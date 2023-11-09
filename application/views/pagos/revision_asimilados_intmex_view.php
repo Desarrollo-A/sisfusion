@@ -3,43 +3,7 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul >
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -84,26 +48,21 @@
             </div>
         </div>
 
-    <div class="content boxContent">
-     <div class="container-fluid">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
-                <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos ooam</a></li>
-            </ul>
-            <div class="card no-shadow m-0 border-conntent__tabs">
-               <div class="card-content p-0">
-                   <div class="nav-tabs-custom">
-                       <div class="tab-content p-2">
-                           <div class="tab-pane active" id="nuevas-1">
-                               <div class="card-content">  
-                                    <div class="encabezadoBox">
-                                        <h3 class="card-title center-align" >Comisiones nuevas <b>asimiliados</b></h3>
-                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
-                                    </div>
-                                   <div class="toolbar">
-                                        <div class="container-fluid p-0">
+        <div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
+                                <i class="fas fa-wallet fa-2x"></i>
+                            </div>
+                            <div class="card-content">            
+                                <div class="encabezadoBox">
+                                    <h3 class="card-title center-align" >Comisiones nuevas <b>asimiliados</b></h3>
+                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+                                </div>
+                                <div class="toolbar">
+                                    <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
@@ -121,15 +80,15 @@
                                         <div class="row aligned-row d-flex align-end">
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="filtro33">Puesto</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required> 
+                                                    <label class="control-label" for="puestoAsimilados">Puesto</label>
+                                                    <select name="puestoAsimilados" id="puestoAsimilados" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required> 
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="filtro44">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                    <label class="control-label" for="usuarioAsimilados">Usuario</label>
+                                                    <select class="selectpicker select-gral" id="usuarioAsimilados" name="usuarioAsimilados[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
@@ -171,13 +130,13 @@
                                             </div>
                                         </div>
                                     </div>
-                               </div>
-                           </div>
-                           <div class="tab-pane" id="proceso-1">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="proceso-1">
                                 <div class="text-center">
                                 <h3 class="card-title center-align" >Comisiones nuevas <b>OOAM</b></h3>
-                                       <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente)</p>
-                                  </div>
+                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente)</p>
+                                </div>
                                   <div class="toolbar">
                                       <div class="container-fluid p-0">
                                           <div class="row">
@@ -256,6 +215,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_intmex_ooam.js"></script>
 

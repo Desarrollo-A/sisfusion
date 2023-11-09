@@ -33,7 +33,7 @@ $(document).ready(function getAssimilatedCommissions(){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent = "$" + to;
+        document.getElementById("totpagarremanente").textContent = to;
     });
 
     $("#tabla_especial").ready("hidden", false);
@@ -48,14 +48,14 @@ $(document).ready(function getAssimilatedCommissions(){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             title: 'Comisiones especiales',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx-1] + ' ';
+                exportOptions: {
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx-1] + ' ';
+                        }
                     }
-                }
-            },
+                },
             },
             {
             text: '<i class="fa fa-check"></i> MARCAR COMO PAGADA',
@@ -80,16 +80,17 @@ $(document).ready(function getAssimilatedCommissions(){
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_especial2.ajax.reload();
-                                modalInformation(1);
+                                mensaje = "Comisiones de esquema <b>especiales</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                modalInformation(0);
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(0);
+                            modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                         }
                     });
                 }else{

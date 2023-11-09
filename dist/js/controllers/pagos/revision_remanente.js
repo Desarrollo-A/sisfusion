@@ -126,33 +126,18 @@ function getDataRemanente(proyecto, condominio){
                                 $("#autorizarRemanente").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#modalEnviadas").modal('toggle');
                                 tabla_remanente.ajax.reload();
-                                $("#modalEnviadas .modal-body").html("");
-                                $("#modalEnviadas").modal();
-                                $("#modalEnviadas .modal-body").append(`
-                                    <center>
-                                        <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif" >
-                                            <p style='color:#676767;'>Comisiones de esquema 
-                                                <b>remanente</b>, fueron enviadas a 
-                                                <b>INTERNOMEX</b> correctamente.
-                                            </p>
-                                    </center>`);
+                                var mensaje = "Comisiones de esquema <b>remanentes</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#modalEnviadas").modal('toggle');
-                                $("#modalEnviadas .modal-body").html("");
-                                $("#modalEnviadas").modal();
-                                $("#modalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#modalEnviadas").modal('toggle');
-                            $("#modalEnviadas .modal-body").html("");
-                            $("#modalEnviadas").modal();
-                            $("#modalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
