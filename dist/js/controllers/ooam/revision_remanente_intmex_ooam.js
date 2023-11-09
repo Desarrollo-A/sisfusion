@@ -124,7 +124,6 @@ $(document).on("click", ".PagarOoam", function () {
 
         $.getJSON(general_base_url + "Ooam/getPagosByProyect/" + valorSeleccionado + '/' + 4).done(function (data) {
             let sumaComision = 0;
-            // console.log(data[0]);
             if (!data) {
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             }
@@ -133,7 +132,7 @@ $(document).on("click", ".PagarOoam", function () {
                     $("#modal_multiples .modal-body ").append(`
                     <center>
                         <div class="row bodypagos" >
-                            <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
+                            <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar
                             <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div>
                     </center>
                             `);
