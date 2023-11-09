@@ -76,11 +76,8 @@ $("#tabla_bono_revision").ready(function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0 ) {
                     var idbono = $(tabla_nuevas.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
                     $.get(general_base_url+"Comisiones/enviarBonosMex/"+idbono).done(function () {
-                        $("#myModalEnviadas").modal('toggle');
                         tabla_nuevas.ajax.reload();
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas").modal();
-                        $("#myModalEnviadas .modal-body").append(`<center><img style='width: 25%; height: 25%;' src="${general_base_url}dist/img/mktd.png"><br><br><b><P style="color:#BCBCBC;"> ${mensaje} </P></P></b></center>`);
+                        modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                     });
                 }else{
                     alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");

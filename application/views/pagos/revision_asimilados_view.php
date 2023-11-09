@@ -191,7 +191,6 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_ooam.js"></script>
 </body>

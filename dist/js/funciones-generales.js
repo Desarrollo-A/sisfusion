@@ -1,3 +1,4 @@
+
 const RESPUESTA_MODAL = Object.freeze({
   SUCCESS: 1,
   FAIL: 2
@@ -362,8 +363,7 @@ function replaceAll(text, busca, reemplaza) {
 }
 
 function modalInformation(bandera, mensaje){
-  mensaje = '';
-
+  
   changeSizeModal('modal-sm');
     if(bandera == RESPUESTA_MODAL.SUCCESS){
       appendBodyModal(`<div class="modal-body"><center><img style="width: 75%; height: 75%;" src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>${mensaje}</p></center></div>`);
