@@ -547,8 +547,4 @@
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
 
-    <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
-    
-
-
 </body>
