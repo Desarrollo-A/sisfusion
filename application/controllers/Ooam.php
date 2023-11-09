@@ -649,123 +649,54 @@ class Ooam extends CI_Controller
     $dispersion["monto"] = $monto->nuevo_general;
     echo json_encode(  $dispersion);
   }
-
-  public function getRevisionXMLOOAM(){
-    $proyecto = $this->input->post('proyecto');
-    $dat =  $this->Ooam_model->getRevisionXMLOOAM($proyecto)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['montoOOAM'] = 0;
-    }
-    
-    public function lista_usuarios(){
-      $rol = $this->input->post("rol");
-      $forma_pago = $this->input->post("forma_pago");
-      $respuesta = $this->Ooam_model->get_lista_usuarios($rol,$forma_pago);
-      echo json_encode($respuesta);
-    }
-
-
-    public function getReporteEmpresa(){
-      echo json_encode($this->Ooam_model->report_empresa());
+  public function lista_usuarios(){
+    $rol = $this->input->post("rol");
+    $forma_pago = $this->input->post("forma_pago");
+    $respuesta = $this->Ooam_model->get_lista_usuarios($rol,$forma_pago);
+    echo json_encode($respuesta);
   }
-  public function getDatosNuevasFContraloria(){
-    $proyecto = $this->input->post("proyecto");
-    $condominio = $this->input->post("condominio");
-      $dat =  $this->Ooam_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['pa'] = 0;
-    }
-    echo json_encode( array( "data" => $dat));
-    }
-
-    public function pago_internomex(){
-      $id_pago_is = $this->input->post('idcomision');  
-      $consulta_comisiones = $this->Ooam_model->consultaComisiones($id_pago_is);
-  
-        if( $consulta_comisiones != 0 ){
-          $id_user_Vl = $this->session->userdata('id_usuario');
-          $sep = ',';
-          $id_pago_i = '';
-          $data=array();
-  
-            foreach ($consulta_comisiones as $row) {
-              $id_pago_i .= implode($sep, $row);
-              $id_pago_i .= $sep;
-  
-              $row_arr=array(
-                'id_pago_i' => $row['id_pago_i'],
-                'id_usuario' =>   $this->session->userdata('id_usuario'),
-                'fecha_movimiento' => date('Y-m-d H:i:s'),
-                'estatus' => 1,
-                'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
-              );
-              array_push($data,$row_arr);
-            }
-            $id_pago_i = rtrim($id_pago_i, $sep);
-              
-              $up_b = $this->Ooam_model->update_acepta_INTMEX($id_pago_i);
-              $ins_b = $this->Ooam_model->insert_phc($data);
-        
-        if($up_b == true && $ins_b == true){
-          $data_response = 1;
-          echo json_encode($data_response);
-        } else {
-          $data_response = 0;
-          echo json_encode($data_response);
-        }
-              
-        }
-        else{
-          $data_response = 0;
-        echo json_encode($data_response);
-        }
-    }
 
 
-    public function getDesarrolloSelectINTMEX(){
-
-      $value = $this->input->post("desarrollo");
-      if($value == ''){
-      echo json_encode($this->Ooam_model->getDesarrolloSelectINTMEX()->result_array());
-    }else{
-      echo json_encode($this->Ooam_model->getDesarrolloSelectINTMEX($value)->result_array());
-    }
+  public function getReporteEmpresa(){
+    echo json_encode($this->Ooam_model->report_empresa());
+}
+public function getDatosNuevasFContraloria(){
+  $proyecto = $this->input->post("proyecto");
+  $condominio = $this->input->post("condominio");
+    $dat =  $this->Ooam_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
+  for( $i = 0; $i < count($dat); $i++ ){
+      $dat[$i]['pa'] = 0;
   }
-  public function getPagosByProyect($proyect = '',$formap = ''){
-    if(empty($proyect)){
-      echo json_encode($this->Ooam_model->getPagosByProyect());
-  
-    }else{
-      echo json_encode($this->Ooam_model->getPagosByProyect($proyect,$formap));
-  
-    }
+  echo json_encode( array( "data" => $dat));
   }
-    function IntMexPagadosByProyect(){
-      date_default_timezone_set('America/Mexico_City');
-      $idsessionado = $this->session->userdata('id_usuario');
-      $idsPagos = $this->input->post("ids");
-      $sep = ',';
-      $id_pago_i = '';
-      //$cadena_equipo = '';
-      $data = array();
-        for($i=0; $i <count($idsPagos) ; $i++) { 
-          $id_pago_i = implode(",", $idsPagos);
-          // $id_pago_i .= implode($sep, $idsPagos);
-          //  $id_pago_i .= $sep;
-          $row_arr=array(
-            'id_pago_i' => $idsPagos[$i],
-            'id_usuario' =>  $idsessionado,
-            'fecha_movimiento' => date('Y-m-d H:i:s'),
-            'estatus' => 1,
-            'comentario' =>  'INTERNOMEX APLICO PAGO' 
-          );
-          array_push($data,$row_arr);
-        }
-        Ini_set('max_execution_time', 0);
+  public function pago_internomex(){
+    $id_pago_is = $this->input->post('idcomision');  
+    $consulta_comisiones = $this->Ooam_model->consultaComisiones($id_pago_is);
 
-        $up_b = $this->Ooam_model->update_acepta_INTMEX($id_pago_i);
-        $ins_b = $this->Ooam_model->insert_phc($data);
+      if( $consulta_comisiones != 0 ){
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $sep = ',';
+        $id_pago_i = '';
+        $data=array();
 
+          foreach ($consulta_comisiones as $row) {
+            $id_pago_i .= implode($sep, $row);
+            $id_pago_i .= $sep;
+
+            $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>   $this->session->userdata('id_usuario'),
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
+            );
+            array_push($data,$row_arr);
+          }
+          $id_pago_i = rtrim($id_pago_i, $sep);
+            
+            $up_b = $this->Ooam_model->update_acepta_INTMEX($id_pago_i);
+            $ins_b = $this->Ooam_model->insert_phc($data);
+      
       if($up_b == true && $ins_b == true){
         $data_response = 1;
         echo json_encode($data_response);
@@ -773,34 +704,93 @@ class Ooam extends CI_Controller
         $data_response = 0;
         echo json_encode($data_response);
       }
+            
+      }
+      else{
+        $data_response = 0;
+      echo json_encode($data_response);
+      }
+  }
+
+  public function getDesarrolloSelectINTMEX(){
+
+    $value = $this->input->post("desarrollo");
+    if($value == ''){
+    echo json_encode($this->Ooam_model->getDesarrolloSelectINTMEX()->result_array());
+  }else{
+    echo json_encode($this->Ooam_model->getDesarrolloSelectINTMEX($value)->result_array());
+  }
+}
+public function getPagosByProyect($proyect = '',$formap = ''){
+  if(empty($proyect)){
+    echo json_encode($this->Ooam_model->getPagosByProyect());
+
+  }else{
+    echo json_encode($this->Ooam_model->getPagosByProyect($proyect,$formap));
+
+  }
+}
+function IntMexPagadosByProyect(){
+  date_default_timezone_set('America/Mexico_City');
+  $idsessionado = $this->session->userdata('id_usuario');
+  $idsPagos = $this->input->post("ids");
+  $sep = ',';
+  $id_pago_i = '';
+  //$cadena_equipo = '';
+  $data = array();
+    for($i=0; $i <count($idsPagos) ; $i++) { 
+      $id_pago_i = implode(",", $idsPagos);
+      // $id_pago_i .= implode($sep, $idsPagos);
+      //  $id_pago_i .= $sep;
+      $row_arr=array(
+        'id_pago_i' => $idsPagos[$i],
+        'id_usuario' =>  $idsessionado,
+        'fecha_movimiento' => date('Y-m-d H:i:s'),
+        'estatus' => 1,
+        'comentario' =>  'INTERNOMEX APLICO PAGO' 
+      );
+      array_push($data,$row_arr);
     }
-    public function getGeneralStatusFromNeodata($proyecto, $condominio)
-    {
+    Ini_set('max_execution_time', 0);
 
-      $this->load->model('ComisionesNeo_model');
+    $up_b = $this->Ooam_model->update_acepta_INTMEX($id_pago_i);
+    $ins_b = $this->Ooam_model->insert_phc($data);
 
-        $datos = $this->ComisionesNeo_model->getLotesByAdviser($proyecto, $condominio);
-        if(COUNT($datos) > 0){
-            $data = array();
-            $final_data = array();
-            $contador = 0;
-            for($i = 0; $i < COUNT($datos); $i++){
-                $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
-                $final_data[$contador] = $this->ComisionesNeo_model->getLoteInformation($datos[$i]['idLote']);
-                $final_data[$contador]->reason = $data[$i]->Marca;
-                $contador ++;
-            }
-            if (COUNT($final_data) > 0) {
-                echo json_encode(array("data" => $final_data));
-            } else {
-                echo json_encode(array("data" => ''));
-            }
+  if($up_b == true && $ins_b == true){
+    $data_response = 1;
+    echo json_encode($data_response);
+  } else {
+    $data_response = 0;
+    echo json_encode($data_response);
+  }
+}
+
+public function getGeneralStatusFromNeodata($proyecto, $condominio)
+{
+
+  $this->load->model('ComisionesNeo_model');
+
+    $datos = $this->ComisionesNeo_model->getLotesByAdviser($proyecto, $condominio);
+    if(COUNT($datos) > 0){
+        $data = array();
+        $final_data = array();
+        $contador = 0;
+        for($i = 0; $i < COUNT($datos); $i++){
+            $data[$i] = $this->ComisionesNeo_model->getGeneralStatusFromNeodata($datos[$i]['referencia'], $datos[$i]['idResidencial']);
+            $final_data[$contador] = $this->ComisionesNeo_model->getLoteInformation($datos[$i]['idLote']);
+            $final_data[$contador]->reason = $data[$i]->Marca;
+            $contador ++;
         }
-        else{
+        if (COUNT($final_data) > 0) {
+            echo json_encode(array("data" => $final_data));
+        } else {
             echo json_encode(array("data" => ''));
         }
     }
-
+    else{
+        echo json_encode(array("data" => ''));
+    }
+}
 
     public function getDatosNuevasAContraloria(){
       $proyecto = $this->input->post('proyecto');  
@@ -811,6 +801,9 @@ class Ooam extends CI_Controller
     }
     echo json_encode( array( "data" => $dat));
     }
+
+
+
     function despausar_solicitud(){
       $respuesta = array( FALSE );
       // <input type="hidden" name="value_pago" value="2">
@@ -839,6 +832,7 @@ class Ooam extends CI_Controller
       }
       echo json_encode( $respuesta );
     }
+
     function refresh_solicitud(){
       $respuesta = array( FALSE );
       if($this->input->post("id_pago_i")){
@@ -846,10 +840,11 @@ class Ooam extends CI_Controller
       }
       echo json_encode( $respuesta );
     }
+
+    
     function getDatosDocumentos($id_comision, $id_pj){
       echo json_encode($this->Ooam_model->getDatosDocumentos($id_comision, $id_pj)->result_array());
     }
-
     public function getDatosFactura($uuid, $id_res){
       if($uuid){
           $consulta_sol = $this->Ooam_model->factura_comision($uuid, $id_res)->row();
@@ -866,7 +861,14 @@ class Ooam extends CI_Controller
       echo json_encode( $datos );
     }
 
-}
-
-
-
+  public function getRevisionXMLOOAM(){
+    $proyecto = $this->input->post('proyecto');
+    $dat =  $this->Ooam_model->getRevisionXMLOOAM($proyecto)->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['montoOOAM'] = 0;
+    }      
+    echo json_encode( array( "data" => $dat));
+  
+  }
+  
+  }
