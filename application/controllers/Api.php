@@ -1161,10 +1161,9 @@ class Api extends CI_Controller
                                             
                                             if (isset($dataComisiones) && !empty($dataComisiones)) {
                                                 $dbTransaction = $this->Ooam_model->insertComisionOOAM('comisiones_ooam',$dataComisiones);
-                                                if($dbTransaction == 1){
-                                                    echo (json_encode(array("result" => $dbTransaction, "message" => "Ok")));
-                                                } else
+                                                if($dbTransaction != 1){
                                                     echo (json_encode($dbTransaction));
+                                                }
                                                 }
                                         }
                                         
@@ -1191,10 +1190,9 @@ class Api extends CI_Controller
                                             
                                             if (isset($dataPago) && !empty($dataPago)) {
                                                 $dbTransactionPago = $this->Ooam_model->insertComisionOOAM('pago_ooam',$dataPago);
-                                                if($dbTransactionPago == 1){
-                                                    echo (json_encode(array("result" => $dbTransactionPago, "message" => "Ok")));
-                                                } else
+                                                if($dbTransactionPago != 1){
                                                     echo (json_encode($dbTransactionPago));
+                                                } 
                                                 }
                                                 
                                                 if ($dbTransaction&&$dbTransactionPago){ // SUCCESS TRANSACTION
