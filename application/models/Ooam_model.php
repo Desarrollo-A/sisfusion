@@ -1020,6 +1020,31 @@ class Ooam_model extends CI_Model {
             INNER JOIN residenciales res ON res.idResidencial = con.idResidencial and res.idResidencial = $id_res
             WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
             }
+
+        function getMontoDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT SUM(lotes) as lotes, SUM(comisiones) as comisiones, SUM(pagos) as pagos, SUM(monto) monto
+            FROM (
+            SELECT COUNT(DISTINCT(id_lote)) lotes , 
+            COUNT(c.id_comision) comisiones, 
+            COUNT(pci.id_pago_i) pagos, 
+            SUM(pci.abono_neodata) monto
+            FROM pago_ooam_ind pci 
+            INNER JOIN comisiones_ooam c on c.id_comision = pci.id_comision
+            INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
+            WHERE CAST(pci.fecha_abono as date) >= CAST('$fecha1' AS date)
+            AND CAST(pci.fecha_abono as date) <= CAST('$fecha2' AS date) 
+            AND pci.estatus NOT IN (0) 
+            GROUP BY u.id_usuario) as lotes ; ");
+        }
+
+        function getPagosDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT count(id_pago_i) pagos FROM pago_ooam_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones_ooam) AND CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND abono_neodata>0");
+        }
+        
+        function getLotesDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones_ooam WHERE id_comision IN (select id_comision from pago_ooam_ind WHERE CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones_ooam))");
+        }
+        
         
 }// llave fin del modal
 
