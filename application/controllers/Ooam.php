@@ -476,7 +476,7 @@ class Ooam extends CI_Controller
   function setPausaPagosOOAM(){
     $respuesta = array( FALSE );
     if($this->input->post("id_pago")){
-      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("factura")  ));
     }
     echo json_encode( $respuesta );
   }

@@ -161,12 +161,12 @@ class Ooam_model extends CI_Model {
         return $query->row();
     }
     
-    function setPausaPagosOOAM($id_pago_i, $obs) {
+    function setPausaPagosOOAM($id_pago_i, $obs , $facturaBandera) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $respuesta = $this->db->query("INSERT INTO  historial_ooam VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         $respuesta = $this->db->query("UPDATE pago_ooam_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        if($facturaBandera == 1 ){
         $row = $this->db->query("SELECT uuid FROM facturas_ooam WHERE id_comision = ".$id_pago_i.";")->result_array();
-        
         if(count($row) > 0){
             $datos =  $this->db->query("SELECT id_factura, total, id_comision, bandera FROM facturas_ooam WHERE uuid='".$row[0]['uuid']."'")->result_array();
             for ($i=0; $i <count($datos); $i++) { 
@@ -179,6 +179,8 @@ class Ooam_model extends CI_Model {
                     }
             }
         }
+        }
+  
         return $respuesta;
     }
     
