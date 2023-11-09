@@ -1505,39 +1505,39 @@ function xml2() {
 
 var justificacion_globla = "";
 
-function subir_xml(input) {
-    var data = new FormData();
-    documento_xml = input[0].files[0];
-    var xml = documento_xml;
-    data.append("xmlfile", documento_xml);
-    resear_formulario();
-    $.ajax({
-        url: general_base_url + "Comisiones/cargaxml",
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        method: 'POST',
-        type: 'POST', // For jQuery < 1.9
-        success: function (data) {
-            if (data.respuesta[0]) {
-                documento_xml = xml;
-                var informacion_factura = data.datos_xml;
-                cargar_info_xml(informacion_factura);
-                $("#solobs").val(justificacion_globla);
-            }
-            else {
-                input.val('');
-                alert(data.respuesta[1]);
-            }
-        },
-        error: function (data) {
-            input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
-        }
-    });
-}
+// function subir_xml(input) {
+//     var data = new FormData();
+//     documento_xml = input[0].files[0];
+//     var xml = documento_xml;
+//     data.append("xmlfile", documento_xml);
+//     resear_formulario();
+//     $.ajax({
+//         url: general_base_url + "Comisiones/cargaxml",
+//         data: data,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         dataType: 'json',
+//         method: 'POST',
+//         type: 'POST', // For jQuery < 1.9
+//         success: function (data) {
+//             if (data.respuesta[0]) {
+//                 documento_xml = xml;
+//                 var informacion_factura = data.datos_xml;
+//                 cargar_info_xml(informacion_factura);
+//                 $("#solobs").val(justificacion_globla);
+//             }
+//             else {
+//                 input.val('');
+//                 alert(data.respuesta[1]);
+//             }
+//         },
+//         error: function (data) {
+//             input.val('');
+//             alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+//         }
+//     });
+// }
 
 function subir_xml2(input) {
     var data = new FormData();

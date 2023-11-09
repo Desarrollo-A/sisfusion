@@ -161,12 +161,12 @@ class Ooam_model extends CI_Model {
         return $query->row();
     }
     
-    function setPausaPagosOOAM($id_pago_i, $obs) {
+    function setPausaPagosOOAM($id_pago_i, $obs , $facturaBandera) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $respuesta = $this->db->query("INSERT INTO  historial_ooam VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         $respuesta = $this->db->query("UPDATE pago_ooam_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        if($facturaBandera == 1 ){
         $row = $this->db->query("SELECT uuid FROM facturas_ooam WHERE id_comision = ".$id_pago_i.";")->result_array();
-        
         if(count($row) > 0){
             $datos =  $this->db->query("SELECT id_factura, total, id_comision, bandera FROM facturas_ooam WHERE uuid='".$row[0]['uuid']."'")->result_array();
             for ($i=0; $i <count($datos); $i++) { 
@@ -179,6 +179,8 @@ class Ooam_model extends CI_Model {
                     }
             }
         }
+        }
+  
         return $respuesta;
     }
     
@@ -273,13 +275,13 @@ class Ooam_model extends CI_Model {
     function leerxml( $xml_leer, $cargar_xml ){
         $str = '';
         if( $cargar_xml ){
-            rename( $xml_leer, "./UPLOADS/XMLS/documento_temporal.txt" );
-            $str = file_get_contents( "./UPLOADS/XMLS/documento_temporal.txt" );
+            rename( $xml_leer, "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
+            $str = file_get_contents( "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
             if( substr ( $str, 0, 3 ) == 'o;?' ){
                 $str = str_replace( "o;?", "", $str );
-                file_put_contents( './UPLOADS/XMLS/documento_temporal.txt', $str );
+                file_put_contents( './UPLOADS/XMLSOOAM/documento_temporal.txt', $str );
             }
-                rename( "./UPLOADS/XMLS/documento_temporal.txt", $xml_leer );
+                rename( "./UPLOADS/XMLSOOAM/documento_temporal.txt", $xml_leer );
             }
             libxml_use_internal_errors(true);
             $xml = simplexml_load_file( $xml_leer, null, true );
@@ -1003,6 +1005,8 @@ class Ooam_model extends CI_Model {
             ORDER BY l.idLote");
             return $query ;
         }
+
+
 
         function factura_comision( $uuid, $id_res){
             return $this->db->query("SELECT DISTINCT CAST(uuid AS VARCHAR(MAX)) AS uuid ,

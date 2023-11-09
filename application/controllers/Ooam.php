@@ -330,7 +330,7 @@ class Ooam extends CI_Controller
       $responsable = $this->session->userdata('id_usuario');
       $resultado = TRUE;
       if( isset( $_FILES ) && !empty($_FILES) ){
-        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['upload_path'] = './UPLOADS/XMLSOOAM/';
         $config['allowed_types'] = 'xml';
         $this->load->library('upload', $config);
         $resultado = $this->upload->do_upload("xmlfile");
@@ -342,7 +342,7 @@ class Ooam extends CI_Controller
           $nuevo_nombre .= date("Hms")."_";
           $nuevo_nombre .= rand(4, 100)."_";
           $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-          rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+          rename( $xml_subido['full_path'], "./UPLOADS/XMLSOOAM/".$nuevo_nombre );
           $datos_xml['nombre_xml'] = $nuevo_nombre;
           $id_com = $id_comision;
           $this->Ooam_model->insertar_factura($id_com, $datos_xml);
@@ -398,7 +398,7 @@ class Ooam extends CI_Controller
     }
     $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
     if( isset( $_FILES ) && !empty($_FILES) ){
-        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['upload_path'] = './UPLOADS/XMLSOOAM/';
         $config['allowed_types'] = 'xml';
         //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
         $this->load->library('upload', $config);
@@ -476,7 +476,7 @@ class Ooam extends CI_Controller
   function setPausaPagosOOAM(){
     $respuesta = array( FALSE );
     if($this->input->post("id_pago")){
-      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("factura")  ));
     }
     echo json_encode( $respuesta );
   }
@@ -531,7 +531,7 @@ class Ooam extends CI_Controller
         $responsable = $this->session->userdata('id_usuario');
         $resultado = TRUE;
         if( isset( $_FILES ) && !empty($_FILES) ){
-          $config['upload_path'] = './UPLOADS/XMLS/';
+          $config['upload_path'] = './UPLOADS/XMLSOOAM/';
           $config['allowed_types'] = 'xml';
           $this->load->library('upload', $config);
           $resultado = $this->upload->do_upload("xmlfile");
@@ -546,7 +546,7 @@ class Ooam extends CI_Controller
               $nuevo_nombre .= date("Hms")."_";
               $nuevo_nombre .= rand(4, 100)."_";
               $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-              rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+              rename( $xml_subido['full_path'], "./UPLOADS/XMLSOOAM/".$nuevo_nombre );
               $datos_xml['nombre_xml'] = $nuevo_nombre;
               ini_set('max_execution_time', 0);
               for ($i=0; $i <count($datos) ; $i++) { 
