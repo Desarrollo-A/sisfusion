@@ -4443,7 +4443,6 @@ public function getDatosHistorialPagoEstatus($proyecto, $condominio, $usuario) {
             $resultado[$i]['id_sede'] = $MKTD[0]['id_sede']; 
             $resultado[$i]['impuesto'] = $MKTD[0]['impuesto']; 
             $resultado[$i]['forma_pago'] = $MKTD[0]['forma_pago']; 
-   
           }
           
           $resultado[$i]['sumaBono2'] = $Bono2; 
@@ -5342,7 +5341,6 @@ public function descuentosCapitalHumano(){
          //  se cambio la vista 
     }
     public function ultimoRegistro (){
-
       $idLote   = $this->input->post('idLote');
       $respusta = $this->comisiones_model->ultimoRegistro($idLote);
       var_dump($respusta);

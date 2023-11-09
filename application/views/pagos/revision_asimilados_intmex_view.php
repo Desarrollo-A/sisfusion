@@ -3,43 +3,7 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul >
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -85,9 +49,9 @@
         </div>
 
     <div class="content boxContent">
-     <div class="container-fluid">
+        <div class="container-fluid">
         <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                 <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
                 <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos ooam</a></li>
@@ -252,12 +216,10 @@
         </div>
      </div>
     </div>
-
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_intmex_ooam.js"></script>
-
-
 </body>
