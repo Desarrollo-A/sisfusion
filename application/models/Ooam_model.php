@@ -1040,7 +1040,8 @@ class Ooam_model extends CI_Model {
         function getLotesDispersadoDates($fecha1, $fecha2){
             return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones_ooam WHERE id_comision IN (select id_comision from pago_ooam_ind WHERE CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones_ooam))");
         }
-        
+
+
         
 }// llave fin del modal
 

@@ -919,4 +919,28 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
     
     }
 
+    public function GetDescripcionXML($xml){
+      error_reporting(0);
+      $xml=simplexml_load_file("".base_url()."UPLOADS/XMLSOOAM/".$xml."") or die("Error: Cannot create object");
+      $cuantos = count($xml-> xpath('//cfdi:Concepto'));
+      $UUID = $xml->xpath('//@UUID')[0];
+      $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
+      $folio = $xml -> xpath('//cfdi:Comprobante')[0]['Folio'];
+      if($folio[0] == null){
+        $folio = '*';
+      }
+      $total = $xml -> xpath('//cfdi:Comprobante')[0]['Total'];
+      $cadena = '';
+      for($i=0;$i< $cuantos; $i++ ){
+        $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+      }
+      $arr[0]= $UUID[0];
+      $arr[1]=  $fecha[0];
+      $arr[2]=  $folio[0];
+      $arr[3]=  $total;
+      $arr[4]=  $cadena;
+      echo json_encode($arr);
+    }
+
+
   }
