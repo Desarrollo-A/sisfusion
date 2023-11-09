@@ -545,7 +545,7 @@
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
-     <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
 
     <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
     
