@@ -73,7 +73,7 @@ $('#usuario').change(function(ruta){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissionsOoam(proyecto, condominio);
+    getFacturaCommissionsOOAM(proyecto, condominio);
 });
 
 
@@ -190,7 +190,7 @@ $('#tabla_factura_ooam thead tr:eq(0) th').each( function (i) {
     }
 });
 
-function getAssimilatedCommissionsOoam(proyecto, condominio){
+function getFacturaCommissionsOOAM(proyecto, condominio){
     $('#tabla_factura_ooam').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -392,7 +392,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 8){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQOOAM[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQOOAM[]" class="individualCheckOOAM" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -676,7 +676,7 @@ function preview_info(archivo){
     }
 }
 // Selección de CheckBox
-$(document).on("click", ".individualCheck", function() {
+$(document).on("click", ".individualCheckOOAM", function() {
     totaPen = 0;
     tabla_factura_ooam.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_factura_ooam.$('input[type="checkbox"]:checked') ;
