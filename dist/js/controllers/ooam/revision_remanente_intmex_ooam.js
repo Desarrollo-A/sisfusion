@@ -180,7 +180,7 @@ $('#tabla_remanente_ooam thead tr:eq(0) th').each(function (i) {
         });
     }
     else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllOOAM(this)"/>');
     }
 });
 
@@ -203,9 +203,9 @@ function getAssimilatedCommissionsOoam(proyecto, condominio) {
         buttons: [{
             text: '<div class="d-flex"><i class="fa fa-check "></i><p class="m-0 pl-1">Marcar como pagado</p></div>',
             action: function () {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
+                if ($('input[name="idTQOOAM[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente_ooam.$('input[name="idTQ[]"]:checked')).map(function () {
+                    var idcomision = $(tabla_remanente_ooam.$('input[name="idTQOOAM[]"]:checked')).map(function () {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
@@ -399,7 +399,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio) {
             render: function (d, type, full, meta) {
                 if (full.estatus == 8) {
                     if (full.id_comision) {
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                        return '<input type="checkbox" name="idTQOOAM[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }
                     else {
                         return '';
@@ -415,7 +415,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio) {
             },
         }],
         ajax: {
-            "url": general_base_url + "Ooam/getDatosNuevasRContraloria/",
+            "url": general_base_url + "Ooam/getRevisionRemanenteOOAM/",
             "type": "POST",
             cache: false,
             data: {
@@ -767,7 +767,7 @@ $(document).on("click", ".individualCheck", function () {
     $("#totpagarPenOoam").html(formatMoney(numberTwoDecimal(totaPenOoam)));
 });
 // Función de selección total
-function selectAll(e) {
+function selectAllOOAM(e) {
     tota2 = 0;
     if (e.checked == true) {
         $(tabla_remanente_ooam.$('input[type="checkbox"]')).each(function (i, v) {

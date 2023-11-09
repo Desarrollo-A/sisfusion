@@ -660,15 +660,7 @@ class Ooam extends CI_Controller
   public function getReporteEmpresa(){
     echo json_encode($this->Ooam_model->report_empresa());
 }
-public function getDatosNuevasFContraloria(){
-  $proyecto = $this->input->post("proyecto");
-  $condominio = $this->input->post("condominio");
-    $dat =  $this->Ooam_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
-  for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
-  }
-  echo json_encode( array( "data" => $dat));
-  }
+ 
   public function pago_internomex(){
     $id_pago_is = $this->input->post('idcomision');  
     $consulta_comisiones = $this->Ooam_model->consultaComisiones($id_pago_is);
@@ -791,18 +783,6 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
         echo json_encode(array("data" => ''));
     }
 }
-
-    public function getDatosNuevasAContraloria(){
-      $proyecto = $this->input->post('proyecto');  
-      $condominio = $this->input->post('condominio');  
-      $dat =  $this->Ooam_model->getDatosNuevasAContraloria($proyecto,$condominio);
-    for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['pa'] = 0;
-    }
-    echo json_encode( array( "data" => $dat));
-    }
-
-
 
     function despausar_solicitud(){
       $respuesta = array( FALSE );
