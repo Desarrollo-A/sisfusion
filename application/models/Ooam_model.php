@@ -275,13 +275,13 @@ class Ooam_model extends CI_Model {
     function leerxml( $xml_leer, $cargar_xml ){
         $str = '';
         if( $cargar_xml ){
-            rename( $xml_leer, "./UPLOADS/XMLS/documento_temporal.txt" );
-            $str = file_get_contents( "./UPLOADS/XMLS/documento_temporal.txt" );
+            rename( $xml_leer, "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
+            $str = file_get_contents( "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
             if( substr ( $str, 0, 3 ) == 'o;?' ){
                 $str = str_replace( "o;?", "", $str );
-                file_put_contents( './UPLOADS/XMLS/documento_temporal.txt', $str );
+                file_put_contents( './UPLOADS/XMLSOOAM/documento_temporal.txt', $str );
             }
-                rename( "./UPLOADS/XMLS/documento_temporal.txt", $xml_leer );
+                rename( "./UPLOADS/XMLSOOAM/documento_temporal.txt", $xml_leer );
             }
             libxml_use_internal_errors(true);
             $xml = simplexml_load_file( $xml_leer, null, true );
@@ -1006,28 +1006,7 @@ class Ooam_model extends CI_Model {
             return $query ;
         }
 
-    public function getDataLiquidadasOOAM() {
-        $this->db->query("SET LANGUAGE Español;");
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote, (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta, (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta, pc.nombreCliente, pc.estatusContratacion idStatusOOAM, l.totalNeto2, (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, l.referencia, pc.numero_dispersion, pc.bandera,
-        CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
-        CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
-        CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
-        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
-        (CASE WHEN pc.plan_comision IN (0) OR pc.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, pc.plan_comision, l.registro_comision 
-        FROM lotes l
-        INNER JOIN pago_ooam pc ON pc.id_lote = l.idLote AND pc.bandera NOT in (0,100)
-        INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial   
-        INNER JOIN usuarios ae ON ae.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 7 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario) 
-        LEFT JOIN usuarios co ON co.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 9 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios ge ON ge.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 3 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios su ON su.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 2 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
-        WHERE pc.bandera NOT in (0,100) ORDER BY l.idLote");
-            
-        return $query;
-    }
+
 
         function factura_comision( $uuid, $id_res){
             return $this->db->query("SELECT DISTINCT CAST(uuid AS VARCHAR(MAX)) AS uuid ,
