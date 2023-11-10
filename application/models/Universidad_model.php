@@ -90,7 +90,7 @@ public function get_lista_roles() {
 
 
 function getCommentsDU($user){
-    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, convert(nvarchar(20), pci.fecha_abono, 113) date_final, convert(nvarchar(20), pci.fecha_abono, 113) fecha_abono, 
+    return $this->db->query("SELECT pci.abono_neodata as comentario,concat(' - ',pci.comentario) comentario2, pci.id_pago_i, pci.modificado_por, convert(nvarchar(20), pci.fecha_pago_intmex, 113) date_final, convert(nvarchar(20), pci.fecha_pago_intmex, 113) fecha_abono, 
     CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario 
     FROM pago_comision_ind pci  
     INNER JOIN usuarios u ON u.id_usuario = pci.modificado_por
