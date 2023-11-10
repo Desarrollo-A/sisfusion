@@ -537,7 +537,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
-    <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();

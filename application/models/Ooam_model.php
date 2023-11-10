@@ -249,29 +249,7 @@ class Ooam_model extends CI_Model {
             GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, poam.porcentaje_abono, oxcest.nombre, sed.impuesto, poam.bonificacion, opt.fecha_creacion, opt.estatus");
     }
 
-    
-    function getDatosHistorialAsesor($estado){
-        $user_data = $this->session->userdata('id_usuario');
-        $sede = $this->session->userdata('id_sede');
-        
-        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, lo.nombreLote as lote, oxcpj.nombre as pj_name, u.forma_pago, poam.porcentaje_abono, 0 as factura, 1 expediente, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, poam.bonificacion, 0 lugar_prospeccion, pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion, '' as procesoCl, '' as colorProcesoCl, 0 as proceso, 0 as id_cliente_reubicacion_2
-            FROM pago_ooam_ind pci1 
-            INNER JOIN comisiones_ooam ooamco ON pci1.id_comision = ooamco.id_comision 
-            INNER JOIN lotes lo ON lo.idLote = ooamco.id_lote AND lo.status = 1
-            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-            INNER JOIN usuarios u ON u.id_usuario = ooamco.id_usuario  
-            INNER JOIN comisiones_ooam cooam ON u.id_usuario = cooam.id_usuario
-            INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
-            LEFT JOIN pago_ooam poam on poam.id_lote = cooam.id_lote
-            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
-            LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
-            LEFT JOIN (SELECT id_usuario, fecha_creacion,
-            estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = ooamco.id_usuario
-            WHERE ooamco.id_usuario = $user_data
-            GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, poam.porcentaje_abono, oxcest.nombre, sed.impuesto, poam.bonificacion, opt.fecha_creacion, opt.estatus");
-    }
-    
+
     function leerxml( $xml_leer, $cargar_xml ){
         $str = '';
         if( $cargar_xml ){
@@ -1045,6 +1023,37 @@ class Ooam_model extends CI_Model {
             return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones_ooam WHERE id_comision IN (select id_comision from pago_ooam_ind WHERE CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones_ooam))");
         }
 
+
+
+        function getDatosHistorialAsesor(){
+            $user_data = $this->session->userdata('id_usuario');
+            $sede = $this->session->userdata('id_sede');
+            
+            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, 
+                ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, 
+                pci1.fecha_abono fecha_creacion, pci1.id_usuario, lo.nombreLote as lote, oxcpj.nombre as pj_name, 
+                u.forma_pago, poam.porcentaje_abono, 0 as factura, 1 expediente, 
+                (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, poam.bonificacion, 0 lugar_prospeccion, 
+                pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion, '' as procesoCl, '' as colorProcesoCl, 0 as proceso, 0 as id_cliente_reubicacion_2
+                FROM pago_ooam_ind pci1 
+                INNER JOIN comisiones_ooam ooamco ON pci1.id_comision = ooamco.id_comision 
+                INNER JOIN lotes lo ON lo.idLote = ooamco.id_lote AND lo.status = 1
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN usuarios u ON u.id_usuario = ooamco.id_usuario  
+                INNER JOIN comisiones_ooam cooam ON u.id_usuario = cooam.id_usuario
+                INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+                LEFT JOIN pago_ooam poam on poam.id_lote = cooam.id_lote
+                INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+                LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+                LEFT JOIN (SELECT id_usuario, fecha_creacion,
+                estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = ooamco.id_usuario
+                WHERE ooamco.id_usuario = $user_data
+                GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, ooamco.comision_total, 
+                ooamco.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario,
+                oxcpj.nombre, u.forma_pago,pci1.id_pago_i, poam.porcentaje_abono, oxcest.nombre, sed.impuesto, poam.bonificacion, opt.fecha_creacion, opt.estatus");
+        }
+        
 
         
 }// llave fin del modal
