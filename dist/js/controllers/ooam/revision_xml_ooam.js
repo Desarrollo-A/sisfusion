@@ -74,7 +74,7 @@ function getDataXMLOOAM(proyecto){
             text: 'XMLS',
             action: function(){
                 if(id_rol_global == 17 || id_rol_global == 13 || id_rol_global == 31 || id_rol_global== 32){
-                    window.location = general_base_url+'XMLDownload/descargar_XML';
+                    window.location = general_base_url+'XMLDownload/descargar_XMLOOAM';
                 }
                 else{
                     alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");
@@ -88,7 +88,7 @@ function getDataXMLOOAM(proyecto){
             text: 'OPINIONES CUMPLIMIENTO',
             action: function(){
                 if(id_rol_global == 17 || id_rol_global == 13 || id_rol_global == 31 || id_rol_global== 32){
-                    window.location = general_base_url+'XMLDownload/descargar_PDF';
+                    window.location = general_base_url+'XMLDownload/descargar_PDFOOAM';
                 }
                 else{
                     alerts.showNotification("top", "right", "No tienes permisos para descargar archivos.", "warning");
@@ -356,11 +356,11 @@ function getDataXMLOOAM(proyecto){
         id_residencial = $(this).attr("data-value");
         user_factura = $(this).attr("data-userfactura");
         $("#modalAbrirFacturaOOAM").modal();
-        $.getJSON( general_base_url + "pagos/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
+        $.getJSON( general_base_url + "Ooam/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
             $("#modalAbrirFacturaOOAM .modal-body").append('<div class="row">');
             let uuid,fecha,folio,tot,descripcion;
             if (!data.datos_solicitud['uuid'] == '' && !data.datos_solicitud['uuid'] == '0'){
-                $.get(general_base_url+"pagos/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
+                $.get(general_base_url+"Ooam/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
                     let datos = JSON.parse(dat);
                     uuid = datos[0][0];
                     fecha = datos[1][0];
@@ -475,7 +475,7 @@ function subir_xml(input,id_user) {
     var xml = documento_xml;
     data.append("xmlfile", documento_xml);
     $.ajax({
-        url: general_base_url + "Pagos/cargaxml2/"+id_user,
+        url: general_base_url + "Ooam/cargaxml2/"+id_user,
         data: data,
         cache: false,
         contentType: false,

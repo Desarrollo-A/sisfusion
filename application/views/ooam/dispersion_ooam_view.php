@@ -390,4 +390,5 @@
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/dispersion_ooam.js"></script>
+
 </body>

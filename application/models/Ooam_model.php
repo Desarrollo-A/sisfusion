@@ -161,12 +161,12 @@ class Ooam_model extends CI_Model {
         return $query->row();
     }
     
-    function setPausaPagosOOAM($id_pago_i, $obs) {
+    function setPausaPagosOOAM($id_pago_i, $obs , $facturaBandera) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $respuesta = $this->db->query("INSERT INTO  historial_ooam VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         $respuesta = $this->db->query("UPDATE pago_ooam_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        if($facturaBandera == 1 ){
         $row = $this->db->query("SELECT uuid FROM facturas_ooam WHERE id_comision = ".$id_pago_i.";")->result_array();
-        
         if(count($row) > 0){
             $datos =  $this->db->query("SELECT id_factura, total, id_comision, bandera FROM facturas_ooam WHERE uuid='".$row[0]['uuid']."'")->result_array();
             for ($i=0; $i <count($datos); $i++) { 
@@ -179,6 +179,8 @@ class Ooam_model extends CI_Model {
                     }
             }
         }
+        }
+  
         return $respuesta;
     }
     
@@ -246,17 +248,18 @@ class Ooam_model extends CI_Model {
             WHERE pci1.estatus IN ($estado) AND ooamco.id_usuario = $user_data
             GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, poam.porcentaje_abono, oxcest.nombre, sed.impuesto, poam.bonificacion, opt.fecha_creacion, opt.estatus");
     }
-    
+
+
     function leerxml( $xml_leer, $cargar_xml ){
         $str = '';
         if( $cargar_xml ){
-            rename( $xml_leer, "./UPLOADS/XMLS/documento_temporal.txt" );
-            $str = file_get_contents( "./UPLOADS/XMLS/documento_temporal.txt" );
+            rename( $xml_leer, "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
+            $str = file_get_contents( "./UPLOADS/XMLSOOAM/documento_temporal.txt" );
             if( substr ( $str, 0, 3 ) == 'o;?' ){
                 $str = str_replace( "o;?", "", $str );
-                file_put_contents( './UPLOADS/XMLS/documento_temporal.txt', $str );
+                file_put_contents( './UPLOADS/XMLSOOAM/documento_temporal.txt', $str );
             }
-                rename( "./UPLOADS/XMLS/documento_temporal.txt", $xml_leer );
+                rename( "./UPLOADS/XMLSOOAM/documento_temporal.txt", $xml_leer );
             }
             libxml_use_internal_errors(true);
             $xml = simplexml_load_file( $xml_leer, null, true );
@@ -574,6 +577,30 @@ class Ooam_model extends CI_Model {
         LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
         LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
         WHERE pc.bandera in (0,100) ORDER BY l.idLote");
+            
+        return $query;
+    }
+
+
+    public function getDataLiquidadasOOAM() {
+        $this->db->query("SET LANGUAGE Español;");
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote, (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta, (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta, pc.nombreCliente, pc.estatusContratacion idStatusOOAM, l.totalNeto2, (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, l.referencia, pc.numero_dispersion, pc.bandera,
+        CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
+        CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+        CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
+        CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
+        (CASE WHEN pc.plan_comision IN (0) OR pc.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, pc.plan_comision, l.registro_comision 
+        FROM lotes l
+        INNER JOIN pago_ooam pc ON pc.id_lote = l.idLote AND pc.bandera NOT in (0,100)
+        INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial   
+        INNER JOIN usuarios ae ON ae.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 7 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario) 
+        LEFT JOIN usuarios co ON co.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 9 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        LEFT JOIN usuarios ge ON ge.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 3 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        LEFT JOIN usuarios su ON su.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 2 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
+        WHERE pc.bandera NOT in (0,100) ORDER BY l.idLote");
             
         return $query;
     }
@@ -901,6 +928,63 @@ class Ooam_model extends CI_Model {
             }
         }
 
+        public function getDataLiquidadasPagoOOAM($val = '') {
+            ini_set('memory_limit', -1);
+    
+            $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre as nombreCondominio, l.nombreLote,
+            (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta,
+            (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
+            (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+            (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
+            CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, 
+            (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, se.nombre as sede, l.referencia, cl.id_cliente, 
+            CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) as asesor, 
+            CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) as coordinador,
+            CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, 
+            CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) as subdirector, 
+            (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
+            CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) as director, 
+            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,
+            (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not in (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera as bandera_penalizacion, pe.id_porcentaje_penalizacion, pe.dias_atraso, 
+            (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu, clr.totalNeto2Cl, 
+            (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas, 
+            (CASE WHEN clr.banderaComisionCl in (0,8) AND l.registro_comision IN (9) THEN 1
+            WHEN clr.banderaComisionCl = 1 AND l.registro_comision IN (9) THEN 2 
+            WHEN clr.banderaComisionCl = 7 AND l.registro_comision IN (9) THEN 3 ELSE 0 END) AS bandera_dispersion, 
+            l.registro_comision, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') as nombreLoteReub, ISNULL(ooamDis.dispersar, 0) banderaOOAM, lor.nombreLote as nombreOtro, abono_comisiones, pc.abonado,  (CASE WHEN ((abono_comisiones-pc.abonado) BETWEEN -1 AND 1) OR (abono_comisiones-pc.abonado) IS NULL THEN 0 ELSE (abono_comisiones-pc.abonado)END) pendiente, pcm.porcentaje_comisiones
+    
+            FROM lotes l
+            INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
+            INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+            INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
+            LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote
+            LEFT JOIN (SELECT id_cliente FROM ventas_compartidas WHERE estatus = 1) AS vc ON vc.id_cliente = cl.id_cliente
+            LEFT JOIN (SELECT SUM(comision_total) abono_comisiones, id_lote FROM comisiones WHERE estatus in (1) AND id_usuario not in (0) GROUP BY id_lote) cm ON cm.id_lote = l.idLote 
+            LEFT JOIN (SELECT SUM(porcentaje_decimal) porcentaje_comisiones, id_lote FROM comisiones WHERE estatus in (1) AND id_usuario not in (0) GROUP BY id_lote) pcm ON pcm.id_lote = l.idLote
+            
+            LEFT JOIN usuarios co ON co.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios ge ON ge.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios su ON su.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios re ON re.id_usuario = cl.id_regional
+            LEFT JOIN usuarios di ON di.id_usuario = 2
+            LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
+            LEFT JOIN sedes se ON se.id_sede = cl.id_sede       
+            LEFT JOIN penalizaciones pe ON pe.id_lote = l.idLote AND pe.id_cliente = l.idCliente
+            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+            LEFT JOIN clientes clr ON clr.id_cliente = cl.id_cliente_reubicacion_2
+            LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
+            LEFT JOIN lotes lor ON lor.idLote = clr.idLote
+            LEFT JOIN (select COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
+            LEFT JOIN (select COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
+            LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
+            LEFT JOIN (select COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
+            WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1 AND l.registro_comision in (7) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) /*AND YEAR(cl.fechaApartado) = 2023 AND MONTH(cl.fechaApartado) = 03 or l.idLote =50139*/
+            ORDER BY l.idLote");
+            return $query ;
+        }
+
+
 
         function factura_comision( $uuid, $id_res){
             return $this->db->query("SELECT DISTINCT CAST(uuid AS VARCHAR(MAX)) AS uuid ,
@@ -914,6 +998,63 @@ class Ooam_model extends CI_Model {
             INNER JOIN residenciales res ON res.idResidencial = con.idResidencial and res.idResidencial = $id_res
             WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
             }
+
+        function getMontoDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT SUM(lotes) as lotes, SUM(comisiones) as comisiones, SUM(pagos) as pagos, SUM(monto) monto
+            FROM (
+            SELECT COUNT(DISTINCT(id_lote)) lotes , 
+            COUNT(c.id_comision) comisiones, 
+            COUNT(pci.id_pago_i) pagos, 
+            SUM(pci.abono_neodata) monto
+            FROM pago_ooam_ind pci 
+            INNER JOIN comisiones_ooam c on c.id_comision = pci.id_comision
+            INNER JOIN usuarios u ON u.id_usuario = pci.creado_por AND u.id_rol IN (32,13,17) 
+            WHERE CAST(pci.fecha_abono as date) >= CAST('$fecha1' AS date)
+            AND CAST(pci.fecha_abono as date) <= CAST('$fecha2' AS date) 
+            AND pci.estatus NOT IN (0) 
+            GROUP BY u.id_usuario) as lotes ; ");
+        }
+
+        function getPagosDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT count(id_pago_i) pagos FROM pago_ooam_ind WHERE estatus NOT IN (11,0) AND id_comision IN (select id_comision from comisiones_ooam) AND CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND abono_neodata>0");
+        }
+        
+        function getLotesDispersadoDates($fecha1, $fecha2){
+            return $this->db->query("SELECT count(distinct(id_lote)) lotes FROM comisiones_ooam WHERE id_comision IN (select id_comision from pago_ooam_ind WHERE CAST(fecha_abono as date) >= CAST('$fecha1' AS date) AND CAST(fecha_abono as date) <= CAST('$fecha2' AS date) AND estatus NOT IN (11,0) AND id_comision IN (SELECT id_comision FROM comisiones_ooam))");
+        }
+
+
+
+        function getDatosHistorialAsesor(){
+            $user_data = $this->session->userdata('id_usuario');
+            $sede = $this->session->userdata('id_sede');
+            
+            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, 
+                ooamco.comision_total, ooamco.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, 
+                pci1.fecha_abono fecha_creacion, pci1.id_usuario, lo.nombreLote as lote, oxcpj.nombre as pj_name, 
+                u.forma_pago, poam.porcentaje_abono, 0 as factura, 1 expediente, 
+                (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, poam.bonificacion, 0 lugar_prospeccion, 
+                pci1.fecha_abono, opt.fecha_creacion as fecha_opinion, opt.estatus as estatus_opinion, '' as procesoCl, '' as colorProcesoCl, 0 as proceso, 0 as id_cliente_reubicacion_2
+                FROM pago_ooam_ind pci1 
+                INNER JOIN comisiones_ooam ooamco ON pci1.id_comision = ooamco.id_comision 
+                INNER JOIN lotes lo ON lo.idLote = ooamco.id_lote AND lo.status = 1
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN usuarios u ON u.id_usuario = ooamco.id_usuario  
+                INNER JOIN comisiones_ooam cooam ON u.id_usuario = cooam.id_usuario
+                INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+                LEFT JOIN pago_ooam poam on poam.id_lote = cooam.id_lote
+                INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+                LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+                LEFT JOIN (SELECT id_usuario, fecha_creacion,
+                estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = ooamco.id_usuario
+                WHERE ooamco.id_usuario = $user_data
+                GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, ooamco.comision_total, 
+                ooamco.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario,
+                oxcpj.nombre, u.forma_pago,pci1.id_pago_i, poam.porcentaje_abono, oxcest.nombre, sed.impuesto, poam.bonificacion, opt.fecha_creacion, opt.estatus");
+        }
+        
+
         
 }// llave fin del modal
 
