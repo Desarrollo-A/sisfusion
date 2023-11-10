@@ -41,7 +41,7 @@ $(document).on('click', '.btn_liberacion', function (){
 
     changeSizeModal('modal-md');
         appendBodyModal(`<form method="post" id="formLiberarLote">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
                             <h4>¿Estás seguro de liberar el lote?</h4>
                         </div>
                         <br>

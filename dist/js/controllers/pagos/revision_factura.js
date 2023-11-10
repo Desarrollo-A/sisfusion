@@ -1,6 +1,6 @@
 var tr;
-var tabla_remanente2 ;
-var totaPen = 0;
+var tabla_factura ;
+var totaPagos = 0;
 let titulos = [];
 
 $(document).ready(function() {
@@ -10,15 +10,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoFac").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoFactura").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoFac").selectpicker('refresh');
+        $("#proyectoFactura").selectpicker('refresh');
     }, 'json');
 });
 
-$('#catalogoFac').change(function(){
-residencial = $('#catalogoFac').val();
-$("#condominioFac").empty().selectpicker('refresh');
+$('#proyectoFactura').change(function(){
+residencial = $('#proyectoFactura').val();
+$("#condominioFactura").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -29,29 +29,29 @@ $("#condominioFac").empty().selectpicker('refresh');
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioFac").append($('<option>').val(id).text(name));
+                $("#condominioFactura").append($('<option>').val(id).text(name));
             }
-            $("#condominioFac").selectpicker('refresh');
+            $("#condominioFactura").selectpicker('refresh');
         }
     });
 });
 
-$('#catalogoFac').change(function(){
-    proyecto = $('#catalogoFac').val();
-    condominio = $('#condominioFac').val();
+$('#proyectoFactura').change(function(){
+    proyecto = $('#proyectoFactura').val();
+    condominio = $('#condominioFactura').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getDataFactura(proyecto, condominio);
 });
 
-$('#condominioFac').change(function(){
-    proyecto = $('#catalogoFac').val();
-    condominio = $('#condominioFac').val();
+$('#condominioFactura').change(function(){
+    proyecto = $('#proyectoFactura').val();
+    condominio = $('#condominioFactura').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getDataFactura(proyecto, condominio);
 });
 
 $('#tabla_factura thead tr:eq(0) th').each(function (i) {
@@ -69,18 +69,18 @@ $('#tabla_factura thead tr:eq(0) th').each(function (i) {
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getDataFactura(proyecto, condominio){
     $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent =to;
+        var totalAcumulado = formatMoney(numberTwoDecimal(total));
+        document.getElementById("disponibleFactura").textContent = totalAcumulado;
     });
 
     $("#tabla_factura").prop("hidden", false);
-    tabla_remanente2 = $("#tabla_factura").DataTable({
+    tabla_factura = $("#tabla_factura").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -103,9 +103,9 @@ function getAssimilatedCommissions(proyecto, condominio){
             {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
+                if ($('input[name="idPagoFactura[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_factura.$('input[name="idPagoFactura[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
@@ -121,18 +121,21 @@ function getAssimilatedCommissions(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#autorizarFactura").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_remanente2.ajax.reload();
-                                modalInformation(1);
+                                var mensaje = "Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                tabla_factura.ajax.reload();
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
-                                modalInformation(0);
+                                $('#spiner-loader').addClass('hide');
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
-                            modalInformation(0);
+                            $('#spiner-loader').addClass('hide');
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
@@ -270,7 +273,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idPagoFactura[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -280,7 +283,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "pagos/getDatosNuevasFContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasFContraloria/" ,
             type: "POST",
             cache: false,
             data :{
@@ -356,25 +359,25 @@ function getAssimilatedCommissions(proyecto, condominio){
 
     $('#tabla_factura').on('click', 'input', function() {
         tr = $(this).closest('tr');
-        var row = tabla_remanente2.row(tr).data();
+        var row = tabla_factura.row(tr).data();
         if (row.pa == 0) {
             row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
+            totaPagos += parseFloat(row.pa);
             tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         } 
         else {
-            totaPen -= parseFloat(row.pa);
+            totaPagos -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPagos)));
     });
 
     $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tabla_factura.row( tr );
         id_pago_i = $(this).val();
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append(
+        $("#modalPausarFactura .modal-body").html("");
+        $("#modalPausarFactura .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -397,13 +400,13 @@ function getAssimilatedCommissions(proyecto, condominio){
         );
         const buttonPausar = document.getElementById('btnPausar');
         buttonPausar.addEventListener('click', function handleClick() {
-            $("#totpagarPen").html(formatMoney(0));
+            $("#autorizarFactura").html(formatMoney(0));
         });
-        $("#modal_nuevas").modal();
+        $("#modalPausarFactura").modal();
     });
 }
 
-$("#form_interes").submit( function(e) {
+$("#formPausarFactura").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
@@ -420,10 +423,10 @@ $("#form_interes").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modal_nuevas").modal('toggle' );
+                    $("#modalPausarFactura").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tabla_factura.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -435,43 +438,43 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-$(document).on("click", ".individualCheck", function() {
-    totaPen = 0;
-    tabla_remanente2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_remanente2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_remanente2.$('input[type="checkbox"]');
+$(document).on("click", ".checkPagosIndividual", function() {
+    totaPagos = 0;
+    tabla_factura.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_factura.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_factura.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
-            totaPen += parseFloat(row.impuesto); 
+            row = tabla_factura.row(tr).data();
+            totaPagos += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPagos)));
 });
     
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tabla_factura.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizarFactura").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_factura.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#autorizarFactura").html(formatMoney(0));
     }
 }

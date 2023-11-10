@@ -1,33 +1,33 @@
 var tr;
-var tabla_xml ;
-let titulos = [];
+var tabla_xml_ooam ;
+let titulosOOAM = [];
 
 $(document).ready(function() {
-    $("#tabla_xml").prop("hidden", true);
+    $("#tabla_xml_ooam").prop("hidden", true);
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#proyectoXml").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoXmlOOAM").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyectoXml").selectpicker('refresh');
+        $("#proyectoXmlOOAM").selectpicker('refresh');
     }, 'json');
 });
 
-$('#proyectoXml').change(function(){
-    proyecto = $('#proyectoXml').val();
-    getDataXML(proyecto);
+$('#proyectoXmlOOAM').change(function(){
+    proyecto = $('#proyectoXmlOOAM').val();
+    getDataXMLOOAM(proyecto);
 });
 
-$('#tabla_xml thead tr:eq(0) th').each(function (i) {
+$('#tabla_xml_ooam thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
-        titulos.push(title);
+        titulosOOAM.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_xml').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_xml').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_xml_ooam').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_xml_ooam').DataTable().column(i).search(this.value).draw();
             }
         });
     }
@@ -39,18 +39,18 @@ function changeName(e){
     relatedTarget[0].value = fileName;
 }
 
-function getDataXML(proyecto){
-    $('#tabla_xml').on('xhr.dt', function(e, settings, json, xhr) {
+function getDataXMLOOAM(proyecto){
+    $('#tabla_xml_ooam').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("disponibleXml").textContent = '$' + to;
+        document.getElementById("disponibleXmlOOAM").textContent = '$' + to;
     });
 
-    $("#tabla_xml").prop("hidden", false);
-    tabla_xml = $("#tabla_xml").DataTable({
+    $("#tabla_xml_ooam").prop("hidden", false);
+    tabla_xml_ooam = $("#tabla_xml_ooam").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -65,7 +65,7 @@ function getDataXML(proyecto){
                 columns: [1,2,3,4,5],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulosOOAM[columnIdx] + ' ';
                     }
                 }
             },
@@ -151,11 +151,11 @@ function getDataXML(proyecto){
                 var BtnStats ='';
                 let btnpausar = '';
                 if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
-                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" data-toggle="tooltip" data-placement="top" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
-                    btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresar" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
+                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos_ooam" data-toggle="tooltip" data-placement="top" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-warning verPDF" data-toggle="tooltip" data-placement="top" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="material-icons">description</i></a>';
+                    btnpausar = '<button value="'+data.uuid+'" data-id_user="'+data.id_usuario+'" data-userfactura="'+data.usuario+'" data-total="'+data.total+'" class="btn-data btn-violetChin regresarOOAM" data-placement="top" data-toggle="tooltip" title="Refacturar">' +'<span class="material-icons">autorenew</span></button>';
                 }
                 else{
-                    BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                    BtnStats = '<button value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos_ooam" data-toggle="tooltip" data-placement="top" title="Detalles">' +'<i class="fas fa-info"></i></button>';
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+btnpausar+'</div>';
             }
@@ -166,7 +166,7 @@ function getDataXML(proyecto){
             targets: 0
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasXContraloria/",
+            "url": general_base_url + "Ooam/getRevisionXMLOOAM/",
             "type": "POST",
             cache: false,
             data:{
@@ -175,15 +175,15 @@ function getDataXML(proyecto){
         },
     });
 
-    $('#tabla_xml').on('draw.dt', function() {
+    $('#tabla_xml_ooam').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 
-    $('#tabla_xml tbody').on('click', 'td.details-control', function () {
+    $('#tabla_xml_ooam tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = tabla_xml.row(tr);
+        var row = tabla_xml_ooam.row(tr);
         if ( row.child.isShown() ) {
             row.child.hide();
             tr.removeClass('shown');
@@ -191,15 +191,15 @@ function getDataXML(proyecto){
         }
         else {
             if( row.data().solicitudes == null || row.data().solicitudes == "null" ){
-                $.post( general_base_url + "Pagos/carga_listado_factura" , { "idResidencial" : row.data().idResidencial, "id_usuario" : row.data().id_usuario } ).done( function( data ){
+                $.post( general_base_url + "Ooam/carga_listado_factura" , { "idResidencial" : row.data().idResidencial, "id_usuario" : row.data().id_usuario } ).done( function( data ){
                     data = JSON.parse( data );
                     if(data.length == 0){
                         alerts.showNotification("top", "right", "No hay datos que mostrar", "warning");
                     }
                     else{
                         row.data().solicitudes = data;
-                        tabla_xml.row( tr ).data( row.data() );
-                        row = tabla_xml.row( tr );
+                        tabla_xml_ooam.row( tr ).data( row.data() );
+                        row = tabla_xml_ooam.row( tr );
                         row.child( construir_subtablas( row.data().solicitudes ) ).show();
                         tr.addClass('shown');
                         $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
@@ -229,7 +229,7 @@ function getDataXML(proyecto){
         return solicitudes += '</table>';
     }
 
-    $("#tabla_xml tbody").on("click", ".regresar", function(e){
+    $("#tabla_xml_ooam tbody").on("click", ".regresarOOAM", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         $("#pdfbody").html('');
@@ -345,9 +345,9 @@ function getDataXML(proyecto){
     });
     
     
-    $("#tabla_xml tbody").on("click", ".consultar_documentos", function(e){
+    $("#tabla_xml_ooam tbody").on("click", ".consultar_documentos_ooam", function(e){
         $('#spiner-loader').removeClass('hide');
-        $("#modalAbrirFactura .modal-body").html("");
+        $("#modalAbrirFacturaOOAM .modal-body").html("");
         $('#comments-list-remanente').html('');
         $('#nameLote').html('');
         e.preventDefault();
@@ -355,20 +355,20 @@ function getDataXML(proyecto){
         uuid = $(this).val();
         id_residencial = $(this).attr("data-value");
         user_factura = $(this).attr("data-userfactura");
-        $("#modalAbrirFactura").modal();
-        $.getJSON( general_base_url + "Pagos/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
-            $("#modalAbrirFactura .modal-body").append('<div class="row">');
+        $("#modalAbrirFacturaOOAM").modal();
+        $.getJSON( general_base_url + "pagos/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
+            $("#modalAbrirFacturaOOAM .modal-body").append('<div class="row">');
             let uuid,fecha,folio,tot,descripcion;
             if (!data.datos_solicitud['uuid'] == '' && !data.datos_solicitud['uuid'] == '0'){
-                $.get(general_base_url+"Pagos/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
+                $.get(general_base_url+"pagos/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
                     let datos = JSON.parse(dat);
                     uuid = datos[0][0];
                     fecha = datos[1][0];
                     folio = datos[2][0];
                     tot = datos[3][0];
                     descripcion = datos[4];
-                    $("#modalAbrirFactura .modal-body").append('<br><div class="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE DEL EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
-                    $("#modalAbrirFactura .modal-body").append(
+                    $("#modalAbrirFacturaOOAM .modal-body").append('<br><div class="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE DEL EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
+                    $("#modalAbrirFacturaOOAM .modal-body").append(
                         '<div class="row">'+
                         '<div class="col-md-4">'+
                         '<label style="font-size:14px; margin:0; color:gray;">'+
@@ -392,7 +392,7 @@ function getDataXML(proyecto){
                         '<br><label style="font-size:12px; margin:0; color:gray;"> </label>'+
                         '</div>'+
                         '</div>');
-                    $("#modalAbrirFactura .modal-body").append(
+                    $("#modalAbrirFacturaOOAM .modal-body").append(
                         '<div class="row">'+
                         '<div class="col-md-4">'+
                         '<label style="font-size:14px; margin:0; color:gray;">'+
@@ -412,7 +412,7 @@ function getDataXML(proyecto){
                         '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
                         '</div>'+
                         '</div>');
-                    $("#modalAbrirFactura .modal-body").append(
+                    $("#modalAbrirFacturaOOAM .modal-body").append(
                         '<div class="row">'+
                         '<div class="col-md-3">'+
                         '<label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN FISCAL</b></label>'+
@@ -435,7 +435,7 @@ function getDataXML(proyecto){
                         '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
                         '</div>'+
                         '</div>');
-                    $("#modalAbrirFactura .modal-body").append(
+                    $("#modalAbrirFacturaOOAM .modal-body").append(
                         '<div class="row">'+
                         '<div class="col-md-3">'+
                         '<label style="font-size:14px; margin:0; color:gray;"><b>CLAVE DEL PRODUCTO</b></label>'+
@@ -453,13 +453,13 @@ function getDataXML(proyecto){
                         '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
                         '</div>'+
                         '</div>');
-                    $("#modalAbrirFactura .modal-body").append('<div class ="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+descripcion+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
+                    $("#modalAbrirFacturaOOAM .modal-body").append('<div class ="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+descripcion+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
                 });
             }
             else {
-                $("#modalAbrirFactura .modal-body").append('<div class="col-md-12"><label style="font-size:16px; margin:0; color:black;">NO HAY DATOS A MOSTRAR</label></div>');
+                $("#modalAbrirFacturaOOAM .modal-body").append('<div class="col-md-12"><label style="font-size:16px; margin:0; color:black;">NO HAY DATOS A MOSTRAR</label></div>');
             }
-            $("#modalAbrirFactura .modal-body").append('</div>');
+            $("#modalAbrirFacturaOOAM .modal-body").append('</div>');
             $('#spiner-loader').addClass('hide');
         });
     });
@@ -503,8 +503,8 @@ function subir_xml(input,id_user) {
 
 function cargar_info_xml(informacion_factura) {
     let totalSeleccionado = $('#totalxml').val();
-    let cantidadXml = Number.parseFloat(informacion_factura.total[0]);
-    if((parseFloat(totalSeleccionado) + .10).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (parseFloat(totalSeleccionado) - .10).toFixed(2)){
+    let cantidadXmlOOAM = Number.parseFloat(informacion_factura.total[0]);
+    if((parseFloat(totalSeleccionado) + .10).toFixed(2) >= cantidadXmlOOAM.toFixed(2) && cantidadXmlOOAM.toFixed(2) >= (parseFloat(totalSeleccionado) - .10).toFixed(2)){
         var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
         myCommentsList.setAttribute('style', 'color:green;');
         myCommentsList.innerHTML = 'Cantidad correcta';

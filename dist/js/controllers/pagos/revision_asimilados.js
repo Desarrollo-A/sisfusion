@@ -1,5 +1,5 @@
-var tr;
-var tabla_asimilados2 ;
+var tr;proyectoAsimilados
+var tabla_asimilados2;
 var totaPen = 0;
 let titulos = [];
 
@@ -10,15 +10,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoAsi").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoAsimilados").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoAsi").selectpicker('refresh');
+        $("#proyectoAsimilados").selectpicker('refresh');
     }, 'json');
 });
 
-$('#catalogoAsi').change(function(){
-    residencial = $('#catalogoAsi').val();
-    $("#condominioAsi").empty().selectpicker('refresh');
+$('#proyectoAsimilados').change(function(){
+    residencial = $('#proyectoAsimilados').val();
+    $("#condominioAsimilados").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -28,25 +28,25 @@ $('#catalogoAsi').change(function(){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioAsi").append($('<option>').val(id).text(name));
+                $("#condominioAsimilados").append($('<option>').val(id).text(name));
             }
-            $("#condominioAsi").selectpicker('refresh');
+            $("#condominioAsimilados").selectpicker('refresh');
         }
     });
 });
 
-$('#catalogoAsi').change(function(){
-    proyecto = $('#catalogoAsi').val();
-    condominio = $('#condominioAsi').val();
+$('#proyectoAsimilados').change(function(){
+    proyecto = $('#proyectoAsimilados').val();
+    condominio = $('#condominioAsimilados').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#condominioAsi').change(function(){
-    proyecto = $('#catalogoAsi').val();
-    condominio = $('#condominioAsi').val();
+$('#condominioAsimilados').change(function(){
+    proyecto = $('#proyectoAsimilados').val();
+    condominio = $('#condominioAsimilados').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -123,16 +123,17 @@ function getAssimilatedCommissions(proyecto, condominio){
                             $("#all").prop('checked', false);
                             var fecha = new Date();
                             tabla_asimilados2.ajax.reload();
-                            modalInformation(1);
+                            mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                            modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                         }
                         else {
                             $('#spiner-loader').addClass('hide');
-                            modalInformation(0);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     },
                     error: function( data ){
                         $('#spiner-loader').addClass('hide');
-                        modalInformation(0);
+                        modalInformation(RESPUESTA_MODAL.FAIL);
                     }
                 });
             }else{
@@ -328,12 +329,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
+        appendBodyModal(`<div class="modal-body">
                         <div role="tabpanel">
                             <div id="nameLote"></div>
                             <div class="tab-content">
