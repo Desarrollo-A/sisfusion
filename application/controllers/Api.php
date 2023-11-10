@@ -1001,7 +1001,7 @@ class Api extends CI_Controller
                                 if (count($result) > 0) // EXISTE EL REGISTRO
                                     echo json_encode(array("status" => -1, "message" => "El nombre de usuario asignado ya existe, inténtalo con otro valor."), JSON_UNESCAPED_UNICODE);
                                 else {
-                                    $data = array(
+                                    $data = array (
                                         "fecha_creacion" => date("Y-m-d H:i:s"),
                                         "creado_por" => 1,
                                         "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -1009,7 +1009,7 @@ class Api extends CI_Controller
                                         "rfc" => $data->rfc,
                                         "sesion_activa" => 0,
                                         "estatus" => 1,
-                                        "tipo" => 3,
+                                        "tipo" => 2,
                                         "forma_pago" => $data->forma_pago,
                                         "nombre" => $data->nombre,
                                         "apellido_paterno" => $data->apellido_paterno,

@@ -33,9 +33,9 @@ $(document).ready(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-            title: 'Reporte Comisiones Dispersión',
+            title: 'Reporte Comisiones Dispersión OOAM',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -80,30 +80,13 @@ $(document).ready(function () {
             { data: function (d) {
                     return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span>`;
             }},
-            // { data: function (d) {
-            //     var labelCompartida;
-            //     if(d.compartida == null) {
-            //         labelCompartida ='<span class="label lbl-yellow">Individual</span>';
-            //     } else{
-            //         labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
-            //     }
-            //     return labelCompartida;
-            // }},
             { data: function (d) {
                 var labelStatus;
-                // if(d.idStatusContratacion == 15) {
-                //     labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
-                // }else {
                     labelStatus ='<p class="m-0"><b>'+d.idStatusOOAM+'</b></p>';
-                // }
                 return labelStatus;
             }},
             { data: function (d) {
                 var labelEstatus;
-                // if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
-                //     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
-                // }
-                // else{
                     if(d.totalNeto2 == null) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
@@ -114,31 +97,8 @@ $(document).ready(function () {
                         else
                             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
                     }
-                // }
                 return labelEstatus;
             }},
-            // { data: function (d) {
-            //     var rescisionLote;
-            //     var reactivo;
-            //     rescisionLote = '';
-            //     reactivo = '';
-            //     if (d.registro_comision == 8){
-            //         rescisionLote = '<br><span class="label lbl-warning">Recisión Nueva Venta</span>';
-            //     }
-            //     if(d.id_cliente_reubicacion_2 != 0 ) {
-            //         if((d.bandera_dispersion == 1 && d.registro_comision == 9) ||
-            //         (d.bandera_dispersion == 2 && d.registro_comision == 9) ||
-            //         (d.bandera_dispersion == 2  && d.registro_comision != 9) ||
-            //         (d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0 || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0))){
-            //             reactivo = '<br><span class="label lbl-gray">DISPERSIÓN VENTAS</span>';
-            //         } else if((d.bandera_dispersion == 3  && d.registro_comision == 9) ||
-            //         (d.bandera_dispersion == 3 && d.registro_comision != 9) ||
-            //         ((d.registro_comision == 1 && d.validaLiquidadas == 1 && (d.banderaOOAM == 0 || d.banderaOOAM > 0 )) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0))){//LIQUIDADA 1°
-            //             reactivo = '<br><span class="label lbl-lightBlue">DISPERSIÓN EEC</span>';
-            //         } 
-            //     }
-            //     return rescisionLote+reactivo;
-            // }},
             { data: function (d) {
                 var fechaActualizacion;
 
@@ -158,12 +118,6 @@ $(document).ready(function () {
                 var Mensaje = 'Verificar en NEODATA';
                 varColor2  = 'btn-gray';
                 var RegresaActiva = '';
-
-                // if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
-                //     RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
-                // }
-
-                 
                     if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
@@ -187,8 +141,6 @@ $(document).ready(function () {
                             plan_comision = d.plan_comision;
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 0;
-                            //console.log(d.idLote+" //VENTA NORMAL 1°");
-
                         } else {// NORMAL 2°
                             disparador = 2;
                             totalLote = d.totalNeto2;
@@ -198,13 +150,7 @@ $(document).ready(function () {
                             plan_comision = d.plan_comision;
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 0;
-                            // console.log(d.idLote+" //NORMAL 2°");
                         } 
-
-                        
-
-                         
-                        // || (d.validarLiquidadas == 1 && d.registro_comision == 1)
                         if(disparador != 0){
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 

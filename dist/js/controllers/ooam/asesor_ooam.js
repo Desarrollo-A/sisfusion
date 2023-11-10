@@ -20,7 +20,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -213,7 +213,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     $.each(data, function (i, v) {
                         total += parseFloat(v.pago_cliente);
                     });
-                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
                 }
             });
         } else {
@@ -226,7 +226,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        document.getElementById("myText_nuevas").textContent = to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
@@ -369,27 +369,27 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -624,7 +624,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_revision").textContent = formatMoney(total);
             }
         });
     });
@@ -635,7 +635,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = '$' + to;
+        document.getElementById("myText_revision").textContent = to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -693,22 +693,22 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
@@ -800,7 +800,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                     total += parseFloat(v.pago_cliente);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = formatMoney(total);
             }
         });
     });
@@ -811,7 +811,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = '$' + to;
+        document.getElementById("myText_pagadas").textContent = to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -869,27 +869,27 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -975,7 +975,7 @@ $("#tabla_otras_comisiones").ready(function () {
                 $.each(data, function (i, v) {
                     total += parseFloat(v.pago_cliente);
                 });
-                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
+                document.getElementById("myText_pausadas").textContent = formatMoney(total);
             }
         });
     });
@@ -986,7 +986,7 @@ $("#tabla_otras_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = '$' + to;
+        document.getElementById("myText_pausadas").textContent = to;
     });
 
     tabla_otras = $("#tabla_otras_comisiones").DataTable({
@@ -1044,27 +1044,27 @@ $("#tabla_otras_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.precio_lote) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.precio_lote) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.comision_total) + ' </p>';
+                return '<p class="m-0"> ' + formatMoney(d.comision_total) + ' </p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_neodata) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_neodata) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">$ ' + formatMoney(d.pago_cliente) + '</p>';
+                return '<p class="m-0"> ' + formatMoney(d.pago_cliente) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"><b>$ ' + formatMoney(d.impuesto) + '</b></p>';
+                return '<p class="m-0"><b> ' + formatMoney(d.impuesto) + '</b></p>';
             }
         },
         {
@@ -1505,39 +1505,39 @@ function xml2() {
 
 var justificacion_globla = "";
 
-function subir_xml(input) {
-    var data = new FormData();
-    documento_xml = input[0].files[0];
-    var xml = documento_xml;
-    data.append("xmlfile", documento_xml);
-    resear_formulario();
-    $.ajax({
-        url: general_base_url + "Comisiones/cargaxml",
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        method: 'POST',
-        type: 'POST', // For jQuery < 1.9
-        success: function (data) {
-            if (data.respuesta[0]) {
-                documento_xml = xml;
-                var informacion_factura = data.datos_xml;
-                cargar_info_xml(informacion_factura);
-                $("#solobs").val(justificacion_globla);
-            }
-            else {
-                input.val('');
-                alert(data.respuesta[1]);
-            }
-        },
-        error: function (data) {
-            input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
-        }
-    });
-}
+// function subir_xml(input) {
+//     var data = new FormData();
+//     documento_xml = input[0].files[0];
+//     var xml = documento_xml;
+//     data.append("xmlfile", documento_xml);
+//     resear_formulario();
+//     $.ajax({
+//         url: general_base_url + "Comisiones/cargaxml",
+//         data: data,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         dataType: 'json',
+//         method: 'POST',
+//         type: 'POST', // For jQuery < 1.9
+//         success: function (data) {
+//             if (data.respuesta[0]) {
+//                 documento_xml = xml;
+//                 var informacion_factura = data.datos_xml;
+//                 cargar_info_xml(informacion_factura);
+//                 $("#solobs").val(justificacion_globla);
+//             }
+//             else {
+//                 input.val('');
+//                 alert(data.respuesta[1]);
+//             }
+//         },
+//         error: function (data) {
+//             input.val('');
+//             alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+//         }
+//     });
+// }
 
 function subir_xml2(input) {
     var data = new FormData();
@@ -1705,7 +1705,7 @@ function sumCheck() {
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
 } 
 
 function disabled() {
