@@ -47,7 +47,8 @@ const TipoDoc = {
   CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
   CONTRATO_1_CANCELADO: 42,
   CONTRATO_2_CANCELADO: 43,
-  CONTRATO_REUBICACION_FIRMADO: 44
+  CONTRATO_REUBICACION_FIRMADO: 44,
+  DOCUMENTO_REESTRUCTURA_FIRMA_CLIENTE: 46,
 };
 
 const observacionContratoUrgente = 1; // Bandera para inhabilitar
@@ -207,94 +208,77 @@ function cargarTabla(idLote, idCliente = "") {
     });
   });
 
-  const url =
-    (id_rol_general == 8 ||
-      includesArray(usuariosPermitidosContratoEspecial, id_usuario_general)) &&
-    funcionVista == "replaceDocumentView"
-      ? `${general_base_url}registroCliente/expedientesReplace/${idLote}`
-      : `${general_base_url}registroCliente/expedientesWS/${idLote}/${idCliente}`;
-
-  documentacionLoteTabla = $("#tableDoct").DataTable({
-    destroy: true,
-    ajax: {
-      url: url,
-      dataSrc: "",
-    },
-    dom:
-      "Brt" +
-      "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-    width: "100%",
-    scrollX: true,
-    ordering: false,
-    bAutoWidth: true,
-    pageLength: 20,
-    buttons: [
-      {
-        extend: "excelHtml5",
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: "btn buttons-excel",
-        titleAttr: "DESCARGAR ARCHIVO DE EXCEL",
-        title: "DOCUMENTACION_LOTE",
-        exportOptions: {
-          columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-          format: {
-            header: function (d, columnIdx) {
-              return " " + titulos[columnIdx] + " ";
+    documentacionLoteTabla = $('#tableDoct').DataTable({
+        destroy: true,
+        ajax: {
+            url: `${general_base_url}registroCliente/expedientesWS/${valorSeleccionado}`,
+            dataSrc: ""
+        },
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        ordering: false,
+        pageLength: 20,
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'DOCUMENTACION_LOTE',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
+                    }
+                },
+            }
+        ],
+        language: {
+            url: `${general_base_url}/static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        columns: [
+            { data: 'nombreResidencial' },
+            { data: 'nombre' },
+            { data: 'nombreLote' },
+            { data: 'idLote' },
+            { data: 'nombreCliente' },
+            { data: 'nombreAsesor' },
+            { data: 'nombreCoordinador' },
+            { data: 'nombreGerente' },
+            { data: 'nombreSubdirector' },
+            { data: 'nombreRegional' },
+            { data: 'nombreRegional2' },
+            { data: 'movimiento' },
+            { data: 'modificado' },
+            {
+                data: null,
+                render: function (data) {
+                    return myFunctions.validateEmptyFieldDocs(data.primerNom) + ' ' +
+                        myFunctions.validateEmptyFieldDocs(data.apellidoPa) + ' ' +
+                        myFunctions.validateEmptyFieldDocs(data.apellidoMa);
+                },
             },
-          },
-        },
-      },
-    ],
-    language: {
-      url: `${general_base_url}/static/spanishLoader_v2.json`,
-      paginate: {
-        previous: "<i class='fa fa-angle-left'>",
-        next: "<i class='fa fa-angle-right'>",
-      },
-    },
-    columns: [
-      { data: "nombreResidencial" },
-      { data: "nombre" },
-      { data: "nombreLote" },
-      { data: "idLote" },
-      { data: "nombreCliente" },
-      { data: "nombreAsesor" },
-      { data: "nombreCoordinador" },
-      { data: "nombreGerente" },
-      { data: "nombreSubdirector" },
-      { data: "nombreRegional" },
-      { data: "nombreRegional2" },
-      { data: "movimiento" },
-      { data: "modificado" },
-      {
-        data: null,
-        render: function (data) {
-          return (
-            myFunctions.validateEmptyFieldDocs(data.primerNom) +
-            " " +
-            myFunctions.validateEmptyFieldDocs(data.apellidoPa) +
-            " " +
-            myFunctions.validateEmptyFieldDocs(data.apellidoMa)
-          );
-        },
-      },
-      { data: "ubic" },
-      {
-        data: null,
-        render: function (data) {
-          let buttonMain = "";
-          let buttonDelete = "";
-          if (
-            data.observacionContratoUrgente &&
-            parseInt(data.observacionContratoUrgente) ===
-              observacionContratoUrgente
-          ) {
-            buttonMain =
-              data.expediente == null || data.expediente === ""
-                ? "<p>En proceso de liberación</p>"
-                : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
-            return `<div class="d-flex justify-center">${buttonMain}</div>`;
-          }
+            { data: 'ubic' },
+            {
+                data: null,
+                render: function (data) {
+                    let buttonMain = '';
+                    let buttonDelete = '';
+
+                    if (data.observacionContratoUrgente && parseInt(data.observacionContratoUrgente) === observacionContratoUrgente) {
+                        buttonMain = (data.expediente == null || data.expediente === "")
+                            ? '<p>En proceso de liberación</p>'
+                            : crearBotonAccion(AccionDoc.DOC_CARGADO, data);
+
+                        return `<div class="d-flex justify-center">${buttonMain}</div>`;
+                    }
 
           if (
             data.tipo_doc == TipoDoc.CONTRATO &&
@@ -859,33 +843,37 @@ function getExtensionPorTipoDocumento(tipoDocumento) {
  * @returns {string}
  */
 function crearBotonAccion(type, data) {
-  const [
-    buttonTitulo,
-    buttonEstatus,
-    buttonClassColor,
-    buttonClassAccion,
-    buttonTipoAccion,
-    buttonIcono,
-  ] = getAtributos(type);
-  const d = new Date();
-  const dateStr = [d.getMonth() + 1, d.getDate(), d.getFullYear()].join("-");
-  const tituloDocumento =
-    `${data.nombreResidencial}_${data.nombre.slice(0, 4)}_${data.idLote}_${
-      data.idCliente
-    }` + `_TDOC${data.tipo_doc}${data.movimiento.slice(0, 4)}_${dateStr}`;
-  return `<button class="${buttonClassColor} ${buttonClassAccion}" title="${buttonTitulo}" data-expediente="${
-    data.expediente
-  }" data-accion="${buttonTipoAccion}" data-tipoDocumento="${
-    data.tipo_doc
-  }" ${buttonEstatus} data-toggle="tooltip" data-placement="top" data-nombre="${
-    data.movimiento
-  }" data-idDocumento="${data.idDocumento}" data-idLote="${
-    data.idLote
-  }" data-tituloDocumento="${tituloDocumento}" data-idCliente="${
-    data.idCliente ?? data.id_cliente
-  }" data-lp="${data.lugar_prospeccion}" data-idProspeccion="${
-    data.id_prospecto
-  }"><i class="${buttonIcono}"></i></button>`;
+    const [
+        buttonTitulo,
+        buttonEstatus,
+        buttonClassColor,
+        buttonClassAccion,
+        buttonTipoAccion,
+        buttonIcono
+    ] = getAtributos(type);
+
+    const d = new Date();
+    const dateStr = [d.getMonth()+1,d.getDate(),d.getFullYear()].join('-');
+
+    const tituloDocumento =`${data.nombreResidencial}_${data.nombre.slice(0,4)}_${data.idLote}_${data.idCliente}`+
+        `_TDOC${data.tipo_doc}${data.movimiento.slice(0,4)}_${dateStr}`;
+
+    return `<button class="${buttonClassColor} ${buttonClassAccion}" 
+                title="${buttonTitulo}" 
+                data-expediente="${data.expediente}" 
+                data-accion="${buttonTipoAccion}" 
+                data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
+                data-toggle="tooltip" 
+                data-placement="left" 
+                data-nombre="${data.movimiento}" 
+                data-idDocumento="${data.idDocumento}" 
+                data-idLote="${data.idLote}" 
+                data-tituloDocumento="${tituloDocumento}"
+                data-idCliente="${data.idCliente ?? data.id_cliente}"
+                data-lp="${data.lugar_prospeccion}"
+                data-idProspeccion="${data.id_prospecto}">
+                    <i class="${buttonIcono}"></i>
+            </button>`
 }
 
 /**

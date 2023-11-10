@@ -501,7 +501,7 @@
 
     public function getNameLote($idLote)
     {
-        $query = $this->db->query('SELECT nombreLote from lotes where idLote =  ' . $idLote . ' ');
+        $query = $this->db->query('SELECT nombreLote, tipo_venta from lotes where idLote =  ' . $idLote . ' ');
         return $query->row();
     }
 
@@ -1189,10 +1189,14 @@
 
         }
 
+        
+
         //////////////////////////// CASAS /////////////////////////////////////
 
+    
 
         $nomLote = $this->getNameLote($data["idLote"]);
+        
 
         $arreglo2 = array();
         $arreglo2["idStatusContratacion"] = 1;
@@ -1206,6 +1210,15 @@
         $arreglo2["idLote"] = $data["idLote"];
         $arreglo2["idCondominio"] = $data["idCondominio"];
         $arreglo2["idCliente"] = $cliente_id;
+        
+        $updateLote["tipo_venta"] = $nomLote->tipo_venta;
+
+        //traer el tipo de venta de lote, y luego hacer lo mismo
+        $flag_particular = 0;
+        
+        if($updateLote['tipo_venta'] == 1){
+            $flag_particular=1;
+        }
 
         //EL TIPO DE DOCUMENTOS A CARGAR POR EL TIPO DE CLIENTE
         $tipoDoc = $this->getDocsByType(31);
@@ -1217,8 +1230,14 @@
                 'idLote' => $data["idLote"],
                 'tipo_doc' => $arrayDocs["id_opcion"]
             );
+
             $this->insertDocToHist($arrayDocs);
 
+            if($updateLote["tipo_venta"] == 50){
+               
+            }else{
+                $this->insertDocToHist($arrayDocs);
+            }   
         }
 
 

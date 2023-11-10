@@ -815,17 +815,17 @@ class Juridico extends CI_Controller
 
     $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
-    $this->email
-        ->initialize()
-        ->from('Ciudad Maderas')
-        ->to('tester.ti2@ciudadmaderas.com')
-        // ->to($correosEntregar)
-        ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
-        ->view($this->load->view('mail/juridico/rechazo-est3', [
-            'encabezados' => $encabezados,
-            'contenido' => $contenido,
-            'comentario' => $comentario
-        ], true));
+    // $this->email
+    //     ->initialize()
+    //     ->from('Ciudad Maderas')
+    //     ->to('tester.ti2@ciudadmaderas.com')
+    //     // ->to($correosEntregar)
+    //     ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
+    //     ->view($this->load->view('mail/juridico/rechazo-est3', [
+    //         'encabezados' => $encabezados,
+    //         'contenido' => $contenido,
+    //         'comentario' => $comentario
+    //     ], true));
 
     $validate = $this->Juridico_model->validateSt7($idLote);
 
@@ -1064,17 +1064,17 @@ class Juridico extends CI_Controller
 
     $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
-    $this->email
-      ->initialize()
-      ->from('Ciudad Maderas')
-      ->to('tester.ti2@ciudadmaderas.com')
-      // ->to($correosEntregar)
-      ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
-      ->view($this->load->view('mail/juridico/return1-jaa', [
-          'encabezados' => $encabezados,
-          'contenido' => $contenido,
-          'comentario' => $comentario
-      ], true));
+    // $this->email
+    //   ->initialize()
+    //   ->from('Ciudad Maderas')
+    //   ->to('tester.ti2@ciudadmaderas.com')
+    //   // ->to($correosEntregar)
+    //   ->subject('EXPEDIENTE RECHAZADO-JURÍDICO (7. ELABORACIÓN DE CONTRATO)')
+    //   ->view($this->load->view('mail/juridico/return1-jaa', [
+    //       'encabezados' => $encabezados,
+    //       'contenido' => $contenido,
+    //       'comentario' => $comentario
+    //   ], true));
 
 	$validate = $this->Juridico_model->validateSt7($idLote);
 

@@ -52,6 +52,68 @@ class Postventa_model extends CI_Model
         }
     }
 
+     /**
+     * Función para buscar el path donde se encuentra el archivo en los diferentes tipos de proceso de contratación
+     *
+     * @param $tipoDocumento
+     * @param $tipoContratacion
+     * @param $nombreLote
+     * @param bool $eliminarArchivo bandera para saber si se eliminará el archivo o no para no afectar los archivos del patch viejo
+     * @param $nombreDocumento
+     * @return string
+     */
+
+
+    public function getCarpetaArchivo(
+        $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
+    ): string
+    {
+        if ($tipoContratacion == 0 || $tipoContratacion == 1) {
+            return $this->obtenerPathViejoContratacion($tipoDocumento);
+        }
+
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) {
+            
+            $pathViejo = $this->obtenerPathViejoContratacion($tipoDocumento);
+            return (file_exists($pathViejo.$nombreDocumento)) ? $pathViejo : $pathNuevo;
+        }
+
+        return '';
+    }
+
+    private function obtenerPathViejoContratacion($tipoDocumento): string
+    {
+        $pathBase = 'static/documentos/cliente/';  
+
+        if ($tipoDocumento == 7 || $tipoDocumento == 39) { // CORRIDA FINANCIERA: CONTRALORÍA
+            return "{$pathBase}corrida/";
+        }
+
+        if ($tipoDocumento == 8 || $tipoDocumento == 40) { // CONTRATO: JURÍDICO
+            return "{$pathBase}contrato/";
+        }
+
+        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
+            return "{$pathBase}contratoFirmado/";
+        }
+
+        // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
+        return "{$pathBase}expediente/";
+    }
+
+    
+    
+    public function getNameLote($idLote){
+		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre, res.nombreResidencial, 
+            l.observacionContratoUrgente, cl.proceso
+            FROM lotes l
+            INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+            INNER JOIN clientes cl ON cl.idLote = l.idLote
+		    where l.idLote = $idLote AND cl.status = 1");
+		return $query->row();
+	}
+
     function getDetalleNota($id_solicitud){
  
         return $this->db->query("(SELECT CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS nombre, he.descripcion,he.fecha_creacion as fecha_creacion, he.tipo_movimiento, '' AS color
@@ -1165,7 +1227,7 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getStatus3VP(){
-        $query = $this->db->query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        $query = $this->db->query("SELECT l.idLote, hd.idDocumento, hd.tipo_doc, hd.expediente, hd.movimiento, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,s.nombre  as sede,
         l.tipo_venta, l.observacionContratoUrgente as vl,
@@ -1181,7 +1243,7 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN clientes cl ON l.idLote=cl.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-	
+		INNER JOIN historial_documento hd ON l.idLote = hd.idLote and hd.tipo_doc = 50
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
@@ -1194,7 +1256,7 @@ function checkBudgetInfo($idSolicitud){
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, s.nombre;");
+		cond.idCondominio, s.nombre, hd.idDocumento, hd.tipo_doc, hd.expediente, hd.movimiento;");
         return $query->result_array();
     }
 

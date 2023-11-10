@@ -370,27 +370,27 @@ class Asistente_gerente extends CI_Controller {
             "fechaHora"     =>  $modificado
         ]);
 
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
-            ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
-            ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
-                'encabezados' => $encabezados,
-                'contenido' => $data
-            ], true));
+        // $this->email
+        //     ->initialize()
+        //     ->from('Ciudad Maderas')
+        //     ->to('tester.ti2@ciudadmaderas.com')
+        //     // ->to($correosEntregar)
+        //     ->subject('EXPEDIENTE RECHAZADO-VENTAS (8. CONTRATO ENTREGADO AL ASESOR PARA FIRMA DEL CLIENTE)')
+        //     ->view($this->load->view('mail/asistente-gerente/editar-registro-lote-rechazo-status2-asistentes-proceso8', [
+        //         'encabezados' => $encabezados,
+        //         'contenido' => $data
+        //     ], true));
 
         $validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
         if($validate == 1){
 
           if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-            if ($this->email->send()) {
-              $data['status_msg'] = 'Correo enviado correctamente';
-            } else {
-              $data['status_msg'] = 'Correo no enviado';
-            }
+            // if ($this->email->send()) {
+            //   $data['status_msg'] = 'Correo enviado correctamente';
+            // } else {
+            //   $data['status_msg'] = 'Correo no enviado';
+            // }
             $data['message'] = 'OK';
             echo json_encode($data);
 
