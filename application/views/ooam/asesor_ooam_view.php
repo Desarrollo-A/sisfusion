@@ -537,7 +537,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
-    <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();
@@ -546,9 +545,5 @@
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/ooam/asesor_ooam.js"></script>
-
-    <!-- <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script> -->
-    
-
 
 </body>

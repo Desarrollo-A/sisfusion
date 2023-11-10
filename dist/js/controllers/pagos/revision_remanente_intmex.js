@@ -107,7 +107,7 @@ $(document).on("click", ".Pagar", function() {
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos" ><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
+                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos" ><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
                 $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
