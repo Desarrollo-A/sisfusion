@@ -509,8 +509,6 @@ $(document).on("click", ".Pagar", function() {
             let sumaComision = 0;
             if (!data) {
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
-                CETF981206BS6-
-                CETF981206BS6
             } 
             else {
                 if(data.length > 0){
