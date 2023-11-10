@@ -489,11 +489,13 @@ class Ooam_model extends CI_Model {
         return $this->db->query("DELETE FROM facturas WHERE id_comision =".$id_comision."");
     }
 
-    function validaLoteComision($id_lote, $referencia){
+    function validaLoteComision($referencia, $empresa, $nombreLote){
         $query = $this->db->query("SELECT po.id_lote 
         FROM pago_ooam po 
         INNER JOIN lotes lo ON lo.idLote = po.id_lote
-        WHERE po.id_lote = $id_lote AND lo.referencia = '".$referencia."'");
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        WHERE lo.referencia = $referencia AND lo.nombreLote = '".$nombreLote."' AND re.empresa = '".$empresa."'");
 
         return $query->result_array();
     }
@@ -555,6 +557,15 @@ class Ooam_model extends CI_Model {
         END) AS porcentajeNeodata
         
         FROM plan_comision WHERE id_plan = $planComision");
+        return $query->row();
+    }
+
+    function getInfoLote($referencia, $empresa, $nombreLote){
+        $query = $this->db->query("SELECT lo.idLote
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        WHERE lo.referencia = $referencia AND lo.nombreLote = '".$nombreLote."' AND re.empresa = '".$empresa."'");
         return $query->row();
     }
 
