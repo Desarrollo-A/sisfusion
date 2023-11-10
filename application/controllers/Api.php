@@ -1001,7 +1001,7 @@ class Api extends CI_Controller
                                 if (count($result) > 0) // EXISTE EL REGISTRO
                                     echo json_encode(array("status" => -1, "message" => "El nombre de usuario asignado ya existe, inténtalo con otro valor."), JSON_UNESCAPED_UNICODE);
                                 else {
-                                    $data = array(
+                                    $data = array (
                                         "fecha_creacion" => date("Y-m-d H:i:s"),
                                         "creado_por" => 1,
                                         "fecha_modificacion" => date("Y-m-d H:i:s"),
@@ -1009,7 +1009,7 @@ class Api extends CI_Controller
                                         "rfc" => $data->rfc,
                                         "sesion_activa" => 0,
                                         "estatus" => 1,
-                                        "tipo" => 3,
+                                        "tipo" => 2,
                                         "forma_pago" => $data->forma_pago,
                                         "nombre" => $data->nombre,
                                         "apellido_paterno" => $data->apellido_paterno,
@@ -1121,15 +1121,20 @@ class Api extends CI_Controller
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
                         $dataReturn = json_decode(file_get_contents("php://input"));
-                        if (!isset($dataReturn->idLote) || !isset($dataReturn->referencia) || !isset($dataReturn->estatusContratacion) || !isset($dataReturn->totalLote) || !isset($dataReturn->idCliente) || !isset($dataReturn->nombreCliente))
+                        if (!isset($dataReturn->referencia) || !isset($dataReturn->empresa) || !isset($dataReturn->estatusContratacion) || !isset($dataReturn->totalLote) || !isset($dataReturn->idCliente) || !isset($dataReturn->nombreCliente))
                             echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
                         else {
-                            if (($dataReturn->idLote == '') || ($dataReturn->referencia == '') || ($dataReturn->estatusContratacion == '') || ($dataReturn->totalLote == '') || ($dataReturn->idCliente == '') ||($dataReturn->nombreCliente  == ''))
+                            if (($dataReturn->referencia == '') || ($dataReturn->empresa == '') || ($dataReturn->estatusContratacion == '') || ($dataReturn->totalLote == '') || ($dataReturn->idCliente == '') ||($dataReturn->nombreCliente  == ''))
                                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
                             else {
-                                $getLoteComision = $this->Ooam_model->validaLoteComision($dataReturn->idLote, $dataReturn->referencia);
+                                $getLoteComision = $this->Ooam_model->validaLoteComision($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
                                 if(count($getLoteComision) > 0 )
                                     echo (json_encode(array("result" => false, "message" => "El Lote ingresado ya se encuentra registrado.")));
+                                    else {
+                                        $consultarReferencia = $this->Ooam_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                        if(empty($consultarReferencia))
+                                        echo (json_encode(array("result" => false, "message" => "Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.")));
+                                    
                                     else {
                                         $datosComisionistas = count($dataReturn->comisionistas);
                                         $totalLote = json_decode($dataReturn->totalLote);
@@ -1137,6 +1142,7 @@ class Api extends CI_Controller
                                         $generalComisiones = 0;
                                         $porcentajesComisiones = 0;
                                         $dataPago = array();
+                                        $getInfoLote = $this->Ooam_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
                                         
                                         for($i = 0; $i < $datosComisionistas; $i++ ){
                                             $getPlanComision = $this->Ooam_model->getPlanComision($dataReturn->comisionistas[$i]->rolGenerado,1);
@@ -1144,7 +1150,7 @@ class Api extends CI_Controller
                                             $comisionTotal = (($porcentajeComision/100)*$totalLote);
                                             $generalComisiones =  $generalComisiones + $comisionTotal;
                                             $porcentajesComisiones =  $porcentajesComisiones + $porcentajeComision;
-                                            $dataComisiones['id_lote'] = $dataReturn->idLote;                            
+                                            $dataComisiones['id_lote'] = $getInfoLote->idLote;                            
                                             $dataComisiones['id_usuario'] = $dataReturn->comisionistas[$i]->idUsuario;      
                                             $dataComisiones['comision_total'] = $comisionTotal;                                  
                                             $dataComisiones['estatus'] = 1; 
@@ -1164,10 +1170,10 @@ class Api extends CI_Controller
                                                 if($dbTransaction != 1){
                                                     echo (json_encode($dbTransaction));
                                                 }
-                                                }
+                                            }
                                         }
                                         
-                                            $dataPago['id_lote'] = $dataReturn->idLote;                         
+                                            $dataPago['id_lote'] = $getInfoLote->idLote;                       
                                             $dataPago['total_comision'] = $generalComisiones; 
                                             $dataPago['abonado'] = 0;                    
                                             $dataPago['porcentaje_abono'] = $porcentajeComision; 
@@ -1204,6 +1210,7 @@ class Api extends CI_Controller
                                                 }
                                             }
                                         }
+                                    }
                                     }
                                 } else
                         echo json_encode($checkSingup);
