@@ -29,14 +29,14 @@
                                         <div class="row">
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="empresa">Empresa</label>
-                                                    <select name="empresa" id="empresa" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="empresaReporte">Empresa</label>
+                                                    <select name="empresaReporte" id="empresaReporte" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-6 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="control-label" for="regimen">Regimen</label>
-                                                    <select name="regimen" id="regimen" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="regimenReporte">Regimen</label>
+                                                    <select name="regimenReporte" id="regimenReporte" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>

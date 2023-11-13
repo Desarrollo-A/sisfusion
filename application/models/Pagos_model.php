@@ -867,16 +867,7 @@ function update_estatus_pausaM($id_pago_i, $obs) {
         }
     }
 
-
-
-
-
-
-
-
-
-    public function getComprobantesExtranjero()
-    {
+    public function getComprobantesExtranjero(){
         $query = $this->db->query("SELECT sum(pci1.abono_neodata) total, u.id_usuario, CONCAT(u.nombre, ' ',
             u.apellido_paterno, ' ', u.apellido_materno) usuario,
             fp.nombre as forma_pago, na.nombre as nacionalidad, opn.estatus estatus_archivo, opn.archivo_name,
@@ -897,9 +888,6 @@ function update_estatus_pausaM($id_pago_i, $obs) {
             ORDER BY u.nombre");
         return $query->result_array();
     }
-
-
-
 
     function nueva_mktd_comision($values_send,$id_usuario,$abono_mktd,$pago_mktd,$user, $num_plan,$empresa){
 

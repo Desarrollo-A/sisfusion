@@ -116,25 +116,17 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 $("#totpagarPen").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
                                 tabla_asimilados2.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`<center><img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>`);
+                                var mensaje = "Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>`);
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                                 }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>`);
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
@@ -472,7 +464,8 @@ function CloseModalDelete2(){
     $("#modal_multiples").modal('toggle');  
 }
 
-$(document).on("click", ".Pagar", function() {          
+$(document).on("click", ".Pagar", function() {
+    
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
@@ -514,7 +507,7 @@ $(document).on("click", ".Pagar", function() {
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
+                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar  <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
                 $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);

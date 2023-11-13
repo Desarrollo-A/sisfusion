@@ -5,14 +5,6 @@ function cleanCommentsfactura() {
     myCommentsLote.innerHTML = '';
 }
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
 $(document).ready(function() {
     $("#tabla_factura").prop("hidden", true);
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
@@ -20,15 +12,22 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogoFacturas").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogoFacturas").selectpicker('refresh');
     }, 'json');
+
+    $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
+        $(".report_empresa").html();
+        $.each( data, function( i, v){
+            $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
+        });
+    });
 });
 
-$('#filtro33').change(function(ruta){
-    residencial = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogoFacturas').change(function(ruta){
+    residencial = $('#catalogoFacturas').val();
+    $("#condominioFacturas").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
         type: 'post',
@@ -38,26 +37,25 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#condominioFacturas").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#condominioFacturas").selectpicker('refresh');
         }
     });
 });
 
-
-$('#filtro33').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#catalogoFacturas').change(function(ruta){
+    proyecto = $('#catalogoFacturas').val();
+    condominio = $('#condominioFacturas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getFacturaCommissions(proyecto, condominio);
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#condominioFacturas').change(function(ruta){
+    proyecto = $('#catalogoFacturas').val();
+    condominio = $('#condominioFacturas').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -67,7 +65,6 @@ $('#filtro44').change(function(ruta){
 var tr;
 var tabla_factura2 ;
 
-//INICIO TABLA QUERETARO
 let titulos = [];
 $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -75,15 +72,9 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $('input', this).on('keyup change', function() {
         if (tabla_factura2.column(i).search() !== this.value) {
-            tabla_factura2
-                .column(i)
-                .search(this.value)
-                .draw();
+            tabla_factura2.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_factura2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_factura2.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_factura2.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.total);
@@ -108,7 +99,7 @@ function getFacturaCommissions(proyecto, condominio){
     tabla_factura2 = $("#tabla_factura").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
-        bAutoWidth: true,
+        bAutoWidth: true,
         scrollX: true,
         buttons: [{
             text: 'XMLS',
@@ -202,10 +193,10 @@ function getFacturaCommissions(proyecto, condominio){
             data: function( data ){
                 var BtnStats;
                 if(data.estatus_opinion == 1 || data.estatus_opinion == 2){
-                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalle de factura">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-gray verPDF" title= "Ver opinión de cumplimiento" data-usuario="'+data.archivo_name+'" ><i class="fas fa-file-alt"></i></a>';
+                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="DETALLE DE LA FACTURA">' +'<i class="fas fa-info"></i></button><a href="#" class="btn-data btn-gray verPDF" data-toggle="tooltip" data-placement="top" title= "VER OPINIÓN DE CUMPLIMIENTO" data-usuario="'+data.archivo_name+'" ><i class="fas fa-file-alt"></i></a>';
                 }
                 else{
-                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                    BtnStats = '<button href="#" value="'+data.uuid+'" data-value="'+data.idResidencial+'" data-userfactura="'+data.usuario+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_documentos" data-toggle="tooltip" data-placement="top" title="DETALLES">' +'<i class="fas fa-info"></i></button>';
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -224,6 +215,12 @@ function getFacturaCommissions(proyecto, condominio){
                 condominio:condominio,
             }
         },    
+    });
+
+    $('#tabla_factura').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $('#tabla_factura tbody').on('click', 'td.details-control', function () {
@@ -259,8 +256,7 @@ function getFacturaCommissions(proyecto, condominio){
             solicitudes += '<div class="row"><div class="col-xs-1 col-sm-1 col-sm-1 col-lg-1"><label><b>'+(i+1)+'</b></label></div>';
             solicitudes += '<div class="col-xs-2 col-sm-2 col-sm-2 col-lg-2"><label><b>ID: </b>'+v.id_pago_i+'</label></div>';
             solicitudes += '<div class="col-xs-2 col-sm-2 col-sm-2 col-lg-2"><label><b>CONDOMINIO: </b>'+v.condominio+'</label></div>';
-            solicitudes += '<div class="col-xs-2 col-sm-2 col-sm-2 col-lg-2"><label><b>LOTE: </b>'
-            +v.lote+'</label></div>';
+            solicitudes += '<div class="col-xs-2 col-sm-2 col-sm-2 col-lg-2"><label><b>LOTE: </b>'+v.lote+'</label></div>';
             solicitudes += '<div class="col-xs-2 col-sm-2 col-sm-2 col-lg-2"><label><b>MONTO: </b>'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</label></div>';
             solicitudes += '<div class="col-xs-3 col-sm-3 col-sm-3 col-lg-3"><label><b>USUARIO: </b>'+v.usuario+'</label></div></div>';
             
@@ -312,12 +308,6 @@ function getFacturaCommissions(proyecto, condominio){
     });
 }
 
-//FIN TABLA  
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
-
 $(window).resize(function(){
     tabla_factura2.columns.adjust();
 });
@@ -356,17 +346,6 @@ function cleanComments(){
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }
-
-
-$(document).ready( function(){
-    $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
-        $(".report_empresa").html();
-        $.each( data, function( i, v){
-            $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-        });
-    });
-});
-
 
 $(document).on('click', '.verPDF', function () {
     var $itself = $(this);

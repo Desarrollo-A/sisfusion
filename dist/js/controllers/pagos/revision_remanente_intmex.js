@@ -66,7 +66,7 @@ $('#usuarioRemanente').change(function(ruta){
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$(document).on("click", ".Pagar", function() {          
+$(document).on("click", ".PagarRem", function() {          
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
@@ -142,7 +142,7 @@ $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
                     total += parseFloat(v.impuesto);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("totpagarremanente").textContent = formatMoney(numberTwoDecimal(total));
+                document.getElementById("total_remanente").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
         } 
@@ -158,7 +158,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent = to;
+        document.getElementById("total_remanente").textContent = to;
     });
 
     $("#tabla_remanente").prop("hidden", false);

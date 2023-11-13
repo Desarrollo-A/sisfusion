@@ -94,7 +94,7 @@
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div class="form-group d-flex justify-center align-center">
                                                             <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                            <p class="input-tot pl-1" name="totpagarremanente" id="totpagarremanente">$0.00</p>
+                                                            <p class="input-tot pl-1" name="total_remanente" id="total_remanente">$0.00</p>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -119,7 +119,7 @@
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                                                         <div class="form-group w-100">
-                                                            <button type="button" class="btn-gral-data Pagar">Pagar masivamente</button>
+                                                            <button type="button" class="btn-gral-data PagarRem">Pagar masivamente</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -180,8 +180,7 @@
                                                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                     <div class="form-group">
                                                         <label class="control-label" for="puesto_ooam">Puesto</label>
-                                                        <select name="puesto_ooam" id="puesto_ooam" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                        </select>
+                                                        <select name="puesto_ooam" id="puesto_ooam" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">

@@ -511,7 +511,8 @@ function CloseModalDelete2(){
     $("#modal_multiples").modal('toggle');  
 }
 
-$(document).on("click", ".Pagar", function() {          
+$(document).on("click", ".Pagar", function() {
+    
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);

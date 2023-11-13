@@ -4164,29 +4164,18 @@ public function getDesarrolloSelectINTMEX($a = ''){
   
   }
 
-
-
-
-
-
-
- public function general_Intmex()
-  {
+  public function general_Intmex(){
     $this->load->view('template/header');
     $this->load->view("ventas/general_Intmex");
   }
 
-
-      public function getDatosGralInternomex(){
-      $dat =  $this->Comisiones_model->getDatosGralInternomex()->result_array();
-     for( $i = 0; $i < count($dat); $i++ ){
-         $dat[$i]['pa'] = 0;
-     }
-     echo json_encode( array( "data" => $dat));
+  public function getDatosGralInternomex(){
+    $dat =  $this->Comisiones_model->getDatosGralInternomex()->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
     }
-
-
-
+    echo json_encode( array( "data" => $dat));
+  }
 
   public function lista_estatus()
   {
