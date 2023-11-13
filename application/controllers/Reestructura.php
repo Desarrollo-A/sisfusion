@@ -1717,7 +1717,7 @@ class Reestructura extends CI_Controller{
                 'domicilio_particular' => $coopropietario['domicilio_particular'] ?? '',
                 'estado_civil' => $coopropietario['estado_civil'] ?? '',
                 'ocupacion' => $coopropietario['ocupacion'] ?? '',
-                'fecha_nacimiento' => $coopropietario['fecha_nacimiento'],
+                'ine' => $coopropietario['ine'],
                 'modificado_por' => $this->session->userdata('id_usuario')
             ];
         }
