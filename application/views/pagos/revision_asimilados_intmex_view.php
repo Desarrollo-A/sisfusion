@@ -35,7 +35,17 @@
                 </div>
             </div>
         </div>
-
+        <div class="modal fade modal-alertas" id="modal_multiplesOoam" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiplesOoam">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
@@ -175,7 +185,7 @@
                                                 </div>
                                                 <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                                                     <div class="form-group w-100">
-                                                        <button type="button" class="btn-gral-data Pagar">Pagar masivamente</button>
+                                                        <button type="button" class="btn-gral-data PagarOoam">Pagar masivamente</button>
                                                     </div>
                                                 </div>
                                             </div>
