@@ -407,7 +407,7 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Ooam/getRevisionFacturaOOAM/" ,
+            "url": general_base_url + "Ooam/getRevisionFacturasOOAM/" ,
             "type": "POST",
             data:{
                 proyecto : proyecto,
