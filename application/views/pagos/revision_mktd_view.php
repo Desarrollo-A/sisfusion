@@ -52,45 +52,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
-                </div>
-                <div class="modal-body">
-                    <div role="tabpanel">
-                        <div id="nameLote" class="text-center"></div>
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-plain">
-                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body"></div>
-            </div>
-        </div>
-    </div>
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -186,7 +147,7 @@
                                             </div>
                                         </div> 
                                         <?php } ?>
-                                        <?php if($this->session->userdata('id_rol') == "18") { ?>  <!-- Regresar a 18 -->
+                                        <?php if($this->session->userdata('id_rol') == "18") { ?> 
                                         <div class="tab-pane active" id="nuevas-12">
                                         <div class="encabezadoBox">
                                             <h3 class="card-title center-align" >Comisiones nuevas <b>mktd</b></h3>
@@ -358,10 +319,9 @@
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
-                                                <div class="form-group">
-                                                    <div class="table-responsive">
-                                                        <table class="table-striped table-hover" id="tabla_total_comisionistas" name="tabla_total_comisionistas">
-                                                            <thead>
+                                                <div class="form-group" id="formTableComision">
+                                                    <table class="table-striped table-hover" id="tabla_total_comisionistas" name="tabla_total_comisionistas">
+                                                        <thead>
                                                             <tr>
                                                                 <th>ID COMISIONISTA</th>
                                                                 <th>ROL</th>
@@ -370,9 +330,8 @@
                                                                 <th>FECHA</th>
                                                                 <th>ESTATUS</th>
                                                             </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
+                                                        </thead>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -414,7 +373,7 @@
                                                 </div>
                                             </div>
                                             <div class="material-datatables">
-                                                <div class="form-group">
+                                                <div class="form-group" id="formTableEstatus">
                                                     <table class="table-striped table-hover" id="tabla_total_comisionistas2" name="tabla_total_comisionistas2">
                                                         <thead>
                                                             <tr>
@@ -444,5 +403,7 @@
 <script src="<?= base_url() ?>dist/js/es.js"></script>
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
+<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_mktd.js"></script>
 </body>

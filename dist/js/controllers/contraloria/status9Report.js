@@ -52,7 +52,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx] + ' ';
@@ -77,6 +77,11 @@ function fillTable(typeTransaction, beginDate, endDate) {
         ordering: false,
         scrollX: true,
         columns: [
+            {
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+                }
+            },
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },

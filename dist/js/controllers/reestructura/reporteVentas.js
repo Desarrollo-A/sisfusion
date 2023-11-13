@@ -50,7 +50,7 @@ $('#tablaReporteVentas').DataTable({
     columns: [
         {
             data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-green">${d.tipo_proceso}</span>`;
             }
         },
         { data: "nombreResidencial" },

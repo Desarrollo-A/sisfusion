@@ -13,6 +13,7 @@ class Contraloria extends CI_Controller {
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('email');
+        $this->load->model('Caja_model_outside');
         $this->validateSession();
         date_default_timezone_set('America/Mexico_City');
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -1183,13 +1184,13 @@ class Contraloria extends CI_Controller {
         $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if ($cliente->proceso == 2 || $cliente->proceso == 4) {
+        if (in_array($cliente->proceso, array(2, 3, 4))) { // Reubicación, Reestructura, Reubicación excedente
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
         }
 
         $assigned_location = null;
-        if ($cliente->proceso !== 2 && $cliente->proceso !== 4) {
+        if (!in_array($cliente->proceso, array(2, 3, 4))) { // ! Reubicación, Reestructura, Reubicación excedente
             $ub_jur = $this->Contraloria_model->val_ub($idLote);
             $id_sede_jur = '';
             $assigned_location = $ub_jur[0]['ubicacion'];
@@ -3465,5 +3466,209 @@ class Contraloria extends CI_Controller {
         $numeroLote = preg_replace('/[^0-9]/','',$infoLote->nombreLote);
 
         return $proyecto.$lote.$numeroLote;
+    }
+
+    public function updateLoteMarcarParaLiberar() {
+        if (isset($_POST) && !empty($_POST)) {
+            $idLote = $_POST['idLote'];
+            $fecha = date("Y-m-d H:i:s");
+            
+            if ($_POST['tipoLiberacion'] == 1 ) { //Rescisión
+                //Proceso para subir archivo
+                    /* 
+                    /
+                    /
+                    */
+                //Proceso para realizar registro en bd del archivo
+                $data = array(
+                    "idLote" => $idLote,
+                    "nombre_archivo" => 'Archivo' . $fecha . '.pdf',
+                    "nombre_rama" => $idLote.'/LIBERACIÓN/Archivo'.$fecha.'.pdf',
+                    "estatus" => 1,
+                    "fecha_creacion" => $fecha,
+                    "creado_por" => $this->session->userdata('id_usuario'),
+                    "fecha_modificacion" => $fecha,
+                    "modificado_por" =>$this->session->userdata('id_usuario')
+                );
+                $response = $this->General_model->addRecord('archivos_liberacion', $data);
+                //Hacer registro general
+                if ($response !== false) {
+                    $data = array(
+                        "idLote" => $idLote,
+                        "id_cat_tipo_liberacion" => 107,
+                        "id_tipo_liberacion" => 1,
+                        "id_cat_proceso" => 109,
+                        "id_proceso" => 1,
+                        "proceso_realizado" => 0,
+                        "justificacion_liberacion" => $_POST['justificacion'],
+                        "estatus" => 1,
+                        "modificado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => $fecha,
+                    );
+                    $response = $this->General_model->addRecord('historial_liberacion_lotes', $data);
+                }else {
+                    echo false;
+                }
+            }else if ($_POST['tipoLiberacion'] == 2){ //Devolución
+                //Nadamas hace el registro general
+                $data = array(
+                    "idLote" => $idLote,
+                    "id_cat_tipo_liberacion" => 107,
+                    "id_tipo_liberacion" => 2,
+                    "id_cat_proceso" => 109,
+                    "id_proceso" => 1,
+                    "proceso_realizado" => 0,
+                    "justificacion_liberacion" => $_POST['justificacion'],
+                    "estatus" => 1,
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "fecha_modificacion" => $fecha,
+                );
+                $response = $this->General_model->addRecord('historial_liberacion_lotes', $data);
+            }else { //Algun otro tipo de liberación
+                echo json_encode(array());
+            }
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function get_archivos_lote() {
+        if (isset($_POST) && !empty($_POST)) {
+            $idLote = $_POST['idLote'];
+            $response = $this->Contraloria_model->get_archivos_lote($idLote);
+            echo json_encode($response);
+        } else {
+            json_encode(array());
+        }
+    }
+
+
+    public function get_tipo_liberaciones() {
+        $response = $this->Contraloria_model->get_tipo_liberaciones();
+        echo json_encode($response);
+    }
+
+    public function get_catalogo() {
+        $id_catalogo = $_POST['id_catalogo'];
+        $response = $this->Contraloria_model->get_catalogo($id_catalogo);
+        echo json_encode($response);
+    }
+
+    public function historial_liberaciones() {//VISTA NUEVA
+        $this->load->view('template/header');
+        $this->load->view("contraloria/historial_liberaciones_view");
+    }
+
+    public function get_historial_liberaciones() //FUNCIÓN QUE TRAE Y MUESTRA DATOS EN LA VISTA
+    {
+        $data['data'] = $this->Contraloria_model->get_historial_liberaciones()->result_array();
+        echo json_encode($data);
+    }
+
+    public function get_historial_liberaciones_por_lote()
+    {
+        if (isset($_POST) && !empty($_POST)) {
+            $idLote = $_POST['idLote'];
+            $response = $this->Contraloria_model->get_historial_liberaciones_por_lote($idLote)->result_array();
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function avance_estatus_liberacion(){   
+
+        $resultado = 0;
+        $accion = $_POST['accion'];
+        $rol = $this->session->userdata('id_rol');
+        $fecha = date("Y-m-d H:i:s");
+        $data["idLote"] = $_POST['idLote'];
+        $data["id_cat_tipo_liberacion"] = 107;
+        $data["id_tipo_liberacion"] = $_POST['idLiberacion'];
+        $data["id_cat_proceso"] = 109;
+
+        if ($rol == 33) {
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; //1
+        }
+        if ($rol == 2) {
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; //2
+        }
+        if ($rol == 12) {
+            if ($_POST['accion'] == 1 || $_POST['accion'] == 3) {
+                $data["id_proceso"] = 4;
+                $data["idLote"] = $_POST['idLote'];
+
+                $dataLiberacion ['idCondominio'] = $_POST['idCondominio'];
+                $dataLiberacion["nombreLote"] = $_POST['nombreLote'];
+                $dataLiberacion["idCondominio"] = $_POST['idCondominio'];
+                $dataLiberacion["tipo"] = $_POST['tipo'];
+                $dataLiberacion["nombreLote"] = $_POST['nombreLote'];
+                $dataLiberacion["precio"] = $_POST['precio'];
+                $dataLiberacion["activeLE"] = $_POST['activeLE']; //PREGUNTAR SI SE USAN
+                $dataLiberacion["activeLP"] = $_POST['activeLP']; //PREGUNTAR SI SE USAN
+                $dataLiberacion["clausulas"] = $_POST['clausulas'];
+                
+                $resultado = $this->caja_modules($dataLiberacion);
+            }else {
+                $data["id_proceso"] = 2;    
+            }
+        }
+        
+        $data["proceso_realizado"] = $_POST['accion'] == '2' ? 1 : 0;
+        $data["justificacion_liberacion"] = $_POST['comentario'];
+        $data["estatus"] = 1;
+        $data["modificado_por"] = $this->session->userdata('id_usuario');
+        $data["fecha_modificacion"] = $fecha;
+        $resultado = $this->General_model->addRecord('historial_liberacion_lotes', $data);
+        
+        echo json_encode($resultado);
+    }
+
+    public function actualizar_precio()
+    {
+        if(isset($_POST) && !empty($_POST))
+        {
+            $idLote = $_POST['idLote'];
+            $precio = $_POST['costoM2'];
+            
+            $data = array(
+                "precio" => $precio,
+            );
+            $response=$this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
+            echo json_encode($response);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+    function caja_modules($data) {
+        $datos = array();
+        
+        $datos["idCondominio"] = $data['idCondominio'];
+        $datos["nombreLote"] = $data['nombreLote'];
+        $datos["idCondominio"] = $data['idCondominio'];
+        $datos["nombreLote"] = $data['nombreLote'];
+        $datos["precio"] = $data['precio'];
+        $datos["activeLE"] = $data['activeLE']; //PREGUNTAR SI SE USAN
+        $datos["activeLP"] = $data['activeLP']; //PREGUNTAR SI SE USAN
+        $datos["comentarioLiberacion"] = 'LIBERADO';
+        $datos["observacionLiberacion"] = 'LIBERADO POR CORREO';
+        $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+        $datos["modificado"] = date('Y-m-d H:i:s');
+        $datos["status"] = 1;
+        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $datos["tipo"] = $data['tipo'];
+
+        if ($data['activeLP'] == true)
+
+        $datos["clausulas"] = $data['clausulas'];
+        $update = $this->Contraloria_model->aplicaLiberacion($datos);
+
+        if ($update == TRUE) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

@@ -18,6 +18,11 @@ const TIPO_LOTE = Object.freeze({
     COMERCIAL: 1
 });
 
+const TIPO_PROCESO = Object.freeze({
+    REUBICACION: 2,
+    REESTRUCTURA: 3
+});
+
 const PROYECTO = Object.freeze({
     NORTE: 21,
     PRIVADAPENINSULA: 25
@@ -225,6 +230,52 @@ $(document).on('click', '.btn-reestructurar', function () {
     showModal();
 });
 
+$(document).on('click', '.btn-asignar-propuestas-rees', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const nombreCliente = row.data().cliente;
+    const nombreLote = row.data().nombreLote;
+    const idLoteOriginal = row.data().idLote;
+    const superficie = row.data().superficie;
+    const statusPreproceso = $(this).attr("data-statusPreproceso");
+    const idCliente = $(this).attr("data-idCliente");
+    const idProyecto = $(this).attr("data-idProyecto");
+    const tipoEstatusRegreso = $(this).attr("data-tipoEstatusRegreso");
+    const idPxl = $(this).attr("data-idPxl");
+
+    const botones = (statusPreproceso == 0) ? `<button type="submit" id="" class="btn btn-primary">Aceptar</button>` : `  
+                                               <button type="button" id="resetReestructura" class="btn btn-primary mr-1" onclick="removeLote(this, ${idLoteOriginal}, ${statusPreproceso}, ${idPxl}, ${idProyecto}, ${superficie}, ${tipoEstatusRegreso}, ${TIPO_PROCESO.REESTRUCTURA})">Regresar movimiento</button>`;
+
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+        <form method="post" id="formAsignarPropuestaRees">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <h3 class="m-0">Restructuración del cliente</h3>
+                        <h6 class="m-0">${nombreCliente}</h6>
+                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                        <p class="text-center">${statusPreproceso == 0 ? '¿Estás seguro que deseas reestructurar el lote ' : '¿Deseas regresar a asignación de propuestas el lote ' }  <b>${nombreLote}</b>?</p>
+                        <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
+                        <input type="hidden" id="idLotes" name="idLotes[]" value="${idLoteOriginal}">
+                        <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+                        <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                        <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
+                        ${botones}
+                    </div>
+                </div>
+            </div>
+        </form>
+    `);
+
+    showModal();
+});
+
 $(document).on('click', '.btn-asignar-propuestas', function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -232,7 +283,6 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     const nombreLote = row.data().nombreLote;
     const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
-    const tipoLote = $(this).attr("data-tipoLote");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
@@ -274,7 +324,6 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                             data-statusPreproceso="${statusPreproceso}"
                             data-idProyecto="${idProyecto}" 
                             data-superficie="${superficie}"
-                            data-tipoLote="${tipoLote}"
                             data-idLoteOriginal="${idLoteOriginal}">
                         </select>
                     </div>
@@ -282,7 +331,6 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 <div class="row mt-2" id="infoLotesSeleccionados">
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
-                <input type="hidden" id="tipoLote" value="${tipoLote}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <input type="hidden" name="idCliente" value="${idCliente}">
@@ -303,8 +351,8 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     showModal();
     changeOptionsModal(config);
 
-    getProyectosAOcupar(idProyecto, superficie, tipoLote);
-    getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote);
+    getProyectosAOcupar(idProyecto, superficie);
+    getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie);
 });
 
 const cerrarModalPropuestas = (preproceso) => {
@@ -318,12 +366,15 @@ const cerrarModalPropuestas = (preproceso) => {
     }
 }
 
-$(document).on('click', '.infoUser', async function (){
+$(document).on('click', '.btn-informacion-cliente', async function (){
     $('#ineCLi').val('');
     $("#estadoCli").empty();
 
     const idCliente = $(this).attr('data-idCliente');
     const idLote = $(this).attr('data-idLote');
+    const idStatusLote = $(this).attr('data-idStatusLote');
+
+    $("#spiner-loader").removeClass('hide');
 
     copropietariosEliminar = [];
     estadoCivilList = await obtenerEstadoCivilLista();
@@ -338,74 +389,78 @@ $(document).on('click', '.infoUser', async function (){
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
 
-        changeSizeModal('modal-lg');
+        changeSizeModal('modal-md');
         appendBodyModal(`
                 <form method="post" id="formInfoCliente" class="scroll-styles" style="max-height:500px; padding:0 20px; overflow:auto">
                     <div class="modal-header">
                         <h4 class="modal-title text-center">Corrobora la información del cliente</h4>
                     </div>	
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                    <div class="modal-body p-0">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                    <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="nombreCli" id="nombreCli" type="text" value="${nombreLote}" required/>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                    <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                    <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                                </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="apellidopCli" id="apellidopCli" value="${apePaterno}" type="text" required/>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                    <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                    <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
+                                    <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validarCorreo('#correoCli', '#result')" type="email" value="${correo}" required/>
+                                </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="apellidomCli" id="apellidomCli" type="text" value="${apeMaterno}" required/>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                    <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="telefonoCli" id="telefonoCli" type="number" maxlength="10" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${telefono}" required/>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
+                                    <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
+                                    <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
+                                </div>
                             </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
-                                <input class="form-control input-gral" name="correoCli" id="correoCli" oninput= "validarCorreo('#correoCli', '#result')" type="email" value="${correo}" required/>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
+                                    <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="text" value="${ine}" required/>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                    <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
+                                    <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
+                                </div>
+                            </div>        
+                            <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                            <input type="hidden" name="idStatusLote" id="idStatusLote" value="${idStatusLote}">
+                            
+                            <!-- COPROPIETARIOS -->
+                            <div class="row mt-3">
+                                <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7"></div>
+                                <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
+                                    <button type="button" onclick="agregarCopropietario()" class="" style="width: 100%; color: green; background-color: #00800024; border: none; border-radius: 25px; font-size: 13px; padding: 10px 5px;">AGREGAR COPROPIETARIO</button>
+                                </div>
+                                <form id="formCopropietarios">
+                                    <div class="container-fluid" id="copropietariosDiv"></div>
+                                </form>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="domicilioCli" id="domicilioCli" type="text" value="${domicilio}" required/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
-                                <select name="estadoCli" title="SELECCIONA UNA OPCIÓN" id="estadoCli" class="selectpicker m-0 select-gral" data-container="body" data-width="100%" required></select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
-                                <label class="control-label">INE (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="ineCLi" id="ineCLi" type="number" maxlength="13" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" value="${ine}" required/>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" name="ocupacionCli" id="ocupacionCli" type="text" value="${ocupacion}" required/>
-                            </div>
-                        </div>        
-                        <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
-                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                        
-                        <!-- COPROPIETARIOS -->
-                        <div class="row">
-                            <div class="d-flex justify-end mt-2">
-                                <button type="button" onclick="agregarCopropietario()" class="btn btn-sm btn-primary">AGREGAR COPROPIETARIO</button>
-                            </div>
-                            <form id="formCopropietarios">
-                                <div id="copropietariosDiv"></div>
-                            </form>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="cancelarValidacion" class="btn btn-danger btn-simple cancelarValidacion" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger btn-simple"  onclick="hideModal()">Cancelar</button>
                         <button type="button" id="guardarCliente" name="guardarCliente" class="btn btn-primary guardarValidacion">GUARDAR</button>
                     </div>
                 </form>`);
@@ -427,6 +482,8 @@ $(document).on('click', '.infoUser', async function (){
         showModal();
 
         $('[data-toggle="tooltip"]').tooltip();
+
+        $("#spiner-loader").addClass('hide');
 
     }, 'json');
 });
@@ -460,33 +517,8 @@ $(document).on('click', '#guardarCliente', function (){
     const ineCLi = $('#ineCLi').val();
     const ocupacionCli = $('#ocupacionCli').val();
 
-    if(ineCLi == ''){
-        alerts.showNotification("top", "right", "Captura la INE", "warning");
-        return;
-    }
-
-    if (telefonoCli == '' || telefonoCli == null){
-        alerts.showNotification("top", "right", "Captura el teléfono", "warning");
-        return;
-    }
-
-    if (correoCli == '' || correoCli == null){
-        alerts.showNotification("top", "right", "Captura el correo", "warning");
-        return;
-    }
-
-    if(!validateEmail(correoCli)){
-        alerts.showNotification("top", "right", "Capture el correo de forma correcta", "warning");
-        return;
-    }
-
-    if (domicilioCli == '' || domicilioCli == null){
-        alerts.showNotification("top", "right", "Captura el domicilio", "warning");
-        return;
-    }
-
-    if(ocupacionCli == '' || ocupacionCli == null){
-        alerts.showNotification("top", "right", "Captura la ocupación", "warning");
+    if(ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
+        alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*).", "warning");
         return;
     }
 
@@ -496,12 +528,12 @@ $(document).on('click', '#guardarCliente', function (){
         !validateInputArray('apellido_m[]') ||
         !validateInputArray('telefono2[]') ||
         !validateInputArray('correo[]') ||
-        !validateInputArray('fecha_nacimiento[]') ||
+        !validateInputArray('identificacion[]') ||
         !validateInputArray('domicilio[]') ||
         !validateInputArray('estado_civil[]') ||
         !validateInputArray('ocupacion[]')
     ) {
-        alerts.showNotification("top", "right", "Captura toda la información obligatoria de copropietarios", "warning");
+        alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*) para los copropietarios.", "warning");
         return;
     }
 
@@ -521,7 +553,7 @@ $(document).on('click', '#guardarCliente', function (){
 
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insetarCliente/'+ idLote,
+        url: general_base_url + 'Reestructura/insertarInformacionCli/'+ idLote,
         data: datos,
         processData: false,
         contentType: false,
@@ -539,7 +571,6 @@ $(document).on('click', '#guardarCliente', function (){
             }
         },
         error: function(){
-            $('#aceptarReestructura').modal('hide');
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             $("#spiner-loader").addClass('hide');
         }
@@ -553,7 +584,6 @@ $(document).on('click', '.btn-reubicar', function () {
     const nombreLote = row.data().nombreLote;
     const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
-    const tipoLote = $(this).attr("data-tipoLote");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso"); 
     const idCliente = $(this).attr("data-idCliente");
@@ -575,7 +605,6 @@ $(document).on('click', '.btn-reubicar', function () {
                 <div class="row mt-2" id="infoLotesSeleccionados">
                 </div>
                 <input type="hidden" id="superficie" value="${superficie}">
-                <input type="hidden" id="tipoLote" value="${tipoLote}">
                 <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
                 <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
@@ -594,13 +623,13 @@ $(document).on('click', '.btn-reubicar', function () {
     getPropuestas(idLoteOriginal, statusPreproceso);
 });
 
-function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
+function getProyectosAOcupar(idProyecto, superficie) {
     $('#spiner-loader').removeClass('hide');
     $('#proyectoAOcupar').html("").selectpicker('refresh');
     $("#condominioAOcupar").html("").selectpicker('refresh');
     $("#loteAOcupar").html("").selectpicker('refresh');
 
-    $.post("getProyectosDisponibles", {"idProyecto" : idProyecto, "superficie" : superficie, "tipoLote": tipoLote}, function(data) {
+    $.post("getProyectosDisponibles", {"idProyecto" : idProyecto, "superficie" : superficie}, function(data) {
         const len = data.length;
         for (let i = 0; i < len; i++) {
             const id = data[i]['proyectoReubicacion'];
@@ -613,13 +642,13 @@ function getProyectosAOcupar(idProyecto, superficie, tipoLote) {
     }, 'json');
 }
 
-function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, tipoLote){
+function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie){
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal}, function(data) {
         $('#infoLotesSeleccionados').html('');
 
         for (let lote of data) {
-            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, tipoLote, lote.idCondominio, lote.tipo_estatus_regreso);
+            let html = divLotesSeleccionados(statusPreproceso, lote.nombreLote, lote.sup, lote.id_lotep, lote.id_pxl, idProyecto, superficie, lote.idCondominio, lote.tipo_estatus_regreso);
 
             $("#infoLotesSeleccionados").append(html);
         }
@@ -634,9 +663,8 @@ $(document).on("change", "#proyectoAOcupar", function(e){
 
     const idProyecto = $(this).val();
     const superficie = $("#superficie").val();
-    const tipoLote = $("#tipoLote").val();
 
-    $.post("getCondominiosDisponibles", {"idProyecto": idProyecto, "superficie": superficie, "tipoLote": tipoLote}, function(data) {
+    $.post("getCondominiosDisponibles", {"idProyecto": idProyecto, "superficie": superficie}, function(data) {
         const len = data.length;
         for (let i = 0; i < len; i++) {
             const id = data[i]['idCondominio'];
@@ -712,7 +740,6 @@ $(document).on("change", "#loteAOcupar", function(e){
     const idLoteOriginal = $(this).attr('data-idLoteOriginal');
     const idProyecto = $(this).attr("data-idProyecto");
     const superficieLoteOriginal = $(this).attr('data-superficie');
-    const tipoLote = $(this).attr("data-tipoLote");
     const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
 
     if (statusPreproceso != 1) {
@@ -721,15 +748,15 @@ $(document).on("change", "#loteAOcupar", function(e){
         const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso);
         $("#infoLotesSeleccionados").append(html);
 
-        getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
+        getProyectosAOcupar(idProyecto, superficieLoteOriginal);
         return;
     }
 
     $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado}, (data) => {
         const response = JSON.parse(data);
         if (response.code === 200) {
-            getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal, tipoLote);
-            getProyectosAOcupar(idProyecto, superficieLoteOriginal, tipoLote);
+            getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal);
+            getProyectosAOcupar(idProyecto, superficieLoteOriginal);
 
             alerts.showNotification("top", "right", 'Lote agregado con éxito', 'success');
         }
@@ -742,8 +769,8 @@ $(document).on("change", "#loteAOcupar", function(e){
     });
 })
 
-function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoLote, tipoEstatusRegreso) {
-    if (statusPreproceso != 1) {
+function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoEstatusRegreso, tipoProceso) {
+    if (statusPreproceso != 1 && tipoProceso != 3) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
         return;
@@ -755,6 +782,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     data.append("idLote", idLote);
     data.append("id_pxl", id_pxl);
     data.append("tipoEstatusRegreso", tipoEstatusRegreso);
+    data.append("tipoProceso", tipoProceso);
     $.ajax({
         url : 'setLoteDisponible',
         data: data,
@@ -766,9 +794,15 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
             $('#spiner-loader').addClass('hide');
             if(data) {
                 alerts.showNotification("top", "right", "El registro se ha eliminado y liberado con éxito.", "success");
-                getProyectosAOcupar(idProyecto, superficie, tipoLote);
-                let divLote = e.closest( '.lotePropuesto' );
-                divLote.remove();
+                // SE VUELVE A LLENAR SELECT PARA REFRESCAR OPCIONES
+                if (tipoProceso == TIPO_PROCESO.REUBICACION){
+                    getProyectosAOcupar(idProyecto, superficie);
+                    let divLote = e.closest( '.lotePropuesto' );
+                    divLote.remove();  }
+                else{
+                    $('#reubicacionClientes').DataTable().ajax.reload();
+                    hideModal();
+                }
             }
             else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "danger")
@@ -780,14 +814,14 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     });
 }
 
-function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, tipoLote = null, idCondominio=null, tipoEstatusRegreso = null){
+function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote, id_pxl = null, idProyecto = null, superficieAnterior = null, idCondominio=null, tipoEstatusRegreso = null){
     if (statusPreproceso == 0 || statusPreproceso == 1 ){
         return `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                 <div class="p-2 pt-1" style="background-color: #eaeaea; border-radius:15px">
                     <div class="d-flex justify-between">
                         <h5 class="mb-0 mt-2 text-center">LOTE SELECCIONADO</h5>
-                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoLote}, ${tipoEstatusRegreso})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
+                        <button type="button" class="fl-r" onclick="removeLote(this, ${idLote}, ${statusPreproceso}, ${id_pxl}, ${idProyecto}, ${superficieAnterior}, ${tipoEstatusRegreso}, ${TIPO_PROCESO.REUBICACION})" style="color: gray; background-color:transparent; border:none;" title="Eliminar selección"><i class="fas fa-times"></i></button>
                     </div>
                     <span class="w-100 d-flex justify-between">
                         <p class="m-0">Lote</p>
@@ -857,6 +891,34 @@ $(document).on("submit", "#formReubicacion", function(e){
     });
 });
 
+$(document).on("submit", "#formAsignarPropuestaRees", function(e){
+    e.preventDefault();
+
+    $('#spiner-loader').removeClass('hide');
+    let data = new FormData($(this)[0]);
+    //Identificamos si es reestructura
+    data.append("proceso", TIPO_PROCESO.REESTRUCTURA);
+    $.ajax({
+        url : 'asignarPropuestasLotes',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(data){
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
+            $('#spiner-loader').addClass('hide');
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            hideModal();
+        },
+        error: function( data ){
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            hideModal();
+        }
+    });
+});
+
 $(document).on("submit", "#formAsignarPropuestas", function(e){
     e.preventDefault();
 
@@ -866,6 +928,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
+    data.append("proceso", TIPO_PROCESO.REUBICACION);
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
@@ -913,7 +976,6 @@ $(document).on("submit", "#formReestructura", function(e){
 });
 
 $(document).on('click', '.btn-avanzar', async function () {
-
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreLote = row.data().nombreLote;
@@ -922,10 +984,8 @@ $(document).on('click', '.btn-avanzar', async function () {
     const idCliente = $(this).attr("data-idCliente");
     const idEstatusMovimento = $(this).attr("data-idEstatusMovimiento");
 
-
     if (tipoTransaccion == 1) {
         const totalP = await totalPropuestas(idLote);
-
         if (!validarLotesRequeridos(totalP)) {
             return;
         }
@@ -1109,13 +1169,24 @@ const botonesAccionReubicacion = (d) => {
                             data-toggle="tooltip" 
                             data-placement="left"
                             title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-tipoLote="${d.tipo_lote}"
+                            data-idCliente="${d.idCliente}"
                             data-idProyecto="${d.idProyecto}"
                             data-statusPreproceso="${idEstatusPreproceso}"
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}">
                             <i class="fas fa-clipboard-list"></i>
                     </button>`;
+    const BTN_PROPUESTAS_REES =  `<button class="btn-data btn-violetDeep btn-asignar-propuestas-rees"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR REESTRUCTURA' : 'REGRESAR A ASIGNACIÓN DE REESTRUCTURA'}"
+                            data-idCliente="${d.idCliente}" 
+                            data-idProyecto="${d.idProyecto}"
+                            data-statusPreproceso="${idEstatusPreproceso}"
+                            data-idEstatusMovimiento="${d.id_estatus_modificacion}"
+                            data-tipoEstatusRegreso="${d.tipo_estatus_regreso}"
+                            ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
+                            
+                        </button>`;
 
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
                     data-toggle="tooltip" 
@@ -1136,12 +1207,13 @@ const botonesAccionReubicacion = (d) => {
                     <i class="fas fa-thumbs-down"></i>
                 </button>`;
 
-    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green infoUser"
+    const BTN_INFOCLIENTE =  `<button class="btn-data btn-green btn-informacion-cliente"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
-                    data-idLote="${d.idLote}">
+                    data-idLote="${d.idLote}"
+                    data-idStatusLote="${d.idStatusLote == 17 ? 17 : 16}">
                     <i class="fas fa-user-check"></i>
                 </button>`;
     const BTN_SUBIR_ARCHIVO =  `<button class="btn-data btn-blueMaderas btn-abrir-modal"
@@ -1158,24 +1230,23 @@ const botonesAccionReubicacion = (d) => {
                     data-tipoTransaccion="${idEstatusPreproceso}">
                     <i class="fas ${btnShow}"></i>
                 </button>`;
-    const BTN_REESTRUCTURA = `
-        <button class="btn-data btn-sky btn-reestructurar"
-                data-toggle="tooltip" 
-                data-placement="left"
-                title="REESTRUCTURAR"
-                data-idCliente="${d.idCliente}">
-                <i class="fas fa-map-marker"></i>
-        </button>`;
+    const BTN_REESTRUCTURA = `<button class="btn-data btn-green btn-reestructurar"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="REESTRUCTURAR"
+                    data-idCliente="${d.idCliente}">
+                    <i class="fas fa-map-marker"></i>
+                </button>`;
     const BTN_REUBICACION = `
-        <button class="btn-data btn-green btn-reubicar"
+        <button class="btn-data btn-sky btn-reubicar"
                 data-toggle="tooltip" 
                 data-placement="left"
                 title="REUBICAR CLIENTE"
                 data-idCliente="${d.idCliente}"
-                data-idProyecto="${d.idProyecto}"
-                data-tipoLote="${d.tipo_lote}">
+                data-idProyecto="${d.idProyecto}">
             <i class="fas fa-route"></i>
         </button>`;
+
     const BTN_SUBIR_CONTRATO_FIRMADO =  `
         <button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
             data-toggle="tooltip" 
@@ -1205,17 +1276,26 @@ const botonesAccionReubicacion = (d) => {
             <i class="fas fa-user-alt"></i>
         </button>`;
 
-
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
-        return BTN_PROPUESTAS;
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA)
+            ? BTN_PROPUESTAS_REES + BTN_PROPUESTAS
+            : BTN_PROPUESTAS;
     }
 
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-        if (d.idLoteXcliente == null) {
+        if (d.idLoteXcliente == null && d.idStatusLote != 17) {
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
         }
+        else if (d.idLoteXcliente == null && d.idStatusLote == 17) {
+            return BTN_INFOCLIENTE;
+        }
+        else if (d.idLoteXcliente != null && d.idStatusLote != 17) {
+            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+        }
+        else{
+            return BTN_AVANCE + BTN_INFOCLIENTE;
+        }
 
-        return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
     }
 
     if (idEstatusPreproceso === 1 && id_rol_general == 7) { // EEC: Ver/Editar la información del cliente
@@ -1224,8 +1304,8 @@ const botonesAccionReubicacion = (d) => {
 
     if (idEstatusPreproceso === 2 && id_rol_general == 17) { // Contraloría: ELABORACIÓN DE CORRIDAS
         return (totalCorridas === totalCorridasRef && totalContratoFirmado==1)
-            ? BTN_AVANCE + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
-            : BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO;
+            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
+            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
     }
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15 && id_usuario_general != 13733) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
@@ -1245,9 +1325,7 @@ const botonesAccionReubicacion = (d) => {
     }
 
     if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA)
-            ? BTN_REESTRUCTURA + BTN_REUBICACION
-            : BTN_REUBICACION;
+        return ( d.idStatusLote == 17 ) ? BTN_REESTRUCTURA : BTN_REUBICACION;
     }
 
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
@@ -1293,7 +1371,7 @@ $(document).on("click", "#sendRequestButtonAsignacion", function (e) {
                 $("#sendRequestButton").prop("disabled", false);
                 if (response) {
                     alerts.showNotification("top", "right", `El asignación del lote <b>${nombreLote}</b> a <b>${textNombreAsesor}</b> ha sido exitosa.`, "success");
-                    $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
+                    $('#reubicacionClientes').DataTable().ajax.reload(null, false);
                     $("#asignacionModal").modal("hide");
                 }
                 else
@@ -1316,7 +1394,7 @@ const agregarCopropietario = (copropietario = null) => {
             id="copropietarioDiv${idDiv}">
             <div class="col-lg-12">
                 <div id="accordion${idDiv}">
-                    <div class="card mt-2 mb-0">
+                    <div class="card mt-2 mb-0" style="border-radius: 27px!important">
                         <div class="card-header collapsed cursor-point" 
                             id="copropietario-collapse${idDiv}"
                             data-toggle="collapse" 
@@ -1330,12 +1408,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">
                                         <span class="fs-2">
-                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')"
-                                                id="eliminarIcon${idDiv}"
-                                                class="fa fa-close"
-                                                data-toggle="tooltip" 
-                                                data-placement="left"
-                                                title="ELIMINAR COPROPIETARIO"></i>
+                                            <i onclick="eliminarCopropietario(${idDiv}, '${idCopropietario}')" id="eliminarIcon${idDiv}" class="fa fa-close" data-toggle="tooltip" data-placement="left" title="ELIMINAR COPROPIETARIO"></i>
                                         </span>
                                     </div>
                                 </div>
@@ -1346,11 +1419,11 @@ const agregarCopropietario = (copropietario = null) => {
                             class="collapse" 
                             aria-labelledby="copropietario-collapse${idDiv}" 
                             data-parent="#accordion${idDiv}">
-                            <div class="card-body">
-                                <div class="p-4">
+                            <div class="card-body pb-2">
+                                <div class="container-fluid">
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">NOMBRE (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="nombre[]" 
                                                 type="text" 
@@ -1367,7 +1440,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO PATERNO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Apellido paterno (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="apellido_p[]" 
                                                 type="text"
@@ -1379,7 +1452,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12">
-                                            <label class="control-label">APELLIDO MATERNO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Apellido materno (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral"
                                                 name="apellido_m[]" 
                                                 type="text"
@@ -1391,7 +1464,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CELULAR (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Teléfono (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="telefono2[]" 
                                                 type="number" 
@@ -1400,7 +1473,7 @@ const agregarCopropietario = (copropietario = null) => {
                                                 value="${copropietario?.telefono_2 ?? ''}"/>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <label class="control-label">CORREO ELECTRÓNICO (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
+                                            <label class="control-label">Correo (<small style="color: red;">*</small>)<small class="pl-1" id="errorMsgCorreo${idDiv}"></small></label></label>
                                             <input class="form-control input-gral" 
                                                 name="correo[]" 
                                                 id="correoCop${idDiv}"
@@ -1412,17 +1485,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">FECHA DE NACIMIENTO (<small style="color: red;">*</small>)</label>
-                                            <input class="form-control input-gral" 
-                                                name="fecha_nacimiento[]" 
-                                                onkeydown="return false" 
-                                                type="date"
-                                                value="${copropietario?.fecha_nacimiento ?? ''}"/>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">DOMICILIO (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Domicilio (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="domicilio[]" 
                                                 type="text" 
@@ -1432,7 +1495,7 @@ const agregarCopropietario = (copropietario = null) => {
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
-                                            <label class="control-label">ESTADO CIVIL (<small style="color: red;">*</small>)</label>
+                                            <label class="control-label">Estado civil (<small style="color: red;">*</small>)</label>
                                             <select name="estado_civil[]" 
                                                 id="estadoCivilSelect${idDiv}"
                                                 title="SELECCIONA UNA OPCIÓN" 
@@ -1442,8 +1505,15 @@ const agregarCopropietario = (copropietario = null) => {
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12">
-                                            <label class="control-label">OCUPACIÓN (<small style="color: red;">*</small>)</label>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <label class="control-label">INE/Pasaporte (<small style="color: red;">*</small>)</label>
+                                            <input class="form-control input-gral" 
+                                                name="identificacion[]" 
+                                                type="text"
+                                                value="${copropietario?.ine ?? ''}"/>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                                            <label class="control-label">Ocupación (<small style="color: red;">*</small>)</label>
                                             <input class="form-control input-gral" 
                                                 name="ocupacion[]" 
                                                 type="text" 
