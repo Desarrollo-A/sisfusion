@@ -330,7 +330,7 @@ class Ooam extends CI_Controller
       $responsable = $this->session->userdata('id_usuario');
       $resultado = TRUE;
       if( isset( $_FILES ) && !empty($_FILES) ){
-        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['upload_path'] = './UPLOADS/XMLSOOAM/';
         $config['allowed_types'] = 'xml';
         $this->load->library('upload', $config);
         $resultado = $this->upload->do_upload("xmlfile");
@@ -342,7 +342,7 @@ class Ooam extends CI_Controller
           $nuevo_nombre .= date("Hms")."_";
           $nuevo_nombre .= rand(4, 100)."_";
           $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-          rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+          rename( $xml_subido['full_path'], "./UPLOADS/XMLSOOAM/".$nuevo_nombre );
           $datos_xml['nombre_xml'] = $nuevo_nombre;
           $id_com = $id_comision;
           $this->Ooam_model->insertar_factura($id_com, $datos_xml);
@@ -398,7 +398,7 @@ class Ooam extends CI_Controller
     }
     $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
     if( isset( $_FILES ) && !empty($_FILES) ){
-        $config['upload_path'] = './UPLOADS/XMLS/';
+        $config['upload_path'] = './UPLOADS/XMLSOOAM/';
         $config['allowed_types'] = 'xml';
         //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
         $this->load->library('upload', $config);
@@ -476,7 +476,7 @@ class Ooam extends CI_Controller
   function setPausaPagosOOAM(){
     $respuesta = array( FALSE );
     if($this->input->post("id_pago")){
-      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+      $respuesta = array( $this->Ooam_model->setPausaPagosOOAM( $this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("factura")  ));
     }
     echo json_encode( $respuesta );
   }
@@ -531,7 +531,7 @@ class Ooam extends CI_Controller
         $responsable = $this->session->userdata('id_usuario');
         $resultado = TRUE;
         if( isset( $_FILES ) && !empty($_FILES) ){
-          $config['upload_path'] = './UPLOADS/XMLS/';
+          $config['upload_path'] = './UPLOADS/XMLSOOAM/';
           $config['allowed_types'] = 'xml';
           $this->load->library('upload', $config);
           $resultado = $this->upload->do_upload("xmlfile");
@@ -546,7 +546,7 @@ class Ooam extends CI_Controller
               $nuevo_nombre .= date("Hms")."_";
               $nuevo_nombre .= rand(4, 100)."_";
               $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-              rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+              rename( $xml_subido['full_path'], "./UPLOADS/XMLSOOAM/".$nuevo_nombre );
               $datos_xml['nombre_xml'] = $nuevo_nombre;
               ini_set('max_execution_time', 0);
               for ($i=0; $i <count($datos) ; $i++) { 
@@ -918,5 +918,35 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
       echo json_encode($datos);
     
     }
+
+    public function GetDescripcionXML($xml){
+      error_reporting(0);
+      $xml=simplexml_load_file("".base_url()."UPLOADS/XMLSOOAM/".$xml."") or die("Error: Cannot create object");
+      $cuantos = count($xml-> xpath('//cfdi:Concepto'));
+      $UUID = $xml->xpath('//@UUID')[0];
+      $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
+      $folio = $xml -> xpath('//cfdi:Comprobante')[0]['Folio'];
+      if($folio[0] == null){
+        $folio = '*';
+      }
+      $total = $xml -> xpath('//cfdi:Comprobante')[0]['Total'];
+      $cadena = '';
+      for($i=0;$i< $cuantos; $i++ ){
+        $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+      }
+      $arr[0]= $UUID[0];
+      $arr[1]=  $fecha[0];
+      $arr[2]=  $folio[0];
+      $arr[3]=  $total;
+      $arr[4]=  $cadena;
+      echo json_encode($arr);
+    }
+
+    public function getDatosHistorialOOAM(){
+      $data['data'] = $this->Ooam_model->getDatosHistorialAsesor()->result_array();
+      echo json_encode($data);
+    }
+  
+
 
   }

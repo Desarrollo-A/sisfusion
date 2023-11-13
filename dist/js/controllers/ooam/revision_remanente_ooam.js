@@ -429,6 +429,7 @@ $("#formPausarRemanenteOOAM").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        data.append("factura", 1);
         $.ajax({
             url: general_base_url + "Ooam/setPausaPagosOOAM/",
             data: data,
