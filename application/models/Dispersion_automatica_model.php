@@ -6,8 +6,8 @@ class Dispersion_automatica_model extends CI_Model {
     public function __construct()
     {
         parent::__construct();
-        // $this->gphsis = $this->load->database('GPHSIS', TRUE);
     }
+        // $this->gphsis = $this->load->database('GPHSIS', TRUE);
 
 
     public function getDatosDispersion (){
@@ -27,7 +27,7 @@ class Dispersion_automatica_model extends CI_Model {
      INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
      INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
      LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
-     WHERE com.id_lote = 66018  AND com.estatus = 1 ORDER BY com.rol_generado asc"; 
+     WHERE  com.estatus = 1 ORDER BY com.rol_generado asc"; 
     $query =  $this->db->query($cmd);
     return $query->result_array();
 
@@ -39,7 +39,7 @@ class Dispersion_automatica_model extends CI_Model {
 		,com.id_usuario 
 		,com.idCliente
          FROM  clientes cl 
-		 inner join lotes l on l.idLote = cl.idLote
+		 INNER JOIN lotes l on l.idLote = cl.idLote
 		 INNER JOIN pago_comision comi on comi.id_lote = l.idLote
 		 INNER JOIN comisiones com on com.id_lote = l.idLote  and com.estatus = 1 
 		 WHERE  l.idLote = $idLote ";
@@ -63,5 +63,53 @@ class Dispersion_automatica_model extends CI_Model {
             }
     }
     
+        public function consulta ($idLote) {
+        $cmd = " SELECT com.id_comision, com.id_usuario, 
+        (CASE WHEN ((com.comision_total-ISNULL(pci.abonado, 0))) <= ((pc.new_neo-ISNULL(pci.abonado, 0))*(0.125*com.porcentaje_decimal)) 
+        THEN ((com.comision_total - ISNULL(pci.abonado, 0)))
+        WHEN ((com.comision_total-ISNULL(pci.abonado, 0))) > ((pc.new_neo-ISNULL(pci.abonado, 0))*(0.125*com.porcentaje_decimal)) 
+        THEN  ((pc.new_neo - ISNULL(pci.abonado, 0))*(0.125*com.porcentaje_decimal)) 
+        ELSE 0 END) abono_neodata, pc.new_neo pago_neodata, com.id_lote
+       
+        FROM comisiones com 
+        INNER JOIN pago_comision pc ON pc.id_lote = com.id_lote 
+        AND pc.bandera = 2
+        LEFT JOIN (SELECT SUM(abono_neodata) abonado, id_comision FROM pago_comision_ind pci GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+        WHERE com.estatus = 1 and com.descuento NOT IN (1) 
+        AND (pc.new_neo - pc.abonado) > 0 
+        AND  com.id_lote = $idLote";
+        
+        $query = $this->db->query($cmd);        
+
+        return $query->result_array();
+
+    }
+
+
+
+    public function getLotesPagadosAutomatica($res){
+        $cmd = "SELECT p.id_lote, p.numero_dispersion, 
+        p.ultima_dispersion ,p.bandera,l.registro_comision, 
+        p.ultimo_pago,l.referencia,r.idResidencial 
+        FROM pago_comision p
+        INNER JOIN lotes l ON l.idLote = p.id_lote
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        WHERE p.bandera = 2
+        AND l.registro_comision IN (1,5) 
+        AND l.idStatusContratacion = 15 
+        AND p.ultimo_pago > 0 
+        AND r.idResidencial = $res";
+        $query =  $this->db->query($cmd);
+        return $query->result_array();
+    }
+    
+
+
+
+
+
+
+
 
 }

@@ -494,6 +494,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507) AND pr.id_sede IN (8, 10)";
             else if ($id_usuario == 479) // MARBELLA DEL SOCORRO DZUL CALÁN
                 $where = "pr.id_gerente IN ($id_lider, 4223) AND pr.id_sede IN (3, 15)";
+            else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
+                $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

@@ -233,7 +233,7 @@ class Incidencias extends CI_Controller
      echo json_encode($respuesta); 
     
     }
-
+ 
     public function AddVentaCompartida(){
       $datosAse = explode(",",$this->input->post('usuarioid5'));
       $coor = $this->input->post('usuarioid6');

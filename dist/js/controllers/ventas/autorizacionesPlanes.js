@@ -511,6 +511,13 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion){
+        const arrayCondiciones = [1,2,13];
+        var desc = document.getElementById("descuento");
+
+        const found = arrayCondiciones.find((element) => element == id_condicion);
+        console.log(found)
+        found != undefined ? desc.setAttribute("data-type","") : desc.setAttribute("data-type","currency") ;
+        
         $('#descuento').val('');
         $('#label_descuento').html();
         $('#id_condicion').val(id_condicion);
@@ -611,20 +618,17 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             $("#table"+title).DataTable({
                 dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
                 width: "auto",
-                buttons: [
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                        className: 'btn buttons-excel',
-                        titleAttr: 'Descargar archivo de Excel',
-                        title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
-                    },
-                    {
-                        text: `<a href="#" onclick="addDescuento(${id_condicion}, '${descripcion}');" style="color: #000;">Agregar descuento</a>`,
-                        className: 'btn-azure',
-                    }
-                ]
-                ,
+                buttons: [{
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                    className: 'btn buttons-excel',
+                    titleAttr: 'Descargar archivo de Excel',
+                    title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
+                },
+                {
+                    text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
+                    className: 'btn btn-blueMaderas text-white',
+                }],
                 pagingType: "full_numbers",
                 language: {
                     url: general_base_url + "static/spanishLoader_v2.json",

@@ -1,5 +1,5 @@
 <?php
-//    require_once 'static/autoload.php';
+    require_once 'static/autoload.php';
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -596,8 +596,6 @@ class Corrida extends CI_Controller {
 				$informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			}*/
 
-		$informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
-		$informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
         if($informacion_corrida->id_asesor!=0){
             $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
@@ -617,6 +615,13 @@ class Corrida extends CI_Controller {
 //        echo 'gerente:<br>';
 //        print_r($data_gerente);
 //        echo '<br>';
+
+        $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
+        $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
+
+        $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
+
+
         $informacion_vendedor = array(
             "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
             "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
@@ -871,16 +876,16 @@ legend {
 					  </table>
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
-                      
-                          foreach ($informacion_diferidos as $row){
-                              $html .='
-                              <tr align="center">
-							  <td style="font-size: 1.4em;">'.$row['fecha'].'</td>
-							  <td style="font-size: 1.4em;">'.$row['pago'].'</td>
-							  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row['total']).'</td>
-                              </tr>';
-                          }
-                          
+
+                            foreach ($informacion_diferidos as $row){
+                                $html .='
+                                                  <tr align="center">
+                                                  <td style="font-size: 1.4em;">'.$row->fecha.'</td>
+                                                  <td style="font-size: 1.4em;">'.$row->pago.'</td>
+                                                  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
+                                                  </tr>';
+                            }
+
                         $html .='</table>
                         
                         <br>
@@ -1604,12 +1609,12 @@ legend {
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
 
-        foreach ($informacion_diferidos as $row) {
-            $html .= '
+        foreach ($informacion_diferidos as $row){
+            $html .='
                               <tr align="center">
-							  <td style="font-size: 1.4em;">' . $row['fecha'] . '</td>
-							  <td style="font-size: 1.4em;">' . $row['pago'] . '</td>
-							  <td style="font-size: 1.4em;">' . money_format('%(#10n', $row['total']) . '</td>
+							  <td style="font-size: 1.4em;">'.$row->fecha.'</td>
+							  <td style="font-size: 1.4em;">'.$row->pago.'</td>
+							  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
                               </tr>';
         }
 
@@ -1802,7 +1807,93 @@ legend {
 	The function is tested using PHP 5.1.4 in Windows XP
 	and Apache WebServer.
 	*/
-	function money_format($floatcurr, $curr = 'EUR')
+    /*function money_format($format, $number)
+    {
+        $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'.
+            '(?:#([0-9]+))?(?:\.([0-9]+))?([in%])/';
+        if (setlocale(LC_MONETARY, 0) == 'C') {
+            setlocale(LC_MONETARY, '');
+        }
+        $locale = localeconv();
+        preg_match_all($regex, $format, $matches, PREG_SET_ORDER);
+        foreach ($matches as $fmatch) {
+            $value = floatval($number);
+            $flags = array(
+                'fillchar'  => preg_match('/\=(.)/', $fmatch[1], $match) ?
+                    $match[1] : ' ',
+                'nogroup'   => preg_match('/\^/', $fmatch[1]) > 0,
+                'usesignal' => preg_match('/\+|\(/', $fmatch[1], $match) ?
+                    $match[0] : '+',
+                'nosimbol'  => preg_match('/\!/', $fmatch[1]) > 0,
+                'isleft'    => preg_match('/\-/', $fmatch[1]) > 0
+            );
+            $width      = trim($fmatch[2]) ? (int)$fmatch[2] : 0;
+            $left       = trim($fmatch[3]) ? (int)$fmatch[3] : 0;
+            $right      = trim($fmatch[4]) ? (int)$fmatch[4] : $locale['int_frac_digits'];
+            $conversion = $fmatch[5];
+
+            $positive = true;
+            if ($value < 0) {
+                $positive = false;
+                $value  *= -1;
+            }
+            $letter = $positive ? 'p' : 'n';
+
+            $prefix = $suffix = $cprefix = $csuffix = $signal = '';
+
+            $signal = $positive ? $locale['positive_sign'] : $locale['negative_sign'];
+            switch (true) {
+                case $locale["{$letter}_sign_posn"] == 1 && $flags['usesignal'] == '+':
+                    $prefix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 2 && $flags['usesignal'] == '+':
+                    $suffix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 3 && $flags['usesignal'] == '+':
+                    $cprefix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 4 && $flags['usesignal'] == '+':
+                    $csuffix = $signal;
+                    break;
+                case $flags['usesignal'] == '(':
+                case $locale["{$letter}_sign_posn"] == 0:
+                    $prefix = '(';
+                    $suffix = ')';
+                    break;
+            }
+            if (!$flags['nosimbol']) {
+                $currency = $cprefix .
+                    ($conversion == 'i' ? $locale['int_curr_symbol'] : $locale['currency_symbol']) .
+                    $csuffix;
+            } else {
+                $currency = '';
+            }
+            $space  = $locale["{$letter}_sep_by_space"] ? ' ' : '';
+
+            $value = number_format($value, $right, $locale['mon_decimal_point'],
+                $flags['nogroup'] ? '' : $locale['mon_thousands_sep']);
+            $value = @explode($locale['mon_decimal_point'], $value);
+
+            $n = strlen($prefix) + strlen($currency) + strlen($value[0]);
+            if ($left > 0 && $left > $n) {
+                $value[0] = str_repeat($flags['fillchar'], $left - $n) . $value[0];
+            }
+            $value = implode($locale['mon_decimal_point'], $value);
+            if ($locale["{$letter}_cs_precedes"]) {
+                $value = $prefix . $currency . $space . $value . $suffix;
+            } else {
+                $value = $prefix . $value . $space . $currency . $suffix;
+            }
+            if ($width > 0) {
+                $value = str_pad($value, $width, $flags['fillchar'], $flags['isleft'] ?
+                    STR_PAD_RIGHT : STR_PAD_LEFT);
+            }
+
+            $format = str_replace($fmatch[0], $value, $format);
+        }
+        return $format;
+    }*/
+	/*function money_format($floatcurr, $curr = 'EUR')
 	{
 		$currencies['ARS'] = array(2, ',', '.');          //  Argentine Peso
 		$currencies['AMD'] = array(2, '.', ',');          //  Armenian Dram
@@ -1939,9 +2030,105 @@ legend {
 		}
 		else
 		{
+		    print_r($floatcurr);
+		    echo '<br>';
+            print_r($currencies);
+            echo '<br>';
+            print_r($curr);
+            echo '<br>';
+            exit;
 			return number_format($floatcurr, $currencies[$curr][0], $currencies[$curr][1], $currencies[$curr][2]);
 		}
-	}
+	}*/
+    function money_format($format, $number)
+    {
+        $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'.
+            '(?:#([0-9]+))?(?:\.([0-9]+))?([in%])/';
+        if (setlocale(LC_MONETARY, 0) == 'C') {
+            setlocale(LC_MONETARY, '');
+        }
+        $locale = localeconv();
+        preg_match_all($regex, $format, $matches, PREG_SET_ORDER);
+        foreach ($matches as $fmatch) {
+            $value = floatval($number);
+            $flags = array(
+                'fillchar'  => preg_match('/\=(.)/', $fmatch[1], $match) ?
+                    $match[1] : ' ',
+                'nogroup'   => preg_match('/\^/', $fmatch[1]) > 0,
+                'usesignal' => preg_match('/\+|\(/', $fmatch[1], $match) ?
+                    $match[0] : '+',
+                'nosimbol'  => preg_match('/\!/', $fmatch[1]) > 0,
+                'isleft'    => preg_match('/\-/', $fmatch[1]) > 0
+            );
+            $width      = trim($fmatch[2]) ? (int)$fmatch[2] : 0;
+            $left       = trim($fmatch[3]) ? (int)$fmatch[3] : 0;
+            $right      = trim($fmatch[4]) ? (int)$fmatch[4] : $locale['int_frac_digits'];
+            $conversion = $fmatch[5];
+
+            $positive = true;
+            if ($value < 0) {
+                $positive = false;
+                $value  *= -1;
+            }
+            $letter = $positive ? 'p' : 'n';
+
+            $prefix = $suffix = $cprefix = $csuffix = $signal = '';
+
+            $signal = $positive ? $locale['positive_sign'] : $locale['negative_sign'];
+            switch (true) {
+                case $locale["{$letter}_sign_posn"] == 1 && $flags['usesignal'] == '+':
+                    $prefix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 2 && $flags['usesignal'] == '+':
+                    $suffix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 3 && $flags['usesignal'] == '+':
+                    $cprefix = $signal;
+                    break;
+                case $locale["{$letter}_sign_posn"] == 4 && $flags['usesignal'] == '+':
+                    $csuffix = $signal;
+                    break;
+                case $flags['usesignal'] == '(':
+                case $locale["{$letter}_sign_posn"] == 0:
+                    $prefix = '(';
+                    $suffix = ')';
+                    break;
+            }
+            if (!$flags['nosimbol']) {
+                $currency = $cprefix .
+                    ($conversion == 'i' ? $locale['int_curr_symbol'] : $locale['currency_symbol']) .
+                    $csuffix;
+            } else {
+                $currency = '';
+            }
+            $space  = $locale["{$letter}_sep_by_space"] ? ' ' : '';
+
+            $value = number_format($value, $right, $locale['mon_decimal_point'],
+                $flags['nogroup'] ? '' : $locale['mon_thousands_sep']);
+            $value = @explode($locale['mon_decimal_point'], $value);
+
+            $n = strlen($prefix) + strlen($currency) + strlen($value[0]);
+            if ($left > 0 && $left > $n) {
+                $value[0] = str_repeat($flags['fillchar'], $left - $n) . $value[0];
+            }
+            $value = implode($locale['mon_decimal_point'], $value);
+            if ($locale["{$letter}_cs_precedes"]) {
+                $value = $prefix . $currency . $space . $value . $suffix;
+            } else {
+                $value = $prefix . $value . $space . $currency . $suffix;
+            }
+            if ($width > 0) {
+                $value = str_pad($value, $width, $flags['fillchar'], $flags['isleft'] ?
+                    STR_PAD_RIGHT : STR_PAD_LEFT);
+            }
+
+            $format = str_replace($fmatch[0], $value, $format);
+        }
+        return $format;
+    }
+
+
+
 	function getResidencialDisponible() {
 		$residenciales = $this->Corrida_model->getResidencialDis();
 		if($residenciales != null) {
@@ -2940,12 +3127,12 @@ legend {
             for($q = 0; $q<count($data_desc_paq); $q++){
                 $data_descuento = $this->Corrida_model->getDescById($data_desc_paq[$q]['id_descuento']);
                 $paquete_view[$i]['response'][$q]['id_descuento'] = $data_descuento->id_descuento;
-                $paquete_view[$i]['response'][$q]['id_tdescuento'] = $data_descuento->id_tdescuento;
-                $paquete_view[$i]['response'][$q]['inicio'] = $data_descuento->inicio;
-                $paquete_view[$i]['response'][$q]['fin'] = $data_descuento->fin;
+//                $paquete_view[$i]['response'][$q]['id_tdescuento'] = $data_descuento->id_tdescuento;
+//                $paquete_view[$i]['response'][$q]['inicio'] = $data_descuento->inicio;
+//                $paquete_view[$i]['response'][$q]['fin'] = $data_descuento->fin;
                 $paquete_view[$i]['response'][$q]['id_condicion'] = $data_descuento->id_condicion;
                 $paquete_view[$i]['response'][$q]['porcentaje'] = (int)$data_descuento->porcentaje;
-                $paquete_view[$i]['response'][$q]['eng_top'] = $data_descuento->eng_top;
+//                $paquete_view[$i]['response'][$q]['eng_top'] = $data_descuento->eng_top;
                 $paquete_view[$i]['response'][$q]['apply'] = $data_descuento->apply;
                 $paquete_view[$i]['response'][$q]['leyenda'] = $data_descuento->leyenda;
                 $paquete_view[$i]['response'][$q]['prioridad'] = $data_descuento->prioridad;

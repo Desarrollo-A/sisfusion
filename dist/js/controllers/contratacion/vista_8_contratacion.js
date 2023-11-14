@@ -207,8 +207,7 @@ $(document).ready(function () {
                   data.idMovimiento == 77 &&
                   data.perfil == 15) ||
                 (data.idStatusContratacion == 11 &&
-                  data.idMovimiento == 41 &&
-                  data.perfil == 11)
+                  data.idMovimiento == 41)
               ) {
                 cntActions =
                   '<button href="#" data-idLote="' +

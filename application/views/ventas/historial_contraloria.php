@@ -91,6 +91,10 @@
                                 <li>
                                     <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
                                 </li>
+
+                                <li>
+                                    <a href="#solicitudesOOAM" role="tab" data-toggle="tab">Historial OOAM</a>
+                                </li>
                             <?php } ?>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -295,6 +299,38 @@
                                                     </div>
                                                 </div>
                                             </div><!-- End tab HISTORIAL DESCUENTOS validado -->
+                                            <!-- INICIO tab HISTORIAL OOAM validado -->
+                                            <div class="tab-pane" id="solicitudesOOAM">
+                                                <div class="encabezadoBox">
+                                                    <div class="row">
+                                                        <h3 class="card-title center-align">Historial OOAM</h3>
+                                                        <p class="card-title pl-1">Este es un listado de todos los descuentos que te han aplicado.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tablaHistorialOOAM" name="tablaHistorialOOAM">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID PAGO</th>
+                                                                    <th>ID COMISION</th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>PRECIO LOTE </th>
+                                                                    <th>COMISION TOTAL</th>
+                                                                    <th>PORCENTAJE DECIMAL</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>FECHA CREACIÓN</th>
+                                                                    <th>ID USUARIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>PJ</th>
+                                                                    <th>FORMA PAGO</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div><!-- End tab HISTORIAL DESCUENTOS validado -->
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -311,4 +347,5 @@
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/Ooam/historial_colaborador.js"></script>
 </body>
