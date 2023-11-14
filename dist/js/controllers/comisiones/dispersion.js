@@ -319,7 +319,9 @@ $(document).ready(function () {
                         if(disparador != 0){
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 
-                            data-totalNeto2 = "${totalLote}" 
+                            data-totalNeto2 = "${totalLote}"
+                            data-totalNeto2Cl = "${d.totalNeto2Cl}" 
+                            data-total8P = "${d.total8P}" 
                             data-reubicadas = "${reubicadas}" 
                             data-penalizacion = "${d.penalizacion}"
                             data-nombreLote = "${nombreLote}" 
@@ -449,6 +451,8 @@ $(document).ready(function () {
 
         idLote = $(this).val();
         totalNeto2 = $(this).attr("data-totalNeto2");
+        totalNeto2Cl = $(this).attr("data-totalNeto2Cl");
+        total8P = $(this).attr("data-total8P");
         reubicadas = $(this).attr("data-reubicadas");
         penalizacion = $(this).attr("data-penalizacion");
         nombreLote = $(this).attr("data-nombreLote");
@@ -543,6 +547,27 @@ $(document).ready(function () {
                                 let abonado=0;
                                 let porcentaje_abono=0;
                                 let total_comision=0;
+
+                                const plan8P =  [
+                                    {
+                                        idRol:7,
+                                        porcentaje:0.50
+                                    },
+                                    {
+                                        idRol:3,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:2,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:1,
+                                        porcentaje:0.1
+                                    }
+                                ];
+                                console.log(plan8P);
+
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
