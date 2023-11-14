@@ -1,7 +1,5 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-
-console.log(userSede);
 let fin = userSede == 8 ? 16 : 13;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
@@ -160,7 +158,6 @@ $(document).ready(function () {
         requestCodigoPostal();
     }
 });
-
 
 $('#proyecto_wp').change(function () {
     $('#boxTablaComisionesSinPago').removeClass('hide');
@@ -322,7 +319,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                 } else if (data == 5) {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VALIDA", "warning");
+                                    alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
                                 } else {
                                     $('#spiner-loader').addClass('hide');
                                     alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
@@ -578,11 +575,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                 return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                             case '3': //ASIMILADOS
                             case 3: //ASIMILADOS
-                                   /* if(full.forma_pago != forma_pago){
-                                        alerts.showNotification("top", "right", "Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar.", "warning");
-                                        return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-                                        break;
-                                    }*/
                             case '4': //RD
                             case 4: //RD
                             default:
