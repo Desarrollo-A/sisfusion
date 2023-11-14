@@ -384,7 +384,7 @@ class Asesor extends CI_Controller {
         $informacion = $this->Asesor_model->getPrintableInformation($id_prospecto)->row();
         $informacion_lugar = $this->Asesor_model->getProspectSpecification($id_prospecto)->row();
         if ($informacion) {
-            $html = '
+            $html = '                                                                      
             <!DOCTYPE html>
             <html lang="es_mx"  ng-app="CRM">
         <head>
@@ -3180,6 +3180,17 @@ class Asesor extends CI_Controller {
             $documentsNumber = 3;
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
         } else { // ES COMERCIALIZACIÓN
+            $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
+            $leyendaMsgValidacion = '';
+            foreach($documentosContrato as $documento){
+                if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 1 CANCELADO ';
+                }else if($documento['movimiento']=='CONTRATO 2 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 2 CANCELADO ';
+                }
+            }
+
+
             if($tipo_comprobante == 1) {
                 $comprobante_domicilio = "";
                 $comprobante_domicilio_label = "";
@@ -3194,13 +3205,14 @@ class Asesor extends CI_Controller {
                         : "";
                     $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
                     $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO"
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
                         : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
+
                     $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
                     $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO";
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
                 }
             }
             $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
@@ -3437,6 +3449,9 @@ class Asesor extends CI_Controller {
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
+
+        print_r($idLote);
+        exit;
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
             return;
