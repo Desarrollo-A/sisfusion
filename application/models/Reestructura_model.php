@@ -31,7 +31,6 @@ class Reestructura_model extends CI_Model
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_usuario";
         } else if (in_array($id_rol, array(2, 5)) && $tipo == 2) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM
-
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
