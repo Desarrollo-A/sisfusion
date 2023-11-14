@@ -508,6 +508,13 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion){
+        const arrayCondiciones = [1,2,13];
+        var desc = document.getElementById("descuento");
+
+        const found = arrayCondiciones.find((element) => element == id_condicion);
+        console.log(found)
+        found != undefined ? desc.setAttribute("data-type","") : desc.setAttribute("data-type","currency") ;
+        
         $('#descuento').val('');
         $('#label_descuento').html();
         $('#id_condicion').val(id_condicion);
@@ -616,8 +623,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
                 },
                 {
-                    text: `<a href="#" onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</a>`,
-                    className: 'btn-azure',
+                    text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
+                    className: 'btn btn-blueMaderas text-white',
                 }],
                 pagingType: "full_numbers",
                 language: {

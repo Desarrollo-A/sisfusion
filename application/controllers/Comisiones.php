@@ -523,12 +523,16 @@ function update_estatus(){
   }
 
   public function acepto_comisiones_user(){
-    $this->load->model("Comisiones_model");
+    $formaPagoInvalida = [2,3,4,5];
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
-    $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
+    $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i,u.forma_pago FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
+    //var_dump($consulta_comisiones->result_array());
+    //var_dump($consulta_comisiones->result_array()[0]['forma_pago']);
+    if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){
+      //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+      $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE mes=$mesActual")->result_array();
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
@@ -607,6 +611,12 @@ function update_estatus(){
         $data_response = 0;
       echo json_encode($data_response);
       }
+    }else{
+            //EL COMISIONISTA NO TIENE UNA FORMA DE PAGO VALIDA Y TERMINA CON EL PROCESO DE ENVIO DE COMISIONES
+            $data_response = 5;
+            echo json_encode($data_response);
+    }
+    
   }
  
   public function acepto_comisiones_resguardo(){
