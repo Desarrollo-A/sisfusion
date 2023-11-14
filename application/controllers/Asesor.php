@@ -3449,9 +3449,7 @@ class Asesor extends CI_Controller {
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
-
-        print_r($idLote);
-        exit;
+        
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
             return;
