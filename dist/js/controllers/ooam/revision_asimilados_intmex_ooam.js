@@ -503,30 +503,30 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-function CloseModalDelete2(){
-    document.getElementById("form_multiples").reset();
+function CloseModalDeleteOoam(){
+    document.getElementById("form_multiplesOoam").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal_multiples").modal('toggle');  
+    $("#modal_multiplesOoam").modal('toggle');  
 }
 
-$(document).on("click", ".Pagar", function() {          
-    $("#modal_multiples .modal-body").html("");
-    $("#modal_multiples .modal-header").html("");
-    $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect">
+$(document).on("click", ".PagarOoam", function() {      
+    $("#modal_multiplesOoam .modal-body").html("");
+    $("#modal_multiplesOoam .modal-header").html("");
+    $("#modal_multiplesOoam .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiplesOoam .modal-footer").append(`<div id="borrarProyect">
         
-                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
+                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDeleteOoam()">CANCELAR</button>
                 <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
 
         </div>`);
 
-    $("#modal_multiples .modal-header").append(`
+    $("#modal_multiplesOoam .modal-header").append(`
     <div class="row">
         <div class="col-md-12">
-            <select id="desarrolloSelect" name="desarrolloSelect" 
-                class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
+            <select id="desarrolloSelectOoam" name="desarrolloSelectOoam" 
+                class="selectpicker select-gral desarrolloSelectOoam ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
                 required data-live-search="true">
             </select>
         </div>
@@ -537,17 +537,17 @@ $(document).on("click", ".Pagar", function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['name_user'];
-            $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#desarrolloSelectOoam").append($('<option>').val(id).attr('data-value', id).text(name));
         }
         if (len <= 0) {
-            $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#desarrolloSelectOoam").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
-        $("#desarrolloSelect").val(0);
-        $("#desarrolloSelect").selectpicker('refresh');
+        $("#desarrolloSelectOoam").val(0);
+        $("#desarrolloSelectOoam").selectpicker('refresh');
     }, 'json');
         
-    $('#desarrolloSelect').change(function() {
-        $("#modal_multiples .modal-body .bodypagos").html("");
+    $('#desarrolloSelectOoam').change(function() {
+        $("#modal_multiplesOoam .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
             let a =  document.getElementById('bodypago2');
             padre = a.parentNode;
@@ -555,20 +555,18 @@ $(document).on("click", ".Pagar", function() {
         }
     
         var valorSeleccionado = $(this).val();
-        var combo = document.getElementById("desarrolloSelect");
+        var combo = document.getElementById("desarrolloSelectOoam");
         var selected = combo.options[combo.selectedIndex].text;
 
         $.getJSON(general_base_url + "Ooam/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
             console.log(data[0]);
             if (!data) {
-                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
-                CETF981206BS6-
-                CETF981206BS6
+                $("#modal_multiplesOoam .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`
+                    $("#modal_multiplesOoam .modal-body ").append(`
                     <center>
                         <div class="row bodypagos" >
                             <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
@@ -577,9 +575,9 @@ $(document).on("click", ".Pagar", function() {
                             `);
                 } 
                 
-                $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
+                $("#modal_multiplesOoam .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiples .modal-body #bodypago2").append(`
+                    $("#modal_multiplesOoam .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                     
                 });
@@ -588,7 +586,7 @@ $(document).on("click", ".Pagar", function() {
         });
     });
 
-    $("#modal_multiples").modal({
+    $("#modal_multiplesOoam").modal({
         backdrop: 'static',
         keyboard: false
     });
@@ -693,7 +691,7 @@ $(document).ready( function(){
     });
 });
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiplesOoam").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
@@ -712,16 +710,18 @@ $("#form_multiples").submit( function(e) {
             type: 'POST', // For jQuery < 1.9
             success: function(data){
                 if( data == 1){
-                    CloseModalDelete2();
+                    tabla_asimilados_ooam.ajax.reload();
+                    CloseModalDeleteOoam();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
+
                 }else{
-                    CloseModalDelete2();
+                    CloseModalDeleteOoam();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#spiner-loader').addClass('hidden');
 
             },error: function( ){
-                CloseModalDelete2();
+                CloseModalDeleteOoam();
                 alert("ERROR EN EL SISTEMA");
                 $('#spiner-loader').addClass('hidden');
 

@@ -1,6 +1,5 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-console.log(userSede);
 let fin = userSede == 8 ? 16 : 13;
 $("#file-upload-extranjero").on('change', function () {
     $('#archivo-extranjero').val('');
@@ -274,6 +273,14 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
                     (id_usuario_general == 7689)) {
                     if ($('input[name="idT[]"]:checked').length > 0) {
+
+                        var data = tabla_nuevas.row().data();
+
+                        if(data.forma_pago != forma_pago){
+                            alerts.showNotification("top", "right", "Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar.", "warning");
+                            return false;
+                        }
+
                         $('#spiner-loader').removeClass('hide');
                         var idcomision = $(tabla_nuevas.$('input[name="idT[]"]:checked')).map(function () {
                             return this.value;
@@ -309,6 +316,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                                     $('#spiner-loader').addClass('hide');
                                     $("#all").prop('checked', false);
                                     alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
+                                } else if (data == 5) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
                                 } else {
                                     $('#spiner-loader').addClass('hide');
                                     alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
