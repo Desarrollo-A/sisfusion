@@ -566,11 +566,11 @@ $(document).ready(function () {
                                         porcentaje:0.1
                                     }
                                 ];
-                                console.log(plan8P);
 
-                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
+                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:10000,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
+                                        
 
                                         if(plan_comision == 66){
                                             const busqueda = datosPlan8P.find((roles) => roles.idRol == v.id_rol);
