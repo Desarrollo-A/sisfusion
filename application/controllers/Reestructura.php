@@ -89,7 +89,7 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
 	}
 
 	public function insertarOpcionN (){
@@ -145,7 +145,6 @@ class Reestructura extends CI_Controller{
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
-
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
@@ -1718,7 +1717,7 @@ class Reestructura extends CI_Controller{
                 'domicilio_particular' => $coopropietario['domicilio_particular'] ?? '',
                 'estado_civil' => $coopropietario['estado_civil'] ?? '',
                 'ocupacion' => $coopropietario['ocupacion'] ?? '',
-                'fecha_nacimiento' => $coopropietario['fecha_nacimiento'],
+                'ine' => $coopropietario['ine'],
                 'modificado_por' => $this->session->userdata('id_usuario')
             ];
         }

@@ -1,6 +1,7 @@
 var totaPen = 0;
 var tr;
 $("#tabla_plaza_1").ready( function(){
+
     let titulos = [];
     $('#tabla_plaza_1 thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -12,17 +13,14 @@ $("#tabla_plaza_1").ready( function(){
                 var total = 0;
                 var index = plaza_1.rows({ selected: true, search: 'applied' }).indexes();
                 var data = plaza_1.rows( index ).data();
-                $.each(data, function(i, v){
-                    total += parseFloat(v.total);
-                });
+                $.each(data, function(i, v){ total += parseFloat(v.total); });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_nuevas").textContent = formatMoney(total);
+                document.getElementById("myText_nuevas").textContent = to1;
             }
         });
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     }); 
+
     let c=0;
     $('#tabla_plaza_1').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
@@ -32,6 +30,7 @@ $("#tabla_plaza_1").ready( function(){
         var to = formatMoney(total);
         document.getElementById("myText_nuevas").textContent = to;
     });
+
     plaza_1 = $("#tabla_plaza_1").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -186,16 +185,12 @@ $('#tabla_plaza_2 thead tr:eq(0) th').each( function (i) {
             var total = 0;
             var index = plaza_2.rows({ selected: true, search: 'applied' }).indexes();
             var data = plaza_2.rows( index ).data();
-            $.each(data, function(i, v){
-                total += parseFloat(v.total);
-            });
+            $.each(data, function(i, v){ total += parseFloat(v.total); });
             var to1 = formatMoney(total);
-            document.getElementById("myText_proceso").textContent = formatMoney(total);
+            document.getElementById("myText_proceso").textContent = to1;
         }
     });
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
 
 $("#tabla_plaza_2").ready( function(){
@@ -208,6 +203,7 @@ $("#tabla_plaza_2").ready( function(){
         var to = formatMoney(total);
         document.getElementById("myText_proceso").textContent = to;
     });
+    
     plaza_2 = $("#tabla_plaza_2").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
@@ -221,8 +217,7 @@ $("#tabla_plaza_2").ready( function(){
             title: 'LISTADO COMISIONES PLAZA 2', 
             exportOptions: {
                 columns: [0,1,2,3,4,5,6],
-                format: 
-                {
+                format: {
                     header:  function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
                     }
@@ -367,17 +362,14 @@ $("#tabla_compartidas").ready( function(){
                 var total = 0;
                 var index = plaza_c.rows({ selected: true, search: 'applied' }).indexes();
                 var data = plaza_c.rows( index ).data();
-                $.each(data, function(i, v){
-                    total += parseFloat(v.total);
-                });
+                $.each(data, function(i, v){ total += parseFloat(v.total); });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_comp").textContent = formatMoney(total);
+                document.getElementById("myText_comp").textContent = to1;
             }
         });
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+
     let c=0;
     $('#tabla_compartidas').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
@@ -387,6 +379,7 @@ $("#tabla_compartidas").ready( function(){
         var to = formatMoney(total);
         document.getElementById("myText_comp").textContent = to;
     });
+
     plaza_c = $("#tabla_compartidas").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -400,9 +393,8 @@ $("#tabla_compartidas").ready( function(){
             title: 'COMISIONES COMPARTIDAS',
             exportOptions: {
                 columns: [0,1,2,3,4,5,6],
-                format: 
-                {
-                    header:  function (d, columnIdx) {
+                format: {
+                    header:  function (columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
@@ -563,16 +555,13 @@ $("#tabla_planes").ready( function(){
                 var total = 0;
                 var index = tabla_planes.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_planes.rows( index ).data();
-                $.each(data, function(i, v){
-                    total += parseFloat(v.pago_cliente);
-                });
+                $.each(data, function(i, v){ total += parseFloat(v.pago_cliente); });
                 var to1 = formatMoney(total);
             }
         });
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
+
     $('#tabla_planes').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
         $.each(json.data, function(i, v){
@@ -580,6 +569,7 @@ $("#tabla_planes").ready( function(){
         });
         var to = formatMoney(total);
     });
+
     tabla_planes = $("#tabla_planes").DataTable({
         dom: 'rt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -647,6 +637,7 @@ $("#tabla_planes").ready( function(){
             data: function( d ){}
         },
     });
+
     $("#tabla_planes tbody").on("click", ".ver_plan_details", function(){
         var tr = $(this).closest('tr');
         var row = tabla_planes.row( tr );
@@ -781,7 +772,7 @@ function subir_xml( input ){
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST',
         success: function(data){
             if( data.respuesta[0] ){
                 documento_xml = xml;
@@ -820,7 +811,6 @@ $("#form_colaboradores").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
-        //bloquear boton 
         $("#btnplz1").button({ disabled: true });
         $("#btnplz2").button({ disabled: true });
         $("#btnplzc").button({ disabled: true });
@@ -856,7 +846,6 @@ $("#form_colaboradores").submit( function(e) {
                         plaza_1.ajax.reload();
                         plaza_c.ajax.reload();
                         alerts.showNotification("top", "right", "¡Se agregó con éxito!", "success");
-                        // alert("");
                     }else{
                         alerts.showNotification("top", "right", "NO SE HA PODIDO COMPLETAR LA SOLICITUD", "danger");
                         $('#spiner-loader').addClass('hide');
@@ -886,7 +875,7 @@ $("#frmnewsol").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
@@ -925,7 +914,7 @@ $("#form_MKTD").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
@@ -939,13 +928,6 @@ $("#form_MKTD").submit( function(e) {
         });   
     }
 });
-
-function cleanComments(){
-    var myCommentsList = document.getElementById('documents');
-    myCommentsList.innerHTML = '';
-    var myFactura = document.getElementById('facturaInfo');
-    myFactura.innerHTML = '';
-}
 
 $(window).resize(function(){
     plaza_1.columns.adjust();

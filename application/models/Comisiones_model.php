@@ -1310,7 +1310,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN porcentajes_club pcm ON pcm.numero_plan = pk.id_plancl
         INNER JOIN usuarios u ON u.id_usuario = pcm.id_usuario
         INNER JOIN opcs_x_cats op1 ON op1.id_opcion = pcm.rol
-        WHERE op1.id_catalogo = 1 AND u.id_rol IN (44) AND pcm.id_sede IN (2) AND pk.fecha_plan <= '".$consulta_FINAL."' /*AND pk.fin_plan >= '".$consulta_FINAL."'*/)
+        WHERE op1.id_catalogo = 1 AND u.id_rol IN (44) AND pcm.id_sede IN (2) AND pk.fecha_plan <= '".$consulta_FINAL." /*AND pk.fin_plan >= '".$consulta_FINAL."'*/)
         UNION
         (SELECT pk.id_plancl, pk.fecha_plan, pk.fin_plan, u.id_usuario, CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador, op1.nombre AS rol, pcm.porcentaje, u.id_sede
         FROM planes_club pk
@@ -2037,6 +2037,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (select COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (select COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status = 1 AND l.registro_comision in (7) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) /*AND YEAR(cl.fechaApartado) = 2023 AND MONTH(cl.fechaApartado) = 03 or l.idLote =50139*/
+        AND year(pc.fecha_modificacion) = 2023
         ORDER BY l.idLote");
         return $query ;
     }
@@ -3251,7 +3252,7 @@ class Comisiones_model extends CI_Model {
     
     public function BorrarPrestamo($id_prestamo){
         $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=0,modificado_por=".$this->session->userdata('id_usuario')." WHERE id_prestamo=$id_prestamo ");
-        $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL)");
+        $respuesta = $this->db->query("INSERT INTO historial_log VALUES($id_prestamo,".$this->session->userdata('id_usuario').",GETDATE(),1,'SE CANCELÓ EL PRÉSTAMO','prestamos_aut',NULL,NULL,NULL,NULL)");
 
         if (! $respuesta ) {
             return 0;
@@ -5713,10 +5714,8 @@ public function CancelarDescuento($id_pago,$motivo)
 
         $cmd = "SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, 
         UPPER(CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno)) AS user_names, 
-        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha,
-        convert(nvarchar,  his.fecha_movimiento , 6)as fecha_devolucion,
-        convert(nvarchar,  pci1.fecha_pago_intmex , 6)as fecha_pago_intmex,
-
+        convert(nvarchar,  his.fecha_movimiento , 6)as fecha_pago_intmex,
+			convert(nvarchar,  his.fecha_movimiento , 6)as fecha_devolucion,
          pci1.id_usuario, 
         UPPER(oprol.nombre) AS puesto, 
         UPPER(se.nombre) AS sede, 
@@ -5730,6 +5729,7 @@ public function CancelarDescuento($id_pago,$motivo)
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $query2
         INNER JOIN usuarios cr ON cr.id_usuario = pci1.modificado_por
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+    
         INNER JOIN historial_comisiones his ON his.id_pago_i = pci1.id_pago_i 
         AND his.estatus = 2
         LEFT JOIN sedes se   
@@ -6147,5 +6147,8 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
         WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
     }
+
+
+
     
 }

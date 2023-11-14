@@ -124,11 +124,12 @@ function CrearTable() {
         } 
         Posiciones.push(h);
     }
+
     tabla_bonos1 = $('#tabla_bonos').DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        // scrollX: true, se coloca doble header
-        // bAutoWidth: true,
+        scrollX: true,
+        bAutoWidth: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -162,26 +163,24 @@ function CrearTable() {
         "ordering": false,
         "data": TodosDatos,
         "columns": NewHeader,
-        columnDefs: [
-            {
-                "targets": pares,
-                "render": function(data, type, full, meta) {
-                    return  '<p class="m-0"><center><b>'+data+'</b></center></p>';
-                }
-            },
-            {
-                "targets": impares,
-                "render": function(data, type, full, meta) {
-                    return  '<p class="m-0"><b style="color:green;">'+formatMoney(data)+'</b></p>';
-                }
-            },
-            {
-                "targets": ultimo,
-                "render": function(data, type, full, meta) {
-                    return  '<p class="m-0"><b style="color:green;">'+formatMoney(data)+'</b></p>';
-                }
-            },
-        ]
+        columnDefs: [{
+            "targets": pares,
+            "render": function(data) {
+                return  '<p class="m-0"><center><b>'+data+'</b></center></p>';
+            }
+        },
+        {
+            "targets": impares,
+            "render": function(data) {
+                return  '<p class="m-0"><b style="color:green;">'+formatMoney(data)+'</b></p>';
+            }
+        },
+        {
+            "targets": ultimo,
+            "render": function(data) {
+                return  '<p class="m-0"><b style="color:green;">'+formatMoney(data)+'</b></p>';
+            }
+        }]
     });
 }
 

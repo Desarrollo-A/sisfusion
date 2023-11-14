@@ -1,3 +1,9 @@
+
+const RESPUESTA_MODAL = Object.freeze({
+  SUCCESS: 1,
+  FAIL: 2
+}); 
+
 $().ready(function () {
   myFunctions = {
     validateEmptyField(field) {
@@ -354,6 +360,17 @@ function replaceAll(text, busca, reemplaza) {
   while (text.toString().indexOf(busca) != -1)
       text = text.toString().replace(busca, reemplaza);
   return text;
+}
+
+function modalInformation(bandera, mensaje){
+  
+  changeSizeModal('modal-sm');
+    if(bandera == RESPUESTA_MODAL.SUCCESS){
+      appendBodyModal(`<div class="modal-body"><center><img style="width: 75%; height: 75%;" src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>${mensaje}</p></center></div>`);
+    }else{
+      appendBodyModal(`<div class="modal-body"><center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center></div>`);
+    } 
+  showModal();
 }
 
 

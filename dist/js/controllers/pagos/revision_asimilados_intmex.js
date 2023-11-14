@@ -1,17 +1,7 @@
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
+var tr;
+var tabla_asimilados2 ;
+var totaPen = 0;
+let titulos = [];
 
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
@@ -20,16 +10,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#puestoAsimilados").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#puestoAsimilados").selectpicker('refresh');
     }, 'json');
-
 });
 
-$('#filtro33').change(function(ruta){
-    rol = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#puestoAsimilados').change(function(ruta){
+    rol = $('#puestoAsimilados').val();
+    $("#usuarioAsimilados").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url +'Pagos/lista_usuarios',
         type: 'post',
@@ -43,30 +32,24 @@ $('#filtro33').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#usuarioAsimilados").append($('<option>').val(id).text(name));
             }
             if(len<=0){
-                $("#filtro44").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
+                $("#usuarioAsimilados").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#usuarioAsimilados").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro44').change(function(ruta){
-    proyecto = $('#filtro33').val();
-    condominio = $('#filtro44').val();
+$('#usuarioAsimilados').change(function(ruta){
+    proyecto = $('#puestoAsimilados').val();
+    condominio = $('#usuarioAsimilados').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
-
-var tr;
-var tabla_asimilados2 ;
-var totaPen = 0;
-//INICIO TABLA QUERETARO
-let titulos = [];
 
 $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
     if(i != 0){
@@ -77,10 +60,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             if ($('#tabla_asimilados').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_asimilados').DataTable().column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_asimilados2.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_asimilados2.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -95,6 +75,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
 });
 
 function getAssimilatedCommissions(proyecto, condominio){
+    console.log("out")
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -103,6 +84,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         var to = formatMoney(numberTwoDecimal((total)));
         document.getElementById("totpagarAsimilados").textContent = to;
     });
+    
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados2 = $("#tabla_asimilados").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -138,24 +120,13 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 tabla_asimilados2.ajax.reload();
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                    <center>
-                                        <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif">
-                                            <p style='color:#676767;'>Comisiones de esquema 
-                                                <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.
-                                            </p>
-                                    </center>`);
+                                $("#myModalEnviadas .modal-body").append(`<center><img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>Comisiones de esquema<b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>`);
                             } else {
                                 $('#spiner-loader').addClass('hide');
                                 $("#myModalEnviadas").modal('toggle');
                                 $("#myModalEnviadas .modal-body").html("");
                                 $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                    <center>
-                                        <P>ERROR AL ENVIAR COMISIONES </P>
-                                            <BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                        </P>
-                                    </center>`);
+                                $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>`);
                                 }
                         },
                         error: function( data ){
@@ -163,12 +134,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                             $("#myModalEnviadas").modal('toggle');
                             $("#myModalEnviadas .modal-body").html("");
                             $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                        <P>ERROR AL ENVIAR COMISIONES </P>
-                                        <BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i>
-                                        </P>
-                                </center>`);
+                            $("#myModalEnviadas .modal-body").append(`<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>`);
                         }
                     });
                 }else{
@@ -189,7 +155,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
-                    header: function (d, columnIdx) {
+                    header: function (columnIdx) {
                         return ' ' + titulos[columnIdx-1] + ' ';
                     }
                 }
@@ -322,31 +288,21 @@ function getAssimilatedCommissions(proyecto, condominio){
             
             "orderable": false,
             data: function( data ){
-                var BtnStats;
+                let btns = '';
+
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
+
                 if(data.estatus == 8){
-                    BtnStats = `
-                        <button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" 
-                            class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"> <i class="fas fa-info">
-                            </i>
-                        </button>
-                        <button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}"  
-                            class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause">
-                            </i>
-                        </button>`;
+                    btns += BTN_DETASI;
+                    btns += BTN_PAUASI;
                 }
                 else{
-                    BtnStats = `
-                    <button href="#" value="${data.id_pago_i}" 
-                        data-value="${data.lote}" data-code="${data.cbbtton}" 
-                        class="btn-data btn-blueMaderas consultar_logs_asimilados"title="Detalles"> 
-                            <i class="fas fa-info"></i>
-                    </button>
-                    <button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" 
-                        class="btn-data btn-green regresar_estatus" title="Activar solicitud">
-                            <i class="fas fa-play"></i>
-                    </button>`;
+                    btns += BTN_DETASI;
+                    btns += BTN_ACTASI;
                 }
-                return `<div class="d-flex"> ${BtnStats} </div>`;
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -385,11 +341,38 @@ function getAssimilatedCommissions(proyecto, condominio){
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
         $('#spiner-loader').removeClass('hide');
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul >
+                        <div id="nameLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
@@ -424,13 +407,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="88"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
         $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append(`<div class="row">
-                                                    <div class="col-md-6"></div>
-                                                    <div class="d-flex justify-end">
-                                                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>
-                                                        <button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button>
-                                                    </div>
-                                                </div>`);
+        $("#modal_nuevas .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
         $("#modal_nuevas").modal();
     });
 
@@ -442,23 +419,10 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
         $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="8"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append(`<div class="d-flex justify-end">
-        <input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">
-        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button>
-        <button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button>
-        </div>
-    ` );        $("#modal_nuevas").modal();
+        $("#modal_nuevas .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
+        $("#modal_nuevas").modal();
     });
-
-    /**--------------------------------------------------------------------------------------------- */
-
 }
-
-//FIN TABLA  ****************************************************************************************
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
-});
 
 $(window).resize(function(){
     tabla_asimilados2.columns.adjust();
@@ -473,7 +437,6 @@ $("#form_interes").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/despausar_solicitud",
@@ -483,18 +446,16 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_nuevas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         tabla_asimilados2.ajax.reload();
-                        // tabla_otras2.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -515,22 +476,8 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect">
-        
-                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
-                <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
-
-        </div>`);
-
-    $("#modal_multiples .modal-header").append(`
-    <div class="row">
-        <div class="col-md-12">
-            <select id="desarrolloSelect" name="desarrolloSelect" 
-                class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
-                required data-live-search="true">
-            </select>
-        </div>
-    </div>`);
+    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
         var len = data.length;
@@ -560,21 +507,12 @@ $(document).on("click", ".Pagar", function() {
 
         $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
-            console.log(data[0]);
             if (!data) {
                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
-                CETF981206BS6-
-                CETF981206BS6
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`
-                    <center>
-                        <div class="row bodypagos" >
-                            <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
-                            <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div>
-                    </center>
-                            `);
+                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
                 $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
@@ -594,13 +532,11 @@ $(document).on("click", ".Pagar", function() {
     });
 });
 
-//Función para regresar a estatus 7 la solicitud
 $("#form_refresh").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/refresh_solicitud/",
@@ -610,8 +546,9 @@ $("#form_refresh").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
+
                 if( data[0] ){
                     $("#modal_refresh").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
@@ -621,7 +558,6 @@ $("#form_refresh").submit( function(e) {
                 }
                 else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             },error: function( ){
                 alert("ERROR EN EL SISTEMA");
@@ -630,17 +566,13 @@ $("#form_refresh").submit( function(e) {
     }
 });
 
-
-
 function cleanComments(){
     var myCommentsList = document.getElementById('documents');
     myCommentsList.innerHTML = '';
-
     var myFactura = document.getElementById('facturaInfo');
     myFactura.innerHTML = '';
 }
 
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_asimilados2.$('input[type="checkbox"]').each(function () {
@@ -651,15 +583,15 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_asimilados2.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
+
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
     $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-    // Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -683,7 +615,6 @@ function selectAll(e) {
     }
 }
 
-
 $(document).ready( function(){
     $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
         $(".report_empresa").html();
@@ -697,10 +628,8 @@ $("#form_multiples").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
-
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         $.ajax({
             url: general_base_url + "Pagos/IntMexPagadosByProyect",
             data: data,
@@ -711,6 +640,7 @@ $("#form_multiples").submit( function(e) {
             method: 'POST',
             type: 'POST', // For jQuery < 1.9
             success: function(data){
+
                 if( data == 1){
                     CloseModalDelete2();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
@@ -719,12 +649,10 @@ $("#form_multiples").submit( function(e) {
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#spiner-loader').addClass('hidden');
-
             },error: function( ){
                 CloseModalDelete2();
                 alert("ERROR EN EL SISTEMA");
                 $('#spiner-loader').addClass('hidden');
-
             }
         });
     }

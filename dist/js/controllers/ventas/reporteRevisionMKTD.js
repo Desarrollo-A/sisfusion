@@ -2,9 +2,20 @@ var tr;
 var tabla_bonos2 ;
 var totaPen = 0;
 
-$('#mes').change( function(){
-    mes = $('#mes').val();
-    anio = $('#anio').val();
+$(document).ready(function(){
+    $('#anioComisiones').html("");
+    var d = new Date();
+    var n = d.getFullYear();
+    for (var i = n; i >= 2020; i--){
+    var id = i;
+    $("#anioComisiones").append($('<option>').val(id).text(id));
+    }
+    $("#anioComisiones").selectpicker('refresh');
+});
+
+$('#mesComisiones').change( function(){
+    mes = $('#mesComisiones').val();
+    anio = $('#anioComisiones').val();
     if(anio == ''){
     }
     else{
@@ -12,26 +23,16 @@ $('#mes').change( function(){
     }
 });
 
-$(document).ready(function(){
-    $('#anio').html("");
-    var d = new Date();
-    var n = d.getFullYear();
-    for (var i = n; i >= 2020; i--){
-    var id = i;
-    $("#anio").append($('<option>').val(id).text(id));
-    }
-    $("#anio").selectpicker('refresh');
-});
-$('#anio').change( function(){
+$('#anioComisiones').change( function(){
     $("#plaza").html("");
     $("#gerente").html("");
-    mes = $('#mes').val();
+    mes = $('#mesComisiones').val();
     if(mes == ''){
-    mes =0;
+        mes =0;
     }
     else{
-    anio = $('#anio').val();
-    getComisionesPasadas(mes, anio, 0, 0);
+        anio = $('#anioComisiones').val();
+        getComisionesPasadas(mes, anio, 0, 0);
     }      
 });
 
@@ -95,6 +96,7 @@ function getComisionesPasadas(mes,anio){
     let pagad1=0;
     let pagad2=0;
     let pagado_mktd=0;
+    
     $.each(json.data, function(i, v) {
         total += parseFloat(v.Total);
         SumaNus += parseFloat(v.sumaBono1);
@@ -124,6 +126,7 @@ function getComisionesPasadas(mes,anio){
     var pagado_mktdT = formatMoney(pagado_mktd);
     document.getElementById("pagadas_mktd").innerHTML = pagado_mktdT;
     });
+
     $("#tabla_bonos").prop("hidden", false);
     tabla_bonos1 = $("#tabla_bonos").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -277,9 +280,7 @@ function getComisionesPasadas(mes,anio){
     });
     
     $('#tabla_bonos').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 }
 
