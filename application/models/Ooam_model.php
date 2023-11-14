@@ -580,14 +580,18 @@ class Ooam_model extends CI_Model {
         FROM lotes l
         INNER JOIN pago_ooam pc ON pc.id_lote = l.idLote AND pc.bandera in (0,100)
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial   
-        INNER JOIN usuarios ae ON ae.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 7 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario) 
-        LEFT JOIN usuarios co ON co.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 9 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios ge ON ge.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 3 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios su ON su.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 2 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN clientes_ooam cl ON cl.idLote = pc.id_lote 
+        AND cl.fechaModificacion = (select max(cl2.fechaModificacion) from clientes_ooam cl2 Where cl2.idCliente = cl2.idCliente)
+        INNER JOIN usuarios ae ON ae.id_usuario = cl.idAsesor 
+        LEFT JOIN usuarios co ON co.id_usuario =  cl.idCoordinador 
+        LEFT JOIN usuarios ge ON ge.id_usuario = cl.idGerente 
+        LEFT JOIN usuarios su ON su.id_usuario = cl.idSubdirector
+        LEFT JOIN usuarios di ON di.id_usuario = cl.idDirector
         LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
-        WHERE pc.bandera in (0,100) ORDER BY l.idLote");
+        WHERE pc.bandera in (0,100)
+        ORDER BY l.idLote");
+
             
         return $query;
     }
@@ -605,11 +609,13 @@ class Ooam_model extends CI_Model {
         INNER JOIN pago_ooam pc ON pc.id_lote = l.idLote AND pc.bandera NOT in (0,100)
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial   
-        INNER JOIN usuarios ae ON ae.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 7 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario) 
-        LEFT JOIN usuarios co ON co.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 9 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios ge ON ge.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 3 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios su ON su.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 2 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
-        LEFT JOIN usuarios di ON di.id_usuario = (SELECT c.id_usuario FROM comisiones_ooam c WHERE c.rol_generado = 1 AND c.id_lote = pc.id_lote GROUP BY c.id_usuario)
+        INNER JOIN usuarios ae ON ae.id_usuario = cl.idAsesor 
+        LEFT JOIN clientes_ooam cl ON cl.idLote = pc.id_lote 
+        AND cl.fechaModificacion = (select max(cl2.fechaModificacion) from clientes_ooam cl2 Where cl2.idCliente = cl2.idCliente)
+        LEFT JOIN usuarios co ON co.id_usuario =  cl.idCoordinador 
+        LEFT JOIN usuarios ge ON ge.id_usuario = cl.idGerente 
+        LEFT JOIN usuarios su ON su.id_usuario = cl.idSubdirector
+        LEFT JOIN usuarios di ON di.id_usuario = cl.idDirector
         LEFT JOIN plan_comision pl ON pl.id_plan = pc.plan_comision
         WHERE pc.bandera NOT in (0,100) ORDER BY l.idLote");
             
@@ -629,15 +635,15 @@ class Ooam_model extends CI_Model {
     }
 
     public function getDatosAbonadoSuma11($idlote){
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, cl.totalLote as totalNeto2/*, cl.lugar_prospeccion*/
         FROM lotes lo
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        INNER JOIN clientes_ooam cl ON cl.idCliente = lo.idCliente
         INNER JOIN comisiones_ooam c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
         LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones_ooam WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
         INNER JOIN pago_ooam pac ON pac.id_lote = lo.idLote
         LEFT JOIN pago_ooam_ind pci on pci.id_comision = c1.id_comision
-        WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
-        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+        WHERE lo.status = 1 AND cl.estatus = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, c2.abono_pagado");
     }
 
     public function getDatosAbonadoDispersion($idlote){ 
