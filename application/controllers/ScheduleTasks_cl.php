@@ -1049,7 +1049,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     {
         $encabezados = ($typeTransaction === 1)
             ? [
-                'nombreSede'       => 'SEDE',
+                'tipo_proceso'      => 'TIPO DE PROCESO',
+                'nombreSede'        => 'SEDE',
                 'nombreResidencial' => 'PROYECTO',
                 'nombreCondominio'  => 'CONDOMINIO',
                 'nombreLote'        => 'LOTE',
