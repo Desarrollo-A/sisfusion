@@ -96,7 +96,6 @@
   
   function getEventos(ids){
     removeCRMEvents();
-
     return $.ajax({
       type: 'POST',
       url: `${base_url}Calendar/Events`,
@@ -108,7 +107,6 @@
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
-
         if(data.length == 0) {
           alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
         }
