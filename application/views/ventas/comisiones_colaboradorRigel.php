@@ -28,7 +28,6 @@
             }
         </style>
 
-        <!-- Modals --> 
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -81,9 +80,8 @@
                 </div>
             </div>
         </div>
- 
-        <!-- inicia modal subir factura -->
-         <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+
+        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -204,11 +202,7 @@
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
                                             <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
-                                                                                
-                                                <?php
-                                                if($this->session->userdata('forma_pago') == 3){
-
-                                                ?>
+                                                <?php if($this->session->userdata('forma_pago') == 3){ ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Recuerda que el <b>impuesto estatal</b> sobre tu pago de comisiones es de 
                                                 <?php
                                                 switch($this->session->userdata('id_usuario')){
@@ -241,10 +235,7 @@
                                                 }
                                                 ?>
                                                 </p>
-                                                <?php
-
-                                                }
-                                                ?>
+                                                <?php } ?>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -280,14 +271,14 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label  class="control-label" for="proyecto1">Proyecto</label>
-                                                                <select name="proyecto1" id="proyecto1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label  class="control-label" for="catalogo_nuevas">Proyecto</label>
+                                                                <select name="catalogo_nuevas" id="catalogo_nuevas" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="condominio1">Condominio</label>
-                                                                <select name="condominio1" id="condominio1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="condominio_nuevas">Condominio</label>
+                                                                <select name="condominio_nuevas" id="condominio_nuevas" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">                    
@@ -314,10 +305,8 @@
 
                                                                 }else if($opn_cumplimiento[0]['estatus'] == 2){
                                                                     echo '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
-
                                                                 }
                                                             }
-
                                                                 }
                                                                 else{
                                                                     echo '';
@@ -343,7 +332,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -403,7 +392,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>                 
                                                 </thead>
                                             </table>
@@ -470,7 +459,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>                
                                                 </thead>
                                             </table>
@@ -531,12 +520,12 @@
                                                             <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
-                                                            <th>MÁS</th>
+                                                            <th>ACCIONES</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
                                         </div>
-                                        <!-- /////////////// -->
+
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
                                             <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
@@ -544,18 +533,16 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                 <?php
                                                                     $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-                                                                    foreach ($query->result() as $row)
-                                                                    {
+                                                                    foreach ($query->result() as $row){
                                                                         $number = $row->nuevo_general;
                                                                         echo '$' . number_format($number, 2).'';
-                                                                    }
-                                                                    ?>
+                                                                    } ?>
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -592,7 +579,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -648,10 +635,7 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
-    <script>
-            var formaPago = "<?= $this->session->userdata('forma_pago')?>";
-    </script>                                                        
+    <script> var formaPago = "<?= $this->session->userdata('forma_pago')?>"; </script>                                                        
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaboradorRigel.js"></script>
 </body>
