@@ -1213,7 +1213,7 @@
         
         $updateLote["tipo_venta"] = $nomLote->tipo_venta;
 
-        //traer el tipo de venta de lote, y luego hacer lo mismo
+        
         $flag_particular = 0;
         
         if($updateLote['tipo_venta'] == 1){
@@ -1234,10 +1234,23 @@
             $this->insertDocToHist($arrayDocs);
 
             if($updateLote["tipo_venta"] == 50){
-               
+                $this->insertDocToHist($arrayDocs);
             }else{
                 $this->insertDocToHist($arrayDocs);
             }   
+
+
+            if($arrayDocs["id_opcion"] == 50){
+                if($flag_particular == 1){
+                    $this->caja_model_outside->insertDocToHist($arrayDocs);
+                }
+                        
+            }else{
+                    $this->caja_model_outside->insertDocToHist($arrayDocs);
+
+            }
+
+
         }
 
 
