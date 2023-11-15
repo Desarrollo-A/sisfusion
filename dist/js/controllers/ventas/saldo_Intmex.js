@@ -64,7 +64,7 @@ $('#tabla_historialGral thead tr:eq(0) th').each(function(i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.dispersado);
             });
-            document.getElementById("myText_nuevas").textContent = formatMoney(numberTwoDecimal(total));
+            document.getElementById("disponible_reporte").textContent = formatMoney(numberTwoDecimal(total));
         }
     });
 });
@@ -76,7 +76,7 @@ function getAssimilatedCommissions(empresa, regimen) {
             total += parseFloat(v.dispersado);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("myText_nuevas").textContent = to;
+        document.getElementById("disponible_reporte").textContent = to;
     });
 
     $("#tabla_historialGral").prop("hidden", false);

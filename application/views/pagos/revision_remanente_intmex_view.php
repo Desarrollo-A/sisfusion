@@ -47,27 +47,9 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
         </div>
 
         <div class="content boxContent">
@@ -100,26 +82,26 @@
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div class="form-group d-flex justify-center align-center">
                                                             <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                            <p class="input-tot pl-1" id="totpagarPen" name="totpagarPen">$0.00</p>
+                                                            <p class="input-tot pl-1" id="total_autorizar" name="total_autorizar">$0.00</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row aligned-row d-flex align-end">
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                         <div class="form-group">
-                                                            <label class="control-label" for="catalogoRemanente">Puesto</label>
-                                                            <select name="catalogoRemanente" id="catalogoRemanente" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                            <label class="control-label" for="catalogo_remanente">Puesto</label>
+                                                            <select name="catalogo_remanente" id="catalogo_remanente" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                         <div class="form-group">
-                                                            <label class="control-label" for="usuarioRemanente">Usuario</label>
-                                                            <select class="selectpicker select-gral m-0" id="usuarioRemanente" name="usuarioRemanente[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                            <label class="control-label" for="usuario_remanente">Usuario</label>
+                                                            <select class="selectpicker select-gral m-0" id="usuario_remanente" name="usuario_remanente[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                                                         <div class="form-group w-100">
-                                                            <button type="button" class="btn-gral-data PagarRem">Pagar masivamente</button>
+                                                            <button type="button" class="btn-gral-data pagar_remanente">Pagar masivamente</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -165,13 +147,13 @@
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div class="form-group d-flex justify-center align-center">
                                                             <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                            <p class="input-tot pl-1" name="totpagarremanenteOoam" id="totpagarremanenteOoam">$0.00</p>
+                                                            <p class="input-tot pl-1" name="total_remanenteOoam" id="total_remanenteOoam">$0.00</p>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                         <div class="form-group d-flex justify-center align-center">
                                                             <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                            <p class="input-tot pl-1" id="totpagarPenOoam" name="totpagarPenOoam">$0.00</p>
+                                                            <p class="input-tot pl-1" id="total_autorizarOoam" name="total_autorizarOoam">$0.00</p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -231,7 +213,7 @@
     <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_remanente_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_remanente_intmex_ooam.js"></script>
 </body>

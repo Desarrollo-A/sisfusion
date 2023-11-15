@@ -261,12 +261,10 @@ function getDataXML(proyecto){
                 <div class="col-sm-4 col-md-4 col-lg-4 p-0">
                     <button class="btn btn-azure w-90" type="button" onclick="xmlFuncion(${id_user})" id="cargar_xmlFuncion"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
                 </div> 
-            </div>
-                `);
+            </div>`);
             
         $("#seeInformationModalPDF .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-        $("#seeInformationModalPDF .modal-body").append(`
-            <div class="row">
+        $("#seeInformationModalPDF .modal-body").append(`<div class="row">
                 <div class="col-lg-6 form-group">
                     <label class="control-label" for="emisor">Emisor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="emisor" name="emisor" placeholder="Emisor" value="" required>

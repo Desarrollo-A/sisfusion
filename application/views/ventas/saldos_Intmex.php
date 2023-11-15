@@ -22,7 +22,7 @@
                                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" id="myText_nuevas">$0.00</p>
+                                                    <p class="input-tot pl-1" id="disponible_reporte">$0.00</p>
                                                 </div>
                                             </div>
                                         </div>

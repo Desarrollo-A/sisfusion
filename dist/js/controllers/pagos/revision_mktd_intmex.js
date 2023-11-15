@@ -30,16 +30,15 @@ $("#tabla_plaza_1").ready( function(){
         $( 'input', this ).on('keyup change', function () {
             if (plaza_1.column(i).search() !== this.value ) {
                 plaza_1.column(i).search(this.value).draw();
-                
                 var total = 0;
                 var index = plaza_1.rows({ selected: true, search: 'applied' }).indexes();
                 var data = plaza_1.rows( index ).data();
-
+                
                 $.each(data, function(i, v){
                     total += parseFloat(v.sum_abono_marketing);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("myText_nuevas").textContent = to1;
+                document.getElementById("disponible_nuevas").textContent = to1;
             }
         });
     });
@@ -52,7 +51,7 @@ $("#tabla_plaza_1").ready( function(){
             total += parseFloat(v.sum_abono_marketing);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = to;
+        document.getElementById("disponible_nuevas").textContent = to;
     });
 
     plaza_1 = $("#tabla_plaza_1").DataTable({
@@ -399,7 +398,7 @@ $("#tabla_plaza_2").ready( function(){
 
         
     $("#tabla_plaza_2 tbody").on("click", ".consultar_logs_asimilados", function(e){
-        $("#nameLote").html('');
+        $("#nombreLote").html('');
         $("#comments-list-remanente").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -408,14 +407,14 @@ $("#tabla_plaza_2").ready( function(){
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-body">
                         <div role="tabpanel">
-                            <div id="nameLote"></div>
+                            <div id="nombreLote"></div>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                    <ul class="timeline-3" id="comentarioListaComisiones"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -429,10 +428,10 @@ $("#tabla_plaza_2").ready( function(){
                     </div>`);
         showModal();
 
-        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li>\n' +
+                $("#comentarioListaComisiones").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
@@ -844,14 +843,6 @@ function preview_info(archivo){
         elemento += '</div>';
         $("#documento_preview .modal-dialog").append(elemento);
     }
-}
-
-
-function cleanComments() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
 }
 
 $(window).resize(function(){
