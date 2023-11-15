@@ -66,7 +66,7 @@
                         <div class="card-content" style="padding: 50px 20px;">
                             <h4 class="card-title"></h4>
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Corridas Financieras por lote</h3>
+                                <h3 class="card-title center-align">Corridas financieras por lote</h3>
                                 <div class="container-fluid" style="padding: 20px 0px;">
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
@@ -130,7 +130,7 @@
                                             <th class="text-center">RESPONSABLE</th>
                                             <!--<th class="text-center">UBICACIÓN</th>-->
                                             <th class="text-center">CORRIDA FINANCIERA</th>
-                                            <th class="text-center">ESTATUS </th>
+                                            <th class="text-center">ACCIONES </th>
 
                                         </tr>
                                         </thead>
