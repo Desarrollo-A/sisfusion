@@ -16,7 +16,7 @@ function cleanCommentsremanente() {
     myCommentsLote.innerHTML = '';
 }
 
-function CloseModalDelete2(){
+function CloseModalDelete2Ooam(){
     document.getElementById("form_multiplesOoam").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
@@ -86,7 +86,7 @@ $(document).on("click", ".PagarOoam", function() {
     $("#modal_multiplesOoam .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
     $("#modal_multiplesOoam .modal-footer").append(`<div id="borrarProyect">
         
-                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button>
+                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Ooam()">CANCELAR</button>
                 <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
 
         </div>`);
@@ -163,7 +163,7 @@ $(document).on("click", ".PagarOoam", function() {
 
 //INICIO TABLA QUERETARO***************************************
 let titulosOoam = [];
-$('#tabla_factura_ooam thead tr:eq(0) th').each( function (i) {
+$('#tabla_factura_ooam thead trs:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         titulosOoam.push(title);
@@ -452,7 +452,11 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
 
     $('#tabla_factura_ooam').on('click', 'input', function() {
         trs = $(this).closest('trs');
-        var rows = tabla_factura_ooam.row(trs).data();
+        console.log(trs);
+        var rows = tabla_factura_ooam.row(trs).data();  
+
+
+        console.log(rows)
         if (rows.pa == 0) {
             rows.pa = rows.impuesto;
             totaPen += parseFloat(rows.pa);
@@ -743,15 +747,15 @@ $("#form_multiplesOoam").submit( function(e) {
             type: 'POST', // For jQuery < 1.9
             success: function(data){
                 if( data == 1){
-                    CloseModalDelete2();
+                    CloseModalDelete2Ooam();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                 }else{
-                    CloseModalDelete2();
+                    CloseModalDelete2Ooam();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#loader').addClass('hidden');
             },error: function( ){
-                CloseModalDelete2();
+                CloseModalDelete2Ooam();
                 alert("ERROR EN EL SISTEMA");
                 $('#loader').addClass('hidden');
             }

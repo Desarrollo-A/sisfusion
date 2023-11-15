@@ -2,6 +2,7 @@ var tr;
 var tabla_remanente2 ;
 
 function CloseModalDelete2(){
+
     document.getElementById("form_multiples").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
