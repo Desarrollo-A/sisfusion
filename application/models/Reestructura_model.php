@@ -30,8 +30,7 @@ class Reestructura_model extends CI_Model
         } else if ($id_rol == 3 && $tipo == 2) { // GERENTE && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_usuario";
-        } else if (in_array($id_rol, array(2, 5)) && $tipo == 2) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM
-
+        } else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
@@ -278,21 +277,21 @@ class Reestructura_model extends CI_Model
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
                     asig_jur = 0, tipo_estatus_regreso = 1
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
-
-        if(!in_array($datos["tipo"],array(7,8,9))) {
-            $this->email
-                ->initialize()
-                ->from('Ciudad Maderas')
-                ->to('programador.analista24@ciudadmaderas.com')
-                ->subject('Notificación de liberación')
-                ->view($this->load->view('mail/reestructura/mailLiberacion', [
-                    'lote' => $row[0]['nombreLote'],
-                    'fechaApartado' => $datos['fechaLiberacion'],
-                    'Observaciones' => $datos['obsLiberacion']
-                ], true));
-
-            $this->email->send();
-        }
+                    
+                    if(!in_array($datos["tipo"],array(7,8,9))) {
+                        $this->email
+                            ->initialize()
+                            ->from('Ciudad Maderas')
+                            ->to('programador.analista24@ciudadmaderas.com')
+                            ->subject('Notificación de liberación')
+                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                                'lote' => $row[0]['nombreLote'],
+                                'fechaApartado' => $datos['fechaLiberacion'],
+                                'Observaciones' => $datos['obsLiberacion']
+                            ], true));
+                
+                        $this->email->send();
+                    }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
