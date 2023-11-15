@@ -195,11 +195,14 @@ class Contraloria_model extends CI_Model {
 			WHERE vc.id_cliente = ".$idCliente." AND u.id_rol = 6 AND u.estatus = 1
 			UNION ALL
 			/*ASISTENTE SUBDIRECTOR (TITULAR VENTA) */
-			SELECT c.id_cliente, uuu.correo FROM clientes c 
+			/*SELECT c.id_cliente, uuu.correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_gerente
 			LEFT JOIN usuarios uu ON uu.id_usuario = u.id_lider
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
-			WHERE c.id_cliente = ".$idCliente." AND uuu.id_rol = 5 AND u.estatus = 1
+			WHERE c.id_cliente = ".$idCliente." AND uuu.id_rol = 5 AND u.estatus = 1*/
+            SELECT c.id_cliente, u.correo FROM clientes c 
+			LEFT JOIN usuarios u ON u.id_lider = c.id_subdirector AND u.estatus = 1 AND u.id_rol = 5
+			WHERE c.id_cliente = $idCliente
 			UNION ALL
 			/*ASISTENTE SUBDIRECTOR (VENTAS COMPARTIDAS) */
 			SELECT vc.id_cliente, uuu.correo FROM ventas_compartidas vc 
@@ -752,7 +755,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function get_id_asig($id){
-        $query = $this->db->query("SELECT contador FROM variables where identificador = $id");
+        $query = $this->db->query("SELECT contador FROM variables where identificador = '$id'");
         return $query->row();
     }
 

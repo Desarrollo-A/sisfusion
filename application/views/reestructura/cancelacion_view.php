@@ -5,6 +5,25 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
 
+        <div class="modal fade" id="cancelarLote" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content" > 
+					<div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4>¿Estás seguro de cancelar el contrato del lote?</h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLote" id="idLote">
+                        <textarea name="obsLiberacion" id="obsLiberacion" placeholder="Observaciones" class="text-modal" required row="4"></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="saveCancel" name="saveCancel" class="btn btn-primary">Aceptar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -20,7 +39,7 @@
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                <select name="catalogoLiberar" id="catalogoLiberar" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
@@ -55,4 +74,3 @@
 </body>
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/cancelacion.js"></script>
-<script src="<?=base_url()?>dist/js/core/modal-general.js"></script>

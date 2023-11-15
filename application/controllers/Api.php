@@ -1163,7 +1163,22 @@ class Api extends CI_Controller
                                             $dataComisiones['fecha_modificado'] = date("Y-m-d H:i:s");
                                             $dataComisiones['fecha_creacion'] = date("Y-m-d H:i:s");
                                             $dataComisiones['fecha_autorizacion'] = date("Y-m-d H:i:s");
-                                            $dataComisiones['creado_por'] = 1;                                                
+                                            $dataComisiones['creado_por'] = 1;            
+                                            
+                                            if($dataReturn->comisionistas[$i]->rolGenerado == 7){
+                                                $dataLineaVenta['idAsesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
+                                                $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){
+                                                $dataLineaVenta['idGerente'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 2){
+                                                $dataLineaVenta['idSubdirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 1){
+                                                $dataLineaVenta['idDirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else{
+                                                $dataLineaVenta['idOtro'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }
+
                                             
                                             if (isset($dataComisiones) && !empty($dataComisiones)) {
                                                 $dbTransaction = $this->Ooam_model->insertComisionOOAM('comisiones_ooam',$dataComisiones);
@@ -1172,6 +1187,11 @@ class Api extends CI_Controller
                                                 }
                                             }
                                         }
+                                        $dataLineaVenta['idLote'] = $getInfoLote->idLote;                            
+                                        $dataLineaVenta['estatus'] = 1;                            
+                                        $dataLineaVenta['idCliente'] = $dataReturn->idCliente;
+                                        $dataLineaVenta['totalLote'] = $totalLote;
+                                        $dataLineaVenta['modificadoPor'] = 'SOOAM';
                                         
                                             $dataPago['id_lote'] = $getInfoLote->idLote;                       
                                             $dataPago['total_comision'] = $generalComisiones; 
@@ -1193,6 +1213,13 @@ class Api extends CI_Controller
                                             $dataPago['nombreCliente'] = $dataReturn->nombreCliente;
                                             $dataPago['estatusContratacion'] = $dataReturn->estatusContratacion;
                                             $dataPago['totalLote'] = $dataReturn->totalLote;
+
+                                            if (isset($dataLineaVenta) && !empty($dataLineaVenta)) {
+                                                $dbTransactionLV = $this->Ooam_model->insertComisionOOAM('clientes_ooam',$dataLineaVenta);
+                                                if($dbTransactionLV != 1){
+                                                    echo (json_encode($dbTransactionLV));
+                                                } 
+                                                }
                                             
                                             if (isset($dataPago) && !empty($dataPago)) {
                                                 $dbTransactionPago = $this->Ooam_model->insertComisionOOAM('pago_ooam',$dataPago);
@@ -1201,7 +1228,7 @@ class Api extends CI_Controller
                                                 } 
                                                 }
                                                 
-                                                if ($dbTransaction&&$dbTransactionPago){ // SUCCESS TRANSACTION
+                                                if ($dbTransaction&&$dbTransactionPago&&$dbTransactionLV){ // SUCCESS TRANSACTION
                                                     echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
                                                     header('Content-Type: application/json');
                                                 } else{ // ERROR TRANSACTION
