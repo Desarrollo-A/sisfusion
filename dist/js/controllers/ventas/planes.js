@@ -406,7 +406,7 @@ async function ConsultarPlanes(){
                     templateCard(indexNext, element);
 
                     $("#checks_"+indexNext).html('');
-                    $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text(" UNA OPCIÓN"));
+                    $("#tipo_descuento_"+indexNext).append($('<option>').val("default").text("SELECCIONA UNA OPCIÓN"));
                     let lenDesCon = descuentosYCondiciones.length;
 
                     descuentosYCondiciones.forEach(function (subelement, indexCondicion) {                        
