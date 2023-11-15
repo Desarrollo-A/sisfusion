@@ -98,12 +98,14 @@
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
+                <form id="frmnewsol2" method="post">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <form method="post" id="form_multiples">
                         <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
                     </form>
+
                 </div>
             </div>
         </div>

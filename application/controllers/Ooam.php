@@ -166,19 +166,19 @@ class Ooam extends CI_Controller
         $datos["cadena"] = '<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
       } else{
         if($opn_cumplimiento[0]['estatus'] == 1){
-          $datos["cadena"] = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+          $datos["cadena"] = '<button type="button"  class="btn btn btn-azure subir_factura_multiple" >SUBIR FACTURAS</button>';
         } else if($opn_cumplimiento[0]['estatus'] == 0){
           $datos["cadena"] ='<a href="'.base_url().'Usuarios/configureProfile"> <span class="label label-danger" style="background:orange;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA</span> </a>';
         } else if($opn_cumplimiento[0]['estatus'] == 2){
-          $datos["cadena"] = '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+          $datos["cadena"] = '<button type="button"  class="btn btn-azure subir_factura_multiple" >SUBIR FACTURAS</button>';
         }
       }
     } else if ($query->forma_pago == 5) {
       $bandera = 1;
       if(count($opn_cumplimiento) == 0){
-        $datos["cadena"] = '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+        $datos["cadena"] = '<button type="button" class="btn btn-azure subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
       } else if($opn_cumplimiento[0]['estatus'] == 0) {
-        $datos["cadena"]= '<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
+        $datos["cadena"]= '<button type="button"  class="btn btn-azure subir-archivo">SUBIR DOCUMENTO FISCAL</button>';
       } else if ($opn_cumplimiento[0]['estatus'] == 1) {
         $datos["cadena"] = '<p><b>Documento fiscal cargado con éxito</b><a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="cursor: pointer;"><u>Ver documento</u></a></p>';
       } else if($opn_cumplimiento[0]['estatus'] == 2) {

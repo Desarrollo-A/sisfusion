@@ -1408,13 +1408,19 @@ $(document).on("click", ".subir_factura_multiple", function() {
     (id_usuario_general == 7689)) {
         $("#modal_multiples .modal-body").html("");
         $("#modal_multiples .modal-header").html("");
-        $("#modal_multiples .modal-header").append(`<div class="row">
-        <div class="col-md-12 text-right">
-        <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true" style="font-size:40px;">&times;</span>
-        </button>
-        </div>
-        <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+        $("#modal_multiples .modal-footer").html("");
+        $("#modal_multiples .modal-header").append(`
+            <div class="col-md-12 text-right">
+                <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="font-size:40px;">&times;</span>
+                </button>
+            </div>
+            <div class="col-md-12">
+                <select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral m-0 desarrolloSelect" 
+                    title="SELECCIONA UNA OPCIÓN" data-style="btn" data-show-subtext="true" data-container="body"
+                    required data-live-search="true">
+                </select>
+            </div>`);
         // alert(313133)
         $.post('getDesarrolloSelect', function (data) {
             if (data == 3) {
@@ -1433,7 +1439,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                         $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
                     }
                     if (len <= 0) {
-                        $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+                        $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');  
                     }
                     $("#desarrolloSelect").val(0);
                     $("#desarrolloSelect").selectpicker('refresh');
@@ -1445,34 +1451,130 @@ $(document).on("click", ".subir_factura_multiple", function() {
             $("#modal_multiples .modal-body").html("");
             $.getJSON(general_base_url + "Ooam/getDatosProyecto/" + valorSeleccionado).done(function (data) {
                 if (!data) {
-                    $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                    $("#modal_multiples .modal-body").append(`
+                    <div class="row col-md-12">
+                        <div class="col-md-12">SIN DATOS A MOSTRAR
+                        </div>
+                    </div>`);
                 }
                 else {
                     if (data.length > 0) {
-                        $("#modal_multiples .modal-body").append(`<div class="row">
-                        <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
+                        $("#modal_multiples .modal-body").append(`
+                        <div class="row col-md-12">
+                            <div class="col-md-1">
+                                <input type="checkbox" class="form-control input-gral" onclick="todos();" id="btn_all">
+                            </div>
+                            <div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b>
+                            </div>
+                        </div>`);
                     }
                     $.each(data, function (i, v) {
                         c++;
                         abono_asesor = (v.abono_neodata);
-                        $("#modal_multiples .modal-body").append('<div class="row">' +
-                            '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.nombreLote + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_i + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                        $("#modal_multiples .modal-body").append(`
+                        <div class="row col-md-12">
+                            <div class="col-md-1">
+                                <input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult${i}" 
+                                name="comisiones_facura_mult">
+                            </div>
+                            <div class="col-md-4">
+                                <input id="data1${i}" name="data1${i}" value="${v.nombreLote}" class="form-control input-gral data1 ng-invalid ng-invalid-required" required placeholder="%"> 
+                            </div>
+                            <div class="col-md-4">
+                                <input type="hidden" id="idpago-${i}" name="idpago-${i}" value="${v.id_pago_i}">
+                                <input id="data2${i}" name="data2${i}" value="${parseFloat(abono_asesor).toFixed(2)}" class="form-control input-gral valid data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%">
+                            </div>
+                        </div>`);
                     });
-                    $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new"></span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
-                    $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
-                    $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-                    $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
-                        '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
-                        '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
-                        '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
-                        '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
-                        '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
-                        '<div class="row"><div class="col-lg-12 form-group"><label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="saveX();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
-                }
+                    $("#modal_multiples .modal-body").append(`
+                        
+                            <div class="col-md-12 ">
+                                <b  class="text-left lbl-azure" id="sumacheck"> Suma seleccionada: 0</b>
+                            </div>
+
+                            <div class="col col-xs-9 col-sm-9 col-md-9 col-lg-9 mb-12">
+                                <div class="" id="selectFileSectionResicioncf">
+                                    <div class="file-gph">
+                                        <input class="d-none" type="file" onchange="changeName(this)" required accept="application/xml" id="xmlfile2">
+                                        <input class="file-name overflow-text" id="xmlfile2-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                        <label class="upload-btn m-0" for="xmlfile2"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                            
+                                <button class="btn btn-azure w-90" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
+
+                            </div>                            
+                            <div class="col-lg-12">
+                                <p id="cantidadSeleccionada"></p>
+                                <b id="cantidadSeleccionadaMal"></b>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="emisor">Emisor:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="emisor" name="emisor" placeholder="Emisor" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label for="receptor">Receptor:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="receptor" name="receptor" placeholder="Receptor" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="total">Monto:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="total" name="total" placeholder="Total" value="" required>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="formaPago">Forma Pago:</label>
+                                <input type="text" class="form-control input-gral valid" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="cfdi">Uso del CFDI:</label>
+                                <input type="text" class="form-control input-gral valid" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="metodopago">Método de Pago:</label>
+                                <input type="text" class="form-control input-gral valid" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label for="unidad">Unidad:</label>
+                                <input type="text" class="form-control input-gral valid" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> 
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label class="label-gral" for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control input-gral valid" id="clave" name="clave" placeholder="Clave" value="" required="">
+                            </div> 
+                            <div class="col-lg-12 form-group"> 
+                                <label class="label-gral" >OBSERVACIONES FACTURA 
+                                    <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover"  title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i>
+                                </label>
+                                <textarea class="text-modal" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones">
+                                </textarea> 
+                            </div> 
+                    
+                        
+                        `);
+                
+
+                    $("#modal_multiples .modal-footer").append(`
+                            <div class="col-lg-12">
+                                <button type="button"  onclick="saveX();" id="btng" disabled class="btn btn-primary guardarFactura">GUARDAR</button> 
+                                <button type="button" data-dismiss="modal" class="btn btn-danger btn-simple close_modal_xml">CANCELAR</button>
+                            </div> 
+                        `);
+                    
+                
+                    }
             });
         });
         $("#modal_multiples").modal({
@@ -1717,6 +1819,74 @@ function disabled() {
     }
 }
 
+$("#frmnewsol2").submit(function (e) {
+    e.preventDefault();
+}).validate({
+    submitHandler: function (formData) {
+        alert(133139310)
+        input = $("#xmlfile2")
+        const labelSum = $('#sumacheck').text();
+        const total = Number(labelSum.split('$')[1].trim().replace(',', ''));
+
+        documento_xml = input[0].files[0];
+        var xml = documento_xml;
+        console.log(documento_xml)
+        console.log(documento_xml)
+        formData.append("dato", "valor");
+        formData.append("xmlfile", xml);
+        formData.append("pagos", pagos);
+        formData.append('total', total);
+
+        console.log(formData)
+        $.ajax({
+            url: general_base_url + 'Ooam/guardar_solicitud2',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function (data) {
+                console.log(data);
+                document.getElementById('btng').disabled = false;
+                if (data.resultado) {
+                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    $("#modal_multiples").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                    tabla_revision.ajax.reload();
+                    $("#modal_multiples .modal-body").html("");
+                    $("#modal_multiples .header").html("");
+                } else if (data == 3) {
+                    alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                    $('#loader').addClass('hidden');
+                    $("#modal_multiples").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                    $("#modal_multiples .modal-body").html("");
+                    $("#modal_multiples .header").html("");
+                } else if (data == 4) {
+                    alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                    $('#loader').addClass('hidden');
+                    $("#modal_multiples").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                    $("#modal_multiples .modal-body").html("");
+                    $("#modal_multiples .header").html("");
+                } else {
+                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    $('#loader').addClass('hidden');
+                    $("#modal_multiples").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                    $("#modal_multiples .modal-body").html("");
+                    $("#modal_multiples .header").html("");
+                }
+            },
+            error: function () {
+                document.getElementById('btng').disabled = false;
+                alert("ERROR EN EL SISTEMA");
+            }
+        });
+    }
+})
 function save2() {
     let formData = new FormData(document.getElementById("frmnewsol2"));
     const labelSum = $('#sumacheck').text();
@@ -1804,38 +1974,38 @@ $("#frmnewsol").submit(function (e) {
     }
 });
 
-$("#frmnewsol2").submit(function (e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function (form) {
-        var data = new FormData($(form)[0]);
-        data.append("xmlfile", documento_xml);
-        alert(data);
-        $.ajax({
-            url: general_base_url + link_post,
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST', // For jQuery < 1.9
-            success: function (data) {
-                if (data.resultado) {
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
-                    $("#modal_formulario_solicitud").modal('toggle');
-                    tabla_nuevas.ajax.reload();
-                }
-                else {
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                }
-            },
-            error: function () {
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
+// $("#frmnewsol2").submit(function (e) {
+//     e.preventDefault();
+// }).validate({
+//     submitHandler: function (form) {
+//         var data = new FormData($(form)[0]);
+//         data.append("xmlfile", documento_xml);
+//         alert(data);
+//         $.ajax({
+//             url: general_base_url + link_post,
+//             data: data,
+//             cache: false,
+//             contentType: false,
+//             processData: false,
+//             dataType: 'json',
+//             method: 'POST',
+//             type: 'POST', // For jQuery < 1.9
+//             success: function (data) {
+//                 if (data.resultado) {
+//                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+//                     $("#modal_formulario_solicitud").modal('toggle');
+//                     tabla_nuevas.ajax.reload();
+//                 }
+//                 else {
+//                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+//                 }
+//             },
+//             error: function () {
+//                 alert("ERROR EN EL SISTEMA");
+//             }
+//         });
+//     }
+// });
 
 function calcularMontoParcialidad() {
     $precioFinal = parseFloat($('#value_pago_cliente').val());
@@ -1916,3 +2086,23 @@ function asignarValorColumnasDT(nombre_datatable) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
+
+$("input:file").on("change", function () {
+    const target = $(this);
+    const relatedTarget = target.siblings(".file-name");
+    const fileName = target[0].files[0].name;
+    relatedTarget.val(fileName);
+});
+$(document).on("change", ".btn-file :file", function () {
+    const input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, "/").replace(/.*\//, "");
+    input.trigger("fileselect", [numFiles, label]);
+});
+
+function changeName(e){
+    const fileName = e.files[0].name;
+    let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+    relatedTarget[0].value = fileName;
+}
+
