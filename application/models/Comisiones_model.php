@@ -350,7 +350,7 @@ class Comisiones_model extends CI_Model {
     function getDatosHistorialPago($anio,$proyecto) {
         ini_set('memory_limit', -1);
         $filtro_00 = ' AND re.idResidencial = '.$proyecto.' AND YEAR(pci1.fecha_abono) = '.$anio.' ';
-        $filtro_estatus = ' pci1.estatus IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,51,52,88,16,17,41,42,18,19,20,21,22,23,24,25,26,27,28,29) ';
+        $filtro_estatus = ' pci1.estatus IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,51,52,88,16,17,41,42,18,19,20,21,22,23,24,25,26,27,28,29,30) ';
         switch ($this->session->userdata('id_rol')) {
             case 1:
             case 2:
@@ -3277,7 +3277,7 @@ class Comisiones_model extends CI_Model {
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus in (18,19,20,21,22,23,24,25,26,28,29,30) AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc on opc.id_opcion=p.tipo and opc.id_catalogo=23
         WHERE p.estatus in(1,2,3,0)
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
@@ -3976,7 +3976,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
          UPPER(se.nombre) AS sede, pci1.abono_neodata, CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno) creado
         FROM pago_comision_ind pci1
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
-        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN(1,0)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
@@ -4004,7 +4004,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         (SELECT pci1.id_pago_i, lo.nombreLote, re.empresa, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names, CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_pago_intmex,pci1.id_usuario, UPPER(CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END) as puesto, pci1.abono_neodata, UPPER(se.nombre) AS sede, pci1.abono_neodata, UPPER(CONCAT(cr.nombre, ' ',cr.apellido_paterno, ' ', cr.apellido_materno)) AS creado
         FROM pago_comision_ind pci1 
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus in (1)
-        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN(1,0)
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
         INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
@@ -5177,7 +5177,7 @@ public function CancelarDescuento($id_pago,$motivo)
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29,30) AND pci.descuento_aplicado = 1
             WHERE pa.id_prestamo = $idPrestamo
             GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
         return $result->row();
@@ -5205,7 +5205,7 @@ public function CancelarDescuento($id_pago,$motivo)
                  ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
+                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29,30) AND pci.descuento_aplicado = 1
                 INNER JOIN comisiones c ON c.id_comision = pci.id_comision
                 INNER JOIN lotes l ON l.idLote = c.id_lote
                 INNER JOIN condominios con ON con.idCondominio=l.idCondominio
@@ -5258,7 +5258,7 @@ public function CancelarDescuento($id_pago,$motivo)
     }
 
     function lista_estatus_descuentos(){
-        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29)");
+        return $this->db->query(" SELECT * FROM opcs_x_cats where id_catalogo=23 and id_opcion in(18,19,20,21,22,23,24,25,26,29,30)");
     }
 
     public function reactivarPago($idDescuento, $fecha)
@@ -6094,14 +6094,14 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
 
             INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-            WHERE com.estatus = 1 AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
+            WHERE com.estatus IN (1,8) AND pci.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) AND pci.id_usuario = $user_vobo $cadena ORDER BY pci.abono_neodata DESC");
         }else if($valor == 2){
             return $this->db->query(" SELECT l.idLote, l.nombreLote, pci.id_pago_i, pci.abono_neodata as comision_total, 0 abono_pagado,pci.pago_neodata 
             FROM comisiones com 
             INNER JOIN lotes l ON l.idLote = com.id_lote
             INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
             INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
-            WHERE com.estatus = 1 AND pci.estatus IN (4) AND pci.id_usuario = $user_vobo ORDER BY pci.abono_neodata DESC ");
+            WHERE com.estatus IN (1,8) AND pci.estatus IN (4) AND pci.id_usuario = $user_vobo ORDER BY pci.abono_neodata DESC ");
         }
     }
 

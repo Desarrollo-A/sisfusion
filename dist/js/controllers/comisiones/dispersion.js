@@ -319,7 +319,9 @@ $(document).ready(function () {
                         if(disparador != 0){
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 
-                            data-totalNeto2 = "${totalLote}" 
+                            data-totalNeto2 = "${totalLote}"
+                            data-totalNeto2Cl = "${d.totalNeto2Cl}" 
+                            data-total8P = "${d.total8P}" 
                             data-reubicadas = "${reubicadas}" 
                             data-penalizacion = "${d.penalizacion}"
                             data-nombreLote = "${nombreLote}" 
@@ -449,6 +451,8 @@ $(document).ready(function () {
 
         idLote = $(this).val();
         totalNeto2 = $(this).attr("data-totalNeto2");
+        totalNeto2Cl = $(this).attr("data-totalNeto2Cl");
+        total8P = $(this).attr("data-total8P");
         reubicadas = $(this).attr("data-reubicadas");
         penalizacion = $(this).attr("data-penalizacion");
         nombreLote = $(this).attr("data-nombreLote");
@@ -498,15 +502,35 @@ $(document).ready(function () {
                                 $("#modal_NEODATA .modal-body").append(`
                                         <div class="row">
                                             <div class="col-md-12 text-center">
-                                            <h3>Lote: <b>${nombreLote}${labelPenalizacion}</b></h3></div></div>
+                                                <h3>Lote: <b>${nombreLote}${labelPenalizacion}</b></h3>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-3 p-0">
-                                                <h5>Precio lote: <b>${formatMoney(totalNeto2)}</b>
-                                                </h5></div><div class="col-md-3 p-0">
-                                                <h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5></div>
+                                                    <h5>Precio lote: <b>${formatMoney(totalNeto2)}</b></h5>
+                                            </div>
+                                                <div class="col-md-3 p-0">
+                                                    <h5>$ Neodata: <b style="color:${data[0].Aplicado <= 0 ? 'black' : 'blue'};">${formatMoney(data[0].Aplicado)}</b></h5>
+                                                </div>
                                             <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5></div>
-                                                <div class="col-md-3 p-0">${cadena}</div></div>`);
+                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
+                                            </div>
+                                            <div class="col-md-3 p-0">
+                                                    ${cadena}
+                                            </div>
+                                        </div>`);
+
+                                        $("#modal_NEODATA .modal-body").append(plan_comision == 66 ? `
+                                            <div class="row">
+                                                <div class="col-md-4 p-0">
+                                                    <h5>Precio lote origen:<b>${formatMoney(totalNeto2Cl)}</b></h5>
+                                                </div>
+                                                <div class="col-md-4 p-0">
+                                                    <h5>Excedente:<b>${formatMoney(total8P)}</b></h5>
+                                                </div>
+                                            </div>
+                                        ` : '');
+                                        
                                 // OPERACION PARA SACAR 5% y 10%
                                 operacionA = (totalNeto2 * 0.05).toFixed(3);
                                 operacionB = (totalNeto2 * 0.10).toFixed(3);
@@ -543,9 +567,37 @@ $(document).ready(function () {
                                 let abonado=0;
                                 let porcentaje_abono=0;
                                 let total_comision=0;
+
+                                const datosPlan8P =  [
+                                    {
+                                        idRol:7,
+                                        porcentaje:0.50
+                                    },
+                                    {
+                                        idRol:3,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:2,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:1,
+                                        porcentaje:0.1
+                                    }
+                                ];
+
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
+                                        let porcentajes = '';
+                                        if(plan_comision == 66){
+                                            const busqueda = datosPlan8P.find((roles) => roles.idRol == v.id_rol);
+                                            porcentajes = busqueda != undefined ? `<p style="font-size:12px;">${busqueda.porcentaje}% L.O. + ${v.porcentaje_decimal}% E.</p>` : '' ;
+                                            v.porcentaje_decimal = busqueda != undefined ? v.porcentaje_decimal + busqueda.porcentaje : v.porcentaje_decimal;
+                                            v.comision_total = busqueda != undefined ? v.comision_total + ((busqueda.porcentaje/100) * totalNeto2Cl) : v.comision_total;
+                                        }
+
                                         let porcentajeAse = v.porcentaje_decimal;
                                         let total_comision1 = 0;
                                         total_comision1 = totalNeto2 * (porcentajeAse / 100);
@@ -594,6 +646,14 @@ $(document).ready(function () {
                                             }
                                             break;
                                         }
+
+
+                                            
+
+
+
+
+
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
                                         abonado = parseFloat(abonado) +parseFloat(saldo1C);
                                         porcentaje_abono = parseFloat(porcentaje_abono) + parseFloat(v.porcentaje_decimal);
@@ -604,7 +664,8 @@ $(document).ready(function () {
                                                             <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}">
                                                             <input type="hidden" name="plan_c" id="plan_c" value="${plan_comision}">
                                                             <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.id_rol}"><input id="num_usuarios" type="hidden" name="num_usuarios[]" value="${v.num_usuarios}">
-                                                            <input class="form-control input-gral" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;">${v.detail_rol}</p></b>
+                                                            <input class="form-control input-gral" required readonly="true" value="${v.nombre}" style="font-size:12px;"><b><p style="font-size:12px;margin-bottom:0px !important;">${v.detail_rol}</p></b>${porcentajes}
+                                                            
                                                         </div>
                                                         <div class="col-md-1">
                                                             <label id="" class="control-label labelPorcentaje hide">%</label>

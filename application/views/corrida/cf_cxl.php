@@ -774,7 +774,7 @@
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="basic-addon1">#</span>
                                                     <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control" id="msdif" ><!--ng-change="changeDaysEng()"-->
-                                                        <option value = ""> - Selecciona los años - </option>
+                                                        <option value = ""> - Selecciona los meses - </option>
                                                     </select>
                                                 </div>
                                             </div>

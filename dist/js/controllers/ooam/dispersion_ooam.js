@@ -322,7 +322,7 @@ $(document).ready(function () {
                                     }else{
                                         cadena = '<h4>Bonificación: <b >'+formatMoney(0)+'</b></h4>';
                                     }
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio de toma OOAM: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                     <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                     </div><br>`);
 
