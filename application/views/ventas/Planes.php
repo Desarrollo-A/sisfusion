@@ -196,7 +196,7 @@
 						<div class="form-group d-flex justify-center">
 							<div class="">
 								<p class="m-0" id="label_descuento"></p>
-								<input type="text" class="input-gral border-none w-100" required id="descuento" name="descuento">
+								<input type="text" class="input-gral border-none w-100" required data-type="currency" id="descuento" name="descuento">
 							</div>
 						</div>
 						<div class="container-fluid">
