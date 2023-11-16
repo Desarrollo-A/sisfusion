@@ -22,7 +22,6 @@ var getInfo1 = new Array(6);
 var getInfo2 = new Array(6);
 
 
-
 $(document).ready(function(){
     $.post( "get_tventa", function(data) {
         var len = data.length;
@@ -143,6 +142,7 @@ $("#tabla_estatus3").ready( function(){
                     return '<p class="m-0">'+d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno+'</p>';
                 }
             },
+            
             {
                 data: function( d ){
                     return '<p class="m-0">'+d.modificado.split('.')[0]+'</p>';
@@ -212,6 +212,21 @@ $("#tabla_estatus3").ready( function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="rechazarStatus btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
+
+                                if (data.expediente == null || data.expediente === "") {
+                                    // NO HAY DOCUMENTO CARGADO
+                                    const nuevoBotonHTML = crearBotonAccion(AccionDoc.SUBIR_DOC, data);
+                                    cntActions += nuevoBotonHTML;
+                                
+                                } else {
+                                    const nuevoBoton3HTML = crearBotonAccion(AccionDoc.DOC_CARGADO, data);
+                                    const nuevoBoton2HTML = crearBotonAccion(AccionDoc.ELIMINAR_DOC, data);
+                                    cntActions += nuevoBoton3HTML; 
+                                    cntActions += nuevoBoton2HTML;  
+                                     
+                                }
+                                
+  
                         }
                         else if(data.idStatusContratacion == 3 && data.idMovimiento == 99)
                         {
@@ -223,6 +238,7 @@ $("#tabla_estatus3").ready( function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="edit2 btn-data btn-warning" title= "RECHAZAR A ESTATUS 2">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
+                            
                         }
                         else if(data.idStatusContratacion == 2 && data.idMovimiento == 105 || data.idStatusContratacion == 2 && data.idMovimiento == 107)
                         {
@@ -234,6 +250,7 @@ $("#tabla_estatus3").ready( function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="rechazarStatusRechazo6 btn-data btn-warning" title="Rechazar estatus 1">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
+                            
                         }
                         else if(data.idStatusContratacion == 2 && data.idMovimiento == 110)
                         {
@@ -245,6 +262,7 @@ $("#tabla_estatus3").ready( function(){
                                 'data-idCliente="'+data.id_cliente+'" data-fecVen="'+data.fechaVenc+'" data-ubic="'+data.ubicacion+'" ' +
                                 'class="rechazarStatusRechazo7 btn-data btn-warning" title="Rechazar estatus">' +
                                 '<i class="fas fa-thumbs-down"></i></button>';
+                            
                         }
                         else
                         {
@@ -830,3 +848,405 @@ jQuery(document).ready(function(){
         jQuery(this).find('#comentario2').val('');
     })
 })
+
+
+const AccionDoc = {
+    DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
+    DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
+    SUBIR_DOC: 3, // NO HAY DOCUMENTO CARGADO, PERO TIENE PERMISO PARA SUBIRLO
+    ELIMINAR_DOC: 4, // LA RAMA TIENE UN DOCUMENTO CARGADO, TIENE PERMISO PARA ELIMINAR EL ARCHIVO
+    ENVIAR_SOLICITUD: 5,
+};
+
+Shadowbox.init();
+
+$(document).ready(function () {
+    $("#addDeleteFileModal").on("hidden.bs.modal", function () {
+      $("#fileElm").val(null);
+      $("#file-name").val("");
+    });
+    $("input:file").on("change", function () {
+      const target = $(this);
+      const relatedTarget = target.siblings(".file-name");
+      const fileName = target[0].files[0].name;
+      relatedTarget.val(fileName);
+    });
+  });
+
+$(document).on("click", ".addRemoveFile", function (e) {
+    e.preventDefault();
+    let idDocumento = $(this).attr("data-idDocumento");
+    //console.log(idDocumento);
+    
+    let tipoDocumento = $(this).attr("data-tipoDocumento");
+    let accion = parseInt($(this).data("accion"));
+    let nombreDocumento = $(this).data("nombre");
+    $("#idLoteValue").val($(this).attr("data-idLote"));
+    $("#idDocumento").val(idDocumento);
+    $("#tipoDocumento").val(tipoDocumento);
+    $("#nombreDocumento").val(nombreDocumento);
+    $("#tituloDocumento").val($(this).attr("data-tituloDocumento"));
+    $("#accion").val(accion);
+    if (accion === AccionDoc.DOC_NO_CARGADO || accion === AccionDoc.DOC_CARGADO) {
+      document.getElementById("mainLabelText").innerHTML =
+        accion === AccionDoc.DOC_NO_CARGADO
+          ? "Selecciona el archivo que desees asociar a <b>" +
+            nombreDocumento +
+            "</b>"
+          : accion === AccionDoc.DOC_CARGADO
+          ? "¿Estás seguro de eliminar el archivo <b>" + nombreDocumento + "</b>?"
+          : "Selecciona los motivos de rechazo que asociarás al documento <b>" +
+            nombreDocumento +
+            "</b>.";
+      document.getElementById("secondaryLabelDetail").innerHTML =
+        accion === AccionDoc.DOC_NO_CARGADO
+          ? "El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>."
+          : accion === AccionDoc.DOC_CARGADO
+          ? "El documento se eliminará de manera permanente una vez que des clic en <i>Guardar</i>."
+          : "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en <i>Guardar</i>.";
+      if (accion === AccionDoc.DOC_NO_CARGADO) {
+        // ADD FILE
+        $("#selectFileSection").removeClass("hide");
+        $("#txtexp").val("");
+      }
+      if (accion === AccionDoc.DOC_CARGADO) {
+        // REMOVE FILE
+        $("#selectFileSection").addClass("hide");
+      }
+      $("#addDeleteFileModal").modal("show");
+    }
+    if (accion === AccionDoc.SUBIR_DOC) {
+      const fileName = $(this).attr("data-file");
+      window.location.href = getDocumentPath(tipoDocumento, fileName, 0, 0, 0);
+      alerts.showNotification(
+        "top",
+        "right",
+        "El documento <b>" + nombreDocumento + "</b> se ha descargado con éxito.",
+        "success"
+      );
+    }
+    if (accion === AccionDoc.ENVIAR_SOLICITUD) {
+      $("#sendRequestButton").click();
+    }
+  });
+
+
+  $(document).on("click", "#sendRequestButton", function (e) {
+    e.preventDefault();
+    const accion = parseInt($("#accion").val());
+    if (accion === AccionDoc.DOC_NO_CARGADO) {
+      // UPLOAD FILE
+      const uploadedDocument = document.getElementById("fileElm").value;
+      let validateUploadedDocument = uploadedDocument.length === 0;
+      // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVE A CABO EL REQUEST
+      if (validateUploadedDocument) {
+        alerts.showNotification(
+          "top",
+          "right",
+          "Asegúrate de haber seleccionado un archivo antes de guardar.",
+          "warning"
+        );
+        return;
+      }
+      const archivo = $("#fileElm")[0].files[0];
+      const tipoDocumento = parseInt($("#tipoDocumento").val());
+      let extensionDeDocumento = archivo.name.split(".").pop();
+      let extensionesPermitidas = getExtensionPorTipoDocumento(tipoDocumento);
+      let statusValidateExtension = validateExtension(
+        extensionDeDocumento,
+        extensionesPermitidas
+      );
+      if (!statusValidateExtension) {
+        // MJ: ARCHIVO VÁLIDO PARA CARGAR
+        alerts.showNotification(
+          "top",
+          "right",
+          `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. ` +
+            `Recuerda seleccionar un archivo ${extensionesPermitidas}`,
+          "warning"
+        );
+        return;
+      }
+      const nombreDocumento = $("#nombreDocumento").val();
+      let data = new FormData();
+      data.append("idLote", $("#idLoteValue").val());
+      data.append("idDocumento", $("#idDocumento").val());
+      data.append("tipoDocumento", tipoDocumento);
+      data.append("uploadedDocument", archivo);
+      data.append("accion", accion);
+      data.append("tituloDocumento", $("#tituloDocumento").val());
+      $.ajax({
+        url: `${general_base_url}Postventa/subirArchivo`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: "POST",
+        beforeSend: function () {
+          $("#uploadFileButton").prop("disabled", true);
+        },
+        success: function (response) {
+          const res = JSON.parse(response);
+          if (res.code === 200) {
+            alerts.showNotification(
+              "top",
+              "right",
+              `El documento ${nombreDocumento} se ha cargado con éxito.`,
+              "success"
+            );
+            $('#tabla_estatus3').DataTable().ajax.reload();
+            $("#addDeleteFileModal").modal("hide");
+          }
+          if (res.code === 400) {
+            alerts.showNotification("top", "right", res.message, "warning");
+          }
+          if (res.code === 500) {
+            alerts.showNotification(
+              "top",
+              "right",
+              "Oops, algo salió mal.",
+              "warning"
+            );
+          }
+        },
+        error: function () {
+          $("#sendRequestButton").prop("disabled", false);
+          alerts.showNotification(
+            "top",
+            "right",
+            "Oops, algo salió mal.",
+            "danger"
+          );
+        },
+      });
+    }else {
+        // VA A ELIMINAR
+        const nombreDocumento = $("#nombreDocumento").val();
+        let data = new FormData();
+        data.append("idDocumento", $("#idDocumento").val());
+        data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
+        $.ajax({
+          url: `${general_base_url}Documentacion/eliminarArchivo`,
+          data: data,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: "POST",
+          success: function (response) {
+            const res = JSON.parse(response);
+            $("#sendRequestButton").prop("disabled", false);
+            if (res.code === 200) {
+              alerts.showNotification(
+                "top",
+                "right",
+                `El documento ${nombreDocumento} se ha eliminado con éxito.`,
+                "success"
+              );
+              $('#tabla_estatus3').DataTable().ajax.reload();
+              $("#addDeleteFileModal").modal("hide");
+            }
+            if (res.code === 400) {
+              alerts.showNotification("top", "right", res.message, "warning");
+            }
+            if (res.code === 500) {
+              alerts.showNotification(
+                "top",
+                "right",
+                "Oops, algo salió mal.",
+                "warning"
+              );
+            }
+          },
+          error: function () {
+            $("#sendRequestButton").prop("disabled", false);
+            alerts.showNotification(
+              "top",
+              "right",
+              "Oops, algo salió mal.",
+              "danger"
+            );
+          },
+        });
+      }
+});
+
+const TipoDoc = {
+    CONTRATO: 8,
+    CORRIDA: 7,
+    CARTA_DOMICILIO: 29,
+    CONTRATO_FIRMADO: 30,
+    DS_NEW: 'ds_new',
+    DS_OLD: 'ds_old',
+    EVIDENCIA_MKTD_OLD: 66, // EXISTE LA RAMA CON LA EVIDENCIA DE MKTD (OLD)
+    AUTORIZACIONES: 'autorizacion',
+    PROSPECTO: 'prospecto',
+    APOSTILLDO_CONTRATO: 31,
+    CARTA: 32,
+    RESCISION_CONTRATO: 33,
+    CARTA_PODER: 34,
+    RESCISION_CONTRATO_FIRMADO: 35,
+    DOCUMENTO_REESTRUCTURA: 36,
+    DOCUMENTO_REESTRUCTURA_FIRMADO: 37,
+    CONSTANCIA_SITUACION_FISCAL: 38,
+    CORRIDA_ANTERIOR: 39,
+    CONTRATO_ANTERIOR: 40,
+    COMPLEMENTO_ENGANCHE: 45,
+    CONTRATO_ELEGIDO_FIRMA_CLIENTE: 41,
+    CONTRATO_1_CANCELADO: 42,
+    CONTRATO_2_CANCELADO: 43,
+    CONTRATO_REUBICACION_FIRMADO: 44,
+    AUTORIZACIONES_PARTICULARES: 50,
+  };
+
+/**
+ * @param {number} tipoDocumento
+ * @returns {string}
+ */
+
+function getExtensionPorTipoDocumento(tipoDocumento) {
+    if (tipoDocumento === TipoDoc.CORRIDA) {
+      return "xlsx";
+    }
+    if (
+      tipoDocumento === TipoDoc.CONTRATO ||
+      tipoDocumento === TipoDoc.CONTRATO_FIRMADO
+    ) {
+      return "pdf";
+    }
+    return "jpg, jpeg, png, pdf";
+  }
+
+/**
+ * Función para crear el botón a partir del tipo de acción
+ *
+ * @param {number} type
+ * @param {any} data
+ * @returns {string}
+ */
+
+
+$(document).on("click", ".verDocumento", function () {
+   
+    const $itself = $(this);
+
+    var expediente = $itself.attr("data-expediente");
+    var cadenaSinEspacios = expediente.replace(/\s/g, '');
+
+    let pathUrl = `${general_base_url}static/documentos/cliente/expediente/${cadenaSinEspacios}`;
+    console.log(pathUrl);
+
+    if (parseInt($itself.attr("data-tipoDocumento")) === TipoDoc.CORRIDA) {
+        descargarArchivo(pathUrl, $itself.attr("data-expediente"));
+        alerts.showNotification(
+          "top",
+          "right",
+          "El documento <b>" +
+            $itself.attr("data-expediente") +
+            "</b> se ha descargado con éxito.",
+          "success"
+        );
+        return;
+    }
+
+    if (screen.width > 480 && screen.width < 800) {
+      window.location.href = `${pathUrl}`;
+    } else {
+      Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo:  ${cadenaSinEspacios}  `,
+        width: 985,
+        height: 660,
+      });
+    }
+  });
+
+//cargar documentos
+function crearBotonAccion(type, data) {
+    //console.log(data);
+    const [
+      buttonTitulo,
+      buttonEstatus,
+      buttonClassColor,
+      buttonClassAccion,
+      buttonTipoAccion,
+      buttonIcono,
+    ] = getAtributos(type);
+    const d = new Date();
+    const dateStr = [d.getMonth() + 1, d.getDate(), d.getFullYear()].join("-");
+
+    const tituloDocumento =
+    `${data.nombreResidencial}_${data.nombre.slice(0, 4)}_${data.idLote}_${
+      data.id_cliente
+    }` + `_TDOC${data.tipo_doc}${data.movimiento.slice(0, 4)}_${dateStr}`;
+
+    return `<button class="${buttonClassColor} ${buttonClassAccion}" title="${buttonTitulo}" data-expediente="${
+      data.expediente
+    }" data-accion="${buttonTipoAccion}" data-tipoDocumento="${
+      data.tipo_doc
+    }" ${buttonEstatus} data-toggle="tooltip" data-placement="top" data-nombre="${
+      data.movimiento
+    }" data-idDocumento="${data.idDocumento}" data-idLote="${
+      data.idLote
+    }" data-tituloDocumento="${tituloDocumento}" data-idCliente="${
+      data.idCliente ?? data.id_cliente
+    }" data-lp="${data.lugar_prospeccion}" data-idProspeccion="${
+      data.id_prospecto
+    }"><i class="${buttonIcono}"></i></button>`;
+  }
+  
+  /**
+   * Función para obtener los atributos del botón de acción de la tabla
+   *
+   * @param {number} type
+   * @returns {string[]}
+   */
+  function getAtributos(type) {
+    let buttonTitulo = "";
+    let buttonEstatus = "";
+    let buttonClassColor = "";
+    let buttonClassAccion = "";
+    let buttonIcono = "";
+    let buttonTipoAccion = "";
+    if (type === AccionDoc.DOC_NO_CARGADO) {
+      buttonTitulo = "DOCUMENTO NO CARGADO";
+      buttonEstatus = "disabled";
+      buttonClassColor = "btn-data btn-orangeYellow";
+      buttonClassAccion = "";
+      buttonIcono = "fas fa-file";
+      buttonTipoAccion = "";
+    }
+    if (type === AccionDoc.DOC_CARGADO) {
+      buttonTitulo = "VER DOCUMENTO";
+      buttonEstatus = "";
+      buttonClassColor = "btn-data btn-blueMaderas";
+      buttonClassAccion = "verDocumento";
+      buttonIcono = "fas fa-eye";
+      buttonTipoAccion = "3";
+    }
+    if (type === AccionDoc.SUBIR_DOC) {
+      buttonTitulo = "SUBIR DOCUMENTO";
+      buttonEstatus = "";
+      buttonClassColor = "btn-data btn-green";
+      buttonClassAccion = "addRemoveFile";
+      buttonIcono = "fas fa-upload";
+      buttonTipoAccion = "1";
+    }
+    if (type === AccionDoc.ELIMINAR_DOC) {
+      buttonTitulo = "ELIMINAR DOCUMENTO";
+      buttonEstatus = "";
+      buttonClassColor = "btn-data btn-warning";
+      buttonClassAccion = "addRemoveFile";
+      buttonIcono = "fas fa-trash";
+      buttonTipoAccion = "2";
+    }
+    
+    return [
+      buttonTitulo,
+      buttonEstatus,
+      buttonClassColor,
+      buttonClassAccion,
+      buttonTipoAccion,
+      buttonIcono,
+    ];
+  }
