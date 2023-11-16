@@ -1201,7 +1201,7 @@ class Contraloria extends CI_Controller {
         } else if ($assigned_location == 1) { // EXPEDIENTES SAN LUIS POTOSÍ
             $id_sede_jur = 1;
             $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
-            $id_asig = $data_asig->contador;c b
+            $id_asig = $data_asig->contador;
             
             if ($id_asig == 5468)
                 $assigned_user = 2764;
