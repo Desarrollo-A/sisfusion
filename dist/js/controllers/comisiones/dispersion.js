@@ -465,6 +465,8 @@ $(document).ready(function () {
         ooamDispersion = $(this).attr("data-ooam");
         nombreOtro = $(this).attr("data-nombreOtro");
         
+        totalNeto2 = plan_comision == 66 ? total8P : totalNeto2;
+
 
         if(parseFloat(totalNeto2) > 0){
 
@@ -587,7 +589,7 @@ $(document).ready(function () {
                                     }
                                 ];
 
-                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:10000,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
+                                $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
@@ -595,7 +597,7 @@ $(document).ready(function () {
                                             const busqueda = datosPlan8P.find((roles) => roles.idRol == v.id_rol);
                                             porcentajes = busqueda != undefined ? `<p style="font-size:12px;">${busqueda.porcentaje}% L.O. + ${v.porcentaje_decimal}% E.</p>` : '' ;
                                             v.porcentaje_decimal = busqueda != undefined ? v.porcentaje_decimal + busqueda.porcentaje : v.porcentaje_decimal;
-                                            v.comision_total = busqueda != undefined ? v.comision_total + ((busqueda.porcentaje/100) * totalNeto2Cl) : v.comision_total;
+                                            v.comision_total = busqueda != undefined ? (v.comision_total + ((busqueda.porcentaje/100)) * totalNeto2Cl) : v.comision_total;
                                         }
 
                                         let porcentajeAse = v.porcentaje_decimal;
