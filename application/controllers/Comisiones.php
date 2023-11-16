@@ -25,7 +25,7 @@ class Comisiones extends CI_Controller
     $this->validateSession();
     $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
     $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-   }
+  }
 
   public function index(){
     redirect(base_url());
