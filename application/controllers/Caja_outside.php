@@ -1546,10 +1546,14 @@ class Caja_outside extends CI_Controller {
                 $arreglo2["idLote"]= $value->idLote;  
                 $arreglo2["idCondominio"]= $value->idCondominio;          
                 $arreglo2["idCliente"]= $idClienteInsert[0]["lastId"];          
-        
+                
+                $flag_particular = 0;
+
+                if($updatelote['tipo_venta'] == 1){
+                    $flag_particular=1;
+                }
         
                 if($data->personalidad_juridica == 1){
-        
                     $tipoDoc = $this->caja_model_outside->getDocsByType(32);
                     foreach ($tipoDoc AS $arrayDocs){
                           $arrayDocs = array(
@@ -1559,12 +1563,20 @@ class Caja_outside extends CI_Controller {
                             'idLote' => $value->idLote,
                             'tipo_doc' => $arrayDocs["id_opcion"]
                           );
-                          $this->caja_model_outside->insertDocToHist($arrayDocs);
+                          if($arrayDocs["id_opcion"] == 50){
+                                if($flag_particular == 1){
+                                    $this->caja_model_outside->insertDocToHist($arrayDocs);
+                                }
+                                
+                          }else{
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+
+                          }
                     }
         
                     
                 } else if ($data->personalidad_juridica == 2){
-                
+
                     $tipoDoc = $this->caja_model_outside->getDocsByType(31);
                     foreach ($tipoDoc AS $arrayDocs){
                           $arrayDocs = array(
@@ -1574,10 +1586,15 @@ class Caja_outside extends CI_Controller {
                             'idLote' => $value->idLote,
                             'tipo_doc' => $arrayDocs["id_opcion"]
                           );
-                          $this->caja_model_outside->insertDocToHist($arrayDocs);
-        
-                    }
-                        
+                          if($arrayDocs["id_opcion"] == 50){
+                            if($flag_particular == 1){
+                                $this->caja_model_outside->insertDocToHist($arrayDocs);
+                            }
+                            
+                          }else{
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+                          }
+                    }  
                 }
         
         

@@ -25,7 +25,6 @@ class PaquetesCorrida_model extends CI_Model
     }
     public function getDescuentosPorTotal($id_condicion)
     {
-        //Modificar
         return $this->db->query("SELECT de.inicio, de.fin, de.id_condicion,max(de.id_descuento) AS de.id_descuento, de.porcentaje 
         FROM descuentos de
         INNER JOIN condiciones co ON co.id_condicion = de.id_condicion
@@ -65,6 +64,14 @@ class PaquetesCorrida_model extends CI_Model
         }
     }
 
+    public function descuentosAll(){
+        return $this->db->query("SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento AS id_descuento, d.porcentaje FROM descuentos d
+                INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+                WHERE d.id_condicion = 1 
+                    AND d.inicio IS NULL
+                 GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje, d.id_descuento");
+    }
+
     public function getDescuentosYCondiciones($tipoCondicion = 0){
         $queryFinal = ''; $condiciones = '';
 
@@ -75,13 +82,11 @@ class PaquetesCorrida_model extends CI_Model
 
         foreach ($condiciones as $index => $valor) {
             $id_condicion = $valor['id_condicion'];
-            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion,
-        MAX(d.id_descuento) AS id_descuento, d.porcentaje 
-        FROM descuentos d
-        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+            $queryFinal .= "SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento AS id_descuento, d.porcentaje FROM descuentos d
+            INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
             WHERE d.id_condicion = $id_condicion 
-        AND d.inicio IS NULL
-            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje";
+                AND d.inicio IS NULL
+            GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.porcentaje, d.id_descuento";
             if( ($index+1) != count($condiciones)) {
                 $queryFinal .= " UNION ALL ";
             }
@@ -103,7 +108,11 @@ class PaquetesCorrida_model extends CI_Model
     }
 
     public function SaveNewDescuento($id_condicion,$descuento){
-      $response =  $this->db->query("INSERT INTO descuentos VALUES(NULL,NULL,$id_condicion,$descuento,NULL)"); 
+      
+      
+       $id_tdescuento= $id_condicion == 2 ? 2 : 1;
+
+      $response =  $this->db->query("INSERT INTO descuentos VALUES($id_tdescuento,NULL,NULL,$id_condicion,$descuento,NULL)"); 
 
         if (! $response ) {
             return $finalAnswer = 0;
@@ -115,14 +124,14 @@ class PaquetesCorrida_model extends CI_Model
 
     public function ValidarDescuento($id_condicion,$descuento)
     {
-        return $this->db->query("SELECT c.descripcion,d.inicio,d.fin,d.id_condicion,max(d.id_descuento) AS id_descuento,d.porcentaje 
+        return $this->db->query("SELECT c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento, d.porcentaje 
         FROM descuentos d
-		INNER JOIN condiciones c on c.id_condicion=d.id_condicion
-		AND d.id_condicion = $id_condicion 
-        AND d.porcentaje=$descuento
-		and d.inicio is null 
-        group by c.descripcion,d.inicio,d.fin,d.id_condicion,d.porcentaje 
-        order by d.porcentaje");
+        INNER JOIN condiciones c ON c.id_condicion = d.id_condicion
+        WHERE d.id_condicion = $id_condicion 
+          AND d.porcentaje = $descuento
+          AND d.inicio IS NULL 
+        GROUP BY c.descripcion, d.inicio, d.fin, d.id_condicion, d.id_descuento, d.porcentaje 
+        ORDER BY d.porcentaje;");
     }
  
 
