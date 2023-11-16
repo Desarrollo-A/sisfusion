@@ -608,7 +608,7 @@ class Incidencias_model extends CI_Model {
                     $comision_total=$precio_lote * ($por /100);
             
                     if(empty($validate->row()->id_usuario)){
-                    $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ VENTA COMPARTIDA',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL,0)");
+                    $response = $this->db->query("INSERT INTO comisiones VALUES (".$idLote.",$newColab,$comision_total,1,'SE MODIFICÓ VENTA COMPARTIDA',NULL,NULL,1,GETDATE(),$por,GETDATE(),$rolSelect,0,NULL,0,NULL)");
                     if($response){
                         return 1;
                     }else{
