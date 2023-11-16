@@ -943,7 +943,7 @@ public function getGeneralStatusFromNeodata($proyecto, $condominio)
     }
 
     public function getDatosHistorialOOAM(){
-      $data['data'] = $this->Ooam_model->getDatosHistorialAsesor()->result_array();
+      $data['data'] = $this->Ooam_model->getDatosHistorialOOAM()->result_array();
       echo json_encode($data);
     }
   
