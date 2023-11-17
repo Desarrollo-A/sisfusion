@@ -218,7 +218,7 @@ $(document).ready(function () {
 
                         } else if(d.bandera_dispersion == 3  && d.registro_comision == 9){//LIQUIDADA 1°
                             disparador = 1;
-                            totalLote = d.totalNeto2;
+                            totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
                             nombreLote = d.nombreLoteReub;
                             id_cliente = d.id_cliente;
@@ -255,7 +255,7 @@ $(document).ready(function () {
 
                         } else if(d.bandera_dispersion == 3 && d.registro_comision != 9){//LIQUIDADA 2°
                             disparador = 2;   
-                            totalLote = d.totalNeto2;
+                            totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
                             nombreLote = d.nombreLoteReub;
                             id_cliente = d.id_cliente;
@@ -292,7 +292,7 @@ $(document).ready(function () {
 
                         else if(d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM == 0 ){// OOAM 1°
                             disparador = 3;
-                            totalLote = d.totalNeto2;
+                            totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
                             nombreLote = d.nombreLote;
                             id_cliente = d.id_cliente;
@@ -305,7 +305,7 @@ $(document).ready(function () {
 
                         else if((d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM > 0 ) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0 ) ){// OOAM 1°
                             disparador = 2;
-                            totalLote = d.totalNeto2;
+                            totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
                             nombreLote = d.nombreLote;
                             id_cliente = d.id_cliente;
