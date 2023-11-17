@@ -162,7 +162,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE proyectoReubicacion IN ($id_proyecto)) lotx ON lotx.proyectoReubicacion = co.idResidencial
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status IN (1)
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.status = 1")->result();
+        WHERE lo.status = 18")->result();
     }
 
     public function historialModel($idLote){
@@ -178,7 +178,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function aplicaLiberacion($datos){
-        
+
         $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
         $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
         $datos["comentarioLiberacion"] = $comentarioLiberacion;
@@ -194,69 +194,69 @@ class Reestructura_model extends CI_Model
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = ($datos['tipo'] == 8 || $datos['tipo'] == 9) ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 : 1);
+        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 19 : 18);
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
-        $sqlIdClienteAnt = isset($datos["idClienteAnterior"]) ? 'AND idCliente = '.$datos["idClienteAnterior"] : ''; 
-        
-        $this->db->trans_begin();
-            $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
-            $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
-            $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
-            $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
-            $this->db->query("UPDATE clientes SET status = 0, tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
-            $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdClienteAnt");
-            $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
+        $sqlIdClienteAnt = isset($datos["idClienteAnterior"]) ? 'AND idCliente = '.$datos["idClienteAnterior"] : '';
 
-            $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote']." WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
-            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
-            for ($i=0; $i <count($comisiones) ; $i++) {
+        $this->db->trans_begin();
+        $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
+        $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
+        $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
+        $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
+        $this->db->query("UPDATE clientes SET status = 0, tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
+        $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdClienteAnt");
+        $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
+
+        $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote']." WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
+        $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+        for ($i=0; $i <count($comisiones) ; $i++) {
             $sumaxcomision=0;
             $pagos_ind = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_comision=".$comisiones[$i]['id_comision']."")->result_array();
             for ($j=0; $j <count($pagos_ind) ; $j++) {
                 $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
-            } 
+            }
             if(($datos['tipo'] == 7 || $datos['tipo'] == 8) && $row[0]['registro_comision'] == 1){
-                    $nuevaComision = $comisiones[$i]['comision_total'] - $sumaxcomision;
-                    $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisiones[$i]['id_usuario'].",".$nuevaComision.",".$comisiones[$i]['porcentaje_decimal'].",".$comisiones[$i]['rol_generado'].",".$row[0]['idCliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')");
+                $nuevaComision = $comisiones[$i]['comision_total'] - $sumaxcomision;
+                $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisiones[$i]['id_usuario'].",".$nuevaComision.",".$comisiones[$i]['porcentaje_decimal'].",".$comisiones[$i]['rol_generado'].",".$row[0]['idCliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')");
             }
             $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
         }
         $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
 
 
-            if($row[0]['tipo_venta'] == 1){
-                if($datos['tipo'] == 7 || $datos['tipo'] == 8){
-                    $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
-                    $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
-                }
-                $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+        if($row[0]['tipo_venta'] == 1){
+            if($datos['tipo'] == 7 || $datos['tipo'] == 8){
+                $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
+                $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
             }
+            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+        }
 
 
 
-                $data_l = array(
-                    'nombreLote'=> $row[0]['nombreLote'],
-                    'comentarioLiberacion'=> $datos['comentarioLiberacion'],
-                    'observacionLiberacion'=> $datos['observacionLiberacion'],
-                    'precio'=> $row[0]['precio'],
-                    'fechaLiberacion'=> $datos['fechaLiberacion'],
-                    'modificado'=> $datos['modificado'],
-                    'status'=> $datos['status'],
-                    'idLote'=> $row[0]['idLote'],
-                    'tipo'=> $datos['tipo'],
-                    'userLiberacion'=> $datos['userLiberacion'],
-                    'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
-                    );
+        $data_l = array(
+            'nombreLote'=> $row[0]['nombreLote'],
+            'comentarioLiberacion'=> $datos['comentarioLiberacion'],
+            'observacionLiberacion'=> $datos['observacionLiberacion'],
+            'precio'=> $row[0]['precio'],
+            'fechaLiberacion'=> $datos['fechaLiberacion'],
+            'modificado'=> $datos['modificado'],
+            'status'=> $datos['status'],
+            'idLote'=> $row[0]['idLote'],
+            'tipo'=> $datos['tipo'],
+            'userLiberacion'=> $datos['userLiberacion'],
+            'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
+        );
 
-                    $this->db->insert('historial_liberacion',$data_l);
+        $this->db->insert('historial_liberacion',$data_l);
 
-                    $idStatusContratacion = $datos["tipo"] == 8 ? 1 : 0;
-                    $idClienteNuevo = $datos["tipo"] == 8 ? $datos['idClienteNuevo'] : 0 ;
-                    $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
-                    $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
-                    $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
-                    $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
-                    $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
+        $idStatusContratacion = $datos["tipo"] == 8 ? 1 : 0;
+        $idClienteNuevo = $datos["tipo"] == 8 ? $datos['idClienteNuevo'] : 0 ;
+        $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
+        $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
+        $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
+        $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
+        $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
                     idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = 'NULL', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0, 
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
@@ -278,20 +278,20 @@ class Reestructura_model extends CI_Model
                     asig_jur = 0, tipo_estatus_regreso = 1
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
 
-                    if(!in_array($datos["tipo"],array(7,8,9))) {
-                        $this->email
-                            ->initialize()
-                            ->from('Ciudad Maderas')
-                            ->to('programador.analista24@ciudadmaderas.com')
-                            ->subject('Notificación de liberación')
-                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
-                                'lote' => $row[0]['nombreLote'],
-                                'fechaApartado' => $datos['fechaLiberacion'],
-                                'Observaciones' => $datos['obsLiberacion']
-                            ], true));
-                
-                        $this->email->send();
-                    }
+        if(!in_array($datos["tipo"],array(7,8,9))) {
+            $this->email
+                ->initialize()
+                ->from('Ciudad Maderas')
+                ->to('programador.analista24@ciudadmaderas.com')
+                ->subject('Notificación de liberación')
+                ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                    'lote' => $row[0]['nombreLote'],
+                    'fechaApartado' => $datos['fechaLiberacion'],
+                    'Observaciones' => $datos['obsLiberacion']
+                ], true));
+
+            $this->email->send();
+        }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -407,8 +407,8 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
         INNER JOIN loteXReubicacion lotx ON lotx.idProyecto = con.idResidencial AND lotx.idProyecto IN ($id_proyecto)
-        INNER JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1)
-        WHERE cli.proceso IN(0,1)
+        LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1) AND cli.proceso IN (0, 1)
+        WHERE ISNULL(lot.tipo_venta, 0) != 1 AND lot.status = 1 AND idStatusLote IN (2, 3)
         GROUP BY lotx.idProyecto, res.nombreResidencial,con.nombre, lot.nombreLote, lot.idLote ,lot.sup, lot.precio, 
         cli.nombre, cli.apellido_paterno, cli.apellido_materno, lot.observacionLiberacion")->result();
     }

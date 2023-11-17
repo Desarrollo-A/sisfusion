@@ -1649,4 +1649,9 @@ class Asesor_model extends CI_Model {
     {
         $this->db->query("DELETE FROM codigo_autorizaciones WHERE id_cliente = $idCliente AND tipo = $tipo");
     }
+
+    function obtenerDocumentacionByIdloteCL($idLote, $id_cliente){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$id_cliente." AND idLote=".$idLote);
+        return $query->result_array();
+    }
 }
