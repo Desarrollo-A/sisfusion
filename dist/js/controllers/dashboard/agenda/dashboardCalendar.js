@@ -777,11 +777,10 @@ $(document).on('submit', '#feedback_form', function(e) {
 
 document.querySelector('#feedback_form').addEventListener('submit', e =>  {
   e.preventDefault();
-  let data = Object.fromEntries(
+    let data = Object.fromEntries(
     new FormData(e.target)
   )
   data['idAgenda'] = $(".idAgenda2").val();
-
   $.ajax({
     type: 'POST',
     url: `${general_base_url}Calendar/setAppointmentRate`,
@@ -914,7 +913,6 @@ function createArrayEvents(params){
   let array = []
   let obj = {};
   const nameWithValue = params.split('&');
-
   for(i=0; i<nameWithValue.length; i++){
     const objAttr = nameWithValue[i].split('=');
     for(j=0; j<objAttr.length; j+=2){
