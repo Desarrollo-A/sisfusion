@@ -1042,7 +1042,7 @@ class Ooam_model extends CI_Model {
 
 
 
-        function getDatosHistorialAsesor(){
+        function getDatosHistorialOOAM(){
             $user_data = $this->session->userdata('id_usuario');
             $sede = $this->session->userdata('id_sede');
             
@@ -1062,7 +1062,7 @@ class Ooam_model extends CI_Model {
                 INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
                 LEFT JOIN pago_ooam poam on poam.id_lote = cooam.id_lote
                 INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
-                LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+                LEFT JOIN sedes sed ON sed.id_sede in ($sede) and sed.estatus = 1
                 LEFT JOIN (SELECT id_usuario, fecha_creacion,
                 estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = ooamco.id_usuario
                 WHERE ooamco.id_usuario = $user_data

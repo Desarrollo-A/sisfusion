@@ -387,7 +387,6 @@ $(document).ready(function () {
         const idLote = $(this).val();
         const nombreLote = $(this).attr("data-value");
         const statusLote = $(this).attr("data-statusLote");
-     
         $('#id-lote-detenido').val(idLote);
         $('#statusLote').val(statusLote);
         $('#anterior').val(0);
