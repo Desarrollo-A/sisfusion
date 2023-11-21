@@ -343,20 +343,20 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2':
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3':
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -386,10 +386,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
             render: function (d, type, full, meta) {
                 if (noDia == 1 || (noDia == 2 && hora <= 14)) {
                     switch (full.id_forma_pago) {
-                        case '1': //SIN DEFINIR
-                        case 1: //SIN DEFINIR
-                        case '2': //FACTURA
-                        case 2: //FACTURA
+                        case '1':
+                        case 1:
+                        case '2':
+                        case 2: 
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                             break;
 
@@ -404,14 +404,14 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             }
                             return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
 
-                        case '3': //ASIMILADOS
-                        case 3: //ASIMILADOS
-                        case '4': //RD
-                        case 4: //RD
+                        case '3': 
+                        case 3: 
+                        case '4': 
+                        case 4: 
                         default:
+
                             if (full.id_usuario == 5028 || full.id_usuario == 4773 || full.id_usuario == 5381) {
                                 return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-
                             } else {
                                 return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                             }
@@ -571,19 +571,19 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -624,10 +624,10 @@ $("#tabla_revision_comisiones").ready(function () {
         modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -751,28 +751,25 @@ $("#tabla_pagadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4':
+                    case 4: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>
+                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>
                         `;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
@@ -807,10 +804,10 @@ $("#tabla_pagadas_comisiones").ready(function () {
         modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -822,6 +819,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
     $('#tabla_pausadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         var title = $(this).text();
+
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length - 1);
@@ -933,29 +931,25 @@ $("#tabla_pausadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1':
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>
-                        `;
+                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>`;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-blue">REVISAR CON RH</span></p>';
                 }
@@ -989,10 +983,10 @@ $("#tabla_pausadas_comisiones").ready(function () {
         modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
@@ -1045,26 +1039,16 @@ $(document).on("click", ".subir_factura_multiple", function () {
                             else {
                                 $("#modal_multiples .modal-body").html("");
                                 $("#modal_multiples .modal-header").html("");
-
-                                $("#modal_multiples .modal-header").append(`<div class="row">
-                                    <div class="col-md-12 text-right">
-                                        <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true" style="font-size:40px;">&times;</span>
-                                        </button>
-                                    </div>
-                                </div>`);
-
+                                $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div></div>`);
                                 c = 0;
                                 if (data.length > 0) {
-                                    $("#modal_multiples .modal-body").append(`<div class="row">
-                                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
+                                    $("#modal_multiples .modal-body").append(`<div class="row"><div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
                                 }
                                 $.each(data, function (i, v) {
                                     c++;
 
                                     abono_asesor = (v.total_comision);
-                                    $("#modal_multiples .modal-body").append('<div class="row">' +
-                                        '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                                    $("#modal_multiples .modal-body").append('<div class="row">' + '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
                                 });
 
                                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
@@ -1084,10 +1068,7 @@ $(document).on("click", ".subir_factura_multiple", function () {
                                     ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
                             }
                             $('#spiner-loader').addClass('hide');
-                            $("#modal_multiples").modal({
-                                backdrop: 'static',
-                                keyboard: false
-                            });
+                            $("#modal_multiples").modal({ backdrop: 'static', keyboard: false });
                         },
                         error: function () {
                             $('#spiner-loader').addClass('hide');
