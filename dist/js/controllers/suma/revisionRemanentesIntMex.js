@@ -502,7 +502,7 @@ $("#form_multiples").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
-            url: general_base_url + "Comisiones/IntMexPagadosByProyect",
+            url: general_base_url + "Pagos/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,
