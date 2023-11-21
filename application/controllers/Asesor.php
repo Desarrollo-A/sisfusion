@@ -3158,22 +3158,30 @@ class Asesor extends CI_Controller {
         $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
+        $encabezados = [
+            'nombreResidencial' =>  'PROYECTO',
+            'nombre'            =>  'CONDOMINIO',
+            'nombreLote'        =>  'LOTE',
+            'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+            'fechaHora'         =>  'FECHA/HORA'
+        ];
         
+        $infoLote = (array)$this->Juridico_model->getNameLote($idLote);
+
+        $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
 
         $this->email
         ->initialize()
         ->from('Ciudad Maderas')
         ->to('mariadejesus.garduno@ciudadmaderas.com')
-        // ->to($correosEntregar)
+        ->cc('programador.analista35@ciudadmaderas.com')
         ->subject('EXPEDIENTE CONFIRMADO')
         ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria.php', [
             'encabezados' => $encabezados,
             'contenido' => $contenido,
             'comentario' => $comentario
         ], true));
-
-
-        }
+    
 
 
         if ($validate == 1) {
