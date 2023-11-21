@@ -1183,7 +1183,7 @@ const botonesAccionReubicacion = (d) => {
                             data-idProyecto="${d.idProyecto}"
                             data-statusPreproceso="${idEstatusPreproceso}"
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}"
-                            data-tipoEstatusRegreso="${d.tipo_estatus_regreso}"
+                            data-tipoEstatusRegreso="${d.tipo_estatus_regreso}">
                             ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
                             
                         </button>`;
@@ -1243,7 +1243,8 @@ const botonesAccionReubicacion = (d) => {
                 data-placement="left"
                 title="REUBICAR CLIENTE"
                 data-idCliente="${d.idCliente}"
-                data-idProyecto="${d.idProyecto}">
+                data-idProyecto="${d.idProyecto}"
+                data-statusPreproceso="${idEstatusPreproceso}">
             <i class="fas fa-route"></i>
         </button>`;
 

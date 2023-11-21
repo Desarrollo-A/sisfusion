@@ -2989,12 +2989,18 @@ class Asesor extends CI_Controller {
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 2;
-                $idMovimiento = 105;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
+                $statusContratacion = 1;
+                $idMovimiento = 89;
+            } 
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+                $statusContratacion = 7;
+                $idMovimiento = 83;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
                 $statusContratacion = 2;
                 $idMovimiento = 110;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+            }
+             elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
                 $statusContratacion = 2;
                 $idMovimiento = 113;
             } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
@@ -3642,10 +3648,15 @@ class Asesor extends CI_Controller {
         $comentario = $this->input->post('comentario');
         $fechaVenc = $this->input->post('fechaVenc');
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ){
+        if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ){
+            $statusContratacion = 7;
+            $idMovimiento = 83;
+        }
+        elseif($valida_tventa[0]['tipo_venta'] == 1){
             $statusContratacion = 3;
             $idMovimiento = 98;
-        }else{
+        }
+        else{
             $statusContratacion = 7;
             $idMovimiento = 83;
         }

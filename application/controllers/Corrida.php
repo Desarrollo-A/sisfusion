@@ -91,7 +91,6 @@ class Corrida extends CI_Controller {
 			echo json_encode(array());
 		}
 	}
-
  
 	public function editar_ds(){
 
