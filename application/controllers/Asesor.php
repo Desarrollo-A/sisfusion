@@ -3173,7 +3173,7 @@ class Asesor extends CI_Controller {
         ], true));
 
 
-        }
+        
 
 
         if ($validate == 1) {
