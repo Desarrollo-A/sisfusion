@@ -79,7 +79,7 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 AND HD.idCliente = cl.id_cliente
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
-        LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
+        LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_seded
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
@@ -451,7 +451,7 @@ class Reestructura_model extends CI_Model
     public function getListaAsignacionCartera() {
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
-        return $this->db->query("SELECT lf.idFusion,lf.idLotePvOrigen,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -461,7 +461,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, ISNULL(u6.id_usuario, 0) idAsesorAsignado, 
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, lo.totalNeto2
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -726,5 +726,10 @@ class Reestructura_model extends CI_Model
         FROM loteXReubicacion lotx
 		INNER JOIN residenciales res ON res.idResidencial = lotx.idProyecto 
 		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
+    }
+
+    function getFusion($idLote){
+        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen=".$idLote);
+        return $query->result_array();
     }
 }

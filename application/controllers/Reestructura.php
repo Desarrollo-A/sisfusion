@@ -1143,8 +1143,32 @@ class Reestructura extends CI_Controller{
     }
 
     public function setAsesor() {
-        $updateData = array("id_usuario_asignado" => $this->input->post('idAsesor'), "usuario" => $this->session->userdata('id_usuario'));
-        echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+	    $idFusion = $this->input->post('idFusion');
+        $idAsesorAsignado = $this->input->post('idAsesor');
+	    if($idFusion==1){
+            $idLote = $this->input->post('idLote');
+            $lotesFusionados = explode(",", $idLote);
+            $flagEsatus = 0;
+            foreach ($lotesFusionados as $elemento){
+                $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+                if($this->General_model->updateRecord("lotes", $updateData, "idLote", $elemento)){
+                    $flagEsatus = $flagEsatus + 1;
+                }
+//                echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
+            }
+            if($flagEsatus == count($lotesFusionados)){
+                echo json_encode(array("status" => 200, "message" => "OK"), JSON_UNESCAPED_UNICODE);
+            }else{
+                echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
+            }
+        }else if($idFusion == 0){
+            $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+            if($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote'))){
+                echo json_encode(array("status" => 200, "message" => "OK"), JSON_UNESCAPED_UNICODE);
+            }else{
+                echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
+            }
+        }
     }
     
     public function cambiarBandera  ()
@@ -1828,5 +1852,51 @@ class Reestructura extends CI_Controller{
         $proyecto = $this->input->post('index_proyecto');
         $datos = $this->Reestructura_model->obtenerLotesLiberar($proyecto);
         echo json_encode($datos);
+    }
+
+    public function setFusionLotes(){
+        $datos = $this->input->post('data');
+        //valores:
+        //[0] -> nombreLote
+        //[1] -> idCliente
+        //[2] -> idAsesorAsignado -->no se usa en este punto
+        //[3] -> totalNeto2
+        //[4] -> idLote
+
+        $dataInsert = array();
+        $datos = json_decode($datos);
+        foreach ($datos as $index => $elemento){
+            $dataInsert[$index] = array(
+                'idLote' => $elemento[4],
+                'idCliente' => $elemento[1],
+                'origen' => 1,
+                'destino' => 0,
+                'idLotePvOrigen' => $datos[0][4],
+                'nombreLotes' => $elemento[0],
+                'totalNeto2' => $elemento[3],
+                'creadoPor' => 1,
+                'fechaCreacion' => date('Y-m-d H:i:s'),
+                'modificadoPor' => null,
+                'fechaModificacion' => date('Y-m-d H:i:s'),
+            );
+        }
+
+
+        $insertResponse = $this->General_model->insertBatch('lotesFusion', $dataInsert);
+
+        if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+            echo json_encode(array("status" => 200, "message" => "Se han fusionado los lotes correctamente."), JSON_UNESCAPED_UNICODE);
+        else // FALLÓ EL BATCH
+            echo json_encode(array("status" => 500, "message" => "No se logró procesar la petición."), JSON_UNESCAPED_UNICODE);
+    }
+
+    function getFusion(){
+	    $idLote = $this->input->post('idLote');
+        $data = $this->Reestructura_model->getFusion($idLote);
+
+        if ($data) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+            echo json_encode(array("status" => 200, "message" => "OK", "data" => $data), JSON_UNESCAPED_UNICODE);
+        else // FALLÓ EL BATCH
+            echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
     }
 }
