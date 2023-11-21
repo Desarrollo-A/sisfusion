@@ -490,8 +490,6 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
             if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
-            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
-                $where = "pr.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507) AND pr.id_sede IN (8, 10)";
             else if ($id_usuario == 479) // MARBELLA DEL SOCORRO DZUL CALÁN
                 $where = "pr.id_gerente IN ($id_lider, 4223) AND pr.id_sede IN (3, 15)";
             else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
