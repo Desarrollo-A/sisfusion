@@ -3158,10 +3158,36 @@ class Asesor extends CI_Controller {
         $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
+        
+
+        $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to('mariadejesus.garduno@ciudadmaderas.com')
+        // ->to($correosEntregar)
+        ->subject('EXPEDIENTE CONFIRMADO')
+        ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria.php', [
+            'encabezados' => $encabezados,
+            'contenido' => $contenido,
+            'comentario' => $comentario
+        ], true));
+
+
+        }
+
+
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+
+                if ($this->email->send()) {
+                    $data['message_email'] = 'OK'; // El correo se envió correctamente
+                } else {
+                    $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                }
+
                 $data['message'] = 'OK';
                 echo json_encode($data);
+                
             } else {
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
