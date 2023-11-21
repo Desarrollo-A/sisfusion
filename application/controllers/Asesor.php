@@ -3173,14 +3173,15 @@ class Asesor extends CI_Controller {
         $this->email
         ->initialize()
         ->from('Ciudad Maderas')
-        ->to('programador.analista35@ciudadmaderas.com')
-        // ->to($correosEntregar)
+        ->to('mariadejesus.garduno@ciudadmaderas.com')
+        ->cc('programador.analista35@ciudadmaderas.com')
         ->subject('EXPEDIENTE CONFIRMADO')
         ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria.php', [
             'encabezados' => $encabezados,
             'contenido' => $contenido,
             'comentario' => $comentario
         ], true));
+    
 
 
         if ($validate == 1) {
