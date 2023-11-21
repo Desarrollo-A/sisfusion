@@ -8,12 +8,12 @@ class Reestructura extends CI_Controller{
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
-		$this->validateSession();
+		//$this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession() {
@@ -89,7 +89,7 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
 	}
 
 	public function insertarOpcionN (){
@@ -145,6 +145,7 @@ class Reestructura extends CI_Controller{
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
+
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
@@ -468,13 +469,6 @@ class Reestructura extends CI_Controller{
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
         $tipo_venta = $clienteAnterior->tipo_venta;
         $ubicacion = $clienteAnterior->ubicacion;
-        $total8P = 0; 
-        
-        if ($proceso == 4){
-            $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
-            $total8P = floatval(($nuevaSup - $anteriorSup)) * floatval($precioM2Original);
-            $total8P = floatval(number_format($total8P, 2, '.', ''));
-        }
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
@@ -485,9 +479,9 @@ class Reestructura extends CI_Controller{
                 'color' => 'danger'
             ));
             return;
-        }
+        } 
 
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio);
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -658,9 +652,9 @@ class Reestructura extends CI_Controller{
         ));
 	}
 
-    public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null, $total8P = 0) {
+    public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
         $dataCliente = [];
-        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion', 'totalNeto2'];
+        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion'];
 
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
@@ -696,7 +690,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $proceso], $dataCliente);
                 continue;
             } else if ($clave == 'totalNeto2Cl') {
-                $dataCliente = array_merge([$clave => 0], $dataCliente);
+                $dataCliente = array_merge([$clave =>  0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
                 $dataCliente = array_merge([$clave => $clienteAnterior->id_cliente], $dataCliente);
@@ -715,9 +709,6 @@ class Reestructura extends CI_Controller{
                 continue;
             } else if ($clave == 'creado_por'){
                 $dataCliente = array_merge([$clave => $this->session->userdata('id_usuario')], $dataCliente);
-                continue;
-            } else if ($clave == 'total8P'){
-                $dataCliente = array_merge([$clave => $total8P], $dataCliente);
                 continue;
             }
 
@@ -1727,7 +1718,7 @@ class Reestructura extends CI_Controller{
                 'domicilio_particular' => $coopropietario['domicilio_particular'] ?? '',
                 'estado_civil' => $coopropietario['estado_civil'] ?? '',
                 'ocupacion' => $coopropietario['ocupacion'] ?? '',
-                'ine' => $coopropietario['ine'],
+                'fecha_nacimiento' => $coopropietario['fecha_nacimiento'],
                 'modificado_por' => $this->session->userdata('id_usuario')
             ];
         }
