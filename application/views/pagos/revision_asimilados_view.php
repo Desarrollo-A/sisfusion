@@ -105,12 +105,13 @@
                                                                         <th>EMPRESA</th>
                                                                         <th>TOTAL DE LA COMISIÓN</th>
                                                                         <th>PAGADO POR EL CLIENTE</th>
+                                                                        
                                                                         <th>TOTAL A PAGAR</th>
                                                                         <th>TIPO DE VENTA</th>
                                                                         <th>USUARIO</th>
-                                                                        <th>PUESTO</th>
+                                                                        <!--<th>PUESTO</th>
                                                                         <th>FECHA DE ENVÍO</th>
-                                                                        <th>ACCIONES</th>
+                                                                        <th>ACCIONES</th> -->
                                                                     </tr>
                                                                 </thead>
                                                             </table>
