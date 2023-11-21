@@ -1401,6 +1401,16 @@ class Asesor_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getNameLote($idLote){
+		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
+		res.nombreResidencial
+        FROM lotes l
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		where l.idLote = ".$idLote." "); 
+		return $query->row();
+	}
+
     public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)
