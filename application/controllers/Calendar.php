@@ -10,7 +10,6 @@ class Calendar extends CI_Controller {
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -48,7 +47,6 @@ class Calendar extends CI_Controller {
 
     public function updateAppointmentData(){
         $objDatos = json_decode(file_get_contents("php://input"));
-
         $data = array(
             "medio" => $objDatos->estatus_recordatorio2,
             "fecha_cita" => str_replace("T", " ", $objDatos->dateStart),

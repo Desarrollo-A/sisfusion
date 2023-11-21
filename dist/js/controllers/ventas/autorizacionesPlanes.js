@@ -23,6 +23,9 @@ sp = {
 }
 
 $(document).ready(function(){
+
+
+
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -678,7 +681,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             processData:false,
             success: function(data) {
                 data =  JSON.parse(data);
-                if ( data['status'] = 402 ){
+                if ( data['status'] == 402 ){
                     descuentosYCondiciones.forEach(element => {
                         if ( element['condicion']['id_condicion'] == data['detalle'][0]['condicion']['id_condicion'] ){
                             element['data'] = [];

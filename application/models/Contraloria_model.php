@@ -760,7 +760,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function update_asig_jur($id, $id_sede){
-        $this->db->query("UPDATE variables SET contador = $id WHERE identificador = $id_sede");
+        $this->db->query("UPDATE variables SET contador = $id WHERE identificador = '$id_sede'");
         return true;
     }
 
