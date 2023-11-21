@@ -28,6 +28,38 @@
             }
         </style>
 
+        <!-- Modals --> 
+        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #B2B2B2;">
+                                <h5 style="color: white;"><b>BITÁCORA DE CAMBIOS</b></h5>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade bd-example-modal-sm" id="ModalEnviar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,8 +81,9 @@
                 </div>
             </div>
         </div>
-
-        <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
+ 
+        <!-- inicia modal subir factura -->
+         <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -171,7 +204,11 @@
                                         <div class="tab-pane active" id="nuevas-1">
                                             <div class="encabezadoBox">
                                             <p class="card-title pl-2">Comisiones nuevas disponibles para solicitar tu pago, para ver más detalles podrás consultarlo en el historial. <a href="<?=base_url()?>Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
-                                                <?php if($this->session->userdata('forma_pago') == 3){ ?>
+                                                                                
+                                                <?php
+                                                if($this->session->userdata('forma_pago') == 3){
+
+                                                ?>
                                                 <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> Recuerda que el <b>impuesto estatal</b> sobre tu pago de comisiones es de 
                                                 <?php
                                                 switch($this->session->userdata('id_usuario')){
@@ -204,7 +241,10 @@
                                                 }
                                                 ?>
                                                 </p>
-                                                <?php } ?>
+                                                <?php
+
+                                                }
+                                                ?>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -227,27 +267,27 @@
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                                <p class="input-tot pl-1" name="total_disponible" id="total_disponible">$0.00</p>
+                                                                <p class="input-tot pl-1" name="myText_nuevas" id="myText_nuevas">$0.00</p>
                                                             </div>
                                                         </div>
                                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Solicitar:</h4>
-                                                                <p class="input-tot pl-1" name="total_solicitar" id="total_solicitar">$0.00</p>
+                                                                <p class="input-tot pl-1" name="totpagarPen" id="totpagarPen">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label  class="control-label" for="catalogo_nuevas">Proyecto</label>
-                                                                <select name="catalogo_nuevas" id="catalogo_nuevas" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label  class="control-label" for="proyecto1">Proyecto</label>
+                                                                <select name="proyecto1" id="proyecto1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="condominio_nuevas">Condominio</label>
-                                                                <select name="condominio_nuevas" id="condominio_nuevas" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="condominio1">Condominio</label>
+                                                                <select name="condominio1" id="condominio1" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">                    
@@ -274,8 +314,10 @@
 
                                                                 }else if($opn_cumplimiento[0]['estatus'] == 2){
                                                                     echo '<button type="button" class="btn btn-info subir_factura_multiple" >SUBIR FACTURAS</button>';
+
                                                                 }
                                                             }
+
                                                                 }
                                                                 else{
                                                                     echo '';
@@ -301,7 +343,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>MÁS</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -331,18 +373,18 @@
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total solicitado:</h4>
-                                                                <p class="input-tot pl-1" name="total_solicitado" id="total_solicitado">$0.00</p>
+                                                                <p class="input-tot pl-1" name="myText_proceso" id="myText_proceso">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="control-label" for="proyecto_revision">Proyecto</label>
-                                                            <select name="proyecto_revision" id="proyecto_revision" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="proyecto2">Proyecto</label>
+                                                            <select name="proyecto2" id="proyecto2" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_revision">Condominio</label>
-                                                            <select name="condominio_revision" id="condominio_revision" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio2">Condominio</label>
+                                                            <select name="condominio2" id="condominio2" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -361,7 +403,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>MÁS</th>
                                                     </tr>                 
                                                 </thead>
                                             </table>
@@ -401,14 +443,14 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="catalogo_resguardo">Proyecto</label>
-                                                                <select name="catalogo_resguardo" id="catalogo_resguardo" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="proyecto28">Proyecto</label>
+                                                                <select name="proyecto28" id="proyecto28" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group">
-                                                                <label class="control-label" for="condominio_resguardo">Condominio</label>
-                                                                <select name="condominio_resguardo" id="condominio_resguardo" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                <label class="control-label" for="condominio28">Condominio</label>
+                                                                <select name="condominio28" id="condominio28" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -428,7 +470,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>MÁS</th>
                                                     </tr>                
                                                 </thead>
                                             </table>
@@ -459,18 +501,18 @@
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total:</h4>
-                                                                <p class="input-tot pl-1" name="total_pagar" id="total_pagar">$0.00</p>
+                                                                <p class="input-tot pl-1" name="myText_pagadas" id="myText_pagadas">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">                      
-                                                            <label class="control-label" for="catalogo_pagar">Proyecto</label>
-                                                            <select name="catalogo_pagar" id="catalogo_pagar" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="proyecto3">Proyecto</label>
+                                                            <select name="proyecto3" id="proyecto3" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_pagar">Condominio</label>
-                                                            <select name="condominio_pagar" id="condominio_pagar" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio3">Condominio</label>
+                                                            <select name="condominio3" id="condominio3" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -489,12 +531,12 @@
                                                             <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
-                                                            <th>ACCIONES</th>
+                                                            <th>MÁS</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
                                         </div>
-
+                                        <!-- /////////////// -->
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
                                             <p class="card-title pl-1">Comisiones pausadas, para ver el motivo da clic el botón de información. Si requieres ver más detalles como lo pagado y lo pendiente, podrás consultarlo en el historial. <a href="https://maderascrm.gphsis.com/Comisiones/historial_colaborador"><b>clic para ir al historial</b></a>.</p>
@@ -502,34 +544,36 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
                                                                 <?php
                                                                     $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-                                                                    foreach ($query->result() as $row){
+                                                                    foreach ($query->result() as $row)
+                                                                    {
                                                                         $number = $row->nuevo_general;
                                                                         echo '$' . number_format($number, 2).'';
-                                                                    } ?>
+                                                                    }
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Total pausado:</h4>
-                                                                <p class="input-tot pl-1" name="total_otras" id="total_otras">$0.00</p>
+                                                                <p class="input-tot pl-1" name="myText_otras" id="myText_otras">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="control-label" for="catalogo_otras">Proyecto</label>
-                                                            <select name="catalogo_otras" id="catalogo_otras" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="proyecto4">Proyecto</label>
+                                                            <select name="proyecto4" id="proyecto4" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                            <label class="control-label" for="condominio_otras">Condominio</label>
-                                                            <select name="condominio_otras" id="condominio_otras" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="condominio4">Condominio</label>
+                                                            <select name="condominio4" id="condominio4" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -548,7 +592,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
+                                                        <th>MÁS</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -563,14 +607,14 @@
                                                         <div class="row">
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                                 <div class="form-group">
-                                                                    <label class="control-label" for="catalogo_pago">Proyecto</label>
-                                                                    <select name="catalogo_pago" id="catalogo_pago" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                                    <label class="control-label" for="proyecto">Proyecto</label>
+                                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
                                                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                                 <div class="form-group">
-                                                                    <label class="control-label" for="condominio_pago">Condominio</label>
-                                                                    <select name="condominio_pago" id="condominio_pago" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
+                                                                    <label class="control-label" for="condominio">Condominio</label>
+                                                                    <select name="condominio" id="condominio" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -604,8 +648,10 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
+    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
-    <script> var formaPago = "<?= $this->session->userdata('forma_pago')?>"; </script>
-    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>                                                        
+    <script>
+            var formaPago = "<?= $this->session->userdata('forma_pago')?>";
+    </script>                                                        
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaboradorRigel.js"></script>
 </body>
