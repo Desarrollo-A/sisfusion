@@ -605,7 +605,8 @@ class Reestructura_model extends CI_Model
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta
+        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta,
+		UPPER(ISNULL(CAST(re2.descripcion AS varchar(75)), 'SIN ESPECIFICAR')) nombreResidencial2, ISNULL(co2.nombre, 'SIN ESPECIFICAR') nombreCondominio2, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLote2
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -614,7 +615,10 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = u0.id_lider
         LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
-        LEFT JOIN (SELECT idLote FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote ) pxl ON pxl.idLote = lo.idLote
+        LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote, id_lotep) pxl ON pxl.idLote = lo.idLote
+		LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
+		LEFT JOIN condominios co2 ON co2.idCondominio = lo2.idCondominio
+        LEFT JOIN residenciales re2 ON re2.idResidencial = co2.idResidencial
         WHERE lo.estatus_preproceso != 0
         ORDER BY lo.estatus_preproceso")->result_array();
     }
