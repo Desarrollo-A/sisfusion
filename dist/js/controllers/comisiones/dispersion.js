@@ -649,13 +649,6 @@ $(document).ready(function () {
                                             break;
                                         }
 
-
-                                            
-
-
-
-
-
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
                                         abonado = parseFloat(abonado) +parseFloat(saldo1C);
                                         porcentaje_abono = parseFloat(porcentaje_abono) + parseFloat(v.porcentaje_decimal);
@@ -1413,18 +1406,18 @@ function responsive(maxWidth) {
 
 function function_totales(){
     $.getJSON( general_base_url + "Comisiones/getMontoDispersado").done( function( data ){
-    $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
-    document.getElementById("monto_label").innerHTML = $cadena ;
+        $cadena = '<b>$'+formatMoney(data[0].monto)+'</b>';
+        document.getElementById("monto_label").innerHTML = $cadena ;
     });
     $.getJSON( general_base_url + "Comisiones/getPagosDispersado").done( function( data ){
-    $cadena01 = '<b>'+data[0].pagos+'</b>';
-    document.getElementById("pagos_label").innerHTML = $cadena01 ;
+        $cadena01 = '<b>'+data[0].pagos+'</b>';
+        document.getElementById("pagos_label").innerHTML = $cadena01 ;
     });
     $.getJSON( general_base_url + "Comisiones/getLotesDispersado").done( function( data ){
-    $cadena02 = '<b>'+data[0].lotes+'</b>';
-    document.getElementById("lotes_label").innerHTML = $cadena02 ;
-    }); 
-    }
+        $cadena02 = '<b>'+data[0].lotes+'</b>';
+        document.getElementById("lotes_label").innerHTML = $cadena02 ;
+    });
+}
 
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);
