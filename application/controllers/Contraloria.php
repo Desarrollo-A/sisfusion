@@ -1003,6 +1003,7 @@ class Contraloria extends CI_Controller {
         $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
         $tipo_enganche = $this->input->post('tipo_enganche');
         $estatus_enganche = $this->input->post('estatus_enganche');
+        $banderaFusion = $this->input->post('banderaFusion');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 6;
@@ -1274,7 +1275,8 @@ class Contraloria extends CI_Controller {
         $data = [
             'tipoLiberacion' => 7,
             'idLote' => $loteAnterior->idLote,
-            'idLoteNuevo' => $idLote
+            'idLoteNuevo' => $idLote,
+            'banderaFusion' => $banderaFusion
         ];
 
         if (!$this->Reestructura_model->aplicaLiberacion($data)) {
