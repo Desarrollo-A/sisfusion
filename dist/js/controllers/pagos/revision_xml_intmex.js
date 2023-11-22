@@ -30,7 +30,7 @@ $('#filtro33').change(function(ruta){
     residencial = $('#filtro33').val();
     $("#filtro44").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){

@@ -942,4 +942,13 @@ public function getCommissionsByMktdUserReport($estatus,$typeTransaction, $begin
         lo.referencia, sed.impuesto, oxcfp.nombre, cl.estructura, oprol2.nombre ORDER BY lo.nombreLote");
     }
 
+    public function getCondominioDesc($residencial)
+    {
+        $query = $this->db->query("SELECT con.idCondominio, con.nombre, res.idResidencial, res.nombreResidencial, CAST(res.descripcion AS NVARCHAR(100)) descripcion   
+            FROM residenciales res
+            JOIN condominios con ON con.idResidencial = res.idResidencial
+            WHERE con.status in(1) AND con.idResidencial =" . $residencial . " ORDER BY con.nombre");
+        return $query->result();
+    }
+
 }

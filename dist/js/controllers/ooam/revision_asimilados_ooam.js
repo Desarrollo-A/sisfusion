@@ -20,7 +20,7 @@ $('#proyectoAsimiladosOOAM').change(function(){
 residencial = $('#proyectoAsimiladosOOAM').val();
 $("#condominioAsimiladosOOAM").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -76,8 +76,8 @@ function getDataAsimiladosOOAM(proyecto, condominio){
         $.each(json.data, function(i, v) {
             totalooam += parseFloat(v.impuesto);
         });
-        var to = formatMoney(numberTwoDecimal(totalooam));
-        document.getElementById("disponibleAsimiladosOOAM").textContent = to;
+        var toOoam = formatMoney(numberTwoDecimal(totalooam));
+        document.getElementById("disponibleAsimiladosOOAM").textContent = toOoam;
     });
     
 
