@@ -1,21 +1,6 @@
 var trs;
 var tabla_factura_ooam ;
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
-function cleanCommentsremanente() {
-    var myCommentsList = document.getElementById('comments-list-remanente');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 function CloseModalDelete2Ooam(){
     document.getElementById("form_multiplesOoam").reset();
     a = document.getElementById('borrarProyect');
@@ -32,17 +17,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#puesto").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_factura_ooam").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#puesto").selectpicker('refresh');
+        $("#catalogo_factura_ooam").selectpicker('refresh');
     }, 'json');
-
 });
 
-
-$('#puesto').change(function(ruta){
-    rol = $('#puesto').val();
-    $("#usuario").empty().selectpicker('refresh');
+$('#catalogo_factura_ooam').change(function(ruta){
+    rol = $('#catalogo_factura_ooam').val();
+    $("#usuario_factura_ooam").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Ooam/lista_usuarios/',
         data:{
@@ -57,19 +40,19 @@ $('#puesto').change(function(ruta){
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#usuario").append($('<option>').val(id).text(name));
+                $("#usuario_factura_ooam").append($('<option>').val(id).text(name));
             }
             if(len<=0){
-            $("#usuario").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
+            $("#usuario_factura_ooam").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
             }
-            $("#usuario").selectpicker('refresh');
+            $("#usuario_factura_ooam").selectpicker('refresh');
         }
     });
 });
 
-$('#usuario').change(function(ruta){
-    proyecto = $('#puesto').val();
-    condominio = $('#usuario').val();
+$('#usuario_factura_ooam').change(function(ruta){
+    proyecto = $('#catalogo_factura_ooam').val();
+    condominio = $('#usuario_factura_ooam').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
@@ -77,29 +60,12 @@ $('#usuario').change(function(ruta){
 });
 
 
-
-
-/**------------------------------------------------------------- */
 $(document).on("click", ".PagarOoam", function() {          
     $("#modal_multiplesOoam .modal-body").html("");
     $("#modal_multiplesOoam .modal-header").html("");
     $("#modal_multiplesOoam .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiplesOoam .modal-footer").append(`<div id="borrarProyect">
-        
-                <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Ooam()">CANCELAR</button>
-                <button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button>
-
-        </div>`);
-
-    $("#modal_multiplesOoam .modal-header").append(`
-    <div class="row">
-        <div class="col-md-12">
-            <select id="desarrolloSelect" name="desarrolloSelect" 
-                class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN"
-                required data-live-search="true">
-            </select>
-        </div>
-    </div>`);
+    $("#modal_multiplesOoam .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiplesOoam .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Ooam/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
@@ -108,6 +74,7 @@ $(document).on("click", ".PagarOoam", function() {
             var name = data[i]['name_user'];
             $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
         }
+
         if (len <= 0) {
             $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
@@ -129,26 +96,18 @@ $(document).on("click", ".PagarOoam", function() {
 
         $.getJSON(general_base_url + "Ooam/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
-            // console.log(data[0]);
+
             if (!data) {
                 $("#modal_multiplesOoam .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiplesOoam .modal-body ").append(`
-                    <center>
-                        <div class="row bodypagos" >
-                            <p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $
-                            <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div>
-                    </center>
-                            `);
+                    $("#modal_multiplesOoam .modal-body ").append(`<center><div class="row bodypagos" ><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
                 $("#modal_multiplesOoam .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiplesOoam .modal-body #bodypago2").append(`
-                    <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
-                    
+                    $("#modal_multiplesOoam .modal-body #bodypago2").append(`<input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                 });
                 document.getElementById('btn-aceptar').disabled = false;
             }
@@ -161,7 +120,6 @@ $(document).on("click", ".PagarOoam", function() {
     });
 });
 
-//INICIO TABLA QUERETARO***************************************
 let titulosOoam = [];
 $('#tabla_factura_ooam thead trs:eq(0) th').each( function (i) {
     if(i != 0){
@@ -172,16 +130,13 @@ $('#tabla_factura_ooam thead trs:eq(0) th').each( function (i) {
             if (tabla_factura_ooam.column(i).search() !== this.value) {
                 tabla_factura_ooam.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_factura_ooam.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+                var index = tabla_factura_ooam.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_factura_ooam.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("totpagarremanente").textContent = formatMoney(numberTwoDecimal(total));
+                document.getElementById("total_factura_ooam").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
     }
@@ -197,7 +152,7 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent = to;
+        document.getElementById("total_factura_ooam").textContent = to;
     });
 
     $("#tabla_factura_ooam").prop("hidden", false);
@@ -227,33 +182,21 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#autorizar_factura_ooam").html(formatMoney(0));
                                 $("#all").prop('checked', false);
-                                var fecha = new Date();
                                 $("#myModalEnviadas").modal('toggle');
                                 tabla_factura_ooam.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
-                                <center>
-                                    <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif">
-                                    <p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p>
-                                </center>`);
+                                let mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }else{
@@ -466,7 +409,7 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
             totaPen -= parseFloat(rows.pa);
             rows.pa = 0;
         }
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#autorizar_factura_ooam").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_factura_ooam tbody").on("click", ".cambiar_estatus", function(){
@@ -536,7 +479,6 @@ function getFacturaCommissionsOOAM(proyecto, condominio){
     });
 }
 
-//FIN TABLA  ****************************************************************************************
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
     .columns.adjust();
@@ -550,13 +492,12 @@ function cancela(){
     $("#modal_nuevas").modal('toggle');
 }
 
-//Función para pausar la solicitud
 $("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
+        
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "Pagos/pausar_solicitud/",
@@ -566,7 +507,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_nuevas").modal('toggle' );
@@ -584,13 +525,11 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-//Función para regresar a estatus 7 la solicitud
 $("#form_refresh").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "pagos/refresh_solicitud/",
@@ -600,7 +539,7 @@ $("#form_refresh").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_refresh").modal('toggle' );
@@ -623,7 +562,6 @@ $("#form_despausar").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         data.append("id_pago_i", id_pago_i);
         $.ajax({
             url: general_base_url + "pagos/despausar_solicitud/",
@@ -633,14 +571,13 @@ $("#form_despausar").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST', 
             success: function(data){
                 if( data[0] ){
                     $("#modal_despausar").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_factura_ooam.ajax.reload();
-                        // tabla_otras2.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -679,7 +616,7 @@ function preview_info(archivo){
         $("#documento_preview .modal-dialog").append(elemento);
     }
 }
-// Selección de CheckBox
+
 $(document).on("click", ".individualCheckOOAM", function() {
     totaPen = 0;
     tabla_factura_ooam.$('input[type="checkbox"]').each(function () {
@@ -690,15 +627,15 @@ $(document).on("click", ".individualCheckOOAM", function() {
             rows = tabla_factura_ooam.row(trs).data();
             totaPen += parseFloat(rows.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
+
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#autorizar_factura_ooam").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-    // Función de selección total
+    
 function selectAllOOAM(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -710,7 +647,7 @@ function selectAllOOAM(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar_factura_ooam").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(tabla_factura_ooam.$('input[type="checkbox"]')).each(function (i, v) {
@@ -718,7 +655,7 @@ function selectAllOOAM(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#autorizar_factura_ooam").html(formatMoney(0));
     }
 }
 
@@ -735,7 +672,6 @@ $("#form_multiplesOoam").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
-        console.log(data);
         $.ajax({
             url: general_base_url + "Ooam/IntMexPagadosByProyect",
             data: data,
@@ -744,7 +680,7 @@ $("#form_multiplesOoam").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data == 1){
                     CloseModalDelete2Ooam();

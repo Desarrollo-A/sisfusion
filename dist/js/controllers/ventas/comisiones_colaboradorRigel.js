@@ -19,6 +19,7 @@ $(document).ready(function() {
             for (var i = 0; i < len; i++) {
                 var id = data[i]['idResidencial'];
                 var name = data[i]['descripcion'];
+                console.log(index);
                 $('#proyecto'+index).append($('<option>').val(id).text(name.toUpperCase()));
                 $('#proyecto28'+index).append($('<option>').val(id).text(name.toUpperCase()));
             }

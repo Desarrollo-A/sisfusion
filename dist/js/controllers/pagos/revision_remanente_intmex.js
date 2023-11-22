@@ -1,6 +1,6 @@
 
 var tr;
-var tabla_remanente2 ;
+var tablaRemanente2;
 var totaPen = 0;
 
 $(document).ready(function() {
@@ -10,9 +10,9 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#catalogoRemanente").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_remanente").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoRemanente").selectpicker('refresh');
+        $("#catalogo_remanente").selectpicker('refresh');
     }, 'json');
 
     $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
@@ -31,9 +31,9 @@ function CloseModalDelete2(){
     $("#modal_multiples").modal('toggle');  
 }
 
-$('#catalogoRemanente').change(function(ruta){
-    rol = $('#catalogoRemanente').val();
-    $("#usuarioRemanente").empty().selectpicker('refresh');
+$('#catalogo_remanente').change(function(ruta){
+    rol = $('#catalogo_remanente').val();
+    $("#usuario_remanente").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos/lista_usuarios/',
         type: 'post',
@@ -47,26 +47,26 @@ $('#catalogoRemanente').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#usuarioRemanente").append($('<option>').val(id).text(name));
+                $("#usuario_remanente").append($('<option>').val(id).text(name));
             }
             if(len<=0){
-                $("#usuarioRemanente").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
+                $("#usuario_remanente").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
             }
-            $("#usuarioRemanente").selectpicker('refresh');
+            $("#usuario_remanente").selectpicker('refresh');
         }
     });
 });
 
-$('#usuarioRemanente').change(function(ruta){
-    proyecto = $('#catalogoRemanente').val();
-    condominio = $('#usuarioRemanente').val();
+$('#usuario_remanente').change(function(ruta){
+    proyecto = $('#catalogo_remanente').val();
+    condominio = $('#usuario_remanente').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
     getAssimilatedCommissions(proyecto, condominio);
 });
 
-$(document).on("click", ".Pagar", function() {          
+$(document).on("click", ".pagar_remanente", function() {          
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
@@ -133,16 +133,16 @@ $('#tabla_remanente thead tr:eq(0) th').each( function (i) {
         titulos.push(title);
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
-            if (tabla_remanente2.column(i).search() !== this.value) {
-                tabla_remanente2.column(i).search(this.value).draw();
+            if (tablaRemanente2.column(i).search() !== this.value) {
+                tablaRemanente2.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_remanente2.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_remanente2.rows(index).data();
+                var index = tablaRemanente2.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tablaRemanente2.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
                 var to1 = formatMoney(total);
-                document.getElementById("totpagarremanente").textContent = formatMoney(numberTwoDecimal(total));
+                document.getElementById("total_remanente").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
         } 
@@ -158,11 +158,11 @@ function getAssimilatedCommissions(proyecto, condominio){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent = to;
+        document.getElementById("total_remanente").textContent = to;
     });
 
     $("#tabla_remanente").prop("hidden", false);
-    tabla_remanente2 = $("#tabla_remanente").DataTable({
+    tablaRemanente2 = $("#tabla_remanente").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -172,7 +172,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             action: function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() { return this.value; }).get();
+                    var idcomision = $(tablaRemanente2.$('input[name="idTQ[]"]:checked')).map(function() { return this.value; }).get();
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
@@ -186,10 +186,10 @@ function getAssimilatedCommissions(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#total_autorizar").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_remanente2.ajax.reload();
+                                tablaRemanente2.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente."
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
@@ -332,9 +332,9 @@ function getAssimilatedCommissions(proyecto, condominio){
             data: function( data ){
                 let btns = '';
 
-                const BTN_DETREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles"><i class="fas fa-info"></i></button>`;
-                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"><i class="fas fa-pause"></i></button>`;
-                const BTN_ACTREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
+                const BTN_DETREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
+                const BTN_ACTREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="ACTIVAR SOLICITUD"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
                     btns += BTN_DETREM;
@@ -386,8 +386,8 @@ function getAssimilatedCommissions(proyecto, condominio){
         $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
-        $("#nameLote").html('');
-        $("#comments-list-asimilados").html('');
+        $("#nombreLote").html('');
+        $("#comentariosAsimilados").html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
 
@@ -395,7 +395,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         appendBodyModal(`<div class="modal-body">
                 <div role="tabpanel">
                     <ul>
-                        <div id="nameLote"></div>
+                        <div id="nombreLote"></div>
                     </ul>
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="changelogTab">
@@ -403,7 +403,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                                 <div class="col-md-12">
                                     <div class="card card-plain">
                                         <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
                                         </div>
                                     </div>
                                 </div>
@@ -417,10 +417,10 @@ function getAssimilatedCommissions(proyecto, condominio){
             </div>`);
         showModal();
 
-        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nombreLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li>\n' +
+                $("#comentariosAsimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
@@ -444,7 +444,7 @@ function getAssimilatedCommissions(proyecto, condominio){
 
     $('#tabla_remanente').on('click', 'input', function() {
         tr = $(this).closest('tr');
-        var row = tabla_remanente2.row(tr).data();
+        var row = tablaRemanente2.row(tr).data();
         if (row.pa == 0) {
             row.pa = row.impuesto;
             totaPen += parseFloat(row.pa);
@@ -455,12 +455,12 @@ function getAssimilatedCommissions(proyecto, condominio){
             row.pa = 0;
         }
 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#total_autorizar").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
     $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tablaRemanente2.row( tr );
         id_pago_i = $(this).val();
 
         $("#modal_nuevas .modal-body").html("");
@@ -474,7 +474,7 @@ function getAssimilatedCommissions(proyecto, condominio){
 
     $("#tabla_remanente tbody").on("click", ".regresar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tablaRemanente2.row( tr );
         id_pago_i = $(this).val();
 
         $("#modal_nuevas .modal-body").html("");
@@ -485,56 +485,10 @@ function getAssimilatedCommissions(proyecto, condominio){
         $("#modal_nuevas .modal-footer").append(` <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button>`);
         $("#modal_nuevas").modal();
     });
-
-    $("#tabla_remanente tbody").on("click", ".consultar_documentos", function(){
-        id_com = $(this).val();
-        id_pj = $(this).attr("data-personalidad");
-        $("#seeInformationModal").modal();
-        $.getJSON( general_base_url + "Pagos/getDatosDocumentos/"+id_com+"/"+id_pj).done( function( data ){
-            $.each( data, function( i, v){
-                $("#seeInformationModal .documents").append('<div class="row">');
-
-                if (v.estado == "NO EXISTE"){
-                    $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:gray;">'+(v.nombre).substr(0, 52)+'</label></div><div class="col-md-5"><label style="font-size:10px; margin:0; color:gray;">(No existente)</label></div>');
-                }
-                else{
-                    $("#seeInformationModal .documents").append('<div class="col-md-7"><label style="font-size:10px; margin:0; color:#0a548b;"><b>'+(v.nombre).substr(0, 52)+'</b></label></div> <div class="col-md-5"><label style="font-size:10px; margin:0; color:#0a548b;"><b>('+v.expediente+')</label></b> - <button onclick="preview_info(&#39;'+(v.expediente)+'&#39;)" style="border:none; background-color:#fff;"><i class="fa fa-file" aria-hidden="true" style="font-size: 12px; color:#0a548b;"></i></button></div>');
-                }
-                $("#seeInformationModal .documents").append('</div>');
-            });
-        });
-
-        $.getJSON( general_base_url + "Pagos/getDatosFactura/"+id_com).done( function( data ){
-            $("#seeInformationModal .facturaInfo").append('<div class="row">');
-            
-            if (!data.datos_solicitud['id_factura'] == '' && !data.datos_solicitud['id_factura'] == '0'){
-                $("#seeInformationModal .facturaInfo").append('<BR><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b> LOTE</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>TOTAL FACT.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['total']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>MONTO COMSN.</b></label><br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['folio_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA FACTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_factura']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-4"><label style="font-size:14px; margin:0; color:gray;"><b>FECHA CAPTURA</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN F.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>FORMA P.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-3"><label style="font-size:14px; margin:0; color:gray;"><b>CLAVE PROD.</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-6"><label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['uuid']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['descripcion']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div>');
-            }
-            else {
-                $("#seeInformationModal .facturaInfo").append('<div class="col-md-12"><label style="font-size:10px; margin:0; color:orange;">SIN HAY DATOS A MOSTRAR</label></div>');
-            }
-                
-            $("#seeInformationModal .facturaInfo").append('</div>');
-        });
-    });
 }
 
 $(window).resize(function(){
-    tabla_remanente2.columns.adjust();
+    tablaRemanente2.columns.adjust();
 });
 
 function cancela(){
@@ -561,7 +515,7 @@ $("#form_interes").submit( function(e) {
                     $("#modal_nuevas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tablaRemanente2.ajax.reload();
                     }, 3000);
                 }
                 else{
@@ -571,7 +525,7 @@ $("#form_interes").submit( function(e) {
                 alert("ERROR EN EL SISTEMA");
             }
         });
-        $("#totpagarPen").html(formatMoney(0));
+        $("#total_autorizar").html(formatMoney(0));
     }
 });
 
@@ -595,7 +549,7 @@ $("#form_refresh").submit( function(e) {
                     $("#modal_refresh").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tablaRemanente2.ajax.reload();
                     }, 3000);
                 }
                 else{
@@ -628,7 +582,7 @@ $("#form_despausar").submit( function(e) {
                     $("#modal_despausar").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tablaRemanente2.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -640,8 +594,7 @@ $("#form_despausar").submit( function(e) {
     }
 });
 
-
-function preview_info(archivo){
+function vistapreviaInformacion(archivo){
     $("#documento_preview .modal-dialog").html("");
     $("#documento_preview").css('z-index', 9999);
     archivo = general_base_url+"dist/documentos/"+archivo+"";
@@ -671,12 +624,12 @@ function preview_info(archivo){
 
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
-    tabla_remanente2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_remanente2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_remanente2.$('input[type="checkbox"]');
+    tablaRemanente2.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tablaRemanente2.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tablaRemanente2.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tablaRemanente2.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
@@ -684,29 +637,29 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false); 
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#total_autorizar").html(formatMoney(numberTwoDecimal(totaPen)));
 });
 
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tablaRemanente2.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tablaRemanente2.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#total_autorizar").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tablaRemanente2.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#total_autorizar").html(formatMoney(0));
     }
 }
 

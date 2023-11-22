@@ -16,7 +16,7 @@
                     </div>
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
-                    </form>WHEN
+                    </form>
                 </div>
             </div>
         </div>
@@ -86,6 +86,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal fade bd-example-modal-sm" id="ModalEnviar" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

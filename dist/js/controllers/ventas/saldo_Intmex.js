@@ -2,49 +2,45 @@ var tr;
 var tabla_historialGral2;
 var totaPen = 0;
 
-function cleanCommentsData() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    myCommentsList.innerHTML = '';
-}
-
 $(document).ready(function(){
     $("#tabla_historialGral").prop("hidden", true);
     $.post(general_base_url + "Comisiones/listEmpresa", function(data) {
         var len = data.length;
-        $("#empresa").append($('<option value="null">TODAS</option>'));
+        $("#empresaReporte").append($('<option value="null">TODAS</option>'));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['nombreUser'];
             var name = data[i]['nombreUser'];
-            $("#empresa").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#empresaReporte").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#empresa").selectpicker('refresh');
+        $("#empresaReporte").selectpicker('refresh');
     }, 'json');
+
     $.post(general_base_url + "Comisiones/listRegimen", function(data) {
         var len = data.length;
-        $("#regimen").append($('<option value="0">TODOS</option>'));
+        $("#regimenReporte").append($('<option value="0">TODOS</option>'));
         for( var i = 0; i<len; i++)
         {
             var id = data[i]['id_opcion'];
             var name = data[i]['descripcion'];
-            $("#regimen").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#regimenReporte").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#regimen").selectpicker('refresh');
+        $("#regimenReporte").selectpicker('refresh');
     }, 'json');
 });
 
-$('#empresa').change( function(){
-    empresa = $('#empresa').val();
-    regimen = $('#regimen').val();
+$('#empresaReporte').change( function(){
+    empresa = $('#empresaReporte').val();
+    regimen = $('#regimenReporte').val();
     if(regimen == ''){
         regimen = 0;
     }
     getAssimilatedCommissions(empresa, regimen);
 });
 
-$('#regimen').change( function(){
-    regimen = $('#regimen').val();
-    empresa = $('#empresa').val();
+$('#regimenReporte').change( function(){
+    regimen = $('#regimenReporte').val();
+    empresa = $('#empresaReporte').val();
     if(empresa == ''){
         empresa = 0;
     }
@@ -63,27 +59,24 @@ $('#tabla_historialGral thead tr:eq(0) th').each(function(i) {
         if (tabla_historialGral2.column(i).search() !== this.value) {
             tabla_historialGral2.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_historialGral2.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_historialGral2.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_historialGral2.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.dispersado);
             });
-            document.getElementById("myText_nuevas").textContent = formatMoney(numberTwoDecimal(total));
+            document.getElementById("disponible_reporte").textContent = formatMoney(numberTwoDecimal(total));
         }
     });
 });
 
 function getAssimilatedCommissions(empresa, regimen) {
-    $('#tabla_historialGral').on('xhr.dt', function(e, settings, json, xhr) {
+    $('#tabla_historialGral').on('xhr.dt', function(json) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.dispersado);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("myText_nuevas").textContent = to;
+        document.getElementById("disponible_reporte").textContent = to;
     });
 
     $("#tabla_historialGral").prop("hidden", false);
@@ -169,9 +162,7 @@ function getAssimilatedCommissions(empresa, regimen) {
     });
 
     $('#tabla_historialGral').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $('#tabla_historialGral').on('click', 'input', function() {
