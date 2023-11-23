@@ -54,16 +54,18 @@ class Reestructura extends CI_Controller{
 	public function getProyectosDisponibles(){
 		$idProyecto = $this->input->post('idProyecto');
 		$superficie = $this->input->post('superficie');
+		$flagFusion = $this->input->post('flagFusion');
 
-		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie);
+		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $flagFusion);
         echo json_encode($data);
     }
 
 	public function getCondominiosDisponibles(){
 		$idProyecto = $this->input->post('idProyecto');
 		$superficie = $this->input->post('superficie');
+        $flagFusion = $this->input->post('flagFusion');
 
-		$data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto, $superficie);
+		$data = $this->Reestructura_model->getCondominiosDisponibles($idProyecto, $superficie, $flagFusion);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -74,8 +76,9 @@ class Reestructura extends CI_Controller{
 	public function getLotesDisponibles(){
 		$idCondominio = $this->input->post('idCondominio');
         $superficie = $this->input->post('superficie');
+        $flagFusion = $this->input->post('flagFusion');
 
-		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie);
+		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie, $flagFusion);
         if ($data != null) {
             echo json_encode($data);
         } else {

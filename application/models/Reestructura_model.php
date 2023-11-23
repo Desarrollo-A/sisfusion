@@ -35,7 +35,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
 
-        return $this->db->query("SELECT dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.idLotePvOrigen, dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -76,7 +76,8 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 AND HD.idCliente = cl.id_cliente
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
-        LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_seded
+        LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
+        LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
@@ -94,13 +95,19 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function getProyectosDisponibles($proyecto, $superficie){
+    public function getProyectosDisponibles($proyecto, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= '.$superficie.' - 1)';
+        }
         return $this->db->query("SELECT t.proyectoReubicacion, descripcion, SUM(disponibles) disponibles FROM (
             SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 15 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio ".$superficieWhere." AND lo.idStatusLote = 15 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             UNION ALL
@@ -108,24 +115,38 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio ".$superficieWhere." AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
         ) t
         GROUP BY t.proyectoReubicacion, descripcion")->result_array();
     }
 
-    public function getCondominiosDisponibles($proyecto, $superficie){
+    public function getCondominiosDisponibles($proyecto, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= '.$superficie.' - 1)';
+        }
+
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
         WHERE lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
-        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie - 1)
+        AND co.idResidencial = $proyecto ".$superficieWhere."
         GROUP BY lo.idCondominio, co.nombre");
         return $query->result();
     }
 
-    public function getLotesDisponibles($condominio, $superficie){
+    public function getLotesDisponibles($condominio, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= $superficie - 1)';
+        }
+
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
 		WHEN (lo.sup - $superficie) <= lo.sup * 0.05 THEN op2.nombre
@@ -134,7 +155,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
-		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1) AND (lo.sup >= $superficie - 1)");
+		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)".$superficieWhere);
         return $query->result();
     }
 
@@ -710,7 +731,9 @@ class Reestructura_model extends CI_Model
     }
 
     function getFusion($idLote){
-        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen=".$idLote);
+        $query = $this->db->query("SELECT lf.*, l.sup FROM lotesFusion lf
+        INNER JOIN lotes l ON l.idLote = lf.idLote
+        WHERE lf.idLotePvOrigen=".$idLote);
         return $query->result_array();
     }
 }
