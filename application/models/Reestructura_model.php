@@ -189,7 +189,7 @@ class Reestructura_model extends CI_Model
         $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
         $datos["modificado"] = date('Y-m-d H:i:s');
         $datos["status"] = 1;
-        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $datos["userLiberacion"] = ($datos['tipoLiberacion'] == 7 &&  $this->session->userdata('id_rol') == 17 ) ? 1 : $this->session->userdata('id_usuario');
         $datos["tipo"] = $datos['tipoLiberacion'];
 
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,
@@ -398,7 +398,9 @@ class Reestructura_model extends CI_Model
 
     public function obtenerCopropietariosPorIdCliente($idCliente)
     {
-        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = $idCliente");
+        $query = $this->db->query("SELECT nombre,apellido_paterno,apellido_materno,telefono_2,correo,domicilio_particular,estado_civil,ocupacion,fecha_nacimiento 
+                                    FROM copropietarios WHERE id_cliente IN($idCliente) 
+                                    GROUP BY nombre,apellido_paterno,apellido_materno,telefono_2,correo,domicilio_particular,estado_civil,ocupacion,fecha_nacimiento");
         return $query->result_array();
     }
 
