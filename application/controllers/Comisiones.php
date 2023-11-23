@@ -2366,7 +2366,7 @@ class Comisiones extends CI_Controller
     $reubicadas = $this->input->post("reubicadas");
       
     if($clienteReubicacion!=null && $reubicadas!= 0){
-      echo json_encode($this->Comisiones_model->porcentajesReubicacion($clienteReubicacion)->result_array(),JSON_NUMERIC_CHECK);
+      echo json_encode($this->Comisiones_model->porcentajesReubicacion($cliente, $clienteReubicacion)->result_array(),JSON_NUMERIC_CHECK);
     }else{
       echo json_encode($this->Comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
     }
