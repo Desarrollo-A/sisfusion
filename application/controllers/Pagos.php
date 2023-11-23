@@ -719,7 +719,7 @@ class Pagos extends CI_Controller
       $arrayplaza = $this->input->post("plazaMKTDSelect[]");
       $arraysede = $this->input->post("sedeMKTDSelect[]");
       $arrayestatus = $this->input->post("estatusMk[]");
-     
+    
       $query_max = $this->db->query("SELECT MAX(numero_plan) AS nummax FROM porcentajes_mktd");
       $new_max = intval($query_max->row()->nummax)+1;
     
@@ -776,7 +776,6 @@ class Pagos extends CI_Controller
         break;
       }
     }
-
 
     public function acepto_internomex_especial(){
       $this->load->model("Comisiones_model");

@@ -3158,8 +3158,6 @@ class Asesor extends CI_Controller {
         $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
-        
-
         $this->email
         ->initialize()
         ->from('Ciudad Maderas')
@@ -3171,10 +3169,7 @@ class Asesor extends CI_Controller {
             'contenido' => $contenido,
             'comentario' => $comentario
         ], true));
-
-
         }
-
 
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {

@@ -7,14 +7,6 @@ $(document).ready(function () {
     });
 });
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
-    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
-});
-
 let titulos = [];
 $('#prospectscon_datatable thead tr:eq(0) th').each(function (i) {
     let title = $(this).text();
@@ -44,10 +36,8 @@ function readFileAsync(selectedFile) {
             var workbook = XLSX.read(data, {
                 type: "binary"
             });
-
             workbook.SheetNames.forEach(sheet => {
                 rowObject = JSON.stringify(XLSX.utils.sheet_to_json(workbook.Sheets[sheet], { header: 0, defval: '', blankrows: true }));
-                // jsonProspectos = JSON.stringify(rowObject, null);
             });
             resolve(rowObject);
         };
@@ -59,16 +49,17 @@ function readFileAsync(selectedFile) {
 $(document).on('click', '#cargaCoincidencias', function (){
     checked = $("input[type=checkbox]:checked").length;
     fileElm = document.getElementById("fileElm");
+
     if ( checked > 0 &&  fileElm.value != ''){
         processFile(fileElm.files[0]).then(jsonProspectos => {
             var checks = [];
             $('input[name^="checks"]:checked').each(function() {
                 checks.push($(this).val());
             });
+            
             if($("#anio").val()=='' ){
                 alerts.showNotification('top', 'right', 'Debes seleccionar un año', 'warning');
             }else{
-                // MJ: SE AGREGÓ EL AÑO AL ARRAY DE CHECKS
                 checks.push("anio");
                 updateTable(checks, jsonProspectos, $("#anio").val());
                 $('#prospectscon_datatable').removeClass('hide');
@@ -77,7 +68,14 @@ $(document).on('click', '#cargaCoincidencias', function (){
         });
     }
     else{
-        $('#notificacion').modal('show');
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+                <p class="p-0 text-center">No ha seleccionado al menos un filtro o cargado un documento</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+            </div>`);
+        showModal();
     }
 });
 
@@ -86,23 +84,21 @@ function updateTable(checks, jsonProspectos, anio){
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title:'Coincidencias de prospectos',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4,5,6,7,8,9,10],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title:'Coincidencias de prospectos',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4,5,6,7,8,9,10],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
         language: {
             url: "../static/spanishLoader_v2.json",
@@ -189,4 +185,10 @@ function updateTable(checks, jsonProspectos, anio){
             }
         }
     });
+
+    $('#prospectscon_datatable').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    });
 }
+
+

@@ -412,7 +412,6 @@ function fillCommissionTableNUEVAS(proyecto,condominio){
         destroy: true,
         ordering: false,
         columns: [{
-           
         },
         {
             "data": function(d) {
