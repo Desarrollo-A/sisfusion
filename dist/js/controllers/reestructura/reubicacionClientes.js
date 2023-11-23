@@ -990,6 +990,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
     data.append("proceso", TIPO_PROCESO.REUBICACION);
+    data.append("flagFusion", flagFusion);
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
@@ -1181,16 +1182,21 @@ $(document).on("submit", "#formRechazarEstatus", function(e) {
  * @return {boolean}
  */
 const validarLotesRequeridos = (numberLotes) => {
+    let flagFusion = parseInt($('#flagFusion').val());
+    let numeroMaxLotes;
+    if(flagFusion == 1){
+        numeroMaxLotes = 100;
+    }else{
+        numeroMaxLotes = 3;
+    }
     if (numberLotes === 0) {
         alerts.showNotification("top", "right", "Debes seleccionar al menos un lote", "warning");
         return false;
     }
-
-    if(numberLotes > 3){
+    if(numberLotes > numeroMaxLotes){
         alerts.showNotification("top", "right", "Debes seleccionar máximo 3 lotes", "warning");
         return false;
     }
-
     return true;
 }
 
