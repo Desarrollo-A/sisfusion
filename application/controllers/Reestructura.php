@@ -341,6 +341,8 @@ class Reestructura extends CI_Controller{
         $totalLotes = count($idLotes);
         $flagConteo = 0;
         $arrayNoDisponible = '';
+        $flagFusion = $this->input->post('flagFusion');
+
         foreach ($idLotes as $elementoLote) {
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
@@ -356,30 +358,74 @@ class Reestructura extends CI_Controller{
             $arrayLotesApartado = array();
             //AA: Se asignan propuesta por primera vez
             if ($statusPreproceso == 0) {
-                foreach ($idLotes as $idLote) {
-                    $arrayLote = array(
-                        'idLote' => $idLoteOriginal,
-                        'id_lotep' => $idLote,
-                        'estatus' =>  $proceso == 2 ? 0 : 1,
-                        'creado_por' => $this->session->userdata('id_usuario'),
-                        'fecha_modificacion' => date("Y-m-d H:i:s"),
-                        'modificado_por' => $this->session->userdata('id_usuario')
-                    );
+                if($flagFusion == 1){
+                    foreach ($idLotes as $elemento){
+                        $arrayLote = array(
+                            "idLote" => $elemento, //lote propuesta
+                            "idCliente" => 0,
+                            "origen" => 0,
+                            "destino" => 1,
+                            "idLotePvOrigen" => $idLoteOriginal, //idLotePivote
+                            "nombreLotes" => null,
+                            "totalNeto2" => null,
+                            "creadoPor" => $this->session->userdata('id_usuario'),
+                            "fechaCreacion" => date('Y-m-d H:i:s'),
+                            "modificadoPor" => null,
+                            "fechaModificacion" => null,
+                            "contrato" => null,
+                            "corrida" => null,
+                            "rescision" => null,
+                        );
 
-                    array_push($arrayLotes, $arrayLote);
-                }
-                if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
-                    $this->db->trans_rollback();
+                        array_push($arrayLotes, $arrayLote);
+                    }
+                    if (!$this->General_model->insertBatch('lotesFusion', $arrayLotes)) {
+                        $this->db->trans_rollback();
 
-                    echo json_encode([
-                        'titulo' => 'ERROR',
-                        'resultado' => FALSE,
-                        'message' => 'Error al dar el alta de las propuestas',
-                        'color' => 'danger'
-                    ]);
-                    return;
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar el alta de las propuestas',
+                            'color' => 'danger'));
+                        return;
+                    }
+                    $this->db->trans_commit();
+                    echo json_encode(array(
+                        'titulo' => 'OK',
+                        'resultado' => TRUE,
+                        'message' => 'Proceso realizado correctamente.',
+                        'color' => 'success'
+                    ));
+
                 }
+                else{
+                    foreach ($idLotes as $idLote) {
+                        $arrayLote = array(
+                            'idLote' => $idLoteOriginal,
+                            'id_lotep' => $idLote,
+                            'estatus' =>  $proceso == 2 ? 0 : 1,
+                            'creado_por' => $this->session->userdata('id_usuario'),
+                            'fecha_modificacion' => date("Y-m-d H:i:s"),
+                            'modificado_por' => $this->session->userdata('id_usuario')
+                        );
+
+                        array_push($arrayLotes, $arrayLote);
+                    }
+                    if (!$this->General_model->insertBatch('propuestas_x_lote', $arrayLotes)) {
+                        $this->db->trans_rollback();
+
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar el alta de las propuestas',
+                            'color' => 'danger'));
+                        return;
+                    }
+                }
+
             }
+
+            //hasta aqui llegué EP
             foreach ($idLotes as $idLote) {
                 $arrayLoteApartado = array(
                     'idLote' => $idLote,
@@ -389,14 +435,15 @@ class Reestructura extends CI_Controller{
 
                 array_push($arrayLotesApartado, $arrayLoteApartado);
             }
+
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
-                echo json_encode([
+                echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
                     'message' => 'Error al actualizar en apartado los lotes',
                     'color' => 'danger'
-                ]);
+                ));
                 return;
             }
             $updateLoteOriginal = array(
@@ -405,23 +452,23 @@ class Reestructura extends CI_Controller{
             );
             if (!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)) {
                 $this->db->trans_rollback();
-                echo json_encode([
+                echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
                     'message' => 'Error al actualizar en apartado los lotes',
                     'color' => 'danger'
-                ]);
+                ));
                 return;
             }
 
             if (!$this->copiarCopropietariosAnteriores($idCliente, $idLoteOriginal)) {
                 $this->db->trans_rollback();
-                echo json_encode([
+                echo json_encode(array(
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
                     'message' => 'Error al actualizar en apartado los lotes',
                     'color' => 'danger'
-                ]);
+                ));
                 return;
             }
 

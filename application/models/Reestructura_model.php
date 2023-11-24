@@ -733,7 +733,7 @@ class Reestructura_model extends CI_Model
     function getFusion($idLote){
         $query = $this->db->query("SELECT lf.*, l.sup FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
-        WHERE lf.idLotePvOrigen=".$idLote);
+        WHERE lf.idLotePvOrigen=".$idLote." AND origen=1");
         return $query->result_array();
     }
 }
