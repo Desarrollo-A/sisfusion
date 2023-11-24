@@ -1438,10 +1438,11 @@ class Reestructura extends CI_Controller{
         $comentario = $this->input->post('comentario');
         $idMovimiento = $this->input->post('idEstatusMovimento');
         $idUsuario = $this->session->userdata('id_usuario');
+        $idRol = $this->session->userdata('id_rol');
         $flagProcesoContraloriaJuridico;
 
         if ($idPreproceso == 2)
-            $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote)->contador;
+            $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);
 
         $assigned_user = 0;
         if ($idPreproceso + 1 == 2) { // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
@@ -1457,8 +1458,15 @@ class Reestructura extends CI_Controller{
             $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
         }
 
+        /*if ((($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15) || ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73]))) && $idPreproceso == 2)
+            $estatus_proceso = 3;
+        else */if ((($flagProcesoContraloriaJuridico->flagProcesoContraloria == 0 && $idRol == 15) || ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 0 && in_array($idRol, [17, 70, 71, 73]))) && $idPreproceso == 2)
+            $estatus_proceso = 2;
+        else
+            $estatus_proceso = $idPreproceso + 1;
+
         $dataUpdateLote = [
-			'estatus_preproceso' => $idPreproceso + 1,
+			'estatus_preproceso' => $estatus_proceso,
 			'usuario' => $idUsuario,
             'id_juridico_preproceso' => $assigned_user
         ];
