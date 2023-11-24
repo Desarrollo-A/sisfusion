@@ -17,6 +17,7 @@
                                     <table id="tablaReporteReubicaciones" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO ORIGEN</th>
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>
