@@ -107,13 +107,12 @@ class Reestructura_model extends CI_Model
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             UNION ALL
-            SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
-                    FROM loteXReubicacion lr
-                    INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
-                    INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
-                    WHERE lr.idProyecto = $proyecto
-                    GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
+            SELECT re.idResidencial proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
+                    FROM lotes lo
+                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.status = 1
+                    WHERE (lo.sup >= $superficie - 1) AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
         ) t
         GROUP BY t.proyectoReubicacion, descripcion")->result_array();
     }
@@ -553,7 +552,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
         lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
         ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
-        lo.tipo_estatus_regreso
+        lo.tipo_estatus_regreso, 'EXCLUSIVO REESTRUCTURA' tipo
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -561,7 +560,18 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (1, 15, 16) AND lo.status = 1
+        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
+        UNION ALL
+        SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
+        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
+        'NA' estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
+        lo.tipo_estatus_regreso, 'ABIERTO' tipo
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        WHERE lo.idStatusLote IN (1) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
 
