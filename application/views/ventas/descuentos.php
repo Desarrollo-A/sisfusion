@@ -10,7 +10,6 @@
             }
         </style>
 
-        <!-- Modals -->
         <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -54,52 +53,48 @@
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label">Puesto del usuario</label>
-                                <select class="selectpicker roles" name="roles" id="roles" required>
-                                    <option value="">----Seleccionar-----</option>
+                                <label class="label control-label">Puesto del usuario</label>
+                                <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body"required>
                                     <option value="7">Asesor</option>
                                     <option value="38">MKTD</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
                                     <option value="2">Sub director</option>  
                                     <option value="1">Director</option> 
-
                                 </select>
                             </div>
-                            <div class="form-group" id="users">
-                                <label class="label">Usuario</label>
-                                <select id="usuarioid" name="usuarioid" class="form-control directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
+                            <div class="form-group hide" id="users">
+                                <label class="label control-label" id="label_usuario">Usuario</label>
+                                <select id="usuarioid" name="usuarioid" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" required data-live-search="true"></select>
                             </div>
                             <div class="form-group" id="loteorigen">
-                                <label class="label">Lote origen</label>
-                                <select id="idloteorigen"  name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
+                                <label class="label control-label">Lote origen</label>
+                                <select id="idloteorigen" name="idloteorigen[]" multiple="multiple" class="form-control directorSelect2 js-example-theme-multiple" style="width: 100%;height:200px !important;"  required data-live-search="true"></select>
                             </div>
                             <b id="msj2" style="color: red;"></b>
                             <b id="sumaReal"></b>
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="form-group" >
-                                        <label class="label">Monto disponible</label>
-                                        <input class="form-control" type="text" id="idmontodisponible" readonly name="idmontodisponible" value="">
+                                        <label class="label control-label d-flex justify-left">Monto disponible</label>
+                                        <input class="form-control input-gral" type="text" id="idmontodisponible" readonly name="idmontodisponible" value="">
                                     </div>
                                     <div id="montodisponible"></div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="label">Monto a descontar</label>
-                                        <input class="form-control" type="text" id="monto" onblur="verificar();" name="monto" value="">
+                                        <label class="label control-label d-flex justify-left">Monto a descontar</label>
+                                        <input class="form-control input-gral" type="text" id="monto" onblur="verificar();" name="monto" value="">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="label">Mótivo de descuento</label>
-                                <textarea id="comentario" name="comentario" class="form-control" rows="3" required></textarea>
+                                <label class="label control-label">Mótivo de descuento</label>
+                                <textarea id="comentario" name="comentario" class="text-modal" rows="3" required></textarea>
                             </div>
-                            <div class="form-group">
-                                
-                                    <button type="submit" id="btn_abonar" class="btn btn-success">GUARDAR</button>
-                                    <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button>
-                                
+                            <div class="form-group d-flex justify-end">
+                                <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                                <button type="submit" id="btn_abonar" class="btn btn-primary">GUARDAR</button>  
                             </div>
                         </div>
                     </form>
@@ -183,7 +178,6 @@
                 </div>
             </div>
         </div>
-        <!-- END MODALS-->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -237,7 +231,7 @@
                                                     <th>ESTATUS</th>
                                                     <th>CREADO POR</th>
                                                     <th>FECHA DE CAPTURA</th>
-                                                    <th>OPCIONES</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -250,15 +244,8 @@
             </div>
         </div>
         <?php $this->load->view('template/footer_legend');?>
-    </div><!--main-panel close--> 
+    </div>
     <?php $this->load->view('template/footer');?>
-    <!--DATATABLE BUTTONS DATA EXPORT-->
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
     <script type="text/javascript" src="<?= base_url()?>dist/js/funciones-generales.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/comisiones/descuentos.js"></script>
 </body>
