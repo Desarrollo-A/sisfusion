@@ -37,7 +37,7 @@ class Reestructura extends CI_Controller{
         $array_final = array();
         $array_manejo = array();
         foreach ($data as $elemento){
-            if($elemento['origen']==1 && $elemento['destino']===null){
+            if($elemento['origen']==1 || $elemento['destino']===null){
                 array_push($array_final, $elemento);
             }
         }

@@ -87,7 +87,7 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 --AND HD.idCliente = cl.id_cliente
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
-        LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote AND lf.origen=1
+        LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
