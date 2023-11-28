@@ -1,4 +1,4 @@
-$(document).ready(function() {
+ys  $(document).ready(function() {
 
     $(".select-is-empty").removeClass("is-empty");
 
