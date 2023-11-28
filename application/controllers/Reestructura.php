@@ -446,6 +446,7 @@ class Reestructura extends CI_Controller{
                 //Acctualizamos preproceso para todos los lote de origen fusionados
                 $arrayLoteOrigen = array();
                 $arrayLotesOrigen = array();
+                $idClientesOrigen = '';
                 $lotesOrigen = $this->Reestructura_model->getFusion($idLoteOriginal);
                 foreach ($lotesOrigen as $dataLote){
                     $arrayLoteOrigen = array(
