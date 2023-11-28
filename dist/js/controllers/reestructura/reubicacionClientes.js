@@ -1241,12 +1241,12 @@ const botonesAccionReubicacion = (d) => {
 
 
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef ) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef ) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
         btnContratoFirmado = 'fa-eye';
@@ -1312,6 +1312,7 @@ const botonesAccionReubicacion = (d) => {
                     title="INFORMACIÓN CLIENTE"
                     data-idCliente="${d.idCliente}" 
                     data-idLote="${d.idLote}"
+                    ${botonFusionadoEstatus}
                     data-idStatusLote="${d.idStatusLote == 17 ? 17 : 16}">
                     <i class="fas fa-user-check"></i>
                 </button>`;
@@ -1408,7 +1409,7 @@ const botonesAccionReubicacion = (d) => {
         else
             return BTN_AVANCE + BTN_INFOCLIENTE;
     }
-    if (idEstatusPreproceso === 1 && id_rol_general == 7) // EEC: Ver/Editar la información del cliente
+    if (idEstatusPreproceso === 1 && id_rol_general == 7){ // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
     }
 
@@ -1426,6 +1427,7 @@ const botonesAccionReubicacion = (d) => {
         }
 
     }
+
 
     if (idEstatusPreproceso === 3 && id_rol_general == 15 && id_usuario_general != 13733) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
         if(totalContratoFirmado==1)
