@@ -34,7 +34,14 @@ class Reestructura extends CI_Controller{
 
     public function getListaClientesReubicar(){
         $data = $this->Reestructura_model->getListaClientesReubicar();
-        echo json_encode($data);
+        $array_final = array();
+        $array_manejo = array();
+        foreach ($data as $elemento){
+            if($elemento['origen']==1 && $elemento['destino']===null){
+                array_push($array_final, $elemento);
+            }
+        }
+        echo json_encode($array_final);
     }
 
     public function getCliente($idCliente, $idLote){
@@ -42,7 +49,7 @@ class Reestructura extends CI_Controller{
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
         if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
             $datCliente = $this->Reestructura_model->getCliente($idCliente);
-        $datCliente->copropietarios = $copropietarios; // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
+        $datCliente->copropietarios = (count($copropietarios)>0) ? $copropietarios : array(); // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
         echo json_encode($datCliente);
     }
     
@@ -389,14 +396,6 @@ class Reestructura extends CI_Controller{
                             'color' => 'danger'));
                         return;
                     }
-                    $this->db->trans_commit();
-                    echo json_encode(array(
-                        'titulo' => 'OK',
-                        'resultado' => TRUE,
-                        'message' => 'Proceso realizado correctamente.',
-                        'color' => 'success'
-                    ));
-
                 }
                 else{
                     foreach ($idLotes as $idLote) {
@@ -432,10 +431,8 @@ class Reestructura extends CI_Controller{
                     'idStatusLote' => ($proceso == 2) ? 16 : 17,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
-
                 array_push($arrayLotesApartado, $arrayLoteApartado);
             }
-
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
@@ -1260,7 +1257,8 @@ class Reestructura extends CI_Controller{
 
     function getOpcionesLote(){
 	    $idLote = $this->input->post('idLote');
-	    $data['opcionesLotes'] = $this->Reestructura_model->getOpcionesLote($idLote);
+	    $flagFusion = $this->input->post('flagFusion');
+	    $data['opcionesLotes'] = $this->Reestructura_model->getOpcionesLote($idLote, $flagFusion);
 	    $data['copropietarios'] = $this->Reestructura_model->getCopropietariosReestructura($idLote);
         echo json_encode ($data);
     }
@@ -1271,6 +1269,7 @@ class Reestructura extends CI_Controller{
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $editar = $_POST['editarFile'];
+        $flagFusion = $_POST['flagFusion'];
 
 
 
@@ -1298,6 +1297,18 @@ class Reestructura extends CI_Controller{
             $acceptFiles = 'pdf';
 
         }
+        if($flagFusion == 1){//hacer las destinciones dependiendo el proceso
+            $fechaModificacionCampo = 'fechaModificacion';
+            $modificadoPorCampo = 'modificadoPor';
+            $keyActualizacion = 'idFusion';
+            $tablaActualizar = 'lotesFusion';
+        }else{
+            $fechaModificacionCampo = 'fecha_modificacion';
+            $modificadoPorCampo = 'modificado_por';
+            $keyActualizacion = 'id_pxl';
+            $tablaActualizar = 'propuestas_x_lote';
+        }
+
 
         $arrayData = array();
         $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
@@ -1313,15 +1324,15 @@ class Reestructura extends CI_Controller{
                 $fileExtension = strtolower(end($fileNameCmps));
                 $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
                 rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
-                $idpxl = $this->input->post('idLoteArchivo'.$i);
+                $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
 
                 $updateDocumentData = array(
                     $nameField => $nuevoNombre,
-                    "fecha_modificacion" => date('Y-m-d H:i:s'),
-                    "modificado_por" => $this->session->userdata('id_usuario')
+                    $fechaModificacionCampo => date('Y-m-d H:i:s'),
+                    $modificadoPorCampo => $this->session->userdata('id_usuario')
                 );
 
-                $result = $this->General_model->updateRecord("propuestas_x_lote", $updateDocumentData, "id_pxl", $idpxl);
+                $result = $this->General_model->updateRecord($tablaActualizar, $updateDocumentData, $keyActualizacion, $idArchivoActualizar);
                 if($result){
                     $flagInterno = $flagInterno + 1;
                     if($editar==1){
@@ -1385,13 +1396,27 @@ class Reestructura extends CI_Controller{
     }
 
     function actualizaExpecifico(){
+
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $editar = $_POST['editarFile'];
+        $flagFusion = $_POST['flagFusion'];
 
 
+
+        if($flagFusion == 1){//hacer las destinciones dependiendo el proceso
+            $fechaModificacionCampo = 'fechaModificacion';
+            $modificadoPorCampo = 'modificadoPor';
+            $keyActualizacion = 'idFusion';
+            $tablaActualizar = 'lotesFusion';
+        }else{
+            $fechaModificacionCampo = 'fecha_modificacion';
+            $modificadoPorCampo = 'modificado_por';
+            $keyActualizacion = 'id_pxl';
+            $tablaActualizar = 'propuestas_x_lote';
+        }
 
         $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
@@ -1406,7 +1431,8 @@ class Reestructura extends CI_Controller{
             $carpetaUbicacion = 'CORRIDA/';
             $nameField = 'corrida';
             $acceptFiles = 'xlsx|csv|xls';
-        }elseif($flagAction==3){
+        }
+        elseif($flagAction==3){
             $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
@@ -1433,15 +1459,15 @@ class Reestructura extends CI_Controller{
                     $fileExtension = strtolower(end($fileNameCmps));
                     $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
                     rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
-                    $idpxl = $this->input->post('idLoteArchivo'.$i);
+                    $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
 
                     $updateDocumentData = array(
                         $nameField => $nuevoNombre,
-                        "fecha_modificacion" => date('Y-m-d H:i:s'),
-                        "modificado_por" => $this->session->userdata('id_usuario')
+                        $fechaModificacionCampo => date('Y-m-d H:i:s'),
+                        $modificadoPorCampo => $this->session->userdata('id_usuario')
                     );
 
-                    $result = $this->General_model->updateRecord("propuestas_x_lote", $updateDocumentData, "id_pxl", $idpxl);
+                    $result = $this->General_model->updateRecord($tablaActualizar, $updateDocumentData, $keyActualizacion, $idArchivoActualizar);
                     if($result){
                         $flagInterno = $flagInterno + 1;
                         if($editar==1){
@@ -1496,7 +1522,8 @@ class Reestructura extends CI_Controller{
 
     public function obtenerPropuestasXLote(){
         $idLote =  $this->input->post('idLoteOriginal');
-        echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote)->result_array());
+        $flagFusion =  $this->input->post('flagFusion');
+        echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote, $flagFusion)->result_array());
     }
 
     public function setAvance()
@@ -1551,22 +1578,35 @@ class Reestructura extends CI_Controller{
     
     public function setLoteDisponible()
     {
-        $dataUpdateLote = [
-            'idStatusLote' => $this->input->post('tipoEstatusRegreso') == 1 ? 15: 1,
-            'usuario' => $this->session->userdata('id_usuario'),
-            'estatus_preproceso' => $this->input->post('tipoProceso') == 3 ? 0 : 1
-        ];
+        $tipoEstatusRegreso = $this->input->post('tipoEstatusRegreso');
+        $id_usuario = $this->input->post('id_usuario');
+        $tipoProceso = $this->input->post('tipoProceso');
+        $idLote = $this->input->post('idLote');
+        $id_pxl = $this->input->post('id_pxl');
+        $flagFusion = $this->input->post('flagFusion');
 
-        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $this->input->post('idLote'));
-        $responseDeletePropuesta = $this->General_model->deleteRecord('propuestas_x_lote', ['id_pxl' => $this->input->post('id_pxl')]);
+        $dataUpdateLote = array(
+            'idStatusLote' => $tipoEstatusRegreso == 1 ? 15: 1,
+            'usuario' => $id_usuario,
+            'estatus_preproceso' => $tipoProceso == 3 ? 0 : 1
+        );
+
+        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+        if($flagFusion==1){
+            $responseDeletePropuesta = $this->General_model->deleteRecord('lotesFusion', array('idFusion' => $id_pxl));
+        }else{
+            $responseDeletePropuesta = $this->General_model->deleteRecord('propuestas_x_lote', array('id_pxl' => $id_pxl));
+        }
 
         echo ($responseUpdateLote && $responseDeletePropuesta);
     }
 
     public function agregarLotePropuesta()
     {
+
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idLotePropuesta = $this->input->post('idLotePropuesta');
+        $flagFusion = $this->input->post('flagFusion');
 
         $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
         if (count($lote) === 0) {
@@ -1574,29 +1614,50 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        $dataUpdateLote = [
+        $dataUpdateLote = array(
             'idStatusLote' => 16,
             'usuario' => $this->session->userdata('id_usuario')
-        ];
-        
-        $dataInsertPropuestaLote = [
-            'idLote' => $idLoteOriginal,
-            'id_lotep' => $idLotePropuesta,
-            'estatus' => 0,
-            'creado_por' => $this->session->userdata('id_usuario'),
-            'fecha_modificacion'   => date("Y-m-d H:i:s"),
-            'modificado_por' => $this->session->userdata('id_usuario')
-        ];
+        );
+        if($flagFusion==1){
+            $tabla= 'lotesFusion';
+            $dataInsertPropuestaLote = array(
+                'idLote' => $idLotePropuesta,
+                'idcliente' => 0,
+                'origen' => 0,
+                'destino' => 1,
+                'idLotePvOrigen' => $idLoteOriginal,
+                'nombreLotes' => null,
+                'totalNeto2' => null,
+                'creadoPor' => $this->session->userdata('id_usuario'),
+                'fechaCreacion'   => date("Y-m-d H:i:s"),
+                'modificadoPor' => $this->session->userdata('id_usuario'),
+                'fechaModificacion'   => date("Y-m-d H:i:s"),
+                'contrato'   => null,
+                'corrida'   => null,
+                'rescision'   => null
+            );
+        }else{
+            $tabla = 'propuestas_x_lote';
+
+            $dataInsertPropuestaLote = array(
+                'idLote' => $idLoteOriginal,
+                'id_lotep' => $idLotePropuesta,
+                'estatus' => 0,
+                'creado_por' => $this->session->userdata('id_usuario'),
+                'fecha_modificacion'   => date("Y-m-d H:i:s"),
+                'modificado_por' => $this->session->userdata('id_usuario')
+            );
+        }
 
         $responseUpdateLote = $this->General_model->updateRecord('lotes', $dataUpdateLote, 'idLote', $idLotePropuesta);
-        $responseInsertPropuesta = $this->General_model->addRecord('propuestas_x_lote', $dataInsertPropuestaLote);
+        $responseInsertPropuesta = $this->General_model->addRecord($tabla, $dataInsertPropuestaLote);
 
         echo ($responseUpdateLote && $responseInsertPropuesta) ? json_encode(['code' => 200]) : json_encode(['code' => 500]);
     }
 
-    public function totalPropuestas($idLoteOriginal)
+    public function totalPropuestas($idLoteOriginal, $flagFusion)
     {
-        $totalPropuestas = $this->Reestructura_model->obtenerTotalPropuestas($idLoteOriginal);
+        $totalPropuestas = $this->Reestructura_model->obtenerTotalPropuestas($idLoteOriginal, $flagFusion);
         echo json_encode($totalPropuestas->total_propuestas);
     }
 
