@@ -22,7 +22,7 @@ $('#tablaReporteReubicaciones').DataTable({
         titleAttr: 'Reporte de ventas',
         title:"Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -48,6 +48,11 @@ $('#tablaReporteReubicaciones').DataTable({
     order: [[4, "desc"]],
     destroy: true,
     columns: [
+        {
+            data: function (d) {
+                return `<span class='label lbl-blueMaderas'>${d.tipo_proceso}</span>`;
+            }
+        },
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
@@ -65,7 +70,10 @@ $('#tablaReporteReubicaciones').DataTable({
             data: function (d) {
                 return `<span class="label lbl-green">${d.procesoVenta}</span>`;
             }
-        }
+        },
+        { data: "nombreResidencial2" },
+        { data: "nombreCondominio2" },
+        { data: "nombreLote2" }
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteReubicaciones`,

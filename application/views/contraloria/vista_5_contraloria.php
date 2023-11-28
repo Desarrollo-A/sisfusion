@@ -147,6 +147,7 @@
 												<th>PROYECTO</th>
 												<th>CONDOMINIO</th>
 												<th>LOTE</th>
+												<th>ESTATUS</th>
 												<th>REFERENCIA</th>
 												<th>CLIENTE</th>
 												<th>GERENTE</th>

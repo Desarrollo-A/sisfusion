@@ -49,10 +49,11 @@ const STATUSLOTE = Object.freeze({
 const ESTATUS_PREPROCESO = [
     'PENDIENTE CARGA DE PROPUESTAS',
     'REVISIÓN DE PROPUESTAS',
-    'ELABORACIÓN DE CORRIDAS',
-    'ELABORACIÓN DE CONTRATO Y RESICISIÓN',
-    'DOCUMENTACIÓN ENTREGADA',
-    'RECEPCIÓN DE DOCUMENTOS CONFIRMADA',
+    'ELABORACIÓN DE CORRIDAS, CONTRATO Y RESCISIÓN',
+    'RECEPCIÓN DE DOCUMENTACIÓN',
+    'OBTENCIÓN DE FIRMA DEL CLIENTE',
+    'CONTRATO FIRMADO CONFIRMADO, PENDIENTE TRASPASO DE RECURSO',
+    'RECURSO TRASPASADO, PENDIENTE EJECUCIÓN APARTADO NUEVO',
     'PROCESO DE CONTRATACIÓN'
 ];
 
@@ -291,7 +292,6 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
 });
 
 $(document).on('click', '.btn-asignar-propuestas', function () {
-    // $('.')
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -320,11 +320,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 });
                 superficie = (superficie).toFixed(2);
             }
-            //     if (response.code === 400) {
-            //         alerts.showNotification("top", "right", response.message, 'warning');
-            //     }
             if (response.status === 500) {
-                //         alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 return;
             }
         });
@@ -1208,6 +1204,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const botonesAccionReubicacion = (d) => {
+    const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
+    const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
     let totalCorridas; //= parseInt(d.totalCorridas);
     let totalContrato;//= parseInt(d.totalContratos);
@@ -1243,12 +1241,12 @@ const botonesAccionReubicacion = (d) => {
 
 
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef) { //subiendo corridas
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 3 && totalContrato === totalContratoRef) { //subiendo contratos
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos
         editar = 1;
         btnShow = 'fa-edit';
         btnContratoFirmado = 'fa-eye';
@@ -1380,31 +1378,37 @@ const botonesAccionReubicacion = (d) => {
             <i class="fas fa-user-alt"></i>
         </button>`;
 
+    const BTN_TRASPASO_RECURSO =  `<button class="btn-data btn-btn-violetBoots btn-traspaso"
+            data-toggle="tooltip" 
+            data-placement="left"
+            title="Confirmar traspaso / Editar cantidad traspasada"
+            data-idLote="${d.idLote}">
+            <i class="fas fa-user-alt"></i>
+        </button>`;
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
-         if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-            return  BTN_PROPUESTAS_REES + BTN_PROPUESTAS
+        if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA ){
+            if (d.idLotePvOrigen == null || d.idLotePvOrigen == '' ){
+                return BTN_PROPUESTAS_REES + BTN_PROPUESTAS;
+            }
+            else{
+                return BTN_PROPUESTAS;
+            }
         }else{
             return BTN_PROPUESTAS;
         }
     }
 
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
-        if (d.idLoteXcliente == null && d.idStatusLote != 17) {
+        if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
-        }
-        else if (d.idLoteXcliente == null && d.idStatusLote == 17) {
+        else if (d.idLoteXcliente == null && d.idStatusLote == 17)
             return BTN_INFOCLIENTE;
-        }
-        else if (d.idLoteXcliente != null && d.idStatusLote != 17) {
+        else if (d.idLoteXcliente != null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
-        }
-        else{
+        else
             return BTN_AVANCE + BTN_INFOCLIENTE;
-        }
-
     }
-
-    if (idEstatusPreproceso === 1 && id_rol_general == 7) { // EEC: Ver/Editar la información del cliente
+    if (idEstatusPreproceso === 1 && id_rol_general == 7) // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
     }
 
@@ -1428,24 +1432,18 @@ const botonesAccionReubicacion = (d) => {
             botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
         else
             botonJuridico = '';
-
-        return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1)
-            ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico
-            : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
-
+        return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
-
-    if (idEstatusPreproceso === 4 && id_rol_general == 6) { // Asistente gerente: DOCUMENTACIÓN ENTREGADA
+    if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
-    }
-
-    if (idEstatusPreproceso === 5) { // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return ( d.idStatusLote == 17 ) ? BTN_REESTRUCTURA : BTN_REUBICACION;
-    }
-
+    if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESEOR - Obtención de firma del cliente
+        return BTN_AVANCE;
+    if (idEstatusPreproceso === 5 && id_rol_general == 11) // MJ: ADMINISTRACIÓN - Contrato firmado confirmado, pendiente traspaso de recurso.
+        return BTN_AVANCE + BTN_TRASPASO_RECURSO;
+    if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+        return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
-
     return '';
 }
 

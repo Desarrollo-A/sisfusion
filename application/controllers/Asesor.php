@@ -2976,6 +2976,7 @@ class Asesor extends CI_Controller {
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
+        $comentario=$this->input->post('comentario');
 
         /*if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
@@ -3158,8 +3159,41 @@ class Asesor extends CI_Controller {
         $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
+        if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+            $encabezados = [
+                'nombreResidencial' =>  'PROYECTO',
+                'nombre'            =>  'CONDOMINIO',
+                'nombreLote'        =>  'LOTE',
+                'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+                'fechaHora'         =>  'FECHA/HORA'
+            ];
+            
+            $infoLote = (array)$this->Asesor_model->getNameLote($idLote);
+
+            $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to(['coord.bd@ciudadmaderas.com', 'supervisor.bd@ciudadmaderas.com', 'mariadejesus.garduno@ciudadmaderas.com'])
+            //->to('mariadejesus.garduno@ciudadmaderas.com')
+            //->to('programador.analista35@ciudadmaderas.com')
+            ->subject('EXPEDIENTE CONFIRMADO')
+            ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $comentario
+            ], true));
+        }
+    
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+                    if ($this->email->send())
+                        $data['message_email'] = 'OK'; // El correo se envió correctamente
+                    else
+                        $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {

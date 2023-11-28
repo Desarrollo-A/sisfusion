@@ -207,7 +207,7 @@ $(document).on('click', '.btn-asignar-venta', function () {
             });
             $("#idLote").val(lotesFusionados);
             $('#fusionLote').val(1);
-            document.getElementById("mainLabelText").innerHTML = `Asinga un asesor para el seguimiento de la venta <b>${lotesFusion}</b>`;
+            document.getElementById("mainLabelText").innerHTML = `Asigna un asesor para el seguimiento de la venta <b>${lotesFusion}</b>`;
             $("#asignacionModal").modal("show");
         }, 'json');
         const idAsesorAsignado = $(this).attr("data-idAsesorAsignado");
@@ -223,7 +223,7 @@ $(document).on('click', '.btn-asignar-venta', function () {
         //$('#payment_method').selectpicker('refresh');
         $("#idLote").val(idLote);
         $('#fusionLote').val(0);
-        document.getElementById("mainLabelText").innerHTML = `Asinga un asesor para el seguimiento de la venta <b>${nombreLote}</b>`;
+        document.getElementById("mainLabelText").innerHTML = `Asigna un asesor para el seguimiento de la venta <b>${nombreLote}</b>`;
         $("#asignacionModal").modal("show");
     }
 

@@ -421,10 +421,8 @@ class Reestructura extends CI_Controller{
                         return;
                     }
                 }
-
             }
 
-            //hasta aqui llegué EP
             foreach ($idLotes as $idLote) {
                 $arrayLoteApartado = array(
                     'idLote' => $idLote,
@@ -443,11 +441,36 @@ class Reestructura extends CI_Controller{
                 ));
                 return;
             }
-            $updateLoteOriginal = array(
-                'estatus_preproceso' => 1,
-                'usuario' => $this->session->userdata('id_usuario')
-            );
-            if (!$this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal)) {
+
+            if ($flagFusion == 1) {
+                //Acctualizamos preproceso para todos los lote de origen fusionados
+                $arrayLoteOrigen = array();
+                $arrayLotesOrigen = array();
+                $lotesOrigen = $this->Reestructura_model->getFusion($idLoteOriginal);
+                foreach ($lotesOrigen as $dataLote){
+                    $arrayLoteOrigen = array(
+                        'idLote' => $dataLote['idLote'],
+                        'estatus_preproceso' => 1,
+                        'usuario' => $this->session->userdata('id_usuario')
+                    );
+
+                    $idClientesOrigen .= $dataLote['idCliente'] .", ";
+                    array_push($arrayLotesOrigen, $arrayLoteOrigen);
+                }
+                
+                $idClientesOrigen = trim($idClientesOrigen, ',');
+                $lotesOrigenUpdated = $this->General_model->updateBatch('lotes', $arrayLotesOrigen, 'idLote');
+            }
+            else{
+                $updateLoteOriginal = array(
+                    'estatus_preproceso' => 1,
+                    'usuario' => $this->session->userdata('id_usuario')
+                );
+
+                $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
+            }
+
+            if (!$lotesOrigenUpdated) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
                     'titulo' => 'ERROR',
@@ -456,6 +479,10 @@ class Reestructura extends CI_Controller{
                     'color' => 'danger'
                 ));
                 return;
+            }
+
+            if ($flagFusion == 1) {
+
             }
 
             if (!$this->copiarCopropietariosAnteriores($idCliente, $idLoteOriginal)) {
@@ -1210,7 +1237,6 @@ class Reestructura extends CI_Controller{
                 if($this->General_model->updateRecord("lotes", $updateData, "idLote", $elemento)){
                     $flagEsatus = $flagEsatus + 1;
                 }
-//                echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
             }
             if($flagEsatus == count($lotesFusionados)){
                 echo json_encode(array("status" => 200, "message" => "OK"), JSON_UNESCAPED_UNICODE);
@@ -1526,9 +1552,8 @@ class Reestructura extends CI_Controller{
         echo json_encode( $this->Reestructura_model->obtenerPropuestasXLote($idLote, $flagFusion)->result_array());
     }
 
-    public function setAvance()
-    {
-        $estatusMovimientos = array(
+    public function setAvance() {
+        $estatusMovimientos = [
             1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
             2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
             3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
@@ -1540,10 +1565,15 @@ class Reestructura extends CI_Controller{
         $comentario = $this->input->post('comentario');
         $idMovimiento = $this->input->post('idEstatusMovimento');
         $idUsuario = $this->session->userdata('id_usuario');
+        $idRol = $this->session->userdata('id_rol');
+        $flagProcesoContraloriaJuridico;
+
+        if ($idPreproceso == 2)
+            $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);
         $flagFusion = $this->input->post('flagFusion');
 
         $assigned_user = 0;
-        if ($idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+        if ($idPreproceso + 1 == 2) { // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
             $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
             if ($id_asig == 2747) // CARLITOS
                 $assigned_user = 2762; // SE ASIGNA A DANI
@@ -1621,6 +1651,18 @@ class Reestructura extends CI_Controller{
             echo json_encode($responseUpdateLote && $responseInsertHistorial);
         }
 
+        /*if ((($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15) || ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73]))) && $idPreproceso == 2)
+            $estatus_proceso = 3;
+        else */if ((($flagProcesoContraloriaJuridico->flagProcesoContraloria == 0 && $idRol == 15) || ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 0 && in_array($idRol, [17, 70, 71, 73]))) && $idPreproceso == 2)
+            $estatus_proceso = 2;
+        else
+            $estatus_proceso = $idPreproceso + 1;
+
+        $dataUpdateLote = [
+			'estatus_preproceso' => $estatus_proceso,
+			'usuario' => $idUsuario,
+            'id_juridico_preproceso' => $assigned_user
+        ];
 
     }
     
@@ -2024,12 +2066,6 @@ class Reestructura extends CI_Controller{
 
     public function setFusionLotes(){
         $datos = $this->input->post('data');
-        //valores:
-        //[0] -> nombreLote
-        //[1] -> idCliente
-        //[2] -> idAsesorAsignado -->no se usa en este punto
-        //[3] -> totalNeto2
-        //[4] -> idLote
 
         $dataInsert = array();
         $datos = json_decode($datos);
@@ -2049,10 +2085,9 @@ class Reestructura extends CI_Controller{
             );
         }
 
-
         $insertResponse = $this->General_model->insertBatch('lotesFusion', $dataInsert);
 
-        if ($insertResponse) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+        if ($insertResponse) // SE EVALÚA LA RESPUESTA DE LA TRANSACCIÓN OK
             echo json_encode(array("status" => 200, "message" => "Se han fusionado los lotes correctamente."), JSON_UNESCAPED_UNICODE);
         else // FALLÓ EL BATCH
             echo json_encode(array("status" => 500, "message" => "No se logró procesar la petición."), JSON_UNESCAPED_UNICODE);
@@ -2061,10 +2096,6 @@ class Reestructura extends CI_Controller{
     function getFusion(){
 	    $idLote = $this->input->post('idLote');
         $data = $this->Reestructura_model->getFusion($idLote);
-
-        if ($data) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
-            echo json_encode(array("status" => 200, "message" => "OK", "data" => $data), JSON_UNESCAPED_UNICODE);
-        else // FALLÓ EL BATCH
-            echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
+        echo json_encode($data);
     }
 }
