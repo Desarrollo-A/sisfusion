@@ -1075,6 +1075,7 @@ $(document).on('click', '.btn-avanzar', async function () {
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
                     <input type="hidden" name="idCliente" value="${idCliente}">
                     <input type="hidden" name="idEstatusMovimento" value="${idEstatusMovimento}">
+                    <input type="hidden" name="flagFusion" value="${flagFusionRev}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -1136,6 +1137,7 @@ const totalPropuestas = async (idLoteOriginal, flagFusion) => {
 $(document).on("submit", "#formAvanzarEstatus", function(e) {
     $('#spiner-loader').removeClass('hide');
     e.preventDefault();
+
     let data = new FormData($(this)[0]);
     $.ajax({
         url : 'setAvance',
@@ -1410,7 +1412,7 @@ const botonesAccionReubicacion = (d) => {
         if(flagFusion==1){
             //en la segunda validacion se ocupa "totalCorridasRef" ya que trae el numero de corridas que debe haber(el mismo número que los contratos
             //firmados que debe de haber
-            return (totalCorridas === totalCorridasRef && totalCorridasRef===d.contratoFirmadoFusion )
+            return (totalCorridas === totalCorridasRef && d.totalContratoFirmadoFusionNumero===d.totalContratoFirmadoFusion )
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
         }else{

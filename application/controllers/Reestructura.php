@@ -1528,11 +1528,11 @@ class Reestructura extends CI_Controller{
 
     public function setAvance()
     {
-        $estatusMovimientos = [
+        $estatusMovimientos = array(
             1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
             2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
             3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
-        ];
+        );
 
         $idLote = $this->input->post('idLote');
         $idPreproceso = $this->input->post('tipoTransaccion');
@@ -1540,6 +1540,7 @@ class Reestructura extends CI_Controller{
         $comentario = $this->input->post('comentario');
         $idMovimiento = $this->input->post('idEstatusMovimento');
         $idUsuario = $this->session->userdata('id_usuario');
+        $flagFusion = $this->input->post('flagFusion');
 
         $assigned_user = 0;
         if ($idPreproceso + 1 == 3) { // AVANCE A JURÍDICO: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
@@ -1552,28 +1553,75 @@ class Reestructura extends CI_Controller{
                 $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
         
             $dataUpdateVariable = array('contador' => $assigned_user);
-            $responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
+            //$responseVariable = $this->General_model->updateRecord("variables", $dataUpdateVariable, "identificador", 'reestructura');
+        }
+        if($flagFusion==1){
+            $data = $this->Reestructura_model->getFusion($idLote);
+            //print_r($data);
+            $dataUpdateLote = array(
+                'estatus_preproceso' => $idPreproceso + 1,
+                'usuario' => $idUsuario,
+                'id_juridico_preproceso' => $assigned_user
+            );
+            $flagInsert1 = 0;
+            $flagInsert2 = 0;
+
+            foreach($data as $elemento){
+                $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $elemento['idLote']);
+                if($responseUpdateLote){
+                    $flagInsert1 = $flagInsert1 +1;
+                }
+                if($elemento['idLotePvOrigen'] == $elemento['idLote']){
+                    $dataHistorial = array(
+                        'idLote' => $idLote,
+                        'idCliente' => $idCliente,
+                        'id_preproceso' => $idPreproceso,
+                        'comentario' => $comentario,
+                        'estatus' => $estatusMovimientos[$idMovimiento],
+                        'modificado_por' => $idUsuario
+                    );
+                }else{
+                    $dataHistorial = array(
+                        'idLote' => $elemento['idLote'],
+                        'idCliente' => $elemento['idCliente'],
+                        'id_preproceso' => $idPreproceso,
+                        'comentario' => $comentario,
+                        'estatus' => $estatusMovimientos[$idMovimiento],
+                        'modificado_por' => $idUsuario
+                    );
+                }
+
+                $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+                if($responseInsertHistorial){
+                    $flagInsert2 = $flagInsert2 +1;
+                }
+            }
+            if((count($data)==$flagInsert1) && (count($data)==$flagInsert2)){
+                echo json_encode(true);
+            }
+        }else{
+            $dataUpdateLote = array(
+                'estatus_preproceso' => $idPreproceso + 1,
+                'usuario' => $idUsuario,
+                'id_juridico_preproceso' => $assigned_user
+            );
+
+            $dataHistorial = array(
+                'idLote' => $idLote,
+                'idCliente' => $idCliente,
+                'id_preproceso' => $idPreproceso,
+                'comentario' => $comentario,
+                'estatus' => $estatusMovimientos[$idMovimiento],
+                'modificado_por' => $idUsuario
+            );
+
+            $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
+            $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
+
+            echo json_encode($responseUpdateLote && $responseInsertHistorial);
         }
 
-        $dataUpdateLote = [
-			'estatus_preproceso' => $idPreproceso + 1,
-			'usuario' => $idUsuario,
-            'id_juridico_preproceso' => $assigned_user
-        ];
 
-        $dataHistorial = [
-            'idLote' => $idLote,
-            'idCliente' => $idCliente,
-            'id_preproceso' => $idPreproceso,
-            'comentario' => $comentario,
-            'estatus' => $estatusMovimientos[$idMovimiento],
-            'modificado_por' => $idUsuario
-        ];
-
-        $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
-        $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
-
-        echo json_encode($responseUpdateLote && $responseInsertHistorial);
     }
     
     public function setLoteDisponible()
