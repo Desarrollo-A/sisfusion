@@ -394,7 +394,7 @@ class Reestructura_model extends CI_Model
 
     public function obtenerCopropietariosPorIdCliente($idCliente)
     {
-        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = $idCliente");
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente IN ($idCliente)");
         return $query->result_array();
     }
 
@@ -731,7 +731,7 @@ class Reestructura_model extends CI_Model
     }
 
     function getFusion($idLote){
-        $query = $this->db->query("SELECT lf.*, l.sup FROM lotesFusion lf
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
         WHERE lf.idLotePvOrigen=".$idLote." AND origen=1");
         return $query->result_array();
