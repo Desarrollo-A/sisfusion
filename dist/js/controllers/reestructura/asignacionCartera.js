@@ -205,14 +205,13 @@ $(document).on('click', '.btn-asignar-venta', function () {
                 lotesFusion += elemento.nombreLotes+ ' ';
                 lotesFusionados.push(elemento.idLote);
             });
-            const idAsesorAsignado = $(this).attr("data-idAsesorAsignado");
-            $("#idAsesor").val(idAsesorAsignado == 0 ? '' : idAsesorAsignado).selectpicker('refresh');
             $("#idLote").val(lotesFusionados);
             $('#fusionLote').val(1);
             document.getElementById("mainLabelText").innerHTML = `Asinga un asesor para el seguimiento de la venta <b>${lotesFusion}</b>`;
             $("#asignacionModal").modal("show");
         }, 'json');
-
+        const idAsesorAsignado = $(this).attr("data-idAsesorAsignado");
+        $("#idAsesor").val(idAsesorAsignado == 0 ? '' : idAsesorAsignado).selectpicker('refresh');
     }else{
         const tr = $(this).closest('tr');
         const row = $('#tablaAsignacionCartera').DataTable().row(tr);
@@ -296,15 +295,12 @@ function verificarCheck(valorActual){
         botonEnviar[0].classList.remove('hide');
     }else{
         botonEnviar[0].classList.add('hide');
-
     }
-
-    console.log(arrayValores);
 }
 
 $(document).on('click', '.btn-asignar-ventaML', ()=>{
-   console.log('vámonos alv');
-    document.getElementById('txtLotes').innerHTML = '';
+   document.getElementById('txtLotes').innerHTML = '';
+
    let nombresLot = '';
    let separador = '';
    arrayValores.map((elemento, index)=>{
@@ -344,6 +340,8 @@ $(document).on('click', '#fusionarLotes', ()=>{
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
                 $('#preguntaConfirmacion').modal('toggle');
+                document.getElementsByClassName('btn-asignar-ventaML')[0].classList.add('hide');
+                arrayValores=[]; //resetea el array que guarda los lotes que se fusionaron
             }
             else
                 alerts.showNotification("top", "right", response.status, "warning");/**/
