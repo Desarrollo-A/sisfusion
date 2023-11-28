@@ -29,7 +29,7 @@
                 <div class="modal-content">
                     <div class="modal-header"></div>
                     <div class="modal-body text-center">
-                        <h5 id="mainLabelText">¿Desea fusionar los siguientes lotes para proceso de reestructura?</h5>
+                        <h5 id="mainLabelText">¿Desea fusionar los siguientes lotes para proceso de reubicación?</h5>
                         <p id="txtLotes"></p>
                     </div>
                     <div class="modal-footer mt-2">

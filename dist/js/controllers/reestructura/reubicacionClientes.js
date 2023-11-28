@@ -291,7 +291,6 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
 });
 
 $(document).on('click', '.btn-asignar-propuestas', function () {
-    // $('.')
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -320,11 +319,7 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
                 });
                 superficie = (superficie).toFixed(2);
             }
-            //     if (response.code === 400) {
-            //         alerts.showNotification("top", "right", response.message, 'warning');
-            //     }
             if (response.status === 500) {
-                //         alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
                 return;
             }
         });
@@ -1359,8 +1354,13 @@ const botonesAccionReubicacion = (d) => {
         </button>`;
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
-         if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA){
-            return  BTN_PROPUESTAS_REES + BTN_PROPUESTAS
+        if(d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA ){
+            if (d.idLotePvOrigen == null || d.idLotePvOrigen == '' ){
+                return BTN_PROPUESTAS_REES + BTN_PROPUESTAS;
+            }
+            else{
+                return BTN_PROPUESTAS;
+            }
         }else{
             return BTN_PROPUESTAS;
         }
