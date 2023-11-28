@@ -1553,7 +1553,7 @@ class Reestructura extends CI_Controller{
     }
 
     public function setAvance() {
-        $estatusMovimientos = [
+        $estatusMovimientos = array(
             1 => 1, // Si el movimiento anterior es nuevo, el sig pasa a nuevo
             2 => 3, // Si el movimiento ant. es rechazo, el sig pasa a corrección
             3 => 1 // Si el movimiento ant. es corrección, el sig pasa a nuevo
@@ -2066,7 +2066,6 @@ class Reestructura extends CI_Controller{
 
     public function setFusionLotes(){
         $datos = $this->input->post('data');
-
         $dataInsert = array();
         $datos = json_decode($datos);
         foreach ($datos as $index => $elemento){
@@ -2094,8 +2093,11 @@ class Reestructura extends CI_Controller{
     }
 
     function getFusion(){
-	    $idLote = $this->input->post('idLote');
+        $idLote = $this->input->post('idLote');
         $data = $this->Reestructura_model->getFusion($idLote);
-        echo json_encode($data);
+        if ($data) // SE EVALÚA LA RESPUSTA DE LA TRANSACCIÓN OK
+            echo json_encode(array("status" => 200, "message" => "OK", "data" => $data), JSON_UNESCAPED_UNICODE);
+        else // FALLÓ EL BATCH
+            echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
     }
 }
