@@ -4,7 +4,7 @@ class Reestructura extends CI_Controller{
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Reestructura_model','General_model', 'caja_model_outside', 'Contraloria_model', 'Clientes_model'));
-        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'permisos_sidebar', 'Formatter'));
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -1904,5 +1904,15 @@ class Reestructura extends CI_Controller{
         $proyecto = $this->input->post('index_proyecto');
         $datos = $this->Reestructura_model->obtenerLotesLiberar($proyecto);
         echo json_encode($datos);
+    }
+
+    public function setTraspaso() {
+        $updateData = array(
+            "cantidadTraspaso" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
+            "comentario" => $this->input->post('comentarioTraspaso'), 
+            "modificado_por" => $this->session->userdata('id_usuario'), 
+            'fecha_modificacion' => date('Y-m-d H:i:s')
+        );
+        echo json_encode($this->General_model->updateRecord("datos_x_cliente", $updateData, "idLote", $this->input->post('idLote')));
     }
 }

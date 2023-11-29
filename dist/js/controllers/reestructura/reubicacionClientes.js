@@ -1280,12 +1280,15 @@ const botonesAccionReubicacion = (d) => {
             <i class="fas fa-user-alt"></i>
         </button>`;
 
-        const BTN_TRASPASO_RECURSO =  `<button class="btn-data btn-btn-violetBoots btn-traspaso"
+        // BOTÓN QUE ABRIRÁ MODAL PARA CAPTURAR / EDITAR LA CANTIDAD TRASPASADA (ES PARA ADMINISTRACIÓN)
+        const BTN_TRASPASO_RECURSO =  `<button class="btn-data btn-blueMaderas btn-traspaso"
         data-toggle="tooltip" 
         data-placement="left"
         title="Confirmar traspaso / Editar cantidad traspasada"
-        data-idLote="${d.idLote}">
-        <i class="fas fa-user-alt"></i>
+        data-idLote="${d.idLote}"
+        data-cantidadTraspaso="${d.cantidadTraspaso}"
+        data-comentarioTraspaso="${d.comentarioTraspaso}">
+        <i class="fas fa-money-check-alt"></i>
     </button>`;
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS
@@ -1316,7 +1319,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESEOR - Obtención de firma del cliente
         return BTN_AVANCE;
     if (idEstatusPreproceso === 5 && id_rol_general == 11) // MJ: ADMINISTRACIÓN - Contrato firmado confirmado, pendiente traspaso de recurso.
-        return BTN_AVANCE + BTN_TRASPASO_RECURSO;
+    return d.cantidadTraspaso > 0.00 ? BTN_AVANCE + BTN_TRASPASO_RECURSO : BTN_TRASPASO_RECURSO; // SI YA HAY RECURSO SE MUESTRAN AMBOS BOTONES, SINO SÓLO EL DE CAPTURAR LA CANTIDA CORRESPONDIENTE AL TRASPASO
     if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
@@ -1374,6 +1377,7 @@ $(document).on("click", "#sendRequestButtonAsignacion", function (e) {
         });
     }
 });
+
 const agregarCopropietario = (copropietario = null) => {
     const idDiv = copropietario?.id_dxcop ?? new Date().getTime();
     const titulo = (copropietario === null) ? 'NUEVO COPROPIETARIO' : 'COPROPIETARIO';
@@ -1577,3 +1581,62 @@ const obtenerEstadoCivilLista = () =>{
         });
     });
 }
+
+$(document).on('click', '.btn-traspaso', function () {
+    const tr = $(this).closest('tr');
+    const row = $('#reubicacionClientes').DataTable().row(tr);
+    $("#idLoteTraspaso").val(row.data().idLote);
+    $("#comentarioTraspaso").val($(this).attr("data-comentarioTraspaso"));
+    $("#cantidadTraspaso").val($(this).attr("data-cantidadTraspaso") <= 0 ? '' : $(this).attr("data-cantidadTraspaso"));
+    document.getElementById("mainLabelTextTraspaso").innerHTML = `Confirma la cantidad que se va a traspasar del <b>${row.data().nombreLote}</b>.`;
+    $("#capturaTraspasoModal").modal("show");
+});
+
+// ESTA FUNCIÓN LA VOY A MOVER A GENERALES
+function soloNumeros(evt) {
+	if (window.event)
+		keynum = evt.keyCode;
+	else
+		keynum = evt.which;
+	if ((keynum > 47 && keynum < 58) || keynum == 8 || keynum == 13 || keynum == 6 || keynum == 46)
+		return true;
+	else {
+		alerts.showNotification("top", "left", "Oops, algo salió mal. Asegúrate de ingresar únicamente números.", "danger");
+		return false;
+	}
+}
+
+// SE ENVÍA COMENTARIO Y CANTIDAD A TRASPASAR PARA ACTUALIZAR EN DATOS X CLIENTE
+$(document).on("click", "#guardarTraspaso", function (e) {
+    e.preventDefault();
+    let data = new FormData();
+    data.append("idLote", $("#idLoteTraspaso").val());
+    data.append("cantidadTraspaso", $("#cantidadTraspaso").val());
+    data.append("comentarioTraspaso", $("#comentarioTraspaso").val());
+    if ($("#cantidadTraspaso").val() == '')
+        alerts.showNotification("top", "right", `Asegúrate de ingresar la cantidad que se traspasó.`, "warning");
+    else {
+        $.ajax({
+            url: `${general_base_url}Reestructura/setTraspaso`,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: "POST",
+            success: function (response) {
+                $("#guardarTraspaso").prop("disabled", false);
+                if (response) {
+                    alerts.showNotification("top", "right", `La información ha sido capturada de manera exitosa.`, "success");
+                    $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                    $("#capturaTraspasoModal").modal("hide");
+                }
+                else
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+            },
+            error: function () {
+                $("#guardarTraspaso").prop("disabled", false);
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    }
+});
