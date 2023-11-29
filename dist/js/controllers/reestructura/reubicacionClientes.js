@@ -195,7 +195,10 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                return (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                boton
+                :((d.idLotePvOrigen == null) ? boton : '');
             }
         }
     ],
@@ -1201,13 +1204,13 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const botonesAccionReubicacion = (d) => {
+    const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
     const totalCorridas = parseInt(d.totalCorridas);
-    const totalContrato = parseInt(d.totalContratos);
+    const totalContrato = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratos);
     const totalCorridasRef = parseInt(d.totalCorridasNumero);
-    const totalContratoRef = parseInt(d.totalContratoNumero);
-    const totalContratoFirmado = parseInt(d.totalContratoFirmado);
-
+    const totalContratoRef = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratoNumero);
+    const totalContratoFirmado = parseInt( banderaFusion == 1 ? d.totalContratoFirmadoFusion : d.totalContratoFirmado);
     let editar = 0;
     let btnShow = 'fa-upload';
     let btnContratoFirmado = 'fa-file-upload';
@@ -1305,8 +1308,9 @@ const botonesAccionReubicacion = (d) => {
                     data-idLote="${d.idLote}"
                     data-nombreLote="${d.nombreLote}"
                     data-estatusLoteArchivo="${d.status}"
+                    data-banderaFusion="${d.idLotePvOrigen}"
                     data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
+                    data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
                     data-id_dxc="${d.id_dxc}"   
                     data-tipoTransaccion="${idEstatusPreproceso}">
                     <i class="fas ${btnShow}"></i>
@@ -1339,7 +1343,7 @@ const botonesAccionReubicacion = (d) => {
             data-nombreLote="${d.nombreLote}"
             data-estatusLoteArchivo="${d.status}"
             data-editar="${editarContratoFirmado}"   
-            data-rescision="${d.rescision}"
+            data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
             data-idCondominio="${d.idCondominio}"   
             data-tipoTransaccion="${d.id_estatus_preproceso}"
