@@ -206,6 +206,7 @@ class Reestructura_model extends CI_Model
         $datos["status"] = 1;
         $datos["userLiberacion"] = $this->session->userdata('id_usuario');
         $datos["tipo"] = $datos['tipoLiberacion'];
+        $tipo_estatus_regreso = $datos['tipoLiberacion'] == 9 ? 1 : 0; // SI ES LIBERACIÓN DE YOLA (ES EL INVENTARIO ESPECIAL PARA EL PROYECTO DE REESTRUCURA) SE MANDA BANDERA EN 1 SINO 0
 
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
@@ -293,7 +294,7 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0, tipo_estatus_regreso = 1
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
                     if(!in_array($datos["tipo"],array(7,8,9))) {
