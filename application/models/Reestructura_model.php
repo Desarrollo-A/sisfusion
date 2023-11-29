@@ -551,8 +551,9 @@ class Reestructura_model extends CI_Model
     function getOpcionesLote($idLote,$banderaFusion = 0){
         $tabla='propuestas_x_lote';
         $columna='id_lotep';
-        $columnExtra='idLote';
+        $columnExtra='';
         $coumnExtra = '';
+        $columnWhere='idLote';
         if($banderaFusion != 0){
             $tabla='lotesFusion';
             $columna='idLote';

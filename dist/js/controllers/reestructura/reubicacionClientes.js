@@ -1212,6 +1212,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const botonesAccionReubicacion = (d) => {
+    const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
+    const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
     const totalCorridas = parseInt(d.totalCorridas);
@@ -1330,7 +1332,9 @@ const botonesAccionReubicacion = (d) => {
                     data-idLote="${d.idLote}"
                     data-nombreLote="${d.nombreLote}"
                     data-estatusLoteArchivo="${d.status}"
-                    data-banderaFusion="${d.idLotePvOrigen}"
+                    data-banderaFusion="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.idLotePvOrigen : 0}"
+                    data-flagProcesoContraloria="${d.flagProcesoContraloria}"
+                    data-flagProcesoJuridico="${d.flagProcesoJuridico}"
                     data-editar="${editar}"   
                     data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
                     data-id_dxc="${d.id_dxc}"   
