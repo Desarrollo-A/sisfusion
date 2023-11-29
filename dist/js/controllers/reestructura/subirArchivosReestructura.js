@@ -40,6 +40,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
     banderaFusion = banderaFusion == null ? 0 : banderaFusion
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
+    flagFusion = $(this).attr("data-fusion");
     let contenedorTitulo = $('#tituloLote');
     let tipotransaccion = $(this).attr("data-tipotransaccion");
     rescisionArchivo = $(this).attr("data-rescision");
@@ -137,8 +138,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -152,7 +153,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
                     '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                     '                           </div>' +
@@ -198,8 +199,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             }
             archivosAborrar.push(nombreArchivo);
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + ':' + elemento.nombreLote + '</h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -212,11 +213,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
                 '                           <div class="d-flex justify-center">' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
-                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
                 '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + idLotePROCESS + '" ' +
                 '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                 '                           </div>' +
@@ -381,10 +382,12 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
         arrayKeysArchivos.map((elemento, index) => {
             let flagEditar = ($("#fileElm" + index)[0].files[0] == undefined) ? 0 : 1;
+            let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
+
             data.append("flagEditado" + index, flagEditar);
             data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
-            data.append("idLoteArchivo" + index, $("#idLotep" + elemento.id_pxl).val());
-            data.append("nombreLote" + index, $("#nombreLote" + elemento.id_pxl).val());
+            data.append("idLoteArchivo" + index, $("#idLotep" + idLotePR).val());
+            data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
             data.append('archivoEliminar' + index, archivosAborrar[index]);
         });
         if (flagProceso == 3) {
@@ -465,10 +468,13 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("id_dxc[]", id_dxcs);
                 data.append("id_pxls[]",id_pxls);
                 data.append("editarFile", editarFile);
+                data.append("flagFusion", flagFusion);
+                console.log(arrayKeysArchivos);
                 arrayKeysArchivos.map((elemento, index) => {
+                    let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
-                    data.append("idLoteArchivo" + index, $("#idLotep" + elemento.id_pxl).val());
-                    data.append("nombreLote" + index, $("#nombreLote" + elemento.id_pxl).val());
+                    data.append("idLoteArchivo" + index, $("#idLotep" + idLotePR).val());
+                    data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
                     data.append('archivoEliminar' + index, archivosAborrar[index]);
                 });
                 if (flagProceso == 3) {
