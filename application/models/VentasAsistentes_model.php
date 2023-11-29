@@ -145,6 +145,9 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
+                } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916)";
+                    $filtroSede = "";
                 } else if ($id_rol == 6) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
@@ -338,6 +341,9 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
                 } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
+                    $filtroSede = "";
+                }  else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916)";
                     $filtroSede = "";
                 } else if ($id_rol == 6) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
