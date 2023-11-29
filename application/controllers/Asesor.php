@@ -3000,17 +3000,20 @@ class Asesor extends CI_Controller {
                 $statusContratacion = 2;
                 $idMovimiento = 110;
             }
-             elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
                 $statusContratacion = 2;
                 $idMovimiento = 113;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+            } 
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
                 $statusContratacion = 2;
                 $idMovimiento = 114;
-            } else {
+            } 
+            else {
                 $statusContratacion = 3;
                 $idMovimiento = 98;
             }
-        } else {
+        } 
+        else {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
@@ -3169,15 +3172,14 @@ class Asesor extends CI_Controller {
             'contenido' => $contenido,
             'comentario' => $comentario
         ], true));
-        }
-
+        
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
 
                 if ($this->email->send()) {
-                    $data['message_email'] = 'OK'; // El correo se envió correctamente
+                    $data['message_email'] = 'OK';
                 } else {
-                    $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                    $data['message_email'] = $this->email->print_debugger(); 
                 }
 
                 $data['message'] = 'OK';

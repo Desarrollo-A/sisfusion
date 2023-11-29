@@ -2,8 +2,7 @@ var totaPen = 0;
 var tr;
 let ObjRoles = new Object();
 
-$(document).ready(function() { 
-    
+$(document).ready(function() {    
     $.post(general_base_url+"Comisiones/getRolesIn",{ catalogo:1, roles:"1,2,3,7,9,38 "}, function (data) {
         var len = data.length;
         $("#roles").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
@@ -40,6 +39,7 @@ $("#form_descuentos").on('submit', function(e){
         cache: false,
         processData:false,
         success: function(data) {
+
             if (data == 1) {
                 document.getElementById("form_descuentos").reset();
                 $('#tabla_descuentos').DataTable().ajax.reload(null, false);
@@ -92,6 +92,7 @@ $("#form_descuentos2").on('submit', function(e){
         cache: false,
         processData:false,
         success: function(data) {
+
             if (data == 1) {
                 document.getElementById('btn_abonar2').disabled=false;
                 document.getElementById("form_descuentos2").reset();
@@ -104,12 +105,10 @@ $("#form_descuentos2").on('submit', function(e){
                 $("#usuarioid2").selectpicker("refresh");
                 document.getElementById('sumaReal2').innerHTML = '';
                 document.getElementById('btn_abonar2').disabled=true;
-
                 alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
             }
             else if(data == 2) {
                 document.getElementById('btn_abonar2').disabled=false;
-
                 $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
@@ -117,7 +116,6 @@ $("#form_descuentos2").on('submit', function(e){
             }
             else if(data == 3){
                 document.getElementById('btn_abonar2').disabled=false;
-
                 $('#tabla_descuentos').DataTable().ajax.reload(null, false);
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
@@ -139,6 +137,7 @@ $("#tabla_descuentos").ready( function(){
         titulos.push(title);
         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $( 'input', this ).on('keyup change', function () {
+
             if (tabla_nuevas.column(i).search() !== this.value ) {
                 tabla_nuevas.column(i).search(this.value).draw();
                 var total = 0;
@@ -274,7 +273,6 @@ $("#tabla_descuentos").ready( function(){
         $("#modal_abono .modal-body").append(`<div id="inputhidden">
         <h6>¿Seguro que desea descontar a <b>${dat[3]}</b> la cantidad de <b style="color:red;">${formatMoney(dat[1])}</b> correspondiente a la comisión de <b>${dat[2]}</b> ?</h6>
         <input type='hidden' name="id_bono" id="id_bono" value="${dat[0]}"><input type='hidden' name="pago" id="pago" value="${dat[1]}"><input type='hidden' name="id_usuario" id="id_usuario" value="${dat[2]}">
-    
         <div class="col-md-3"></div>
         <div class="col-md-3">
             <button type="submit" id="" class="btn btn-primary ">GUARDAR</button>
@@ -283,7 +281,6 @@ $("#tabla_descuentos").ready( function(){
             <button type="button" onclick="closeModalEng()" class=" btn btn-danger" data-dismiss="modal">CANCELAR</button>
             </div>
             <div class="col-md-3"></div>
-
             </div>`);
         $("#modal_abono .modal-body").append(``);
         $('#modal_abono').modal('show');
@@ -291,24 +288,20 @@ $("#tabla_descuentos").ready( function(){
 
     $("#tabla_descuentos tbody").on("click", ".btn-delete", function(){    
         id = $(this).val();
-        $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete">
+        $("#modal-borrar .modal-body").append(`<div id="borrarBono"><form id="form-delete">
         <h5>¿Estas seguro que deseas eliminar este bono?</h5>
         <br>
         <input type="hidden" id="id_descuento" name="id_descuento" value="${id}">
         <input type="submit" class="btn btn-success" value="Aceptar">
         <button class="btn btn-danger" onclick="CloseModalDelete2();">Cerrar</button>
         </form></div>`);
-
-        $('#modal-delete').modal('show');
+        $('#modal-borrar').modal('show');
     });
-
 
     $("#tabla_descuentos tbody").on("click", ".btn-update", function(){
         var tr = $(this).closest('tr');
         var row = tabla_nuevas.row( tr );
-
         id_pago_i = $(this).val();
-
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append(`
             <div class="row">
@@ -330,7 +323,6 @@ function closeModalEng(){
     a = document.getElementById('inputhidden');
     padre = a.parentNode;
     padre.removeChild(a);
-
     $("#modal_abono").modal('toggle');
 }
 
@@ -339,7 +331,7 @@ function CloseModalDelete2(){
     a = document.getElementById('borrarBono');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal-delete").modal('toggle');
+    $("#modal-borrar").modal('toggle');
 }
 
 $(document).on('submit','#form-delete', function(e){ 
@@ -386,7 +378,7 @@ $("#form_aplicar").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data = 1 ){
                     $("#modal_nuevas").modal('toggle' );
@@ -418,7 +410,6 @@ $(window).resize(function(){
 });
 
 $("#roles").change(function() {
-    $("#users").removeClass('hide');
     var parent = $(this).val();
     document.getElementById('monto').value = ''; 
     document.getElementById('idmontodisponible').value = ''; 
@@ -427,8 +418,8 @@ $("#roles").change(function() {
     $('#idloteorigen option').remove();
     $('#usuarioid option').remove();
     $.post('getUsuariosRol/'+parent+"/"+1, function(data) {
-        $("#usuarioid").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
         var len = data.length;
+        $("#users").removeClass('hide');
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name =data[i]['id_usuario']+' - '+data[i]['name_user'];
@@ -451,7 +442,7 @@ $("#roles2").change(function() {
     $('#usuarioid2 option').remove();
     $('#idloteorigen2 option').remove();
     $.post('getUsuariosRol/'+parent, function(data) {
-        $("#usuarioid2").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+        $(".usuario_seleccionar").removeClass('hide');
         var len = data.length;
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
@@ -465,11 +456,8 @@ $("#roles2").change(function() {
     }, 'json'); 
 });
 
-/**----------------------------FIN ROLES---------------------- */
 $("#idloteorigen").select2({dropdownParent:$('#miModal')});
-$("#idloteorigen2").select2({dropdownParent:$('#miModal2')});
-
-/**-----------------------------LOTES----------------------- */   
+$("#idloteorigen2").select2({dropdownParent:$('#miModal2')}); 
 $("#usuarioid").change(function() {
     document.getElementById('monto').value = ''; 
     document.getElementById('idmontodisponible').value = ''; 
@@ -479,7 +467,6 @@ $("#usuarioid").change(function() {
     var user = $(this).val();
     $('#idloteorigen option').remove(); // clear all values
     $.post('getLotesOrigen/'+user+'/'+1, function(data) {
-        $("#idloteorigen").append($('<option disabled>').val("default").text("Seleccione una opción"));
         var len = data.length;
         for( var i = 0; i<len; i++){
             var name = data[i]['nombreLote'];
@@ -508,7 +495,7 @@ $("#usuarioid2").change(function() {
     document.getElementById('sumaReal2').innerHTML = '';
 
     var user = $(this).val();
-    $('#idloteorigen2 option').remove(); // clear all values
+    $('#idloteorigen2 option').remove();
     $.post('getLotesOrigen/'+user+'/'+2, function(data) {
         $("#idloteorigen2").append($('<option disabled>').val("default").text("Seleccione una opción"));
         var len = data.length;
@@ -532,7 +519,6 @@ $("#usuarioid2").change(function() {
     }, 'json'); 
 });
 
-/**--------------------------------------------------- */
 $("#idloteorigen").change(function() {
     let cuantos = $('#idloteorigen').val().length;
     let suma =0;
@@ -576,7 +562,6 @@ $("#idloteorigen").change(function() {
             document.getElementById('sumaReal').innerHTML = 'Suma real:'+disponible;
             $("#montodisponible").append('<input type="hidden" name="valor_comision" id="valor_comision" value="'+disponible+'">');
             $("#idmontodisponible").val(formatMoney(disponible));
-        
             $("#montodisponible").append('<input type="hidden" name="ide_comision" id="ide_comision" value="'+idecomision+'">');
                         
             var len = data.length;
@@ -656,7 +641,6 @@ $("#idloteorigen2").change(function() {
     }
 });
 
-/**---------------------------------------------------------------------- */
 $("#numeroP").change(function(){
     let monto = parseFloat($('#monto').val());
     let cantidad = parseFloat($('#numeroP').val());
@@ -777,5 +761,6 @@ function verificar2(){
             }
         }else{
             $("#idloteorigen2").prop("disabled", false);
-        }            }    
+        }            
+    }    
 }
