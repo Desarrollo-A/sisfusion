@@ -57,7 +57,8 @@ class Reestructura_model extends CI_Model
         (SELECT CASE WHEN (count(idDocumento)>0) THEN count(idDocumento) ELSE 0 END FROM lotesFusion lf2
 		INNER JOIN historial_documento hd ON hd.idLote = lf2.idLote
 		WHERE lf2.destino=1 AND hd.tipo_doc=30 AND hd.expediente!='' AND lf2.idLotePvOrigen=lf.idLotePvOrigen
-		GROUP BY lf2.idLotePvOrigen) as contratoFirmadoFusion
+		GROUP BY lf2.idLotePvOrigen) as contratoFirmadoFusion, 
+        ISNULL(dxc2.flagProcesoContraloria, 0) flagProcesoContraloria, ISNULL(dxc2.flagProcesoJuridico, 0) flagProcesoJuridico, dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
@@ -226,6 +227,7 @@ class Reestructura_model extends CI_Model
         $datos["status"] = 1;
         $datos["userLiberacion"] = $this->session->userdata('id_usuario');
         $datos["tipo"] = $datos['tipoLiberacion'];
+        $tipo_estatus_regreso = $datos['tipoLiberacion'] == 9 ? 1 : 0; // SI ES LIBERACIÓN DE YOLA (ES EL INVENTARIO ESPECIAL PARA EL PROYECTO DE REESTRUCURA) SE MANDA BANDERA EN 1 SINO 0
 
         $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,
         (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
@@ -313,7 +315,7 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0, tipo_estatus_regreso = 1
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
                     if(!in_array($datos["tipo"],array(7,8,9))) {
@@ -617,7 +619,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
         lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
         ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
-        lo.tipo_estatus_regreso
+        lo.tipo_estatus_regreso, 'EXCLUSIVO REESTRUCTURA' tipo
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -625,7 +627,18 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (1, 15, 16) AND lo.status = 1
+        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
+        UNION ALL
+        SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
+        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
+        'NA' estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
+        lo.tipo_estatus_regreso, 'ABIERTO' tipo
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        WHERE lo.idStatusLote IN (1) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
 
@@ -783,7 +796,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function validarEstatusContraloriaJuridico($idLote){
-        return $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM lotes WHERE idLote = $idLote")->row();
+        return $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM datos_x_cliente WHERE idLote = $idLote")->row();
     }
 
     function getFusion($idLote){
