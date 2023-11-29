@@ -1288,7 +1288,7 @@ const botonesAccionReubicacion = (d) => {
         <i class="fas fa-user-alt"></i>
     </button>`;
 
-    if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente/Subdirector: PENDIENTE CARGA DE PROPUESTAS
+    if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS
         return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA) ? BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
