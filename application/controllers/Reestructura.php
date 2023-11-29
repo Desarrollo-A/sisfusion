@@ -455,11 +455,11 @@ class Reestructura extends CI_Controller{
                         'usuario' => $this->session->userdata('id_usuario')
                     );
 
-                    $idClientesOrigen .= $dataLote['idCliente'] .", ";
+                    $idClientesOrigen .= "'". $dataLote['idCliente'] ."', ";
                     array_push($arrayLotesOrigen, $arrayLoteOrigen);
                 }
                 
-                $idClientesOrigen = trim($idClientesOrigen, ',');
+                $idCliente = substr($idClientesOrigen, 0, -2);
                 $lotesOrigenUpdated = $this->General_model->updateBatch('lotes', $arrayLotesOrigen, 'idLote');
             }
             else{
@@ -480,10 +480,6 @@ class Reestructura extends CI_Controller{
                     'color' => 'danger'
                 ));
                 return;
-            }
-
-            if ($flagFusion == 1) {
-
             }
 
             if (!$this->copiarCopropietariosAnteriores($idCliente, $idLoteOriginal)) {

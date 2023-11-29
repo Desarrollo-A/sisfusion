@@ -587,7 +587,7 @@ class Reestructura_model extends CI_Model
     public function obtenerTotalPropuestas($idLoteAnterior, $flagFusion)
     {
         if($flagFusion==1){
-            $query = $this->db->query(" SELECT COUNT(*) AS total_propuestas FROM lotesFusion WHERE idLotePvOrigen = $idLoteAnterior AND destino=1");
+            $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM lotesFusion WHERE idLotePvOrigen = $idLoteAnterior AND destino=1");
         }else{
             $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM propuestas_x_lote WHERE idLote = $idLoteAnterior");
         }

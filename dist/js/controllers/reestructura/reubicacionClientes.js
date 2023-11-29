@@ -9,6 +9,16 @@ $(document).ready(function () {
     }
 });
 
+function obtenerDataFusion(idLoteOriginal) {
+    return new Promise((resolve) => {
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal}, (data) => {
+            $("#spiner-loader").addClass('hide');
+            const response = JSON.parse(data);
+            resolve(response);
+        });
+    });
+}
+
 let reubicacionClientes;
 let estadoCivilList = [];
 let copropietariosEliminar = [];
@@ -291,13 +301,13 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
     showModal();
 });
 
-$(document).on('click', '.btn-asignar-propuestas', function () {
+$(document).on('click', '.btn-asignar-propuestas', async function (){
+    $("#spiner-loader").removeClass('hide');
+
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    // const nombreLote = row.data().nombreLote;
-    // const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
@@ -309,94 +319,90 @@ $(document).on('click', '.btn-asignar-propuestas', function () {
     let superficie = 0;
     let nombreLote = '';
     if(flagFusion==1){
-        let lotesFusionados;
-        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal}, (data) => {
-            const response = JSON.parse(data);
-            if (response.status === 200) {
-                lotesFusionados = response.data;
-                lotesFusionados.map((elemento, index)=>{
-                    superficie = parseFloat(elemento.sup) + superficie;
-                    nombreLote += elemento.nombreLotes+' ';
-                });
-                superficie = (superficie).toFixed(2);
-            }
-            if (response.status === 500) {
-                return;
-            }
-        });
+        const responseLotesFusionados = await obtenerDataFusion(idLoteOriginal);
+
+        if (responseLotesFusionados.status === 200) {
+            lotesFusionados = responseLotesFusionados.data;
+            lotesFusionados.map((elemento, index)=>{
+                superficie = parseFloat(elemento.sup) + superficie;
+                nombreLote += elemento.nombreLotes+' ';
+            });
+            superficie = (superficie).toFixed(2);
+        }
+        if (responseLotesFusionados.status === 500) {
+            return;
+        }
     }
     else{
+        $("#spiner-loader").addClass('hide');
         nombreLote = row.data().nombreLote;
         superficie = row.data().sup;
     }
 
-
-        setTimeout(()=>{
-            changeSizeModal('modal-md');
-            appendBodyModal(`
-            <form method="post" id="formAsignarPropuestas">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <h3 class="m-0">Reubicación</h3>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                            <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
-                            <p class="m-0 text-center">Lote. ${nombreLote}</p>
-                            <p class="m-0 text-center">Superficie. ${superficie}</p>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
-                            <label class="lbl-gral">Proyecto</label>
-                            <select name="proyectoAOcupar" title="SELECCIONA UNA OPCIÓN" id="proyectoAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                            </select>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                            <label class="lbl-gral">Condominio</label>
-                            <select name="condominioAOcupar" title="SELECCIONA UNA OPCIÓN" id="condominioAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
-                            </select>
-                        </div>
-                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                            <label class="lbl-gral">Lote</label>
-                            <select name="loteAOcupar" 
-                                title="SELECCIONA UNA OPCIÓN" 
-                                id="loteAOcupar" 
-                                class="selectpicker m-0 select-gral" 
-                                data-live-search="true" 
-                                data-container="body" 
-                                data-width="100%"
-                                data-statusPreproceso="${statusPreproceso}"
-                                data-idProyecto="${idProyecto}" 
-                                data-superficie="${superficie}"
-                                data-idLoteOriginal="${idLoteOriginal}">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-2" id="infoLotesSeleccionados">
-                    </div>
-                    <input type="hidden" id="superficie" value="${superficie}">
-                    <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
-                    <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
-                    <input type="hidden" name="idCliente" value="${idCliente}">
-                    <input type="hidden" id="flagFusion" value="${flagFusion}">
-                    <div class="row mt-2">
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                            <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
-                            ${botonAceptar}
-                        </div>
-                    </div>
+    changeSizeModal('modal-md');
+    appendBodyModal(`
+    <form method="post" id="formAsignarPropuestas">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="m-0">Reubicación</h3>
                 </div>
-            </form>
-            `);
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                    <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
+                    <p class="m-0 text-center">Lote. ${nombreLote}</p>
+                    <p class="m-0 text-center">Superficie. ${superficie}</p>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
+                    <label class="lbl-gral">Proyecto</label>
+                    <select name="proyectoAOcupar" title="SELECCIONA UNA OPCIÓN" id="proyectoAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                    <label class="lbl-gral">Condominio</label>
+                    <select name="condominioAOcupar" title="SELECCIONA UNA OPCIÓN" id="condominioAOcupar" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%">
+                    </select>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
+                    <label class="lbl-gral">Lote</label>
+                    <select name="loteAOcupar" 
+                        title="SELECCIONA UNA OPCIÓN" 
+                        id="loteAOcupar" 
+                        class="selectpicker m-0 select-gral" 
+                        data-live-search="true" 
+                        data-container="body" 
+                        data-width="100%"
+                        data-statusPreproceso="${statusPreproceso}"
+                        data-idProyecto="${idProyecto}" 
+                        data-superficie="${superficie}"
+                        data-idLoteOriginal="${idLoteOriginal}">
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2" id="infoLotesSeleccionados">
+            </div>
+            <input type="hidden" id="superficie" value="${superficie}">
+            <input type="hidden" id="idLoteOriginal" name="idLoteOriginal" value="${idLoteOriginal}">
+            <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
+            <input type="hidden" name="idCliente" value="${idCliente}">
+            <input type="hidden" id="flagFusion" value="${flagFusion}">
+            <div class="row mt-2">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
+                    <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
+                    ${botonAceptar}
+                </div>
+            </div>
+        </div>
+    </form>
+    `);
 
-            const config = (statusPreproceso == 1)
-                ? { backdrop: 'static', keyboard: false, show: true }
-                : { backdrop: true, keyboard: true, show: true };
+    const config = (statusPreproceso == 1)
+        ? { backdrop: 'static', keyboard: false, show: true }
+        : { backdrop: true, keyboard: true, show: true };
 
-            showModal();
-            changeOptionsModal(config);
-            getProyectosAOcupar(idProyecto, superficie, flagFusion);
-            getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion);
-        }, 200);
+    showModal();
+    changeOptionsModal(config);
+    getProyectosAOcupar(idProyecto, superficie, flagFusion);
+    getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion);
 });
 
 const cerrarModalPropuestas = (preproceso) => {
@@ -687,7 +693,6 @@ function getProyectosAOcupar(idProyecto, superficie, flagFusion) {
 }
 
 function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion){
-    console.log('ALABERGA', flagFusion)
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal, "flagFusion": flagFusion}, function(data) {
         $('#infoLotesSeleccionados').html('');
