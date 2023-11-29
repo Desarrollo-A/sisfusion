@@ -1228,7 +1228,7 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = '';
     let flagFusion = 0;
 
-    if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
+    /*if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
         if(d.idLotePvOrigen!=d.idLote){
             botonFusionadoEstatus = "disabled=false";
             totalCorridas = parseInt(d.totalCorridas);
@@ -1243,7 +1243,7 @@ const botonesAccionReubicacion = (d) => {
             totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
             totalContratoRef = parseInt(d.totalContratoNumero);
         }
-    }
+    }*/
 
 
 
