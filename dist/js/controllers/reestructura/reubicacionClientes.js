@@ -1091,6 +1091,7 @@ $(document).on('click', '.btn-rechazar', function () {
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
+    let flagFusion = $(this).attr("data-fusion");
 
     changeSizeModal('modal-sm');
     appendBodyModal(`
@@ -1108,6 +1109,7 @@ $(document).on('click', '.btn-rechazar', function () {
                     <input type="hidden" id="idLote" name="idLote" value="${idLote}">
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
                     <input type="hidden" name="idCliente" value="${idCliente}">
+                    <input type="hidden" name="flagFusion" value="${flagFusion}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -1160,7 +1162,6 @@ $(document).on("submit", "#formRechazarEstatus", function(e) {
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
-    data.append('flagFusion', flagFusion)
     $.ajax({
         url : `${general_base_url}Reestructura/rechazarRegistro`,
         data: data,
@@ -1302,7 +1303,8 @@ const botonesAccionReubicacion = (d) => {
                     title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
-                    ${botonFusionadoEstatus}>
+                    ${botonFusionadoEstatus}
+                    data-fusion="${flagFusion}">
                     <i class="fas fa-thumbs-down"></i>
                 </button>`;
 
