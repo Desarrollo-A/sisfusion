@@ -701,42 +701,46 @@ class Api extends CI_Controller
                                     if ($result->id_rol != 7)
                                         echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                                     else {
-                                        $data = array(
-                                            "id_sede" => $result->id_sede,
-                                            "id_asesor" => $data->idAsesor,
-                                            "id_coordinador" => $result->id_coordinador,
-                                            "id_gerente" => $result->id_gerente,
-                                            "id_subdirector" => $result->id_subdirector,
-                                            "id_regional" => $result->id_regional,
-                                            "personalidad_juridica" => 2,
-                                            "nombre" => $data->nombreCompleto,
-                                            "apellido_paterno" => '',
-                                            "apellido_materno" => '',
-                                            "correo" => $data->email,
-                                            "telefono" => $data->telefono,
-                                            "lugar_prospeccion" => 47,
-                                            "otro_lugar" => 0,
-                                            "plaza_venta" => 0,
-                                            "fecha_creacion" => date("Y-m-d H:i:s"),
-                                            "creado_por" => 1,
-                                            "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                            "modificado_por" => 1,
-                                            "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
-                                            "observaciones" => '',
-                                            "id_arcus"  =>  $data->uid,
-                                            "origen_referido"   =>  $data->origenReferido,
-                                            "asesor_asignado"   =>  $data->asesorAsignado,
-                                            "ciudad_interes"   =>  $data->ciudadInteres,
-                                            "desarrollo_interes"   =>  $data->desarrolloInteres
-                                        );
-                                        $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                                        if ($dbTransaction){ // SUCCESS TRANSACTION
-                                            echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
-                                            header('Content-Type: application/json');
-                                        }
-                                        else{ // ERROR TRANSACTION
-                                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
-                                            header('Content-Type: application/json');
+                                        $validacionCorreoTelefono = $this->Api_model->validarCorreoTelefono($data->telefono, $data->email);
+                                        if (count($validacionCorreoTelefono) > 0) // SE ENCONTRARON COINCIDENCIAS DE CORREO O TELÉFONO
+                                            echo json_encode(array("status" => -1, "message" => "Información no guardada. El correo o teléfono que ingresaste ya existe en CRM."), JSON_UNESCAPED_UNICODE);
+                                        else {
+                                            $data = array(
+                                                "id_sede" => $result->id_sede,
+                                                "id_asesor" => $data->idAsesor,
+                                                "id_coordinador" => $result->id_coordinador,
+                                                "id_gerente" => $result->id_gerente,
+                                                "id_subdirector" => $result->id_subdirector,
+                                                "id_regional" => $result->id_regional,
+                                                "personalidad_juridica" => 2,
+                                                "nombre" => $data->nombreCompleto,
+                                                "apellido_paterno" => '',
+                                                "apellido_materno" => '',
+                                                "correo" => $data->email,
+                                                "telefono" => $data->telefono,
+                                                "lugar_prospeccion" => 47,
+                                                "otro_lugar" => 0,
+                                                "plaza_venta" => 0,
+                                                "fecha_creacion" => date("Y-m-d H:i:s"),
+                                                "creado_por" => 1,
+                                                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                                "modificado_por" => 1,
+                                                "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                                "observaciones" => '',
+                                                "id_arcus"  =>  $data->uid,
+                                                "origen_referido"   =>  $data->origenReferido,
+                                                "ciudad_interes"   =>  $data->ciudadInteres,
+                                                "desarrollo_interes"   =>  $data->desarrolloInteres
+                                            );
+                                            $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                            if ($dbTransaction){ // SUCCESS TRANSACTION
+                                                echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                                header('Content-Type: application/json');
+                                            }
+                                            else{ // ERROR TRANSACTION
+                                                echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                                header('Content-Type: application/json');
+                                            }
                                         }
                                     }
                                 }
