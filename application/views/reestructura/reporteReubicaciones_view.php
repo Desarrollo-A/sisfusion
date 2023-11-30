@@ -17,9 +17,10 @@
                                     <table id="tablaReporteReubicaciones" class="table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>PROYECTO</th>
-                                                <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
+                                                <th>TIPO DE PROCESO</th>
+                                                <th>PROYECTO ORIGEN</th>
+                                                <th>CONDOMINIO ORIGEN</th>
+                                                <th>LOTE ORIGEN</th>
                                                 <th>ID LOTE</th>
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
@@ -27,6 +28,9 @@
                                                 <th>SUBDIRECTOR</th>
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS PROPUESTA</th>
+                                                <th>PROYECTO DESTINO</th>
+                                                <th>CONDOMINIO DESTINO</th>
+                                                <th>LOTE DESTINO</th>
                                             </tr>
                                         </thead>
                                     </table>

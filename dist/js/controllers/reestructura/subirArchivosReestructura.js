@@ -8,6 +8,7 @@ var acceptFiles = '';
 var nombreLote = '';
 var arrayCF = [];
 var editarContrafoFirmado = 0;
+var flagFusion = 0;
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -28,6 +29,7 @@ $(document).ready(function () {
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     nombreLote = $(this).attr("data-nombreLote");
+    flagFusion = $(this).attr("data-fusion");
     let contenedorTitulo = $('#tituloLote');
     let tipotransaccion = $(this).attr("data-tipotransaccion");
     rescisionArchivo = $(this).attr("data-rescision");
@@ -36,6 +38,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
     let flagEditar = $(this).attr("data-editar");
     var formData = new FormData();
     formData.append("idLote", idLote);
+    formData.append("flagFusion", flagFusion);
     $.ajax({
         type: 'POST',
         url: 'getOpcionesLote',
@@ -51,7 +54,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
                 loadCopropietarios(data['copropietarios']);
                 document.getElementById('co-propietarios').classList.remove('hide');
             }
-            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote)
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote, flagFusion)
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -60,7 +63,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
 
     $("#archivosReestructura").modal();
 });
-function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
+function formArchivos(estatusProceso, datos, flagEditar, nombreLote, flagFusion) {
     let label = '';
     let contenedorArchivos = document.getElementById('formularioArchivos');
     let contenidoHTML = '';
@@ -112,10 +115,14 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     }
     if (flagEditar == 0) {
         editarFile = 0;
+        let idLotePROCESS;
         datos.map((elemento, index) => {
+            idLotePROCESS= (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
+            console.log(idLotePROCESS);
+            console.log('elemento', elemento);
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -129,7 +136,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
                     '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                     '                           </div>' +
@@ -154,7 +161,9 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
     }
     else if (flagEditar == 1) {
         editarFile = 1;
+        let idLotePROCESS;
         datos.map((elemento, index) => {
+            idLotePROCESS= (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
             arrayKeysArchivos.push(elemento);
 
             if (flagProceso == 3) {
@@ -164,8 +173,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
             }
             archivosAborrar.push(nombreArchivo);
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + ':' + elemento.nombreLote + '</h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -178,11 +187,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote) {
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
                 '                           <div class="d-flex justify-center">' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
-                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
                 '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + idLotePROCESS + '" ' +
                 '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                 '                           </div>' +
@@ -319,12 +328,15 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("nombreLoteOriginal", nombreLote);
         data.append("id_dxc", id_dxc);
         data.append("editarFile", editarFile);
+        data.append("flagFusion", flagFusion);
         arrayKeysArchivos.map((elemento, index) => {
             let flagEditar = ($("#fileElm" + index)[0].files[0] == undefined) ? 0 : 1;
+            let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
+
             data.append("flagEditado" + index, flagEditar);
             data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
-            data.append("idLoteArchivo" + index, $("#idLotep" + elemento.id_pxl).val());
-            data.append("nombreLote" + index, $("#nombreLote" + elemento.id_pxl).val());
+            data.append("idLoteArchivo" + index, $("#idLotep" + idLotePR).val());
+            data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
             data.append('archivoEliminar' + index, archivosAborrar[index]);
         });
         if (flagProceso == 3) {
@@ -399,10 +411,13 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("nombreLoteOriginal", nombreLote);
                 data.append("id_dxc", id_dxc);
                 data.append("editarFile", editarFile);
+                data.append("flagFusion", flagFusion);
+                console.log(arrayKeysArchivos);
                 arrayKeysArchivos.map((elemento, index) => {
+                    let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
-                    data.append("idLoteArchivo" + index, $("#idLotep" + elemento.id_pxl).val());
-                    data.append("nombreLote" + index, $("#nombreLote" + elemento.id_pxl).val());
+                    data.append("idLoteArchivo" + index, $("#idLotep" + idLotePR).val());
+                    data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
                     data.append('archivoEliminar' + index, archivosAborrar[index]);
                 });
                 if (flagProceso == 3) {

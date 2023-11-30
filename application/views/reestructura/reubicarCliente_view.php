@@ -132,6 +132,36 @@
             </div>
         </div>
 
+        <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header text-center">
+                        <h4 class="modal-title"><label>Confirmación de traspado del recurso <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12">
+                            <label>Comentario</label>
+                            <textarea class="text-modal" id="comentario" rows="3"></textarea>
+                            <br>
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
+                            <label id="tvLbl">Total a validar</label>
+                            <input class="form-control input-gral" name="totalNeto" id="totalNeto" oncopy="return false" onpaste="return false" readonly type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                        </div>
+                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 mt-1">
+                            <label id="tvLbl">Total validado</label>
+                            <input type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control input-gral" name="totalValidado" id="totalValidado" oncopy="return false" onpaste="return false" onkeypress="return SoloNumeros(event)">
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
+                        <button type="button" id="save1" class="btn btn-primary"> Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

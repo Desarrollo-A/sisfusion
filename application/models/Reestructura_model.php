@@ -18,12 +18,12 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) {// JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario --AND dxc2.flagProcesoJuridico = 0";
             else
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoJuridico = 0";
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
-            $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
+            $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoContraloria = 0";
         else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (3, 0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_lider";
@@ -37,7 +37,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
-        return $this->db->query("SELECT dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -46,26 +46,31 @@ class Reestructura_model extends CI_Model
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl4.totalContratoNumero, pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl4.totalContratoNumero, 
+        pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
-        HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado,
+        HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
+        lf1.totalCorridaFusion, lf2.totalCorridasFusionNumero, lf3.totalContratosFusion, lf4.totalContratoFusionNumero, lf5.totalContratoFirmadoFusionNumero,
         hpl.comentario, ISNULL(hpl.estatus, 1) AS id_estatus_modificacion, ISNULL(oxc2.nombre, 'NUEVO') AS estatus_modificacion, 
         ISNULL(oxc2.color, '#1B4F72') AS estatus_modificacion_color, lo.id_juridico_preproceso, ISNULL(se.nombre, 'SIN ESPECIFICAR') sedeAsesorAsignado, u6.id_usuario idAsesorAsignado, u6.id_lider,
         CASE WHEN u7.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u7.nombre, ' ', u7.apellido_paterno, ' ', u7.apellido_materno)) END nombreEjecutivoJuridico, lo.idStatusLote, lo.tipo_estatus_regreso,
-        dxc2.flagProcesoContraloria, dxc2.flagProcesoJuridico
+        (SELECT CASE WHEN (count(idDocumento)>0) THEN count(idDocumento) ELSE 0 END FROM lotesFusion lf2
+		INNER JOIN historial_documento hd ON hd.idLote = lf2.idLote
+		WHERE lf2.destino=1 AND hd.tipo_doc=30 AND hd.expediente!='' AND lf2.idLotePvOrigen=lf.idLotePvOrigen
+		GROUP BY lf2.idLotePvOrigen) as contratoFirmadoFusion
         FROM lotes lo
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        INNER JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
-        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
-        INNER JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente
+        LEFT JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
 	        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
@@ -73,13 +78,23 @@ class Reestructura_model extends CI_Model
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpl.estatus AND oxc2.id_catalogo = 108
         LEFT JOIN (SELECT idLote, COUNT(*) AS totalCorridasNumero FROM propuestas_x_lote GROUP BY idLote) pxl3 ON pxl3.idLote = lo.idLote
         LEFT JOIN (SELECT idLote, COUNT(*) AS totalContratoNumero FROM propuestas_x_lote GROUP BY idLote) pxl4 ON pxl4.idLote = lo.idLote
+        LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalCorridasFusionNumero FROM lotesFusion WHERE destino=1  GROUP BY idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = lo.idLote
         LEFT JOIN (SELECT idLote, COUNT(*) totalCorridas FROM propuestas_x_lote WHERE corrida IS NOT NULL GROUP BY idLote) pxl1 ON pxl1.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratos FROM propuestas_x_lote WHERE contrato IS NOT NULL GROUP BY idLote) pxl2 ON pxl2.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalRescision FROM datos_x_cliente WHERE rescision IS NOT NULL GROUP BY idLote) dxc ON dxc.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
-		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 AND HD.idCliente = cl.id_cliente
+		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalCorridaFusion FROM lotesFusion WHERE destino=1 AND corrida IS NOT NULL GROUP BY idLotePvOrigen) lf1 ON  lf1.idLotePvOrigen = lo.idLote
+		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalContratosFusion FROM lotesFusion WHERE destino=1 AND contrato IS NOT NULL GROUP BY idLotePvOrigen) lf3 ON lf3.idLotePvOrigen = lo.idLote
+		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFirmadoFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf5 ON lf5.idLotePvOrigen = lo.idLote
+		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFusionNumero FROM lotesFusion WHERE destino=1 GROUP BY idLotePvOrigen) lf4 ON lf4.idLotePvOrigen = lo.idLote
+		LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
+
+    	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30  AND lf.origen=1 AND hd2.expediente  IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
+
+		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 --AND HD.idCliente = cl.id_cliente
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
+        
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
@@ -97,13 +112,19 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function getProyectosDisponibles($proyecto, $superficie){
+    public function getProyectosDisponibles($proyecto, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= '.$superficie.' - 1)';
+        }
         return $this->db->query("SELECT t.proyectoReubicacion, descripcion, SUM(disponibles) disponibles FROM (
             SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 15 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio ".$superficieWhere." AND lo.idStatusLote = 15 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             UNION ALL
@@ -111,24 +132,38 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND (lo.sup >= $superficie - 1) AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio ".$superficieWhere." AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
         ) t
         GROUP BY t.proyectoReubicacion, descripcion")->result_array();
     }
 
-    public function getCondominiosDisponibles($proyecto, $superficie){
+    public function getCondominiosDisponibles($proyecto, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= '.$superficie.' - 1)';
+        }
+
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
         WHERE lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
-        AND co.idResidencial = $proyecto AND (lo.sup >= $superficie - 1)
+        AND co.idResidencial = $proyecto ".$superficieWhere."
         GROUP BY lo.idCondominio, co.nombre");
         return $query->result();
     }
 
-    public function getLotesDisponibles($condominio, $superficie){
+    public function getLotesDisponibles($condominio, $superficie, $flagFusion){
+        $superficieWhere = '';
+        if($flagFusion == 1){
+            $superficieWhere = '';
+        }else{
+            $superficieWhere = ' AND (lo.sup >= '.$superficie.' - 1)';
+        }
+
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
 		WHEN (lo.sup - $superficie) <= lo.sup * 0.05 THEN op2.nombre
@@ -137,7 +172,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
-		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1) AND (lo.sup >= $superficie - 1)");
+		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)".$superficieWhere);
         return $query->result();
     }
 
@@ -376,7 +411,7 @@ class Reestructura_model extends CI_Model
 
     public function obtenerCopropietariosPorIdCliente($idCliente)
     {
-        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = $idCliente");
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente IN ($idCliente)");
         return $query->result_array();
     }
 
@@ -435,7 +470,7 @@ class Reestructura_model extends CI_Model
     public function getListaAsignacionCartera() {
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
-        return $this->db->query("SELECT cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -445,7 +480,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total, ISNULL(u6.id_usuario, 0) idAsesorAsignado, 
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, lo.totalNeto2
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -459,6 +494,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
+        LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote
         WHERE lo.liberaBandera = 1 AND lo.status = 1")->result_array();
     }
 
@@ -485,8 +521,19 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
         return $query->result_array();
     }
-    function getOpcionesLote($idLote){
-        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
+    function getOpcionesLote($idLote, $flagFusion){
+        if($flagFusion==1){
+            $query = $this->db->query("		SELECT l.nombreLote, lf.*, lf.rescision,
+        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
+        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
+        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo_proceso
+		FROM lotesFusion lf
+		INNER JOIN lotes l ON lf.idLote = l.idLote
+		LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lf.idLotePvOrigen --DEBE TENER INNER, EL LEFT ES PROVICIONAL
+		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18 --DEBE TENER INNER, EL LEFT ES PROVICIONAL
+		WHERE lf.destino=1 AND lf.idLotePvOrigen =".$idLote);
+        }else{
+            $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
         CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
         oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
         dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo_proceso
@@ -495,18 +542,31 @@ class Reestructura_model extends CI_Model
         INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
         WHERE pxl.idLote=".$idLote);
+        }
+
         return $query->result_array();
     }
     function checkDocumentacion($idLote){
         $query = $this->db->query("SELECT dxc.id_dxc, dxc.rescision, pxl.* FROM propuestas_x_lote pxl INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote WHERE pxl.idLote=".$idLote);
         return $query->result_array();
     }
-    function obtenerPropuestasXLote($idLote){
-        return $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup, lo.idCondominio, lo.tipo_estatus_regreso
-        FROM propuestas_x_lote pl
-        INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
+    function obtenerPropuestasXLote($idLote, $flagFusion){
+        if($flagFusion){
+            $query = $this->db->query("SELECT lf.idFusion as id_pxl, lf.idLotePvOrigen as idLote, lf.idLote as id_lotep,
+		lo.nombreLote, lo.sup, lo.idCondominio, lo.tipo_estatus_regreso
+		FROM lotesFusion lf
+		INNER JOIN lotes lo ON lo.idLote = lf.idLote
 		INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        WHERE pl.idLote = $idLote;");
+		WHERE destino=1 AND lf.idLotePvOrigen =$idLote");
+        }else{
+            $query = $this->db->query("SELECT pl.id_pxl, pl.idLote, pl.id_lotep, lo.nombreLote, lo.sup, lo.idCondominio, lo.tipo_estatus_regreso
+            FROM propuestas_x_lote pl
+            INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
+		    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE pl.idLote = $idLote;");
+        }
+
+        return $query;
     }
 
     function getNuevaPropuesta($idLote, $lotesPropuestos){
@@ -524,9 +584,13 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function obtenerTotalPropuestas($idLoteAnterior)
+    public function obtenerTotalPropuestas($idLoteAnterior, $flagFusion)
     {
-        $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM propuestas_x_lote WHERE idLote = $idLoteAnterior");
+        if($flagFusion==1){
+            $query = $this->db->query(" SELECT COUNT(*) AS total_propuestas FROM lotesFusion WHERE idLotePvOrigen = $idLoteAnterior AND destino=1");
+        }else{
+            $query = $this->db->query("SELECT COUNT(*) AS total_propuestas FROM propuestas_x_lote WHERE idLote = $idLoteAnterior");
+        }
         return $query->row();
     }
 
@@ -556,7 +620,8 @@ class Reestructura_model extends CI_Model
         lo.tipo_estatus_regreso
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN (1, 2, 3, 4, 5, 6, 13, 27, 30, 31)
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE estatus = 1) lxr ON lxr.proyectoReubicacion = re.idResidencial
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
@@ -605,7 +670,9 @@ class Reestructura_model extends CI_Model
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta
+        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta,
+		UPPER(ISNULL(CAST(re2.descripcion AS varchar(75)), 'SIN ESPECIFICAR')) nombreResidencial2, ISNULL(co2.nombre, 'SIN ESPECIFICAR') nombreCondominio2, 
+        ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLote2, ISNULL(oxc1.nombre, 'SIN ESPECIFICAR') tipo_proceso
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -614,7 +681,11 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u2 ON u2.id_usuario = u0.id_lider
         LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
-        LEFT JOIN (SELECT idLote FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote ) pxl ON pxl.idLote = lo.idLote
+        LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote, id_lotep) pxl ON pxl.idLote = lo.idLote
+		LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
+		LEFT JOIN condominios co2 ON co2.idCondominio = lo2.idCondominio
+        LEFT JOIN residenciales re2 ON re2.idResidencial = co2.idResidencial
+        LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cl.proceso AND oxc1.id_catalogo = 97
         WHERE lo.estatus_preproceso != 0
         ORDER BY lo.estatus_preproceso")->result_array();
     }
@@ -711,8 +782,14 @@ class Reestructura_model extends CI_Model
 		GROUP BY lotx.idProyecto,CONCAT(res.nombreResidencial, ' - ' , res.descripcion)");
     }
 
-    public function get_id_asig($idLote){
+    public function validarEstatusContraloriaJuridico($idLote){
         return $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM lotes WHERE idLote = $idLote")->row();
     }
 
+    function getFusion($idLote){
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente FROM lotesFusion lf
+        INNER JOIN lotes l ON l.idLote = lf.idLote
+        WHERE lf.idLotePvOrigen=".$idLote." AND origen=1");
+        return $query->result_array();
+    }
 }

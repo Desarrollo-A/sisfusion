@@ -123,6 +123,14 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
+                    let libContraloria = (d.vl == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                    return d.tipo_venta == null ?
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria}<center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">SIN ESPECIFICAR</span> ${libContraloria} <center>`;
+                }
+            },
+            {
+                data: function (d) {
                     return '<p class="m-0">' + d.referencia + '</p>';
                 }
             },
