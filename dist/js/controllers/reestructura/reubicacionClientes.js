@@ -1281,7 +1281,7 @@ const botonesAccionReubicacion = (d) => {
     let tooltipCF = 'SUBIR CONTRATO FIRMADO';
     let botonJuridico = '';
     let botonFusionadoEstatus = '';
-    let flagFusion = 0;
+    let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
     /*if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
         if(d.idLotePvOrigen!=d.idLote){
