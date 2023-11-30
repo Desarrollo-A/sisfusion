@@ -140,7 +140,7 @@ class Pagos_model extends CI_Model {
         $query = $this->db->query($cmd); 
         return $query->result_array();
     }
-+++
+
     public function registroComisionAsimilados($id_pago){
         $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_comision_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
