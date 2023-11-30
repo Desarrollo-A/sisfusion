@@ -573,7 +573,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-warning{
     color:$red;
     border: none;
-    background-color: #c0131318;
+    background-color: #c0131318 !important;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
