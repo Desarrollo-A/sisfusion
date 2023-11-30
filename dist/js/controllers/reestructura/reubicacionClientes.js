@@ -1058,7 +1058,8 @@ $(document).on("submit", "#formReestructura", function(e){
 $(document).on('click', '.btn-avanzar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
-    const nombreLote = row.data().nombreLote;
+    let nombreLote='';
+    let pluralidad=' EL LOTE ';
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
@@ -1072,14 +1073,18 @@ $(document).on('click', '.btn-avanzar', async function () {
         if(flagFusionRev == 1){
             const dataFusionDes = await totalSuperficieFusion(idLote, 3);
             //AA: Obtenemos la superfices de origen y destino de la fusión.
-            dataFusionDes.data.forEach((fusionLotes) => {
+            let separador=', ';
+            dataFusionDes.data.forEach((fusionLotes, index) => {
+                separador = (index==0) ? '' : ', ';
                 if(fusionLotes.origen == 1){
                     sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
+                    nombreLote += separador+fusionLotes.nombreLotes;
                 }
                 else{
                     sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
                 }
             });
+            pluralidad = ' LOS LOTES ';
             if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
                 return;
             }
@@ -1089,8 +1094,11 @@ $(document).on('click', '.btn-avanzar', async function () {
             if (!validarLotesRequeridos(totalP)) {
                 return;
             }
+            nombreLote = row.data().nombreLote;
         }   
     }
+
+
 
     changeSizeModal('modal-sm');
     appendBodyModal(`
@@ -1098,7 +1106,7 @@ $(document).on('click', '.btn-avanzar', async function () {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6 class="m-0">¿Estás seguro de envíar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
+                        <h6 class="m-0">¿Estás seguro de envíar ${pluralidad} <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
                     </div>
                     <div class="col-12">
                         <label class="control-label">Comentario</label>
