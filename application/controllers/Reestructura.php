@@ -155,7 +155,6 @@ class Reestructura extends CI_Controller{
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
-
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
 
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
@@ -540,6 +539,13 @@ class Reestructura extends CI_Controller{
 		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
         $tipo_venta = $clienteAnterior->tipo_venta;
         $ubicacion = $clienteAnterior->ubicacion;
+        $total8P = 0; 
+        
+        if ($proceso == 4){
+            $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
+            $total8P = floatval(($nuevaSup - $anteriorSup)) * floatval($precioM2Original);
+            $total8P = floatval(number_format($total8P, 2, '.', ''));
+        }
 
 		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
         if ($validateLote == 0) {
@@ -552,7 +558,7 @@ class Reestructura extends CI_Controller{
             return;
         } 
 
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio);
+        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -723,9 +729,9 @@ class Reestructura extends CI_Controller{
         ));
 	}
 
-    public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null) {
+    public function copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected = null, $idCondominio = null, $total8P = 0) {
         $dataCliente = [];
-        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion'];
+        $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion', 'totalNeto2'];
 
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
@@ -761,7 +767,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $proceso], $dataCliente);
                 continue;
             } else if ($clave == 'totalNeto2Cl') {
-                $dataCliente = array_merge([$clave =>  0], $dataCliente);
+                $dataCliente = array_merge([$clave => 0], $dataCliente);
                 continue;
             } else if ($clave == 'id_cliente_reubicacion_2') {
                 $dataCliente = array_merge([$clave => $clienteAnterior->id_cliente], $dataCliente);
@@ -780,6 +786,9 @@ class Reestructura extends CI_Controller{
                 continue;
             } else if ($clave == 'creado_por'){
                 $dataCliente = array_merge([$clave => $this->session->userdata('id_usuario')], $dataCliente);
+                continue;
+            } else if ($clave == 'total8P'){
+                $dataCliente = array_merge([$clave => $total8P], $dataCliente);
                 continue;
             }
 
@@ -1284,14 +1293,12 @@ class Reestructura extends CI_Controller{
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $id_rol = $this->session->userdata('id_rol');
-        //var_dump($nombreLoteOriginal);
-        //exit;
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
         
         $editar = $_POST['editarFile'];
         $arrayLotes = 0;
-        $numeroArchivos = $_POST['countArchResi'];
+        $numeroArchivos = $banderaFusion != 0 ? $_POST['countArchResi'] : $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
@@ -2164,9 +2171,5 @@ class Reestructura extends CI_Controller{
             'fecha_modificacion' => date('Y-m-d H:i:s')
         );
         echo json_encode($this->General_model->updateRecord("datos_x_cliente", $updateData, "idLote", $this->input->post('idLote')));
-    }
-
-    public function totalSuperfecieFusion($idLotePV){
-
     }
 }

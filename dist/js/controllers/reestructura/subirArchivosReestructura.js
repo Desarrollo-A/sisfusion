@@ -144,10 +144,12 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     if (flagEditar == 0) {
         editarFile = 0;
        let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
+       console.log(datos);
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
-            
+        elemento.idStatusLote == 17 ? nombreLotes.push(elemento.nombreLote) : '';
+
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
                 '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
@@ -694,7 +696,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
     if (flagEnviar) {
         let data = new FormData();
         data.append("idLote", arrayCF['idLoteCF']);
-        data.append("nombreLoteOriginal[]", nombreLote);
+        data.append("nombreLoteOriginal", nombreLote);
         data.append("idDocumento", arrayCF['idDocumento']);
         data.append("idCliente", arrayCF['idClienteCF']);
         data.append("editarFile", editarContrafoFirmado);
