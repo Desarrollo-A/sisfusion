@@ -163,13 +163,10 @@ class Contraloria_model extends CI_Model {
     }
 
     public function validateSt6($idLote){
-        $this->db->where("idLote",$idLote);
-        $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106))");
-        $query = $this->db->get('lotes');
-        $valida = (empty($query->result())) ? 0 : 1;
-        return $valida;
-    }
+		$query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote AND idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106) AND idStatusLote = 3")->result();
+		$valida = empty($query) ? 0 : 1;
+		return $valida;
+	}
 
     public function getCorreoSt ($idCliente) {
         $query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
