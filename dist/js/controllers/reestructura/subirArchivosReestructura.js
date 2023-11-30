@@ -16,7 +16,8 @@ var archivosResicion = [];
 var banderaTipoProceso = 0;
 var banderaFusionGlobal=0;
 var idsArchivos = [];
-
+var flagProcesoJuridicoGlobal = null;
+var flagProcesoContraloriaGlobal = null;
 $(document).ready(function () {
     $("#archivosReestructura").on("hidden.bs.modal", function () {
         $("#fileElm1").val(null);
@@ -38,8 +39,11 @@ $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     let banderaFusion = $(this).attr("data-banderaFusion");
     console.log(banderaFusion)
-    let flagProcesoContraloria = $(this).attr("data-flagProcesoContraloria");
-    let flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
+    var flagProcesoContraloria = $(this).attr("data-flagProcesoContraloria");
+    var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
+    flagProcesoJuridicoGlobal = flagProcesoJuridico;
+    flagProcesoContraloriaGlobal = flagProcesoContraloria;
+    console.log(flagProcesoJuridico)
     banderaFusion = banderaFusion == null ? 0 : banderaFusion
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
@@ -68,7 +72,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
                 loadCopropietarios(data['copropietarios']);
                 document.getElementById('co-propietarios').classList.remove('hide');
             }
-            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,flagProcesoContraloria,flagProcesoJuridico)
+            formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
         },
         error: function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -83,6 +87,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     id_dxcs = [];
     id_pxls = [];
     nombreLotes = [];
+    rescisionArchivos = [];
     let label = '';
     console.log(datos)
     let contenedorArchivos = document.getElementById('formularioArchivos');
@@ -117,22 +122,25 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     let nombreArchivo = '';
     let columnWith = '';
     let hideButton = '';
-    switch (estatusProceso) {
-        case '2':
+    switch (id_rol_general) {
+        case 17:
             label = '<b>Subir corrida del lote</b>';
             flagProceso = 2;
-            acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel,pdf';
+            acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
             columnWith = 'col-md-12 col-lg-12';
             hideButton = 'hide';
             break;
-        case '3':
+        case 15:
             label = '<b>Subir contrato del lote</b>';
-            flagProceso = 3;
+            flagProceso = 2;
             acceptFiles = 'application/pdf';
             columnWith = 'col-md-11 col-lg-11';
             hideButton = '';
             break;
     }
+    console.log(flagProceso);
+    console.log(flagProcesoJuridico);
+    console.log(id_rol_general)
     if (flagEditar == 0) {
         editarFile = 0;
        let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
@@ -142,8 +150,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + '<b>: </b>' + elemento.nombreLote + '<span class="text-red">*</span></h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -157,7 +165,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
                     '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
+                    '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                     '                           </div>' +
@@ -168,7 +176,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
-            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : datos[{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_pxl}] ;
+            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             console.log(datos);
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.push(elemento.nombreLote);
@@ -203,8 +211,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             }
             archivosAborrar.push(nombreArchivo);
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
-                '                            <input type="hidden" name="idLotep' + idLotePROCESS + '" id="idLotep' + idLotePROCESS + '" value="' + idLotePROCESS + '">\n' +
-                '                            <input type="hidden" id="nombreLote' + idLotePROCESS + '" value="' + elemento.nombreLote + '">\n' +
+                '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
+                '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
                 '                            <h6 class="text-left">' + label + ':' + elemento.nombreLote + '</h6>\n' +
                 '                            <div class="" id="selectFileSection' + index + '">\n' +
                 '                                <div class="file-gph">\n' +
@@ -217,11 +225,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
                 '                           <div class="d-flex justify-center">' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
-                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + idLotePROCESS + '" ' +
+                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
                 '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + idLotePROCESS + '" ' +
+                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
                 '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                 '                           </div>' +
@@ -229,7 +237,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         });
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
-            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : datos[{"nombreLote" : nombreLote,"id_dxc" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
+            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"id_dxc" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
 
             nuevosDatosOrigen.map((elemento, index) => {
@@ -365,7 +373,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagEnviar = true;
         }else{
             //detecta que no hay ni un archivo subido
-            if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+            if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
                 if (!arrayContratos.includes(1)) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
@@ -394,7 +402,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
             data.append('archivoEliminar' + index, archivosAborrar[index]);
         });
-        if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+        if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
             for (let m = 0; m < idsArchivos.length; m++) {
                 data.append("archivoResicion_"+m, $(`#Resicion_${idsArchivos[m]}`)[0].files[0]);
                 let flagEditarRescision = ($(`#Resicion_${idsArchivos[m]}`)[0].files[0] == undefined) ? 0 : 1;
@@ -420,7 +428,9 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 success: function (data) {
                     const res = JSON.parse(data);
                     if (res.code === 200) {
+                        flagProcesoJuridicoGlobal = null;
                         reubicacionClientes.ajax.reload();
+                        flagProcesoJuridicoGlobal = null;
                         alerts.showNotification(
                             "top",
                             "right",
@@ -457,7 +467,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagEnviar = false;
         }
         
-        if ((flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) && arrayContratos.includes(0)) {
+        if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayContratos.includes(0)) {
             $("#spiner-loader").addClass('hide');
             const archivoLbl = ([2,5,6].includes(banderaTipoProceso)) ? 'archivo de rescisión' : 'documento de reestructura';
             alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');
@@ -481,7 +491,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
                     data.append('archivoEliminar' + index, archivosAborrar[index]);
                 });
-                if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+                if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
                     for (let m = 0; m < idsArchivos.length; m++) {
                         data.append("archivoResicion_"+m, $(`#Resicion_${idsArchivos[m]}`)[0].files[0]);
                     }
@@ -500,6 +510,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     beforeSend: function () {
                     },
                     success: function (data) {
+                        flagProcesoJuridicoGlobal = null;
                         const res = JSON.parse(data);
                         if (res.code === 200) {
                             alerts.showNotification(
@@ -544,7 +555,7 @@ $(document).on('click', '.ver-archivo', function () {
     let url_base = general_base_url + 'static/documentos/contratacion-reubicacion-temp/' + nombreArchivoOriginal + '/';
     let carpetaVisor = '';
     let url = '';
-    if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+    if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
         carpetaVisor = 'CONTRATO/';
         if (excel == 1) {
             carpetaVisor = 'CORRIDA/';
@@ -556,7 +567,7 @@ $(document).on('click', '.ver-archivo', function () {
         carpetaVisor = 'RESCISIONES/';
     }
     url = url_base + carpetaVisor + nombreArchivo;
-    if ((flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) || rescision == 1) {
+    if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) || rescision == 1) {
         if (excel == 1) {
             window.open(url, "_blank");
         } else {

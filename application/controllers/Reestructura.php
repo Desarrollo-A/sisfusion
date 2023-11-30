@@ -1283,6 +1283,7 @@ class Reestructura extends CI_Controller{
         $banderaFusion = $_POST['banderaFusion'];
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
+        $id_rol = $this->session->userdata('id_rol');
         //var_dump($nombreLoteOriginal);
         //exit;
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
@@ -1295,18 +1296,18 @@ class Reestructura extends CI_Controller{
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
         }else{
-            $arrayLotes = $nombreLoteOriginal;
+            $arrayLotes = $nombreLoteOriginal[0];
         }   
 
             for ($j=0; $j < $numeroArchivos ; $j++) { 
-                $nombreLoteOriginal = $arrayLotes[$j];
+                $nombreLoteOriginal = $numeroArchivos > 1 ? $arrayLotes[$j] : $arrayLotes;
 
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true) or die("Error en la generación");
                 }
         
-                if($flagAction==2){
+                if($flagAction==2 && $id_rol == 17){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
                     if (!file_exists($micarpeta)) {
                         mkdir($micarpeta, 0777, true);
@@ -1314,7 +1315,7 @@ class Reestructura extends CI_Controller{
                     $carpetaUbicacion = 'CORRIDA/';
                     $nameField = 'corrida';
                     $acceptFiles = 'xlsx|csv|xls';
-                }elseif($flagAction==3){
+                }elseif($flagAction==2 && $id_rol == 15){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
                     if (!file_exists($micarpeta)) {
                         mkdir($micarpeta, 0777, true);
@@ -1357,7 +1358,7 @@ class Reestructura extends CI_Controller{
                         }
                     }
                 }
-                if($flagAction == 3){
+                if($flagAction == 2 && $id_rol == 15){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
                     if (!file_exists($micarpeta)) {
                         mkdir($micarpeta, 0777, true);
@@ -1424,36 +1425,26 @@ class Reestructura extends CI_Controller{
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
         $numeroArchivos = $_POST['countArchResi'];
+        $id_rol = $this->session->userdata('id_rol');
+
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
             $rescisionArchivo = explode(',', $_POST['rescisionArchivo'][0]);
         }else{
-            $arrayLotes = $nombreLoteOriginal;
+            $arrayLotes = $nombreLoteOriginal[0];
             $rescisionArchivo = $_POST['rescisionArchivo'];
 
         }
         for ($j=0; $j < $numeroArchivos ; $j++) {
-            $nombreLoteOriginal = $arrayLotes[$j];
-
-        if($flagFusion == 1){//hacer las destinciones dependiendo el proceso
-            $fechaModificacionCampo = 'fechaModificacion';
-            $modificadoPorCampo = 'modificadoPor';
-            $keyActualizacion = 'idFusion';
-            $tablaActualizar = 'lotesFusion';
-        }else{
-            $fechaModificacionCampo = 'fecha_modificacion';
-            $modificadoPorCampo = 'modificado_por';
-            $keyActualizacion = 'id_pxl';
-            $tablaActualizar = 'propuestas_x_lote';
-        }
+            $nombreLoteOriginal = $numeroArchivos > 1 ? $arrayLotes[$j] : $arrayLotes;
 
         $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {
             mkdir($micarpeta, 0777, true);
         }
 
-        if($flagAction==2){
+        if($flagAction==2 && $id_rol == 17){
             $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
@@ -1462,7 +1453,7 @@ class Reestructura extends CI_Controller{
             $nameField = 'corrida';
             $acceptFiles = 'xlsx|csv|xls';
         }
-        elseif($flagAction==3){
+        elseif($flagAction==2 && $id_rol == 15){
             $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
@@ -1490,6 +1481,7 @@ class Reestructura extends CI_Controller{
                     $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
                     rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                     $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
+                    $idpxl = $this->input->post('idLoteArchivo'.$i);
 
                     $updateDocumentData = array(
                         $nameField => $nuevoNombre,
@@ -1510,7 +1502,7 @@ class Reestructura extends CI_Controller{
             }
 
         }
-        if($flagAction == 3){
+        if($flagAction == 2 && $id_rol == 15){
             if($_POST['flagEditarRescision_'.$j] == 1){
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
                 if (!file_exists($micarpeta)) {
