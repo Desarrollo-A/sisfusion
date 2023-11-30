@@ -71,7 +71,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector  
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         LEFT JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente
@@ -822,10 +822,21 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM datos_x_cliente WHERE idLote = $idLote")->row();
     }
 
-    function getFusion($idLote){
+    function getFusion($idLote, $tipo){
+        if ($tipo == 1){
+            $tipoOrigenDestino = 'AND origen = 1';
+        }
+        else if($tipo == 0){
+            $tipoOrigenDestino = 'AND destino = 1';
+        }
+        else{
+            $tipoOrigenDestino = '';
+        }
+
         $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
-        WHERE lf.idLotePvOrigen=".$idLote." AND origen=1");
+        WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
     }
+
 }

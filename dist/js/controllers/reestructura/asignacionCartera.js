@@ -199,7 +199,7 @@ $(document).on('click', '.btn-asignar-venta', function () {
         let lotesFusion = '';
         let idLotePV = $(this).attr('data-idLote');
         let lotesFusionados = [];
-        $.post('getFusion/', {idLote: idLotePV}, function(respuesta) {
+        $.post('getFusion/', {idLote: idLotePV, tipoOrigenDestino: 1}, function(respuesta) {
 
             respuesta.data.map((elemento, index)=>{
                 lotesFusion += elemento.nombreLotes+ ' ';

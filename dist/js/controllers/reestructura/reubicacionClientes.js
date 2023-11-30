@@ -11,7 +11,7 @@ $(document).ready(function () {
 
 function obtenerDataFusion(idLoteOriginal) {
     return new Promise((resolve) => {
-        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal}, (data) => {
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino:1}, (data) => {
             $("#spiner-loader").addClass('hide');
             const response = JSON.parse(data);
             resolve(response);
@@ -390,7 +390,7 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
             <input type="hidden" id="flagFusion" value="${flagFusion}">
             <div class="row mt-2">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                    <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
+                    <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso}, ${flagFusion});">Cancelar</button>
                     ${botonAceptar}
                 </div>
             </div>
@@ -408,13 +408,26 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion);
 });
 
-const cerrarModalPropuestas = (preproceso) => {
+const cerrarModalPropuestas = async (preproceso, flagFusion) => {
     if (preproceso != 1) {
         hideModal();
         return;
     }
-
-    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
+    if(flagFusion == 1){
+        let sumSuperficieD = 0;
+        const idLoteOriginal = $("#idLoteOriginal").val();
+        const superficieFusion = parseFloat($('#superficie').val());
+        const dataFusionDes = await totalSuperficieFusion(idLoteOriginal, 0);
+        //AA: Obtenemos la superfice destino de la fusión.
+        dataFusionDes.data.forEach((fusionLotes) => {
+            sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
+        });
+        if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
+            return;
+        }
+        hideModal();
+    }
+    else if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         hideModal();
     }
 }
@@ -983,9 +996,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     let superficieFusion = parseFloat($('#superficie').val());
     let superficiePropuestas = sumatoriaLS;
     if(flagFusion == 1){
-        if(superficiePropuestas < superficieFusion){
-            alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+sumatoriaLS+'</b>) es menor al total de ' +
-                'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
+        if(!validarSuperficiesFusion(superficiePropuestas, superficieFusion)){
             return;
         }
     }
@@ -1052,14 +1063,33 @@ $(document).on('click', '.btn-avanzar', async function () {
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
     const idEstatusMovimento = $(this).attr("data-idEstatusMovimiento");
+    let sumSuperficieD = 0;
+    let sumSuperficieO = 0;
     let flagFusionRev = $(this).attr('data-fusion');
 
 
     if (tipoTransaccion == 1) {
-        const totalP = await totalPropuestas(idLote, flagFusionRev);
-        if (!validarLotesRequeridos(totalP)) {
-            return;
+        if(flagFusionRev == 1){
+            const dataFusionDes = await totalSuperficieFusion(idLote, 3);
+            //AA: Obtenemos la superfices de origen y destino de la fusión.
+            dataFusionDes.data.forEach((fusionLotes) => {
+                if(fusionLotes.origen == 1){
+                    sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
+                }
+                else{
+                    sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
+                }
+            });
+            if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
+                return;
+            }
         }
+        else{
+            const totalP = await totalPropuestas(idLote, flagFusionRev);
+            if (!validarLotesRequeridos(totalP)) {
+                return;
+            }
+        }   
     }
 
     changeSizeModal('modal-sm');
@@ -1099,6 +1129,7 @@ $(document).on('click', '.btn-rechazar', function () {
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
+    let flagFusion = $(this).attr("data-fusion");
 
     changeSizeModal('modal-sm');
     appendBodyModal(`
@@ -1116,6 +1147,7 @@ $(document).on('click', '.btn-rechazar', function () {
                     <input type="hidden" id="idLote" name="idLote" value="${idLote}">
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
                     <input type="hidden" name="idCliente" value="${idCliente}">
+                    <input type="hidden" name="flagFusion" value="${flagFusion}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -1127,6 +1159,17 @@ $(document).on('click', '.btn-rechazar', function () {
     `);
     showModal();
 });
+
+const totalSuperficieFusion  = async (idLoteOriginal, tipoOrigenDestino) => {
+    return new Promise((resolve) => {
+        $('#spiner-loader').removeClass('hide');
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino: tipoOrigenDestino}, (data) => {
+            $("#spiner-loader").addClass('hide');
+            const response = JSON.parse(data);
+            resolve(response);
+        });
+    });
+}
 
 const totalPropuestas = async (idLoteOriginal, flagFusion) => {
     return new Promise((resolve) => {
@@ -1168,7 +1211,6 @@ $(document).on("submit", "#formRechazarEstatus", function(e) {
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
-    data.append('flagFusion', flagFusion)
     $.ajax({
         url : `${general_base_url}Reestructura/rechazarRegistro`,
         data: data,
@@ -1211,6 +1253,17 @@ const validarLotesRequeridos = (numberLotes) => {
     return true;
 }
 
+const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
+    if(superficiePropuestas < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
+            'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+
 const botonesAccionReubicacion = (d) => {
     const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
@@ -1238,6 +1291,7 @@ const botonesAccionReubicacion = (d) => {
             totalCorridasRef = parseInt(d.totalCorridasNumero);
             totalContratoRef = parseInt(d.totalContratoNumero);
         }else{
+            //si es el pivote se le dejan las opciones
             botonFusionadoEstatus = "";
             flagFusion = 1;
             totalCorridas = parseInt(d.totalCorridaFusion);
@@ -1249,12 +1303,12 @@ const botonesAccionReubicacion = (d) => {
 
 
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef ) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef ) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
         btnContratoFirmado = 'fa-eye';
@@ -1310,7 +1364,8 @@ const botonesAccionReubicacion = (d) => {
                     title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
-                    ${botonFusionadoEstatus}>
+                    ${botonFusionadoEstatus}
+                    data-fusion="${flagFusion}">
                     <i class="fas fa-thumbs-down"></i>
                 </button>`;
 
