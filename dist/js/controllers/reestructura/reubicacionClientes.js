@@ -11,7 +11,7 @@ $(document).ready(function () {
 
 function obtenerDataFusion(idLoteOriginal) {
     return new Promise((resolve) => {
-        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal}, (data) => {
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino:1}, (data) => {
             $("#spiner-loader").addClass('hide');
             const response = JSON.parse(data);
             resolve(response);
@@ -387,7 +387,7 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
             <input type="hidden" id="flagFusion" value="${flagFusion}">
             <div class="row mt-2">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
-                    <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso});">Cancelar</button>
+                    <button type="button" class="btn btn-simple btn-danger" onclick="cerrarModalPropuestas(${statusPreproceso}, ${flagFusion});">Cancelar</button>
                     ${botonAceptar}
                 </div>
             </div>
@@ -405,13 +405,26 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
     getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion);
 });
 
-const cerrarModalPropuestas = (preproceso) => {
+const cerrarModalPropuestas = async (preproceso, flagFusion) => {
     if (preproceso != 1) {
         hideModal();
         return;
     }
-
-    if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
+    if(flagFusion == 1){
+        let sumSuperficieD = 0;
+        const idLoteOriginal = $("#idLoteOriginal").val();
+        const superficieFusion = parseFloat($('#superficie').val());
+        const dataFusionDes = await totalSuperficieFusion(idLoteOriginal, 0);
+        //AA: Obtenemos la superfice destino de la fusión.
+        dataFusionDes.data.forEach((fusionLotes) => {
+            sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
+        });
+        if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
+            return;
+        }
+        hideModal();
+    }
+    else if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         hideModal();
     }
 }
@@ -980,9 +993,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     let superficieFusion = parseFloat($('#superficie').val());
     let superficiePropuestas = sumatoriaLS;
     if(flagFusion == 1){
-        if(superficiePropuestas < superficieFusion){
-            alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+sumatoriaLS+'</b>) es menor al total de ' +
-                'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
+        if(!validarSuperficiesFusion(superficiePropuestas, superficieFusion)){
             return;
         }
     }
@@ -1049,14 +1060,33 @@ $(document).on('click', '.btn-avanzar', async function () {
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
     const idEstatusMovimento = $(this).attr("data-idEstatusMovimiento");
+    let sumSuperficieD = 0;
+    let sumSuperficieO = 0;
     let flagFusionRev = $(this).attr('data-fusion');
 
 
     if (tipoTransaccion == 1) {
-        const totalP = await totalPropuestas(idLote, flagFusionRev);
-        if (!validarLotesRequeridos(totalP)) {
-            return;
+        if(flagFusionRev == 1){
+            const dataFusionDes = await totalSuperficieFusion(idLote, 3);
+            //AA: Obtenemos la superfices de origen y destino de la fusión.
+            dataFusionDes.data.forEach((fusionLotes) => {
+                if(fusionLotes.origen == 1){
+                    sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
+                }
+                else{
+                    sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
+                }
+            });
+            if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
+                return;
+            }
         }
+        else{
+            const totalP = await totalPropuestas(idLote, flagFusionRev);
+            if (!validarLotesRequeridos(totalP)) {
+                return;
+            }
+        }   
     }
 
     changeSizeModal('modal-sm');
@@ -1124,6 +1154,17 @@ $(document).on('click', '.btn-rechazar', function () {
     `);
     showModal();
 });
+
+const totalSuperficieFusion  = async (idLoteOriginal, tipoOrigenDestino) => {
+    return new Promise((resolve) => {
+        $('#spiner-loader').removeClass('hide');
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino: tipoOrigenDestino}, (data) => {
+            $("#spiner-loader").addClass('hide');
+            const response = JSON.parse(data);
+            resolve(response);
+        });
+    });
+}
 
 const totalPropuestas = async (idLoteOriginal, flagFusion) => {
     return new Promise((resolve) => {
@@ -1206,6 +1247,17 @@ const validarLotesRequeridos = (numberLotes) => {
         return false;
     }
     return true;
+}
+
+const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
+    if(superficiePropuestas < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
+            'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
+        return false;
+    }
+    else{
+        return true;
+    }
 }
 
 const botonesAccionReubicacion = (d) => {

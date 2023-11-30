@@ -799,10 +799,21 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM datos_x_cliente WHERE idLote = $idLote")->row();
     }
 
-    function getFusion($idLote){
+    function getFusion($idLote, $tipo){
+        if ($tipo == 1){
+            $tipoOrigenDestino = 'AND origen = 1';
+        }
+        else if($tipo == 0){
+            $tipoOrigenDestino = 'AND destino = 1';
+        }
+        else{
+            $tipoOrigenDestino = '';
+        }
+
         $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
-        WHERE lf.idLotePvOrigen=".$idLote." AND origen=1");
+        WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
     }
+
 }
