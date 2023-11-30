@@ -1635,7 +1635,6 @@ class Reestructura extends CI_Controller{
 
             $this->General_model->updateBatch('lotes', $arrayLotesUpdate, 'idLote');
             $this->General_model->insertBatch('historial_preproceso_lote', $arrayLotesHistorial);
-
         } else {
             $dataUpdateLote = array(
                 'estatus_preproceso' => $estatus_proceso,
@@ -1897,59 +1896,40 @@ class Reestructura extends CI_Controller{
     
     public function rechazarRegistro()
     {
+        $this->db->trans_begin();
         $idPreproceso = $this->input->post('tipoTransaccion');
         $idLote = $this->input->post('idLote');
         $idCliente = $this->input->post('idCliente');
         $comentario = $this->input->post('comentario');
         $idUsuario = $this->session->userdata('id_usuario');
         $flagFusion= $this->input->post('flagFusion');
-
+        
         if($flagFusion==1){
-            $data = $this->Reestructura_model->getFusion($idLote);
-            $dataUpdateLote = array(
-                'estatus_preproceso' => $idPreproceso - 1,
-                'usuario' => $idUsuario
-            );
-            $flagInsert1 = 0;
-            $flagInsert2 = 0;
-
+            $data = $this->Reestructura_model->getFusion($idLote, 1);
+            $arrayLotesUpdate = array();
+            $arrayLotesHistorial = array();
             foreach($data as $elemento){
-                $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $elemento['idLote']);
+                $dataUpdateLote = array(
+                    "idLote" => $elemento['idLote'],
+                    'estatus_preproceso' => $idPreproceso - 1,
+                    'usuario' => $idUsuario
+                );
+                array_push($arrayLotesUpdate, $dataUpdateLote);
 
-                if($responseUpdateLote){
-                    $flagInsert1 = $flagInsert1 +1;
-                }
-                if($elemento['idLotePvOrigen'] == $elemento['idLote']){
-                    $dataHistorial = array(
-                        'idLote' => $idLote,
-                        'idCliente' => $idCliente,
-                        'id_preproceso' => $idPreproceso,
-                        'comentario' => $comentario,
-                        'estatus' => 2,
-                        'modificado_por' => $idUsuario
-                    );
-                }else{
-                    $dataHistorial = array(
-                        'idLote' => $elemento['idLote'],
-                        'idCliente' => $elemento['idCliente'],
-                        'id_preproceso' => $idPreproceso,
-                        'comentario' => $comentario,
-                        'estatus' => 2,
-                        'modificado_por' => $idUsuario
-                    );
-                }
-
-                $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
-                if($responseInsertHistorial){
-                    $flagInsert2 = $flagInsert2 +1;
-                }
+                $dataHistorial = array(
+                    'idLote' => $elemento['idLote'],
+                    'idCliente' => $elemento['idCliente'],
+                    'id_preproceso' => $idPreproceso,
+                    'comentario' => $comentario,
+                    'estatus' => 2,
+                    'modificado_por' => $idUsuario
+                );
+                array_push($arrayLotesHistorial, $dataHistorial);
             }
-            if((count($data)==$flagInsert1) && (count($data)==$flagInsert2)){
-                echo json_encode(array('code' => 200));
-            }else{
-                echo json_encode(array('code' => 500));
-            }
-        }else{
+                $this->General_model->updateBatch('lotes', $arrayLotesUpdate, 'idLote');
+                $this->General_model->insertBatch('historial_preproceso_lote', $arrayLotesHistorial);
+        }
+        else{
             $dataUpdateLote = array(
                 'estatus_preproceso' => $idPreproceso - 1,
                 'usuario' => $idUsuario
@@ -1966,13 +1946,26 @@ class Reestructura extends CI_Controller{
 
             $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
             $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
-
-            echo ($responseUpdateLote && $responseInsertHistorial)
-                ? json_encode(array('code' => 200))
-                : json_encode(array('code' => 500));
         }
 
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al realizar avance de lotes',
+                'color' => 'danger'
+            ));
+            return;
+        }
 
+        $this->db->trans_commit();
+        echo json_encode(array(
+            'titulo' => 'OK',
+            'resultado' => TRUE,
+            'message' => 'Proceso realizado correctamente.',
+            'color' => 'success'
+        ));
     }
 
     public function getListaUsuariosReasignacionJuridico() {
