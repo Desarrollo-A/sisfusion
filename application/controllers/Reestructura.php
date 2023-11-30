@@ -1603,7 +1603,7 @@ class Reestructura extends CI_Controller{
         if($flagFusion==1) {
             $this->db->trans_begin();
 
-            //Se obtienen lotes de fusión de origen para actualizar estatus e insertar historial
+            //Se obtienen lotes de fusión de origen para actualizar estatus de lote e insertar historial
             $data = $this->Reestructura_model->getFusion($idLote, 1);
             foreach($data as $elemento){
                 $dataUpdateLote = array();
