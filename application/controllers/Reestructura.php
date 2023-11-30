@@ -1293,7 +1293,7 @@ class Reestructura extends CI_Controller{
         
         $editar = $_POST['editarFile'];
         $arrayLotes = 0;
-        $numeroArchivos = $_POST['countArchResi'];
+        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
@@ -1302,7 +1302,7 @@ class Reestructura extends CI_Controller{
         }   
 
             for ($j=0; $j < $numeroArchivos ; $j++) { 
-                $nombreLoteOriginal = $numeroArchivos > 1 ? $arrayLotes[$j] : $arrayLotes;
+                $nombreLoteOriginal = ( $numeroArchivos > 1 && $id_rol == 15 ) ? $arrayLotes[$j] : $this->input->post('nombreLote'.$j);
 
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
@@ -1420,26 +1420,27 @@ class Reestructura extends CI_Controller{
 
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
+        $id_rol = $this->session->userdata('id_rol');
         $nombreLoteOriginal = $_POST['nombreLoteOriginal'];
         $id_dxc = $_POST['id_dxc'];
         $editar = $_POST['editarFile'];
         $banderaFusion = $_POST['banderaFusion'];
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
-        $numeroArchivos = $_POST['countArchResi'];
+        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : $arrayLength ;
         $id_rol = $this->session->userdata('id_rol');
 
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
-            $rescisionArchivo = explode(',', $_POST['rescisionArchivo'][0]);
+            $rescisionArchivo = $id_rol == 17 ? 0 : explode(',', $_POST['rescisionArchivo'][0]);
         }else{
             $arrayLotes = $nombreLoteOriginal[0];
             $rescisionArchivo = $_POST['rescisionArchivo'];
 
         }
         for ($j=0; $j < $numeroArchivos ; $j++) {
-            $nombreLoteOriginal = $numeroArchivos > 1 ? $arrayLotes[$j] : $arrayLotes;
+            $nombreLoteOriginal = ( $numeroArchivos > 1 && $id_rol == 15 ) ? $arrayLotes[$j] : $this->input->post('nombreLote'.$j);
 
         $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {

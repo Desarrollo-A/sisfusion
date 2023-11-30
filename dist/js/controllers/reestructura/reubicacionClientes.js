@@ -1292,6 +1292,34 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'disabled=false' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
+
+    /*if(d.idLotePvOrigen!=null){
+        //valores para lotes fusionados
+        if(d.idLotePvOrigen!=d.idLote){//si no es el lote pivote se le deshabilitan las opciones
+           // botonFusionadoEstatus = "disabled=false";
+            totalCorridas = parseInt(d.totalCorridas);
+            totalContrato = parseInt(d.totalContratos);
+            totalCorridasRef = parseInt(d.totalCorridasNumero);
+            totalContratoRef = parseInt(d.totalContratoNumero);
+        }else{
+            //si es el pivote se le dejan las opciones
+            //botonFusionadoEstatus = "";
+            flagFusion = 1;
+            totalCorridas = parseInt(d.totalCorridaFusion);
+            totalContrato = parseInt(d.totalContratosFusion);
+            totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
+            totalContratoRef = parseInt(d.totalContratoNumero);
+        }
+    }else{
+        //se le asignan las variables a los lotes con proceso normal (SIN FUSION)
+        //botonFusionadoEstatus = "";
+        totalCorridas = parseInt(d.totalCorridas);
+        totalContrato = parseInt(d.totalContratos);
+        totalCorridasRef = parseInt(d.totalCorridasNumero);
+        totalContratoRef = parseInt(d.totalContratoNumero);
+    }*/
+
+
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
