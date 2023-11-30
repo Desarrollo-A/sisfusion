@@ -5,6 +5,9 @@ class Reestructura_model extends CI_Model
     {
         $this->load->library('email');
         parent::__construct();
+        $this->load->model(array('Comisiones_model'));
+        
+
     }
 
     public function getListaClientesReubicar() {
@@ -37,7 +40,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
-        return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.rescision,cl.plan_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -96,7 +99,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
         
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.idLote in(74668,74669,74670) $validacionAsignacion $validacionEstatus")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote){
@@ -225,7 +228,7 @@ class Reestructura_model extends CI_Model
         $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
         $datos["modificado"] = date('Y-m-d H:i:s');
         $datos["status"] = 1;
-        $datos["userLiberacion"] = $this->session->userdata('id_usuario');
+        $datos["userLiberacion"] = ($datos['tipoLiberacion'] == 7 &&  $this->session->userdata('id_rol') == 17 ) ? 1 : $this->session->userdata('id_usuario');
         $datos["tipo"] = $datos['tipoLiberacion'];
         $tipo_estatus_regreso = $datos['tipoLiberacion'] == 9 ? 1 : 0; // SI ES LIBERACIÓN DE YOLA (ES EL INVENTARIO ESPECIAL PARA EL PROYECTO DE REESTRUCURA) SE MANDA BANDERA EN 1 SINO 0
 
@@ -234,13 +237,13 @@ class Reestructura_model extends CI_Model
         (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
         (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
         $registro_comision = ($datos['tipo'] == 8 || $datos['tipo'] == 9) ? 9 : 8;
-        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 19 : 18);
+        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 :( $datos['tipo'] == 7 ? 19 : 18));
         $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
         $sqlIdClienteAnt = isset($datos["idClienteAnterior"]) ? 'AND idCliente = '.$datos["idClienteAnterior"] : '';
 
         $this->db->trans_begin();
         $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
-        $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
+        $id_cliente = $this->db->query("SELECT id_cliente,plan_comision FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
         $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
         $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
         $this->db->query("UPDATE clientes SET status = 0, tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
@@ -248,28 +251,50 @@ class Reestructura_model extends CI_Model
         $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
 
         $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote']." WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
-        $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
-        for ($i=0; $i <count($comisiones) ; $i++) {
-            $sumaxcomision=0;
-            $pagos_ind = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_comision=".$comisiones[$i]['id_comision']."")->result_array();
-            for ($j=0; $j <count($pagos_ind) ; $j++) {
-                $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
+        //$arrayRegistroComision = [0,8,9];
+        if(!in_array($row[0]['registro_comision'],array(7))){
+            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
+            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+
+            if(in_array($row[0]['registro_comision'],array(8,0))){
+                for ($i=0; $i < count($comisionesNuevas) ; $i++) { 
+                    $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisionesNuevas[$i]['id_usuario'].",".$comisionesNuevas[$i]['comision_total'].",".$comisionesNuevas[$i]['porcentaje_decimal'].",".$comisionesNuevas[$i]['id_rol'].",".$id_cliente[0]['id_cliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')"); 
+                }
+            }else{
+                if(count($comisiones) == 0){
+                    for ($i=0; $i < count($comisionesNuevas) ; $i++) { 
+                        $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisionesNuevas[$i]['id_usuario'].",".$comisionesNuevas[$i]['comision_total'].",".$comisionesNuevas[$i]['porcentaje_decimal'].",".$comisionesNuevas[$i]['id_rol'].",".$id_cliente[0]['id_cliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')"); 
+                    }
+                }else{
+                    for ($i=0; $i <count($comisiones) ; $i++) {
+                        $sumaxcomision=0;
+                        $pagos_ind = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_comision=".$comisiones[$i]['id_comision']."")->result_array();
+                        for ($j=0; $j <count($pagos_ind) ; $j++) {
+                            $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
+                        }
+                        if(($datos['tipo'] == 7 || $datos['tipo'] == 8) && $row[0]['registro_comision'] == 1){
+                            $nuevaComision = $comisiones[$i]['comision_total'] - $sumaxcomision;
+                            $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisiones[$i]['id_usuario'].",".$nuevaComision.",".$comisiones[$i]['porcentaje_decimal'].",".$comisiones[$i]['rol_generado'].",".$row[0]['idCliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')");
+                        }
+                        $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
+                    }
+                    $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
+                }
             }
-            if(($datos['tipo'] == 7 || $datos['tipo'] == 8) && $row[0]['registro_comision'] == 1){
-                $nuevaComision = $comisiones[$i]['comision_total'] - $sumaxcomision;
-                $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisiones[$i]['id_usuario'].",".$nuevaComision.",".$comisiones[$i]['porcentaje_decimal'].",".$comisiones[$i]['rol_generado'].",".$row[0]['idCliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')");
-            }
-            $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
         }
-        $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
-
-
+        
         if($row[0]['tipo_venta'] == 1){
             if($datos['tipo'] == 7 || $datos['tipo'] == 8){
                 $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
                 $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
             }
             $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+        }
+
+        //LOTES FUSIÓN
+        if($datos["tipo"] == 7 && $datos['banderaFusion'] == 1){
+            $this->db->query("UPDATE lotesFusion SET banderaComision=".$row['registro_comision'].",totalNeto2=".$row[0]['totalNeto2'].",modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLote=".$datos['idLote']." AND idCliente=".$row[0]['idCliente']." ");
+            $this->db->query("UPDATE lotesFusion SET nombreLotes=CONCAT(nombreLotes,',',$row[0]['nombreLote']),modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLotePvOrigen=".$datos['idLotePv']." AND destino=1");
         }
 
 
@@ -523,29 +548,27 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
         return $query->result_array();
     }
-    function getOpcionesLote($idLote, $flagFusion){
-        if($flagFusion==1){
-            $query = $this->db->query("		SELECT l.nombreLote, lf.*, lf.rescision,
-        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
-        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
-        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo_proceso
-		FROM lotesFusion lf
-		INNER JOIN lotes l ON lf.idLote = l.idLote
-		LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lf.idLotePvOrigen --DEBE TENER INNER, EL LEFT ES PROVICIONAL
-		LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18 --DEBE TENER INNER, EL LEFT ES PROVICIONAL
-		WHERE lf.destino=1 AND lf.idLotePvOrigen =".$idLote);
-        }else{
-            $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision,
-        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
-        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
-        dxc.correo, dxc.telefono1, dxc.ocupacion, dxc.tipo_proceso
-        FROM propuestas_x_lote pxl 
-        INNER JOIN lotes l ON pxl.id_lotep=l.idLote
-        INNER JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
-        WHERE pxl.idLote=".$idLote);
+    function getOpcionesLote($idLote,$banderaFusion = 0){
+        $tabla='propuestas_x_lote';
+        $columna='id_lotep';
+        $columnExtra='';
+        $coumnExtra = '';
+        $columnWhere='idLote';
+        if($banderaFusion != 0){
+            $tabla='lotesFusion';
+            $columna='idLote';
+            $columnWhere='idLotePvOrigen';
+            $columnExtra = ',pxl.origen,pxl.destino,pxl.idFusion id_pxl';
         }
-
+        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision as rescisioncl,
+        CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
+        oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
+        dxc.correo, dxc.telefono1, dxc.ocupacion, 5 tipo_proceso $columnExtra
+        FROM $tabla pxl 
+        INNER JOIN lotes l ON l.idLote=pxl.$columna
+        left JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
+        left JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
+        WHERE pxl.$columnWhere=".$idLote);
         return $query->result_array();
     }
     function checkDocumentacion($idLote){

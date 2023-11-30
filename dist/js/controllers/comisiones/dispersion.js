@@ -239,7 +239,7 @@ $(document).ready(function () {
                             descripcion_plan = d.descripcion_planReu;
                             ooamDispersion = 2;
                             nombreOtro = '';
-                            //console.log(d.idLote+" //NUEVA VENTAS 2°");
+//console.log(d.idLote+" //NUEVA VENTAS 2°");
 
                         }else if(d.bandera_dispersion == 2  && d.registro_comision != 9){//REUBICADAS 2°
                             disparador = 2;
@@ -251,7 +251,7 @@ $(document).ready(function () {
                             descripcion_plan = d.descripcion_planReu;
                             ooamDispersion = 2;
                             nombreOtro = '';
-                            //console.log(d.idLote+" //REUBICADAS 2°");
+//console.log(d.idLote+" //REUBICADAS 2°");
 
                         } else if(d.bandera_dispersion == 3 && d.registro_comision != 9){//LIQUIDADA 2°
                             disparador = 2;   
@@ -263,7 +263,7 @@ $(document).ready(function () {
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 1;
                             nombreOtro = '';
-                            //console.log(d.idLote+" //LIQUIDADA 2°");
+//console.log(d.idLote+" //LIQUIDADA 2°");
 
                         } else if(d.bandera_dispersion == 0 && (d.registro_comision == 0 || d.registro_comision == 8)){//VENTA NORMAL 1°
                             disparador = 1;
@@ -275,7 +275,7 @@ $(document).ready(function () {
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 0;
                             nombreOtro = '';
-                            //console.log(d.idLote+" //VENTA NORMAL 1°");
+//console.log(d.idLote+" //VENTA NORMAL 1°");
 
                         } else if(d.bandera_dispersion == 0 && d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM == 0){// NORMAL 2°
                             disparador = 2;
@@ -287,7 +287,7 @@ $(document).ready(function () {
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 0;
                             nombreOtro = '';
-                            // console.log(d.idLote+" //NORMAL 2°");
+// console.log(d.idLote+" //NORMAL 2°");
                         } 
 
                         else if(d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM == 0 ){// OOAM 1°
@@ -300,7 +300,7 @@ $(document).ready(function () {
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 1;
                             nombreOtro = '';
-                            // console.log(d.idLote+" //OOAM 1°");
+// console.log(d.idLote+" //OOAM 1°");
                         } 
 
                         else if((d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM > 0 ) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0 ) ){// OOAM 1°

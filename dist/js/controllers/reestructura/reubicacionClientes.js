@@ -206,7 +206,10 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                return `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`;
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                boton
+                :((d.idLotePvOrigen == null) ? boton : '');
             }
         }
     ],
@@ -1264,13 +1267,13 @@ const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
 const botonesAccionReubicacion = (d) => {
     const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
+    const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
-    let totalCorridas; //= parseInt(d.totalCorridas);
-    let totalContrato;//= parseInt(d.totalContratos);
-    let totalCorridasRef; //= parseInt(d.totalCorridasNumero);
-    let totalContratoRef; //= parseInt(d.totalContratoNumero);
-    let totalContratoFirmado = parseInt(d.totalContratoFirmado);
-
+    const totalCorridas = parseInt(d.totalCorridas);
+    const totalContrato = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratos);
+    const totalCorridasRef = parseInt(d.totalCorridasNumero);
+    const totalContratoRef = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratoNumero);
+    const totalContratoFirmado = parseInt( banderaFusion == 1 ? d.totalContratoFirmadoFusion : d.totalContratoFirmado);
     let editar = 0;
     let btnShow = 'fa-upload';
     let btnContratoFirmado = 'fa-file-upload';
@@ -1278,11 +1281,10 @@ const botonesAccionReubicacion = (d) => {
     let tooltipCF = 'SUBIR CONTRATO FIRMADO';
     let botonJuridico = '';
     let botonFusionadoEstatus = '';
-    let flagFusion = 0;
+    let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if(d.idLotePvOrigen!=null){
-        //valores para lotes fusionados
-        if(d.idLotePvOrigen!=d.idLote){//si no es el lote pivote se le deshabilitan las opciones
+    /*if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
+        if(d.idLotePvOrigen!=d.idLote){
             botonFusionadoEstatus = "disabled=false";
             totalCorridas = parseInt(d.totalCorridas);
             totalContrato = parseInt(d.totalContratos);
@@ -1297,14 +1299,7 @@ const botonesAccionReubicacion = (d) => {
             totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
             totalContratoRef = parseInt(d.totalContratoNumero);
         }
-    }else{
-        //se le asignan las variables a los lotes con proceso normal (SIN FUSION)
-        botonFusionadoEstatus = "";
-        totalCorridas = parseInt(d.totalCorridas);
-        totalContrato = parseInt(d.totalContratos);
-        totalCorridasRef = parseInt(d.totalCorridasNumero);
-        totalContratoRef = parseInt(d.totalContratoNumero);
-    }
+    }*/
 
 
 
@@ -1392,8 +1387,11 @@ const botonesAccionReubicacion = (d) => {
                     data-idLote="${d.idLote}"
                     data-nombreLote="${d.nombreLote}"
                     data-estatusLoteArchivo="${d.status}"
+                    data-banderaFusion="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.idLotePvOrigen : 0}"
+                    data-flagProcesoContraloria="${d.flagProcesoContraloria}"
+                    data-flagProcesoJuridico="${d.flagProcesoJuridico}"
                     data-editar="${editar}"   
-                    data-rescision="${d.rescision}"
+                    data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
                     data-id_dxc="${d.id_dxc}"   
                     data-tipoTransaccion="${idEstatusPreproceso}"
                     ${botonFusionadoEstatus}
@@ -1428,7 +1426,7 @@ const botonesAccionReubicacion = (d) => {
             data-nombreLote="${d.nombreLote}"
             data-estatusLoteArchivo="${d.status}"
             data-editar="${editarContratoFirmado}"   
-            data-rescision="${d.rescision}"
+            data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
             data-idCondominio="${d.idCondominio}"   
             data-tipoTransaccion="${d.id_estatus_preproceso}"
