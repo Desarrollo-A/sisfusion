@@ -1291,7 +1291,7 @@ class Reestructura extends CI_Controller{
         
         $editar = $_POST['editarFile'];
         $arrayLotes = 0;
-        $numeroArchivos = $_POST['countArchResi'];
+        $numeroArchivos = $banderaFusion != 0 ? $_POST['countArchResi'] : $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);

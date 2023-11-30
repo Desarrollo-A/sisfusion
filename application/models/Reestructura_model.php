@@ -560,7 +560,7 @@ class Reestructura_model extends CI_Model
             $columnWhere='idLotePvOrigen';
             $columnExtra = ',pxl.origen,pxl.destino,pxl.idFusion id_pxl';
         }
-        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision as rescisioncl,
+        $query = $this->db->query("SELECT l.nombreLote, pxl.*, dxc.rescision as rescisioncl,l.idStatusLote,
         CONCAT(dxc.nombre,' ', dxc.apellido_paterno,' ', dxc.apellido_materno) AS nombreCliente,
         oxc.nombre AS estadoCivil, dxc.ine, dxc.domicilio_particular,
         dxc.correo, dxc.telefono1, dxc.ocupacion, 5 tipo_proceso $columnExtra
