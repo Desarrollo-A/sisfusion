@@ -36,12 +36,14 @@ class Reestructura extends CI_Controller{
         $data = $this->Reestructura_model->getListaClientesReubicar();
         $array_final = array();
         $array_manejo = array();
+
         foreach ($data as $elemento){
-            if($elemento['origen']==1 || $elemento['destino']===null){
+            if($elemento['origen']==1 || $elemento['destino']==0){
                 array_push($array_final, $elemento);
             }
         }
         echo json_encode($array_final, JSON_NUMERIC_CHECK);
+
     }
 
     public function getCliente($idCliente, $idLote){
