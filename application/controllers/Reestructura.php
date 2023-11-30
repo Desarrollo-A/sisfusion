@@ -41,7 +41,7 @@ class Reestructura extends CI_Controller{
                 array_push($array_final, $elemento);
             }
         }
-        echo json_encode($array_final);
+        echo json_encode($array_final, JSON_NUMERIC_CHECK);
     }
 
     public function getCliente($idCliente, $idLote){

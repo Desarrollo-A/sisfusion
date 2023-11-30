@@ -1278,7 +1278,7 @@ const botonesAccionReubicacion = (d) => {
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
-    const totalCorridas = parseInt(d.totalCorridas);
+    const totalCorridas =  parseInt(banderaFusion == 1 ? d.totalCorridaFusion : d.totalCorridas);
     const totalContrato = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratos);
     const totalCorridasRef = parseInt(d.totalCorridasNumero);
     const totalContratoRef = parseInt(banderaFusion == 1 ? d.totalContratosFusion : d.totalContratoNumero);
@@ -1289,7 +1289,7 @@ const botonesAccionReubicacion = (d) => {
     let editarContratoFirmado = 0;
     let tooltipCF = 'SUBIR CONTRATO FIRMADO';
     let botonJuridico = '';
-    let botonFusionadoEstatus = '';
+    let botonFusionadoEstatus = (banderaFusion == 1 ? 'disabled=false': '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
