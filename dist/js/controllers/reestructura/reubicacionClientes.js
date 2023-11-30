@@ -1194,7 +1194,8 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         processData: false,
         type: 'POST',
         success: function(data){
-            alerts.showNotification("top", "right", "El registro se ha avanzado con éxito.", "success");
+            data = JSON.parse(data);
+            alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#reubicacionClientes').DataTable().ajax.reload();
             $('#spiner-loader').addClass('hide');
             hideModal();
@@ -1282,26 +1283,6 @@ const botonesAccionReubicacion = (d) => {
     let botonJuridico = '';
     let botonFusionadoEstatus = '';
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
-
-    /*if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
-        if(d.idLotePvOrigen!=d.idLote){
-            botonFusionadoEstatus = "disabled=false";
-            totalCorridas = parseInt(d.totalCorridas);
-            totalContrato = parseInt(d.totalContratos);
-            totalCorridasRef = parseInt(d.totalCorridasNumero);
-            totalContratoRef = parseInt(d.totalContratoNumero);
-        }else{
-            //si es el pivote se le dejan las opciones
-            botonFusionadoEstatus = "";
-            flagFusion = 1;
-            totalCorridas = parseInt(d.totalCorridaFusion);
-            totalContrato = parseInt(d.totalContratosFusion);
-            totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
-            totalContratoRef = parseInt(d.totalContratoNumero);
-        }
-    }*/
-
-
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;

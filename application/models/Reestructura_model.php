@@ -99,7 +99,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
         
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.idLote in(74668,74669,74670) $validacionAsignacion $validacionEstatus")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.idLote in(52474, 52475) $validacionAsignacion $validacionEstatus")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote){
