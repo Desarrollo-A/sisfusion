@@ -1126,6 +1126,7 @@ $(document).on('click', '.btn-rechazar', function () {
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
+    let flagFusion = $(this).attr("data-fusion");
 
     changeSizeModal('modal-sm');
     appendBodyModal(`
@@ -1143,6 +1144,7 @@ $(document).on('click', '.btn-rechazar', function () {
                     <input type="hidden" id="idLote" name="idLote" value="${idLote}">
                     <input type="hidden" id="tipoTransaccion" name="tipoTransaccion" value="${tipoTransaccion}">
                     <input type="hidden" name="idCliente" value="${idCliente}">
+                    <input type="hidden" name="flagFusion" value="${flagFusion}">
                     <div class="row mt-2">
                         <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                             <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -1206,7 +1208,6 @@ $(document).on("submit", "#formRechazarEstatus", function(e) {
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
-    data.append('flagFusion', flagFusion)
     $.ajax({
         url : `${general_base_url}Reestructura/rechazarRegistro`,
         data: data,
@@ -1279,14 +1280,16 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = '';
     let flagFusion = 0;
 
-    if(d.idLotePvOrigen!=null || d.idLotePvOrigen==''){
-        if(d.idLotePvOrigen!=d.idLote){
+    if(d.idLotePvOrigen!=null){
+        //valores para lotes fusionados
+        if(d.idLotePvOrigen!=d.idLote){//si no es el lote pivote se le deshabilitan las opciones
             botonFusionadoEstatus = "disabled=false";
             totalCorridas = parseInt(d.totalCorridas);
             totalContrato = parseInt(d.totalContratos);
             totalCorridasRef = parseInt(d.totalCorridasNumero);
             totalContratoRef = parseInt(d.totalContratoNumero);
         }else{
+            //si es el pivote se le dejan las opciones
             botonFusionadoEstatus = "";
             flagFusion = 1;
             totalCorridas = parseInt(d.totalCorridaFusion);
@@ -1294,16 +1297,23 @@ const botonesAccionReubicacion = (d) => {
             totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
             totalContratoRef = parseInt(d.totalContratoNumero);
         }
+    }else{
+        //se le asignan las variables a los lotes con proceso normal (SIN FUSION)
+        botonFusionadoEstatus = "";
+        totalCorridas = parseInt(d.totalCorridas);
+        totalContrato = parseInt(d.totalContratos);
+        totalCorridasRef = parseInt(d.totalCorridasNumero);
+        totalContratoRef = parseInt(d.totalContratoNumero);
     }
 
 
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef ) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef ) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
         btnContratoFirmado = 'fa-eye';
@@ -1359,7 +1369,8 @@ const botonesAccionReubicacion = (d) => {
                     title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
-                    ${botonFusionadoEstatus}>
+                    ${botonFusionadoEstatus}
+                    data-fusion="${flagFusion}">
                     <i class="fas fa-thumbs-down"></i>
                 </button>`;
 
