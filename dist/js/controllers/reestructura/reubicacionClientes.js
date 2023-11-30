@@ -1345,6 +1345,7 @@ const botonesAccionReubicacion = (d) => {
                 data-placement="left"
                 title="REUBICAR CLIENTE"
                 data-idCliente="${d.idCliente}"
+                data-fusion="${flagFusion}"
                 data-idProyecto="${d.idProyecto}"
                 data-statusPreproceso="${idEstatusPreproceso}">
             <i class="fas fa-route"></i>
