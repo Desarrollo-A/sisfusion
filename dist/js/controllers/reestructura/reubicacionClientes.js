@@ -1372,7 +1372,9 @@ const botonesAccionReubicacion = (d) => {
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
                     data-idEstatusMovimiento="${d.id_estatus_modificacion}"
-                    data-fusion="${flagFusion}">
+                    data-fusion="${flagFusion}"
+                    ${botonFusionadoEstatus}
+                    >
                     <i class="fas fa-thumbs-up"></i>
                 </button>`;
 
