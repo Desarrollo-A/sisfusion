@@ -20,7 +20,7 @@ $('#proyectoRemanente').change(function(){
 residencial = $('#proyectoRemanente').val();
 $("#condominioRemanente").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){

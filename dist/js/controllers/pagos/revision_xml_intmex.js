@@ -26,7 +26,7 @@ $('#catalgo_facturas').change(function(ruta){
     residencial = $('#catalgo_facturas').val();
     $("#condominio_facturas").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
