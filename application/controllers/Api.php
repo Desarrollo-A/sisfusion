@@ -696,7 +696,7 @@ class Api extends CI_Controller
                             else {
                                 $result = $this->Api_model->getAdviserLeaderInformation($data->idAsesor);
                                 if(empty($result) || $result == '')
-                                    echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no corresponde a un asesor."), JSON_UNESCAPED_UNICODE);
+                                    echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no ha sido encontrado o se encuentra inactivo."), JSON_UNESCAPED_UNICODE);
                                 else {
                                     if ($result->id_rol != 7)
                                         echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
