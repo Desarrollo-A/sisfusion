@@ -68,9 +68,14 @@ $(document).on('click', '.btn-abrir-modal', function () {
         },
         success: function(data) {
             data = JSON.parse(data);
-            if(tipotransaccion==3){
+            if (data['copropietarios'].length > 0) {
                 loadCopropietarios(data['copropietarios']);
                 document.getElementById('co-propietarios').classList.remove('hide');
+            } 
+            else {
+                let copropietarios = document.getElementById('co-propietarios');
+                copropietarios.innerHTML = '';
+                document.getElementById('co-propietarios').classList.add('hide');
             }
             formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
         },
