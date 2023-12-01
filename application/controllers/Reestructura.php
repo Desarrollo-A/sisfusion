@@ -1286,22 +1286,27 @@ class Reestructura extends CI_Controller{
         $id_rol = $this->session->userdata('id_rol');
         //var_dump($nombreLoteOriginal);
         //exit;
+        //print_r($_POST);
+        //exit;
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
         
         $editar = $_POST['editarFile'];
         $arrayLotes = 0;
-        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : $arrayLength ;
+        
+        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : count(explode(',',$nombreLoteOriginal[0]));// $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
+            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
             $id_dxc = explode(',', $id_dxc[0]);
         }else{
-            $arrayLotes = $nombreLoteOriginal[0];
+            $arrayLotes = $nombreLoteOriginal;
         }   
-
+            
             for ($j=0; $j < $numeroArchivos ; $j++) { 
-                $nombreLoteOriginal = ( $numeroArchivos > 1 && $id_rol == 15 ) ? $arrayLotes[$j] : $this->input->post('nombreLote'.$j);
-
+                $nombreLoteOriginal = $arrayLotes[$j];// ( $numeroArchivos > 1 && ($id_rol == 15 || $id_rol == 17 )) ? $arrayLotes[$j] // : //$this->input->post('nombreLote'.$j);
+               // echo $nombreLoteOriginal;
+                 //   exit;
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true) or die("Error en la generación");
@@ -1415,7 +1420,7 @@ class Reestructura extends CI_Controller{
     }
 
     function actualizaExpecifico(){
-
+        
         $flagAction = $_POST['tipoProceso'];
         $arrayLength = $_POST['longArray'];
         $id_rol = $this->session->userdata('id_rol');
@@ -1425,7 +1430,7 @@ class Reestructura extends CI_Controller{
         $banderaFusion = $_POST['banderaFusion'];
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
-        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : $arrayLength ;
+        $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : count(explode(',',$nombreLoteOriginal[0]));// $arrayLength ;
         $id_rol = $this->session->userdata('id_rol');
 
         if($numeroArchivos > 1){
@@ -1438,7 +1443,7 @@ class Reestructura extends CI_Controller{
 
         }
         for ($j=0; $j < $numeroArchivos ; $j++) {
-            $nombreLoteOriginal = ( $numeroArchivos > 1 && $id_rol == 15 ) ? $arrayLotes[$j] : $this->input->post('nombreLote'.$j);
+            $nombreLoteOriginal = $arrayLotes[$j];// ( $numeroArchivos > 1 && ($id_rol == 15 || $id_rol == 17 )) ? $arrayLotes[$j] // : //$this->input->post('nombreLote'.$j);
 
         $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
         if (!file_exists($micarpeta)) {

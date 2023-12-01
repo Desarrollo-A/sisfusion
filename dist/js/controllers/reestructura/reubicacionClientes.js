@@ -209,7 +209,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                 let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
                 return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
-                :((d.idLotePvOrigen == null) ? boton : '');
+                :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
             }
         }
     ],
@@ -1278,7 +1278,7 @@ const botonesAccionReubicacion = (d) => {
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
     const idEstatusPreproceso = parseInt(d.id_estatus_preproceso);
-    const totalCorridas = parseInt(banderaFusion == 0 ? d.totalCorridas : (d.idLotePvOrigen!=d.idLote ? d.totalCorridas : d.totalCorridaFusion));
+    const totalCorridas = parseInt(banderaFusion == 0 ? d.totalCorridas : (d.idLotePvOrigen != d.idLote ? d.totalCorridas : d.totalCorridaFusion));
     const totalContrato = parseInt(banderaFusion == 0 ? d.totalContratos : (d.idLotePvOrigen!=d.idLote ? d.totalContratos : d.totalContratosFusion));
     const totalCorridasRef = parseInt(banderaFusion == 0 ? d.totalCorridasNumero : (d.idLotePvOrigen!=d.idLote ? d.totalCorridasNumero : d.totalCorridasFusionNumero));
     const totalContratoRef = parseInt(banderaFusion == 0 ? d.totalContratoNumero : (d.idLotePvOrigen!=d.idLote ? d.totalContratoNumero : d.totalContratoNumero));
@@ -1318,7 +1318,13 @@ const botonesAccionReubicacion = (d) => {
         totalCorridasRef = parseInt(d.totalCorridasNumero);
         totalContratoRef = parseInt(d.totalContratoNumero);
     }*/
+console.log('---------------')
+console.log(totalCorridas)
+console.log(totalCorridasRef)
 
+console.log(FLAGPROCESOCONTRALORIA)
+console.log(idEstatusPreproceso)
+console.log('---------------')
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
