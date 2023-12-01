@@ -542,6 +542,8 @@ class Reestructura extends CI_Controller{
             $idClientesOrigen = '';
             $idLotesDestino = '';
             $numDestinos = 0;
+            $arrayUpdateCliente = ();
+
             $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
             foreach ($dataFusion as $dataLote){
                 if($dataLote['origen'] == 1){
@@ -580,22 +582,94 @@ class Reestructura extends CI_Controller{
             }
 
             foreach ($clienteAnteriores as $dataCliente){
+                $dataUpdateCliente=();
                 if ($proceso == 4){
                     $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
                     $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
                 }
+
+                $dataUpdateCliente = array(
+                    'id_cliente' => $dataCliente['id_cliente'],
+                    'proceso' => 2,
+                );
+                array_push($arrayUpdateCliente, $dataUpdateCliente);
             }
 
             $total8P = floatval(($totalSupDestino - $totalSupOrigen ) - $metrosGratuitos) * ($sumPrecioM2Original / count($clienteAnteriores));
             $total8P = floatval(number_format($total8P, 2, '.', ''));
-            $total8P = $total8P / $numOrigenes;
+            $total8P = $total8P / $numDestinos;
+
+            $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
+            $dataUpdateClienteNew = array(
+                'nombre' => $datosClienteConfirm->nombre,
+                'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
+                'apellido_materno' => $datosClienteConfirm->apellido_materno,
+                'estado_civil' => $datosClienteConfirm->estado_civil,
+                'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
+                'correo' => $datosClienteConfirm->correo,
+                'telefono1' => $datosClienteConfirm->telefono1,
+                'ocupacion' => $datosClienteConfirm->ocupacion,
+                'modificado_por' => $this->session->userdata('id_usuario'),
+                'fecha_modificacion' => date('Y-m-d h:i:s')
+            );
+
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
-                    $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote, $idCondominio, $total8P);
+                    $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote, $dataLote['idCondominio'], $total8P);
+                    $idClienteInsert = $clienteNuevo[0]['lastId'];
+
+                    if (!$idClienteInsert) {
+                        $this->db->trans_rollback();
+            
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+
+                    //Se modifican datos a los ingresados como confirmación por los gerentes ooam
+                    if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
+                        $this->db->trans_rollback();
+
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error al actualizar la información del cliente nuevo con datos verificados de postventa',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
                 }
             }
 
+            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar los clientes anteriores',
+                    'color' => 'danger'
+                ));
+                return;
+            }
 
+            //No se realiza update en selección de propuestas
+            //No se realiza función de desactivar lotes ya que todos son selecciones finales para fusión
+            if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
         }
         else{
             $loteAOcupar = $this->input->post('idLote');
@@ -633,102 +707,102 @@ class Reestructura extends CI_Controller{
             } 
             
             $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+            $idClienteInsert = $clienteNuevo[0]['lastId'];
+            if (!$idClienteInsert) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            $dataUpdateCliente = array(
+                'proceso' => 2,
+            );
+
+            if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
+            $dataUpdateClienteNew = array(
+                'nombre' => $datosClienteConfirm->nombre,
+                'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
+                'apellido_materno' => $datosClienteConfirm->apellido_materno,
+                'estado_civil' => $datosClienteConfirm->estado_civil,
+                'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
+                'correo' => $datosClienteConfirm->correo,
+                'telefono1' => $datosClienteConfirm->telefono1,
+                'ocupacion' => $datosClienteConfirm->ocupacion,
+                'modificado_por' => $this->session->userdata('id_usuario'),
+                'fecha_modificacion' => date('Y-m-d h:i:s')
+            );
+
+            //Se modifican datos a los ingresados como confirmación por los gerentes ooam
+            if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
+                $this->db->trans_rollback();
+
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            if (!$this->Reestructura_model->setSeleccionPropuesta($idLoteOriginal, $loteAOcupar)){
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+    
+            if (!$this->desactivarOtrosLotes($idLoteOriginal)) {
+                $this->db->trans_rollback();
+    
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+    
+    
+            if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
         }
+
         
-        $idClienteInsert = $clienteNuevo[0]['lastId'];
-
-        if (!$idClienteInsert) {
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
-        $dataUpdateCliente = array(
-            'proceso' => 2,
-        );
-
-        if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
-        $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
-        $dataUpdateClienteNew = array(
-            'nombre' => $datosClienteConfirm->nombre,
-            'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
-            'apellido_materno' => $datosClienteConfirm->apellido_materno,
-            'estado_civil' => $datosClienteConfirm->estado_civil,
-            'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
-            'correo' => $datosClienteConfirm->correo,
-            'telefono1' => $datosClienteConfirm->telefono1,
-            'ocupacion' => $datosClienteConfirm->ocupacion,
-            'modificado_por' => $this->session->userdata('id_usuario'),
-            'fecha_modificacion' => date('Y-m-d h:i:s')
-        );
-
-        //Se modifican datos a los ingresados como confirmación por los gerentes ooam
-        if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
-        if (!$this->Reestructura_model->setSeleccionPropuesta($idLoteOriginal, $loteAOcupar)){
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
-        if (!$this->desactivarOtrosLotes($idLoteOriginal)) {
-            $this->db->trans_rollback();
-
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
-
-        if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
 
         $dataInsertHistorialLote = array(
 			'nombreLote' => $loteSelected->nombreLote,
@@ -870,7 +944,7 @@ class Reestructura extends CI_Controller{
 
             $dataCliente = array_merge([$clave => $valor], $dataCliente);
         }
-
+        
         return $this->caja_model_outside->insertClient($dataCliente);
     }
 
@@ -2000,8 +2074,7 @@ class Reestructura extends CI_Controller{
         return $expediente;
     }
     
-    public function rechazarRegistro()
-    {
+    public function rechazarRegistro() {
         $this->db->trans_begin();
         $idPreproceso = $this->input->post('tipoTransaccion');
         $idLote = $this->input->post('idLote');
@@ -2017,9 +2090,21 @@ class Reestructura extends CI_Controller{
             foreach($data as $elemento){
                 $dataUpdateLote = array(
                     "idLote" => $elemento['idLote'],
-                    'estatus_preproceso' => $idPreproceso - 1,
                     'usuario' => $idUsuario
                 );
+
+                if ($idRol == 15 && $idPreproceso - 1 == 1) { // JURÍDICO RECHAZA A CONTRALORÍA, SE LIMPIA flagProcesoContraloria Y SE MANTIENE ESTATUS 2
+                    $dataUpdateLote['estatus_preproceso'] = 2;
+                    $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $elemento['idLote']);
+                } else if (in_array($idRol, [17, 70, 71, 73]) && $idPreproceso - 1 == 1) { // CONTRALORÍA RECHAZA A REVISIÓN PROPUESTAS, SE LIMPIA flagProcesoContraloria Y flagProcesoJuridico Y SE MUEVE A 1
+                    $dataUpdateLote['estatus_preproceso'] = 1;
+                    $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $elemento['idLote']);
+                } else if ($idPreproceso - 1 == 2) { // AG RECHAZA AL 2, SE LIMPIA flagProcesoContraloria Y flagProcesoJuridico Y SE MUEVE A 2
+                    $dataUpdateLote['estatus_preproceso'] = 2;
+                    $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $elemento['idLote']);
+                } else
+                    $dataUpdateLote['estatus_preproceso'] = $idPreproceso - 1;
+                    
                 array_push($arrayLotesUpdate, $dataUpdateLote);
 
                 $dataHistorial = array(
@@ -2036,11 +2121,20 @@ class Reestructura extends CI_Controller{
                 $this->General_model->insertBatch('historial_preproceso_lote', $arrayLotesHistorial);
         }
         else{
-            $dataUpdateLote = array(
-                'estatus_preproceso' => $idPreproceso - 1,
-                'usuario' => $idUsuario
-            );
+            $dataUpdateLote = array('usuario' => $idUsuario);
 
+            if ($idRol == 15 && $idPreproceso - 1 == 1) { // JURÍDICO RECHAZA A CONTRALORÍA, SE LIMPIA flagProcesoContraloria Y SE MANTIENE ESTATUS 2
+                $dataUpdateLote['estatus_preproceso'] = 2;
+                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+            } else if (in_array($idRol, [17, 70, 71, 73]) && $idPreproceso - 1 == 1) { // CONTRALORÍA RECHAZA A REVISIÓN PROPUESTAS, SE LIMPIA flagProcesoContraloria Y flagProcesoJuridico Y SE MUEVE A 1
+                $dataUpdateLote['estatus_preproceso'] = 1;
+                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+            } else if ($idPreproceso - 1 == 2) { // AG RECHAZA AL 2, SE LIMPIA flagProcesoContraloria Y flagProcesoJuridico Y SE MUEVE A 2
+                $dataUpdateLote['estatus_preproceso'] = 2;
+                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+            } else
+                $dataUpdateLote['estatus_preproceso'] = $idPreproceso - 1;
+                
             $dataHistorial = array(
                 'idLote' => $idLote,
                 'idCliente' => $idCliente,
