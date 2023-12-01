@@ -370,7 +370,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
     if (editarFile == 1) {
         console.log(arrayContratos);
-        if (flagValidacion>0 && arrayContratos.includes(1)) {
+        if (flagValidacion>0 && ((arrayContratos.includes(1) && id_rol_general == 15 ) || id_rol_general == 17)) {
             //hay al menos un archivo actualizado
             flagEnviar = true;
         }else{
