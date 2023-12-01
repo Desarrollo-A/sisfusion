@@ -143,13 +143,17 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     console.log(id_rol_general)
     if (flagEditar == 0) {
         editarFile = 0;
-       let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
+        let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
+       let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
        console.log(datos);
+       nuevosDatosOrigenBack.map((elementoBack, index2) => {
+        elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
+    });
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
-        elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
-
+       // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
+        
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
                 '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
@@ -180,6 +184,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             console.log(datos);
+            nombreLotes = [];
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.push(elemento.nombreLote);
             idsArchivos.push(elemento.id_pxl);
@@ -201,6 +206,11 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     }
     else if (flagEditar == 1) {
         editarFile = 1;
+        let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
+        console.log(datos);
+        nuevosDatosOrigenBack.map((elementoBack, index2) => {
+         elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
+     });
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
         nuevosDatosDestino.map((elemento, index) => {
             arrayKeysArchivos.push(elemento);
