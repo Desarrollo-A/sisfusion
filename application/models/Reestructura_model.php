@@ -449,7 +449,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getSelectedSup($idLote){
-        $query = $this->db->query("SELECT idLote, sup, nombreLote, idCondominio FROM lotes WHERE idLote = $idLote");
+        $query = $this->db->query("SELECT idLote, sup, nombreLote, idCondominio FROM lotes WHERE idLote IN ($idLote)");
         return $query;
     }
 
@@ -833,10 +833,18 @@ class Reestructura_model extends CI_Model
             $tipoOrigenDestino = '';
         }
 
-        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente FROM lotesFusion lf
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
         WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
     }
 
+    public function validateLote($idLote){
+        $this->db->where("idLote", $idLote);
+        $this->db->where_in('idStatusLotee', array('1', '101', '102', '16'));
+        $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
+        $query = $this->db->get('lotes');
+        $valida = (empty($query->result())) ? 0 : 1;
+        return $valida;
+    }
 }

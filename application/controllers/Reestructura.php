@@ -526,41 +526,107 @@ class Reestructura extends CI_Controller{
     public function setReubicacion(){
         $this->db->trans_begin();
 
+        $flagFusion = $this->input->post('flagFusion');
         $idClienteAnterior = $this->input->post('idCliente');
-        $loteAOcupar = $this->input->post('idLote');
-        $idLoteOriginal = $this->input->post('idLoteOriginal');
+        $idLoteOriginal = $this->input->post('idLoteOriginal'); // O PIVOTE
         $idAsesor = $this->session->userdata('id_usuario');
 		$nombreAsesor = $this->session->userdata('nombre') . ' ' . $this->session->userdata('apellido_paterno') . ' ' . $this->session->userdata('apellido_materno');
         $idLider = $this->session->userdata('id_lider');
-		$clienteAnterior = $this->General_model->getClienteNLote($idClienteAnterior)->row();
-        $loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->row();
-        $idCondominio = $loteSelected->idCondominio;
         $lineaVenta = $this->General_model->getLider($idLider)->row();
-		$nuevaSup = floatval($loteSelected->sup);
-		$anteriorSup = floatval($clienteAnterior->sup);
-		$proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
-        $tipo_venta = $clienteAnterior->tipo_venta;
-        $ubicacion = $clienteAnterior->ubicacion;
+        $metrosGratuitos = 0;
         $total8P = 0; 
-        
-        if ($proceso == 4){
-            $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
-            $total8P = floatval(($nuevaSup - $anteriorSup)) * floatval($precioM2Original);
+
+        if( $flagFusion == 1){
+            $totalSupOrigen = 0;
+            $idClientesOrigen = '';
+            $idLotesDestino = '';
+            $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
+            foreach ($dataFusion as $dataLote){
+                if($dataLote['origen'] == 1){
+                    $idClientesOrigen .= "'". $dataLote['idCliente'] ."', ";
+                    $totalSupOrigen = $totalSupOrigen + floatval($dataLote['sup']);
+                } 
+                else if($dataLote['destino'] == 1){
+                    $idLotesDestino .= "'". $dataLote['idLote'] ."', ";
+                    $totalSupDestino = $totalSupDestino + floatval($dataLote['sup']);
+
+                    $validateLote = $this->caja_model_outside->validate($dataLote['idLote']);
+                    //Validamos que los lotes de destino estén disponibles
+                    if ($validateLote == 0) {
+                        echo json_encode(array(
+                            'titulo' => 'FALSE',
+                            'resultado' => FALSE,
+                            'message' => 'Error, el lote '.$dataLote['nombreLote'].' no está disponible',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+                }
+
+            }
+            $idClientesOrigen = substr($idClientesOrigen, 0, -2);
+            $idLotesDestino = substr($idLotesDestino, 0, -2);
+            $clienteAnteriores = $this->General_model->getClienteNLote($idClientesOrigen)->result_array();
+            $loteSelected = $this->Reestructura_model->getSelectedSup($idLotesDestino)->result_array();
+            if( $totalSupOrigen == $totalSupDestino || $totalSupDestino < $totalSupOrigen ){
+                $proceso = 2;
+            }
+            else{
+                $metrosGratuitos = $totalSupOrigen * 0.05;
+                $proceso = $totalSupDestino - $totalSupOrigen <= $metrosGratuitos ? 2 : 4;
+            }
+
+            foreach ($clienteAnteriores as $dataCliente){
+                if ($proceso == 4){
+                    $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
+                    $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
+                }
+            }
+
+            $total8P = floatval(($totalSupDestino - $totalSupOrigen ) - $metrosGratuitos) * ($sumPrecioM2Original / count($clienteAnteriores));
             $total8P = floatval(number_format($total8P, 2, '.', ''));
+            $clienteNuevo = $this->copiarClienteANuevo($clienteAnteriores, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+
         }
+        else{
+            $loteAOcupar = $this->input->post('idLote');
+            $clienteAnterior = $this->General_model->getClienteNLote($idClienteAnterior)->row();
+            $loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->row();
+            $idCondominio = $loteSelected->idCondominio;
+            $nuevaSup = floatval($loteSelected->sup);
+            $anteriorSup = floatval($clienteAnterior->sup);
+            $proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
+            $tipo_venta = $clienteAnterior->tipo_venta;
+            $ubicacion = $clienteAnterior->ubicacion;
 
-		$validateLote = $this->caja_model_outside->validate($loteAOcupar);
-        if ($validateLote == 0) {
-            echo json_encode(array(
-                'titulo' => 'FALSE',
-                'resultado' => FALSE,
-                'message' => 'Error, el lote no está disponible',
-                'color' => 'danger'
-            ));
-            return;
-        } 
+            if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
+                $proceso = 2;
+            }
+            else{
+                $metrosGratuitos = $anteriorSup * 0.05;
+                $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
+            }
 
-        $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+            if ($proceso == 4){
+                $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
+                $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
+                $total8P = floatval(number_format($total8P, 2, '.', ''));
+            }
+
+            $validateLote = $this->caja_model_outside->validate($loteAOcupar);
+            if ($validateLote == 0) {
+                echo json_encode(array(
+                    'titulo' => 'FALSE',
+                    'resultado' => FALSE,
+                    'message' => 'Error, el lote no está disponible',
+                    'color' => 'danger'
+                ));
+                return;
+            } 
+            
+            $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+        }
+        
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {

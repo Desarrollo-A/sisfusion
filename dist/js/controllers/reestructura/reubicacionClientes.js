@@ -9,9 +9,9 @@ $(document).ready(function () {
     }
 });
 
-function obtenerDataFusion(idLoteOriginal) {
+function obtenerDataFusion(idLoteOriginal, tipoOrigenDestino) {
     return new Promise((resolve) => {
-        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino:1}, (data) => {
+        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino: tipoOrigenDestino}, (data) => {
             $("#spiner-loader").addClass('hide');
             const response = JSON.parse(data);
             resolve(response);
@@ -322,7 +322,7 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
     let superficie = 0;
     let nombreLote = '';
     if(flagFusion==1){
-        const responseLotesFusionados = await obtenerDataFusion(idLoteOriginal);
+        const responseLotesFusionados = await obtenerDataFusion(idLoteOriginal, 1);
 
         if (responseLotesFusionados.status === 200) {
             lotesFusionados = responseLotesFusionados.data;
@@ -643,16 +643,47 @@ $(document).on('click', '#guardarCliente', function (){
     });
 });
 
-$(document).on('click', '.btn-reubicar', function () {
+$(document).on('click', '.btn-reubicar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    const nombreLote = row.data().nombreLote;
-    const superficie = row.data().sup;
     const idProyecto = $(this).attr("data-idProyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
+    let flagFusion = $(this).attr("data-fusion");
+    let superficie = 0;
+    let nombreLote = '';
+    let htmlSeleccionadoFusion = '';
+
+    if(flagFusion==1){
+        const responseLotesFusionados = await obtenerDataFusion(idLoteOriginal, 3);
+
+        if (responseLotesFusionados.status === 200) {
+            lotesFusionados = responseLotesFusionados.data;
+            lotesFusionados.map((elemento, index)=>{
+                if(elemento.origen == 1){
+                    superficie = parseFloat(elemento.sup) + superficie;
+                    nombreLote += elemento.nombreLotes + ', ';
+                }
+                else{
+                    const idLote = elemento.idLote;
+                    const nombreLoteDO = elemento.nombreLoteDO;
+                    const superficie = elemento.sup;
+                    htmlSeleccionadoFusion += divSeleccionadosFusion(idLote, nombreLoteDO, superficie);
+                }
+            });
+            superficie = (superficie).toFixed(2);
+        }
+        if (responseLotesFusionados.status === 500) {
+            return;
+        }
+    }
+    else{
+        $("#spiner-loader").addClass('hide');
+        nombreLote = row.data().nombreLote;
+        superficie = row.data().sup;
+    }
 
     changeSizeModal('modal-md');
     appendBodyModal(`
@@ -675,6 +706,7 @@ $(document).on('click', '.btn-reubicar', function () {
                 <input type="hidden" id="idCliente" name="idCliente" value="${idCliente}">
                 <input type="hidden" id="statusPreproceso" name="statusPreproceso" value="${statusPreproceso}">
                 <input type="hidden" id="idProyecto" name="idProyecto" value="${idProyecto}">
+                <input type="hidden" id="flagFusion" name="flagFusion" value="${flagFusion}">
                 <div class="row mt-2">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-end">
                         <button type="button" class="btn btn-simple btn-danger" onclick="hideModal()">Cancelar</button>
@@ -684,9 +716,13 @@ $(document).on('click', '.btn-reubicar', function () {
             </div>
         </form>
     `);
-    showModal();
 
-    getPropuestas(idLoteOriginal, statusPreproceso);
+    if(flagFusion==1)
+        $("#infoLotesSeleccionados").append(htmlSeleccionadoFusion);
+    else
+        getPropuestas(idLoteOriginal, statusPreproceso);
+
+    showModal();
 });
 
 function getProyectosAOcupar(idProyecto, superficie, flagFusion) {
@@ -929,14 +965,36 @@ function divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLote,
     }
 }
 
+function divSeleccionadosFusion(idLote, nombreLote, superficie){
+    return `
+        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+            <div class="" id="checkDS">
+                <div class="container boxChecks p-0">
+                    <label class="m-0 checkstyleDS">
+                        <input type="checkbox" name="idLotes[]" id="idLote" value="${idLote}" checked>
+                        
+                        <span class="w-100 d-flex justify-between">
+                            <p class="m-0">Lote <b>${nombreLote}</b></p>
+                        </span>
+                        <span class="w-100 d-flex justify-between">
+                            <p class="m-0">Superficie <b>${superficie}</b></p>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+    const flagFusion = $('#flagFusion').val()
+    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
 
-    if (!existeSeleccion) {
-        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-        return;
-    }
+    // if (!existeSeleccion) {
+    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+    //     return;
+    // }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
@@ -1290,7 +1348,7 @@ const botonesAccionReubicacion = (d) => {
     let editarContratoFirmado = 0;
     let tooltipCF = 'SUBIR CONTRATO FIRMADO';
     let botonJuridico = '';
-    let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'disabled=false' : '');
+    let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
 
@@ -1432,7 +1490,9 @@ const botonesAccionReubicacion = (d) => {
                 title="REUBICAR CLIENTE"
                 data-idCliente="${d.idCliente}"
                 data-idProyecto="${d.idProyecto}"
-                data-statusPreproceso="${idEstatusPreproceso}">
+                data-statusPreproceso="${idEstatusPreproceso}"
+                ${botonFusionadoEstatus}
+                data-fusion="${flagFusion}">
             <i class="fas fa-route"></i>
         </button>`;
 
@@ -1472,7 +1532,8 @@ const botonesAccionReubicacion = (d) => {
         title="Confirmar traspaso / Editar cantidad traspasada"
         data-idLote="${d.idLote}"
         data-cantidadTraspaso="${d.cantidadTraspaso}"
-        data-comentarioTraspaso="${d.comentarioTraspaso}">
+        data-comentarioTraspaso="${d.comentarioTraspaso}"
+        >
         <i class="fas fa-money-check-alt"></i>
     </button>`;
 
