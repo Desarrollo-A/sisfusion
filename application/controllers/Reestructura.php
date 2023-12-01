@@ -1638,10 +1638,10 @@ class Reestructura extends CI_Controller{
                 );
 
                 if ($idPreproceso + 1 == 2)
-                    $dataUpdateLote += ['id_juridico_preproceso'] => $assigned_user;
+                    $dataUpdateLote['id_juridico_preproceso'] = $assigned_user;
 
                 if ($updateFechaVencimientoBandera == 1)
-                    $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
+                    $dataUpdateLote['fechaVencimiento'] = $fechaVencimiento;
 
                 array_push($arrayLotesUpdate, $dataUpdateLote);
                 
@@ -1656,6 +1656,7 @@ class Reestructura extends CI_Controller{
                 array_push($arrayLotesHistorial, $dataHistorial);
             }
 
+
             $this->General_model->updateBatch('lotes', $arrayLotesUpdate, 'idLote');
             $this->General_model->insertBatch('historial_preproceso_lote', $arrayLotesHistorial);
 
@@ -1666,10 +1667,10 @@ class Reestructura extends CI_Controller{
             );
 
             if ($idPreproceso + 1 == 2)
-                $dataUpdateLote += ['id_juridico_preproceso'] => $assigned_user;
+                $dataUpdateLote['id_juridico_preproceso'] = $assigned_user;
 
             if ($updateFechaVencimientoBandera == 1)
-                $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
+                $dataUpdateLote['fechaVencimiento'] = $fechaVencimiento;
 
             $dataHistorial = array(
                 'idLote' => $idLote,
