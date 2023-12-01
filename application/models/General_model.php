@@ -241,7 +241,7 @@ class General_model extends CI_Model
         return $this->db->query("SELECT cl.*, lo.sup, lo.idCondominio, lo.nombreLote, lo.tipo_venta, lo.ubicacion, lo.totalNeto2
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
-        WHERE cl.id_cliente = $cliente");
+        WHERE cl.id_cliente IN ($cliente)");
     }
 
     public function getLider($id_gerente) {
