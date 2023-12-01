@@ -147,8 +147,8 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
        let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
        console.log(datos);
        nuevosDatosOrigenBack.map((elementoBack, index2) => {
-        elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
-    });
+           banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
+       });
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
@@ -208,9 +208,15 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         editarFile = 1;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
         console.log(datos);
-        nuevosDatosOrigenBack.map((elementoBack, index2) => {
-         elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
-     });
+        if(banderaFusion != 0){
+            nuevosDatosOrigenBack.map((elementoBack, index2) => {
+                nombreLotes.push(elementoBack.nombreLote)
+            });
+        }else{
+            nombreLotes.push(nombreLote);
+        }
+
+
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
         nuevosDatosDestino.map((elemento, index) => {
             arrayKeysArchivos.push(elemento);
