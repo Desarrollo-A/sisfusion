@@ -1594,15 +1594,24 @@ class Reestructura extends CI_Controller{
             if ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 0 && in_array($idRol, [17, 70, 71, 73]))
                 $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             if ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 0 && $idRol == 15)
-                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoJuridico' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             
-            if (($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73])) || ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15))
+            if (($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73])) || ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15)) {
                 $estatus_proceso = 3;
-            else
+                $updateFechaVencimientoBandera = 1;
+            }
+            else {
                 $estatus_proceso = 2;
+                $updateFechaVencimientoBandera = 0;
+            }
         }
-        else
+        else {
             $estatus_proceso = $idPreproceso + 1;
+            $updateFechaVencimientoBandera = 1;
+        }
+        
+        $diasOtorgados = $estatus_proceso == 2 ? 2 : 1;
+        $fechaVencimiento = $this->getFechaVencimiento($diasOtorgados); // SI ES ELABORACIÓN DE CORRIDAS, CONTRATO Y RESCISIÓN DA 2 DÍAS SINO 1
 
         if($flagFusion==1) {
             //Se obtienen lotes de fusión de origen para actualizar estatus de lote e insertar historial
@@ -1620,6 +1629,10 @@ class Reestructura extends CI_Controller{
                     'usuario' => $idUsuario,
                     'id_juridico_preproceso' => $assigned_user
                 );
+
+                if ($updateFechaVencimientoBandera == 1)
+                    $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
+
                 array_push($arrayLotesUpdate, $dataUpdateLote);
                 
                 $dataHistorial = array(
@@ -1642,6 +1655,9 @@ class Reestructura extends CI_Controller{
                 'usuario' => $idUsuario,
                 'id_juridico_preproceso' => $assigned_user
             );
+
+            if ($updateFechaVencimientoBandera == 1)
+                $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
 
             $dataHistorial = array(
                 'idLote' => $idLote,
@@ -2176,4 +2192,93 @@ class Reestructura extends CI_Controller{
     public function totalSuperfecieFusion($idLotePV){
 
     }
+
+    public function getFechaVencimiento ($numeroDias) {
+        $numeroDias = intval($numeroDias);
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+        $fechaVencimiento = '';
+        if ($horaActual > $horaInicio && $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if (in_array($sig_fecha_dia2, ["Sat", "Sun"]) || in_array($sig_fecha_feriado2, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+'.$numeroDias.' days', $hoy_strtotime); // SUMA DE DÍAS
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (!in_array($sig_fecha_dia, ["Sat", "Sun"]) || !in_array($sig_fecha_feriado, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento  = $fecha; // ASIGNACIÓN DE FECHA
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= 0) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+'.$numeroDias.' days', $hoy_strtotime); // SUMA DE DÍAS
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (!in_array($sig_fecha_dia, ["Sat", "Sun"]) || !in_array($sig_fecha_feriado, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento  = $fecha; // ASIGNACIÓN DE FECHA
+            }
+        }
+        elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
+            if (in_array($sig_fecha_dia2, ["Sat", "Sun"]) || in_array($sig_fecha_feriado2, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+'.$numeroDias.' days', $hoy_strtotime); // SUMA DE DÍAS
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (!in_array($sig_fecha_dia, ["Sat", "Sun"]) || !in_array($sig_fecha_feriado, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento  = $fecha; // ASIGNACIÓN DE FECHA
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while($i <= 1) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+'.$numeroDias.' days', $hoy_strtotime); // SUMA DE DÍAS
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (!in_array($sig_fecha_dia, ["Sat", "Sun"]) || !in_array($sig_fecha_feriado, ["01-01", "06-02", "20-03", "01-05", "16-09", "20-11", "19-11", "25-12"])) {
+                        $fecha= $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento  = $fecha; // ASIGNACIÓN DE FECHA
+            }
+        }
+        return $fechaVencimiento;
+    }
+    
 }
