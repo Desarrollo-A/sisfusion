@@ -192,7 +192,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             console.log(datos);
-            nombreLotes = [];
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
@@ -394,6 +393,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
+        console.log('arrayResicion')
         console.log(arrayResicion);
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
@@ -406,7 +406,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         }else{
             //detecta que no hay ni un archivo subido
             if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
-                if (!arrayResicion.includes(1) || flagValidacion == 0) {
+                if (!arrayResicion.includes(1) && flagValidacion == 0) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
                 }
