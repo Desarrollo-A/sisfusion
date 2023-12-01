@@ -145,10 +145,18 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         editarFile = 0;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
        let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
-       console.log(datos);
-       nuevosDatosOrigenBack.map((elementoBack, index2) => {
-           banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
-       });
+       console.log(nombreLote);
+      /* nuevosDatosOrigenBack.map((elementoBack, index2) => {
+       // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
+        banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
+    });*/
+    if(banderaFusion != 0){
+        nuevosDatosOrigenBack.map((elementoBack, index2) => {
+            nombreLotes.push(elementoBack.nombreLote)
+        });
+    }else{
+        nombreLotes.push(nombreLote);
+    }
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
@@ -186,7 +194,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             console.log(datos);
             nombreLotes = [];
             nuevosDatosOrigen.map((elemento, index) => {
-            nombreLotes.push(elemento.nombreLote);
+            nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
             id_dxcs.push(elemento.id_pxl);
             rescisionArchivos.push(banderaFusion != 0 ? elemento.rescision : elemento.rescisionArchivo)
@@ -208,6 +216,9 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         editarFile = 1;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
         console.log(datos);
+        /*nuevosDatosOrigenBack.map((elementoBack, index2) => {
+         elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
+     });*/
         if(banderaFusion != 0){
             nuevosDatosOrigenBack.map((elementoBack, index2) => {
                 nombreLotes.push(elementoBack.nombreLote)
@@ -215,8 +226,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         }else{
             nombreLotes.push(nombreLote);
         }
-
-
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
         nuevosDatosDestino.map((elemento, index) => {
             arrayKeysArchivos.push(elemento);
@@ -259,7 +268,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
 
             nuevosDatosOrigen.map((elemento, index) => {
-                nombreLotes.push(elemento.nombreLote);
+                nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
                 elemento.id_dxc = banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc;
                 idsArchivos.push(banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc);
                 let idArchivo = banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc;
@@ -386,27 +395,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
     if (editarFile == 1) {
         console.log(arrayResicion);
-        // if (flagValidacion>0 && ((arrayContratos.includes(1) && id_rol_general == 15 ) || id_rol_general == 17)) {
-        //     //hay al menos un archivo actualizado
-        //     flagEnviar = true;
-        // }else{
-        //     //detecta que no hay ni un archivo subido
-        //     if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
-        //         if (!arrayContratos.includes(1)) {
-        //             alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
-        //             flagEnviar = false;
-        //         }
-        //     } else if (flagProceso == 2) {
-        //         alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
-        //         flagEnviar = false;
-        //     }
-        // }
-
-        console.log('flagValidacion', flagValidacion);
-        console.log('banderaFusionGlobal', banderaFusionGlobal);
-        console.log('arrayResicion', arrayResicion);
-
-
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
             flagEnviar = true;

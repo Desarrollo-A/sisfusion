@@ -1438,9 +1438,9 @@ class Reestructura extends CI_Controller{
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
-            $rescisionArchivo = $id_rol == 17 ? 0 : explode(',', $_POST['rescisionArchivo'][0]);
+            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
         }else{
-            $arrayLotes = $nombreLoteOriginal[0];
+            $arrayLotes = $nombreLoteOriginal;
             $rescisionArchivo = $_POST['rescisionArchivo'];
 
         }
