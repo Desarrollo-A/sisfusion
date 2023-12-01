@@ -260,7 +260,13 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
             {
                 data: function( d ){
-                    return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                    if(d.id_cliente_reubicacion_2 != 0 ) {
+                        p3 = `<p class="m-0"${d.colorProcesoCl} "> ${d.procesoCl}</p>`;
+                        }else{
+                            p3 = '';
+                        }
+                    p2 = `<p class="m-0"><i> ${d.puesto}</i></p>`;
+                    return  p3+p2;
                 }
             },
             {
