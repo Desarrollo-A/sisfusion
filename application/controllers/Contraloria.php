@@ -3543,7 +3543,6 @@ class Contraloria extends CI_Controller {
         }
     }
 
-
     public function get_tipo_liberaciones() {
         $response = $this->Contraloria_model->get_tipo_liberaciones();
         echo json_encode($response);
@@ -3555,12 +3554,12 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function historial_liberaciones() {//VISTA NUEVA
+    public function historial_liberaciones() {
         $this->load->view('template/header');
         $this->load->view("contraloria/historial_liberaciones_view");
     }
 
-    public function get_historial_liberaciones() //FUNCIÓN QUE TRAE Y MUESTRA DATOS EN LA VISTA
+    public function get_historial_liberaciones() 
     {
         $data['data'] = $this->Contraloria_model->get_historial_liberaciones()->result_array();
         echo json_encode($data);
@@ -3589,10 +3588,16 @@ class Contraloria extends CI_Controller {
         $data["id_cat_proceso"] = 109;
 
         if ($rol == 33) {
-            $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; //1
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; 
         }
         if ($rol == 2) {
-            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; //2
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; 
+
+            $replace = [",","$"];
+            $precio = str_replace($replace,"",$_POST['costoM2']);
+
+
+            $this->actualizar_precio($_POST['idLote'], $precio);
         }
         if ($rol == 12) {
             if ($_POST['accion'] == 1 || $_POST['accion'] == 3) {
@@ -3605,8 +3610,8 @@ class Contraloria extends CI_Controller {
                 $dataLiberacion["tipo"] = $_POST['tipo'];
                 $dataLiberacion["nombreLote"] = $_POST['nombreLote'];
                 $dataLiberacion["precio"] = $_POST['precio'];
-                $dataLiberacion["activeLE"] = $_POST['activeLE']; //PREGUNTAR SI SE USAN
-                $dataLiberacion["activeLP"] = $_POST['activeLP']; //PREGUNTAR SI SE USAN
+                $dataLiberacion["activeLE"] = $_POST['activeLE']; 
+                $dataLiberacion["activeLP"] = $_POST['activeLP']; 
                 $dataLiberacion["clausulas"] = $_POST['clausulas'];
                 
                 $resultado = $this->caja_modules($dataLiberacion);
@@ -3625,21 +3630,13 @@ class Contraloria extends CI_Controller {
         echo json_encode($resultado);
     }
 
-    public function actualizar_precio()
-    {
-        if(isset($_POST) && !empty($_POST))
-        {
-            $idLote = $_POST['idLote'];
-            $precio = $_POST['costoM2'];
-            
+    public function actualizar_precio($idLote, $precio)
+    {       
             $data = array(
                 "precio" => $precio,
             );
             $response=$this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-            echo json_encode($response);
-        }else{
-            echo json_encode(array());
-        }
+            return $response;
     }
 
     function caja_modules($data) {
@@ -3650,8 +3647,8 @@ class Contraloria extends CI_Controller {
         $datos["idCondominio"] = $data['idCondominio'];
         $datos["nombreLote"] = $data['nombreLote'];
         $datos["precio"] = $data['precio'];
-        $datos["activeLE"] = $data['activeLE']; //PREGUNTAR SI SE USAN
-        $datos["activeLP"] = $data['activeLP']; //PREGUNTAR SI SE USAN
+        $datos["activeLE"] = $data['activeLE']; 
+        $datos["activeLP"] = $data['activeLP']; 
         $datos["comentarioLiberacion"] = 'LIBERADO';
         $datos["observacionLiberacion"] = 'LIBERADO POR CORREO';
         $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
@@ -3670,5 +3667,21 @@ class Contraloria extends CI_Controller {
         } else {
             return 0;
         }
+    }
+
+    public function lotes_contratados() {
+        $this->load->view('template/header');
+        $this->load->view("contraloria/lotes_contratados_view");
+    }
+
+    public function get_lotes_contratados()
+    {
+        $data['data'] = $this->Contraloria_model->get_lotes_contratados()->result_array();
+        echo json_encode($data);
+    }
+
+    public function actualiza_lotes_apartados(){
+        $data= $this->Contraloria_model->actualiza_lotes_apartados($_POST['idLote'], $_POST['isProrroga']);
+        echo json_encode($data);
     }
 }

@@ -31,6 +31,48 @@
                 </div>
             </div>
         </div>
+        
+        <div class="modal fade" id="marcarLiberarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-md ">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="msj"></h4>
+                        </div>
+                        <form id="marcarLiberarForm" name="marcarLiberarForm" method="POST" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-3">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1">
+                                        <label class="control-label">Tipo de liberación: (<span class="isRequired">*</span>)</label>
+                                        <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" data-size="7" id="selectTipoLiberacion" data-live-search="true"></select>
+                                    </div>
+							        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							        	<label class="control-label">Comentarios (<span class="isRequired">*</span>)</label>
+							        	<input class="text-modal mb-1" name="justificacion" id="justificacionMarcarLiberar" autocomplete="off">
+							        	<br>
+							        </div>
+                                    <div id="fileContainer" class="d-none col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <label class="control-label">Selección de archivo a cargar (<span class="isRequired">*</span>)</label>
+                                        <div class="file-gph">
+                                            <input class="d-none" type="file" id="rescision-file-input" accept=".pdf">
+                                            <input class="file-name" id="rescision-file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                            <label class="upload-btn m-0" for="rescision-file-input">
+                                                <span>Seleccionar</span>
+                                                <i class="fas fa-folder-open"></i>
+                                            </label>
+                                        </div>
+                                    </div>
+							        <input type="hidden" id="idLote">
+						        </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger btn-simple" onclick="closeModal()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary" id="btnMarcarParaLiberar">Aceptar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
@@ -64,13 +106,15 @@
                                             <thead>
                                             <tr>
                                                 <th></th>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
                                                 <th>ID LOTE</th>
                                                 <th>NOMBRE</th>
                                                 <th>REFERENCIA</th>
                                                 <th>CLIENTE</th>
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS DE CONTRATACIÓN</th>
-                                                <th>ESTATUS DE LIBERACIÓN</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                             </thead>
                                         </table>

@@ -40,7 +40,7 @@ class General_model extends CI_Model
     {
         return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
             (SELECT value FROM menu_usuario CROSS APPLY STRING_SPLIT(menu, ',') 
-                    WHERE id_usuario = $idUsuario AND es_padre = 1) AND estatus=1 ORDER BY orden");
+                    WHERE id_usuario = $idUsuario AND es_padre = 1) AND estatus IN(1,3) ORDER BY orden");
     }
 
     public function getMenuHijoEspecial($idUsuario)
