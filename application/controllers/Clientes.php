@@ -2781,4 +2781,15 @@ public function getStatusMktdPreventa(){
         $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
         echo json_encode($data);
     }
+
+    public function listaClientesArcus() {
+        $this->load->view('template/header');
+        $this->load->view("marketing/listaClientesArcus");
+    }
+
+    public function getListaClientesArcus() {
+        $result['data'] = $this->Clientes_model->getListaClientesArcus();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
+    }
+    
 }

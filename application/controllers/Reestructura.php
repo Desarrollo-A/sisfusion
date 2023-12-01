@@ -1583,7 +1583,6 @@ class Reestructura extends CI_Controller{
             $flagProcesoContraloriaJuridico = $this->Reestructura_model->validarEstatusContraloriaJuridico($idLote);
         
         $flagFusion = $this->input->post('flagFusion');
-        $assigned_user = 0;
 
         // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
         if ($idPreproceso + 1 == 2) { 
@@ -1604,15 +1603,23 @@ class Reestructura extends CI_Controller{
             if ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 0 && in_array($idRol, [17, 70, 71, 73]))
                 $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             if ($flagProcesoContraloriaJuridico->flagProcesoJuridico == 0 && $idRol == 15)
-                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+                $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoJuridico' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             
-            if (($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73])) || ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15))
+            if (($flagProcesoContraloriaJuridico->flagProcesoJuridico == 1 && in_array($idRol, [17, 70, 71, 73])) || ($flagProcesoContraloriaJuridico->flagProcesoContraloria == 1 && $idRol == 15)) {
                 $estatus_proceso = 3;
-            else
+                $updateFechaVencimientoBandera = 1;
+            }
+            else {
                 $estatus_proceso = 2;
+                $updateFechaVencimientoBandera = 0;
+            }
         }
-        else
+        else {
             $estatus_proceso = $idPreproceso + 1;
+            $updateFechaVencimientoBandera = 1;
+        }
+        
+        $fechaVencimiento = $this->getFechaVencimiento(0); // SI ES ELABORACIÓN DE CORRIDAS, CONTRATO Y RESCISIÓN DA 2 DÍAS SINO 1
 
         if($flagFusion==1) {
             //Se obtienen lotes de fusión de origen para actualizar estatus de lote e insertar historial
@@ -1627,9 +1634,15 @@ class Reestructura extends CI_Controller{
                 $dataUpdateLote = array(
                     "idLote" => $elemento['idLote'],
                     'estatus_preproceso' => $estatus_proceso,
-                    'usuario' => $idUsuario,
-                    'id_juridico_preproceso' => $assigned_user
+                    'usuario' => $idUsuario
                 );
+
+                if ($idPreproceso + 1 == 2)
+                    $dataUpdateLote += ['id_juridico_preproceso'] => $assigned_user;
+
+                if ($updateFechaVencimientoBandera == 1)
+                    $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
+
                 array_push($arrayLotesUpdate, $dataUpdateLote);
                 
                 $dataHistorial = array(
@@ -1649,9 +1662,14 @@ class Reestructura extends CI_Controller{
         } else {
             $dataUpdateLote = array(
                 'estatus_preproceso' => $estatus_proceso,
-                'usuario' => $idUsuario,
-                'id_juridico_preproceso' => $assigned_user
+                'usuario' => $idUsuario
             );
+
+            if ($idPreproceso + 1 == 2)
+                $dataUpdateLote += ['id_juridico_preproceso'] => $assigned_user;
+
+            if ($updateFechaVencimientoBandera == 1)
+                $dataUpdateLote += ['fechaVencimiento' => $fechaVencimiento];
 
             $dataHistorial = array(
                 'idLote' => $idLote,
@@ -1905,8 +1923,7 @@ class Reestructura extends CI_Controller{
         return $expediente;
     }
     
-    public function rechazarRegistro()
-    {
+    public function rechazarRegistro() {
         $idPreproceso = $this->input->post('tipoTransaccion');
         $idLote = $this->input->post('idLote');
         $idCliente = $this->input->post('idCliente');
@@ -1914,7 +1931,7 @@ class Reestructura extends CI_Controller{
         $idUsuario = $this->session->userdata('id_usuario');
         $flagFusion= $this->input->post('flagFusion');
 
-        if($flagFusion==1){
+        if ($flagFusion==1) {
             $data = $this->Reestructura_model->getFusion($idLote);
             $dataUpdateLote = array(
                 'estatus_preproceso' => $idPreproceso - 1,
@@ -1922,14 +1939,12 @@ class Reestructura extends CI_Controller{
             );
             $flagInsert1 = 0;
             $flagInsert2 = 0;
-
-            foreach($data as $elemento){
+            foreach($data as $elemento) {
                 $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $elemento['idLote']);
-
-                if($responseUpdateLote){
+                if ($responseUpdateLote) {
                     $flagInsert1 = $flagInsert1 +1;
                 }
-                if($elemento['idLotePvOrigen'] == $elemento['idLote']){
+                if($elemento['idLotePvOrigen'] == $elemento['idLote']) {
                     $dataHistorial = array(
                         'idLote' => $idLote,
                         'idCliente' => $idCliente,
@@ -1938,7 +1953,7 @@ class Reestructura extends CI_Controller{
                         'estatus' => 2,
                         'modificado_por' => $idUsuario
                     );
-                }else{
+                } else {
                     $dataHistorial = array(
                         'idLote' => $elemento['idLote'],
                         'idCliente' => $elemento['idCliente'],
@@ -1948,18 +1963,17 @@ class Reestructura extends CI_Controller{
                         'modificado_por' => $idUsuario
                     );
                 }
-
                 $responseInsertHistorial = $this->General_model->addRecord('historial_preproceso_lote', $dataHistorial);
-                if($responseInsertHistorial){
+                if ($responseInsertHistorial) {
                     $flagInsert2 = $flagInsert2 +1;
                 }
             }
-            if((count($data)==$flagInsert1) && (count($data)==$flagInsert2)){
+            if((count($data)==$flagInsert1) && (count($data)==$flagInsert2)) {
                 echo json_encode(array('code' => 200));
-            }else{
+            } else {
                 echo json_encode(array('code' => 500));
             }
-        }else{
+        } else {
             $dataUpdateLote = array(
                 'estatus_preproceso' => $idPreproceso - 1,
                 'usuario' => $idUsuario
@@ -1981,8 +1995,6 @@ class Reestructura extends CI_Controller{
                 ? json_encode(array('code' => 200))
                 : json_encode(array('code' => 500));
         }
-
-
     }
 
     public function getListaUsuariosReasignacionJuridico() {
@@ -2186,4 +2198,95 @@ class Reestructura extends CI_Controller{
     public function totalSuperfecieFusion($idLotePV){
 
     }
+
+    public function getFechaVencimiento ($numeroDias) {
+        $numeroDias = intval($numeroDias);
+        date_default_timezone_set('America/Mexico_City');
+        $horaActual = date('H:i:s');
+        $horaInicio = date("08:00:00");
+        $horaFin = date("16:00:00");
+        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            }
+        } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
+            $fechaAccion = date("Y-m-d H:i:s");
+            $hoy_strtotime2 = strtotime($fechaAccion);
+            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
+            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+            if (in_array($sig_fecha_dia2, ['Sat', 'Sun']) || in_array($sig_fecha_feriado2, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            } else {
+                $fecha = $fechaAccion;
+                $i = 0;
+                while ($i <= $numeroDias) {
+                    $hoy_strtotime = strtotime($fecha);
+                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                    $sig_fecha_dia = date('D', $sig_strtotime);
+                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
+                    if (in_array($sig_fecha_dia, ['Sat', 'Sun']) || in_array($sig_fecha_feriado, ['01-01', '06-02', '20-03', '01-05', '16-09', '20-11', '19-11', '25-12'])) {
+                    } else {
+                        $fecha = $sig_fecha;
+                        $i++;
+                    }
+                    $fecha = $sig_fecha;
+                }
+                $fechaVencimiento = $fecha;
+            }
+        }
+        return $fechaVencimiento;
+    }
+    
 }
