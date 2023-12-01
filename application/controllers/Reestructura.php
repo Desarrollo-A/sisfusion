@@ -535,11 +535,13 @@ class Reestructura extends CI_Controller{
         $lineaVenta = $this->General_model->getLider($idLider)->row();
         $metrosGratuitos = 0;
         $total8P = 0; 
+        $clienteAnterior = $this->General_model->getClienteNLote($idClienteAnterior)->row();
 
         if( $flagFusion == 1){
             $totalSupOrigen = 0;
             $idClientesOrigen = '';
             $idLotesDestino = '';
+            $numDestinos = 0;
             $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
             foreach ($dataFusion as $dataLote){
                 if($dataLote['origen'] == 1){
@@ -561,6 +563,7 @@ class Reestructura extends CI_Controller{
                         ));
                         return;
                     }
+                    $numDestinos = $numDestinos + 1;
                 }
 
             }
@@ -585,12 +588,17 @@ class Reestructura extends CI_Controller{
 
             $total8P = floatval(($totalSupDestino - $totalSupOrigen ) - $metrosGratuitos) * ($sumPrecioM2Original / count($clienteAnteriores));
             $total8P = floatval(number_format($total8P, 2, '.', ''));
-            $clienteNuevo = $this->copiarClienteANuevo($clienteAnteriores, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected, $idCondominio, $total8P);
+            $total8P = $total8P / $numOrigenes;
+            foreach ($dataFusion as $dataLote){
+                if($dataLote['destino'] == 1){
+                    $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote, $idCondominio, $total8P);
+                }
+            }
+
 
         }
         else{
             $loteAOcupar = $this->input->post('idLote');
-            $clienteAnterior = $this->General_model->getClienteNLote($idClienteAnterior)->row();
             $loteSelected = $this->Reestructura_model->getSelectedSup($loteAOcupar)->row();
             $idCondominio = $loteSelected->idCondominio;
             $nuevaSup = floatval($loteSelected->sup);
@@ -1377,9 +1385,7 @@ class Reestructura extends CI_Controller{
         }   
             
             for ($j=0; $j < $numeroArchivos ; $j++) { 
-                $nombreLoteOriginal = $arrayLotes[$j];// ( $numeroArchivos > 1 && ($id_rol == 15 || $id_rol == 17 )) ? $arrayLotes[$j] // : //$this->input->post('nombreLote'.$j);
-               // echo $nombreLoteOriginal;
-                 //   exit;
+                $nombreLoteOriginal = $arrayLotes[$j];
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true) or die("Error en la generación");

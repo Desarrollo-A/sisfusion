@@ -93,13 +93,9 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFirmadoFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf5 ON lf5.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFusionNumero FROM lotesFusion WHERE destino=1 GROUP BY idLotePvOrigen) lf4 ON lf4.idLotePvOrigen = lo.idLote
 		LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote 
-
     	LEFT JOIN (SELECT lf.idLotePvOrigen, COUNT(*) totalContratoFirmadoFusion FROM historial_documento hd2 INNER JOIN lotesFusion lf ON lf.idLote = hd2.idLote WHERE hd2.tipo_doc=30  AND lf.origen=1 AND hd2.expediente  IS NOT NULL GROUP BY lf.idLotePvOrigen) hdcountlf ON hdcountlf.idLotePvOrigen = lf.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusion FROM lotesFusion WHERE rescision IS NOT NULL GROUP BY idLotePvOrigen) lf6 ON lf6.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalRescisionFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf7 ON lf7.idLotePvOrigen = lo.idLote
-
-
-
 		LEFT JOIN historial_documento HD ON HD.idLote = lo.idLote AND HD.tipo_doc = 30 AND HD.status = 1 --AND HD.idCliente = cl.id_cliente
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
