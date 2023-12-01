@@ -395,6 +395,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
+        console.log('arrayResicion')
         console.log(arrayResicion);
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
@@ -407,7 +408,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         }else{
             //detecta que no hay ni un archivo subido
             if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
-                if (!arrayResicion.includes(1) || flagValidacion == 0) {
+                if (!arrayResicion.includes(1) && flagValidacion == 0) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
                 }
