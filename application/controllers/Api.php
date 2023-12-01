@@ -755,40 +755,6 @@ class Api extends CI_Controller
         }
     }
 
-    function sendLeadInfoRecord() {
-        $data = json_decode(file_get_contents('php://input'));
-        if(!isset($data->fechaDeCompra) || !isset($data->propiedadRelacionada) || !isset($data->uid) || !isset($data->id) || !isset($data->montoDelNegocio))
-            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
-        else {
-            $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
-            $time = time();
-            $datos = array(
-                "iat" => $time, // Tiempo en que inició el token
-                "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                "data" => array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj"),
-            );
-            $token = '';
-            // $url = curl_init('https://prueba.gphsis.com/sisfusion/api/exitoArcus');
-            $url = curl_init();
-            curl_setopt($url, CURLOPT_URL, 'https://hook.us1.make.com/l3mh2xcfdsxob8l2ip28iv53ctikfwbm');
-            curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($url, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Authorization:'. $token
-            ));
-            $data->montoDelNegocio = doubleval($data->montoDelNegocio);
-            curl_setopt($url, CURLOPT_POSTFIELDS, json_encode($data));
-            $response = curl_exec($url);
-            $status = curl_getinfo($url, CURLINFO_HTTP_CODE);
-            curl_close($url);
-            $result = array(
-                'response'  =>  $response,
-                'status'    =>  $status
-            );
-            echo json_encode($result);
-        }
-    }
-
     //funcion de prueba para el servicio de Arcus, borrar despues de pruebas y Vo.Bo.
     function exitoArcus() {
         if (!isset(apache_request_headers()["authorization"]))
