@@ -366,15 +366,15 @@ function loadCopropietarios(datos){
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let flagEnviar = true;
-    let arrayContratos = [];
+    let arrayResicion = [];
     let validacionArray = [];
     let flagValidacion = 0;
     console.log(idsArchivos);
     for (let m = 0; m < idsArchivos.length; m++) {
         if($(`#Resicion_${idsArchivos[m]}`)[0].files[0] != undefined){
-            arrayContratos.push(1);
+            arrayResicion.push(1);
         }else{
-            arrayContratos.push(0);
+            arrayResicion.push(0);
         }        
     }
     arrayKeysArchivos.map((element, raiz)=>{
@@ -385,22 +385,51 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
-        console.log(arrayContratos);
-        if (flagValidacion>0 && ((arrayContratos.includes(1) && id_rol_general == 15 ) || id_rol_general == 17)) {
+        console.log(arrayResicion);
+        // if (flagValidacion>0 && ((arrayContratos.includes(1) && id_rol_general == 15 ) || id_rol_general == 17)) {
+        //     //hay al menos un archivo actualizado
+        //     flagEnviar = true;
+        // }else{
+        //     //detecta que no hay ni un archivo subido
+        //     if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
+        //         if (!arrayContratos.includes(1)) {
+        //             alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
+        //             flagEnviar = false;
+        //         }
+        //     } else if (flagProceso == 2) {
+        //         alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
+        //         flagEnviar = false;
+        //     }
+        // }
+
+        console.log('flagValidacion', flagValidacion);
+        console.log('banderaFusionGlobal', banderaFusionGlobal);
+        console.log('arrayResicion', arrayResicion);
+
+
+        if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
+            flagEnviar = true;
+        }else if(flagValidacion > 0 && banderaFusionGlobal != 0){
+            flagEnviar = true;
+        }
+        else if(banderaFusionGlobal != 0 && (((arrayResicion.includes(1) || flagValidacion > 0) && id_rol_general == 15 ) || id_rol_general == 17)){
             flagEnviar = true;
         }else{
             //detecta que no hay ni un archivo subido
             if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
-                if (!arrayContratos.includes(1)) {
+                if (!arrayResicion.includes(1) || flagValidacion == 0) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
                 }
-            } else if (flagProceso == 2) {
+            } else if (flagProceso == 2  && flagProcesoContraloriaGlobal == 0 && id_rol_general == 17  ) {
                 alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                 flagEnviar = false;
             }
         }
+
+
+
         let data = new FormData();
         data.append("tipoProceso", flagProceso);
         data.append("longArray", arrayKeysArchivos.length);
@@ -485,7 +514,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagEnviar = false;
         }
         
-        if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayContratos.includes(0)) {
+        if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayResicion.includes(0)) {
             $("#spiner-loader").addClass('hide');
             const archivoLbl = ([2,5,6].includes(banderaTipoProceso)) ? 'archivo de rescisión' : 'documento de reestructura';
             alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');

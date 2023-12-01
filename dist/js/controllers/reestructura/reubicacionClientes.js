@@ -1281,8 +1281,15 @@ const botonesAccionReubicacion = (d) => {
     const totalCorridas = parseInt(banderaFusion == 0 ? d.totalCorridas : (d.idLotePvOrigen != d.idLote ? d.totalCorridas : d.totalCorridaFusion));
     const totalContrato = parseInt(banderaFusion == 0 ? d.totalContratos : (d.idLotePvOrigen!=d.idLote ? d.totalContratos : d.totalContratosFusion));
     const totalCorridasRef = parseInt(banderaFusion == 0 ? d.totalCorridasNumero : (d.idLotePvOrigen!=d.idLote ? d.totalCorridasNumero : d.totalCorridasFusionNumero));
-    const totalContratoRef = parseInt(banderaFusion == 0 ? d.totalContratoNumero : (d.idLotePvOrigen!=d.idLote ? d.totalContratoNumero : d.totalContratoNumero));
+    const totalContratoRef = parseInt(banderaFusion == 0 ? d.totalContratoNumero : (d.idLotePvOrigen!=d.idLote ? d.totalContratoNumero : d.totalContratoFusionNumero));
     const totalContratoFirmado = parseInt( banderaFusion == 1 ? d.totalContratoFirmadoFusion : d.totalContratoFirmado);
+
+
+    const totalResicion = parseInt( banderaFusion == 1 ? d.totalRescisionFusion : d.totalRescision);
+    const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
+
+
+
     let editar = 0;
     let btnShow = 'fa-upload';
     let btnContratoFirmado = 'fa-file-upload';
@@ -1291,40 +1298,6 @@ const botonesAccionReubicacion = (d) => {
     let botonJuridico = '';
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'disabled=false' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
-
-
-    /*if(d.idLotePvOrigen!=null){
-        //valores para lotes fusionados
-        if(d.idLotePvOrigen!=d.idLote){//si no es el lote pivote se le deshabilitan las opciones
-           // botonFusionadoEstatus = "disabled=false";
-            totalCorridas = parseInt(d.totalCorridas);
-            totalContrato = parseInt(d.totalContratos);
-            totalCorridasRef = parseInt(d.totalCorridasNumero);
-            totalContratoRef = parseInt(d.totalContratoNumero);
-        }else{
-            //si es el pivote se le dejan las opciones
-            //botonFusionadoEstatus = "";
-            flagFusion = 1;
-            totalCorridas = parseInt(d.totalCorridaFusion);
-            totalContrato = parseInt(d.totalContratosFusion);
-            totalCorridasRef = parseInt(d.totalCorridasFusionNumero);
-            totalContratoRef = parseInt(d.totalContratoNumero);
-        }
-    }else{
-        //se le asignan las variables a los lotes con proceso normal (SIN FUSION)
-        //botonFusionadoEstatus = "";
-        totalCorridas = parseInt(d.totalCorridas);
-        totalContrato = parseInt(d.totalContratos);
-        totalCorridasRef = parseInt(d.totalCorridasNumero);
-        totalContratoRef = parseInt(d.totalContratoNumero);
-    }*/
-console.log('---------------')
-console.log(totalCorridas)
-console.log(totalCorridasRef)
-
-console.log(FLAGPROCESOCONTRALORIA)
-console.log(idEstatusPreproceso)
-console.log('---------------')
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
@@ -1501,11 +1474,6 @@ console.log('---------------')
         if(flagFusion==1){
             //en la segunda validacion se ocupa "totalCorridasRef" ya que trae el numero de corridas que debe haber(el mismo número que los contratos
             //firmados que debe de haber
-            console.log('d.idLote retrurn:', d.idLote);
-            console.log('totalCorridas:', totalCorridas);
-            console.log('totalCorridasRef:', totalCorridasRef);
-            console.log('totalContratoFirmadoFusionNumero:', d.totalContratoFirmadoFusionNumero);
-            console.log('d.totalContratoFirmadoFusion:', d.totalContratoFirmadoFusion);
             return (totalCorridas === totalCorridasRef && d.totalContratoFirmadoFusionNumero===d.totalContratoFirmadoFusion )
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
@@ -1523,7 +1491,7 @@ console.log('---------------')
             botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
         else
             botonJuridico = '';
-        return (totalContrato === totalContratoRef && parseInt(d.totalRescision) === 1) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
+        return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
