@@ -148,7 +148,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
-        elemento.idStatusLote == 17 ? nombreLotes.push(elemento.nombreLote) : '';
+        elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
 
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
