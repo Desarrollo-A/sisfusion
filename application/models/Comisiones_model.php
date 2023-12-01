@@ -211,8 +211,8 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         WHERE 
-        l.idLote IN (71723,80643,10,51,152,165,11010,17310)
-        /*(l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250) 
+        -- l.idLote IN (71723,80643,10,51,152,165,11010,17310)
+        (l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250) 
         AND l.registro_comision not IN (7) 
         AND pc.bandera IN (0,100)) 
         AND cl.proceso IN (0)
@@ -227,16 +227,6 @@ class Comisiones_model extends CI_Model {
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
         AND ISNULL(l.totalNeto2, 0) > 0)
-        OR (
-		l.idStatusContratacion >= 1 
-        AND cl.status = 1 
-        AND cl.proceso NOT IN (0)
-        AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
-        AND pc.bandera IN (0,100))) 
-        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (8)) 
-        AND cl.fechaApartado >= '2020-03-01' 
-        AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
-        AND ISNULL(l.totalNeto2, 0) > 0)*/ 
         
         ORDER BY l.idLote"); 
         return $query;
