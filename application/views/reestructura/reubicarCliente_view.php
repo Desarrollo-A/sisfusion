@@ -190,6 +190,8 @@
                                                 <th>COMENTARIO</th>
                                                 <th>EJECUTIVO JURÍDICO</th>
                                                 <th>SEDE</th>
+                                                <th>FECHA ÚLTIMO ESTATUS</th>
+                                                <th>FECHA VENCIMIENTO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
