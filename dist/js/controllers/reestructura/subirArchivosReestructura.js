@@ -150,6 +150,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
        // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
         banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
     });*/
+
     if(banderaFusion != 0){
         nuevosDatosOrigenBack.map((elementoBack, index2) => {
             nombreLotes.push(elementoBack.nombreLote)
@@ -157,6 +158,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     }else{
         nombreLotes.push(nombreLote);
     }
+    console.log('nombreLotes', nombreLotes);
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
@@ -192,7 +194,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             console.log(datos);
-            nombreLotes = [];
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
