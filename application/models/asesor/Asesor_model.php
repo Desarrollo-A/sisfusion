@@ -1636,10 +1636,14 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$id_cliente." AND status=1 AND tipo_doc=".$tipo_documento);
         return $query->result_array();
     }
+    
     function getTipoVenta($idLote){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
-        return $query->result_array();
+        return $this->db->query("SELECT lo.tipo_venta, lo.idStatusContratacion, lo.idMovimiento, ISNULL(cl.proceso, 0) tipo_proceso
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        WHERE lo.idLote = $idLote")->result_array();
     }
+
     function getInicioMensualidadAut($idLote, $id_cliente){
         $query = $this->db->query("SELECT * FROM corridas_financieras cf
         INNER JOIN historial_documento hd ON hd.idLote = cf.id_lote

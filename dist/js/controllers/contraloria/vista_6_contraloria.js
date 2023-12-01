@@ -683,6 +683,8 @@ function preguntaRegCorr() {
   var totalNeto = $("#totalNeto").val();
   var tipo_enganche = $("#tipo_enganche").val();
   var estatus_enganche = $("#estatus_enganche").val();
+  var banderaFusion = $("#banderaFusion").val();
+  var idLotePivote = $("#idLotePivote").val();
   var parametros = {
     idLote: idLote,
     idCondominio: idCondominio,
@@ -693,7 +695,9 @@ function preguntaRegCorr() {
     comentario: comentario,
     totalNeto: totalNeto,
     tipo_enganche: tipo_enganche,
-    estatus_enganche: estatus_enganche
+    estatus_enganche: estatus_enganche,
+    banderaFusion: banderaFusion,
+    idLotePivote: idLotePivote
   };
 
   if (comentario.length <= 0 || $("#totalNeto").val().length == 0)

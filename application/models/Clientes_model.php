@@ -494,6 +494,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 4223) AND pr.id_sede IN (3, 15)";
             else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
+            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
+                $where = "pr.id_gerente IN ($id_lider, 1916) AND pr.id_sede IN (10)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
