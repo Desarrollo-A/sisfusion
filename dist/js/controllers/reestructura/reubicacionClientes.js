@@ -1318,13 +1318,13 @@ const botonesAccionReubicacion = (d) => {
         totalCorridasRef = parseInt(d.totalCorridasNumero);
         totalContratoRef = parseInt(d.totalContratoNumero);
     }*/
-console.log('---------------')
+/*console.log('---------------')
 console.log(totalCorridas)
 console.log(totalCorridasRef)
 
 console.log(FLAGPROCESOCONTRALORIA)
 console.log(idEstatusPreproceso)
-console.log('---------------')
+console.log('---------------')*/
 
     if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
