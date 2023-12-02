@@ -2082,7 +2082,9 @@ class Reestructura extends CI_Controller{
         $comentario = $this->input->post('comentario');
         $idUsuario = $this->session->userdata('id_usuario');
         $flagFusion= $this->input->post('flagFusion');
-        
+        $idRol = $this->session->userdata('id_rol');
+
+
         if($flagFusion==1){
             $data = $this->Reestructura_model->getFusion($idLote, 1);
             $arrayLotesUpdate = array();
