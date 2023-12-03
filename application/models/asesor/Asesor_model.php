@@ -77,7 +77,7 @@ class Asesor_model extends CI_Model {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
-        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, cl.fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida, aut.estatus,
@@ -203,7 +203,7 @@ class Asesor_model extends CI_Model {
         set_time_limit(300);
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
+        cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc , lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida, aut.estatus as estatus,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
@@ -859,7 +859,7 @@ class Asesor_model extends CI_Model {
         }
 
 		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
-        cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
+        cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,cl.fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus
         FROM clientes AS cl			

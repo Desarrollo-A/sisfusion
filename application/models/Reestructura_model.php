@@ -49,7 +49,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl4.totalContratoNumero, 
+        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
         pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
@@ -63,7 +63,7 @@ class Reestructura_model extends CI_Model
 		WHERE lf2.destino=1 AND hd.tipo_doc=30 AND hd.expediente!='' AND lf2.idLotePvOrigen=lf.idLotePvOrigen
 		GROUP BY lf2.idLotePvOrigen) as contratoFirmadoFusion, 
         ISNULL(dxc2.flagProcesoContraloria, 0) flagProcesoContraloria, ISNULL(dxc2.flagProcesoJuridico, 0) flagProcesoJuridico, 
-        dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento
+        dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
@@ -82,8 +82,7 @@ class Reestructura_model extends CI_Model
 	        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
         ) 
         LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = hpl.estatus AND oxc2.id_catalogo = 108
-        LEFT JOIN (SELECT idLote, COUNT(*) AS totalCorridasNumero FROM propuestas_x_lote GROUP BY idLote) pxl3 ON pxl3.idLote = lo.idLote
-        LEFT JOIN (SELECT idLote, COUNT(*) AS totalContratoNumero FROM propuestas_x_lote GROUP BY idLote) pxl4 ON pxl4.idLote = lo.idLote
+        LEFT JOIN (SELECT idLote, COUNT(*) AS totalCorridasNumero, COUNT(*) AS totalContratoNumero, COUNT(*) totalPropuestas FROM propuestas_x_lote GROUP BY idLote) pxl3 ON pxl3.idLote = lo.idLote
         LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalCorridasFusionNumero FROM lotesFusion WHERE destino=1  GROUP BY idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = lo.idLote
         LEFT JOIN (SELECT idLote, COUNT(*) totalCorridas FROM propuestas_x_lote WHERE corrida IS NOT NULL GROUP BY idLote) pxl1 ON pxl1.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratos FROM propuestas_x_lote WHERE contrato IS NOT NULL GROUP BY idLote) pxl2 ON pxl2.idLote = lo.idLote
@@ -101,6 +100,8 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u7 ON u7.id_usuario = lo.id_juridico_preproceso
         LEFT JOIN sedes se ON CAST(se.id_sede AS varchar(45)) = u6.id_sede
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
+        LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
+        LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
@@ -599,9 +600,14 @@ class Reestructura_model extends CI_Model
     function getNuevaPropuesta($idLote, $lotesPropuestos){
         return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND id_lotep NOT IN ($lotesPropuestos)");
     }    
-    public function expedienteReubicacion($idLote)
-    {
+    public function expedienteReubicacion($idLote){
         $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 1");
+        
+        return $query->row();
+    }
+
+    public function expedienteFusionDestino($idLotePivote, $idLoteDestino){
+        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen = $idLotePivote AND idLote = $idLoteDestino");
         return $query->row();
     }
 
@@ -849,4 +855,16 @@ class Reestructura_model extends CI_Model
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
     }
+
+    public function updateEstatusPreseleccion($idLote, $idLotePreseleccionado, $idLotesPropuestas) {
+        $id_usuario = $this->session->userdata('id_usuario');
+        $idLotesPropuestas = substr($idLotesPropuestas, 0, -1);
+        $response1 = $this->db->query("UPDATE propuestas_x_lote SET estatusPreseleccion = 1, modificado_por = $id_usuario, fecha_modificacion = GETDATE() WHERE idLote = $idLote AND id_lotep = $idLotePreseleccionado ");
+        $response2 = $this->db->query("UPDATE propuestas_x_lote SET estatusPreseleccion = 0, modificado_por = $id_usuario, fecha_modificacion = GETDATE() WHERE idLote = $idLote AND id_lotep IN ($idLotesPropuestas) AND id_lotep != $idLotePreseleccionado");
+        if ($response1 && $response2)
+            return true;
+        else
+            return false;
+    }
+    
 }

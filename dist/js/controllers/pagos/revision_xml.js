@@ -46,7 +46,7 @@ function getDataXML(proyecto){
             total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("disponibleXml").textContent = '$' + to;
+        document.getElementById("disponibleXml").textContent = to;
     });
 
     $("#tabla_xml").prop("hidden", false);
@@ -65,7 +65,7 @@ function getDataXML(proyecto){
                 columns: [1,2,3,4,5],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulos[columnIdx-1] + ' ';
                     }
                 }
             },
@@ -125,7 +125,7 @@ function getDataXML(proyecto){
                 if(d.total == null || d.total == "" || d.total == undefined)
                     return '<p class="m-0"><b>$0.00</b></p>';
                 else
-                    return '<p class="m-0"><b>'+'$'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
             }
         },{
             data: function( d ){
@@ -222,7 +222,7 @@ function getDataXML(proyecto){
             solicitudes += '<td>'+'<b>'+'ID: '+'</b> '+v.id_pago_i+'</td>';
             solicitudes += '<td>'+'<b>'+'CONDOMINIO: '+'</b> '+v.condominio+'</td>';
             solicitudes += '<td>'+'<b>'+'LOTE: '+'</b> '+v.lote+'</td>';
-            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+'$'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
+            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
             solicitudes += '<td>'+'<b>'+'USUARIO: '+'</b> '+v.usuario+'</td>';
             solicitudes += '</tr>';
         });          
@@ -245,7 +245,7 @@ function getDataXML(proyecto){
         <input type="hidden" name="uuid2" id="uuid2" value="${uuid}">
         <input type="hidden" name="totalxml" id="totalxml" value="${total}">
         <input type="hidden" name="id_user" id="id_user" value="${id_user}">
-        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${'$'+formatMoney(numberTwoDecimal(total))}</b> ?</h6>
+        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${formatMoney(numberTwoDecimal(total))}</b> ?</h6>
         <label class="control-label" for="motivo">Motivo</label>
         <textarea id="motivo" name="motivo" class="text-modal"></textarea>`);
         $("#seeInformationModalPDF .modal-body").append(`
@@ -261,12 +261,10 @@ function getDataXML(proyecto){
                 <div class="col-sm-4 col-md-4 col-lg-4 p-0">
                     <button class="btn btn-azure w-90" type="button" onclick="xmlFuncion(${id_user})" id="cargar_xmlFuncion"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
                 </div> 
-            </div>
-                `);
+            </div>`);
             
         $("#seeInformationModalPDF .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-        $("#seeInformationModalPDF .modal-body").append(`
-            <div class="row">
+        $("#seeInformationModalPDF .modal-body").append(`<div class="row">
                 <div class="col-lg-6 form-group">
                     <label class="control-label" for="emisor">Emisor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="emisor" name="emisor" placeholder="Emisor" value="" required>
