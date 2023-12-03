@@ -542,7 +542,7 @@ class Reestructura extends CI_Controller{
             $idClientesOrigen = '';
             $idLotesDestino = '';
             $numDestinos = 0;
-            $arrayUpdateCliente = ();
+            $arrayUpdateCliente = array();
 
             $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
             foreach ($dataFusion as $dataLote){
@@ -582,7 +582,7 @@ class Reestructura extends CI_Controller{
             }
 
             foreach ($clienteAnteriores as $dataCliente){
-                $dataUpdateCliente=();
+                $dataUpdateCliente= array();
                 if ($proceso == 4){
                     $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
                     $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
