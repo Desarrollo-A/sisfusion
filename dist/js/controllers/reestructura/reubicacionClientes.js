@@ -661,6 +661,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
+    const idLotePreseleccionado = $(this).attr("data-idLotePreseleccionado");
     let flagFusion = $(this).attr("data-fusion");
     let superficie = 0;
     let nombreLote = '';
@@ -730,7 +731,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     if(flagFusion==1)
         $("#infoLotesSeleccionados").append(htmlSeleccionadoFusion);
     else
-        getPropuestas(idLoteOriginal, statusPreproceso);
+        getPropuestas(idLoteOriginal, statusPreproceso, null, null, null, idLotePreseleccionado);
 
     showModal();
 });
@@ -754,7 +755,7 @@ function getProyectosAOcupar(idProyecto, superficie, flagFusion) {
     }, 'json');
 }
 
-function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion){
+function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie, flagFusion, idLotePreseleccionado){
     $('#spiner-loader').removeClass('hide');
     $.post("obtenerPropuestasXLote", {"idLoteOriginal" : idLoteOriginal, "flagFusion": flagFusion}, function(data) {
         $('#infoLotesSeleccionados').html('');
@@ -764,6 +765,8 @@ function getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficie,
 
             $("#infoLotesSeleccionados").append(html);
         }
+        if (idLotePreseleccionado != 0) // YA SELECCIÓNO ALGO
+            $(`input[type=radio][name=idLote][value="${idLotePreseleccionado}"]`).click();
         $('#spiner-loader').addClass('hide');
     }, 'json');
 }
@@ -1497,7 +1500,8 @@ const botonesAccionReubicacion = (d) => {
                 data-idProyecto="${d.idProyecto}"
                 data-statusPreproceso="${idEstatusPreproceso}"
                 ${botonFusionadoEstatus}
-                data-fusion="${flagFusion}">
+                data-fusion="${flagFusion}"
+                data-idLotePreseleccionado="${d.lotePreseleccionado}">
             <i class="fas fa-route"></i>
         </button>`;
 
