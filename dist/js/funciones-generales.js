@@ -340,10 +340,6 @@ function cleanElement(e) {
 
 
 function visorArchivo(rutaArchivo, nombreArchivo){
-  //ruta: completa
-  // nombreArchivo: para mostrar su nombre
-  //esta funcion abre un shadowbox
-  //en la vista se debe llamar el JS así como los CSS para quefuncione
   Shadowbox.open({
     content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute  " src="${rutaArchivo}"></iframe></div>`,
     player: "html",
