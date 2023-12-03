@@ -1772,6 +1772,9 @@ class Reestructura extends CI_Controller{
         
         $fechaVencimiento = $this->getFechaVencimiento(0); // SI ES ELABORACIÓN DE CORRIDAS, CONTRATO Y RESCISIÓN DA 2 DÍAS SINO 1
 
+        if ($idPreproceso + 1 == 5 && $this->input->post('numeroTotalPropuestas') == 1) // AVANZA A ADMINISTRACIÓN CON SÓLO UNA PROPUESTA LA CUAL SE CHECKEA POR DEFECTO COMO LA OPCIÓN SELECCIONADA POR EL CLIENTE
+            $this->General_model->updateRecord("propuestas_x_lote", array('estatusPreseleccion' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+
         if($flagFusion==1) {
             //Se obtienen lotes de fusión de origen para actualizar estatus de lote e insertar historial
             $data = $this->Reestructura_model->getFusion($idLote, 1);
@@ -2454,4 +2457,9 @@ class Reestructura extends CI_Controller{
         }
         return $fechaVencimiento;
     }
+
+    public function setPreseleccion() {
+        echo json_encode($this->Reestructura_model->updateEstatusPreseleccion($this->input->post('idLote'), $this->input->post('idLotePreseleccionado'), $this->input->post('idLotesPropuestas')));
+    }
+    
 }
