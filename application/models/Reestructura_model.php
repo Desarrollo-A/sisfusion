@@ -599,9 +599,14 @@ class Reestructura_model extends CI_Model
     function getNuevaPropuesta($idLote, $lotesPropuestos){
         return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND id_lotep NOT IN ($lotesPropuestos)");
     }    
-    public function expedienteReubicacion($idLote)
-    {
+    public function expedienteReubicacion($idLote){
         $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 1");
+        
+        return $query->row();
+    }
+
+    public function expedienteFusionDestino($idLotePivote, $idLoteDestino){
+        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen = $idLotePivote AND idLote = $idLoteDestino");
         return $query->row();
     }
 
