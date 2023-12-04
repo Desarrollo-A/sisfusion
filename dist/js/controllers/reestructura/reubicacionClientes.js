@@ -1544,7 +1544,8 @@ const botonesAccionReubicacion = (d) => {
         data-cantidadTraspaso="${d.cantidadTraspaso}"
         data-comentarioTraspaso="${d.comentarioTraspaso}"
         data-nombreLotePreseleccionado="${d.nombreLotePreseleccionado}"
-        data-fusion="${flagFusion}">
+        data-fusion="${flagFusion}"
+        ${botonFusionadoEstatus}>
         <i class="fas fa-money-check-alt"></i>
     </button>`;
 

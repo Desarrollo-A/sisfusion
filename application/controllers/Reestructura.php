@@ -570,6 +570,7 @@ class Reestructura extends CI_Controller{
         $ubicacion = $clienteAnterior->ubicacion;
 
         if( $flagFusion == 1){
+            $banderaInsertResicion = 0;
             $totalSupOrigen = 0;
             $numDestinos = 0;
             $totalSupDestino = 0;
@@ -737,7 +738,8 @@ class Reestructura extends CI_Controller{
                     }
 
                     $a = 0;
-                    if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'], $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion)) {
+                    if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'],
+                        $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion)) {
                         $this->db->trans_rollback();
             
                         echo json_encode(array(
@@ -749,21 +751,23 @@ class Reestructura extends CI_Controller{
                         return;
                     }
                 }
-
-
+                $banderaInsertResicion = $banderaInsertResicion + 1;
             }
 
-            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
-                $this->db->trans_rollback();
-    
-                echo json_encode(array(
-                    'titulo' => 'ERROR',
-                    'resultado' => FALSE,
-                    'message' => 'Error al actualizar los clientes anteriores',
-                    'color' => 'danger'
-                ));
-                return;
-            }
+            $this->db->trans_rollback();
+            exit;
+//            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
+//                $this->db->trans_rollback();
+//
+//                echo json_encode(array(
+//                    'titulo' => 'ERROR',
+//                    'resultado' => FALSE,
+//                    'message' => 'Error al actualizar los clientes anteriores',
+//                    'color' => 'danger'
+//                ));
+//                return;
+//            }
+
 
             //No se realiza update en selección de propuestas
             //No se realiza función de desactivar lotes ya que todos son selecciones finales para fusión
@@ -1191,7 +1195,7 @@ class Reestructura extends CI_Controller{
 
     function moverExpediente(
         $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
-        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null
+        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion=0
     ): bool
     {
         $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
@@ -1298,34 +1302,35 @@ class Reestructura extends CI_Controller{
             if ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 36) {
                 if($flagFusion == 1){
                     foreach ($dataFusion as $dataLote){
-                        if($dataLote['destino'] == 0){
-                            $nombreLoteOrigen = $dataLote['nombreLotes'];
-                            $nombreResLoteOrigen = $dataLote['rescision'];
-                           
-                            $a = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen";
-                            $b = $ubicacionFolder.$expedienteAnterior;
-                            
-                            copy(
-                                "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
-                                $ubicacionFolder.$expedienteAnterior
-                            );
-            
-                            $documentacion[] = array(
-                                'movimiento' => $doc['nombre'],
-                                'expediente' => $expedienteAnterior,
-                                'modificado' => $modificado,
-                                'status' => 1,
-                                'idCliente' => $idClienteNuevo,
-                                'idCondominio' => $loteNuevoInfo->idCondominio,
-                                'idLote' => $idLoteNuevo,
-                                'idUser' => NULL,
-                                'tipo_documento' => 0,
-                                'id_autorizacion' => 0,
-                                'tipo_doc' => $doc['id_opcion'],
-                                'estatus_validacion' => 0
-                            );
-            
-                            continue;
+                        if($dataLote['destino'] == 1){
+                            if($banderaInsertResicion==0){
+                                $nombreLoteOrigen = $dataLote['nombreLotes'];
+                                $nombreResLoteOrigen = $dataLote['rescision'];
+                                $a = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen";
+                                $b = $ubicacionFolder.$expedienteAnterior;
+                                copy(
+                                    "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
+                                    $ubicacionFolder.$expedienteAnterior
+                                );
+                                $documentacion[] = array(
+                                    'movimiento' => $doc['nombre'],
+                                    'expediente' => $expedienteAnterior,
+                                    'modificado' => $modificado,
+                                    'status' => 1,
+                                    'idCliente' => $idClienteNuevo,
+                                    'idCondominio' => $loteNuevoInfo->idCondominio,
+                                    'idLote' => $idLoteNuevo,
+                                    'idUser' => NULL,
+                                    'tipo_documento' => 0,
+                                    'id_autorizacion' => 0,
+                                    'tipo_doc' => $doc['id_opcion'],
+                                    'estatus_validacion' => 0
+                                );
+                                continue;
+                            }
+                            else{
+                                continue;
+                            }
                         }
                     }
                 }
@@ -1409,7 +1414,10 @@ class Reestructura extends CI_Controller{
             );
         }
 
-        return $this->General_model->insertBatch('historial_documento', $documentacion);
+        print_r(json_encode($documentacion));
+
+            return true;
+//        return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 
     public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo, $idLote): bool
