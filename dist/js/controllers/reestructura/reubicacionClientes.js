@@ -427,7 +427,7 @@ const cerrarModalPropuestas = async (preproceso, flagFusion) => {
         let sumSuperficieD = 0;
         const idLoteOriginal = $("#idLoteOriginal").val();
         const superficieFusion = parseFloat($('#superficie').val());
-        const dataFusionDes = await totalSuperficieFusion(idLoteOriginal, 0);
+        const dataFusionDes = await totalSuperficieFusion(idLoteOriginal, 1);
         //AA: Obtenemos la superfice destino de la fusión.
         dataFusionDes.data.forEach((fusionLotes) => {
             sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
@@ -984,7 +984,7 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
-                        <input type="checkbox" name="idLotes[]" id="idLote" value="${idLote}" checked>
+                        <input type="checkbox" name="idLotes[]" id="idLote" value="${idLote}" checked disabled>
                         
                         <span class="w-100 d-flex justify-between">
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
@@ -1203,14 +1203,28 @@ $(document).on('click', '.btn-avanzar', async function () {
     showModal();
 });
 
-$(document).on('click', '.btn-rechazar', function () {
+$(document).on('click', '.btn-rechazar', async function() {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
-    const nombreLote = row.data().nombreLote;
+    let nombreLote='';
+    let pluralidad=' EL LOTE ';
     const idLote = row.data().idLote;
     const tipoTransaccion = $(this).attr("data-tipoTransaccion");
     const idCliente = $(this).attr("data-idCliente");
     let flagFusion = $(this).attr("data-fusion");
+
+    if (flagFusion == 1) {
+        const dataFusionDes = await totalSuperficieFusion(idLote, 1);
+        let separador=', ';
+        dataFusionDes.data.forEach((fusionLotes, index) => {
+            separador = (index==0) ? '' : ', ';
+            if(fusionLotes.origen == 1){
+                nombreLote += separador+fusionLotes.nombreLotes;
+            }
+        });
+        pluralidad=' LOS LOTES ';
+
+    }
 
     changeSizeModal('modal-sm');
     appendBodyModal(`
@@ -1218,7 +1232,7 @@ $(document).on('click', '.btn-rechazar', function () {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6 class="m-0">¿Estás seguro de rechazar el lote <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}</i></b></h6>
+                        <h6 class="m-0">¿Estás seguro de rechazar ${pluralidad}  <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}</i></b></h6>
                     </div>
                     <div class="col-12">
                         <label class="control-label">Comentario</label>
@@ -1483,6 +1497,7 @@ const botonesAccionReubicacion = (d) => {
                 data-placement="left"
                 title="REUBICAR CLIENTE"
                 data-idCliente="${d.idCliente}"
+                data-fusion="${flagFusion}"
                 data-idProyecto="${d.idProyecto}"
                 data-statusPreproceso="${idEstatusPreproceso}"
                 ${botonFusionadoEstatus}
@@ -1589,7 +1604,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 5 && id_rol_general == 11) // MJ: ADMINISTRACIÓN - Contrato firmado confirmado, pendiente traspaso de recurso.
         return d.cantidadTraspaso > 0.00 ? BTN_AVANCE + BTN_TRASPASO_RECURSO : BTN_TRASPASO_RECURSO; // SI YA HAY RECURSO SE MUESTRAN AMBOS BOTONES, SINO SÓLO EL DE CAPTURAR LA CANTIDA CORRESPONDIENTE AL TRASPASO
     if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION;
+        return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
     return '';

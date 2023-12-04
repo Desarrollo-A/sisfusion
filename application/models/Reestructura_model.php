@@ -600,9 +600,14 @@ class Reestructura_model extends CI_Model
     function getNuevaPropuesta($idLote, $lotesPropuestos){
         return $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND id_lotep NOT IN ($lotesPropuestos)");
     }    
-    public function expedienteReubicacion($idLote)
-    {
+    public function expedienteReubicacion($idLote){
         $query = $this->db->query("SELECT * FROM propuestas_x_lote WHERE idLote = $idLote AND estatus = 1");
+        
+        return $query->row();
+    }
+
+    public function expedienteFusionDestino($idLotePivote, $idLoteDestino){
+        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen = $idLotePivote AND idLote = $idLoteDestino");
         return $query->row();
     }
 
@@ -853,6 +858,7 @@ class Reestructura_model extends CI_Model
 
     public function updateEstatusPreseleccion($idLote, $idLotePreseleccionado, $idLotesPropuestas) {
         $id_usuario = $this->session->userdata('id_usuario');
+        $idLotesPropuestas = substr($idLotesPropuestas, 0, -1);
         $response1 = $this->db->query("UPDATE propuestas_x_lote SET estatusPreseleccion = 1, modificado_por = $id_usuario, fecha_modificacion = GETDATE() WHERE idLote = $idLote AND id_lotep = $idLotePreseleccionado ");
         $response2 = $this->db->query("UPDATE propuestas_x_lote SET estatusPreseleccion = 0, modificado_por = $id_usuario, fecha_modificacion = GETDATE() WHERE idLote = $idLote AND id_lotep IN ($idLotesPropuestas) AND id_lotep != $idLotePreseleccionado");
         if ($response1 && $response2)

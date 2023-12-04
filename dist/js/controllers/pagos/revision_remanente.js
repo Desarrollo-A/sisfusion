@@ -20,7 +20,7 @@ $('#proyectoRemanente').change(function(){
 residencial = $('#proyectoRemanente').val();
 $("#condominioRemanente").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -257,7 +257,7 @@ function getDataRemanente(proyecto, condominio){
             data: function( data ){
                 let btns = '';
 
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
                 const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
 
                 btns += BTN_HISTORIAL;
@@ -389,7 +389,7 @@ function getDataRemanente(proyecto, condominio){
             '</div>'+
             '<div class="row">'+
                 '<div class="col-lg-12">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el mótivo por el cual se pausara la solicitud"></input>'+
+                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
                 '</div>'+
             '</div>'+
             '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
