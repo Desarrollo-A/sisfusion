@@ -1138,8 +1138,8 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/revision_resguardo");
   }
 
-  public function getDatosResguardoContraloria($user,$condominio){
-    $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,1)->result_array();
+  public function getDatosResguardoContraloria($user,$residencial){
+    $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }

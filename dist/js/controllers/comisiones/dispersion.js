@@ -319,8 +319,8 @@ $(document).ready(function () {
                         }
 
                         if(disparador != 0){
-                            // BtnStats += `${nombreOtro}`;            
-
+                            // BtnStats += `${disparador}`; 
+                            
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 
                             data-totalNeto2 = "${totalLote}"
@@ -345,7 +345,7 @@ $(document).ready(function () {
 
                             BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                         }else{
-                            BtnStats += `${disparador}`;
+                            BtnStats += ``;
                         
                     }   
 
@@ -588,26 +588,24 @@ $(document).ready(function () {
                                 operacionB = (totalNeto2 * 0.08).toFixed(3);
                                 cincoporciento = parseFloat(operacionA);
                                 ochoporciento = parseFloat(operacionB);
-                                if(disparador == 3){
+                                
+                                if(disparador == 3 && ooamDispersion == 1){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
-                                    bandera_anticipo = 0;
-                                } else if(total<(cincoporciento-1) && ooamDispersion != 1){
+                                    bandera_anticipo = 3;
+                                } else if(total<(cincoporciento-1) && disparador != 3){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 0;
-                                }else if(total>=(ochoporciento) && ooamDispersion != 1 ){
+                                }else if(total>=(ochoporciento) && disparador != 3 ){
                                 // *********Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% / se dispersa la mitad
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                     bandera_anticipo = 1;
-                                } else if(total>=(cincoporciento-1) && total<(ochoporciento) && ooamDispersion != 1){
+                                } else if(total>=(cincoporciento-1) && total<(ochoporciento) && disparador != 3){
                                 // *********Si el monto el igual o mayor a 5% y menor al 8% se dispersará la 4° parte de la comisión
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo entre 5% - 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 2;
-                                } else if(estatusLote < 15 && ooamDispersion == 1){ //DISPERSION 1,31 OOAM
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo OOAM 50% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
-                                    bandera_anticipo = 1;
-                                }  
+                                } 
                                 // FIN BANDERA OPERACION PARA SACAR 5%
                                 $("#modal_NEODATA .modal-body").append(`<div class="row rowTitulos">
                                 <div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div>
@@ -694,6 +692,15 @@ $(document).ready(function () {
                                             break;
                                             case 2: // monto entre 5% y 8% dispersar 4 parte
                                             operacionValidar = (total_comision1/4);
+                                            if(operacionValidar > v.comision_total){
+                                                saldo1C = v.comision_total;
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
+                                            break;
+
+                                            case 3: // monto OOAM 50%
+                                            operacionValidar = (v.comision_total/2);
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
                                             }else{
