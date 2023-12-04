@@ -68,9 +68,14 @@ $(document).on('click', '.btn-abrir-modal', function () {
         },
         success: function(data) {
             data = JSON.parse(data);
-            if(tipotransaccion==3){
+            if (data['copropietarios'].length > 0) {
                 loadCopropietarios(data['copropietarios']);
                 document.getElementById('co-propietarios').classList.remove('hide');
+            } 
+            else {
+                let copropietarios = document.getElementById('co-propietarios');
+                copropietarios.innerHTML = '';
+                document.getElementById('co-propietarios').classList.add('hide');
             }
             formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
         },
@@ -178,9 +183,12 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                            </div>\n' +
                 '                        </div>';
             if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+
+                let tooltip = flagProcesoContraloria == 0 ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
+                let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
-                    '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
+                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-placement="top" title="'+tooltip+'" ' +
                     '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
