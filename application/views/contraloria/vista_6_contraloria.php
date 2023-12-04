@@ -46,6 +46,7 @@
 							<input type="hidden" name="idCondominio" id="idCondominioregCor" >
 							<input type="hidden" name="fechaVenc" id="fechaVencregCor" >
 							<input type="hidden" name="nombreLote" id="nombreLoteregCor"  >
+							<input type="hidden" name="banderaFusion" id="banderaFusion"  >
 						</div>
 					</div>
 					<div class="modal-footer"></div>

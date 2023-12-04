@@ -295,8 +295,10 @@ class Reestructura_model extends CI_Model
 
         //LOTES FUSIÓN
         if($datos["tipo"] == 7 && $datos['banderaFusion'] == 1){
+            $datosFusion = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idLote=".$datos['idLote'])->result_array();
+            $idLotePv = $datosFusion[0]['idLotePvOrigen'];
             $this->db->query("UPDATE lotesFusion SET banderaComision=".$row['registro_comision'].",totalNeto2=".$row[0]['totalNeto2'].",modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLote=".$datos['idLote']." AND idCliente=".$row[0]['idCliente']." ");
-            $this->db->query("UPDATE lotesFusion SET nombreLotes=CONCAT(nombreLotes,',',$row[0]['nombreLote']),modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLotePvOrigen=".$datos['idLotePv']." AND destino=1");
+            $this->db->query("UPDATE lotesFusion SET nombreLotes=CONCAT(nombreLotes,',',$row[0]['nombreLote']),modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLotePvOrigen=".$idLotePv." AND destino=1");
         }
 
 
