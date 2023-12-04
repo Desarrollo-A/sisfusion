@@ -231,11 +231,10 @@ class Comisiones_model extends CI_Model {
         OR (
         l.idStatusContratacion >= 9 
         AND cl.status = 1 
-        AND cl.proceso IN (0)
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
         AND pc.bandera IN (0,100))) 
-        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2)) 
+        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2,8)) 
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
         AND ISNULL(l.totalNeto2, 0) > 0)
