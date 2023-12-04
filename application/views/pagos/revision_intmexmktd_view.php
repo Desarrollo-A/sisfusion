@@ -4,16 +4,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade modal-alertas" id="modal_users" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -24,6 +14,7 @@
                 </div>
             </div>
         </div>
+        
         <div class="modal fade modal-alertas" id="modal_mktd" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -37,72 +28,6 @@
                     </form>
                 </div>
             </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modalParcialidad" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">SOLICITAR PARCIALIDAD DE PAGO</h4>
-                    </div>
-                    <form method="post" id="form_parcialidad">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul>
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
         
         <div class="content boxContent">
@@ -136,7 +61,7 @@
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                                <p class="input-tot pl-1" id="myText_nuevas">$0.00</p>
+                                                                <p class="input-tot pl-1" id="disponible_nuevas">$0.00</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -219,5 +144,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_mktd_intmex.js"></script>
 </body>
