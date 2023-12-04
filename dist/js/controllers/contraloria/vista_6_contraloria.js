@@ -666,6 +666,7 @@ $(document).on("click", ".regCorrElab", function () {
   $("#idClienteregCor").val($(this).attr("data-idCliente"));
   $("#fechaVencregCor").val($(this).attr("data-fecVen"));
   $("#nomLoteFakeEregCor").val($(this).attr("data-nomLote"));
+  $("#banderaFusion").val($(this).attr("data-banderaFusion"));
   nombreLote = $(this).data("nomlote");
   $(".lote").html(nombreLote);
   $("#regCorrElab").modal();
