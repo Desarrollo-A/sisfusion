@@ -226,33 +226,6 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
-        $dataUpdateClienteNew = array(
-            'nombre' => $datosClienteConfirm->nombre,
-            'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
-            'apellido_materno' => $datosClienteConfirm->apellido_materno,
-            'estado_civil' => $datosClienteConfirm->estado_civil,
-            'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
-            'correo' => $datosClienteConfirm->correo,
-            'telefono1' => $datosClienteConfirm->telefono1,
-            'ocupacion' => $datosClienteConfirm->ocupacion,
-            'modificado_por' => $this->session->userdata('id_usuario'),
-            'fecha_modificacion' => date('Y-m-d h:i:s')
-        );
-
-        //Se modifican datos a los ingresados como confirmación por los gerentes ooam
-        if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
-            $this->db->trans_rollback();
-
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                'color' => 'danger'
-            ));
-            return;
-        }
-
         $dataLiberacion = [
             'tipoLiberacion' => 8,
             'idLote' => $loteAOcupar,
@@ -580,6 +553,7 @@ class Reestructura extends CI_Controller{
             $totalSupDestino = 0;
             $arrayUpdateCliente = array();
             $precioM2Original = 0;
+$sumPrecioM2Original = 0;
 
             $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
@@ -778,8 +752,7 @@ class Reestructura extends CI_Controller{
             $idCondominio = $loteSelected->idCondominio;
             $nuevaSup = floatval($loteSelected->sup);
             $anteriorSup = floatval($clienteAnterior->sup);
-            $proceso = ( $anteriorSup == $nuevaSup || (($nuevaSup - $anteriorSup) <= ($anteriorSup * 0.05))) ? 2 : 4;
-
+            
             if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
                 $proceso = 2;
             }
@@ -997,7 +970,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave =>  $proceso == 3 ? 64 : ($proceso == 2 ? 65 : 66) ], $dataCliente);
+                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : ($proceso == 2 ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'status') {
                 $dataCliente = array_merge([$clave =>  1], $dataCliente);
@@ -1198,6 +1171,7 @@ class Reestructura extends CI_Controller{
         $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion=0
     ): bool
     {
+        $totalPropuestas = 0;
         $loteAnteriorInfo = $this->Reestructura_model->obtenerLotePorId($idLoteAnterior);
         $loteNuevoInfo = (is_null($loteInfo))
             ? $this->Reestructura_model->obtenerLotePorId($idLoteNuevo)
