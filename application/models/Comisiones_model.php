@@ -226,7 +226,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250) 
         AND l.registro_comision not IN (7) 
-        AND pc.bandera IN (0,100)) 
+        AND pc.bandera IN (0,100)
         AND cl.proceso IN (0)
         OR (
         l.idStatusContratacion >= 9 
