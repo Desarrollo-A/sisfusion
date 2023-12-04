@@ -4,7 +4,7 @@ class Caja_outside extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'Arcus'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->jwt_actions->authorize_externals('6489', apache_request_headers()["Authorization"]);
@@ -534,7 +534,8 @@ class Caja_outside extends CI_Controller {
         $date = new DateTime('now');
         $date->modify('-1 month');
         $date->format('Y-m-t');
-        $fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
+        //$fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
+        $fechaApartado = date('Y-m-d H:i:s');
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
@@ -713,6 +714,8 @@ class Caja_outside extends CI_Controller {
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
             );
             if ($dataError != null) {
+                echo "es lo success";
+                exit;
                 echo json_encode($dataError);
             } else {
                 echo json_encode(array());
@@ -931,8 +934,29 @@ class Caja_outside extends CI_Controller {
             }
         }
 
+        if (intval($data['prospecto'][0]['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+        //if (TRUE) {
+            $arcusData = array(
+                "propiedadRelacionada" => $id_lote,
+                "uid" => $data['prospecto'][0]['id_arcus'],
+                "estatus" => 4
+            );
+            $response = $this->arcus->sendLeadInfoRecord($arcusData);
+        }
+
         /***************************************/
         $this->actualizaProspecto($id_prospecto);
+
+        if (intval($data['prospecto'][0]['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+        //if (TRUE) {
+            $arcusData = array(
+                "propiedadRelacionada" => $id_lote,
+                "uid" => $data['prospecto'][0]['id_arcus'],
+                "estatus" => 4
+            );
+            $response = $this->arcus->sendLeadInfoRecord($arcusData);
+        }
+
         $response['Titulo'] = 'Prospecto - cliente';
         $response['resultado'] = TRUE;
         $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');

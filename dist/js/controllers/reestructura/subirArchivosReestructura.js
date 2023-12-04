@@ -68,9 +68,14 @@ $(document).on('click', '.btn-abrir-modal', function () {
         },
         success: function(data) {
             data = JSON.parse(data);
-            if(tipotransaccion==3){
+            if (data['copropietarios'].length > 0) {
                 loadCopropietarios(data['copropietarios']);
                 document.getElementById('co-propietarios').classList.remove('hide');
+            } 
+            else {
+                let copropietarios = document.getElementById('co-propietarios');
+                copropietarios.innerHTML = '';
+                document.getElementById('co-propietarios').classList.add('hide');
             }
             formArchivos(tipotransaccion, data['opcionesLotes'], flagEditar, nombreLote,banderaFusion,flagProcesoContraloria,flagProcesoJuridico)
         },
@@ -143,13 +148,27 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     console.log(id_rol_general)
     if (flagEditar == 0) {
         editarFile = 0;
-       let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
-       console.log(datos);
+        let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
+       let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
+       console.log(nombreLote);
+      /* nuevosDatosOrigenBack.map((elementoBack, index2) => {
+       // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
+        banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
+    });*/
+
+    if(banderaFusion != 0){
+        nuevosDatosOrigenBack.map((elementoBack, index2) => {
+            nombreLotes.push(elementoBack.nombreLote)
+        });
+    }else{
+        nombreLotes.push(nombreLote);
+    }
+    console.log('nombreLotes', nombreLotes);
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
-        elemento.idStatusLote == 17 ? nombreLotes.push(elemento.nombreLote) : '';
-
+       // elemento.idStatusLote == 17 || elemento.idStatusLote == 16  ? nombreLotes.push(elemento.nombreLote) : '';
+        
 
             contenidoHTML += '<div class="col col-xs-12 col-sm-12 ' + columnWith + ' mb-2">\n' +
                 '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
@@ -164,9 +183,12 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                            </div>\n' +
                 '                        </div>';
             if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
+
+                let tooltip = flagProcesoContraloria == 0 ? 'Contraloría no ha cargado corridas' : 'Descargar excel';
+                let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
-                    '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
+                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-placement="top" title="'+tooltip+'" ' +
                     '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
@@ -181,7 +203,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
             console.log(datos);
             nuevosDatosOrigen.map((elemento, index) => {
-            nombreLotes.push(elemento.nombreLote);
+            nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
             id_dxcs.push(elemento.id_pxl);
             rescisionArchivos.push(banderaFusion != 0 ? elemento.rescision : elemento.rescisionArchivo)
@@ -201,6 +223,18 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     }
     else if (flagEditar == 1) {
         editarFile = 1;
+        let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
+        console.log(datos);
+        /*nuevosDatosOrigenBack.map((elementoBack, index2) => {
+         elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
+     });*/
+        if(banderaFusion != 0){
+            nuevosDatosOrigenBack.map((elementoBack, index2) => {
+                nombreLotes.push(elementoBack.nombreLote)
+            });
+        }else{
+            nombreLotes.push(nombreLote);
+        }
         let nuevosDatosDestino = banderaFusion != 0 ? datos.filter(destino => destino.destino == 1) : datos;
         nuevosDatosDestino.map((elemento, index) => {
             arrayKeysArchivos.push(elemento);
@@ -243,7 +277,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
 
             nuevosDatosOrigen.map((elemento, index) => {
-                nombreLotes.push(elemento.nombreLote);
+                nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
                 elemento.id_dxc = banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc;
                 idsArchivos.push(banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc);
                 let idArchivo = banderaFusion != 0 ? elemento.id_pxl : elemento.id_dxc;
@@ -350,15 +384,15 @@ function loadCopropietarios(datos){
 $(document).on("click", "#sendRequestButton", function (e) {
     e.preventDefault();
     let flagEnviar = true;
-    let arrayContratos = [];
+    let arrayResicion = [];
     let validacionArray = [];
     let flagValidacion = 0;
     console.log(idsArchivos);
     for (let m = 0; m < idsArchivos.length; m++) {
         if($(`#Resicion_${idsArchivos[m]}`)[0].files[0] != undefined){
-            arrayContratos.push(1);
+            arrayResicion.push(1);
         }else{
-            arrayContratos.push(0);
+            arrayResicion.push(0);
         }        
     }
     arrayKeysArchivos.map((element, raiz)=>{
@@ -369,22 +403,31 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
-        console.log(arrayContratos);
-        if (flagValidacion>0 && arrayContratos.includes(1)) {
+        console.log('arrayResicion')
+        console.log(arrayResicion);
+        if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
+            flagEnviar = true;
+        }else if(flagValidacion > 0 && banderaFusionGlobal != 0){
+            flagEnviar = true;
+        }
+        else if(banderaFusionGlobal != 0 && (((arrayResicion.includes(1) || flagValidacion > 0) && id_rol_general == 15 ) || id_rol_general == 17)){
             flagEnviar = true;
         }else{
             //detecta que no hay ni un archivo subido
             if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
-                if (!arrayContratos.includes(1)) {
+                if (!arrayResicion.includes(1) && flagValidacion == 0) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
                 }
-            } else if (flagProceso == 2) {
+            } else if (flagProceso == 2  && flagProcesoContraloriaGlobal == 0 && id_rol_general == 17  ) {
                 alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                 flagEnviar = false;
             }
         }
+
+
+
         let data = new FormData();
         data.append("tipoProceso", flagProceso);
         data.append("longArray", arrayKeysArchivos.length);
@@ -469,7 +512,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             flagEnviar = false;
         }
         
-        if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayContratos.includes(0)) {
+        if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) && arrayResicion.includes(0)) {
             $("#spiner-loader").addClass('hide');
             const archivoLbl = ([2,5,6].includes(banderaTipoProceso)) ? 'archivo de rescisión' : 'documento de reestructura';
             alerts.showNotification('top', 'right', `Selecciona ${archivoLbl}`, 'warning');
