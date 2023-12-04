@@ -926,18 +926,6 @@ class Reestructura extends CI_Controller{
                 ));
                 return;
             }
-    
-            if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $idLoteOriginal)) {
-                $this->db->trans_rollback();
-    
-                echo json_encode(array(
-                    'titulo' => 'ERROR',
-                    'resultado' => FALSE,
-                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                    'color' => 'danger'
-                ));
-                return;
-            }
 
             $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
@@ -954,9 +942,6 @@ class Reestructura extends CI_Controller{
                 return;
             }
         }
-
-
-        
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
