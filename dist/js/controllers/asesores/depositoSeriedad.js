@@ -97,11 +97,14 @@ $("#tabla_deposito_seriedad").ready( function(){
     $(document).on('click', '.abrir_prospectos', function () {
         $('#nom_cliente').html('');
         $('#id_cliente_asignar').val(0);
+        $('#idLoteValue').val(0);
         const $itself = $(this);
         const id_cliente = $itself.attr('data-idCliente');
         const nombre_cliente = $itself.attr('data-nomCliente');
+        const idLoteValue = $itself.attr('data-idLote');
         $('#nom_cliente').append(nombre_cliente);
         $('#id_cliente_asignar').val(id_cliente);
+        $('#idLoteValue').val(idLoteValue);
         tabla_valores_ds = $("#table_prospectos").DataTable({
             width: '100%',
             bAutoWidth: true,
@@ -194,7 +197,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 {
                     "data": function(d){
                         return '<center><button class="btn-data btn-green became_prospect_to_cliente"' +
-                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
+                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-idLote="'+idLoteValue+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
                             '<i class="fas fa-user-check"></i></button></center>';
                     }
                 },
@@ -233,12 +236,13 @@ $("#tabla_deposito_seriedad").ready( function(){
         const $itself = $(this);
         const id_cliente = $itself.attr('data-id_cliente');
         const id_prospecto = $itself.attr('data-id_prospecto');
+        const idLote = $itself.attr('data-idLote');
         $('#modal_pregunta').modal();
         $(document).on('click', '#asignar_prospecto', function () {
             $.ajax({
                 type: 'POST',
                 url: general_base_url+'asesor/prospecto_a_cliente',
-                data: {'id_prospecto':id_prospecto,'id_cliente':id_cliente},
+                data: {'id_prospecto' : id_prospecto, 'id_cliente' : id_cliente, 'idLote' : idLote},
                 dataType: 'json',
                 beforeSend: function(){
                     $('#modal_loader_assign').modal();
@@ -695,7 +699,7 @@ function fillDataTable(idCondominio) {
                         d.id_prospecto == 0 &&
                         (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)
                     ) {
-                        buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
+                        buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}" data-idLote="${d.idLote}"> <i class="fas fa-user-check"></i></button>`;
                     }
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';

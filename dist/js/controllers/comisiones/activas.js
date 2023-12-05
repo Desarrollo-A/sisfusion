@@ -116,7 +116,7 @@ $(document).ready(function () {
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 else{
-                    if(d.totalNeto2 == null) {
+                    if(d.totalNeto2 == null && d.proceso == 0) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
@@ -164,41 +164,24 @@ $(document).ready(function () {
                 return fechaActualizacion;
             }
         },
-        { 
-            data: function (d) {
-            var BtnStats = '';
-            var RegresaActiva = '';
-
-            if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
-                BtnStats = 'Asignar Precio';
-            }else if(d.tipo_venta==null || d.tipo_venta==0) {
-                BtnStats = 'Asignar Tipo Venta';
-            }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
-                BtnStats = 'Asignar Prospecto';
-            }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
-                BtnStats = 'Asignar Subdirector';
-            }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
-                BtnStats = 'Asignar Sede';
-            }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
-                BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
-            } else{
-                varColor  = 'btn-deepGray';
-
-                if(d.fecha_sistema != null && d.registro_comision != 8 && d.registro_comision != 0) {
-                    RegresaActiva = '<button href="#" data-idpagoc="' + d.idLote + '" data-nombreLote="' + d.nombreLote + '"  ' +'class="btn-data btn-violetChin update_bandera" data-toggle="tooltip" data-placement="top" title="Enviar a activas">' +'<i class="fas fa-undo-alt"></i></button>';
-                }
-                    BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
-                    if(d.ooam == 0 && d.ventas == 1){
-                        BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                    } else if(d.ooam == 1 && d.ventas == 0){
-                        BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                    } else if(d.ooam == 1 && d.ventas == 1){
-                        BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="2" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-yellow verify_neodata" title="VERIFICAR EN NEODATA VENTAS">'+'<span class="material-icons">verified_user</span></button>';
-                        BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="1" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data btn-azure verify_neodata" title="VERIFICAR EN NEODATA OOAM">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+            { data: function (d) {
+                var BtnStats = '';
+                var RegresaActiva = '';
+                    if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
+                        BtnStats = 'Asignar Precio';
+                    }else if(d.tipo_venta==null || d.tipo_venta==0) {
+                        BtnStats = 'Asignar Tipo Venta';
+                    }else if((d.id_prospecto==null || d.id_prospecto==''|| d.id_prospecto==0) && d.lugar_prospeccion == 6) {
+                        BtnStats = 'Asignar Prospecto';
+                    }else if(d.id_subdirector==null || d.id_subdirector==''|| d.id_subdirector==0) {
+                        BtnStats = 'Asignar Subdirector';
+                    }else if(d.id_sede==null || d.id_sede==''|| d.id_sede==0) {
+                        BtnStats = 'Asignar Sede';
+                    }else if(d.plan_comision==null || d.plan_comision==''|| d.plan_comision==0) {
+                        BtnStats = 'Asignar Plan <br> Sede: '+d.sede;
                     } else{
                     
                     BtnStats += '<button href="#" value="'+d.idLote+'" data-ooam="0" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="VERIFICAR EN NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
-                }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }

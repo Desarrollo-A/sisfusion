@@ -324,7 +324,8 @@ function getAssimilatedCommissions(proyecto, condominio){
         {
             data: function( data ){
                 var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_remanente" title="Detalles">' +'<i class="fas fa-info"></i></button>';
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+
                 return '<div class="d-flex justify-center">'+ BtnStats +'</div>';
             }
         }],

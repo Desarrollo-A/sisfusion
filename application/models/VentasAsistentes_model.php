@@ -128,10 +128,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
                 $filtroGerente = "";
-                if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507)";
-                    $filtroSede = "";
-                } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
                     $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
@@ -148,7 +145,13 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
-                } 
+                } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916)";
+                    $filtroSede = "";
+                } else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                    $filtroSede = "";
+                }
             }
             else { // SON EEC
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
@@ -322,10 +325,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
                 $filtroGerente = "";
-                if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507)";
-                    $filtroSede = "";
-                } else if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
                     $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
@@ -342,7 +342,13 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
-                } 
+                }  else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916)";
+                    $filtroSede = "";
+                } else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                    $filtroSede = "";
+                }
             }
             else { // SON EEC
                 $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

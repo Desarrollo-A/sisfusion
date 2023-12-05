@@ -332,7 +332,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             data: function( data ){
                 let btns = '';
 
-                const BTN_DETREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_DETREM = `<button href="#" value="${data.id_pago_i}"  data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="DETALLES"><i class="fas fa-info"></i></button>`;
                 const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
                 const BTN_ACTREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="ACTIVAR SOLICITUD"><i class="fas fa-play"></i></button>`
 

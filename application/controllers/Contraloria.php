@@ -4,7 +4,7 @@ class Contraloria extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model', 'Caja_model_outside', 'Reestructura_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Formatter','permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Formatter','permisos_sidebar',  'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('email');
@@ -1003,6 +1003,7 @@ class Contraloria extends CI_Controller {
         $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
         $tipo_enganche = $this->input->post('tipo_enganche');
         $estatus_enganche = $this->input->post('estatus_enganche');
+        $banderaFusion = $this->input->post('banderaFusion');
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = 6;
@@ -1171,9 +1172,22 @@ class Contraloria extends CI_Controller {
             $historialSaltoMovimientos[1]["idCondominio"] = $idCondominio;
             $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
-            $arreglo["idStatusContratacion"] = 8;
-            $arreglo["idMovimiento"] = 38;
+            $historialSaltoMovimientos[2]["idStatusContratacion"] = 11;
+            $historialSaltoMovimientos[2]["idMovimiento"] = 41;
+            $historialSaltoMovimientos[2]["nombreLote"] = $nombreLote;
+            $historialSaltoMovimientos[2]["comentario"] = $comentario;
+            $historialSaltoMovimientos[2]["usuario"] = $this->session->userdata('id_usuario');
+            $historialSaltoMovimientos[2]["perfil"] = $this->session->userdata('id_rol');
+            $historialSaltoMovimientos[2]["modificado"] = date("Y-m-d H:i:s");
+            $historialSaltoMovimientos[2]["fechaVenc"] = $fechaVenc;
+            $historialSaltoMovimientos[2]["idLote"] = $idLote;
+            $historialSaltoMovimientos[2]["idCondominio"] = $idCondominio;
+            $historialSaltoMovimientos[2]["idCliente"] = $idCliente;
+
+            $arreglo["idStatusContratacion"] = 11;
+            $arreglo["idMovimiento"] = 41;
             $arreglo["status8Flag"] = 1;
+            $arreglo["validacionEnganche"] = 'VALIDADO';
         }
 
         $assigned_location = null;
@@ -1274,7 +1288,8 @@ class Contraloria extends CI_Controller {
         $data = [
             'tipoLiberacion' => 7,
             'idLote' => $loteAnterior->idLote,
-            'idLoteNuevo' => $idLote
+            'idLoteNuevo' => $idLote,
+            'banderaFusion' => $banderaFusion
         ];
 
         if (!$this->Reestructura_model->aplicaLiberacion($data)) {
@@ -1798,14 +1813,14 @@ class Contraloria extends CI_Controller {
     }
 
     public function editar_registro_lote_contraloria_proceceso9() {
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado=date("Y-m-d H:i:s");
-        $fechaVenc=$this->input->post('fechaVenc');
-        $totalNeto2=$this->input->post('totalNeto2');
+        $idLote = $this->input->post('idLote');
+        $idCondominio = $this->input->post('idCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario = $this->input->post('comentario');
+        $modificado = date("Y-m-d H:i:s");
+        $fechaVenc = $this->input->post('fechaVenc');
+        $totalNeto2 = $this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
         $charactersNoPermit = array('$',',');
@@ -1813,42 +1828,50 @@ class Contraloria extends CI_Controller {
         $id_usuario = $this->session->userdata('id_usuario');
 
         $arreglo=array();
-        $arreglo["idStatusContratacion"]=9;
-        $arreglo["idMovimiento"]=39;
-        $arreglo["comentario"]=$comentario;
+        $arreglo["idStatusContratacion"] = 9;
+        $arreglo["idMovimiento"] = 39;
+        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $id_usuario;
-        $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
-        $arreglo["fechaVenc"]= $modificado;
-        $arreglo["totalNeto2"]=$totalNeto2;
+        $arreglo["perfil"] = $this->session->userdata('id_rol');
+        $arreglo["modificado"] = date("Y-m-d H:i:s");
+        $arreglo["fechaVenc"] = $modificado;
+        $arreglo["totalNeto2"] = $totalNeto2;
 
         $arreglo2=array();
-        $arreglo2["idStatusContratacion"]=9;
-        $arreglo2["idMovimiento"]=39;
-        $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
+        $arreglo2["idStatusContratacion"] = 9;
+        $arreglo2["idMovimiento"] = 39;
+        $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $id_usuario;
-        $arreglo2["perfil"]=$this->session->userdata('id_rol');
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $fechaVenc;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
+        $arreglo2["perfil"] = $this->session->userdata('id_rol');
+        $arreglo2["modificado"] = date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"] = $fechaVenc;
+        $arreglo2["idLote"] = $idLote;
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
 
         $validate = $this->Contraloria_model->validateSt9($idLote);
-
-        $this->Contraloria_model->validate90Dias($idLote,$idCliente,$this->session->userdata('id_usuario'));
-
-        if($validate == 1){
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+        $this->Contraloria_model->validate90Dias($idLote, $idCliente, $this->session->userdata('id_usuario'));
+        
+        if($validate == 1) {
+            if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
+                if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+                //if (TRUE) {
+                    $arcusData = array(
+                        "propiedadRelacionada" => $idLote,
+                        "uid" => $this->input->post('uid'),
+                        "estatus" => 5
+                    );
+                    $response = $this->arcus->sendLeadInfoRecord($arcusData);
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
-            }else{
+            } else {
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-        }else {
+        } else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
         }
@@ -2179,43 +2202,42 @@ class Contraloria extends CI_Controller {
     }
 
     public function editar_registro_lote_contraloria_proceceso15() {
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado=date('Y-m-d H:i:s');
-        $fechaVenc=$this->input->post('fechaVenc');
+        $idLote = $this->input->post('idLote');
+        $idCondominio = $this->input->post('idCondominio');
+        $nombreLote = $this->input->post('nombreLote');
+        $idCliente = $this->input->post('idCliente');
+        $comentario  =$this->input->post('comentario');
+        $modificado = date('Y-m-d H:i:s');
+        $fechaVenc = $this->input->post('fechaVenc');
 
         $arreglo=array();
-        $arreglo["idStatusContratacion"]=15;
-        $arreglo["idMovimiento"]=45;
-        $arreglo["comentario"]=$comentario;
-        $arreglo["idStatusLote"]=2;
-        $arreglo["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
-        $arreglo["fechaVenc"]= $modificado;
+        $arreglo["idStatusContratacion"] = 15;
+        $arreglo["idMovimiento"] = 45;
+        $arreglo["comentario"] = $comentario;
+        $arreglo["idStatusLote"] = 2;
+        $arreglo["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo["perfil"] = $this->session->userdata('id_rol');
+        $arreglo["modificado"] = date("Y-m-d H:i:s");
+        $arreglo["fechaVenc"] = $modificado;
 
 
         $arreglo2=array();
-        $arreglo2["idStatusContratacion"]=15;
-        $arreglo2["idMovimiento"]=45;
-        $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
-        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo2["perfil"]=$this->session->userdata('id_rol');
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $fechaVenc;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
+        $arreglo2["idStatusContratacion"] = 15;
+        $arreglo2["idMovimiento"] = 45;
+        $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
+        $arreglo2["usuario"] = $this->session->userdata('id_usuario');
+        $arreglo2["perfil"] = $this->session->userdata('id_rol');
+        $arreglo2["modificado"] = date("Y-m-d H:i:s");
+        $arreglo2["fechaVenc"] = $fechaVenc;
+        $arreglo2["idLote"] = $idLote;
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
 
 
         $validate = $this->Contraloria_model->validateSt15($idLote);
-        if($validate == 1){
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-
+        if ($validate == 1) {
+            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
                 $insertToData = array(
                     "movimiento" => 'CONTRATO FIRMADO',
                     "expediente" => '',
@@ -2232,13 +2254,25 @@ class Contraloria extends CI_Controller {
                 );
                 $this->General_model->addRecord('historial_documento', $insertToData);
 
+                if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+                //if (TRUE) {
+                    $arcusData = array(
+                        "id" => $this->input->post('id'),
+                        "propiedadRelacionada" => $this->input->post('propiedadRelacionada'),
+                        "fechaDeCompra" => $this->input->post('fechaDeCompra'),
+                        "montoDelNegocio" => $this->input->post('montoDelNegocio'),
+                        "uid" => $this->input->post('uid'),
+                        "estatus" => 1
+                    );
+                    $response = $this->arcus->sendLeadInfoRecord($arcusData);
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
-            }else{
+            } else {
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-        }else {
+        } else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
         }

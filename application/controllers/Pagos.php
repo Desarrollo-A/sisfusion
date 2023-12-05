@@ -1086,7 +1086,7 @@ class Pagos extends CI_Controller
                 'estatus' => 1,
                 'comentario' =>  'INTERNOMEX APLICO PAGO' 
               );
-               array_push($data,$row_arr);
+                    array_push($data,$row_arr);
             }
             $id_pago_i = rtrim($id_pago_i, $sep);
         
@@ -1108,6 +1108,16 @@ class Pagos extends CI_Controller
         echo json_encode($data_response);
         }
     }
+
+    public function getCondominioDesc($residenciales){
+      $data = $this->Asesor_model->getCondominioDesc($residenciales);
+      if ($data != null) {
+          echo json_encode($data);
+      } else {
+          echo json_encode(array());
+      }
+      exit;
+  }
 
 
 
