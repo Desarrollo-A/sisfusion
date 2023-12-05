@@ -1395,8 +1395,6 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
-        btnContratoFirmado = 'fa-eye';
-        tooltipCF = 'VER CONTRATO FIRMADO';
     }
     if(d.idContratoFirmado != null){
         btnContratoFirmado = 'fa-eye';
