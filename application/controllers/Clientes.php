@@ -2,7 +2,7 @@
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside', 'General_model'));
+        $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside', 'General_model', 'ReporteVentas_model'));
         $this->load->library(array('session','form_validation'));
         $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
@@ -110,6 +110,11 @@ public function getRpClientes()
         $this->load->view('template/header');
         $this->load->view("clientes/clubmaderas_report");
     }
+    
+    public function reportesInfo(){
+        $this->load->view('template/header');
+        $this->load->view("ventas/reporteVentas_view");
+    } 
 
 /*---------------------------------------------------------------PREVENTA------------------------------------------------*/
  public function updateStatusPreventa(){
@@ -2780,5 +2785,17 @@ public function getStatusMktdPreventa(){
 
         $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
         echo json_encode($data);
+    }
+    
+    public function getFechaBetween(){
+	  
+        if (isset($_POST) || !empty($_POST)) {
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $data['data'] = $this->ReporteVentas_model->getInventarioData2($beginDate, $endDate);
+            echo json_encode($data);
+        } else{
+             echo json_encode(array("error" => "No se han recibido datos POST"));
+        }
     }
 }
