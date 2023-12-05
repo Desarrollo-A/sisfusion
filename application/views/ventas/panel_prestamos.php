@@ -61,7 +61,7 @@
 						</div>
 						<div class="modal-footer">     
 							<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>	
-							<button  type="button" id="updatePrestamo" class="btn btn-gral-data updatePrestamo">Aceptar</button>
+							<button  type="button" id="updatePrestamo" class="btn btn-primary updatePrestamo">Aceptar</button>
 						</div>
 					</form>
 				</div>
@@ -183,7 +183,7 @@
 													<th>USUARIO</th>
 													<th>MONTO</th>
 													<th>NUMERO</th>
-													<th>PAGO CORRESP.</th>
+													<th>PAGO CORRESPONDIENTE</th>
 													<th>ABONADO</th>
 													<th>PENDIENTE</th>
 													<th>COMENTARIO</th>
