@@ -234,10 +234,10 @@ class Comisiones_model extends CI_Model {
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
         AND pc.bandera IN (0,100))) 
-        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2,8)) 
+        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
-        AND ISNULL(l.totalNeto2, 0) > 0)
+        )
         ORDER BY l.idLote"); 
         return $query;
     }
@@ -3689,18 +3689,20 @@ class Comisiones_model extends CI_Model {
     public function porcentajesReubicacion($clienteReubicacion) {
         $validarLotesFusion = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idCliente = $clienteReubicacion");
         $idLotePvOrigen = $validarLotesFusion->row()->idLotePvOrigen;
-        $stringLotesFusion = $this->db->query("SELECT STRING_AGG(idLote,',') cadenaLotes FROM lotesFusion WHERE origen = 1 AND idLotePvOrigen = $idLotePvOrigen GROUP BY idLotePvOrigen");
-        $lotesString = $stringLotesFusion->row()->cadenaLotes;
 
+        echo $idLotePvOrigen  
 
         if(!empty($idLotePvOrigen)){ 
 
-            return $this->db->query("SELECT (SUM(cr.comision_total)/lf2.lotesDividir) as comision_total, (SUM(cr.porcentaje_decimal)/lf2.lotesDividir) porcentaje_decimal, CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_usuario, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, $clienteReubicacion AS idCliente, $idLotePvOrigen AS idLote 
+            $stringLotesFusion = $this->db->query("SELECT STRING_AGG(idLote,',') cadenaLotes FROM lotesFusion WHERE origen = 1 AND idLotePvOrigen = $idLotePvOrigen GROUP BY idLotePvOrigen");
+            $lotesString = $stringLotesFusion->row()->cadenaLotes;
+
+            return $this->db->query("SELECT (SUM(cr.comision_total)/lf2.lotesDividir) as comision_total, (SUM(cr.porcentaje_decimal)/lf2.lotesDividir) porcentaje_decimal, CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_usuario, cr.rol_genesrado AS id_rol, oxc.nombre AS detail_rol, $clienteReubicacion AS idCliente, $idLotePvOrigen AS idLote 
             FROM comisionesReubicadas cr 
             INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario
             INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 1 AND oxc.id_opcion = cr.rol_generado 
-            LEFT JOIN (SELECT COUNT(*) lotesDividir, lf2.idLotePvOrigen FROM lotesFusion lf2 WHERE lf2.idLotePvOrigen = 48363 and lf2.destino = 1
-            GROUP BY lf2.idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = 48363	
+            LEFT JOIN (SELECT COUNT(*) lotesDividir, lf2.idLotePvOrigen FROM lotesFusion lf2 WHERE lf2.idLotePvOrigen = $idLotePvOrigen and lf2.destino = 1
+            GROUP BY lf2.idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = $idLotePvOrigen	
             WHERE cr.idLote IN($lotesString) 
             GROUP BY cr.id_usuario, cr.rol_generado, usu.nombre, usu.apellido_paterno, usu.apellido_materno, oxc.nombre, lf2.lotesDividir
             ");
