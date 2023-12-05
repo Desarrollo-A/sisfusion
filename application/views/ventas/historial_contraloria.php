@@ -69,9 +69,9 @@
                                     <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
                                 </li>
 
-                                <li>
+                                <!-- <li>
                                     <a href="#solicitudesOOAM" role="tab" data-toggle="tab">Historial OOAM</a>
-                                </li>
+                                </li> -->
                             <?php } ?>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -274,7 +274,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="tab-pane" id="solicitudesOOAM">
+                                            <!-- <div class="tab-pane" id="solicitudesOOAM">
                                                 <div class="encabezadoBox">
                                                     <div class="row">
                                                         <h3 class="card-title center-align">Historial OOAM</h3>
@@ -304,7 +304,7 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -319,7 +319,12 @@
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/Ooam/historial_colaborador.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 </body>
