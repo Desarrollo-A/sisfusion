@@ -60,10 +60,10 @@ $('#tablaAsignacionCartera').DataTable({
         }
     },
     {
-        text: '<i class="fas fa-exchange-alt" aria-hidden="true"></i>',
+        text: '<i class="fas fa-random"></i>',
         className: 'btn-large btn-sky btn-asignar-ventaML botonEnviar hide',
-        titleAttr: 'Asignar venta de lotes seleccionados',
-        title:"Asignar venta de lotes seleccionados",
+        titleAttr: 'Fusionar lotes',
+        title:"Fusionar lotes",
     }],
     columnDefs: [{
         searchable: false,
