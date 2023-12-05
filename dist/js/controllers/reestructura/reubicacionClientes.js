@@ -1557,7 +1557,8 @@ const botonesAccionReubicacion = (d) => {
         data-placement="left"
         title="Confirma / edita el nombre del lote seleccionado por el cliente"
         data-idLote="${d.idLote}"
-        data-idLotePreseleccionado="${d.lotePreseleccionado}">
+        data-idLotePreseleccionado="${d.lotePreseleccionado}"
+        ${botonFusionadoEstatus}>
         <i class="fas fa-hand-pointer"></i>
     </button>`;
 
