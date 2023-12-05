@@ -47,7 +47,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Asimilados lotes</a></li>
-                        <!-- <li><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados ooam</a></li> -->
+                        <li><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados ooam</a></li>
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -95,26 +95,22 @@
                                                             <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
                                                                 <thead>
                                                                     <tr>
-                                                                    <th></th>
-                                                                    <th>ID PAGO</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>PRECIO DEL LOTE</th>
-                                                                    <th>EMPRESA</th>
-                                                                    <th>TOTAL DE LA COMISIÓN</th>
-                                                                    <th>PAGADO POR EL CLIENTE</th>
-                                                                    <th>SOLICITADO</th>
-                                                                    <th>IMPTO.</th>
-                                                                    <th>DESCUENTO</th>
-                                                                    <th>TOTAL A PAGAR</th>
-                                                                    <th>TIPO DE VENTA</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>PUESTO</th>
-                                                                    <th>CÓDIGO POSTAL</th>
-                                                                    <th>FECHA ENVÍO</th>
-                                                                    <th>ACCIONES</th>
+                                                                        <th></th>
+                                                                        <th>ID PAGO</th>
+                                                                        <th>PROYECTO</th>
+                                                                        <th>CONDOMINIO</th>
+                                                                        <th>LOTE</th>
+                                                                        <th>REFERENCIA</th>
+                                                                        <th>PRECIO DEL LOTE</th>
+                                                                        <th>EMPRESA</th>
+                                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                                        <th>PAGADO POR EL CLIENTE</th>
+                                                                        <th>TOTAL A PAGAR</th>
+                                                                        <th>TIPO DE VENTA</th>
+                                                                        <th>USUARIO</th>
+                                                                        <th>PUESTO</th>
+                                                                        <th>FECHA DE ENVÍO</th>
+                                                                        <th>ACCIONES</th>
                                                                     </tr>
                                                                 </thead>
                                                             </table>
@@ -196,5 +192,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados.js"></script>
-    <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_ooam.js"></script> -->
+    <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_ooam.js"></script>
 </body>
