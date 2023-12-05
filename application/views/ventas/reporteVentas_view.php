@@ -47,24 +47,24 @@
                                     <table class="table-striped table-hover" id="tablaReportes" name="tablaReportes">
                                         <thead>
                                             <tr>
-                                                <th>PROYECTO</th><!--0-->
-                                                <th>CONDOMINIO</th><!--1-->
-                                                <th>LOTE</th><!--2-->
-                                                <th>ID LOTE</th><!--3-->
-                                                <th>REFERENCIAs</th><!--4-->
-                                                <th>NOMBRE CLIENTES</th><!--5-->
-                                                <th>FECHA APARTADO</th><!--6-->
-                                                <th>ASESOR</th><!--7-->
-                                                <th>COORDINADOR</th><!--8-->
-                                                <th>GERENTE</th><!--9-->
-                                                <th>SUBDIRECTOR</th><!--10-->
-                                                <th>DIRECTOR REGIONAL</th><!--11-->
-                                                <th>DIRECTOR REGIONAL 2</th><!--12-->
-                                                <th>ESTATUS LOTE</th><!--13-->
-                                                <th>ESTATUS DE CONTRATACIÓN</th><!--14-->
-                                                <th>DESCRIPCION</th><!--15-->
-                                                <th>COMENTARIO</th><!--16-->
-                                                <th>UBICACIÓN VENTA</th><!--17-->
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE</th>
+                                                <th>REFERENCIAs</th>
+                                                <th>NOMBRE CLIENTES</th>
+                                                <th>FECHA APARTADO</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
+                                                <th>GERENTE</th>
+                                                <th>SUBDIRECTOR</th>
+                                                <th>DIRECTOR REGIONAL</th>
+                                                <th>DIRECTOR REGIONAL 2</th>
+                                                <th>ESTATUS LOTE</th>
+                                                <th>ESTATUS DE CONTRATACIÓN</th>
+                                                <th>DESCRIPCION</th>
+                                                <th>COMENTARIO</th>
+                                                <th>UBICACIÓN VENTA</th>
                                             </tr>
                                         </thead>
                                     </table>

@@ -32,7 +32,7 @@ class ReporteVentas_model extends CI_Model{
             $where = "AND cl.id_gerente = $id_lider";
         else if ($id_rol == 7) // MJ: ASESOR
             $where = "AND cl.id_asesor = $id_usuario";
-        else if ($id_rol == 9) // MJ: COORDINADIR
+        else if ($id_rol == 9) // MJ: COORDINADOR
             $where = "AND cl.id_coordinador = $id_usuario";
 
         $query = $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.referencia,
