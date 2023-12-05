@@ -107,7 +107,7 @@ $(document).ready(function () {
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 else{
-                    if(d.totalNeto2 == null) {
+                    if(d.totalNeto2 == null && d.proceso == 0) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
@@ -120,7 +120,7 @@ $(document).ready(function () {
                 }
                 return labelEstatus;
             }},
-           
+    
             { data: function (d) {
                 return formatMoney(d.abono_comisiones);;
             }},
@@ -166,7 +166,7 @@ $(document).ready(function () {
             }},
             { data: function (d) {
                 var BtnStats = '';
-                    if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
+                    if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
                         BtnStats = 'Asignar Tipo Venta';
