@@ -3688,11 +3688,9 @@ class Comisiones_model extends CI_Model {
 
     public function porcentajesReubicacion($clienteReubicacion) {
         $validarLotesFusion = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idCliente = $clienteReubicacion");
-        $idLotePvOrigen = $validarLotesFusion->row()->idLotePvOrigen;
+        $idLotePvOrigen = !empty($validarLotesFusion->row()->idLotePvOrigen)?$validarLotesFusion->row()->idLotePvOrigen:0;
 
-        echo $idLotePvOrigen  
-
-        if(!empty($idLotePvOrigen)){ 
+        if($idLotePvOrigen != 0){ 
 
             $stringLotesFusion = $this->db->query("SELECT STRING_AGG(idLote,',') cadenaLotes FROM lotesFusion WHERE origen = 1 AND idLotePvOrigen = $idLotePvOrigen GROUP BY idLotePvOrigen");
             $lotesString = $stringLotesFusion->row()->cadenaLotes;
@@ -3708,7 +3706,6 @@ class Comisiones_model extends CI_Model {
             ");
 
         }else{
-
             return $this->db->query("SELECT CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, cr.porcentaje_decimal, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, cr.idCliente, cr.idLote, lo.totalNeto2 , cl.plan_comision , pc.descripcion, cr.nombreLote 
             FROM comisionesReubicadas cr
             INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario
