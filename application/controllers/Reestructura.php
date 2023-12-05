@@ -553,7 +553,7 @@ class Reestructura extends CI_Controller{
             $totalSupDestino = 0;
             $arrayUpdateCliente = array();
             $precioM2Original = 0;
-$sumPrecioM2Original = 0;
+            $sumPrecioM2Original = 0;
 
             $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
@@ -724,23 +724,21 @@ $sumPrecioM2Original = 0;
                         ));
                         return;
                     }
+                    $banderaInsertResicion = $banderaInsertResicion + 1;
                 }
-                $banderaInsertResicion = $banderaInsertResicion + 1;
             }
 
-            $this->db->trans_rollback();
-            exit;
-//            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
-//                $this->db->trans_rollback();
-//
-//                echo json_encode(array(
-//                    'titulo' => 'ERROR',
-//                    'resultado' => FALSE,
-//                    'message' => 'Error al actualizar los clientes anteriores',
-//                    'color' => 'danger'
-//                ));
-//                return;
-//            }
+            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
+                $this->db->trans_rollback();
+
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar los clientes anteriores',
+                    'color' => 'danger'
+                ));
+                return;
+            }
 
 
             //No se realiza update en selección de propuestas
@@ -1168,7 +1166,7 @@ $sumPrecioM2Original = 0;
 
     function moverExpediente(
         $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
-        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion=0
+        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion
     ): bool
     {
         $totalPropuestas = 0;
@@ -1229,21 +1227,23 @@ $sumPrecioM2Original = 0;
                     );
                 }
             }
+                $documentacion[] = array(
+                    'movimiento' => $doc['movimiento'],
+                    'expediente' => $expedienteAnterior,
+                    'modificado' => $modificado,
+                    'status' => 1,
+                    'idCliente' => $idClienteNuevo,
+                    'idCondominio' => $loteNuevoInfo->idCondominio,
+                    'idLote' => $idLoteNuevo,
+                    'idUser' => NULL,
+                    'tipo_documento' => 0,
+                    'id_autorizacion' => 0,
+                    'tipo_doc' => $doc['tipo_doc'],
+                    'estatus_validacion' => 0
+                );
 
-            $documentacion[] = array(
-                'movimiento' => $doc['movimiento'],
-                'expediente' => $expedienteAnterior,
-                'modificado' => $modificado,
-                'status' => 1,
-                'idCliente' => $idClienteNuevo,
-                'idCondominio' => $loteNuevoInfo->idCondominio,
-                'idLote' => $idLoteNuevo,
-                'idUser' => NULL,
-                'tipo_documento' => 0,
-                'id_autorizacion' => 0,
-                'tipo_doc' => $doc['tipo_doc'],
-                'estatus_validacion' => 0
-        );
+
+
         }
 
         // Crear las ramas extras que no se tengan en el expediente anterior
@@ -1272,16 +1272,42 @@ $sumPrecioM2Original = 0;
 
         $a = 0;
         // Ciclo para las nuevas ramas a agregar
+
         foreach ($expedienteNuevo as $doc) {
-            if ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 36) {
-                if($flagFusion == 1){
-                    foreach ($dataFusion as $dataLote){
-                        if($dataLote['destino'] == 1){
-                            if($banderaInsertResicion==0){
+            $banderainterna = 1;//para que pueda hacer el salto de archivos dentro de los ciclos
+            if ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 35) { //archivos a tomar en cuenta
+                if($flagFusion == 1){ //si son fusiones
+                    foreach ($dataFusion as $dataLote){//recorre el arreglo de los lotes fusionados
+                        if($dataLote['destino'] == 1 && $banderaInsertResicion==0 ){//Revisa que solo pase una vez de todos los destinos
+                            foreach ($dataFusion as $dataLote1 => $elemento){//vuelve a recorrer el arreglo de fusion para sacar los lotes de origen
+                                if($elemento['origen'] == 1 && $banderainterna <= $dataLote['originales']
+                                    && ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 35)){ //dentro del primer destino inserta las ramas para resicion de contrato dependiendo los lotes de origen
+                                        $nombreLoteOrigen = $dataLote1['nombreLotes'];
+                                        $nombreResLoteOrigen = $dataLote1['rescision'];
+                                        copy(
+                                            "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
+                                            $ubicacionFolder.$expedienteAnterior
+                                        );
+                                        $documentacion[] = array(
+                                            'movimiento' => $doc['nombre'],
+                                            'expediente' => $elemento['rescision'],
+                                            'modificado' => $modificado,
+                                            'status' => 1,
+                                            'idCliente' => $idClienteNuevo,
+                                            'idCondominio' => $loteNuevoInfo->idCondominio,
+                                            'idLote' => $idLoteNuevo,
+                                            'idUser' => NULL,
+                                            'tipo_documento' => 0,
+                                            'id_autorizacion' => 0,
+                                            'tipo_doc' => $doc['id_opcion'],
+                                            'estatus_validacion' => 0
+                                        );
+                                }
+                                $banderainterna = $banderainterna + 1;
+                            }
+                            continue;//continua con las ramas de los demás lotes de propuesta y que no se les insertara nada de fusion
                                 $nombreLoteOrigen = $dataLote['nombreLotes'];
                                 $nombreResLoteOrigen = $dataLote['rescision'];
-                                $a = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen";
-                                $b = $ubicacionFolder.$expedienteAnterior;
                                 copy(
                                     "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
                                     $ubicacionFolder.$expedienteAnterior
@@ -1301,10 +1327,7 @@ $sumPrecioM2Original = 0;
                                     'estatus_validacion' => 0
                                 );
                                 continue;
-                            }
-                            else{
-                                continue;
-                            }
+
                         }
                     }
                 }
@@ -1333,7 +1356,6 @@ $sumPrecioM2Original = 0;
     
                     continue;
                 }
-                
             }
 
             // Corrida, contrato
@@ -1372,26 +1394,26 @@ $sumPrecioM2Original = 0;
                 continue;
             }
 
-            $documentacion[] = array(
-                'movimiento' => $doc['nombre'],
-                'expediente' => NULL,
-                'modificado' => $modificado,
-                'status' => 1,
-                'idCliente' => $idClienteNuevo,
-                'idCondominio' => $loteNuevoInfo->idCondominio,
-                'idLote' => $idLoteNuevo,
-                'idUser' => NULL,
-                'tipo_documento' => 0,
-                'id_autorizacion' => 0,
-                'tipo_doc' => $doc['id_opcion'],
-                'estatus_validacion' => 0
-            );
+            if($doc['id_opcion'] != 33){
+                if( $doc['id_opcion'] != 35){
+                    $documentacion[] = array(
+                        'movimiento' => $doc['nombre'],
+                        'expediente' => NULL,
+                        'modificado' => $modificado,
+                        'status' => 1,
+                        'idCliente' => $idClienteNuevo,
+                        'idCondominio' => $loteNuevoInfo->idCondominio,
+                        'idLote' => $idLoteNuevo,
+                        'idUser' => NULL,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => $doc['id_opcion'],
+                        'estatus_validacion' => 0
+                    );
+                }
+            }
         }
-
-        print_r(json_encode($documentacion));
-
-            return true;
-//        return $this->General_model->insertBatch('historial_documento', $documentacion);
+        return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 
     public function copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteNuevo, $idLote): bool
