@@ -552,7 +552,7 @@ class Reestructura extends CI_Controller{
             $totalSupDestino = 0;
             $arrayUpdateCliente = array();
             $precioM2Original = 0;
-$sumPrecioM2Original = 0;
+            $sumPrecioM2Original = 0;
 
             $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
