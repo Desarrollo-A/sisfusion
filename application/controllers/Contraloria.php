@@ -1285,17 +1285,46 @@ class Contraloria extends CI_Controller {
 
     $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
     if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-        $data = [
-            'tipoLiberacion' => 7,
-            'idLote' => $loteAnterior->idLote,
-            'idLoteNuevo' => $idLote,
-            'banderaFusion' => $banderaFusion
-        ];
 
-        if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-            $data['message'] = 'ERROR';
-            echo json_encode($data);
-            return;
+
+        if($banderaFusion != 0){
+            $lotesFusion = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
+            $lotesFusionOrigen =  $lotesFusion['origen'];
+            $lotesFusionDestino =  $lotesFusion['destino'];
+
+            for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
+                if($lotesFusionOrigen[$x]['origen'] == 1){
+                    $data = [
+                        'tipoLiberacion' => 7,
+                        'idLote' => $lotesFusionOrigen[$x]['idLote'],
+                        'idLoteNuevo' => NULL,
+                        'banderaFusion' => $banderaFusion,
+                    ];
+
+                    if($x == count($lotesFusionOrigen) -1){
+                        if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+                            $data['message'] = 'ERROR';
+                            echo json_encode($data);
+                            return;
+                        }
+                    }else{
+                        $this->Reestructura_model->aplicaLiberacion($data);
+                    }
+                }  
+            }
+        }else{
+            $data = [
+                'tipoLiberacion' => 7,
+                'idLote' => $loteAnterior->idLote,
+                'idLoteNuevo' => $idLote,
+                'banderaFusion' => $banderaFusion
+            ];
+
+            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+                return;
+            }
         }
     }
 
