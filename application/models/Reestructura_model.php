@@ -288,10 +288,12 @@ class Reestructura_model extends CI_Model
         
         if($row[0]['tipo_venta'] == 1){
             if($datos['tipo'] == 7 || $datos['tipo'] == 8){
-                $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
-                $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
+                if( $datos['tipo'] == 7 && $datos['banderaFusion'] == 0){
+                    $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
+                    $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
+                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+                }
             }
-            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
         }
 
         //LOTES FUSIÓN
@@ -867,6 +869,12 @@ class Reestructura_model extends CI_Model
             return true;
         else
             return false;
+    }
+    public function getLotesFusion($idLote)
+    {
+        $query['origen'] = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
+        $query['destino'] = $this->db->query("SELECT lf.*,0 enviada FROM lotesFusion lf WHERE lf.idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND lf.origen=0");
+        return $query->result_array($query);
     }
     
 }
