@@ -4,7 +4,6 @@ const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {
@@ -15,15 +14,14 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_nuevas.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
-        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
+            $("#all").prop("checked", false);
     });
     $("#totpagarPen").html(formatMoney(totaPen));
 });
-    // Función de selección total
+
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -143,6 +141,34 @@ $("#deleteDocumentoExtranjero").one('submit', function (e) {
     });
 });
 
+function modalHistorial(){
+    changeSizeModal("modal-md");
+    appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nameLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+    showModal();
+}
+
 $("#tabla_nuevas_comisiones").ready(function () {
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -157,10 +183,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 if (tabla_nuevas.column(i).search() !== this.value) {
                     tabla_nuevas.column(i).search(this.value).draw();
                     var total = 0;
-                    var index = tabla_nuevas.rows({
-                        selected: true,
-                        search: 'applied'
-                    }).indexes();
+                    var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
                     var data = tabla_nuevas.rows(index).data();
                     $.each(data, function (i, v) {
                         total += parseFloat(v.total_comision);
@@ -263,8 +286,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
-        }
-    ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -321,20 +343,20 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2':
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3':
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -352,15 +374,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_suma}"
-                                data-referencia="${data.referencia}"
-                                class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="DETALLES"
-                                data-toggle="tooltip_nuevas" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_nuevas" data-placement="top"><i class="fas fa-info"></i></button>`;
             }
         }],
         columnDefs: [{
@@ -372,10 +386,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
             render: function (d, type, full, meta) {
                 if (noDia == 1 || (noDia == 2 && hora <= 14)) {
                     switch (full.id_forma_pago) {
-                        case '1': //SIN DEFINIR
-                        case 1: //SIN DEFINIR
-                        case '2': //FACTURA
-                        case 2: //FACTURA
+                        case '1':
+                        case 1:
+                        case '2':
+                        case 2: 
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                             break;
 
@@ -390,14 +404,14 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             }
                             return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
 
-                        case '3': //ASIMILADOS
-                        case 3: //ASIMILADOS
-                        case '4': //RD
-                        case 4: //RD
+                        case '3': 
+                        case 3: 
+                        case '4': 
+                        case 4: 
                         default:
+
                             if (full.id_usuario == 5028 || full.id_usuario == 4773 || full.id_usuario == 5381) {
                                 return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-
                             } else {
                                 return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
                             }
@@ -427,19 +441,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        $("#seeInformationModalAsimilados").modal();
+        modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
 });
 
-/* Table revisión */
 $("#tabla_revision_comisiones").ready(function () {
     titulos_encabezado.length = 0;
     num_colum_encabezado.length = 0;
@@ -457,10 +470,7 @@ $("#tabla_revision_comisiones").ready(function () {
                 tabla_revision.column(i).search(this.value).draw();
 
                 var total = 0;
-                var index = tabla_revision.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_revision.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_revision.rows(index).data();
 
                 $.each(data, function (i, v) {
@@ -561,19 +571,19 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -590,16 +600,7 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_suma}"
-                                data-referencia="${data.referencia}"
-                                class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="DETALLES"
-                                data-toggle="tooltip_revision" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
-
+                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_revision" data-placement="top"><i class="fas fa-info"></i></button>`;
             }
         }],
         ajax: {
@@ -620,20 +621,18 @@ $("#tabla_revision_comisiones").ready(function () {
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
-
-        $("#seeInformationModalAsimilados").modal();
+        modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
 });
 
-// /* Table pagadas */
 $("#tabla_pagadas_comisiones").ready(function () {
     titulos_encabezado.length = 0;
     num_colum_encabezado.length = 0;
@@ -651,10 +650,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 tabla_pagadas.column(i).search(this.value).draw();
 
                 var total = 0;
-                var index = tabla_pagadas.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_pagadas.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_pagadas.rows(index).data();
 
                 $.each(data, function (i, v) {
@@ -755,28 +751,25 @@ $("#tabla_pagadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1': 
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4':
+                    case 4: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>
+                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>
                         `;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
@@ -786,15 +779,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_suma}"
-                                data-referencia="${data.referencia}"
-                                class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="DETALLES"
-                                data-toggle="tooltip_pagadas" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_pagadas" data-placement="top"><i class="fas fa-info"></i></button>`;
             }
         }],
         ajax: {
@@ -816,18 +801,17 @@ $("#tabla_pagadas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        $("#seeInformationModalAsimilados").modal();
+        modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
 });
-/* END pagadas */
 
 $("#tabla_pausadas_comisiones").ready(function () {
     titulos_encabezado.length = 0;
@@ -835,6 +819,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
     $('#tabla_pausadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         var title = $(this).text();
+
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length - 1);
@@ -845,18 +830,12 @@ $("#tabla_pausadas_comisiones").ready(function () {
             if (tabla_pausadas.column(i).search() !== this.value) {
                 tabla_pausadas.column(i).search(this.value).draw();
                 var total = 0;
-
-                var index = tabla_pausadas.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
-
+                var index = tabla_pausadas.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_pausadas.rows(index).data();
 
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-
                 document.getElementById("myText_pausadas").textContent = formatMoney(total);
             }
         });
@@ -952,29 +931,25 @@ $("#tabla_pausadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': //SIN DEFINIR
-                    case 1: //SIN DEFINIr
+                    case '1':
+                    case 1: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': //FACTURA
-                    case 2: //FACTURA
+                    case '2': 
+                    case 2: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': //ASIMILADOS
-                    case 3: //ASIMILADOS
+                    case '3': 
+                    case 3: 
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': //RD
-                    case 4: //RD
+                    case '4': 
+                    case 4:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `
-                            <p class="mb-1">
-                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
-                            </p>
-                        `;
+                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>`;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-blue">REVISAR CON RH</span></p>';
                 }
@@ -983,15 +958,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#"
-                                value="${data.id_pago_suma}"
-                                data-referencia="${data.referencia}"
-                                class="btn-data btn-blueMaderas consultar_history m-auto"
-                                title="DETALLES"
-                                data-toggle="tooltip_pausadas" 
-                                data-placement="top">
-                            <i class="fas fa-info"></i>
-                        </button>`;
+                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_pausadas" data-placement="top"><i class="fas fa-info"></i></button>`;
             }
         }],
         ajax: {
@@ -1013,18 +980,17 @@ $("#tabla_pausadas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        $("#seeInformationModalAsimilados").modal();
+        modalHistorial();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
             });
         });
     });
 });
-/* End table pausadas */
 
 function mandarFacturas() {
     document.getElementById('btng').disabled = true;
@@ -1073,26 +1039,16 @@ $(document).on("click", ".subir_factura_multiple", function () {
                             else {
                                 $("#modal_multiples .modal-body").html("");
                                 $("#modal_multiples .modal-header").html("");
-
-                                $("#modal_multiples .modal-header").append(`<div class="row">
-                                    <div class="col-md-12 text-right">
-                                        <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true" style="font-size:40px;">&times;</span>
-                                        </button>
-                                    </div>
-                                </div>`);
-
+                                $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div></div>`);
                                 c = 0;
                                 if (data.length > 0) {
-                                    $("#modal_multiples .modal-body").append(`<div class="row">
-                                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
+                                    $("#modal_multiples .modal-body").append(`<div class="row"><div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
                                 }
                                 $.each(data, function (i, v) {
                                     c++;
 
                                     abono_asesor = (v.total_comision);
-                                    $("#modal_multiples .modal-body").append('<div class="row">' +
-                                        '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                                    $("#modal_multiples .modal-body").append('<div class="row">' + '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
                                 });
 
                                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
@@ -1112,10 +1068,7 @@ $(document).on("click", ".subir_factura_multiple", function () {
                                     ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
                             }
                             $('#spiner-loader').addClass('hide');
-                            $("#modal_multiples").modal({
-                                backdrop: 'static',
-                                keyboard: false
-                            });
+                            $("#modal_multiples").modal({ backdrop: 'static', keyboard: false });
                         },
                         error: function () {
                             $('#spiner-loader').addClass('hide');
@@ -1139,7 +1092,6 @@ $(document).on("click", ".subir_factura_multiple", function () {
     }
 });
 
-//FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
 function resear_formulario() {
     $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
     $("#modal_formulario_solicitud textarea").html('');
@@ -1175,7 +1127,7 @@ function subir_xml(input) {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST', 
         success: function (data) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
@@ -1210,7 +1162,7 @@ function subir_xml2(input) {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST',
         success: function (data) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
@@ -1244,7 +1196,7 @@ $("#eliminar_factura").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function (data) {
                 if (true) {
                     $("#modalQuitarFactura").modal('toggle');
@@ -1295,23 +1247,15 @@ function cargar_info_xml(informacion_factura) {
 
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
     $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
-
     $("#receptor").val((informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '')).attr('readonly', true);
     $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
-
     $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
-
     $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
     $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
-
     $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
-
     $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
-
     $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
-
     $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
-
     $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
 }
 
@@ -1374,7 +1318,6 @@ function sumCheck() {
             pagos[index] = $("#idpago-" + index).val();
             cantidad = Number.parseFloat($("#data2" + index).val());
             suma += cantidad;
-
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
@@ -1408,7 +1351,7 @@ function guardarSolicitud() {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', // For jQuery < 1.9
+        type: 'POST',
         success: function (data) {
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
@@ -1450,6 +1393,5 @@ function guardarSolicitud() {
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-        .columns.adjust();
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });

@@ -573,7 +573,7 @@ $tv                 : "(min-width: 1280px)";
 .btn-warning{
     color:$red;
     border: none;
-    background-color: #c0131318;
+    background-color: #c0131318 !important;
 }
 .btn-warning:hover, .btn-warning:focus{
     background-color: $red!important;
@@ -641,6 +641,12 @@ $tv                 : "(min-width: 1280px)";
     border:none;
     background-color: #96843D18;
 }
+.lbl-fusionMaderas {
+    color: #fff;
+    border: none;
+    background: linear-gradient(to right, #4B0082, #8A2BE2, #800080, #9932CC);
+}
+
 .lbl-gral{
     border-radius: 25px;
     padding: 7px 10px;

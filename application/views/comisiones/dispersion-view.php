@@ -388,7 +388,6 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
-    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
 
     <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>

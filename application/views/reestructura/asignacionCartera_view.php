@@ -15,10 +15,26 @@
                         </div>
                         <input type="text" class="hide" id="idLote">
                         <input type="text" class="hide" id="nombreLote">
+                        <input type="text" class="hide" id="fusionLote">
                     </div>
                     <div class="modal-footer mt-2">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="sendRequestButton" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="preguntaConfirmacion" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center">
+                        <h5 id="mainLabelText">¿Desea fusionar los siguientes lotes para proceso de reubicación?</h5>
+                        <p id="txtLotes"></p>
+                    </div>
+                    <div class="modal-footer mt-2">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="fusionarLotes" class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -37,6 +53,7 @@
                                     <table id="tablaAsignacionCartera" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th></th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

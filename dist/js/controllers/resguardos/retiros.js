@@ -17,7 +17,6 @@ $(document).ready(function () {
         total67 = data;
     }, 'json');
 
-    //TABLA FILTROS
     $('#tabla_retiros_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
         document.getElementById('totalAplicados').textContent = '';
         var total = 0;
@@ -49,10 +48,7 @@ $(document).ready(function () {
             if ($('#tabla_retiros_resguardo').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_retiros_resguardo').DataTable().column(i).search(this.value).draw();
             }
-            var index = $('#tabla_retiros_resguardo').DataTable().rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = $('#tabla_retiros_resguardo').DataTable().rows({ selected: true, search: 'applied' }).indexes();
             var data = $('#tabla_retiros_resguardo').DataTable().rows(index).data();
         });
         
@@ -96,15 +92,22 @@ $(document).ready(function () {
         scrollX: true,
         destroy: true,
         ordering: false,
-        columns: [
-
-            {data: 'id_rc'},
-            {data: 'usuario'},
-            { data: function (d) {
+        columns: [{
+            data: 'id_rc'
+        },    
+        {
+            data: 'usuario'
+        },
+        { 
+            data: function (d) {
                 return '<b>'+formatMoney(d.monto)+'</b>';
-            }},
-            {data: 'conceptos'},
-            { data: function (d) {
+            }
+        },
+        {
+            data: 'conceptos'
+        },
+        {
+            data: function (d) {
                 var labelEstatus;
                 if(d.estatus == 1) {
                     labelEstatus ='<span class="label lbl-green">ACTIVO</span>';
@@ -120,13 +123,19 @@ $(document).ready(function () {
                     labelEstatus ='<span class="label lbl-gray">Sin Definir</span>';
                 }
                 return labelEstatus;
-            }}, 
-            {data: 'creado_por'}, 
-            { data: function (d) {
+            }
+        }, 
+        {
+            data: 'creado_por'
+        }, 
+        { 
+            data: function (d) {
                 var fecha = d.fecha_creacion.substring(0, d.fecha_creacion.length - 4);
                 return fecha;
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 var BtnStats = '';
                 if(id_user == 1875 ){
                     if(d.estatus == 3 || d.estatus == 4 || d.estatus == 2){
@@ -140,7 +149,8 @@ $(document).ready(function () {
                     } 
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-            }}   
+            }
+        }   
         ],
         columnDefs: [{
             visible: false,
@@ -155,21 +165,42 @@ $(document).ready(function () {
     });
 
     $('#tabla_retiros_resguardo').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-
-    $('#tabla_retiros_resguardo').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_retiros_resguardo tbody").on("click", ".btn-log", function(e){
+        $("#comments-list-retiros").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_rc = $(this).val();
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-header">
+            <h3>Historial Retiro</h3>
+        </div>
+        <div class="modal-body pt-0" >
+            <div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist" style="background: #ACACAC;"></ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-retiros"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
+
         $("#seeInformationModalRetiros").modal();
         $.getJSON(general_base_url+"Resguardos/getListaRetiros/"+id_rc, function (data) {
             $.each( data, function(i, v){
@@ -214,7 +245,7 @@ $(document).ready(function () {
                 processData: false,
                 dataType: 'json',
                 method: 'POST',
-                type: 'POST', // For jQuery < 1.9
+                type: 'POST',
                 success: function(data){
                     if( data = 1 ){
                         $("#autorizar-modal").modal('toggle');
@@ -232,10 +263,4 @@ $(document).ready(function () {
             });
         }
     });
-
 });
-
-function cleanCommentsRetiros() {
-    var myCommentsList = document.getElementById('comments-list-retiros');
-    myCommentsList.innerHTML = '';
-}

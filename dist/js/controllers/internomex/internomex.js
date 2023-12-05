@@ -14,7 +14,7 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-sp = { // MJ: SELECT PICKER
+sp = { 
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -70,31 +70,29 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX:true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title:'Consulta pago final' ,
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title:'Consulta pago final' ,
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
-            },
-            {
-                text: '<i class="fas fa-play"></i>',
-                className: `btn btn-dt-youtube buttons-youtube`,
-                titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
-                action: function (e, dt, button, config) {
-                    window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
-                }
             }
-        ],
+        },
+        {
+            text: '<i class="fas fa-play"></i>',
+            className: `btn btn-dt-youtube buttons-youtube`,
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+            action: function (e, dt, button, config) {
+                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            }
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         lengthMenu: [
@@ -110,70 +108,68 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            {
-                data: function (d) {
-                    return d.id_pagoi;
+        columns: [{
+            data: function (d) {
+                return d.id_pagoi;
+            }
+        },
+        {
+            data: function (d) {
+                return d.nombre;
+            }
+        },
+        {
+            data: function (d) {
+                return d.rol;
+            }
+        },
+        {
+            data: function (d) {
+                return d.forma_pago;
+            }
+        },
+        {
+            data: function (d) {
+                return d.sede;
+            }
+        },
+        {
+            data: function (d) {
+                return d.monto_sin_descuento;
+            }
+        },
+        {
+            data: function (d) {
+                return d.monto_con_descuento;
+            }
+        },
+        {
+            data: function (d) {
+                return d.monto_internomex;
+            }
+        },
+        {
+            data: function (d) {
+                return d.fecha_creacion;
+            }
+        },
+        {
+            data: function (d) {
+                return d.comentario;
+            }
+        },
+        {
+            "visible": false,
+            data: function (d) {
+                if (id_rol_global == 31) {
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
+                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
                 }
-            },
-            {
-                data: function (d) {
-                    return d.nombre;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.rol;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.forma_pago;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.sede;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_sin_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_con_descuento;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.monto_internomex;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.fecha_creacion;
-                }
-            },
-            {
-                data: function (d) {
-                    return d.comentario;
-                }
-            },
-            {
-                "visible": false,
-                data: function (d) {
-                    if (id_rol_global == 31) {
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
-                        '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
-                    }
-                    else{
-                        return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
-                    }
+                else{
+                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
                 }
             }
-        ],
+        }],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -314,20 +310,14 @@ $(document).on('click', '#downloadFile', function () {
                 innerRowData.push(response[i]['comentario']);
                 createXLSLFormatObj.push(innerRowData);
             }
-            /* File Name */
+
             let date = new Date();
             var filename = "PlantillaComisionistas_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
-            /* Sheet Name */
             var ws_name = "Plantilla";
-            //if (typeof console !== 'undefined') console.log(new Date());
             var wb = XLSX.utils.book_new(),
                 ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
-            /* Add worksheet to workbook */
             XLSX.utils.book_append_sheet(wb, ws, ws_name);
-            /* Write workbook and Download */
-            //if (typeof console !== 'undefined') console.log(new Date());
             XLSX.writeFile(wb, filename);
-            //if (typeof console !== 'undefined') console.log(new Date());
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
@@ -375,7 +365,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
     else {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".xlsx");
-        if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
+        if (statusValidateExtension == true) { 
             processFile(fileElm.files[0]).then(jsonInfo => {
                 $.ajax({
                     url: 'insertInformation/'+tipo_pago,
@@ -395,7 +385,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
                     }
                 });
             });
-        } else // MJ: EL ARCHIVO QUE SE INTENTA CARGAR TIENE UNA EXTENSIÓN INVÁLIDA
+        } else
             alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
     }
 });
@@ -406,7 +396,6 @@ $(document).on('click', '#uploadFile', function () {
 });
 
 function generateJWT(excelData) {
-    // Defining our token parts
     var header = {"alg": "HS256", "typ": "JWT"};
     var data = excelData;
     var secret = "thisismysecretkeytest";
@@ -421,11 +410,8 @@ function generateJWT(excelData) {
 }
 
 function base64url(source) {
-    // Encode in classical base64
     encodedSource = CryptoJS.enc.Base64.stringify(source);
-   // Remove padding equal characters
     encodedSource = encodedSource.replace(/=+$/, '');
-   // Replace characters according to base64url specifications
     encodedSource = encodedSource.replace(/\+/g, '-');
     encodedSource = encodedSource.replace(/\//g, '_');
     return encodedSource;

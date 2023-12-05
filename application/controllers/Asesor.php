@@ -786,8 +786,18 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
+
+            if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+            //if (TRUE) {
+                $arcusData = array(
+                    "propiedadRelacionada" => $this->input->post('idLote'),
+                    "uid" => $data_prospecto[0]->id_arcus,
+                    "estatus" => 4
+                );
+                $response = $this->arcus->sendLeadInfoRecord($arcusData);
+            }
+
             if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
-                //echo "acciones realizadas correctamente";
                 $data_response['prospecto_update'] = 'OK';
             } else {
                 $data_response['prospecto_update'] = 'FAIL';

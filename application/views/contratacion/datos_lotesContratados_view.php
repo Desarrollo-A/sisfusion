@@ -33,6 +33,7 @@
                                                     <th>GERENTE</th>
                                                     <th>PROCESO CONTRATACIÓN</th>
                                                     <th>COMENTARIO</th>
+                                                    <th>TIPO VENTA</th>
                                                     <th>FECHA DE CONTRATADO</th>
                                                     <th>FECHA DE APARTADO</th>
                                                     <th>PRECIO DE FIANZA</th>

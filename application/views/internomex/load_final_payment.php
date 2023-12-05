@@ -29,9 +29,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                         <h4 class="modal-title">Monto internomex</h4>
                     </div>
                     <div class="modal-body">
@@ -48,8 +46,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12 d-flex justify-end">
-                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar
-                                    </button>
+                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
                                     <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
                                 </div>
                             </div>
@@ -63,16 +60,12 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
                         <h4 class="modal-title">Consulta información</h4>
                     </div>
                     <div class="modal-body">
                         <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist"
-                                style="background: #003d82;">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
                                 <li role="presentation" class="active">
                                     <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
                                 </li>
@@ -94,9 +87,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">
-                            Aceptar
-                        </button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
                     </div>
                 </div>
             </div>
@@ -125,8 +116,7 @@
                                         <div class="row aligned-row pb-3" id="tipo_pago_selector">
                                             <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <label class="control-label">Tipo de pago (<span class="isRequired">*</span>)</label>
-                                                <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN"
-                                                        id="tipo_accion" onchange="validaTipoPago(this.value)">
+                                                <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" id="tipo_accion" onchange="validaTipoPago(this.value)">
                                                     <option value="1">PAGO DE LOTES</option>
                                                     <option value="2">PAGO SUMA</option>
                                                 </select>
@@ -153,25 +143,18 @@
                                         <div class=" form-group d-flex col-xs-12 col-sm-6 col-md-6 col-lg-6 align-center justify-evenly  box-table hide">
                                             <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
                                             <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange">
-                                                <span class="material-icons update-dataTable">search</span>
-                                            </button>
+                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
                                         </div>
                                         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
-                                            <button class="btn-rounded btn-s-greenLight row-load hide " id="downloadFile" name="downloadFile" title="Download">
-                                                <i class="fas fa-download"></i>
-                                            </button> <!-- DOWNLOAD -->
-                                            <button class="btn-rounded btn-s-blueLight row-load hide" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal">
-                                                <i class="fas fa-upload"></i>
-                                            </button> <!-- UPLOAD -->
+                                            <button class="btn-rounded btn-s-greenLight row-load hide " id="downloadFile" name="downloadFile" title="Download"><i class="fas fa-download"></i></button>
+                                            <button class="btn-rounded btn-s-blueLight row-load hide" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal"><i class="fas fa-upload"></i></button>
                                         </div>
                                         
                                     </div>
                                     <div class="row pt-2 hide">
                                         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                                             <div class="form-group label-floating select-is-empty m-0 p-0">
-                                                <select id="columns" name="columns" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona las columnas que se requieran" data-size="10" required multiple>
-                                                </select>
+                                                <select id="columns" name="columns" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona las columnas que se requieran" data-size="10" required multiple></select>
                                             </div>
                                         </div>
                                     </div>
@@ -205,7 +188,6 @@
     </div>
     </div>
     </div>
-
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>

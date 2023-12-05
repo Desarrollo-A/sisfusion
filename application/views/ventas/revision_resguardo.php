@@ -197,22 +197,24 @@
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="tabla_resguardo" name="tabla_resguardo">
                                             <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>EMPRESA</th>
-                                                    <th>TOTAL COMISIÓN</th>
-                                                    <th>PAGADO CLIENTE</th>
-                                                    <th>A PAGAR</th>
-                                                    <th>TIPO VENTA</th>
-                                                    <th>USUARIO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>FECHA DE ENVÍO</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
+                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>PROYECTO</th>
+                                                                <th>CONDOMINIO</th>
+                                                                <th>LOTE</th>
+                                                                <th>REFERENCIA</th>
+                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>TOTAL DE LA COMISIÓN</th>
+                                                                <th>PAGO DEL CLIENTE</th>
+                                                                <th>DISPERSADO</th>
+                                                                <th>PAGADO</th>
+                                                                <th>PENDIENTE</th>
+                                                                <th>USUARIO</th>
+                                                                <th>PUESTO</th>
+                                                                <th>DETALLE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>ACCIONES</th>
+                                                            </tr>
                                             </thead>
                                         </table>
                                     </div>

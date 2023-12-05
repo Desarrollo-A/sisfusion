@@ -44,6 +44,7 @@ class Comisiones extends CI_Controller
   }
 
   public function getDataDispersionPago() {
+    $this->validarLiquidadas();
     $data['data'] = $this->Comisiones_model->getDataDispersionPago()->result_array();
     echo json_encode($data);
   }
@@ -285,10 +286,10 @@ class Comisiones extends CI_Controller
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        $this->session->userdata('tipo') == 1 ? $this->load->view("ventas/comisiones_colaboradorRigel", $datos) : $this->load->view("ventas/comisiones_colaborador", $datos);
+        $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
-      $this->load->view("ventas/comisiones_colaborador", $datos);
+        $this->load->view("ventas/comisiones_colaborador", $datos);
       break;
     }
   }
@@ -874,16 +875,6 @@ class Comisiones extends CI_Controller
     echo json_encode($respuesta);
   }
   
-  public function dispersion_club(){
-    $this->load->view('template/header');
-    $this->load->view("ventas/comisiones_dispersion_club");
-  }
-
-  public function bonos_club(){
-    $this->load->view('template/header');
-    $this->load->view("ventas/bonos_club");
-  }
-
   public function getDatosComisionesNuevasNivel2(){
     $dat =  $this->Comisiones_model->getDatosComisionesNuevasNivel2()->result_array();
     for ($i = 0; $i < count($dat); $i++) {
@@ -1147,8 +1138,8 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/revision_resguardo");
   }
 
-  public function getDatosResguardoContraloria($user,$condominio){
-    $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$condominio)->result_array();
+  public function getDatosResguardoContraloria($user,$residencial){
+    $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }
@@ -2362,11 +2353,10 @@ class Comisiones extends CI_Controller
     $plan_comision = $this->input->post("plan_comision");
     $totalNeto2 = $this->input->post("totalNeto2");
     $cliente = $this->input->post("idCliente");
-    $clienteReubicacion = $this->input->post("id_cliente_reubicacion_2");
     $reubicadas = $this->input->post("reubicadas");
       
-    if($clienteReubicacion!=null && $reubicadas!= 0){
-      echo json_encode($this->Comisiones_model->porcentajesReubicacion($clienteReubicacion)->result_array(),JSON_NUMERIC_CHECK);
+    if($reubicadas!= 0){
+      echo json_encode($this->Comisiones_model->porcentajesReubicacion($cliente)->result_array(),JSON_NUMERIC_CHECK);
     }else{
       echo json_encode($this->Comisiones_model->porcentajes($cliente,$totalNeto2,$plan_comision)->result_array(),JSON_NUMERIC_CHECK);
     }
@@ -3114,6 +3104,10 @@ class Comisiones extends CI_Controller
 
   public function getHistorialDescuentosPorUsuario() {      
     echo json_encode(array( "data" => $this->Comisiones_model->getHistorialDescuentosPorUsuario()));
+  }
+
+  public function validarLiquidadas(){   
+      $this->Comisiones_model->validarLiquidadas();
   }
 
 }

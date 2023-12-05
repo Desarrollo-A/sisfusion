@@ -27,6 +27,7 @@
                                                 <th>TIPO LOTE</th>
                                                 <th>ESTATUS</th>
                                                 <th>ESTATUS LOTE</th>
+                                                <th>CONCEPTO</th>
                                             </tr>
                                         </thead>
                                     </table>

@@ -244,13 +244,18 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function getLotesPagados($res){
-        return $this->db->query("SELECT p.id_lote,p.bandera,l.registro_comision,p.ultimo_pago,l.referencia,r.idResidencial 
+        return $this->db->query("SELECT p.id_lote,p.bandera,l.registro_comision,p.ultimo_pago,l.referencia,r.idResidencial
             FROM pago_comision p
             INNER JOIN lotes l ON l.idLote = p.id_lote
             INNER JOIN condominios c ON c.idCondominio = l.idCondominio
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-            WHERE p.bandera = 1 AND l.registro_comision IN (1,6) AND l.idStatusContratacion = 15 AND p.ultimo_pago > 0 AND r.idResidencial = $res 
-            AND (((abonado - ultimo_pago) > 10 AND (new_neo-ultimo_pago) > 10) OR (total_comision - abonado) > 10)  AND total_comision > 1");
+            LEFT JOIN (SELECT COUNT(*) total, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam ON ooam.id_lote = l.idLote
+            LEFT JOIN (SELECT COUNT(*) total, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ventas ON ventas.id_lote = l.idLote
+            WHERE p.bandera = 1 AND l.registro_comision IN (1,6) 
+            AND (l.idStatusContratacion = 15 OR (l.idStatusContratacion >= 9 AND (CASE WHEN ooam.total > 1 THEN 1 ELSE 0 END) = 0 AND (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) = 1))
+            AND p.ultimo_pago > 0 AND r.idResidencial = $res 
+            AND (((abonado - ultimo_pago) > 10 AND (new_neo-ultimo_pago) > 10) 
+            OR (total_comision - abonado) > 10)  AND total_comision > 1");
     } 
 
     public function getLotesPagados2($res){
@@ -261,11 +266,6 @@ class ComisionesNeo_model extends CI_Model {
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
             WHERE p.bandera not in (7) AND p.total_comision not in (0) AND p.modificado_por = 'NEO' AND r.idResidencial = $res");
     }
-
-    // public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado, $FPoliza, $Aplicado){
-    //     // return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion."  WHERE id_lote = ".$idLote."");
-    //     return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FPoliza."', modificado_por = 'NEO2', new_neo = '".$Aplicado."' WHERE id_lote = ".$idLote."");
-    // }
 
     public function UpdateBanderaPagoComision2($idLote, $bonificacion, $FechaAplicado, $Aplicado){
         // return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion."  WHERE id_lote = ".$idLote."");

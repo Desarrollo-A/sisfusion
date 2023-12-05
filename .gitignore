@@ -65,3 +65,4 @@ application/controllers/ComisionesPRODUCTIVO.php
 application/views/comisiones/ELIMINARMODELOCOMISIONES.php
 application/views/comisiones/INSTALARMODELOCOMISIONES.php
 application/models/Kelhistoriales.php
+application/models/Comisiones_modelPRODUCTIVO.php

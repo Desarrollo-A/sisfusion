@@ -32,7 +32,7 @@ $('#id_proyecto_ei').change(function(ruta){
     residencial = $('#id_proyecto_ei').val();
     $("#id_condominio_ei").empty().selectpicker('refresh');
     $.ajax({
-        url: `${general_base_url}Asesor/getCondominioDesc/${residencial}`,
+        url: `${general_base_url}Pagos/getCondominioDesc/${residencial}`,
         type: 'post',
         dataType: 'json',
         success:function(response){

@@ -33,37 +33,6 @@
             </div>
         </div>
 
-        <div class="modal fade" id="seeInformationModalRetiros" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Historial Retiro</h3>
-                    </div>
-                    <div class="modal-body pt-0" >
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #ACACAC;"></ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-retiros"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsRetiros()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -134,5 +103,6 @@
     <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/resguardos/retiros.js"></script>
 </body>

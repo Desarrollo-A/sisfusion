@@ -170,4 +170,8 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT IDENT_CURRENT('usuarios') id_usuario")->result_array();
     }
 
+    public function validarCorreoTelefono($telefono, $email) {
+        return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
+    }
+
 }

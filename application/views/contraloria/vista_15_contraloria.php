@@ -3,7 +3,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-
         <!-- modal  ENVIA A CONTRALORIA 7-->
         <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
@@ -18,7 +17,6 @@
                             <br>
                         </div>
                     </div>
-                    <div class="modal-footer"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                         <button type="button" id="save1" class="btn btn-primary">Registrar</button>
@@ -27,28 +25,6 @@
             </div>
         </div>
         <!-- modal -->
-
-        <!-- modal  rechazar A CONTRALORIA 7-->
-        <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo estatus 15 - <b><span class="lote"></span></b></label></h4>
-                    </div>
-                    <div class="modal-body">
-                        <label>Comentario</label>
-                        <textarea class="form-control" id="comentario3" rows="3"></textarea>
-                        <br>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="save3" class="btn btn-primary">Registrar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- modal -->
-
         <!--Contenido de la página-->
         <div class="content boxContent">
             <div class="container-fluid">

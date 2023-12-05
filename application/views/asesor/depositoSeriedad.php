@@ -44,6 +44,7 @@
                     <a type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute;top: 2%;right: 5%;"><span class="material-icons">close</span></a>
                     <h5 class=""></h5>
                     <input type="hidden" id="id_cliente_asignar" name="id_cliente_asignar">
+                    <input type="hidden" id="idLoteValue" name="idLoteValue">
                     <div class="modal-body">
                         <div class="material-datatables">
                             <table class=" table-striped table-hover" id="table_prospectos">

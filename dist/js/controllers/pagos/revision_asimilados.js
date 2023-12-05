@@ -1,4 +1,4 @@
-var tr;proyectoAsimilados
+var tr;
 var tabla_asimilados2;
 var totaPen = 0;
 let titulos = [];
@@ -20,7 +20,7 @@ $('#proyectoAsimilados').change(function(){
     residencial = $('#proyectoAsimilados').val();
     $("#condominioAsimilados").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -74,8 +74,10 @@ function getAssimilatedCommissions(proyecto, condominio){
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
+        console.log(total)
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarAsimilados").textContent = to;
+        console.log(to)
+        document.getElementById("disponibleAsimilados").formatMoney = to;
     });
 
     $("#tabla_asimilados").prop("hidden", false);
@@ -225,47 +227,47 @@ function getAssimilatedCommissions(proyecto, condominio){
                 return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
             }
         },
-        {
-            data: function( d ){
-                if(d.dcto == "" || d.dcto == null )
-                    return '<p class="m-0"> $0.00 </p>'
-                else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.dcto))+'</p>';
-            }
-        },
-        {
-            data: function( d ){
-                if(d.impuesto == "" || d.impuesto == null )
-                    return '<p class="m-0"> $0.00 </p>'
-                else
-                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
-            }
-        },
-        {
-            data: function( d ){
-                if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+            {
+                data: function( d ){
+                    if(d.dcto == "" || d.dcto == null )
+                        return '<p class="m-0"> $0.00 </p>'
+                    else
+                        return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.dcto))+'</p>';
                 }
-                else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+            },
+            {
+                data: function( d ){
+                    if(d.impuesto == "" || d.impuesto == null )
+                        return '<p class="m-0"> $0.00 </p>'
+                    else
+                        return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
                 }
-            }
-        },
-        {
-            data: function( d ){
-                return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
-            }
-        },
-        {
-            data: function( d ){
-                return '<p class="m-0"><i> '+d.puesto+'</i></p>';
-            }
-        },
-        {
-            data: function( d ){
-                return '<p class="m-0"><b>'+d.codigo_postal+'</b></i></p>';
-            }
-        },
+            },
+            {
+                data: function( d ){
+                    if(d.lugar_prospeccion == 6){
+                        return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    }
+                    else{
+                        return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
+                    }
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                }
+            },
+            {
+                data: function( d ){
+                    return '<p class="m-0"><b>'+d.codigo_postal+'</b></i></p>';
+                }
+            },
         {
             data: function( d ){
                 return   '<p class="m-0">'+d.fecha_creacion+'</p>';
@@ -275,7 +277,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             "orderable": false,
             data: function( data ){
                 let btns = '';
-                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip"  data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`;
                 const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" id="cambiar_estatus" data-toggle="tooltip"  data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`;
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;

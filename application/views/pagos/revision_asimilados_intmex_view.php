@@ -4,59 +4,41 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
     
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_interes">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_refresh">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <form method="post" id="form_multiples">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade modal-alertas" id="modal_multiplesOoam" role="dialog">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <form method="post" id="form_multiplesOoam">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
+    <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="form_interes">
                     <div class="modal-body"></div>
-                </div>
+                </form>
             </div>
         </div>
+    </div>
+
+    <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" id="form_refresh">
+                    <div class="modal-body"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
+        <div class="modal-dialog modal-md">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <form method="post" id="form_multiples">
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
+        <div class="modal-dialog" style= "margin-top:20px;"></div>
+    </div>
 
     <div class="content boxContent">
         <div class="container-fluid">
@@ -229,7 +211,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados_intmex.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_asimilados_intmex_ooam.js"></script>
 </body>

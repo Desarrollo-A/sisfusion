@@ -140,8 +140,9 @@ class Internomex_model extends CI_Model {
     }
 
     public function getPagosFinal($beginDate, $endDate) {
+        ini_set('memory_limit', -1);
         $condicion = '';
-        if (!in_array($this->session->userdata('id_rol'), array(31, 17, 70, 71, 73))) { // INTERNOMEX & CONTRALORÍA
+        if (!in_array($this->session->userdata('id_rol'), array(31, 17, 70, 71, 73))) { 
             $idUsuario = $this->session->userdata('id_usuario');
             $condicion = " AND pt.id_usuario = $idUsuario";
         }
