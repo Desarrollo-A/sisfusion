@@ -1178,7 +1178,7 @@ $(document).on('click', '.btn-avanzar', async function () {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6 class="m-0">¿Estás seguro de envíar ${pluralidad} <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}</i></b></h6>
+                        <h6 class="m-0">¿Estás seguro de envíar ${pluralidad} <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) + 1]}?</i></b></h6>
                     </div>
                     <div class="col-12">
                         <label class="control-label">Comentario</label>
@@ -1232,7 +1232,7 @@ $(document).on('click', '.btn-rechazar', async function() {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h6 class="m-0">¿Estás seguro de rechazar ${pluralidad}  <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}</i></b></h6>
+                        <h6 class="m-0">¿Estás seguro de rechazar ${pluralidad}  <b>${nombreLote}</b> a <b><i>${ESTATUS_PREPROCESO[parseInt(tipoTransaccion) -1]}?</i></b></h6>
                     </div>
                     <div class="col-12">
                         <label class="control-label">Comentario</label>
@@ -1602,7 +1602,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
-        return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE + BTN_PRESELECCIONAR_PROPUESTAS);
+    return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
     if (idEstatusPreproceso === 5 && id_rol_general == 11) // MJ: ADMINISTRACIÓN - Contrato firmado confirmado, pendiente traspaso de recurso.
         return d.cantidadTraspaso > 0.00 ? BTN_AVANCE + BTN_TRASPASO_RECURSO : BTN_TRASPASO_RECURSO; // SI YA HAY RECURSO SE MUESTRAN AMBOS BOTONES, SINO SÓLO EL DE CAPTURAR LA CANTIDA CORRESPONDIENTE AL TRASPASO
     if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
