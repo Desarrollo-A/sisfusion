@@ -1290,7 +1290,6 @@ class Contraloria extends CI_Controller {
         if($banderaFusion != 0){
             $lotesFusion = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
             $lotesFusionOrigen =  $lotesFusion['origen'];
-            $lotesFusionDestino =  $lotesFusion['destino'];
 
             for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
                 if($lotesFusionOrigen[$x]['origen'] == 1){
