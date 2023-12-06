@@ -76,10 +76,7 @@ $('#tabla_descuentos thead tr:eq(0) th').each(function(i) {
         if (tabla_nuevas.column(i).search() !== this.value) {
             tabla_nuevas.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_nuevas.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_nuevas.rows(index).data();
             $.each(data, function(i, v) {
             });
@@ -87,7 +84,6 @@ $('#tabla_descuentos thead tr:eq(0) th').each(function(i) {
         }
     });
 });
-
 
 function DescuentosxDirectivos(user) {
     let resto = 0;
@@ -251,9 +247,7 @@ function DescuentosxDirectivos(user) {
     });
 
     $('#tabla_descuentos').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_descuentos tbody").on("click", ".btn-delete", function() {

@@ -12,7 +12,6 @@ $(document).ready(function () {
     }, 'json');
 });
 
-
 $('#tipo').change(function (ruta) {
     tipo = $('#tipo').val();
     let m = $('#monto').val();
@@ -36,6 +35,7 @@ $('#tipo').change(function (ruta) {
     document.getElementById("texto").innerHTML = texto;
 
 });
+
 function closeModalEng() {
     document.getElementById("form_prestamos").reset();
     $("#tipo").selectpicker("refresh");
@@ -332,8 +332,6 @@ $("#tabla_prestamos").ready(function () {
 
                 if (d.total_pagado != null || d.total_pagado > 0) {
                     botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
                 }
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -715,7 +713,6 @@ $(document).on("click", "#preview", function () {
         height: 660
     });
 });
-
 
 function monthDiff(dateFrom, dateTo) {
     return dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))

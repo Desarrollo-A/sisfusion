@@ -23,7 +23,7 @@
                     <div class="modal-body" id="bod"></div>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -133,22 +133,20 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <div class="table-responsive">
-                                        <table id="tabla_descuentos" name="tabla_descuentos" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>USUARIO</th>
-                                                    <th>$ DESCUENTO</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>CREADO POR</th>
-                                                    <th>FECHA CAPTURA</th>
-                                                    <th>OPCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table id="tabla_descuentos" name="tabla_descuentos" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>USUARIO</th>
+                                                <th>DESCUENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th>CREADO POR</th>
+                                                <th>FECHA CAPTURA</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
