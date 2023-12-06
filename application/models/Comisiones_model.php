@@ -2944,8 +2944,8 @@ class Comisiones_model extends CI_Model {
         ORDER BY d.n_p asc");
     }
 
-    function getDatosNuevasMontos($proyecto,$condominio){
-        $filtro = " pci1.estatus IN (1) AND com.id_usuario = $condominio ";
+    function getDatosNuevasMontos($usuario){
+        $filtro = " pci1.estatus IN (1) AND com.id_usuario = $usuario ";
 
         return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN UPPER(oprol2.nombre) ELSE UPPER(oprol.nombre) END as puesto, 

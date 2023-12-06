@@ -1087,7 +1087,7 @@ class Pagos extends CI_Controller
                 'estatus' => 1,
                 'comentario' =>  'INTERNOMEX APLICO PAGO' 
               );
-                    array_push($data,$row_arr);
+              array_push($data,$row_arr);
             }
             $id_pago_i = rtrim($id_pago_i, $sep);
         
