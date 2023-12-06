@@ -93,7 +93,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -110,7 +110,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -212,6 +212,15 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         {
             data: function (d) {
                 return d.fechaVencimiento == null ? 'SIN ESPECIFICAR' : d.fechaVencimiento;
+            }
+        },
+        {
+            visible: (id_rol_general == 15) ? true : false,
+            data: (d)=>{
+                if(parseInt(d.flagProcesoContraloria) === 1) // CONTRALORÍA Y REGISTRÓ
+                    return '<label class="label lbl-azure">Registrado</label>';
+                else
+                    return '<br><label class="label lbl-warning ">Pendiente</label>';
             }
         },
         {
