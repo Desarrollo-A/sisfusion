@@ -873,7 +873,7 @@ class Reestructura_model extends CI_Model
     public function getLotesFusion($idLote)
     {
         $query['origen'] = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
-        return $query->result_array($query);
+        return $query->result_array();
     }
     
 }

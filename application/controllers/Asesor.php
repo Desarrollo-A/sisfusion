@@ -3040,9 +3040,9 @@ class Asesor extends CI_Controller {
             return;
         }
 
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+        /*if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
             return;
-        }
+        }*/
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
