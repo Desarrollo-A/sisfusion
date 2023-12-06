@@ -78,7 +78,7 @@ $(document).ready(function () {
             {data: 'idLote'},
             {data: 'nombreCliente'},
             { data: function (d) {
-                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
+                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span>`;
             }},
             { data: function (d) {
                 var labelCompartida;
@@ -104,7 +104,7 @@ $(document).ready(function () {
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 else{
-                    if(d.totalNeto2 == null) {
+                    if(d.totalNeto2 == null && d.proceso == 0) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
@@ -169,7 +169,7 @@ $(document).ready(function () {
                     BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-penalizacion4" data-toggle="tooltip"  data-placement="top" title="Aprobar Penalización"> <i class="material-icons">check</i> </button>
                     <button href="#" value="${d.idLote}" data-value="${d.nombreLote}" data-cliente="${d.id_cliente}" class="btn-data btn-blueMaderas btn-Nopenalizacion btn-warning" data-toggle="tooltip"  data-placement="top" title="Rechazar Penalización"><i class="material-icons">close</i></button>`;
                 }else{
-                    if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
+                    if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
                         BtnStats = 'Asignar Tipo Venta';
@@ -339,10 +339,10 @@ $(document).ready(function () {
                             data-ooam = "${ooamDispersion}"
                             data-estatusLote = "${d.idStatusContratacion}"
                             data-abonadoAnterior = "${d.abonadoAnterior}"
+                            data-procesoReestructura = "${d.proceso}"
                             data-code = "${d.cbbtton}"
                             class = "btn-data ${varColor} verify_neodata" data-toggle="tooltip" data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                             
-
                             BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
                         }else{
                             BtnStats += ``;
@@ -476,6 +476,7 @@ $(document).ready(function () {
         nombreOtro = $(this).attr("data-nombreOtro");
         estatusLote = $(this).attr("data-estatusLote");
         abonadoAnterior = $(this).attr("data-abonadoAnterior");
+        procesoReestructura = $(this).attr("data-procesoReestructura");
 
         // alert(idLote);
         // alert(totalNeto2);
@@ -488,6 +489,7 @@ $(document).ready(function () {
         // alert(idCliente);
         // alert(plan_comision);
         // alert(disparador);
+        // alert(procesoReestructura);
         // alert(tipo_venta);
         // alert(descripcion_plan);
         // alert(ooamDispersion);
@@ -589,19 +591,23 @@ $(document).ready(function () {
                                 cincoporciento = parseFloat(operacionA);
                                 ochoporciento = parseFloat(operacionB);
                                 
-                                if(disparador == 3 && ooamDispersion == 1){
+                                if(procesoReestructura != 0 && estatusLote < 15 && ooamDispersion == 1 ){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
-                                $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
+                                $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM 50%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 3;
-                                } else if(total<(cincoporciento-1) && disparador != 3){
+                                } else if(procesoReestructura != 0 && estatusLote >= 15 && ooamDispersion == 1){
+                                    // *********Si el monto es menor al 5% se dispersará solo lo proporcional
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
+                                        bandera_anticipo = 4;
+                                } else if(total<(cincoporciento-1) && (disparador != 3 || ooamDispersion == 2)){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 0;
-                                }else if(total>=(ochoporciento) && disparador != 3 ){
+                                }else if(total>=(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% / se dispersa la mitad
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                     bandera_anticipo = 1;
-                                } else if(total>=(cincoporciento-1) && total<(ochoporciento) && disparador != 3){
+                                } else if(total>=(cincoporciento-1) && total<(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 5% y menor al 8% se dispersará la 4° parte de la comisión
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo entre 5% - 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 2;
@@ -700,13 +706,24 @@ $(document).ready(function () {
                                             break;
 
                                             case 3: // monto OOAM 50%
-                                            operacionValidar = (v.comision_total/2);
+                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                            if(operacionValidar > (v.comision_total/2)){
+                                                saldo1C = (v.comision_total/2);
+                                            }else{
+                                                saldo1C = operacionValidar;
+                                            }
+                                            break;
+
+                                            case 4: // monto OOAM 100%
+                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
                                             }else{
                                                 saldo1C = operacionValidar;
                                             }
+
                                             break;
+
                                         }
 
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
@@ -933,7 +950,6 @@ sp = {
         });
     }
 }
- 
 
 
 $('#detenidos-form').on('submit', function (e) {

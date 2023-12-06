@@ -40,7 +40,7 @@ class Reestructura_model extends CI_Model
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
-        return $this->db->query("SELECT lf.rescision,cl.plan_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.rescision,cl.plan_comision,lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -288,10 +288,12 @@ class Reestructura_model extends CI_Model
         
         if($row[0]['tipo_venta'] == 1){
             if($datos['tipo'] == 7 || $datos['tipo'] == 8){
-                $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
-                $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
+                if( $datos['tipo'] == 7 && $datos['banderaFusion'] == 0){
+                    $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
+                    $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
+                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+                }
             }
-            $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
         }
 
         //LOTES FUSIÓN
@@ -843,8 +845,10 @@ class Reestructura_model extends CI_Model
             $tipoOrigenDestino = '';
         }
 
-        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio FROM lotesFusion lf
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales
+        FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
+        LEFT JOIN (SELECT lf2.idLotePvOrigen , COUNT(idLotePvOrigen) as originales FROM lotesFusion lf2  WHERE origen=1 GROUP BY lf2.idLotePvOrigen ) co ON co.idLotePvOrigen = lf.idLotePvOrigen
         WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
     }
@@ -867,6 +871,11 @@ class Reestructura_model extends CI_Model
             return true;
         else
             return false;
+    }
+    public function getLotesFusion($idLote)
+    {
+        $query['origen'] = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
+        return $query->result_array($query);
     }
     
 }
