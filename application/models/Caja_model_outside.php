@@ -443,13 +443,11 @@
         return true;
     }
 
-    public function getDocsByType($typeOfPersona)
-    {
-        $query = $this->db-> query("SELECT * FROM opcs_x_cats WHERE id_catalogo = $typeOfPersona AND estatus = 1 AND id_opcion NOT IN(30)");
-        /*$this->db->select('*');
-        $this->db->where('id_catalogo', $typeOfPersona);
-        $query= $this->db->get("opcs_x_cats");*/
-        return $query->result_array();
+    public function getDocsByType($typeOfPersona, $tipo_venta) {
+        $extraWhere = "";
+        if ($tipo_venta == 1) // VENTA DE PARTICULAES
+            $extraWhere = "OR (id_catalogo = $typeOfPersona AND id_opcion IN (50))";
+        return $this->db-> query("SELECT * FROM opcs_x_cats WHERE (id_catalogo = $typeOfPersona AND estatus = 1 AND id_opcion NOT IN (30)) $extraWhere")->result_array();
     }
 
     public function insertLotToHist($data)
@@ -1315,7 +1313,7 @@
         }
 
         //EL TIPO DE DOCUMENTOS A CARGAR POR EL TIPO DE CLIENTE
-        $tipoDoc = $this->getDocsByType(31);
+        $tipoDoc = $this->getDocsByType(31, $nomLote->tipo_venta);
         foreach ($tipoDoc AS $arrayDocs) {
             $arrayDocs = array(
                 'movimiento' => $arrayDocs["nombre"],
@@ -1541,6 +1539,10 @@
         $this->db->update('historial_documento', $dataActualiza);
         return $this->db->affected_rows();
 //        return 5;//prueba
+    }
+
+    public function validarTipoVenta($idLote) {
+        return $this->db-> query("SELECT ISNULL(tipo_venta, 0) tipo_venta FROM lotes WHERE idLote = $idLote")->row(); 
     }
 
 }

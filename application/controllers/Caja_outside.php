@@ -496,6 +496,7 @@ class Caja_outside extends CI_Controller {
 
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
+        $tipo_venta = $this->caja_model_outside->validarTipoVenta($id_lote);
        // $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
  
         if( $datosView->concepto == 'REUBICACIÓN'){
@@ -885,7 +886,7 @@ class Caja_outside extends CI_Controller {
         /*termina la insersión de historial documento*/
         /*Si es persona moral o fisica e sla documentacion que va a insertar*/
         if ($data['prospecto'][0]['personalidad_juridica'] == 1) {
-            $dataDocs = $this->caja_model_outside->getDocsByType(32);
+            $dataDocs = $this->caja_model_outside->getDocsByType(32, $tipo_venta->tipo_venta);
             //print_r($dataDocs);
             $dataDC = array();
             for ($i = 0; $i < count($dataDocs); $i++) {
@@ -896,7 +897,6 @@ class Caja_outside extends CI_Controller {
                 $dataDC[$i]['fecha_creacion'] = $dataDocs[$i]['fecha_creacion'];
                 $dataDC[$i]['creado_por'] = $dataDocs[$i]['creado_por'];
 
-                
                 $dataInsertHistorialDocumento = array(
                     'movimiento' => $dataDC[$i]['nombre'],/*nombre comp del mov*/
                     'modificado' => date('Y-m-d H:m:i'),/*date ahorita*/
@@ -911,7 +911,7 @@ class Caja_outside extends CI_Controller {
 
         } elseif ($data['prospecto'][0]['personalidad_juridica'] == 2 || $data['prospecto'][0]['personalidad_juridica'] == 3) {
             /*Es persona fisica*/
-            $dataDocs = $this->caja_model_outside->getDocsByType(31);
+            $dataDocs = $this->caja_model_outside->getDocsByType(31, $tipo_venta->tipo_venta);
             $dataDC = array();
             for ($i = 0; $i < count($dataDocs); $i++) {
                 $dataDC[$i]['id_opcion'] = $dataDocs[$i]['id_opcion'];
@@ -946,17 +946,6 @@ class Caja_outside extends CI_Controller {
 
         /***************************************/
         $this->actualizaProspecto($id_prospecto);
-
-        if (intval($data['prospecto'][0]['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-        //if (TRUE) {
-            $arcusData = array(
-                "propiedadRelacionada" => $id_lote,
-                "uid" => $data['prospecto'][0]['id_arcus'],
-                "estatus" => 4
-            );
-            $response = $this->arcus->sendLeadInfoRecord($arcusData);
-        }
-
         $response['Titulo'] = 'Prospecto - cliente';
         $response['resultado'] = TRUE;
         $response['message'] = 'Proceso realizado correctamente ' . date('y-m-d H:i:s');

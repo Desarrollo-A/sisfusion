@@ -1232,10 +1232,10 @@ function checkBudgetInfo($idSolicitud){
         return $resultados;
     }
 
-    public function getStatus3VP(){
+    public function getStatus3VP() {
         return $this->db->query("SELECT lo.idLote, hd.idDocumento, hd.tipo_doc, hd.expediente, hd.movimiento, lo.referencia, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         lo.nombreLote, lo.idStatusContratacion, lo.idMovimiento, lo.modificado, cl.rfc,
-        CAST(lo.comentario AS varchar(MAX)) comentario, lo.fechaVenc, lo.perfil, co.nombre nombreCondominio, re.nombreResidencial, lo.ubicacion,s.nombre  sede,
+        CAST(lo.comentario AS varchar(MAX)) comentario, lo.fechaVenc, lo.perfil, co.nombre nombreCondominio, re.nombreResidencial, lo.ubicacion, ISNULL(se.nombre, 'SIN ESPECIFICAR') nombreSede,
         lo.tipo_venta, lo.observacionContratoUrgente as vl,	co.idCondominio, lo.tipo_venta,
 		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
@@ -1244,12 +1244,13 @@ function checkBudgetInfo($idSolicitud){
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-		LEFT JOIN historial_documento hd ON lo.idLote = hd.idLote and hd.tipo_doc = 50
+		LEFT JOIN historial_documento hd ON lo.idLote = hd.idLote AND hd.tipo_doc = 50
 		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
-		WHERE lo.idStatusContratacion IN (2, 3) AND lo.idMovimiento IN (98, 100, 102, 105, 107, 110, 113, 114) AND lo.tipo_venta = 1")->result_array();
+		LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+		WHERE lo.idStatusContratacion IN (2, 3) AND lo.idMovimiento IN (98, 100, 102, 105, 107, 110, 113, 114) AND lo.tipo_venta = 1
+        ORDER BY lo.nombreLote ")->result_array();
     }
 
     public function validateSt3($idLote){
@@ -1260,6 +1261,7 @@ function checkBudgetInfo($idSolicitud){
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
     }
+    
     function pausarSolicitud($idSolicitud,$comentario,$idUsuario){
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus=54 WHERE id_solicitud=$idSolicitud");

@@ -2411,14 +2411,12 @@ function saveNotaria(){
         $this->load->view("postventa/status3revision");
     }
 
-    function getStatus3VP(){
+    function getStatus3VP() {
         $data = $this->Postventa_model->getStatus3VP();
-        //print_r($data);
-        if($data != null) {
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
     public function rechazarStatus(){

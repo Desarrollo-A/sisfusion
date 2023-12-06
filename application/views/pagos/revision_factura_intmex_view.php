@@ -68,7 +68,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
-                        <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos ooam</a></li>
+                        <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos ooam</a></li> -->
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -225,5 +225,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura_intmex.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_intmex_ooam.js"></script>
+    <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_intmex_ooam.js"></script> -->
 </body>
