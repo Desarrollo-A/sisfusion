@@ -97,6 +97,11 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/vista_envio_RL_contraloria");
     }
 
+	public function envio_RL_contraloria_2() {
+		$this->load->view('template/header');
+	 	$this->load->view("contraloria/vista_envio_RL_contraloria_2");
+	}
+
     public function estatus_12_contraloria() {
         $this->load->view('template/header');
         $this->load->view("contraloria/vista_12_contraloria");
@@ -249,25 +254,6 @@ class Contraloria extends CI_Controller {
 
     public function getAdvisersVentas() {
         echo json_encode($this->Clientes_model->getAdvisersVentas()->result_array());
-    }
-
-    public function consultClients() {
-        $this->validateSession();
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("contraloria/vista_documentacion_contraloria_cl",$datos);
-    }
-
-    public function reasignClient() {
-        $data = array(
-            "id_gerente" => $_POST['id_gerente'],
-            "id_coordinador" => $_POST['id_coordinador'],
-            "id_asesor" => $_POST['id_asesor'],
-            "fecha_modificacion" => date("Y-m-d H:i:s"),
-            "modificado_por" => $this->session->userdata('id_usuario')
-        );
-        $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
-        echo json_encode($response);
     }
 
     public function validateSession() {
@@ -866,11 +852,6 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_tventa()->result_array());
     }
 
-    public function pruebaFuncion(){
-        $lotesFusion = $this->Reestructura_model->getLotesFusion(73801);
-        var_dump($lotesFusion);
-    }
-
     public function editar_registro_loteRechazo_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
@@ -1129,10 +1110,8 @@ class Contraloria extends CI_Controller {
                         $i++;
                     }
                     $fecha = $sig_fecha;
-
                 }
                 $arreglo["fechaVenc"] = $fecha;
-
             }
         }
 
@@ -1177,22 +1156,9 @@ class Contraloria extends CI_Controller {
             $historialSaltoMovimientos[1]["idCondominio"] = $idCondominio;
             $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
-            $historialSaltoMovimientos[2]["idStatusContratacion"] = 11;
-            $historialSaltoMovimientos[2]["idMovimiento"] = 41;
-            $historialSaltoMovimientos[2]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[2]["comentario"] = $comentario;
-            $historialSaltoMovimientos[2]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[2]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[2]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[2]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[2]["idLote"] = $idLote;
-            $historialSaltoMovimientos[2]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[2]["idCliente"] = $idCliente;
-
-            $arreglo["idStatusContratacion"] = 11;
-            $arreglo["idMovimiento"] = 41;
+            $arreglo["idStatusContratacion"] = 8;
+            $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
-            $arreglo["validacionEnganche"] = 'VALIDADO';
         }
 
         $assigned_location = null;
@@ -1289,11 +1255,7 @@ class Contraloria extends CI_Controller {
     }
 
     $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
-    /*var_dump($loteAnterior);
-    exit;*/
     if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-
-
         if($banderaFusion != 0){
             $lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
 
@@ -1398,29 +1360,6 @@ class Contraloria extends CI_Controller {
         $arreglo2["idLote"]= $idLote;
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
-
-        // $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-        // $lp = $this->Contraloria_model->get_lp($idLote);
-        // $correosEntregar = [];
-
-        // if(empty($lp)){
-        //    $correos = array_unique(explode(',', $datos[0]["correos"]));
-        // } else {
-        //    $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
-        // }
-
-        // foreach($correos as $email)
-        // {
-        // 	if(trim($email) != 'gustavo.mancilla@ciudadmaderas.com'){
-        // 		if (trim($email) != ''){
-        //            if(trim($email) == 'diego.perez@ciudadmaderas.com'){
-        //                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
-        //            } else {
-        //                array_push($correosEntregar, $email);
-        //            }
-        // 		}
-        // 	}
-        // }
 
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
@@ -3528,4 +3467,25 @@ class Contraloria extends CI_Controller {
             return 0;
         }
     }
+
+    
+    public function consultClients() {
+        $this->validateSession();
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+        $this->load->view("contraloria/vista_documentacion_contraloria_cl",$datos);
+    }
+
+    public function reasignClient() {
+        $data = array(
+            "id_gerente" => $_POST['id_gerente'],
+            "id_coordinador" => $_POST['id_coordinador'],
+            "id_asesor" => $_POST['id_asesor'],
+            "fecha_modificacion" => date("Y-m-d H:i:s"),
+            "modificado_por" => $this->session->userdata('id_usuario')
+        );
+        $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
+        echo json_encode($response);
+    }
+
 }
