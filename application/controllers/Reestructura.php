@@ -548,6 +548,7 @@ class Reestructura extends CI_Controller{
             $numDestinos = 0;
             $totalSupDestino = 0;
             $idClientesOrigen = '';
+            $idLotesOrigen = '';
             $idLotesDestino = '';
             $numDestinos = 0;
             $totalSupDestino = 0;

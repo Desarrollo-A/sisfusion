@@ -6,8 +6,6 @@ class Reestructura_model extends CI_Model
         $this->load->library('email');
         parent::__construct();
         $this->load->model(array('Comisiones_model'));
-        
-
     }
 
     public function getListaClientesReubicar() {
@@ -21,12 +19,12 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) {// JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario"; /* AND dxc2.flagProcesoJuridico = 0 */
             else
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2)"; /* AND dxc2.flagProcesoJuridico = 0 */
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
-            $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
+            $validacionEstatus = "AND lo.estatus_preproceso IN (2)"; /* AND dxc2.flagProcesoContraloria = 0 */
         else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (3, 0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_lider";
@@ -35,14 +33,14 @@ class Reestructura_model extends CI_Model
             $validacionGerente = "AND u6.id_lider = $id_usuario";
         } else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
-        else if ($id_rol == 7 && $tipo == 2){// ASESOR && ES OOAM
+        else if ($id_rol == 7 && $tipo == 2) { // ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
             $validacionEstatus = "AND lo.estatus_preproceso NOT IN (7)";
         }
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
-        return $this->db->query("SELECT lf.rescision,cl.plan_comision,lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
+        return $this->db->query("SELECT lf.rescision,cl.plan_comision, lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
