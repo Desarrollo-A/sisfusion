@@ -3041,9 +3041,10 @@ class Asesor extends CI_Controller {
             return;
         }
 
-        /*if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
             return;
-        }*/
+        }
+
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3225,6 +3226,8 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $leyendaResiciones = '';
+        $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
         if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
@@ -3232,6 +3235,7 @@ class Asesor extends CI_Controller {
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
         } else { // ES COMERCIALIZACIÓN
             $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
+
             $leyendaMsgValidacion = '';
             foreach($documentosContrato as $documento){
                 if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
@@ -3249,6 +3253,24 @@ class Asesor extends CI_Controller {
             }
             else
                 $documentsNumber = 4;
+
+
+
+            $totalResiciones = 0;
+            $totalResicionesFirmadas = 0;
+            foreach ($documentosContrato as $documento){
+                if($documento['tipo_doc'] == 33 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResiciones += 1;
+                }
+                if($documento['tipo_doc'] == 35 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResicionesFirmadas += 1;
+                }
+            }
+            $documentsNumber += ($totalResiciones + $totalResicionesFirmadas);
+            $leyendaResiciones = ($totalResiciones >= 1) ? ', RESICIONES DE CONTRATO ('.$totalResiciones.')' : '' ;
+            $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
+
+
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
                     $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
@@ -3263,11 +3285,15 @@ class Asesor extends CI_Controller {
 
                     $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
                     $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
                 }
             }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
+
+
+
+
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
@@ -3294,6 +3320,7 @@ class Asesor extends CI_Controller {
                 return false;
             }
         }
+
 
         return true;
     }
