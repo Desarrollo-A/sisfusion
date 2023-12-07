@@ -265,7 +265,7 @@ function fillTable(id_rol, id_usuario){
             },
         }],
         ajax: {
-            url: `${general_base_url}Comisiones/getDatosNuevasMontos/${id_rol}/${id_usuario}`,
+            url: `${general_base_url}Comisiones/getDatosNuevasMontos/${id_usuario}`,
             type: "POST",
             cache: false,
             data: function( d ){

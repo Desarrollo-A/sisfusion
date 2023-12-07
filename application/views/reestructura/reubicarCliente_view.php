@@ -213,6 +213,7 @@
                                                 <th>SEDE</th>
                                                 <th>FECHA ÚLTIMO ESTATUS</th>
                                                 <th>FECHA VENCIMIENTO</th>
+                                                <th>ESTATUS CONTRALORÍA</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

@@ -3015,8 +3015,8 @@ class Asesor extends CI_Controller {
                 $statusContratacion = 2;
                 $idMovimiento = 113;
             } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                $statusContratacion = 2;
-                $idMovimiento = 114;
+                $statusContratacion = 5;
+                $idMovimiento = 106;
             } else {
                 $statusContratacion = 3;
                 $idMovimiento = 98;
@@ -3039,15 +3039,6 @@ class Asesor extends CI_Controller {
             echo json_encode($data);
             return;
         }
-
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-            return;
-        }
-        //esto es de prueba
-        $data['message'] = 'FALSE';
-        echo json_encode($data);
-        exit;
-        //termina la parte de prueba
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3542,8 +3533,8 @@ class Asesor extends CI_Controller {
         $idMovimiento = 4;
         if($valida_tventa[0]['tipo_venta'] == 1) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
+                $statusContratacion = 2;
+                $idMovimiento = 103;
             }
         }
 
