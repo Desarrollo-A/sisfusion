@@ -58,10 +58,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             if (tabla_asimilados.column(i).search() !== this.value) {
                 tabla_asimilados.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_asimilados.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_asimilados.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_asimilados.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
