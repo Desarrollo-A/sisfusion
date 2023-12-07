@@ -866,6 +866,11 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_tventa()->result_array());
     }
 
+    public function pruebaFuncion(){
+        $lotesFusion = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
+        var_dump($lotesFusion);
+    }
+
     public function editar_registro_loteRechazo_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
