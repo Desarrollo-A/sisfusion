@@ -9,7 +9,7 @@
                 <div class="modal-content" >
                     <div class="modal-header">
                         <h4 class="modal-title text-center">
-                            Registro estatus 5 - <b><span class="lote"></span></b>
+                            Registro estatus 3 - <b><span class="lote"></span></b>
                         </h4>
                     </div>
                     <div class="modal-body pt-0">
@@ -218,8 +218,7 @@
                                                 <th>CLIENTE</th>
                                                 <th>FECHA DE MODIFICACIÓN</th>
                                                 <th>FECHA DE VENCIMIENTO</th>
-                                                <th>UC</th>
-                                                <th>SEDE</th>
+                                                <th>UBICACIÓN</th>
                                                 <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>

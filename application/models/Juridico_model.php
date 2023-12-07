@@ -228,7 +228,7 @@ class Juridico_model extends CI_Model {
 		return $this->db->query("SELECT us.id_usuario, CONCAT(UPPER(us.nombre), ' ', UPPER(us.apellido_paterno), ' ', 
 		UPPER(us.apellido_materno), ' (', se.nombre, ')') nombreUsuario FROM usuarios us 
 		INNER JOIN sedes se ON se.id_sede = us.id_sede
-		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 12842, 11097) AND us.id_rol = 15 AND us.estatus = 1 
+		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 12842, 11097, 14183) AND us.id_rol = 15 AND us.estatus = 1 
 		ORDER BY us.id_sede, nombreUsuario")->result_array();
 	}
 
