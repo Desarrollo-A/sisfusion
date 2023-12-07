@@ -1,7 +1,7 @@
 
 let prestamosTabla;
 $(document).ready(function () {
-    alert(7189278912790) 
+  
     });
 
 $("#prestamos-table").prop('hidden', true);
@@ -120,7 +120,9 @@ function createPrestamosDataTable(mes, anio) {
 
     prestamosTabla = $('#prestamos-table').DataTable({
         dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
+
+        width: '100%',
+        scrollX: true,
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -128,7 +130,7 @@ function createPrestamosDataTable(mes, anio) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,11,12],
                     format: {
                         header: function (d, columnIndx) {
                             switch (columnIndx) {
@@ -142,8 +144,8 @@ function createPrestamosDataTable(mes, anio) {
                                 case 7: return 'PAGO INDIVIDUAL';
                                 case 8: return 'FECHA';
                                 case 9: return 'COMENTARIOS';
-                                case 10: return 'TIPO DESCUENTO';
-                                case 11: return 'ESTATUS';
+                                case 11: return 'TIPO DESCUENTO';
+                                case 12: return 'ESTATUS';
                                 default: return 'NA';
                             }
                         }
@@ -213,23 +215,42 @@ function createPrestamosDataTable(mes, anio) {
                 }
             },
             {
-                'width': "8%",
-                'data': function( d ){
+
+                visible: true ,
+                data: function( d ){
                     return '<p class="m-0">'+d.fecha_creacion+'</p>';
                 }
             },
             {
                 'width': "8%",
-                'data': function( d ){
+                'data': function( d){         
+                    
+                        return '<p class="m-0">'+d.comentario+'</p>';
+                    
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d){         
                     const letras = d.comentario.split(" ");
-            
                     if(letras.length <= 4)
                     {
                         console.log(1) 
                         return '<p class="m-0">'+d.comentario+'</p>';
                     }else{
+                    
                         console.log(2)
-                        return '<p class="m-0">'+letras[0]+' '+letras[1]+' '+letras[2]+' '+letras[3]+'......</p>';
+                        return `<p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                        <a  data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                            <span class="lbl-blueMaderas">Ver más</span> 
+                        </a>
+
+                                <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                ${d.comentario}
+                                </div>
+                                </div>
+                        `;
                     }
                 }
             },
@@ -271,17 +292,21 @@ function createPrestamosDataTable(mes, anio) {
                 'width': "6%",
                 'orderable': false,
                 'data': function( d ) {
-                    return `
+                    
+                    return `<div class="d-flex justify-center">
                         <button class="btn-data btn-blueMaderas consulta-historial"
                             value="${d.id_relacion_pp}"
                             title="Historial">
                             <i class="fas fa-info"></i>
                         </button>
-`                           ;
+                    </div> `;
                 }
             }
         ],
-        columnDefs: [],
+        columnDefs: [{
+            targets: [ 9], visible: false,
+            searchable: false,
+        }],
         ajax: {
             url: `${general_base_url}Comisiones/getPrestamosTable/${mes}/${anio}`,
             type: "GET",
@@ -291,6 +316,7 @@ function createPrestamosDataTable(mes, anio) {
     });
 
     $('#prestamos-table tbody').on('click', '.consulta-historial', function (e) {
+        $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
 
@@ -315,6 +341,7 @@ function createPrestamosDataTable(mes, anio) {
                 });
 
                 $('#historial-modal').modal();
+                    $('#spiner-loader').addClass('hide');
             });
     });
 }
@@ -328,3 +355,4 @@ function formatMoney( n ) {
         j = (j = i.length) > 3 ? j % 3 : 0;
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
+

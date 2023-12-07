@@ -4,17 +4,18 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <div class="modal fade"
-             id="historial-modal"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="myModalLabel"
-             aria-hidden="true"
-             data-backdrop="static"
-             data-keyboard="false">
+    <!-- modal comentarios -->
+    
+    <div class="modal fade"
+                id="historial-modal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="\"
+                aria-hidden="true"
+                data-backdrop="static"
+                data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable"
-                 role="document">
+                    role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button"
@@ -25,7 +26,38 @@
                         </button>
                         <h4 class="modal-title">Historial del pago</h4>
                     </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="historial-prestamo-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
 
+    <!-- fin de modalComentarios -->
+        <div class="modal fade"
+                id="historial-modal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="myModalLabel"
+                aria-hidden="true"
+                data-backdrop="static"
+                data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable"
+                    role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>
+                        <h4 class="modal-title">Historial del pago</h4>
+                    </div>
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -156,6 +188,7 @@
                                                         <th>PAGO INDIVUAL</th>
                                                         <th>FECHA</th>
                                                         <th>COMENTARIOS</th>
+                                                        <th>COMENTARIOS</th>
                                                         <th>ESTATUS</th>
                                                         <th>TIPO DESCUENTO</th>
                                                         <th>OPCIONES</th>
@@ -171,7 +204,21 @@
                 </div>
             </div>
         </div>
-
+        <div class="spiner-loader hide" id="spiner-loader">
+            <div class="backgroundLS">
+                <div class="contentLS">
+                    <div class="center-align">
+                        Este proceso puede demorar algunos segundos
+                    </div>
+                    <div class="inner">
+                        <div class="load-container load1">
+                            <div class="loader">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
 
