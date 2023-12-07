@@ -1387,7 +1387,7 @@ class Reestructura extends CI_Controller{
 
                                         $documentacion[] = array(
                                             'movimiento' => $doc['nombre'],
-                                            'expediente' => ($doc['id_opcion'] == 33) ? $elemento['rescision'] : '',
+                                            'expediente' => ($doc['id_opcion'] == 33) ? $elemento['rescision'] : null,
                                             'modificado' => $modificado,
                                             'status' => 1,
                                             'idCliente' => $idClienteNuevo,
