@@ -46,19 +46,19 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
-                        <li class="active"><a href="#facturasComercializacion" role="tab" data-toggle="tab">Facturas lotes</a></li>
-                        <!-- <li><a href="#facturasOOAM" role="tab" data-toggle="tab">Facturas ooam</a></li> -->
+                        <li class="active"><a href="#facturaComercializacion" role="tab" data-toggle="tab">Facturas lotes</a></li>
+                        <li><a href="#facturaOOAM" role="tab" data-toggle="tab">Facturas ooam</a></li>
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
-                                    <div class="tab-pane active" id="facturasComercializacion">
+                                    <div class="tab-pane active" id="facturaComercializacion">
                                         <div class="card-content">
                                             <div class="text-center">
                                                 <h3 class="card-title center-align" >Comisiones en revisión <b>factura </b></h3>
-                                                <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de facturación.</p>
+                                                <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -107,11 +107,17 @@
                                                                         <th>PAGADO POR EL CLIENTE</th>
                                                                         <th>TOTAL A PAGAR</th>
                                                                         <th>TIPO DE VENTA</th>
+                                                                        <th>PLAN DE VENTA</th>
+                                                                        <th>PORCENTAJE</th>
+                                                                        <th>FECHA APARTADO</th>
+                                                                        <th>SEDE</th>
                                                                         <th>USUARIO</th>
+                                                                        <th>ESTATUS</th>
                                                                         <th>PUESTO</th>
+                                                                        <th>CÓDIGO POSTAL</th>
                                                                         <th>FECHA DE ENVÍO</th>
                                                                         <th>ACCIONES</th>
-                                                                    </tr>
+                                                                    </tr> 
                                                                 </thead>
                                                             </table>
                                                         </div>
@@ -120,10 +126,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane" id="facturasOOAM">
+                                    <div class="tab-pane" id="facturaOOAM">
                                         <div class="text-center">
                                             <h3 class="card-title center-align" >Comisiones en revisión <b>factura OOAM</b></h3>
-                                            <p class="card-title pl-1">Comisiones solicitadas por el área de OOAM para proceder a pago en esquema de facturación.</p>
+                                            <p class="card-title pl-1">Comisiones solicitadas por el área de OOAM para proceder a pago en esquema de factura.</p>
                                         </div>
                                         <div class="toolbar">
                                             <div class="container-fluid p-0">
@@ -192,5 +198,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura.js"></script>
-    <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_ooam.js"></script> -->
+    <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_ooam.js"></script>
 </body>
