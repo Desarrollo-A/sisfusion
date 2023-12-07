@@ -355,7 +355,7 @@ class Reestructura extends CI_Controller{
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
 
-        foreach ($idLotes as $elementoLote) {
+        foreach ($idLotes as $elementoLote) { 
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
             if (count($dataDisponible) > 0) {
@@ -407,7 +407,7 @@ class Reestructura extends CI_Controller{
                         $arrayLote = array(
                             'idLote' => $idLoteOriginal,
                             'id_lotep' => $idLote,
-                            'estatus' =>  $proceso == 2 ? 0 : 1,
+                            'estatus' =>  $proceso == 0,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => date("Y-m-d H:i:s"),
                             'modificado_por' => $this->session->userdata('id_usuario')
@@ -543,20 +543,9 @@ class Reestructura extends CI_Controller{
         $ubicacion = $clienteAnterior->ubicacion;
 
         if( $flagFusion == 1){
-            $banderaInsertResicion = 0;
-            $totalSupOrigen = 0;
-            $numDestinos = 0;
-            $totalSupDestino = 0;
-            $idClientesOrigen = '';
-            $idLotesOrigen = '';
-            $idLotesDestino = '';
-            $numDestinos = 0;
-            $totalSupDestino = 0;
-            $arrayUpdateCliente = array();
-            $arrayUpdateLoteO = array();
-            $arrayHistorialLoteO = array();
-            $precioM2Original = 0;
-            $sumPrecioM2Original = 0;
+            $banderaInsertResicion = 0; $totalSupOrigen = 0; $numDestinos = 0; $totalSupDestino = 0; $numDestinos = 0; $totalSupDestino = 0; $precioM2Original = 0; $sumPrecioM2Original = 0;
+            $idClientesOrigen = ''; $idLotesOrigen = ''; $idLotesDestino = '';
+            $arrayUpdateCliente = array(); $arrayUpdateLoteO = array(); $arrayHistorialLoteO = array();
 
             $expediente = $this->Reestructura_model->obtenerDocumentacionPorReubicacion($clienteAnterior->personalidad_juridica);
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
@@ -596,7 +585,7 @@ class Reestructura extends CI_Controller{
                         echo json_encode(array(
                             'titulo' => 'FALSE',
                             'resultado' => FALSE,
-                            'message' => 'Error, el lote '.$dataLote['nombreLote'].' no está disponible',
+                            'message' => 'Error, el lote '.$dataLote['nombreLotes'].' no está disponible',
                             'color' => 'danger'
                         ));
                         return;
@@ -985,11 +974,10 @@ class Reestructura extends CI_Controller{
             }
 
             $dataUpdateLoteO = array(
-                'idLote' => $dataLote['idLote'],
                 'estatus_preproceso' => 7,
             );
 
-            if (!$this->General_model->updateRecord("lotes", $dataUpdateLoteO, "idLote", $idClienteInsert)){
+            if (!$this->General_model->updateRecord("lotes", $dataUpdateLoteO, "idLote", $idLoteOriginal)){
                 $this->db->trans_rollback();
                 echo json_encode(array(
                     'titulo' => 'ERROR',
@@ -1001,8 +989,8 @@ class Reestructura extends CI_Controller{
             }
 
             $dataHistorialLoteO = array(
-                'idLote' => $dataLote['idLote'],
-                'idCliente' => $dataLote['idCliente'],
+                'idLote' => $idLoteOriginal,
+                'idCliente' => $idClienteAnterior,
                 'id_preproceso' => 6,
                 'comentario' => 'SELECCIÓN FINAL EEC',
                 'estatus' => 1,
@@ -1271,7 +1259,7 @@ class Reestructura extends CI_Controller{
 
     function moverExpediente(
         $documentacionOriginal, $idLoteAnterior, $idLoteNuevo, $idClienteAnterior, $idClienteNuevo, $expedienteNuevo,
-        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion
+        $loteInfo = null, $docInfo = null, $flagFusion=0, $dataFusion=null, $banderaInsertResicion = 0
     ): bool
     {
         $totalPropuestas = 0;
