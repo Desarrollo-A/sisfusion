@@ -5,7 +5,7 @@ $('#canceladas-tabla').ready(function () {
     $('#canceladas-tabla thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
             if (tablaCanceladas.column(i).search() !== this.value) {
                 tablaCanceladas.column(i).search(this.value).draw();
@@ -80,7 +80,7 @@ $('#canceladas-tabla').ready(function () {
         },
         {
             'data': function (d) {
-                return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas" title="Detalle" onclick="detalleLote(${d.idLote}, ${d.idCliente})"><i class="fas fa-info"></i></button></div>`;
+                return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Detalle" onclick="detalleLote(${d.idLote}, ${d.idCliente})"><i class="fas fa-info"></i></button></div>`;
             }
         }],
         ajax: {
@@ -88,6 +88,10 @@ $('#canceladas-tabla').ready(function () {
             type: "GET",
             data: function (d) {}
         }
+    });
+
+    $('#canceladas-tabla').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 });
 
@@ -115,8 +119,8 @@ function detalleLote(idLote, idCliente) {
                         <div class="col-md-4">
                             <b>USUARIOS</b>
                         </div>
-                        <div class="col-md-1">
-                            <b>%</b>
+                        <div class="col-md-2">
+                            <b>PORCENTAJE</b>
                         </div>
                         <div class="col-md-2">
                             <b>TOTAL COMISIÓN</b>
@@ -135,7 +139,7 @@ function detalleLote(idLote, idCliente) {
                             <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${row.colaborador}" style="font-size:12px; ${row.descuento === "1" ? 'color:red;' : ''}">
                             <b><p style="font-size:12px;${row.descuento === '1' ? 'color:red;' : ''} "> ${row.descuento !== '1' ?  row.rol : row.rol +' Incorrecto' } </p></b>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <input class="form-control input-gral ng-invalid ng-invalid-required" style="${row.descuento === '1' ? 'color:red;' : ''}" required readonly="true" value="${row.porcentaje_decimal}%">
                         </div>
                         <div class="col-md-2">
