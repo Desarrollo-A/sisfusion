@@ -312,7 +312,6 @@ function fillTable(id_rol, id_usuario){
             });
         });
     });
-
 }
 
 $(window).resize(function(){
