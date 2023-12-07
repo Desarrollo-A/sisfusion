@@ -1,6 +1,6 @@
 var tr;
 var tabla_factura ;
-var totaPagos = 0;
+var totaPago = 0;
 let titulos = [];
 
 $(document).ready(function() {
@@ -70,14 +70,16 @@ $('#tabla_factura thead tr:eq(0) th').each(function (i) {
 });
 
 function getDataFactura(proyecto, condominio){
+    
     $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var totalAcumulado = formatMoney(numberTwoDecimal(total));
-        document.getElementById("disponibleFactura").textContent = totalAcumulado;
+        var to = formatMoney(numberTwoDecimal(total));
+        document.getElementById("disponibleFactura").textContent = to;
     });
+    
 
     $("#tabla_factura").prop("hidden", false);
     tabla_factura = $("#tabla_factura").DataTable({
@@ -90,9 +92,9 @@ function getDataFactura(proyecto, condominio){
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title:'Comisiones nuevas factura',
+                title:'Comisiones Factura - Revisión Contraloría',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx -1] + ' ';
@@ -111,7 +113,7 @@ function getDataFactura(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/acepto_internomex_remanente/',
+                        url : general_base_url + 'Pagos/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -124,8 +126,8 @@ function getDataFactura(proyecto, condominio){
                                 $("#autorizarFactura").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                var mensaje = "Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                 tabla_factura.ajax.reload();
+                                var mensaje = "Comisiones de esquema <b>facturas</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
@@ -175,10 +177,8 @@ function getDataFactura(proyecto, condominio){
             }
         },
         {
-            data: function( d ){   
-            
-                p2 = '<p class="m-0"><b>'+d.lote+'</b></p>';
-                return p2 ;
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.lote+'</b></p>';
             }
         },
         
@@ -197,7 +197,7 @@ function getDataFactura(proyecto, condominio){
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.empresa+'</p>';
+                return '<p class="m-0"><b>'+d.empresa+'</b></p>';
             }
         },
         {
@@ -226,29 +226,47 @@ function getDataFactura(proyecto, condominio){
         },
         {
             data: function( d ){
-                if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-                else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-            
+                return '<p class="m-0">'+d.tipo_venta+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                return '<p class="m-0">'+d.plan_descripcion+'</p>';
             }
         },
         {
             data: function( d ){
-                if(d.id_cliente_reubicacion_2 != 0 ) {
-                    p3 = `<p class="m-0"${d.colorProcesoCl} "> ${d.procesoCl}</p>`;
-                    }else{
-                        p3 = '';
-                    }
-                p2 = `<p class="m-0"><i> ${d.puesto}</i></p>`;
-                return  p3+p2;
+                return '<p class="m-0">'+d.porcentaje_decimal+'%</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.fecha_apartado+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.sede_nombre+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.usuario+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.estatus_usuario+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.codigo_postal+'</b></p>';
             }
         },
         {
@@ -310,7 +328,7 @@ function getDataFactura(proyecto, condominio){
     $("#tabla_factura tbody").on("click", ".consultar_logs_factura", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-        $('#comments-list-remanente').html('');
+        $('#comments-list-factura').html('');
         $('#nameLote').html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
@@ -325,7 +343,7 @@ function getDataFactura(proyecto, condominio){
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
+                                                    <ul class="timeline-3" id="comments-list-factura"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,7 +361,7 @@ function getDataFactura(proyecto, condominio){
         $('#spiner-loader').removeClass('hide');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-remanente").append('<li>\n' +
+                $("#comments-list-factura").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
@@ -366,18 +384,18 @@ function getDataFactura(proyecto, condominio){
     });
 
     $('#tabla_factura').on('click', 'input', function() {
-        tr = $(this).closest('tr');
-        var row = tabla_factura.row(tr).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPagos += parseFloat(row.pa);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+        tr2 = $(this).closest('tr');
+        var row = tabla_factura.row(tr2).data();
+        if (row.monto == 0) {
+            row.monto = row.impuesto;
+            totaPago += parseFloat(row.monto);
+            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         } 
         else {
-            totaPagos -= parseFloat(row.pa);
-            row.pa = 0;
+            totaPago -= parseFloat(row.monto);
+            row.monto = 0;
         }
-        $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPagos)));
+        $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPago)));
     });
 
     $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
@@ -395,7 +413,7 @@ function getDataFactura(proyecto, condominio){
             '</div>'+
             '<div class="row">'+
                 '<div class="col-lg-12">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el mótivo por el cual se pausara la solicitud"></input>'+
+                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
                 '</div>'+
             '</div>'+
             '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
@@ -421,7 +439,7 @@ $("#formPausarFactura").submit( function(e) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "pagos/pausar_solicitudM/",
+            url: general_base_url + "Pagos/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -447,21 +465,21 @@ $("#formPausarFactura").submit( function(e) {
 });
 
 $(document).on("click", ".checkPagosIndividual", function() {
-    totaPagos = 0;
+    totaPago = 0;
     tabla_factura.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_factura.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_factura.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_factura.row(tr).data();
-            totaPagos += parseFloat(row.impuesto); 
+            totaPago += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPagos)));
+    $("#autorizarFactura").html(formatMoney(numberTwoDecimal(totaPago)));
 });
     
 function selectAll(e) {
