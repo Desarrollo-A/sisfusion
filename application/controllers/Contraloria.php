@@ -1156,22 +1156,9 @@ class Contraloria extends CI_Controller {
             $historialSaltoMovimientos[1]["idCondominio"] = $idCondominio;
             $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
 
-            $historialSaltoMovimientos[2]["idStatusContratacion"] = 11;
-            $historialSaltoMovimientos[2]["idMovimiento"] = 41;
-            $historialSaltoMovimientos[2]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[2]["comentario"] = $comentario;
-            $historialSaltoMovimientos[2]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[2]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[2]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[2]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[2]["idLote"] = $idLote;
-            $historialSaltoMovimientos[2]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[2]["idCliente"] = $idCliente;
-
-            $arreglo["idStatusContratacion"] = 11;
-            $arreglo["idMovimiento"] = 41;
+            $arreglo["idStatusContratacion"] = 8;
+            $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
-            $arreglo["validacionEnganche"] = 'VALIDADO';
         }
 
         $assigned_location = null;

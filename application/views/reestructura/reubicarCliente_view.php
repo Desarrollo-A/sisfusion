@@ -132,50 +132,6 @@
             </div>
         </div>
 
-        <div class="modal fade" id="capturaTraspasoModal" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <h5 id="mainLabelTextTraspaso"></h5>
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label>Comentario</label>
-                            <textarea class="text-modal" id="comentarioTraspaso" rows="3"></textarea>
-                        </div>
-                        <input type="text" class="hide" id="idLoteTraspaso">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label id="tvLbl">Cantidad traspasada</label>
-                            <input pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" class="form-control input-gral" name="cantidadTraspaso" id="cantidadTraspaso" oncopy="return false" onpaste="return false" onkeypress="return soloNumeros(event)" placeholder="$0.00">
-                        </div>
-                    </div>
-                    <div class="modal-footer mt-2">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
-                        <button type="button" id="guardarTraspaso" class="btn btn-primary"> Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="preseleccionarPropuestaModal" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <h5 id="mainLabelTextPreseleccionPropuestas"></h5>
-                        <input type="text" class="hide" id="idLoteOriginalPreseleccion">
-                        <input type="text" class="hide" name="lotesPropuesta[]" id="l1">
-                        <input type="text" class="hide" name="lotesPropuesta[]" id="l2">
-                        <input type="text" class="hide" name="lotesPropuesta[]" id="l3">
-                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
-                            <div class="row mt-2" id="infoLotesParaPreseleccion"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer mt-2">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar</button>
-                        <button type="button" id="guardarPreseleccion" class="btn btn-primary"> Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
