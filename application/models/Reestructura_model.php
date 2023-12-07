@@ -21,12 +21,12 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) {// JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario --AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0";
             else
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoJuridico = 0";
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
-            $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoContraloria = 0";
+            $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
         else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (3, 0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_lider";
@@ -35,8 +35,10 @@ class Reestructura_model extends CI_Model
             $validacionGerente = "AND u6.id_lider = $id_usuario";
         } else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
-        else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
+        else if ($id_rol == 7 && $tipo == 2){// ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
+            $validacionEstatus = "AND lo.estatus_preproceso NOT IN (7)";
+        }
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
@@ -102,7 +104,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
+        WHERE lo.liberaBandera = 1 ANDD lo.status = 1 $validacionAsignacion $validacionEstatus")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote){

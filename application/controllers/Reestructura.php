@@ -552,6 +552,8 @@ class Reestructura extends CI_Controller{
             $numDestinos = 0;
             $totalSupDestino = 0;
             $arrayUpdateCliente = array();
+            $arrayUpdateLoteO = array();
+            $arrayHistorialLoteO = array();
             $precioM2Original = 0;
             $sumPrecioM2Original = 0;
 
@@ -561,8 +563,27 @@ class Reestructura extends CI_Controller{
             $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
             foreach ($dataFusion as $dataLote){
                 if($dataLote['origen'] == 1){
+                    $dataUpdateLoteO = array();
+                    $dataHistorialLoteO = array();
                     $idClientesOrigen .= "'". $dataLote['idCliente'] ."', ";
                     $totalSupOrigen = $totalSupOrigen + floatval($dataLote['sup']);
+                    $idLotesOrigen .= "'". $dataLote['idLote'] ."', ";
+
+                    $dataUpdateLoteO = array(
+                        'idLote' => $dataLote['idLote'],
+                        'estatus_preproceso' => 7,
+                    );
+                    array_push($arrayUpdateLoteO, $dataUpdateLoteO);
+
+                    $dataHistorialLoteO = array(
+                        'idLote' => $dataLote['idLote'],
+                        'idCliente' => $dataLote['idCliente'],
+                        'id_preproceso' => 6,
+                        'comentario' => 'SELECCIÓN FINAL EEC',
+                        'estatus' => 1,
+                        'modificado_por' => $this->session->userdata('id_usuario')
+                    );
+                    array_push($arrayHistorialLoteO, $dataHistorialLoteO);
                 } 
                 else if($dataLote['destino'] == 1){
                     $idLotesDestino .= "'". $dataLote['idLote'] ."', ";
@@ -588,16 +609,16 @@ class Reestructura extends CI_Controller{
             $clienteAnteriores = $this->General_model->getClienteNLote($idClientesOrigen)->result_array();
             $loteSelected = $this->Reestructura_model->getSelectedSup($idLotesDestino)->result_array();
             if( $totalSupOrigen == $totalSupDestino || $totalSupDestino < $totalSupOrigen ){
-                $proceso = 2;
+                $proceso = 5;
             }
             else{
                 $metrosGratuitos = $totalSupOrigen * 0.05;
-                $proceso = $totalSupDestino - $totalSupOrigen <= $metrosGratuitos ? 2 : 4;
+                $proceso = $totalSupDestino - $totalSupOrigen <= $metrosGratuitos ? 5 : 6;
             }
 
             foreach ($clienteAnteriores as $dataCliente){
                 $dataUpdateCliente= array();
-                if ($proceso == 4){
+                if ($proceso == 6){
                     $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
                     $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
                 }
@@ -711,7 +732,6 @@ class Reestructura extends CI_Controller{
                         return;
                     }
 
-                    $a = 0;
                     if (!$this->moverExpediente($documentacionOriginal, $clienteAnterior->idLote, $dataLote['idLote'],
                         $idClienteAnterior, $idClienteInsert, $expediente, null, null, $flagFusion, $dataFusion, $banderaInsertResicion)) {
                         $this->db->trans_rollback();
@@ -735,6 +755,42 @@ class Reestructura extends CI_Controller{
                     'titulo' => 'ERROR',
                     'resultado' => FALSE,
                     'message' => 'Error al actualizar los clientes anteriores',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar proceso para clientes del origen',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            if (!$this->General_model->updateBatch('lotes', $arrayUpdateLoteO, 'idLote')) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar estatus preproceso final en lotes de origen',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            if (!$this->General_model->insertBatch('historial_preproceso_lote', $arrayHistorialLoteO)) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al insertar historial de pre proceso para los lotes de origen',
                     'color' => 'danger'
                 ));
                 return;
@@ -788,7 +844,7 @@ class Reestructura extends CI_Controller{
             }
 
             $dataUpdateCliente = array(
-                'proceso' => 2,
+                'proceso' => $proceso,
             );
 
             if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
@@ -914,6 +970,55 @@ class Reestructura extends CI_Controller{
                 ));
                 return;
             }
+
+            if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            $dataUpdateLoteO = array(
+                'idLote' => $dataLote['idLote'],
+                'estatus_preproceso' => 7,
+            );
+
+            if (!$this->General_model->updateRecord("lotes", $dataUpdateLoteO, "idLote", $idClienteInsert)){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            $dataHistorialLoteO = array(
+                'idLote' => $dataLote['idLote'],
+                'idCliente' => $dataLote['idCliente'],
+                'id_preproceso' => 6,
+                'comentario' => 'SELECCIÓN FINAL EEC',
+                'estatus' => 1,
+                'modificado_por' => $this->session->userdata('id_usuario')
+            );
+
+            if (!$this->General_model->addRecord('historial_preproceso_lote', $dataHistorialLoteO)) {
+                $this->db->trans_rollback();
+    
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al insertar historial de pre proceso para el lotes de origen',
+                    'color' => 'danger'
+                ));
+                return;
+            }
         }
 
         if ($this->db->trans_status() === FALSE){
@@ -966,7 +1071,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : ($proceso == 2 ? 65 : 66) ], $dataCliente);
+                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'status') {
                 $dataCliente = array_merge([$clave =>  1], $dataCliente);
