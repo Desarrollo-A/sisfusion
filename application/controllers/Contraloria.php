@@ -866,6 +866,11 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->get_tventa()->result_array());
     }
 
+    public function pruebaFuncion(){
+        $lotesFusion = $this->Reestructura_model->getLotesFusion(73801);
+        var_dump($lotesFusion);
+    }
+
     public function editar_registro_loteRechazo_contraloria_proceceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
@@ -1145,7 +1150,7 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if (in_array($cliente->proceso, [2, 4, 3])) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
+        if (in_array($cliente->proceso, [2, 4, 3, 5, 6])) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
 
             $historialSaltoMovimientos = [];
             $historialSaltoMovimientos[0]["idStatusContratacion"] = 7;
@@ -1191,7 +1196,7 @@ class Contraloria extends CI_Controller {
         }
 
         $assigned_location = null;
-        if ($cliente->proceso !== 2 && $cliente->proceso !== 4 && $cliente->proceso !== 3) {
+        if ($cliente->proceso !== 2 && $cliente->proceso !== 4 && $cliente->proceso !== 3 && $cliente->proceso !== 5 && $cliente->proceso !== 6) {
         $ub_jur = $this->Contraloria_model->val_ub($idLote);
         $id_sede_jur = '';
         $assigned_location = $ub_jur[0]['ubicacion'];
@@ -1277,19 +1282,20 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
     }
 
-    if (!in_array($cliente->proceso, [2,4])) {
+    if (!in_array($cliente->proceso, [2,4,5,6])) {
         $data['message'] = 'OK';
         echo json_encode($data);
         return;
     }
 
     $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
+    /*var_dump($loteAnterior);
+    exit;*/
     if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
 
 
         if($banderaFusion != 0){
-            $lotesFusion = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
-            $lotesFusionOrigen =  $lotesFusion['origen'];
+            $lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
 
             for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
                 if($lotesFusionOrigen[$x]['origen'] == 1){
