@@ -3043,11 +3043,7 @@ class Asesor extends CI_Controller {
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
             return;
         }
-        //esto es de prueba
-        $data['message'] = 'FALSE';
-        echo json_encode($data);
-        exit;
-        //termina la parte de prueba
+
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3202,19 +3198,19 @@ class Asesor extends CI_Controller {
         }
     
         if ($validate == 1) {
-//            if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-//                if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
-//                    if ($this->email->send())
-//                        $data['message_email'] = 'OK'; // El correo se envió correctamente
-//                    else
-//                        $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
-//                }
-//                $data['message'] = 'OK';
-//                echo json_encode($data);
-//            } else {
-//                $data['message'] = 'ERROR';
-//                echo json_encode($data);
-//            }
+            if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+                    if ($this->email->send())
+                        $data['message_email'] = 'OK'; // El correo se envió correctamente
+                    else
+                        $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                }
+                $data['message'] = 'OK';
+                echo json_encode($data);
+            } else {
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
+            }
         } else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
