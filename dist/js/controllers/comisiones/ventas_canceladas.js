@@ -96,6 +96,7 @@ $('#canceladas-tabla').ready(function () {
 });
 
 function detalleLote(idLote, idCliente) {
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: general_base_url + `Comisiones/getDetailVentaCancelada/${idLote}/${idCliente}`,
         type: 'GET',
@@ -154,6 +155,7 @@ function detalleLote(idLote, idCliente) {
                     </div>`)
             })
             $('#detalle-modal').modal();
+            $("#spiner-loader").addClass('hide');
         }
     });
 }
