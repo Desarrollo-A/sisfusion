@@ -102,9 +102,9 @@
                                                     <th>SEDE</th>
                                                     <th>TOTAL DE COMISIÓN</th>
                                                     <th>IMPUESTO</th>
-                                                    <th>% COMISIÓN</th>
+                                                    <th>PORCENTAJE COMISIÓN</th>
                                                     <th>ESTATUS</th>
-                                                    <th>MÁS</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
