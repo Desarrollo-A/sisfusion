@@ -29,7 +29,10 @@ class Reestructura extends CI_Controller{
 
 	public function reubicarCliente(){
 		$this->load->view('template/header');
-        $this->load->view("reestructura/reubicarCliente_view");
+        if ($this->session->userdata('id_rol') == 11) // ES ADMINISTRACIÓN
+            $this->load->view("reestructura/traspasoAportaciones_view");
+        else // TODOS LOS DEMÁS
+            $this->load->view("reestructura/reubicarCliente_view");
 	}	
 
     public function getListaClientesReubicar(){
@@ -2008,8 +2011,8 @@ class Reestructura extends CI_Controller{
         
         $fechaVencimiento = $this->getFechaVencimiento(0); // SI ES ELABORACIÓN DE CORRIDAS, CONTRATO Y RESCISIÓN DA 2 DÍAS SINO 1
 
-        if ($idPreproceso + 1 == 5 && $this->input->post('numeroTotalPropuestas') == 1) // AVANZA A ADMINISTRACIÓN CON SÓLO UNA PROPUESTA LA CUAL SE CHECKEA POR DEFECTO COMO LA OPCIÓN SELECCIONADA POR EL CLIENTE
-            $this->General_model->updateRecord("propuestas_x_lote", array('estatusPreseleccion' => 1, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
+        if ($idPreproceso + 1 == 4) // AG ENVÍA A EEC SE HACE EL SALTO DE LOS PASOS 4 Y 5 ENVIÁNDOSE DIRECTOR AL 6
+            $estatus_proceso = 6;
 
         if($flagFusion==1) {
             //Se obtienen lotes de fusión de origen para actualizar estatus de lote e insertar historial
@@ -2598,14 +2601,59 @@ class Reestructura extends CI_Controller{
     }
 
     public function setTraspaso() {
-        $updateData = array(
-            "cantidadTraspaso" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
-            "comentario" => $this->input->post('comentarioTraspaso'), 
-            "modificado_por" => $this->session->userdata('id_usuario'), 
-            'fecha_modificacion' => date('Y-m-d H:i:s')
+        if ($this->input->post('idLoteOrigen') == 1) { // ES DE PROCESO NORMAL DE REUBICACIÓN
+            $updateDataOrigenNormal = array (
+                "cantidadTraspaso" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
+                "comentario" => $this->input->post('comentarioTraspaso'), 
+                "modificado_por" => $this->session->userdata('id_usuario'), 
+                'fecha_modificacion' => date('Y-m-d H:i:s'),
+                'estatusTraspaso' => 1
+            );
+        } else { // ES UN PROCESO FUSIÓN DE REUBICACIÓN
+            $updateDataOrigenFusion = array (
+                "cantidadTraspaso" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
+                "comentario" => $this->input->post('comentarioTraspaso'), 
+                "modificadoPor" => $this->session->userdata('id_usuario'), 
+                'fechaModificacion' => date('Y-m-d H:i:s'),
+                'estatusTraspaso' => 1
+            );
+        }
+
+        $updateDataDestino = array (
+            "totalValidado" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
+            "validacionEnganche" => 'VALIDADO', 
+            "usuario" => $this->session->userdata('id_usuario')
         );
-        echo json_encode($this->General_model->updateRecord("datos_x_cliente", $updateData, "idLote", $this->input->post('idLote')));
+
+        $insertDataDestino = array(
+			'nombreLote' => $this->input->post('nombreLoteDestino'),
+			'idStatusContratacion' => 11,
+			'idMovimiento' => 41,
+			'modificado' => date('Y-m-d h:i:s'),
+			'fechaVenc' => date('Y-m-d h:i:s'),
+			'idLote' => $this->input->post('idLoteDestino'),
+			'idCondominio' => $this->input->post('idCondominioDestino'),
+			'idCliente' => $this->input->post('idClienteDestino'),
+			'usuario' => $this->session->userdata('id_usuario'),
+			'perfil' => $this->session->userdata('id_rol'),
+			'comentario' => $this->input->post('comentarioTraspaso'),
+			'status' => 1
+        );
+        
+        if ($this->input->post('idLoteOrigen') == 1) // ES DE PROCESO NORMAL DE REUBICACIÓN
+            $responseUpdateOrigen = $this->General_model->updateRecord("datos_x_cliente", $updateDataOrigenNormal, "idLote", $this->input->post('idLoteOrigen'));
+        else // ES UN PROCESO FUSIÓN DE REUBICACIÓN
+            $responseUpdateOrigen = $this->General_model->updateRecord("lotesFusion", $updateDataOrigenFusion, "idLote", $this->input->post('idLoteDestino'));
+
+        $responseUpdateDestino = $this->General_model->updateRecord("lotes", $updateDataDestino, "idLote", $this->input->post('idLoteDestino'));
+        $responseInsertHistorial = $this->General_model->addRecord('historial_lotes', $insertDataDestino);
+
+        if ($responseUpdateOrigen && $responseUpdateDestino && $responseInsertHistorial)
+            echo json_encode(true);
+        else 
+            echo json_encode(false);
     }
+
     public function getFechaVencimiento ($numeroDias) {
         $numeroDias = intval($numeroDias);
         date_default_timezone_set('America/Mexico_City');
@@ -2696,8 +2744,14 @@ class Reestructura extends CI_Controller{
         return $fechaVencimiento;
     }
 
-    public function setPreseleccion() {
-        echo json_encode($this->Reestructura_model->updateEstatusPreseleccion($this->input->post('idLote'), $this->input->post('idLotePreseleccionado'), $this->input->post('idLotesPropuestas')));
+    public function getListaLotesPendienteTraspaso() {
+        $registrosNormales = $this->Reestructura_model->getListaLotesPendienteTraspasoNormales();
+        $registrosFusion = $this->Reestructura_model->getListaLotesPendienteTraspasoFusion();
+        for ($i = 0; $i < count($registrosFusion); $i ++) {
+            $registrosFusion[$i]['nombreResidencialOrigen'] = implode(', ', array_unique(explode(', ', $registrosFusion[$i]['nombreResidencialOrigen'])));
+            $registrosFusion[$i]['nombreCondominioOrigen'] = implode(', ', array_unique(explode(', ', $registrosFusion[$i]['nombreCondominioOrigen'])));
+        }
+        echo json_encode(array_merge($registrosNormales, $registrosFusion), JSON_NUMERIC_CHECK);
     }
     
 }
