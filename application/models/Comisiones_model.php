@@ -226,19 +226,18 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250) 
         AND l.registro_comision not IN (7) 
-        AND pc.bandera IN (0,100)) 
+        AND pc.bandera IN (0,100)
         AND cl.proceso IN (0)
         OR (
         l.idStatusContratacion >= 9 
         AND cl.status = 1 
-        AND cl.proceso IN (0)
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
         AND pc.bandera IN (0,100))) 
-        AND (l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2)) 
+        AND ((l.tipo_venta IS NULL OR l.tipo_venta IN (0,1,2) AND ISNULL(l.totalNeto2, 0) > 0) OR (l.tipo_venta IN (8))) 
         AND cl.fechaApartado >= '2020-03-01' 
         AND (cl.id_subdirector IS NOT NULL AND cl.id_subdirector != '' AND cl.id_subdirector != 0 )
-        AND ISNULL(l.totalNeto2, 0) > 0)
+        )
         ORDER BY l.idLote"); 
         return $query;
     }
@@ -2945,8 +2944,8 @@ class Comisiones_model extends CI_Model {
         ORDER BY d.n_p asc");
     }
 
-    function getDatosNuevasMontos($proyecto,$condominio){
-        $filtro = " pci1.estatus IN (1) AND com.id_usuario = $condominio ";
+    function getDatosNuevasMontos($usuario){
+        $filtro = " pci1.estatus IN (1) AND com.id_usuario = $usuario ";
 
         return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
         CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN UPPER(oprol2.nombre) ELSE UPPER(oprol.nombre) END as puesto, 
@@ -3689,25 +3688,24 @@ class Comisiones_model extends CI_Model {
 
     public function porcentajesReubicacion($clienteReubicacion) {
         $validarLotesFusion = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idCliente = $clienteReubicacion");
-        $idLotePvOrigen = $validarLotesFusion->row()->idLotePvOrigen;
-        $stringLotesFusion = $this->db->query("SELECT STRING_AGG(idLote,',') cadenaLotes FROM lotesFusion WHERE origen = 1 AND idLotePvOrigen = $idLotePvOrigen GROUP BY idLotePvOrigen");
-        $lotesString = $stringLotesFusion->row()->cadenaLotes;
+        $idLotePvOrigen = !empty($validarLotesFusion->row()->idLotePvOrigen)?$validarLotesFusion->row()->idLotePvOrigen:0;
 
+        if($idLotePvOrigen != 0){ 
 
-        if(!empty($idLotePvOrigen)){ 
+            $stringLotesFusion = $this->db->query("SELECT STRING_AGG(idLote,',') cadenaLotes FROM lotesFusion WHERE origen = 1 AND idLotePvOrigen = $idLotePvOrigen GROUP BY idLotePvOrigen");
+            $lotesString = $stringLotesFusion->row()->cadenaLotes;
 
-            return $this->db->query("SELECT (SUM(cr.comision_total)/lf2.lotesDividir) as comision_total, (SUM(cr.porcentaje_decimal)/lf2.lotesDividir) porcentaje_decimal, CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_usuario, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, $clienteReubicacion AS idCliente, $idLotePvOrigen AS idLote 
+            return $this->db->query("SELECT (SUM(cr.comision_total)/lf2.lotesDividir) as comision_total, (SUM(cr.porcentaje_decimal)/lf2.lotesDividir) porcentaje_decimal, CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_usuario, cr.rol_genesrado AS id_rol, oxc.nombre AS detail_rol, $clienteReubicacion AS idCliente, $idLotePvOrigen AS idLote 
             FROM comisionesReubicadas cr 
             INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario
             INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = 1 AND oxc.id_opcion = cr.rol_generado 
-            LEFT JOIN (SELECT COUNT(*) lotesDividir, lf2.idLotePvOrigen FROM lotesFusion lf2 WHERE lf2.idLotePvOrigen = 48363 and lf2.destino = 1
-            GROUP BY lf2.idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = 48363	
+            LEFT JOIN (SELECT COUNT(*) lotesDividir, lf2.idLotePvOrigen FROM lotesFusion lf2 WHERE lf2.idLotePvOrigen = $idLotePvOrigen and lf2.destino = 1
+            GROUP BY lf2.idLotePvOrigen) lf2 ON lf2.idLotePvOrigen = $idLotePvOrigen	
             WHERE cr.idLote IN($lotesString) 
             GROUP BY cr.id_usuario, cr.rol_generado, usu.nombre, usu.apellido_paterno, usu.apellido_materno, oxc.nombre, lf2.lotesDividir
             ");
 
         }else{
-
             return $this->db->query("SELECT CONCAT(usu.nombre , ' ' , usu.apellido_paterno , ' ', usu.apellido_materno ) AS nombre, cr.id_comision_reubicada, cr.id_usuario, cr.comision_total, cr.porcentaje_decimal, cr.rol_generado AS id_rol, oxc.nombre AS detail_rol, cr.idCliente, cr.idLote, lo.totalNeto2 , cl.plan_comision , pc.descripcion, cr.nombreLote 
             FROM comisionesReubicadas cr
             INNER JOIN usuarios usu ON usu.id_usuario = cr.id_usuario

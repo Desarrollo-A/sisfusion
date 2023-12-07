@@ -3860,7 +3860,7 @@
 		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
 		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
 		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
-		fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
+		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
 		cl.creado_por, cl.fecha_modificacion, cl.modificado_por,
 		cond.nombre AS nombreCondominio,
 		residencial.nombreResidencial AS nombreResidencial,

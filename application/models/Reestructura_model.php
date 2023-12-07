@@ -21,12 +21,12 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) {// JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario --AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0";
             else
-                $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoJuridico = 0";
+                $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoJuridico = 0";
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
-            $validacionEstatus = "AND lo.estatus_preproceso IN (2) --AND dxc2.flagProcesoContraloria = 0";
+            $validacionEstatus = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
         else if ($id_rol == 6 && $tipo == 2) { // ASISTENTE GERENCIA && ES OOAM
             $validacionEstatus = "AND lo.estatus_preproceso IN (3, 0, 1)";
             $validacionGerente = "AND u6.id_lider = $id_lider";
@@ -35,8 +35,10 @@ class Reestructura_model extends CI_Model
             $validacionGerente = "AND u6.id_lider = $id_usuario";
         } else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
             $validacionEstatus = "AND lo.estatus_preproceso IN (0, 1)";
-        else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
+        else if ($id_rol == 7 && $tipo == 2){// ASESOR && ES OOAM
             $validacionAsignacion = "AND lo.id_usuario_asignado = $id_usuario";
+            $validacionEstatus = "AND lo.estatus_preproceso NOT IN (7)";
+        }
         else if ($id_rol == 11) // ADMINISTRACIÓN
             $validacionEstatus = "AND lo.estatus_preproceso IN (5)";
 
@@ -76,7 +78,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector  
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
-        LEFT JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente
+        INNER JOIN usuarios u6 ON u6.id_usuario = lo.id_usuario_asignado $validacionGerente
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
 	        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote
@@ -845,8 +847,10 @@ class Reestructura_model extends CI_Model
             $tipoOrigenDestino = '';
         }
 
-        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio FROM lotesFusion lf
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales
+        FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
+        LEFT JOIN (SELECT lf2.idLotePvOrigen , COUNT(idLotePvOrigen) as originales FROM lotesFusion lf2  WHERE origen=1 GROUP BY lf2.idLotePvOrigen ) co ON co.idLotePvOrigen = lf.idLotePvOrigen
         WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
     }

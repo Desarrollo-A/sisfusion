@@ -41,18 +41,19 @@
 								<select required="required" name="estatus_enganche" id="estatus_enganche" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="2">
 								</select>
 							</div>
-							<input type="hidden" name="idLote" id="idLoteregCor" >
-							<input type="hidden" name="idCliente" id="idClienteregCor" >
-							<input type="hidden" name="idCondominio" id="idCondominioregCor" >
+							<input type="hidden" name="idLote" id="idLoteregCor">
+							<input type="hidden" name="idCliente" id="idClienteregCor">
+							<input type="hidden" name="idCondominio" id="idCondominioregCor">
 							<input type="hidden" name="fechaVenc" id="fechaVencregCor" >
-							<input type="hidden" name="nombreLote" id="nombreLoteregCor"  >
-							<input type="hidden" name="banderaFusion" id="banderaFusion"  >
+							<input type="hidden" name="nombreLote" id="nombreLoteregCor">
+							<input type="hidden" name="banderaFusion" id="banderaFusion">
 						</div>
 					</div>
 					<div class="modal-footer"></div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
 						<button type="button" id="enviarAContraloriaGuardar" onClick="preguntaRegCorr()" class="btn btn-primary">Registrar</button>
+						
 					</div>
 				</div>
 			</div>
