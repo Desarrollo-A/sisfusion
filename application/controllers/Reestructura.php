@@ -739,8 +739,6 @@ class Reestructura extends CI_Controller{
                 ));
                 return;
             }
-
-
             //No se realiza update en selección de propuestas
             //No se realiza función de desactivar lotes ya que todos son selecciones finales para fusión
         }
@@ -1282,15 +1280,19 @@ class Reestructura extends CI_Controller{
                             foreach ($dataFusion as $dataLote1 => $elemento){//vuelve a recorrer el arreglo de fusion para sacar los lotes de origen
                                 if($elemento['origen'] == 1 && $banderainterna <= $dataLote['originales']
                                     && ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 35)){ //dentro del primer destino inserta las ramas para resicion de contrato dependiendo los lotes de origen
-                                        $nombreLoteOrigen = $dataLote1['nombreLotes'];
-                                        $nombreResLoteOrigen = $dataLote1['rescision'];
-                                        copy(
-                                            "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
-                                            $ubicacionFolder.$expedienteAnterior
-                                        );
+
+                                        if($doc['id_opcion'] == 33){
+                                            $nombreLoteOrigen = $elemento['nombreLotes'];
+                                            $nombreResLoteOrigen = $elemento['rescision'];
+                                            copy(
+                                                "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
+                                                $ubicacionFolder.$nombreResLoteOrigen
+                                            );
+                                        }
+
                                         $documentacion[] = array(
                                             'movimiento' => $doc['nombre'],
-                                            'expediente' => $elemento['rescision'],
+                                            'expediente' => ($doc['id_opcion'] == 33) ? $elemento['rescision'] : '',
                                             'modificado' => $modificado,
                                             'status' => 1,
                                             'idCliente' => $idClienteNuevo,
@@ -1413,6 +1415,7 @@ class Reestructura extends CI_Controller{
                 }
             }
         }
+
         return $this->General_model->insertBatch('historial_documento', $documentacion);
     }
 

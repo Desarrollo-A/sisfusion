@@ -76,8 +76,8 @@ function getDataAsimiladosOOAM(proyecto, condominio){
         $.each(json.data, function(i, v) {
             totalooam += parseFloat(v.impuesto);
         });
-        var toOoam = formatMoney(numberTwoDecimal(totalooam));
-        document.getElementById("disponibleAsimiladosOOAM").textContent = toOoam;
+        var to = formatMoney(numberTwoDecimal(totalooam));
+        document.getElementById("disponibleAsimiladosOOAM").textContent = to;
     });
     
 
@@ -113,7 +113,7 @@ function getDataAsimiladosOOAM(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Ooam/acepto_internomex_remanente/',
+                        url : general_base_url + 'Ooam/acepto_internomex_asimilados/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -319,7 +319,7 @@ function getDataAsimiladosOOAM(proyecto, condominio){
     $("#tabla_asimilados_ooam tbody").on("click", ".consultar_logs_asimilados", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
-        $('#comments-list-remanente').html('');
+        $('#comments-list-asimilados').html('');
         $('#nameLote').html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
@@ -334,7 +334,7 @@ function getDataAsimiladosOOAM(proyecto, condominio){
                                         <div class="col-md-12">
                                             <div class="card card-plain">
                                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-remanente"></ul>
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -352,7 +352,7 @@ function getDataAsimiladosOOAM(proyecto, condominio){
         $('#spiner-loader').removeClass('hide');
         $.getJSON(general_base_url+"Ooam/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-remanente").append('<li>\n' +
+                $("#comments-list-asimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
                 '      <div class="col-md-6">\n' +
@@ -429,7 +429,7 @@ $("#formPausarAsimiladosOOAM").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
-        data.append("factura", 0);
+        data.append("factura", 1);
         $.ajax({
             url: general_base_url + "Ooam/setPausaPagosOOAM/",
             data: data,

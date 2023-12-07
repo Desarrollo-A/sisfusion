@@ -144,7 +144,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_xml.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_xml_ooam.js"></script>
+    <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_xml_ooam.js"></script> -->
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script type="text/javascript"> Shadowbox.init();</script>

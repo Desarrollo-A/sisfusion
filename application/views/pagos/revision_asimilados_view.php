@@ -95,27 +95,29 @@
                                                             <table class="table-striped table-hover" id="tabla_asimilados" name="tabla_asimilados">
                                                                 <thead>
                                                                     <tr>
-                                                                    <th></th>
-                                                                    <th>ID PAGO</th>
-                                                                    <th>PROYECTO</th>
-                                                                    <th>CONDOMINIO</th>
-                                                                    <th>LOTE</th>
-                                                                    <th>REFERENCIA</th>
-                                                                    <th>PRECIO DEL LOTE</th>
-                                                                    <th>EMPRESA</th>
-                                                                    <th>TOTAL DE LA COMISIÓN</th>
-                                                                    <th>PAGADO POR EL CLIENTE</th>
-                                                                    <th>SOLICITADO</th>
-                                                                    <th>IMPTO.</th>
-                                                                    <th>DESCUENTO</th>
-                                                                    <th>TOTAL A PAGAR</th>
-                                                                    <th>TIPO DE VENTA</th>
-                                                                    <th>USUARIO</th>
-                                                                    <th>PUESTO</th>
-                                                                    <th>CÓDIGO POSTAL</th>
-                                                                    <th>FECHA ENVÍO</th>
-                                                                    <th>ACCIONES</th>
-                                                                    </tr>
+                                                                        <th></th>
+                                                                        <th>ID PAGO</th>
+                                                                        <th>PROYECTO</th>
+                                                                        <th>CONDOMINIO</th>
+                                                                        <th>LOTE</th>
+                                                                        <th>REFERENCIA</th>
+                                                                        <th>PRECIO DEL LOTE</th>
+                                                                        <th>EMPRESA</th>
+                                                                        <th>TOTAL DE LA COMISIÓN</th>
+                                                                        <th>PAGADO POR EL CLIENTE</th>
+                                                                        <th>TOTAL A PAGAR</th>
+                                                                        <th>TIPO DE VENTA</th>
+                                                                        <th>PLAN DE VENTA</th>
+                                                                        <th>PORCENTAJE</th>
+                                                                        <th>FECHA APARTADO</th>
+                                                                        <th>SEDE</th>
+                                                                        <th>USUARIO</th>
+                                                                        <th>ESTATUS</th>
+                                                                        <th>PUESTO</th>
+                                                                        <th>CÓDIGO POSTAL</th>
+                                                                        <th>FECHA DE ENVÍO</th>
+                                                                        <th>ACCIONES</th>
+                                                                    </tr> 
                                                                 </thead>
                                                             </table>
                                                         </div>

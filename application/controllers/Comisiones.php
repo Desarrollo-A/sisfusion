@@ -2444,8 +2444,8 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/historial_nuevas");      
   }
 
-  public function getDatosNuevasMontos($proyecto,$condominio){
-    $dat =  $this->Comisiones_model->getDatosNuevasMontos($proyecto,$condominio)->result_array();
+  public function getDatosNuevasMontos($usuario){
+    $dat =  $this->Comisiones_model->getDatosNuevasMontos($usuario)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }

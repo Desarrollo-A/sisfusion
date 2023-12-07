@@ -216,7 +216,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined && d.registro_comision != 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
                 return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
                 :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
@@ -1395,8 +1395,6 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
-        btnContratoFirmado = 'fa-eye';
-        tooltipCF = 'VER CONTRATO FIRMADO';
     }
     if(d.idContratoFirmado != null){
         btnContratoFirmado = 'fa-eye';
@@ -1557,7 +1555,8 @@ const botonesAccionReubicacion = (d) => {
         data-placement="left"
         title="Confirma / edita el nombre del lote seleccionado por el cliente"
         data-idLote="${d.idLote}"
-        data-idLotePreseleccionado="${d.lotePreseleccionado}">
+        data-idLotePreseleccionado="${d.lotePreseleccionado}"
+        ${botonFusionadoEstatus}>
         <i class="fas fa-hand-pointer"></i>
     </button>`;
 
