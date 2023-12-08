@@ -1,12 +1,80 @@
 let copropietarioCollapse = false;
 
+function validarMensaje(tipoMensaje) {
+    if (tipoMensaje === 'danger_1') {
+        // Mostrar mensaje de error
+        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+        return;
+    } else if (tipoMensaje === 'danger_2') {
+        // Mostrar mensaje de éxito
+        alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+    } else if (tipoMensaje === 'success') {
+        // Mostrar mensaje de éxito
+        alerts.showNotification('top', 'right', 'El costo ingresado es válido', 'success');
+    }
+}
+
 $(document).ready(function() {
     const e = new Event("change");
     const element = document.querySelector('#rfc_check')
     element.dispatchEvent(e);
 
     personaFisicaMoralOnChange();
+
+    
+
+    $('#costoM2, #costom2f').on('change', function() {
+        console.log('Evento change activado en #costoM2 o #costom2f');
+        const tipoMensaje = validarCostos();
+        validarMensaje(tipoMensaje);
+    });
+
 });
+
+function validarCostos() {
+    const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));  
+    const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
+    let tipoVenta = document.getElementById('tipo_venta').value;
+    tipoVenta=2;
+
+    console.log('Costo por M2 Lista:', costoListaM2);
+    console.log('Costo por M2 Final:', costoFinalM2);
+    console.log("tipo_venta:", tipoVenta);
+    
+    if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
+        alerts.showNotification('top', 'right', 'El valor ingresado está vacío', 'info');
+        return;
+    }
+    const clienteInfo = obtenerCliente(cliente);
+
+    if (tipoVenta !== '1') {
+        const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
+
+        if (![2, 3, 4].includes(clienteInfo.proceso)) {
+            if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
+                return 'danger_1';
+            } else {
+                return 'success';
+            }
+        } else {
+            if (costoListaM2 > 0) {
+                if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
+                    return 'danger_2';
+                } else {
+                    return 'success';
+                }
+            }
+        }
+    } else {
+        if (costoListaM2 > 0) {
+            if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
+                return 'danger_2';
+            } else {
+                return 'success';
+            }
+        }
+    }
+}
 
 function personaFisicaMoralOnChange() {
     personaFisicaMoralShowOrHide();
@@ -256,8 +324,17 @@ $(document).on('click', '#copropietario-collapse', function () {
     }
 });
 
+let validacionRealizada = false; // Variable para controlar si la validación ya se ha realizado
+
 $(document).on('submit', '#deposito-seriedad-form', async function (e) {
     e.preventDefault();
+
+     
+    const tipoMensaje = validarCostos();
+    if (tipoMensaje !== 'success') {
+        return; // Detiene la ejecución del formulario si hay un error
+    }
+
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');
         return;
@@ -288,7 +365,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
         alerts.showNotification('top', 'right', 'Debes seleccionar si requieres la carta de domicilio', 'danger');
         $('.tipo_comprobante').focus();
         $('#labelSi2').addClass('hover_focus');
-        $('#labelNo2').addClass('hover_focus');
+        $('#labelNo2').addClass('hover_focus'); 
         setTimeout(() => {
             $('#labelSi2').removeClass('hover_focus');
             $('#labelNo2').removeClass('hover_focus');
@@ -296,24 +373,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
         return;
     }
 
-    const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));
-    const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
 
-    const clienteInfo = await obtenerCliente(cliente);
-
-    if (![2,3,4].includes(clienteInfo.proceso)) {
-        if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
-            alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
-            return;
-        }
-    } else {
-        if (costoListaM2 > 0) {
-            if (costoFinalM2 > costoListaM2 || costoFinalM2 < ((costoListaM2 * .80))) {
-                alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA.', 'danger');
-                return;
-            }
-        }
-    }
 
     if (!validateInputArray('telefono2_cop[]', 'Celular')) {
         return;
