@@ -1,16 +1,16 @@
 let titulosTabla = [];
-$('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
+$('#tablaTraspasoAportaciones thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($('#reubicacionClientes').DataTable().column(i).search() !== this.value)
-            $('#reubicacionClientes').DataTable().column(i).search(this.value).draw();
+        if ($('#tablaTraspasoAportaciones').DataTable().column(i).search() !== this.value)
+            $('#tablaTraspasoAportaciones').DataTable().column(i).search(this.value).draw();
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-reubicacionClientes = $('#reubicacionClientes').DataTable({
+tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -113,7 +113,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
 
 $(document).on('click', '.btn-traspaso', function () {
     const tr = $(this).closest('tr');
-    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const row = $('#tablaTraspasoAportaciones').DataTable().row(tr);
     $("#idLoteOrigen").val(row.data().idLoteOrigen);
     $("#idLoteDestino").val(row.data().idLoteDestino);
     $("#nombreLoteDestino").val(row.data().nombreLoteDestino);
@@ -166,7 +166,7 @@ $(document).on("click", "#guardarTraspaso", function (e) {
                 $("#guardarTraspaso").prop("disabled", false);
                 if (response) {
                     alerts.showNotification("top", "right", `La información ha sido capturada de manera exitosa.`, "success");
-                    $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                    $('#tablaTraspasoAportaciones').DataTable().ajax.reload(null, false);
                     $("#capturaTraspasoModal").modal("hide");
                 }
                 else
