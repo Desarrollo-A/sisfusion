@@ -82,7 +82,15 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         { data: "idLoteDestino" },
         {
             data: function (d) {
-                return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas btn-traspaso"
+                let nombreLote = d.nombreLoteDestino;
+                let baseCarpeta = 'static/documentos/contratacion-reubicacion';
+                let linkCorrida = general_base_url+baseCarpeta+'/'+nombreLote+'/'+d.corrida;
+                let corridaButton = '<a class="btn-data btn-green" href="'+linkCorrida+'" target="_blank"><i class="fas fa-file-excel-o"></i></a>';
+
+
+                return `<div class="d-flex justify-center">
+                ${corridaButton}
+                <button class="btn-data btn-blueMaderas btn-traspaso"
                 data-toggle="tooltip" 
                 data-placement="left"
                 title="Confirmar traspaso / Editar cantidad traspasada"
