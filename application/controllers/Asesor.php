@@ -3186,7 +3186,7 @@ class Asesor extends CI_Controller {
             $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to(['coord.bd@ciudadmaderas.com', 'supervisor.bd@ciudadmaderas.com', 'mariadejesus.garduno@ciudadmaderas.com'])
+            ->to(['coord.bd@ciudadmaderas.com', 'supervisor.bd@ciudadmaderas.com'])
             //->to('mariadejesus.garduno@ciudadmaderas.com')
             //->to('programador.analista35@ciudadmaderas.com')
             ->subject('EXPEDIENTE CONFIRMADO')
