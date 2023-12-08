@@ -384,7 +384,7 @@ class Asesor extends CI_Controller {
         $informacion = $this->Asesor_model->getPrintableInformation($id_prospecto)->row();
         $informacion_lugar = $this->Asesor_model->getProspectSpecification($id_prospecto)->row();
         if ($informacion) {
-            $html = '
+            $html = '                                                                      
             <!DOCTYPE html>
             <html lang="es_mx"  ng-app="CRM">
         <head>
@@ -786,8 +786,18 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
+
+            if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+            //if (TRUE) {
+                $arcusData = array(
+                    "propiedadRelacionada" => $this->input->post('idLote'),
+                    "uid" => $data_prospecto[0]->id_arcus,
+                    "estatus" => 4
+                );
+                $response = $this->arcus->sendLeadInfoRecord($arcusData);
+            }
+
             if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
-                //echo "acciones realizadas correctamente";
                 $data_response['prospecto_update'] = 'OK';
             } else {
                 $data_response['prospecto_update'] = 'FAIL';
@@ -2976,6 +2986,7 @@ class Asesor extends CI_Controller {
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
+        $comentario=$this->input->post('comentario');
 
         /*if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
@@ -2989,17 +3000,23 @@ class Asesor extends CI_Controller {
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 2;
-                $idMovimiento = 105;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
+                $statusContratacion = 1;
+                $idMovimiento = 89;
+            } 
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+                $statusContratacion = 7;
+                $idMovimiento = 83;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
                 $statusContratacion = 2;
                 $idMovimiento = 110;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+            }
+             elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
                 $statusContratacion = 2;
                 $idMovimiento = 113;
             } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                $statusContratacion = 2;
-                $idMovimiento = 114;
+                $statusContratacion = 5;
+                $idMovimiento = 106;
             } else {
                 $statusContratacion = 3;
                 $idMovimiento = 98;
@@ -3026,6 +3043,7 @@ class Asesor extends CI_Controller {
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
             return;
         }
+
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3152,8 +3170,41 @@ class Asesor extends CI_Controller {
         $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
+        if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+            $encabezados = [
+                'nombreResidencial' =>  'PROYECTO',
+                'nombre'            =>  'CONDOMINIO',
+                'nombreLote'        =>  'LOTE',
+                'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+                'fechaHora'         =>  'FECHA/HORA'
+            ];
+            
+            $infoLote = (array)$this->Asesor_model->getNameLote($idLote);
+
+            $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to(['coord.bd@ciudadmaderas.com', 'supervisor.bd@ciudadmaderas.com'])
+            //->to('mariadejesus.garduno@ciudadmaderas.com')
+            //->to('programador.analista35@ciudadmaderas.com')
+            ->subject('EXPEDIENTE CONFIRMADO')
+            ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $comentario
+            ], true));
+        }
+    
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+                if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+                    if ($this->email->send())
+                        $data['message_email'] = 'OK'; // El correo se envió correctamente
+                    else
+                        $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
@@ -3174,68 +3225,101 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $leyendaResiciones = '';
+        $leyendaResicionesFirmada = '';
+        //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
         if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
             $documentsNumber = 3;
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
+        } else { // ES COMERCIALIZACIÓN
+            $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
 
-            return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
-        }
-
-        if ($tipo_comprobante == 1) {
-            $comprobante_domicilio = "";
-            $comprobante_domicilio_label = "";
-            $documentsNumber = 3;
-        } else {
-            $documentsNumber = 4;
-        }
-
-        if (!in_array($dataClient[0]['proceso'], [2, 3, 4])) {
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-            return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
-        }
-
-        if (in_array($dataClient[0]['proceso'], [2,4])) {
-            $idLoteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($id_cliente)->idLote;
-            $totalPropuestas = count($this->Reestructura_model->getNotSelectedLotes($idLoteAnterior)) + 1; // +1 para tomar en cuenta el seleccionado
-
-            $ramasContratos = ($totalPropuestas === 2)? '42' : (($totalPropuestas === 3) ? '42, 43' : '');
-            $nombreRamasContratos = ($totalPropuestas === 2) ? ', CONTRATO 1 CANCELADO' : (($totalPropuestas === 3) ? ', CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO' : '');
-
-            if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                $documentosExtra = ", 34, 35, 41, $ramasContratos";
-                $documentsNumber += (2 + $totalPropuestas);
-                $documentosExtra_label = ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE$nombreRamasContratos";
-
-                $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-                $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-                return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
+            $leyendaMsgValidacion = '';
+            foreach($documentosContrato as $documento){
+                if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 1 CANCELADO ';
+                }else if($documento['movimiento']=='CONTRATO 2 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 2 CANCELADO ';
+                }
             }
 
-            // SI ES PF SÓLO PEDIMOS LA CARTA
-            $documentosExtra = ", 35, 41, $ramasContratos";
-            $documentsNumber += (1 + $totalPropuestas);
-            $documentosExtra_label = ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE$nombreRamasContratos";
 
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            if($tipo_comprobante == 1) {
+                $comprobante_domicilio = "";
+                $comprobante_domicilio_label = "";
+                $documentsNumber = 3;
+            }
+            else
+                $documentsNumber = 4;
+
+
+
+            $totalResiciones = 0;
+            $totalResicionesFirmadas = 0;
+            foreach ($documentosContrato as $documento){
+                if($documento['tipo_doc'] == 33 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResiciones += 1;
+                }
+                if($documento['tipo_doc'] == 35 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResicionesFirmadas += 1;
+                }
+            }
+            $documentsNumber += ($totalResiciones + $totalResicionesFirmadas);
+            $leyendaResiciones = ($totalResiciones >= 1) ? ', RESICIONES DE CONTRATO ('.$totalResiciones.')' : '' ;
+            $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
+
+
+            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
+                if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
+                        : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
+                        : "";
+                }
+                else { // SI ES PF SÓLO PEDIMOS LA CARTA
+
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
+                    $documentsNumber += 2; // 4
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                }
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
 
-            return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
+
+
+
         }
 
-        if ($dataClient[0]['proceso'] == 3) {
-            $documentosExtra = ', 46';
-            $documentsNumber += 1;
-            $documentosExtra_label = ', DOCUMENTO REESTRUCTURA FIRMA CLIENTE';
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
+        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-            return $this->validarDocumentacion($idLote, $id_cliente, $documentOptions, $documentsNumber, $error_message);
+        if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
+            $data['message'] = 'MISSING_DOCUMENTS';
+            $data['error_message'] = $error_message;
+            echo json_encode($data);
+            return false;
         }
+
+        if($validacion) {
+            $data['message'] = 'MISSING_AUTORIZATION';
+            echo json_encode($data);
+            return false;
+        }
+
+        if(count($validacionIM) > 0) {
+            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+                $data['message'] = 'MISSING_AUTFI';
+                echo json_encode($data);
+                return false;
+            }
+        }
+
 
         return true;
     }
@@ -3442,6 +3526,7 @@ class Asesor extends CI_Controller {
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
+        
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
             return;
@@ -3453,8 +3538,8 @@ class Asesor extends CI_Controller {
         $idMovimiento = 4;
         if($valida_tventa[0]['tipo_venta'] == 1) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
+                $statusContratacion = 2;
+                $idMovimiento = 103;
             }
         }
 
@@ -3634,10 +3719,15 @@ class Asesor extends CI_Controller {
         $comentario = $this->input->post('comentario');
         $fechaVenc = $this->input->post('fechaVenc');
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ){
+        if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ){
+            $statusContratacion = 7;
+            $idMovimiento = 83;
+        }
+        elseif($valida_tventa[0]['tipo_venta'] == 1){
             $statusContratacion = 3;
             $idMovimiento = 98;
-        }else{
+        }
+        else{
             $statusContratacion = 7;
             $idMovimiento = 83;
         }

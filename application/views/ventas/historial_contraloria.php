@@ -6,28 +6,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- MODALS -->
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <h6 id="nameLote"></h6>
-                            <div class="container-fluid" id="changelogTab">
-                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                </div>
-                            
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
@@ -69,7 +47,6 @@
                 </div>
             </div>
         </div>
-        <!-- END MODALS -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -91,6 +68,10 @@
                                 <li>
                                     <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
                                 </li>
+
+                                <!-- <li>
+                                    <a href="#solicitudesOOAM" role="tab" data-toggle="tab">Historial OOAM</a>
+                                </li> -->
                             <?php } ?>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -113,7 +94,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
                                                             <label class="control-label">Año</label>
-                                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -127,7 +108,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
                                                             <label for="proyecto" class="control-label">Proyecto</label>
-                                                            <select name="filtro44" id="filtro44" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                            <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -152,7 +133,7 @@
                                                                 <th>PUESTO</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
-                                                                <th>MÁS</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
@@ -160,7 +141,6 @@
                                             </div>
                                         </div>
 
-                                        <!-- INICIO tab CANCELADAS validado -->
                                         <div class="tab-pane" id="solicitudesCanceladas">
                                             <div class="encabezadoBox">
                                                 <div class="row">
@@ -177,7 +157,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group overflow-hidden">
                                                             <label class="control-label" for="proyecto">Año</label>
-                                                            <select name="filtro35" id="filtro35" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                                            <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
                                                                 for ($i = 2019; $i <= 2023; $i++) {
@@ -191,9 +171,7 @@
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                         <div class="form-group">
                                                             <label class="control-label" for="proyecto">Proyecto</label>
-                                                            <select name="filtro45" id="filtro45" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                                <option value="0">Seleccione todo</option>
-                                                            </select>
+                                                            <select name="catalogo_canceladas" id="catalogo_canceladas" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required><option value="0">Seleccione todo</option></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -218,13 +196,13 @@
                                                                 <th>PUESTO</th>
                                                                 <th>DETALLE</th>
                                                                 <th>ESTATUS</th>
-                                                                <th>MÁS</th>
+                                                                <th>ACCIONES</th>
                                                             </tr>
                                                         </thead>
                                                     </table>
                                                 </div>
                                             </div>
-                                        </div><!-- End tab CANCELADAS validado -->
+                                        </div>
 
                                         <?php if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 7, 9, 66))) { ?>
                                         <div class="tab-pane <?php if($this->session->userdata('id_rol') == 66){ ?> active <?php } ?>" id="solicitudesSUMA">
@@ -239,8 +217,8 @@
                                                     <div class="row">
                                                         <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
                                                             <div class="form-group select-is-empty">
-                                                                <label for="anio" class="control-label">AÑO</label>
-                                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                                <label for="anio_suma" class="control-label">AÑO</label>
+                                                                <select name="anio_suma" id="anio_suma" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -259,14 +237,14 @@
                                                                     <th>IMPUESTO</th>
                                                                     <th>% COMISÓN</th>
                                                                     <th>ESTATUS</th>
-                                                                    <th>MÁS</th>
+                                                                    <th>ACCIONES</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
                                                     </div>
                                                 </div>
-                                            </div><!-- End tab SUMA  validado solo para ventas-->
-                                            <!-- INICIO tab HISTORIAL DESCUENTOS validado -->
+                                            </div>
+
                                             <div class="tab-pane" id="historialDescuentos">
                                                 <div class="encabezadoBox">
                                                     <div class="row">
@@ -294,7 +272,39 @@
                                                         </table>
                                                     </div>
                                                 </div>
-                                            </div><!-- End tab HISTORIAL DESCUENTOS validado -->
+                                            </div>
+
+                                            <!-- <div class="tab-pane" id="solicitudesOOAM">
+                                                <div class="encabezadoBox">
+                                                    <div class="row">
+                                                        <h3 class="card-title center-align">Historial OOAM</h3>
+                                                        <p class="card-title pl-1">Este es un listado de todos los descuentos que te han aplicado.</p>
+                                                    </div>
+                                                </div>
+                                                <div class="material-datatables">
+                                                    <div class="form-group">
+                                                        <table class="table-striped table-hover" id="tablaHistorialOOAM" name="tablaHistorialOOAM">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>ID PAGO</th>
+                                                                    <th>ID COMISION</th>
+                                                                    <th>PROYECTO</th>
+                                                                    <th>PRECIO LOTE </th>
+                                                                    <th>COMISION TOTAL</th>
+                                                                    <th>PORCENTAJE DECIMAL</th>
+                                                                    <th>ESTATUS</th>
+                                                                    <th>FECHA CREACIÓN</th>
+                                                                    <th>ID USUARIO</th>
+                                                                    <th>LOTE</th>
+                                                                    <th>PJ</th>
+                                                                    <th>FORMA PAGO</th>
+                                                                    <th>ACCIONES</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div> -->
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -307,8 +317,14 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 </body>

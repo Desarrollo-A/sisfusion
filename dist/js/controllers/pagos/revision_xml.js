@@ -1,33 +1,33 @@
 var tr;
-var tabla_factura2 ;
+var tabla_xml ;
 let titulos = [];
 
 $(document).ready(function() {
-    $("#tabla_factura").prop("hidden", true);
+    $("#tabla_xml").prop("hidden", true);
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoXML").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoXml").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoXML").selectpicker('refresh');
+        $("#proyectoXml").selectpicker('refresh');
     }, 'json');
 });
 
-$('#catalogoXML').change(function(){
-    proyecto = $('#catalogoXML').val();
-    getFacturaCommissions(proyecto);
+$('#proyectoXml').change(function(){
+    proyecto = $('#proyectoXml').val();
+    getDataXML(proyecto);
 });
 
-$('#tabla_factura thead tr:eq(0) th').each(function (i) {
+$('#tabla_xml thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_factura').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_factura').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_xml').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_xml').DataTable().column(i).search(this.value).draw();
             }
         });
     }
@@ -39,18 +39,18 @@ function changeName(e){
     relatedTarget[0].value = fileName;
 }
 
-function getFacturaCommissions(proyecto){
-    $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
+function getDataXML(proyecto){
+    $('#tabla_xml').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.total);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarfactura").textContent = '$' + to;
+        document.getElementById("disponibleXml").textContent = to;
     });
 
-    $("#tabla_factura").prop("hidden", false);
-    tabla_factura2 = $("#tabla_factura").DataTable({
+    $("#tabla_xml").prop("hidden", false);
+    tabla_xml = $("#tabla_xml").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -65,7 +65,7 @@ function getFacturaCommissions(proyecto){
                 columns: [1,2,3,4,5],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+                        return ' ' + titulos[columnIdx-1] + ' ';
                     }
                 }
             },
@@ -125,7 +125,7 @@ function getFacturaCommissions(proyecto){
                 if(d.total == null || d.total == "" || d.total == undefined)
                     return '<p class="m-0"><b>$0.00</b></p>';
                 else
-                    return '<p class="m-0"><b>'+'$'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.total))+'</b></p>';
             }
         },{
             data: function( d ){
@@ -166,7 +166,7 @@ function getFacturaCommissions(proyecto){
             targets: 0
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasXContraloria/",
+            "url": general_base_url + "Pagos/getDatosNuevasXContraloria/",
             "type": "POST",
             cache: false,
             data:{
@@ -175,15 +175,15 @@ function getFacturaCommissions(proyecto){
         },
     });
 
-    $('#tabla_factura').on('draw.dt', function() {
+    $('#tabla_xml').on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
 
-    $('#tabla_factura tbody').on('click', 'td.details-control', function () {
+    $('#tabla_xml tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = tabla_factura2.row(tr);
+        var row = tabla_xml.row(tr);
         if ( row.child.isShown() ) {
             row.child.hide();
             tr.removeClass('shown');
@@ -198,8 +198,8 @@ function getFacturaCommissions(proyecto){
                     }
                     else{
                         row.data().solicitudes = data;
-                        tabla_factura2.row( tr ).data( row.data() );
-                        row = tabla_factura2.row( tr );
+                        tabla_xml.row( tr ).data( row.data() );
+                        row = tabla_xml.row( tr );
                         row.child( construir_subtablas( row.data().solicitudes ) ).show();
                         tr.addClass('shown');
                         $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
@@ -222,14 +222,14 @@ function getFacturaCommissions(proyecto){
             solicitudes += '<td>'+'<b>'+'ID: '+'</b> '+v.id_pago_i+'</td>';
             solicitudes += '<td>'+'<b>'+'CONDOMINIO: '+'</b> '+v.condominio+'</td>';
             solicitudes += '<td>'+'<b>'+'LOTE: '+'</b> '+v.lote+'</td>';
-            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+'$'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
+            solicitudes += '<td>'+'<b>'+'MONTO: '+'</b>'+formatMoney(numberTwoDecimal(v.pago_cliente))+'</td>';
             solicitudes += '<td>'+'<b>'+'USUARIO: '+'</b> '+v.usuario+'</td>';
             solicitudes += '</tr>';
         });          
         return solicitudes += '</table>';
     }
 
-    $("#tabla_factura tbody").on("click", ".regresar", function(e){
+    $("#tabla_xml tbody").on("click", ".regresar", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         $("#pdfbody").html('');
@@ -245,7 +245,7 @@ function getFacturaCommissions(proyecto){
         <input type="hidden" name="uuid2" id="uuid2" value="${uuid}">
         <input type="hidden" name="totalxml" id="totalxml" value="${total}">
         <input type="hidden" name="id_user" id="id_user" value="${id_user}">
-        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${'$'+formatMoney(numberTwoDecimal(total))}</b> ?</h6>
+        <h6>¿Estas seguro que deseas regresar esta factura de <b>${usuario}</b> por la cantidad de <b>${formatMoney(numberTwoDecimal(total))}</b> ?</h6>
         <label class="control-label" for="motivo">Motivo</label>
         <textarea id="motivo" name="motivo" class="text-modal"></textarea>`);
         $("#seeInformationModalPDF .modal-body").append(`
@@ -259,14 +259,12 @@ function getFacturaCommissions(proyecto){
                     </div>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-4 p-0">
-                    <button class="btn btn-azure w-90" type="button" onclick="xml2(${id_user})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
+                    <button class="btn btn-azure w-90" type="button" onclick="xmlFuncion(${id_user})" id="cargar_xmlFuncion"><i class="fa fa-upload"></i> VERIFICAR Y <br> CARGAR</button>
                 </div> 
-            </div>
-                `);
+            </div>`);
             
         $("#seeInformationModalPDF .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
-        $("#seeInformationModalPDF .modal-body").append(`
-            <div class="row">
+        $("#seeInformationModalPDF .modal-body").append(`<div class="row">
                 <div class="col-lg-6 form-group">
                     <label class="control-label" for="emisor">Emisor<span class="text-danger">*</span></label>
                     <input type="text" class="form-control input-gral" id="emisor" name="emisor" placeholder="Emisor" value="" required>
@@ -345,9 +343,9 @@ function getFacturaCommissions(proyecto){
     });
     
     
-    $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
+    $("#tabla_xml tbody").on("click", ".consultar_documentos", function(e){
         $('#spiner-loader').removeClass('hide');
-        $("#seeInformationModalfactura .modal-body").html("");
+        $("#modalAbrirFactura .modal-body").html("");
         $('#comments-list-remanente').html('');
         $('#nameLote').html('');
         e.preventDefault();
@@ -355,121 +353,121 @@ function getFacturaCommissions(proyecto){
         uuid = $(this).val();
         id_residencial = $(this).attr("data-value");
         user_factura = $(this).attr("data-userfactura");
-        $("#seeInformationModalfactura").modal();
-        $.getJSON( general_base_url + "pagos/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
-            $("#seeInformationModalfactura .modal-body").append('<div class="row">');
+        $("#modalAbrirFactura").modal();
+        $.getJSON( general_base_url + "Pagos/getDatosFactura/"+uuid+"/"+id_residencial).done( function( data ){
+            $("#modalAbrirFactura .modal-body").append('<div class="row">');
             let uuid,fecha,folio,tot,descripcion;
             if (!data.datos_solicitud['uuid'] == '' && !data.datos_solicitud['uuid'] == '0'){
-                $.get(general_base_url+"pagos/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
+                $.get(general_base_url+"Pagos/GetDescripcionXML/"+data.datos_solicitud['nombre_archivo']).done(function (dat) {
                     let datos = JSON.parse(dat);
                     uuid = datos[0][0];
                     fecha = datos[1][0];
                     folio = datos[2][0];
                     tot = datos[3][0];
                     descripcion = datos[4];
-                    $("#seeInformationModalfactura .modal-body").append('<br><div class="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE DEL EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
-                    $("#seeInformationModalfactura .modal-body").append(
-                                                                        '<div class="row">'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;">'+
-                                                                                    '<b> PROYECTO</b>'+
-                                                                                '</label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;">'+
-                                                                                    '<b>TOTAL DE LA FACTURA</b>'+
-                                                                                '</label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">$ '+tot+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;">'+
-                                                                                    '<b>MONTO DE LA COMISIÓN</b>'+
-                                                                                '</label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                        '</div>');
-                    $("#seeInformationModalfactura .modal-body").append(
-                                                                        '<div class="row">'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;">'+
-                                                                                    '<b>FECHA DE FACTURA</b>'+
-                                                                                '</label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+fecha+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>FECHA DE CAPTURA</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-4">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                        '</div>');
-                    $("#seeInformationModalfactura .modal-body").append(
-                                                                        '<div class="row">'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN FISCAL</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>FORMA DE PAGO</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                        '</div>');
-                    $("#seeInformationModalfactura .modal-body").append(
-                                                                        '<div class="row">'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>CLAVE DEL PRODUCTO</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-6">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label>'+
-                                                                                '<br><label class="text-center" style="font-size:12px; margin:0; color:gray;">'+uuid+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                            '<div class="col-md-3">'+
-                                                                                '<label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label>'+
-                                                                                '<br><label style="font-size:12px; margin:0; color:gray;">'+folio+'</label><br>'+
-                                                                                '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
-                                                                            '</div>'+
-                                                                        '</div>');
-                    $("#seeInformationModalfactura .modal-body").append('<div class ="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+descripcion+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
+                    $("#modalAbrirFactura .modal-body").append('<br><div class="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>NOMBRE DEL EMISOR</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombre']+' '+data.datos_solicitud['apellido_paterno']+' '+data.datos_solicitud['apellido_materno']+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
+                    $("#modalAbrirFactura .modal-body").append(
+                        '<div class="row">'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;">'+
+                        '<b> PROYECTO</b>'+
+                        '</label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['nombreLote']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;">'+
+                        '<b>TOTAL DE LA FACTURA</b>'+
+                        '</label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">$ '+tot+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;">'+
+                        '<b>MONTO DE LA COMISIÓN</b>'+
+                        '</label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">$ '+data.datos_solicitud['porcentaje_dinero']+'</label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '</div>');
+                    $("#modalAbrirFactura .modal-body").append(
+                        '<div class="row">'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;">'+
+                        '<b>FECHA DE FACTURA</b>'+
+                        '</label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+fecha+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>FECHA DE CAPTURA</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['fecha_ingreso']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-4">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>MÉTODO</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['metodo_pago']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '</div>');
+                    $("#modalAbrirFactura .modal-body").append(
+                        '<div class="row">'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>RÉGIMEN FISCAL</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['regimen']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>FORMA DE PAGO</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['forma_pago']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>CFDI</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['cfdi']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>UNIDAD</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['unidad']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '</div>');
+                    $("#modalAbrirFactura .modal-body").append(
+                        '<div class="row">'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>CLAVE DEL PRODUCTO</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+data.datos_solicitud['claveProd']+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-6">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>UUID</b></label>'+
+                        '<br><label class="text-center" style="font-size:12px; margin:0; color:gray;">'+uuid+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '<div class="col-md-3">'+
+                        '<label style="font-size:14px; margin:0; color:gray;"><b>FOLIO</b></label>'+
+                        '<br><label style="font-size:12px; margin:0; color:gray;">'+folio+'</label><br>'+
+                        '<label style="font-size:12px; margin:0; color:gray;"> </label>'+
+                        '</div>'+
+                        '</div>');
+                    $("#modalAbrirFactura .modal-body").append('<div class ="row"><div class="col-md-12"><label style="font-size:14px; margin:0; color:gray;"><b>DESCRIPCIÓN</b></label><br><label style="font-size:12px; margin:0; color:gray;">'+descripcion+'</label><br><label style="font-size:12px; margin:0; color:gray;"> </label></div></div>');
                 });
             }
             else {
-                $("#seeInformationModalfactura .modal-body").append('<div class="col-md-12"><label style="font-size:16px; margin:0; color:black;">NO HAY DATOS A MOSTRAR</label></div>');
+                $("#modalAbrirFactura .modal-body").append('<div class="col-md-12"><label style="font-size:16px; margin:0; color:black;">NO HAY DATOS A MOSTRAR</label></div>');
             }
-            $("#seeInformationModalfactura .modal-body").append('</div>');
+            $("#modalAbrirFactura .modal-body").append('</div>');
             $('#spiner-loader').addClass('hide');
         });
     });
 }
 
-function xml2(id_user) {
-    subir_xml2($("#xmlfile2"),id_user);
+function xmlFuncion(id_user) {
+    subir_xml($("#xmlfile2"),id_user);
 }
 
-function subir_xml2(input,id_user) {
+function subir_xml(input,id_user) {
     var data = new FormData();
     documento_xml = input[0].files[0];
     var xml = documento_xml;
@@ -487,7 +485,7 @@ function subir_xml2(input,id_user) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
                 var informacion_factura = data.datos_xml;
-                cargar_info_xml2(informacion_factura);
+                cargar_info_xml(informacion_factura);
             }
             else {
                 input.val('');
@@ -501,7 +499,7 @@ function subir_xml2(input,id_user) {
     });
 }
 
-function cargar_info_xml2(informacion_factura) {
+function cargar_info_xml(informacion_factura) {
     let totalSeleccionado = $('#totalxml').val();
     let cantidadXml = Number.parseFloat(informacion_factura.total[0]);
     if((parseFloat(totalSeleccionado) + .10).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (parseFloat(totalSeleccionado) - .10).toFixed(2)){

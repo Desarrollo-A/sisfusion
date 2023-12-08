@@ -8,6 +8,9 @@ $(document).ready(function () {
     });
 });
 
+
+
+
 let titulos = [];
 $('#liberacionesTable thead tr:eq(0) th').each( function (i) {
     let title = $(this).text();

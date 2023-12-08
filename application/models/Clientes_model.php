@@ -490,12 +490,12 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
             if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
-            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
-                $where = "pr.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507) AND pr.id_sede IN (8, 10)";
             else if ($id_usuario == 479) // MARBELLA DEL SOCORRO DZUL CALÁN
                 $where = "pr.id_gerente IN ($id_lider, 4223) AND pr.id_sede IN (3, 15)";
             else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
+            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
+                $where = "pr.id_gerente IN ($id_lider, 1916) AND pr.id_sede IN (10)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -4387,4 +4387,32 @@ function getStatusMktdPreventa(){
 
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
+
+    public function getListaClientesArcus() {
+        return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, 
+        lo.idLote, lo.idCliente, lo.referencia, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        cl.correo, cl.telefono1, FORMAT(ISNULL(lo.total, 0), 'C') precioLista , FORMAT(ISNULL(lo.totalNeto2, 0), 'C') precioFinal, cl.fechaApartado,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+        sl.nombre estatusLote, sc.nombreStatus estatusContratacion
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        WHERE lo.status = 1")->result_array();
+    }
+
 }

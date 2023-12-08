@@ -21,7 +21,7 @@ class General_model extends CI_Model
                         return $this->db->query("SELECT * FROM Menu2 WHERE rol=" . $id_rol . " AND estatus = 1 ORDER BY orden ASC");   
         }
     }
-    
+
     public function get_children_menu($id_rol,$id_usuario,$estatus)
     {
         $idUsuario = $id_usuario;
@@ -35,7 +35,7 @@ class General_model extends CI_Model
     {
         return $this->db->query("SELECT padre FROM Menu2 WHERE pagina = '" . $var . "' AND rol = " . $id_rol . " ");
     }
-
+    
     public function getMenuPadreEspecial($idUsuario)
     {
         return $this->db->query("SELECT * FROM Menu2 WHERE idmenu IN 
@@ -75,7 +75,7 @@ class General_model extends CI_Model
                 return false;
         } else
             return false;
-    } 
+    }
 
     public function updateRecord($table, $data, $key, $value) { // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
         if ($data != '' && $data != null) {
@@ -147,7 +147,7 @@ class General_model extends CI_Model
         WHERE rxu.idRol = $rol AND rxu.idUsuario =  $idUsuario AND u.id_rol = $secondRol
         $extraSelect");
     }
-    
+
     function getCatalogOptions($id_catalogo)
     {
         return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus = 1");
@@ -199,7 +199,7 @@ class General_model extends CI_Model
         } else
             return false;
     }
-    
+
     function permisosMenu($val){
         if($val == 1){
             $this->session->set_flashdata('error_usuario', '<div id="ele" class="col-md-11" role="alert"><center><b>¡NO TIENES ACCESO AL PANEL SOLICITADO!</b><br><span style="font-size:12px;">Verificar los datos o ponerse en contacto con un administrador.</span></center></div>');
@@ -238,10 +238,10 @@ class General_model extends CI_Model
     }
 
     function getClienteNLote($cliente){
-        return $this->db->query("SELECT cl.*, lo.sup, lo.idCondominio, lo.nombreLote, lo.tipo_venta, lo.ubicacion
+        return $this->db->query("SELECT cl.*, lo.sup, lo.idCondominio, lo.nombreLote, lo.tipo_venta, lo.ubicacion, lo.totalNeto2
         FROM clientes cl
         INNER JOIN lotes lo ON lo.idLote = cl.idLote
-        WHERE cl.id_cliente = $cliente");
+        WHERE cl.id_cliente IN ($cliente)");
     }
 
     public function getLider($id_gerente) {

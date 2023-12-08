@@ -153,4 +153,25 @@ class Api_model extends CI_Model
         return $query->result_array();
     }
 
+    public function getCatalogos() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 16 AND estatus = 1
+        UNION ALL
+        SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 1 AND estatus = 1 AND id_opcion IN (1, 2, 3, 7, 9)
+        UNION ALL
+        SELECT 0 id_catalogo, id_sede id_opcion, nombre FROM sedes WHERE estatus = 1")->result_array();
+    }
+
+    public function verificarExistenciaUsuario($usuario) {
+        return $this->db->query("SELECT * FROM usuarios WHERE usuario = '$usuario'")->result_array();
+    }
+
+    public function agregarUsuarioOoam($data) {
+        $this->db->insert('usuarios', $data);
+        return $this->db->query("SELECT IDENT_CURRENT('usuarios') id_usuario")->result_array();
+    }
+
+    public function validarCorreoTelefono($telefono, $email) {
+        return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
+    }
+
 }

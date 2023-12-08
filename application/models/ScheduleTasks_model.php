@@ -158,7 +158,8 @@
 			CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
 			l.sup, l.referencia, UPPER(st.nombre) estatusLote, cl.fechaApartado,
 			CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) nombreAsesor,
-			CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) nombreGerente
+			CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) nombreGerente,
+			ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 			FROM historial_lotes hd
 			INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente AND cl.status = 1
 			INNER JOIN lotes l ON hd.idLote = l.idLote AND l.status = 1
@@ -168,6 +169,7 @@
 			INNER JOIN statuslote st ON st.idStatusLote = l.idStatusLote
 			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+			LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 			WHERE (hd.idStatusContratacion = 10 and hd.idMovimiento  = 40) AND hd.status = 1 
 			AND hd.modificado BETWEEN '$date 00:00:00' AND '$date 23:59:59'
 			ORDER BY hd.modificado ASC");

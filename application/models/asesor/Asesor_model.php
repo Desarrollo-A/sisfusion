@@ -77,7 +77,7 @@ class Asesor_model extends CI_Model {
         ini_set('max_execution_time', 300);
         set_time_limit(300);
         $query = $this->db->query("SELECT '1' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
-        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado, cl.fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida, aut.estatus,
@@ -203,7 +203,7 @@ class Asesor_model extends CI_Model {
         set_time_limit(300);
         $query = $this->db->query("SELECT '3' qry, '1' dsType, cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.correo, cl.telefono2,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
+        cl.status ,cl.idLote, convert(varchar,fechaApartado,20) as fechaApartado , convert(varchar,cl.fechaVencimiento,20) as fechaVencimiento, cl.usuario, cond.idCondominio, convert(varchar,cl.fecha_creacion,20) as fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial, cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc , lotes.modificado, lotes.observacionContratoUrgente as vl, lotes.idStatusContratacion, cl.concepto, cl.id_prospecto,
         cl.flag_compartida, aut.estatus as estatus,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
@@ -413,6 +413,7 @@ class Asesor_model extends CI_Model {
             return $query;
         }
     }
+    
     public function registroCliente()
     {
         $this->db->select("cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
@@ -859,7 +860,7 @@ class Asesor_model extends CI_Model {
         }
 
 		$query = $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno, 
-        cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
+        cl.apellido_materno, cl.status ,cl.idLote, fechaApartado ,cl.fechaVencimiento , cl.usuario, cond.idCondominio, cl.fecha_creacion, 
         cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre as nombreCondominio, residencial.nombreResidencial as nombreResidencial,
         cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, convert(varchar,lotes.fechaVenc,20) as fechaVenc, lotes.modificado, 1 estatus
         FROM clientes AS cl			
@@ -1401,6 +1402,16 @@ class Asesor_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getNameLote($idLote){
+		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
+		res.nombreResidencial
+        FROM lotes l
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		where l.idLote = ".$idLote." "); 
+		return $query->row();
+	}
+
     public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc FROM historial_documento WHERE idLote IN ($idLote) AND 
         status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)
@@ -1626,10 +1637,14 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$id_cliente." AND status=1 AND tipo_doc=".$tipo_documento);
         return $query->result_array();
     }
+    
     function getTipoVenta($idLote){
-        $query = $this->db->query("SELECT * FROM lotes WHERE idLote=".$idLote);
-        return $query->result_array();
+        return $this->db->query("SELECT lo.tipo_venta, lo.idStatusContratacion, lo.idMovimiento, ISNULL(cl.proceso, 0) tipo_proceso
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        WHERE lo.idLote = $idLote")->result_array();
     }
+
     function getInicioMensualidadAut($idLote, $id_cliente){
         $query = $this->db->query("SELECT * FROM corridas_financieras cf
         INNER JOIN historial_documento hd ON hd.idLote = cf.id_lote
@@ -1648,5 +1663,10 @@ class Asesor_model extends CI_Model {
     function eliminarCodigoAutorizaciones($idCliente, $tipo)
     {
         $this->db->query("DELETE FROM codigo_autorizaciones WHERE id_cliente = $idCliente AND tipo = $tipo");
+    }
+
+    function obtenerDocumentacionByIdloteCL($idLote, $id_cliente){
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE idCliente=".$id_cliente." AND idLote=".$idLote);
+        return $query->result_array();
     }
 }

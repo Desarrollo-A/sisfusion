@@ -52,6 +52,68 @@ class Postventa_model extends CI_Model
         }
     }
 
+     /**
+     * Función para buscar el path donde se encuentra el archivo en los diferentes tipos de proceso de contratación
+     *
+     * @param $tipoDocumento
+     * @param $tipoContratacion
+     * @param $nombreLote
+     * @param bool $eliminarArchivo bandera para saber si se eliminará el archivo o no para no afectar los archivos del patch viejo
+     * @param $nombreDocumento
+     * @return string
+     */
+
+
+    public function getCarpetaArchivo(
+        $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
+    ): string
+    {
+        if ($tipoContratacion == 0 || $tipoContratacion == 1) {
+            return $this->obtenerPathViejoContratacion($tipoDocumento);
+        }
+
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) {
+            
+            $pathViejo = $this->obtenerPathViejoContratacion($tipoDocumento);
+            return (file_exists($pathViejo.$nombreDocumento)) ? $pathViejo : $pathNuevo;
+        }
+
+        return '';
+    }
+
+    private function obtenerPathViejoContratacion($tipoDocumento): string
+    {
+        $pathBase = 'static/documentos/cliente/';  
+
+        if ($tipoDocumento == 7 || $tipoDocumento == 39) { // CORRIDA FINANCIERA: CONTRALORÍA
+            return "{$pathBase}corrida/";
+        }
+
+        if ($tipoDocumento == 8 || $tipoDocumento == 40) { // CONTRATO: JURÍDICO
+            return "{$pathBase}contrato/";
+        }
+
+        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
+            return "{$pathBase}contratoFirmado/";
+        }
+
+        // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
+        return "{$pathBase}expediente/";
+    }
+
+    
+    
+    public function getNameLote($idLote){
+		$query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre, res.nombreResidencial, 
+            l.observacionContratoUrgente, cl.proceso
+            FROM lotes l
+            INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+            INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+            INNER JOIN clientes cl ON cl.idLote = l.idLote
+		    where l.idLote = $idLote AND cl.status = 1");
+		return $query->row();
+	}
+
     function getDetalleNota($id_solicitud){
  
         return $this->db->query("(SELECT CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS nombre, he.descripcion,he.fecha_creacion as fecha_creacion, he.tipo_movimiento, '' AS color
@@ -229,12 +291,12 @@ class Postventa_model extends CI_Model
         return $this->db->query("SELECT res.nombreResidencial, con.nombre AS condominio, lot.nombreLote, 
 		lot.comentarioLiberacion, lot.idLote, cl.id_cliente,
 		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', apellido_materno)) nombreCliente, hl.observacionLiberacion
-        FROM lotes lot
-        INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
-        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtro
+    FROM lotes lot
+    INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
+    INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtro
 		INNER JOIN historial_liberacion hl ON hl.idLote = lot.idLote AND hl.modificado = (SELECT max(hl2.modificado) from historial_liberacion hl2 WHERE hl2.idLote = hl.idLote)
 		INNER JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote
-        WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
+    WHERE lot.idStatusLote = 1 AND lot.idMovimiento = 0 AND lot.idStatusContratacion = 0 AND 
 		hl.observacionLiberacion LIKE '%CANCELACIÓN DE CONTRATO%'")->result();
     }
 
@@ -1170,48 +1232,36 @@ function checkBudgetInfo($idSolicitud){
         return $resultados;
     }
 
-    function getStatus3VP(){
-        $query = $this->db->query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-        CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,s.nombre  as sede,
-        l.tipo_venta, l.observacionContratoUrgente as vl,
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-        concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-        concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio,
-		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
-		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
-		WHERE idHistorialLote =(SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) 
-		AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc
-        FROM lotes l
-        INNER JOIN clientes cl ON l.idLote=cl.idLote
-        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-	
-		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
-		WHERE l.idStatusContratacion IN (2, 3) AND l.idMovimiento IN (98, 100, 102, 105, 107, 110, 113, 114) AND cl.status = 1
-        GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-        CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, l.observacionContratoUrgente,
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-        concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-        concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, s.nombre;");
-        return $query->result_array();
+    public function getStatus3VP() {
+        return $this->db->query("SELECT lo.idLote, hd.idDocumento, hd.tipo_doc, hd.expediente, hd.movimiento, lo.referencia, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        lo.nombreLote, lo.idStatusContratacion, lo.idMovimiento, lo.modificado, cl.rfc,
+        CAST(lo.comentario AS varchar(MAX)) comentario, lo.fechaVenc, lo.perfil, co.nombre nombreCondominio, re.nombreResidencial, lo.ubicacion, ISNULL(se.nombre, 'SIN ESPECIFICAR') nombreSede,
+        lo.tipo_venta, lo.observacionContratoUrgente as vl,	co.idCondominio, lo.tipo_venta,
+		CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente
+        FROM lotes lo
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+		LEFT JOIN historial_documento hd ON lo.idLote = hd.idLote AND hd.tipo_doc = 50
+		LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+		LEFT JOIN sedes se ON se.id_sede = cl.id_sede
+		WHERE lo.idStatusContratacion IN (2, 3) AND lo.idMovimiento IN (98, 100, 102, 105, 107, 110, 113, 114) AND lo.tipo_venta = 1
+        ORDER BY lo.nombreLote ")->result_array();
     }
 
     public function validateSt3($idLote){
         $this->db->where("idLote",$idLote);
         $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (2,3) AND idMovimiento IN (98,99,100,102,105,107, 110, 113, 114))");
+        $this->db->where("(idStatusContratacion IN (2, 3) AND idMovimiento IN (98, 99, 100, 102, 105, 107, 110, 113, 114))");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
         return $valida;
     }
+    
     function pausarSolicitud($idSolicitud,$comentario,$idUsuario){
 
         $this->db->query("UPDATE solicitudes_escrituracion SET id_estatus=54 WHERE id_solicitud=$idSolicitud");

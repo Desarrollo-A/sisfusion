@@ -1554,7 +1554,7 @@
 		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ',cl.apellido_materno) AS nombreCliente,
 		cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
         lotes.idStatusContratacion, lotes.idMovimiento, CONVERT(VARCHAR, hd.modificado, 120) modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-        lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
+        lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, tv.tipo_venta,
         lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado,
         concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
         concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.totalNeto2, lotes.referencia,
@@ -1564,10 +1564,10 @@
 		ISNULL(hd2.expediente, 0) documentoCargado
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
-
         LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
+		LEFT JOIN tipo_venta as tv ON tv.id_tventa = lotes.tipo_venta
         LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
@@ -1580,11 +1580,11 @@
         GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
         lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
         CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
-        residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
+        residencial.nombreResidencial, cond.nombre, lotes.ubicacion,
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
         lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia,  CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente, tv.tipo_venta");
         return $query->result();
     }
 
@@ -3434,14 +3434,14 @@
 					$id_lider = $id_lider . ', 4223';
 					$sede = "";
 				}
-				else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-					$id_lider = $id_lider . ', 11196, 5637, 2599, 1507';
-					$sede = "";
-				} else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
+				else if ($this->session->userdata('id_usuario') == 11607) { // JOSE ENRIQUE HINOJOSA GUERRERO
 					$id_lider = $id_lider . ', 2411'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE MAGDALENA ESPARZA HERNANDEZ CUANDO ERA GERENTE
 					$sede = "";
 				} else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
 					$id_lider = $id_lider . ', 21, 1545'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
+					$sede = "";
+				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+					$id_lider = $id_lider . ', 1916'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
 				}
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
@@ -3860,7 +3860,7 @@
 		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
 		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
 		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
-		fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
+		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
 		cl.creado_por, cl.fecha_modificacion, cl.modificado_por,
 		cond.nombre AS nombreCondominio,
 		residencial.nombreResidencial AS nombreResidencial,

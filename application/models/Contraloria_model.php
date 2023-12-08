@@ -52,7 +52,7 @@ class Contraloria_model extends CI_Model {
         $query = $this->db-> query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar,l.modificado,120) as modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120)as fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,s.nombre  as sede,
-        l.tipo_venta, l.observacionContratoUrgente as vl,
+  		l.observacionContratoUrgente as vl,  CASE WHEN l.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.background_sl,  sl.color, tv.tipo_venta,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -66,16 +66,19 @@ class Contraloria_model extends CI_Model {
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
 		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
 		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN sedes s ON cl.id_sede = s.id_sede 
+        LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 		WHERE l.status = 1 AND l.idStatusContratacion IN (2) AND l.idMovimiento IN (4, 74, 84, 93, 101, 103) AND cl.status = 1
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sl.background_sl, sl.color,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, l.observacionContratoUrgente,
+        l.tipo_venta, tv.tipo_venta, l.observacionContratoUrgente,l.casa, sl.nombre, 
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
@@ -135,7 +138,8 @@ class Contraloria_model extends CI_Model {
 		(SELECT concat(usuarios.nombre,' ', usuarios.apellido_paterno, ' ', usuarios.apellido_materno)
 		FROM historial_lotes left join usuarios on historial_lotes.usuario = usuarios.id_usuario
 		WHERE idHistorialLote = (SELECT MAX(idHistorialLote) FROM historial_lotes WHERE idLote IN (l.idLote) AND (perfil IN ('13', '32', 'contraloria', '17', '70')) AND status = 1)) as lastUc,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, l.totalNeto
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, l.totalNeto,
+        CASE ISNULL(lf.idLotePvOrigen, 0) WHEN 0 THEN 0 ELSE 1 END banderaFusion
 	    FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -146,6 +150,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN lotesFusion lf ON lf.idLote = l.idLote
 		WHERE l.status = 1 AND l.idStatusContratacion IN ('5', '2') AND l.idMovimiento IN ('35', '22', '62', '75', '94', '106', '108') and cl.status = 1
 	    GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
@@ -154,19 +159,16 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, cl.expediente, sd.nombre, ISNULL(oxc0.nombre, 'Normal'), l.totalNeto
+		cond.idCondominio, cl.expediente, sd.nombre, ISNULL(oxc0.nombre, 'Normal'), l.totalNeto, ISNULL(lf.idLotePvOrigen, 0)
 		ORDER BY l.nombreLote");
         return $query->result();
     }
 
     public function validateSt6($idLote){
-        $this->db->where("idLote",$idLote);
-        $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106))");
-        $query = $this->db->get('lotes');
-        $valida = (empty($query->result())) ? 0 : 1;
-        return $valida;
-    }
+		$query = $this->db->query("SELECT * FROM lotes WHERE idLote = $idLote AND idStatusContratacion IN (5, 2) AND idMovimiento IN (35, 22, 62, 75, 94, 106) AND idStatusLote = 3")->result();
+		$valida = empty($query) ? 0 : 1;
+		return $valida;
+	}
 
     public function getCorreoSt ($idCliente) {
         $query = $this->db-> query("SELECT STRING_AGG (correo, ',') correos FROM (
@@ -195,11 +197,14 @@ class Contraloria_model extends CI_Model {
 			WHERE vc.id_cliente = ".$idCliente." AND u.id_rol = 6 AND u.estatus = 1
 			UNION ALL
 			/*ASISTENTE SUBDIRECTOR (TITULAR VENTA) */
-			SELECT c.id_cliente, uuu.correo FROM clientes c 
+			/*SELECT c.id_cliente, uuu.correo FROM clientes c 
 			LEFT JOIN usuarios u ON u.id_usuario = c.id_gerente
 			LEFT JOIN usuarios uu ON uu.id_usuario = u.id_lider
 			LEFT JOIN usuarios uuu ON uuu.id_usuario = uu.id_lider
-			WHERE c.id_cliente = ".$idCliente." AND uuu.id_rol = 5 AND u.estatus = 1
+			WHERE c.id_cliente = ".$idCliente." AND uuu.id_rol = 5 AND u.estatus = 1*/
+            SELECT c.id_cliente, u.correo FROM clientes c 
+			LEFT JOIN usuarios u ON u.id_lider = c.id_subdirector AND u.estatus = 1 AND u.id_rol = 5
+			WHERE c.id_cliente = $idCliente
 			UNION ALL
 			/*ASISTENTE SUBDIRECTOR (VENTAS COMPARTIDAS) */
 			SELECT vc.id_cliente, uuu.correo FROM ventas_compartidas vc 
@@ -242,14 +247,14 @@ class Contraloria_model extends CI_Model {
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 		
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreClientes,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc, sd.nombre as nombreSede,
 		CAST(l.comentario AS varchar(MAX)) as comentario, convert(varchar,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
 		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl, cl.tipo_nc residencia,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.lugar_prospeccion, pr.id_arcus
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -260,6 +265,7 @@ class Contraloria_model extends CI_Model {
 		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
 		WHERE l.status = 1 AND l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
 		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
 		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
@@ -271,7 +277,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal')
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'), cl.lugar_prospeccion, pr.id_arcus
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -486,7 +492,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
-        $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, ISNULL(cl.apellido_paterno, '') apellido_paterno, ISNULL(cl.apellido_materno, '') apellido_materno,
+        $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', ISNULL(cl.apellido_paterno, ''), ' ', ISNULL(cl.apellido_materno, ''))) nombreCliente,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) as modificado, cl.rfc,
 		UPPER(CAST(l.comentario AS varchar(MAX))) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
 		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.firmaRL, l.validacionEnganche,
@@ -495,7 +501,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -515,7 +521,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal')
+		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal'),
+        pro.lugar_prospeccion
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -752,12 +759,12 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function get_id_asig($id){
-        $query = $this->db->query("SELECT contador FROM variables where identificador = $id");
+        $query = $this->db->query("SELECT contador FROM variables where identificador = '$id'");
         return $query->row();
     }
 
     public function update_asig_jur($id, $id_sede){
-        $this->db->query("UPDATE variables SET contador = $id WHERE identificador = $id_sede");
+        $this->db->query("UPDATE variables SET contador = $id WHERE identificador = '$id_sede'");
         return true;
     }
 

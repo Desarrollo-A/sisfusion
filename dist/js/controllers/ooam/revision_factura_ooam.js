@@ -1,7 +1,7 @@
-var trs;
+var tr;
 var tabla_factura_ooam ;
-var totaFac = 0;
-let titulosfac = [];
+var totaPagoOOAM = 0;
+let titulosOOAM = [];
 
 $(document).ready(function() {
     $("#tabla_factura_ooam").prop("hidden", true);
@@ -10,17 +10,17 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoFacOoam").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoFacturaOOAM").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoFacOoam").selectpicker('refresh');
+        $("#proyectoFacturaOOAM").selectpicker('refresh');
     }, 'json');
 });
 
-$('#catalogoFacOoam').change(function(){
-residencial = $('#catalogoFacOoam').val();
-$("#condominioFacOoam").empty().selectpicker('refresh');
+$('#proyectoFacturaOOAM').change(function(){
+residencial = $('#proyectoFacturaOOAM').val();
+$("#condominioFacturaOOAM").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Asesor/getCondominioDesc/'+residencial,
+        url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -29,35 +29,35 @@ $("#condominioFacOoam").empty().selectpicker('refresh');
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioFacOoam").append($('<option>').val(id).text(name));
+                $("#condominioFacturaOOAM").append($('<option>').val(id).text(name));
             }
-            $("#condominioFacOoam").selectpicker('refresh');
+            $("#condominioFacturaOOAM").selectpicker('refresh');
         }
     });
 });
 
-$('#catalogoFacOoam').change(function(){
-    proyecto = $('#catalogoFacOoam').val();
-    condominio = $('#condominioFacOoam').val();
+$('#proyectoFacturaOOAM').change(function(){
+    proyecto = $('#proyectoFacturaOOAM').val();
+    condominio = $('#condominioFacturaOOAM').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissionsOoam(proyecto, condominio);
+    getDataFacturaOOAM(proyecto, condominio);
 });
 
-$('#condominioFacOoam').change(function(){
-    proyecto = $('#catalogoFacOoam').val();
-    condominio = $('#condominioFacOoam').val();
+$('#condominioFacturaOOAM').change(function(){
+    proyecto = $('#proyectoFacturaOOAM').val();
+    condominio = $('#condominioFacturaOOAM').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissionsOoam(proyecto, condominio);
+    getDataFacturaOOAM(proyecto, condominio);
 });
 
 $('#tabla_factura_ooam thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
-        titulosfac.push(title);
+        titulosOOAM.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_factura_ooam').DataTable().column(i).search() !== this.value ) {
@@ -65,19 +65,21 @@ $('#tabla_factura_ooam thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllOOAM(this)"/>');
     }
 });
 
-function getAssimilatedCommissionsOoam(proyecto, condominio){
+function getDataFacturaOOAM(proyecto, condominio){
+    
     $('#tabla_factura_ooam').on('xhr.dt', function(e, settings, json, xhr) {
-        var total = 0;
+        var totalooam = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.impuesto);
+            totalooam += parseFloat(v.impuesto);
         });
-        var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarremanente").textContent =to;
+        var to = formatMoney(numberTwoDecimal(totalooam));
+        document.getElementById("disponibleFacturaOOAM").textContent = to;
     });
+    
 
     $("#tabla_factura_ooam").prop("hidden", false);
     tabla_factura_ooam = $("#tabla_factura_ooam").DataTable({
@@ -95,7 +97,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
                     columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosfac[columnIdx -1] + ' ';
+                            return ' ' + titulosOOAM[columnIdx -1] + ' ';
                         }
                     }
                 },
@@ -103,15 +105,15 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
+                if ($('input[name="idPagoFacturaOOAM[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_factura_ooam.$('input[name="idTQ[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_factura_ooam.$('input[name="idPagoFacturaOOAM[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/acepto_internomex_remanente/',
+                        url : general_base_url + 'Ooam/acepto_internomex_remanente/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -121,36 +123,36 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#autorizarFacturaOOAM").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
+                                $("#modalEnviadasOOAM").modal('toggle');
                                 tabla_factura_ooam.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append(`
+                                $("#modalEnviadasOOAM .modal-body").html("");
+                                $("#modalEnviadasOOAM").modal();
+                                $("#modalEnviadasOOAM .modal-body").append(`
                                     <center>
                                         <img style='width: 75%; height: 75%;' src="${general_base_url}dist/img/send_intmex.gif" >
                                             <p style='color:#676767;'>Comisiones de esquema 
-                                                <b>asimilados</b>, fueron enviadas a 
+                                                <b>factura</b>, fueron enviadas a 
                                                 <b>INTERNOMEX</b> correctamente.
                                             </p>
                                     </center>`);
                             }
                             else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                $("#modalEnviadasOOAM").modal('toggle');
+                                $("#modalEnviadasOOAM .modal-body").html("");
+                                $("#modalEnviadasOOAM").modal();
+                                $("#modalEnviadasOOAM .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            $("#modalEnviadasOOAM").modal('toggle');
+                            $("#modalEnviadasOOAM .modal-body").html("");
+                            $("#modalEnviadasOOAM").modal();
+                            $("#modalEnviadasOOAM .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
                         }
                     });
                 }else{
@@ -288,7 +290,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                            return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idPagoFacturaOOAM[]" class="checkPagosIndividualOOAM" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     }else{
                         return '';
                     }
@@ -298,7 +300,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "pagos/getDatosNuevasFContraloria/" ,
+            url: general_base_url + "Ooam/getRevisionFacturasOOAM/" ,
             type: "POST",
             cache: false,
             data :{
@@ -348,7 +350,7 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
-        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
+        $.getJSON(general_base_url+"Ooam/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-remanente").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
@@ -373,26 +375,26 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
     });
 
     $('#tabla_factura_ooam').on('click', 'input', function() {
-        trs = $(this).closest('tr');
-        var row = tabla_factura_ooam.row(trs).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaFac += parseFloat(row.pa);
-            trs.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+        tr2 = $(this).closest('tr');
+        var row = tabla_factura_ooam.row(tr2).data();
+        if (row.montoOOAM == 0) {
+            row.montoOOAM = row.impuesto;
+            totaPagoOOAM += parseFloat(row.montoOOAM);
+            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         } 
         else {
-            totaFac -= parseFloat(row.pa);
-            row.pa = 0;
+            totaPagoOOAM -= parseFloat(row.montoOOAM);
+            row.montoOOAM = 0;
         }
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaFac)));
+        $("#autorizarFacturaOOAM").html(formatMoney(numberTwoDecimal(totaPagoOOAM)));
     });
 
     $("#tabla_factura_ooam tbody").on("click", ".cambiar_estatus", function(){
-        var trs = $(this).closest('tr');
-        var row = tabla_factura_ooam.row( trs );
+        var tr = $(this).closest('tr');
+        var row = tabla_factura_ooam.row( tr );
         id_pago_i = $(this).val();
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append(
+        $("#modalPausarFacturaOOAM .modal-body").html("");
+        $("#modalPausarFacturaOOAM .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -415,20 +417,21 @@ function getAssimilatedCommissionsOoam(proyecto, condominio){
         );
         const buttonPausar = document.getElementById('btnPausar');
         buttonPausar.addEventListener('click', function handleClick() {
-            $("#totpagarPen").html(formatMoney(0));
+            $("#autorizarFacturaOOAM").html(formatMoney(0));
         });
-        $("#modal_nuevas").modal();
+        $("#modalPausarFacturaOOAM").modal();
     });
 }
 
-$("#form_interes").submit( function(e) {
+$("#formPausarFacturaOOAM").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        data.append("factura", 1);
         $.ajax({
-            url: general_base_url + "pagos/pausar_solicitudM/",
+            url: general_base_url + "Ooam/setPausaPagosOOAM/",
             data: data,
             cache: false,
             contentType: false,
@@ -438,7 +441,7 @@ $("#form_interes").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modal_nuevas").modal('toggle' );
+                    $("#modalPausarFacturaOOAM").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_factura_ooam.ajax.reload();
@@ -453,36 +456,36 @@ $("#form_interes").submit( function(e) {
     }
 });
 
-$(document).on("click", ".individualCheck", function() {
-    totaFac = 0;
+$(document).on("click", ".checkPagosIndividualOOAM", function() {
+    totaPagoOOAM = 0;
     tabla_factura_ooam.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_factura_ooam.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_factura_ooam.$('input[type="checkbox"]');
         if(this.checked){
-            trs = this.closest('tr');
-            row = tabla_factura_ooam.row(trs).data();
-            totaFac += parseFloat(row.impuesto); 
+            tr = this.closest('tr');
+            row = tabla_factura_ooam.row(tr).data();
+            totaPagoOOAM += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaFac)));
+    $("#autorizarFacturaOOAM").html(formatMoney(numberTwoDecimal(totaPagoOOAM)));
 });
     
-function selectAll(e) {
+function selectAllOOAM(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_factura_ooam.$('input[type="checkbox"]')).each(function (i, v) {
-            trs = this.closest('tr');
-            row = tabla_factura_ooam.row(trs).data();
+            tr = this.closest('tr');
+            row = tabla_factura_ooam.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizarFacturaOOAM").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
         $(tabla_factura_ooam.$('input[type="checkbox"]')).each(function (i, v) {
@@ -490,6 +493,6 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#autorizarFacturaOOAM").html(formatMoney(0));
     }
 }

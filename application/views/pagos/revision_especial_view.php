@@ -18,14 +18,6 @@
             <div class="modal-dialog" style= "margin-top:20px;"></div>
         </div>
 
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -91,6 +83,6 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_especial.js"></script>
 </body>

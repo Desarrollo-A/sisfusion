@@ -55,6 +55,61 @@ public $controller = 'Postventa';
     }
 
 
+    //visualizar documento postventa
+    public function subirArchivo() {
+        $lote = $this->Postventa_model->getNameLote($this->input->post('idLote'));
+
+        // if ($lote->observacionContratoUrgente && intval($lote->observacionContratoUrgente) === 1) {
+        //     echo json_encode(['code' => 400, 'message' => 'El registro se encuentra en proceso de liberación.']);
+        //     return;
+        // }
+            
+        $file = $_FILES["uploadedDocument"];
+        $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $idDocumento = $this->input->post('idDocumento');
+        $tipoDocumento = $this->input->post('tipoDocumento');
+        $documentName = "{$this->input->post('tituloDocumento')}.$fileExt";
+
+        $folder = $this->Postventa_model->getCarpetaArchivo($tipoDocumento, $lote->proceso, $lote->nombreLote);
+
+        if ($tipoDocumento != 7) { // SE VA A SUBIR EL EXPEDIENTE O EL CONTRATO
+            $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+            echo json_encode($res);
+            return;
+        }
+
+        // SE VA A SUBIR / REEMPLAZAR LA CORRIDA
+        if ($fileExt != 'pdf') {
+            // SE INTENTÓ SUBIR UN ARCHIVO DIFERENTE A UN .pdf (CORRIDA)
+            echo json_encode(['code' => 400, 'message' => 'El archivo que se intenta subir no cuenta con la extención .pdf']);
+            return;
+        }
+
+        $res = $this->actualizarRamaDeDocumento($file, $folder, $documentName, $idDocumento);
+        echo json_encode($res);
+    }
+
+    function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
+        $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
+
+        if ($movement) {
+            $updateDocumentData = array(
+                "expediente" => $documentName,
+                "modificado" => date('Y-m-d H:i:s'),
+                "idUser" => $this->session->userdata('id_usuario')
+            );
+
+            $result = $this->General_model->updateRecord("historial_documento", $updateDocumentData, "idDocumento", $idDocumento);
+
+            return ($result)
+                ? ['code' => 200]
+                : ['code' => 500];
+        }
+
+        return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
+    }
+
+
     public function escrituracion()
     {
         if ($this->session->userdata('id_rol') == FALSE) {
@@ -2356,13 +2411,12 @@ function saveNotaria(){
         $this->load->view("postventa/status3revision");
     }
 
-    function getStatus3VP(){
+    function getStatus3VP() {
         $data = $this->Postventa_model->getStatus3VP();
-        if($data != null) {
+        if($data != null)
             echo json_encode($data);
-        } else {
+        else
             echo json_encode(array());
-        }
     }
 
     public function rechazarStatus(){
@@ -3209,6 +3263,10 @@ function saveNotaria(){
         echo json_encode($data);
     }
 }
+
+
+//boton para subir documentos
+
 
 
 

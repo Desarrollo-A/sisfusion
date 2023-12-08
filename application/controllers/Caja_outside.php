@@ -4,7 +4,7 @@ class Caja_outside extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'Arcus'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         $this->jwt_actions->authorize_externals('6489', apache_request_headers()["Authorization"]);
@@ -496,6 +496,7 @@ class Caja_outside extends CI_Controller {
 
         $data['lote'] = $id_lote;
         $data['condominio'] = $this->caja_model_outside->getCondominioByIdLote($id_lote);
+        $tipo_venta = $this->caja_model_outside->validarTipoVenta($id_lote);
        // $data['lider'] = $this->caja_model_outside->getLider($datosView->id_gerente);
  
         if( $datosView->concepto == 'REUBICACIÓN'){
@@ -534,7 +535,8 @@ class Caja_outside extends CI_Controller {
         $date = new DateTime('now');
         $date->modify('-1 month');
         $date->format('Y-m-t');
-        $fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
+        //$fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
+        $fechaApartado = date('Y-m-d H:i:s');
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
@@ -713,6 +715,8 @@ class Caja_outside extends CI_Controller {
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.'
             );
             if ($dataError != null) {
+                echo "es lo success";
+                exit;
                 echo json_encode($dataError);
             } else {
                 echo json_encode(array());
@@ -882,7 +886,7 @@ class Caja_outside extends CI_Controller {
         /*termina la insersión de historial documento*/
         /*Si es persona moral o fisica e sla documentacion que va a insertar*/
         if ($data['prospecto'][0]['personalidad_juridica'] == 1) {
-            $dataDocs = $this->caja_model_outside->getDocsByType(32);
+            $dataDocs = $this->caja_model_outside->getDocsByType(32, $tipo_venta->tipo_venta);
             //print_r($dataDocs);
             $dataDC = array();
             for ($i = 0; $i < count($dataDocs); $i++) {
@@ -893,7 +897,6 @@ class Caja_outside extends CI_Controller {
                 $dataDC[$i]['fecha_creacion'] = $dataDocs[$i]['fecha_creacion'];
                 $dataDC[$i]['creado_por'] = $dataDocs[$i]['creado_por'];
 
-                
                 $dataInsertHistorialDocumento = array(
                     'movimiento' => $dataDC[$i]['nombre'],/*nombre comp del mov*/
                     'modificado' => date('Y-m-d H:m:i'),/*date ahorita*/
@@ -908,7 +911,7 @@ class Caja_outside extends CI_Controller {
 
         } elseif ($data['prospecto'][0]['personalidad_juridica'] == 2 || $data['prospecto'][0]['personalidad_juridica'] == 3) {
             /*Es persona fisica*/
-            $dataDocs = $this->caja_model_outside->getDocsByType(31);
+            $dataDocs = $this->caja_model_outside->getDocsByType(31, $tipo_venta->tipo_venta);
             $dataDC = array();
             for ($i = 0; $i < count($dataDocs); $i++) {
                 $dataDC[$i]['id_opcion'] = $dataDocs[$i]['id_opcion'];
@@ -929,6 +932,16 @@ class Caja_outside extends CI_Controller {
                 $this->caja_model_outside->insertDocToHist($dataInsertHistorialDocumento);
                 
             }
+        }
+
+        if (intval($data['prospecto'][0]['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+        //if (TRUE) {
+            $arcusData = array(
+                "propiedadRelacionada" => $id_lote,
+                "uid" => $data['prospecto'][0]['id_arcus'],
+                "estatus" => 4
+            );
+            $response = $this->arcus->sendLeadInfoRecord($arcusData);
         }
 
         /***************************************/
@@ -1546,10 +1559,14 @@ class Caja_outside extends CI_Controller {
                 $arreglo2["idLote"]= $value->idLote;  
                 $arreglo2["idCondominio"]= $value->idCondominio;          
                 $arreglo2["idCliente"]= $idClienteInsert[0]["lastId"];          
-        
+                
+                $flag_particular = 0;
+
+                if($updatelote['tipo_venta'] == 1){
+                    $flag_particular=1;
+                }
         
                 if($data->personalidad_juridica == 1){
-        
                     $tipoDoc = $this->caja_model_outside->getDocsByType(32);
                     foreach ($tipoDoc AS $arrayDocs){
                           $arrayDocs = array(
@@ -1559,12 +1576,20 @@ class Caja_outside extends CI_Controller {
                             'idLote' => $value->idLote,
                             'tipo_doc' => $arrayDocs["id_opcion"]
                           );
-                          $this->caja_model_outside->insertDocToHist($arrayDocs);
+                          if($arrayDocs["id_opcion"] == 50){
+                                if($flag_particular == 1){
+                                    $this->caja_model_outside->insertDocToHist($arrayDocs);
+                                }
+                                
+                          }else{
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+
+                          }
                     }
         
                     
                 } else if ($data->personalidad_juridica == 2){
-                
+
                     $tipoDoc = $this->caja_model_outside->getDocsByType(31);
                     foreach ($tipoDoc AS $arrayDocs){
                           $arrayDocs = array(
@@ -1574,10 +1599,15 @@ class Caja_outside extends CI_Controller {
                             'idLote' => $value->idLote,
                             'tipo_doc' => $arrayDocs["id_opcion"]
                           );
-                          $this->caja_model_outside->insertDocToHist($arrayDocs);
-        
-                    }
-                        
+                          if($arrayDocs["id_opcion"] == 50){
+                            if($flag_particular == 1){
+                                $this->caja_model_outside->insertDocToHist($arrayDocs);
+                            }
+                            
+                          }else{
+                            $this->caja_model_outside->insertDocToHist($arrayDocs);
+                          }
+                    }  
                 }
         
         
