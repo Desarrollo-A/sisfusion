@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php
-        /*-------------------Contraloria------------------------------------*/
+
         $this->load->view('template/sidebar');
         ?>
         <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -40,6 +40,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,6 +50,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -58,6 +60,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -69,6 +72,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
@@ -76,6 +80,7 @@
                 </div>
             </div>
         </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -141,7 +146,7 @@
                                                     <th>SEDE</th>
                                                     <th>TOTAL COMISIÓN</th>
                                                     <th>IMPUESTO</th>
-                                                    <th>% COMISIÓN</th>
+                                                    <th>PORCENTAJE COMISIÓN</th>
                                                     <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

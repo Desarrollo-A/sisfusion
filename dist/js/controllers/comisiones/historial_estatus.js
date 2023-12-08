@@ -6,9 +6,9 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_general").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogo_general").selectpicker('refresh');
     }, 'json');
 
     $.get(`${general_base_url}Comisiones/getPuestoByIdOpts`, function (data) {
@@ -16,15 +16,15 @@ $(document).ready(function() {
         puestos.forEach(puesto => {
             const id = puesto.id_opcion;
             const name = puesto.nombre.toUpperCase();
-            $('#roles').append($('<option>').val(id).text(name));
+            $('#puesto_general').append($('<option>').val(id).text(name));
         });
-        $("#roles").selectpicker('refresh');
+        $("#puesto_general").selectpicker('refresh');
         $("#spiner-loader").addClass('hide');
     });
 });
 
-$('#filtro33').change(function(ruta){
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogo_general').change(function(ruta){
+    $("#estatus_general").empty().selectpicker('refresh');
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: general_base_url + 'Comisiones/lista_estatus',
@@ -35,30 +35,30 @@ $('#filtro33').change(function(ruta){
             for(let i = 0; i<len; i++){
                 const id = response[i]['idEstatus'];
                 const name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#estatus_general").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#estatus_general").selectpicker('refresh');
             $("#spiner-loader").addClass('hide');
         }
     });
 });
 
-$('#filtro44').change(function(ruta){
+$('#estatus_general').change(function(ruta){
     $("#spiner-loader").removeClass('hide');
-    const proyecto = $('#filtro33').val();
-    let condominio = $('#filtro44').val();
+    const proyecto = $('#catalogo_general').val();
+    let condominio = $('#estatus_general').val();
     if(condominio === '' || condominio === null || condominio === undefined){
         condominio = 0;
     }
-    let usuario = $('#users').val();
+    let usuario = $('#usuario_general').val();
     if (usuario === undefined || usuario === null || usuario === '') {
         usuario = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio, usuario);
+    asimiladoComisiones(proyecto, condominio, usuario);
 });
 
-$('#roles').change(function () {
-    $("#users").empty().selectpicker('refresh');
+$('#puesto_general').change(function () {
+    $("#usuario_general").empty().selectpicker('refresh');
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: `${general_base_url}Comisiones/getUsersName`,
@@ -69,61 +69,55 @@ $('#roles').change(function () {
             for(let i = 0; i < len; i++){
                 const id = data[i]['id_usuario'];
                 const name = data[i]['name_user'].toUpperCase();
-                $("#users").append($('<option>').val(id).text(name));
+                $("#usuario_general").append($('<option>').val(id).text(name));
             }
-            $("#users").selectpicker('refresh');
-            const proyecto = $('#filtro33').val();
-            let condominio = $('#filtro44').val();
+            $("#usuario_general").selectpicker('refresh');
+            const proyecto = $('#catalogo_general').val();
+            let condominio = $('#estatus_general').val();
             if (proyecto === undefined || proyecto === null || proyecto === '') {
                 return;
             }
             if(condominio === '' || condominio === null || condominio === undefined){
                 condominio = 0;
             }
-            let usuario = $('#users').val();
+            let usuario = $('#usuario_general').val();
             if (usuario === undefined || usuario === null || usuario === '') {
                 usuario = 0;
             }
-            getAssimilatedCommissions(proyecto, condominio, usuario);
+            asimiladoComisiones(proyecto, condominio, usuario);
         }
     });
 });
 
-$('#users').change(function () {
-    const proyecto = $('#filtro33').val();
-    let condominio = $('#filtro44').val();
+$('#usuario_general').change(function () {
+    const proyecto = $('#catalogo_general').val();
+    let condominio = $('#estatus_general').val();
     $("#spiner-loader").removeClass('hide');
     if(condominio === '' || condominio === null || condominio === undefined){
         condominio = 0;
     }
 
-    let usuario = $('#users').val();
+    let usuario = $('#usuario_general').val();
     if (usuario === undefined || usuario === null || usuario === '') {
         usuario = 0;
     }
 
-    getAssimilatedCommissions(proyecto, condominio, usuario);
+    asimiladoComisiones(proyecto, condominio, usuario);
 });
-
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-} 
 
 let titulos_intxt = [];
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $('input', this).on('keyup change', function() {
-        if (tabla_historialGral2.column(i).search() !== this.value) {
-            tabla_historialGral2.column(i).search(this.value).draw();
-        }
-    });
+    if(i != 0){
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function() {
+            if (tabla_historialGral2.column(i).search() !== this.value) {
+                tabla_historialGral2.column(i).search(this.value).draw();
+            }
+        });
+    }      
 });
-
 
 var totalLeon = 0;
 var totalQro = 0;
@@ -135,29 +129,13 @@ var tr;
 var tabla_historialGral2 ;
 var totaPen = 0;
 
-const optNueva = `
-    <div class="w-100">
-        <input class="d-none" type="radio" name="estatus" id="estatus-nueva" value="1" required>
-        <label class="w-100" for="estatus-nueva">Nueva</label>
-    </div>`;
-const optRevision = `
-    <div class="w-100">
-        <input class="d-none" type="radio" name="estatus" id="estatus-revision" value="4" required>
-        <label class="w-100" for="estatus-revision"> Revisión contraloría</label>
-    </div>`;
-const optPausado = `
-    <div class="w-100">
-        <input class="d-none" type="radio" name="estatus" id="estatus-pausado" value="6" required>
-        <label class="w-100" for="estatus-pausado"> Pausado</label>
-    </div>`;
-const optPagado = `
-    <div class="w-100">
-        <input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required>
-        <label class="w-100" for="estatus-pagado"> Pagado</label>
-    </div>`;
+const optNueva = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-nueva" value="1" required><label class="w-100" for="estatus-nueva">Nueva</label></div>`;
+const optRevision = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-revision" value="4" required><label class="w-100" for="estatus-revision"> Revisión contraloría</label></div>`;
+const optPausado = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-pausado" value="6" required><label class="w-100" for="estatus-pausado"> Pausado</label></div>`;
+const optPagado = `<div class="w-100"><input class="d-none" type="radio" name="estatus" id="estatus-pagado" value="11" required><label class="w-100" for="estatus-pagado"> Pagado</label></div>`;
 
 let seleccionados = [];
-function getAssimilatedCommissions(proyecto, condominio, usuario){
+function asimiladoComisiones(proyecto, condominio, usuario){
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -169,7 +147,7 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
             action: function() {
                 seleccionados = [];
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
-                    const estatus = $('#filtro44').val();
+                    const estatus = $('#estatus_general').val();
                     const idComisiones = $(tabla_historialGral2.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
                     seleccionados = idComisiones;
                     let options = '';
@@ -299,6 +277,7 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
         {
             "data": function( d ){
                 var lblPenalizacion = '';
+
                 if (d.penalizacion == 1){
                     lblPenalizacion ='<p class="m-0" title="Penalización + 90 días"><span class="label lbl-orange">Penalización + 90 días</span></p>';
                 }
@@ -350,12 +329,12 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
             'searchable':true,
             'className': 'dt-body-center',
             'render': function (d, type, full) {
-                const estatus = $('#filtro44').val();
+                const estatus = $('#estatus_general').val();
                 if (( full.recision == '1' || estatus === '3' || estatus === '5' || estatus === '6' || estatus === '7') && id_rol_general != 17 ) {
                     return '';
                 } else if ( full.recision != '1' && estatus === '7' && (full.estatus === '1' || full.estatus === '6') && id_rol_general == 17 ) {
                     return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                } else if ($('#filtro44').val() === '2' && id_rol_general == 17 ) {
+                } else if ($('#estatus_general').val() === '2' && id_rol_general == 17 ) {
                     if (full.forma_pago.toLowerCase() !== 'factura' && id_rol_general == 17 && full.recision != '1' ) {
                         return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                     } else {
@@ -386,21 +365,47 @@ function getAssimilatedCommissions(proyecto, condominio, usuario){
     });
 
     $('#tabla_historialGral').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $("#nombreLote").html('');
+        $("#comentariosListaAsimilados").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nombreLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comentariosListaAsimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"<b>Cerrar</b></button>
+        </div>`);
+        showModal();
+
+        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
+                $("#comentariosListaAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
         });
     }); 
@@ -434,16 +439,14 @@ $('#estatus-form').on('submit', function (e) {
         success: function (response) {
             if (JSON.parse(response)) {
                 $('#movimiento-modal').modal('hide');
-                appendBodyModal(`
-                    <div class="row">
+                appendBodyModal(`<div class="row">
                         <div class="col-lg-12 text-center">
                             <h3 style='color:#676767;'>Se cambiaron los estatus de los pagos seleccionados</h3>
                         </div>
                         <div class="col-lg-12 text-right ">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
-                    </div>
-                `);
+                    </div>`);
                 showModal();
                 tabla_historialGral2.ajax.reload();
             } else {

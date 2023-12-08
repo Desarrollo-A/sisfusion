@@ -4,36 +4,6 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav" role="tablist">
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade" id="movimiento-modal" tabindex="-1" role="dialog" aria-labelledby="movimientoModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
@@ -51,7 +21,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="modal-footer">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -62,7 +31,7 @@
                 </div>
             </div>
         </div>
- 
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -82,7 +51,7 @@
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group overflow-hidden">
                                                     <label class="m-0" for="proyecto">Proyecto (<span class="isRequired">*</span>)</label>
-                                                    <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <select name="catalogo_general" id="catalogo_general" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                     <?php
                                                     if($this->session->userdata('id_rol') == 13 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){
                                                         ?>
@@ -99,22 +68,22 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="m-0" for="filtro44">Estatus (<span class="isRequired">*</span>)</label>
-                                                    <select class="selectpicker select-gral" id="filtro44" name="estatus[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="m-0" for="estatus_general">Estatus (<span class="isRequired">*</span>)</label>
+                                                    <select class="selectpicker select-gral" id="estatus_general" name="estatus[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
 
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="m-0" for="roles">Puesto</label>
-                                                    <select class="selectpicker select-gral" name="roles" id="roles" data-container="body" required></select>
+                                                    <label class="m-0" for="puesto_general">Puesto</label>
+                                                    <select class="selectpicker select-gral" name="puesto_general" id="puesto_general" data-container="body" required></select>
                                                 </div>
                                             </div>
 
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="users">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="users" name="users" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="m-0" for="usuario_general">Usuario</label>
+                                                    <select class="selectpicker select-gral" id="usuario_general" name="usuario_general" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>
