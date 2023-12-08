@@ -168,9 +168,7 @@ $("#acceptModalButton").click(function(){
         error: function(jqXHR, textStatus, errorThrown) {
             console.error('Error:', jqXHR.status, errorThrown);
         },
-        catch: function (c) {
-            console.log('catch:', c);
-        },
+        catch: function (){},
     });
 });
 
