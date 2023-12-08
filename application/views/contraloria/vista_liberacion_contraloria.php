@@ -1,6 +1,8 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/liberaciones-styles.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <style>
     .bs-searchbox .form-group{
         padding-bottom: 0!important;
@@ -10,27 +12,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <h5 class="text-center">Selección de archivo a cargar</h5>
-                        <div class="file-gph">
-                            <input class="d-none" type="file" id="fileElm">
-                            <input class="file-name" id="file-name"  type="text" placeholder="No has seleccionada nada aún" readonly="">
-                            <label class="upload-btn m-0" for="fileElm">
-                                <span>Seleccionar</span>
-                                <i class="fas fa-folder-open"></i>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        <button class="btn btn-primary" id="cargaCoincidencias" data-toggle="modal">Cargar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
         
         <div class="modal fade" id="marcarLiberarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-md ">
@@ -54,7 +35,7 @@
                                         <label class="control-label">Selección de archivo a cargar (<span class="isRequired">*</span>)</label>
                                         <div class="file-gph">
                                             <input class="d-none" type="file" id="rescision-file-input" accept=".pdf">
-                                            <input class="file-name" id="rescision-file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                                            <input class="file-name" id="rescision-file-label" type="text" placeholder="No has seleccionada nada aún" readonly>
                                             <label class="upload-btn m-0" for="rescision-file-input">
                                                 <span>Seleccionar</span>
                                                 <i class="fas fa-folder-open"></i>
@@ -62,6 +43,9 @@
                                         </div>
                                     </div>
 							        <input type="hidden" id="idLote">
+                                    <input type="hidden" id="idCliente">
+                                    <input type="hidden" id="idCondominio">
+                                    
 						        </div>
                             </div>
                             <div class="modal-footer">
@@ -92,11 +76,6 @@
                                         <div class="col-12 col-sm-12 col-md-5 col-lg-5 pr-0">
                                             <label class="control-label">Condominio(<span class="isRequired">*</span>)</label>
                                             <select class="selectpicker select-gral m-0" title="SELECCIONA UNA OPCIÓN" data-size="7" id="selectCondominios" data-live-search="true"></select>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 pt-3">
-                                            <button class="btn-rounded btn-s-blueLight" name="uploadFile" id="uploadFile" title="Subir plantilla" data-toggle="modal" data-target="#uploadModal">
-                                                <i class="fas fa-upload"></i>
-                                            </button> 
                                         </div>
                                     </div>
                                 </div>

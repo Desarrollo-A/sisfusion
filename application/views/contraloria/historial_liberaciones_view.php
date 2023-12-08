@@ -1,5 +1,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     
         <div class="wrapper">
             <?php $this->load->view('template/sidebar'); ?>
@@ -118,5 +120,4 @@
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/contraloria/historialLiberaciones.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js?=1.1.2"></script>
 </html>
