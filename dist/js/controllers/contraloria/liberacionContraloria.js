@@ -8,9 +8,6 @@ $(document).ready(function () {
     });
 });
 
-
-
-
 let titulos = [];
 $('#liberacionesTable thead tr:eq(0) th').each( function (i) {
     let title = $(this).text();
@@ -75,233 +72,227 @@ function updateLotesStatusLiberacion(e) {
 }
 
 function fillTable(idCondominio) {
-    generalDataTable = $('#liberacionesTable').dataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "100%",
-        scrollX: true,
-        bAutoWidth:true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
-            title: 'Liberaciones',
-            exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
-                    }
-                }
-            }
-        }],
-        pagingType: "full_numbers",
-        lengthMenu: [
-            [10, 25, 50, -1],
-            [10, 25, 50, "Todos"]
-        ],
-        language: {
-            url: "../static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            visible: false,
-        },
-        {
-            data: function (d){
-                return d.nombreResidencial;
-            }
-        },
-        {
-            data: function (d){
-                return d.nombre;
-            }
-        },
-        {
-            data: function (d) {
-                return d.idLote;
-            }
-        },
-        {
-            data: function (d) {
-                return d.nombreLote;
-            }
-        },
-        {
-            data: function (d) {
-                return d.referencia;
-            }
-        },
-        {
-            data: function (d) {
-                if(d.nombreCliente == 0 || d.nombreCliente == null)
-                {
-                    return 'Sin Cliente';
-                }else{
-                    return d.nombreCliente;
-                }
-            }
-        },
-        {
-            data: function (d) {
-                return d.fechaApartado ? d.fechaApartado.split('.')[0] : 'Sin fecha';
-            }
-        },
-        {
-            data: function (d) {
-                return '<span class="label" style="color:#' + d.colorEstatusContratacion +'; background:#' + d.colorEstatusContratacion + '18;">' + d.estatusContratacion + '</span>';
-            }
-        },
-        {
-            data: function (d) {
-                btns = '';
-                return btns = '<div class="d-flex justify-center"><button data-toggle="tooltip" data-placement="left" title="Liberar"'+
-                ' class="btn-data btn-green marcar-para-liberar" data-id-lote="' + d.idLote +'" data-idcondominio="'+d.idCondominio+'" data-idcliente="'+d.id_cliente+'" data-nombre-lote=" '+ d.nombreLote +'" data-proceso="1"'+
-                ' data-idrol="'+d.id_rol+'"><i class="fas fa-thumbs-up"></i></button></div>';
-            }
-        }],
-        columnDefs: [{
-            orderable: false,
-            className: 'select-checkbox dt-body-center',
-            targets: 0,
-            searchable: false,
-            render: function (d, type, full, meta) {
-                return '';
-            },
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-        }],
-        ajax: {
-            url: general_base_url + 'Contraloria/getLiberacionesInformation',
-            type: "POST",
-            cache: false,
-            data: {
-                "idCondominio": idCondominio
-            }
+  generalDataTable = $('#liberacionesTable').dataTable({
+    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    width: "100%",
+    scrollX: true,
+    bAutoWidth:true,
+    buttons: [{
+      extend: 'excelHtml5',
+      text: '<i class="fa fa-file-excel-o" aria-hidden="true" title="DESCARGAR ARCHIVO DE EXCEL"></i>',
+      className: 'btn buttons-excel',
+      titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
+      title: 'Liberaciones',
+      exportOptions: {
+        columns: [1, 2, 3, 4, 5, 6, 7, 8],
+        format: {
+          header: function (d, columnIdx) {
+            return ' ' + titulos[columnIdx] + ' ';
+          }
         }
-    });
+      }
+    }],
+    pagingType: "full_numbers",
+    lengthMenu: [
+      [10, 25, 50, -1],
+      [10, 25, 50, "Todos"]
+    ],
+    language: {
+      url: "../static/spanishLoader_v2.json",
+      paginate: {
+      previous: "<i class='fa fa-angle-left'>",
+      next: "<i class='fa fa-angle-right'>"
+      }
+    },
+    destroy: true,
+    ordering: false,
+    columns: [{
+      visible: false,
+    },
+    {
+      data: function (d){
+        return d.nombreResidencial;
+      }
+    },
+    {
+      data: function (d){
+        return d.nombre;
+      }
+    },
+    {
+      data: function (d) {
+        return d.idLote;
+      }
+    },
+    {
+      data: function (d) {
+        return d.nombreLote;
+      }
+    },
+    {
+      data: function (d) {
+        return d.referencia;
+      }
+    },
+    {
+      data: function (d) {
+        if(d.nombreCliente == 0 || d.nombreCliente == null)
+        {
+          return 'Sin Cliente';
+        }else{
+          return d.nombreCliente;
+        }
+      }
+    },
+    {
+      data: function (d) {
+        return d.fechaApartado ? d.fechaApartado.split('.')[0] : 'Sin fecha';
+      }
+    },
+    {
+      data: function (d) {
+        return '<span class="label" style="color:#' + d.colorEstatusContratacion +'; background:#' + d.colorEstatusContratacion + '18;">' + d.estatusContratacion + '</span>';
+      }
+    },
+    {
+      data: function (d) {
+        btns = '';
+        return btns = '<div class="d-flex justify-center"><button data-toggle="tooltip" data-placement="left" title="Liberar"'+
+        ' class="btn-data btn-green marcar-para-liberar" data-id-lote="' + d.idLote +'" data-idcondominio="'+d.idCondominio+'" data-idcliente="'+d.id_cliente+'" data-nombre-lote=" '+ d.nombreLote +'" data-proceso="1"'+
+        ' data-idrol="'+d.id_rol+'"><i class="fas fa-thumbs-up"></i></button></div>';
+      }
+    }],
+    columnDefs: [{
+      orderable: false,
+      className: 'select-checkbox dt-body-center',
+      targets: 0,
+      searchable: false,
+      render: function (d, type, full, meta) {
+        return '';
+      },
+      select: {
+        style: 'os',
+        selector: 'td:first-child'
+      },
+    }],
+    ajax: {
+      url: general_base_url + 'Contraloria/getLiberacionesInformation',
+      type: "POST",
+      cache: false,
+      data: {
+        "idCondominio": idCondominio
+      }
+    }
+  });
 }
 
 function fillFilesTable(idLote) {
-    let tabla_archivos_lotes = $("#archivosDataTable").DataTable({
-        width: '100%',
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        processing: true,
-        pageLength: 5,
-        bAutoWidth: true,
-        bLengthChange: false,
-        scrollX: true,
-        bInfo: true,
-        searching: true,
-        ordering: false,
-        fixedColumns: true,
-        destroy: true,
-        columns: [{
-            data: function (d) {
-                return '<p class="m-0">' + d.nombre_archivo + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-info see-doc-btn" data-toggle="tooltip" data-placement="left" title= "Visualizar archivo" data-id-archivo="' +d.id_archivo_liberacion+ '"><i class="fas fa-file-alt"></i></button></div>';        
-            }
-        }],
-        columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-        ajax: {
-            url: general_base_url + "Contraloria/get_archivos_lote",
-            type: "POST",
-            cache: false,
-            data: {
-                "idLote": idLote,
-            }, dataSrc: ''
-        },
-        initComplete: function(){
-            $("#spiner-loader").addClass('hide');
-        },
-        "order": [
-            [1, 'asc']
-        ],
+  let tabla_archivos_lotes = $("#archivosDataTable").DataTable({
+    width: '100%',
+    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+    buttons: [],
+    pagingType: "full_numbers",
+    language: {
+      url: general_base_url + "static/spanishLoader_v2.json",
+      paginate: {
+        previous: "<i class='fa fa-angle-left'>",
+        next: "<i class='fa fa-angle-right'>"
+      }
+    },
+    processing: true,
+    pageLength: 5,
+    bAutoWidth: true,
+    bLengthChange: false,
+    scrollX: true,
+    bInfo: true,
+    searching: true,
+    ordering: false,
+    fixedColumns: true,
+    destroy: true,
+    columns: [{
+      data: function (d) {
+        return '<p class="m-0">' + d.nombre_archivo + '</p>';
+      }
+    },
+    {
+      data: function (d) {
+        return '<div class="d-flex justify-center"><button class="btn-data btn-info see-doc-btn" data-toggle="tooltip" data-placement="left" title= "Visualizar archivo" data-id-archivo="' +d.id_archivo_liberacion+ '"><i class="fas fa-file-alt"></i></button></div>';        
+      }
+    }],
+    columnDefs: [{
+      defaultContent: "",
+      targets: "_all",
+      searchable: true,
+      orderable: false
+    }],
+    ajax: {
+      url: general_base_url + "Contraloria/get_archivos_lote",
+      type: "POST",
+      cache: false,
+      data: {
+        "idLote": idLote,
+      }, dataSrc: ''
+    },
+    initComplete: function(){
+      $("#spiner-loader").addClass('hide');
+    },
+    "order": [
+      [1, 'asc']
+    ],
+  });
+  
+  $('#archivosDataTable').on('draw.dt', function() {
+    $('[data-toggle="tooltip"]').tooltip({
+      trigger: "hover"
     });
-    
-    $('#archivosDataTable').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
+  });
 }
 
 function openFilesModal(idLote){
-    $("#filesModal").modal('show');
-    fillFilesTable(idLote); 
+  $("#filesModal").modal('show');
+  fillFilesTable(idLote); 
 }
 
-// function openUploadFileModal(){
-    // $("#uploadfilesModal").modal('show');
-// }
-
 function refreshTipoLiberacionesPicker() {
-    let fileContainer = document.getElementById("fileContainer");
-    if (!fileContainer.classList.contains('d-none')) fileContainer.classList.add('d-none');
-    $("#selectTipoLiberacion").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url + 'Contraloria/get_tipo_liberaciones',
-        type: 'GET',
-        dataType: 'JSON',
-        success: function (res) {
-            for (let i = 0; i < res.length; i++) {
-                let id = res[i]['id_opcion'];
-                let tipo = res[i]['nombre_opc'];
-                $("#selectTipoLiberacion").append($('<option>').val(id).text(tipo));
-            }
-            $("#selectTipoLiberacion").selectpicker('refresh');
-        }, error: function (e) {
-            console.log('error:', e)
-        }, catch: function (c) {
-            console.log('catch:', c)
-        }
-    });
+  let fileContainer = document.getElementById("fileContainer");
+  if (!fileContainer.classList.contains('d-none')) fileContainer.classList.add('d-none');
+  $("#selectTipoLiberacion").empty().selectpicker('refresh');
+  $.ajax({
+    url: general_base_url + 'Contraloria/get_tipo_liberaciones',
+    type: 'GET',
+    dataType: 'JSON',
+    success: function (res) {
+      for (let i = 0; i < res.length; i++) {
+        let id = res[i]['id_opcion'];
+        let tipo = res[i]['nombre_opc'];
+        $("#selectTipoLiberacion").append($('<option>').val(id).text(tipo));
+      }
+      $("#selectTipoLiberacion").selectpicker('refresh');
+    }, 
+    error: function () {}, 
+    catch: function () {}
+  });
 }
 
 $(document).on('click', '.remove-mark', function () { // MJ: FUNCIÓN CAMBIO DE ESTATUS ACTIVO / INACTIVO
-    $.ajax({
-        type: 'POST',
-        url: general_base_url + 'Contraloria/removeMark',
-        data: {
-            'idLote': $(this).attr("data-idLote")
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data == 1) {
-                alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
-                $("#liberacionesTable").DataTable().ajax.reload();
-            } else {
-                alerts.showNotification(" ", "right", "Oops, algo salió mal.", "warning");
-            }
-        }, error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
+  $.ajax({
+    type: 'POST',
+    url: general_base_url + 'Contraloria/removeMark',
+    data: {
+      'idLote': $(this).attr("data-idLote")
+    },
+    dataType: 'json',
+    success: function (data) {
+      if (data == 1) {
+        alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
+        $("#liberacionesTable").DataTable().ajax.reload();
+      } else {
+        alerts.showNotification(" ", "right", "Oops, algo salió mal.", "warning");
+      }
+    }, error: function () {
+      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+  });
 });
 
 $(document).on('click', '.marcar-para-liberar', function(e) {
@@ -370,8 +361,7 @@ $("#marcarLiberarForm").on('submit', function(e){
     data.append("idCondominio", idCondominio);
     data.append("idCliente", idCliente);
     console.log(idCliente);
-        // data.append("tipoLiberacion" , selectTipoLiberacion);
-    //console.log(data); PENDIENTE
+    
     
     $.ajax({
       url: general_base_url + 'Contraloria/updateLoteMarcarParaLiberar',
@@ -393,8 +383,7 @@ $("#marcarLiberarForm").on('submit', function(e){
           alerts.showNotification('top', 'right', 'ops, algo salió mal, intentalo de nuevo', 'danger');
         }
       },
-      error: function (e) {
-        console.log('catch',e);
+      error: function () {
         document.getElementById('btnMarcarParaLiberar').disabled = true;
         alerts.showNotification('top', 'right', 'ops, algo salió mal, intentalo de nuevo', 'danger');
       }
@@ -474,66 +463,6 @@ $(document).ready(function () {
     relatedTarget.val(fileName);
   });
 });
-
-// $(document).on("click", ".addRemoveFile", function (e) {
-//   e.preventDefault();
-//   let idDocumento = $(this).attr("data-idDocumento");
-//     //console.log(idDocumento);
-//   let tipoDocumento = $(this).attr("data-tipoDocumento");
-//   let accion = parseInt($(this).data("accion"));
-//   let nombreDocumento = $(this).data("nombre");
-//   $("#idLoteValue").val($(this).attr("data-idLote"));
-//   $("#idDocumento").val(idDocumento);
-//   $("#tipoDocumento").val(tipoDocumento);
-//   $("#nombreDocumento").val(nombreDocumento);
-//   $("#tituloDocumento").val($(this).attr("data-tituloDocumento"));
-//   $("#accion").val(accion);
-  
-//   if (accion === AccionDoc.DOC_NO_CARGADO || accion === AccionDoc.DOC_CARGADO) {
-//     document.getElementById("mainLabelText").innerHTML =
-//     accion === AccionDoc.DOC_NO_CARGADO
-//     ? "Selecciona el archivo que desees asociar a <b>" +
-//     nombreDocumento +
-//     "</b>"
-//     : accion === AccionDoc.DOC_CARGADO
-//     ? "¿Estás seguro de eliminar el archivo <b>" + nombreDocumento + "</b>?"
-//     : "Selecciona los motivos de rechazo que asociarás al documento <b>" +
-//     nombreDocumento +
-//     "</b>.";
-//     document.getElementById("secondaryLabelDetail").innerHTML =
-//     accion === AccionDoc.DOC_NO_CARGADO
-//     ? "El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>."
-//     : accion === AccionDoc.DOC_CARGADO
-//     ? "El documento se eliminará de manera permanente una vez que des clic en <i>Guardar</i>."
-//     : "Los motivos de rechazo que selecciones se registrarán de manera permanente una vez que des clic en <i>Guardar</i>.";
-    
-//     if (accion === AccionDoc.DOC_NO_CARGADO) {
-//       // ADD FILE
-//       $("#selectFileSection").removeClass("hide");
-//       $("#txtexp").val("");
-//     }
-//     if (accion === AccionDoc.DOC_CARGADO) {
-//       // REMOVE FILE
-//       $("#selectFileSection").addClass("hide");
-//     }
-//     $("#addDeleteFileModal").modal("show");
-//   }
-  
-  // if (accion === AccionDoc.SUBIR_DOC) {
-  //   const fileName = $(this).attr("data-file");
-  //   window.location.href = getDocumentPath(tipoDocumento, fileName, 0, 0, 0);
-  //   alerts.showNotification(
-  //     "top",
-  //     "right",
-  //     "El documento <b>" + nombreDocumento + "</b> se ha descargado con éxito.",
-  //     "success"
-  //     );
-  //   }
-    
-  //   if (accion === AccionDoc.ENVIAR_SOLICITUD) {
-  //     $("#sendRequestButton").click();
-  //   }
-  // });
 
 
   $(document).on("click", "#sendRequestButton", function (e) {
