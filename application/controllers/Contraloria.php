@@ -3414,7 +3414,6 @@ class Contraloria extends CI_Controller {
             $replace = [",","$"];
             $precio = str_replace($replace,"",$_POST['costoM2']);
 
-
             $this->actualizar_precio($_POST['idLote'], $precio);
         }
         if ($rol == 12) {
