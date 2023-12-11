@@ -31,6 +31,7 @@
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
