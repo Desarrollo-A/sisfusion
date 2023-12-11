@@ -3,7 +3,7 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- Modals -->
+
         <div class="modal fade modal-alertas" id="modal_bonos" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -28,11 +28,6 @@
         <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
             <div class="modal-dialog ">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <center>
-                            <img src="<?= base_url() ?>static/images/autor.png" width="200" height="200">
-                        </center>
-                    </div>
                     <form method="post" id="form_abono">
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
@@ -40,7 +35,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -98,7 +92,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- ///////////////// -->
                                         <div class="tab-pane" id="proceso-1">
                                             <h3 class="card-title center-align">Bonos en revisión</h3>    
                                             <div class="material-datatables">
@@ -125,7 +118,6 @@
                                                 </div>
                                             </div>
                                         </div>    
-                                        <!-- /////////////// -->
                                         <div class="tab-pane" id="proceso-2">
                                             <h3 class="card-title center-align">Bonos pagados</h3>
                                             <div class="toolbar">
