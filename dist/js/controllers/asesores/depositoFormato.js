@@ -7,7 +7,7 @@ function validarMensaje(tipoMensaje) {
     } else if (tipoMensaje === 'danger_2') {
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
     } else if (tipoMensaje === 'success') {
-        alerts.showNotification('top', 'right', 'El costo ingresado es válido', 'success');
+        alerts.showNotification('top', 'right', 'El costo FINAL ingresado es válido', 'success');
     }
 }
 
@@ -31,9 +31,9 @@ function validarCostos() {
     let costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
     let tipoVenta = document.getElementById('tipo_venta').value;
 
-    console.log('Costo por M2 Lista:', costoListaM2);
-    console.log('Costo por M2 Final:', costoFinalM2);
-    console.log("tipo_venta:", tipoVenta);
+    // console.log('Costo por M2 Lista:', costoListaM2);
+    // console.log('Costo por M2 Final:', costoFinalM2);
+    // console.log("tipo_venta:", tipoVenta);
     
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
         alerts.showNotification('top', 'right', 'El valor ingresado está vacío', 'info');
@@ -322,7 +322,7 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
      
     const tipoMensaje = validarCostos();
     if (tipoMensaje !== 'success') {
-        validarMensaje(tipoMensaje);
+        //validarMensaje(tipoMensaje);
         return; 
     }
 
