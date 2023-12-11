@@ -4,50 +4,12 @@
     <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-factura"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <form method="post" id="form_interes">
                         <div class="modal-body"></div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
                 </div>
             </div>
         </div>
@@ -114,5 +76,6 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionFacturaExtranjero.js"></script>
 </body>

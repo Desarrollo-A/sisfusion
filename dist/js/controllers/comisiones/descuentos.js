@@ -713,7 +713,7 @@ function verificar(){
 }
 
 function verificarMontos2(){
-                let disponible = remplazarCaracter($('#valor_comision2').val(), '$', '');
+    let disponible = remplazarCaracter($('#valor_comision2').val(), '$', '');
     disponible = remplazarCaracter(disponible, ',', '');
     let monto = remplazarCaracter($('#monto2').val(), ',', '');
     let cuantos = $('#idloteorigen2').val().length;

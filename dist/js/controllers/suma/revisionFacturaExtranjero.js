@@ -76,7 +76,7 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
 tabla_factura = $("#tabla_factura").DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
-    bAutoWidth: true,
+    bAutoWidth: true,
     buttons: [{
         text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
         action: function() {
@@ -237,13 +237,39 @@ $("#tabla_factura tbody").on("click", ".consultar_logs", function(e){
     e.stopImmediatePropagation();
     id_pago = $(this).val();
     referencia = $(this).attr("data-referencia");
-    $("#seeInformationModalfactura").modal();
-    $("#nameLote").html("");
-    $("#comments-list-factura").html("");
-    $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
+
+    changeSizeModal("modal-md");
+    appendBodyModal(`<div class="modal-body">
+        <div role="tabpanel">
+            <ul class="nav" role="tablist">
+                <div id="nombreLote"></div>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-plain">
+                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="comentarioFactura"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
+    </div>`);
+    showModal();
+
+    $("#nombreLote").html("");
+    $("#comentarioFactura").html("");
+    $("#nombreLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-            $("#comments-list-factura").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
+            $("#comentarioFactura").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
         });
     });
 });
@@ -292,6 +318,7 @@ $("#form_interes").submit( function(e) {
         });
     }
 });
+
 $(window).resize(function(){
     tabla_factura.columns.adjust();
 });

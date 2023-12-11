@@ -5,41 +5,6 @@
 
         <?php $this->load->view('template/sidebar'); ?>
 
-        <!-- Modals -->
-        <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsfactura()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="comments-list-factura"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,15 +14,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form method="post" id="form_despausar">
-                        <div class="modal-body"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
+
         <div class="modal fade modal-alertas" id="modal_refresh" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -67,25 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade modal-alertas" id="modal_documentacion" role="dialog">
-            <div class="modal-dialog" style="width:800px; margin-top:20px">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="row"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
-            <div class="modal-dialog" style= "margin-top:20px;"></div>
-        </div>
-        <div class="modal fade bd-example-modal-sm" id="myModalEnviadas" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
+
         <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
@@ -97,13 +36,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade bd-example-modal-sm" id="myModalTQro" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body"></div>
-                </div>
-            </div>
-        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -137,16 +70,16 @@
                                     <div class="row aligned-row d-flex align-end">
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">          
                                             <div class="form-group">
-                                                <label class="m-0" for="filtro33">Puesto</label>
-                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required>
+                                                <label class="m-0" for="catalogo_factura">Puesto</label>
+                                                <select name="catalogo_factura" id="catalogo_factura" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona un puesto" data-size="7" required>
                                                     <option value="0">Seleccione todo</option>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                             <div class="form-group">
-                                                <label class="m-0" for="filtro44">Usuario</label>
-                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
+                                                <label class="m-0" for="usuario_factura">Usuario</label>
+                                                <select class="selectpicker select-gral" id="usuario_factura" name="usuario_factura[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required/></select>
                                             </div>
                                         </div>
                                         <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
@@ -168,9 +101,9 @@
                                                         <th>SEDE</th>
                                                         <th>TOTAL COMISIÓN</th>
                                                         <th>IMPUESTO</th>
-                                                        <th>% COMISIÓN</th>
+                                                        <th>PORCENTAJE COMISIÓN</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -187,5 +120,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionFacturaIntMex.js"></script>
 </body>

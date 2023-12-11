@@ -50,7 +50,7 @@
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label control-label">Puesto del usuariooo</label>
+                                <label class="label control-label">Puesto del usuario</label>
                                 <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                     <option value="7">Asesor</option>
                                     <option value="38">MKTD</option>
@@ -239,6 +239,5 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script type="text/javascript" src="<?= base_url()?>dist/js/funciones-generales.js"></script>
 	<script src="<?=base_url()?>dist/js/controllers/comisiones/descuentos.js"></script>
 </body>

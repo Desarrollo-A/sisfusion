@@ -4,7 +4,7 @@ class Suma extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model', 'Usuarios_modelo'));
+        $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model', 'Usuarios_modelo', 'Pagos_model'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -665,4 +665,15 @@ class Suma extends CI_Controller
         $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc, 'SUMA');
         echo json_encode($response);
     }
+
+    public function getDesarrolloSelectINTMEX(){
+
+        $value = $this->input->post("desarrollo");
+        if($value == ''){
+            echo json_encode($this->Pagos_model->getDesarrolloSelectINTMEX()->result_array());
+        }else{
+            echo json_encode($this->Pagos_model->getDesarrolloSelectINTMEX($value)->result_array());
+        }
+    }
+    
 }
