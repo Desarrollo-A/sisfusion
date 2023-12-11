@@ -2,14 +2,11 @@ let copropietarioCollapse = false;
 
 function validarMensaje(tipoMensaje) {
     if (tipoMensaje === 'danger_1') {
-        // Mostrar mensaje de error
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA ni debe ser inferior al 20% de descuento del COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
         return;
     } else if (tipoMensaje === 'danger_2') {
-        // Mostrar mensaje de éxito
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
     } else if (tipoMensaje === 'success') {
-        // Mostrar mensaje de éxito
         alerts.showNotification('top', 'right', 'El costo ingresado es válido', 'success');
     }
 }
@@ -21,10 +18,7 @@ $(document).ready(function() {
 
     personaFisicaMoralOnChange();
 
-    
-
     $('#costoM2, #costom2f').on('change', function() {
-        console.log('Evento change activado en #costoM2 o #costom2f');
         const tipoMensaje = validarCostos();
         validarMensaje(tipoMensaje);
     });
@@ -37,9 +31,9 @@ function validarCostos() {
     let tipoVenta = document.getElementById('tipo_venta').value;
     tipoVenta=2;
 
-    console.log('Costo por M2 Lista:', costoListaM2);
-    console.log('Costo por M2 Final:', costoFinalM2);
-    console.log("tipo_venta:", tipoVenta);
+    // console.log('Costo por M2 Lista:', costoListaM2);
+    // console.log('Costo por M2 Final:', costoFinalM2);
+    // console.log("tipo_venta:", tipoVenta);
     
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
         alerts.showNotification('top', 'right', 'El valor ingresado está vacío', 'info');
@@ -324,7 +318,7 @@ $(document).on('click', '#copropietario-collapse', function () {
     }
 });
 
-let validacionRealizada = false; // Variable para controlar si la validación ya se ha realizado
+let validacionRealizada = false;
 
 $(document).on('submit', '#deposito-seriedad-form', async function (e) {
     e.preventDefault();
@@ -332,7 +326,8 @@ $(document).on('submit', '#deposito-seriedad-form', async function (e) {
      
     const tipoMensaje = validarCostos();
     if (tipoMensaje !== 'success') {
-        return; // Detiene la ejecución del formulario si hay un error
+        validarMensaje(tipoMensaje);
+        return; 
     }
 
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
