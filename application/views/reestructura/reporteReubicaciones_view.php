@@ -3,6 +3,7 @@
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
+        <?php include 'historialMovimientos.php' ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -31,6 +32,7 @@
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>

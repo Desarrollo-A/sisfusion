@@ -107,7 +107,7 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_resstructura()->result_array());
+		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
 	}
 
 	public function insertarOpcionN (){
@@ -2793,6 +2793,24 @@ class Reestructura extends CI_Controller{
             $registrosFusion[$i]['nombreCondominioOrigen'] = implode(', ', array_unique(explode(', ', $registrosFusion[$i]['nombreCondominioOrigen'])));
         }
         echo json_encode(array_merge($registrosNormales, $registrosFusion), JSON_NUMERIC_CHECK);
+    }
+
+    public function reporteEstatus(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteEstatus_view");
+	}	
+
+    public function getReporteEstatus() {
+        $registros = $this->Reestructura_model->getReporteEstatus();
+        for ($i = 0; $i < count($registros); $i ++) {
+            $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
+            $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
+        }
+        echo json_encode($registros, JSON_NUMERIC_CHECK);
+    }
+
+    public function getHistorialPorLote($idLote) {
+        echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote));
     }
     
 }
