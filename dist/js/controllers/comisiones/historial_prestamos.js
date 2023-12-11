@@ -67,7 +67,7 @@ function fillTable(anio, mes){
             titleAttr: 'Descargar archivo de Excel',
             title: 'Reporte General Prestámos',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10,11,13,14,15],
+                columns: [0,1,2,3,4,5,6,7,8,9,10,12,13,14],
                 format: {
                     header:  function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -139,11 +139,6 @@ function fillTable(anio, mes){
         },
         {
             "data": function( d ){
-                return '<p class="m-0">'+formatMoney(d.pago_individual)+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
                 return '<p class="m-0">'+d.fecha_creacion+'</p>';
             }
         },
@@ -209,7 +204,7 @@ function fillTable(anio, mes){
             }
         }],
         columnDefs: [{
-            targets: [13], visible: false,
+            targets: [12], visible: false,
             searchable: false,
         }],
         
