@@ -25,15 +25,15 @@ $(document).ready(function() {
 
 });
 
-function validarCostos() {
-    const costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));  
-    const costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
-    let tipoVenta = document.getElementById('tipo_venta').value;
-    tipoVenta=2;
 
-    // console.log('Costo por M2 Lista:', costoListaM2);
-    // console.log('Costo por M2 Final:', costoFinalM2);
-    // console.log("tipo_venta:", tipoVenta);
+function validarCostos() {
+    let costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));  
+    let costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
+    let tipoVenta = document.getElementById('tipo_venta').value;
+
+    console.log('Costo por M2 Lista:', costoListaM2);
+    console.log('Costo por M2 Final:', costoFinalM2);
+    console.log("tipo_venta:", tipoVenta);
     
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
         alerts.showNotification('top', 'right', 'El valor ingresado está vacío', 'info');
@@ -41,7 +41,13 @@ function validarCostos() {
     }
     const clienteInfo = obtenerCliente(cliente);
 
-    if (tipoVenta !== '1') {
+    if (tipoVenta === '1') {
+        if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
+            return 'danger_2';
+        } else {
+            return 'success';
+        }
+    } else {
         const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
         if (![2, 3, 4].includes(clienteInfo.proceso)) {
@@ -51,20 +57,10 @@ function validarCostos() {
                 return 'success';
             }
         } else {
-            if (costoListaM2 > 0) {
-                if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
-                    return 'danger_2';
-                } else {
-                    return 'success';
-                }
-            }
-        }
-    } else {
-        if (costoListaM2 > 0) {
-            if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
-                return 'danger_2';
-            } else {
+            if (costoListaM2 > 0 && costoFinalM2 <= costoListaM2 && costoFinalM2 >= 0) {
                 return 'success';
+            } else {
+                return 'danger_1';
             }
         }
     }
