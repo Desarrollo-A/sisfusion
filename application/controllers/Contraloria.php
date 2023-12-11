@@ -3243,8 +3243,6 @@ class Contraloria extends CI_Controller {
             $pathBase = 'static\documentos\cliente\rescision';
             $nombreArchivo = '\CM-Rescisión-Lote';
 
-            // $file = $_FILES["archivo"];
-
             if ($_POST['selectTipoLiberacion'] == 1 ) { 
                 $data = array(
                     "idLote" => $idLote,
@@ -3294,33 +3292,8 @@ class Contraloria extends CI_Controller {
                         // 
                         echo json_encode($response);
                     }
-
-                    
-
-                    /*REALIZAR UN INSERT EN LA TABLA historial_documento Y AGREGAR EL DOCUMENTO TIPO "RESCISIÓN"
-                    DESPUÉS DE ESO, DARLE SU idDocumento PARA TERMINAR LA FUNCIÓN DE LA VISTA*/
-                    
-            
                     return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
                 }
-                //Hacer registro general
-                // if ($response !== false) {
-                //     $data = array(
-                //         "idLote" => $idLote,
-                //         "id_cat_tipo_liberacion" => 107,
-                //         "id_tipo_liberacion" => 1,
-                //         "id_cat_proceso" => 109,
-                //         "id_proceso" => 1,
-                //         "proceso_realizado" => 0,
-                //         "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
-                //         "estatus" => 1,
-                //         "modificado_por" => $this->session->userdata('id_usuario'),
-                //         "fecha_modificacion" => $fecha,
-                //     );
-                //     $response = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-                // }else {
-                //     echo false;
-                // }
 
             }else if ($_POST['selectTipoLiberacion'] == 2){ //Devolución
                 //Nadamas hace el registro general
@@ -3408,7 +3381,6 @@ class Contraloria extends CI_Controller {
 
             $replace = [",","$"];
             $precio = str_replace($replace,"",$_POST['costoM2']);
-
 
             $this->actualizar_precio($_POST['idLote'], $precio);
         }

@@ -810,7 +810,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = 164
+        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = $idCondominio
 		INNER JOIN residenciales AS res ON con.idResidencial = res.idResidencial
         WHERE l.status = 1
         AND l.idLote NOT IN (
@@ -826,9 +826,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion, con.idResidencial, con.idCondominio, con.nombre, res.nombreResidencial, cl.id_cliente
         FROM lotes l
 		
-		 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = 164
+        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = $idCondominio
 		INNER JOIN residenciales AS res ON con.idResidencial = res.idResidencial
         WHERE l.status = 1
         AND (l.idCliente IS NULL OR l.idCliente = 0)
