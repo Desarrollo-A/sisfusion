@@ -373,12 +373,6 @@ function openHistorialModal(idLote) {
   });
 }
 
-// function visualizarDocumento(idLote){
-//     alert("Función por implementar: Visualizar documento del lote "+idLote);
-
-    
-// }
-
 function fillChangelog (i, v) {
   let liberacionTexto = v.id_proceso === 1 ? 'RESCISIÓN' : 'DEVOLUCIÓN';
   let txtRechazado = '';
