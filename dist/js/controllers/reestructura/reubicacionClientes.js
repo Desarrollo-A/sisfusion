@@ -118,14 +118,24 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
             }
         }
     }],
-    columnDefs: [{
-        searchable: false,
-        visible: false
-    }],
+    columnDefs: [
+        {
+            searchable: false,
+            visible: false
+        },
+        { 
+            orderable: true, 
+            targets: [21, 22] 
+        },
+        { 
+            orderable: false, 
+            targets: '_all' 
+        }
+    ],
     pageLength: 10,
     bAutoWidth: false,
     fixedColumns: true,
-    ordering: false,
+    ordering: true,
     language: {
         url: general_base_url+"static/spanishLoader_v2.json",
         paginate: {

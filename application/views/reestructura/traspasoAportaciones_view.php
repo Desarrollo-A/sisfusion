@@ -37,10 +37,10 @@
                         <div class="card">
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Traspaso de eportaciones pendientes</h3>
+                                    <h3 class="card-title center-align">Traspaso de aportaciones pendientes</h3>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="reubicacionClientes" class="table-striped table-hover">
+                                    <table id="tablaTraspasoAportaciones" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>TIPO DE PROCESO</th>

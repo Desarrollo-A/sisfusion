@@ -2601,7 +2601,7 @@ class Reestructura extends CI_Controller{
     }
 
     public function setTraspaso() {
-        if ($this->input->post('idLoteOrigen') == 1) { // ES DE PROCESO NORMAL DE REUBICACIÓN
+        if ($this->input->post('tipo') == 1) { // ES DE PROCESO NORMAL DE REUBICACIÓN
             $updateDataOrigenNormal = array (
                 "cantidadTraspaso" => $this->formatter->removeNumberFormat($this->input->post('cantidadTraspaso')), 
                 "comentario" => $this->input->post('comentarioTraspaso'), 
@@ -2640,7 +2640,7 @@ class Reestructura extends CI_Controller{
 			'status' => 1
         );
         
-        if ($this->input->post('idLoteOrigen') == 1) // ES DE PROCESO NORMAL DE REUBICACIÓN
+        if ($this->input->post('tipo') == 1) // ES DE PROCESO NORMAL DE REUBICACIÓN
             $responseUpdateOrigen = $this->General_model->updateRecord("datos_x_cliente", $updateDataOrigenNormal, "idLote", $this->input->post('idLoteOrigen'));
         else // ES UN PROCESO FUSIÓN DE REUBICACIÓN
             $responseUpdateOrigen = $this->General_model->updateRecord("lotesFusion", $updateDataOrigenFusion, "idLote", $this->input->post('idLoteDestino'));

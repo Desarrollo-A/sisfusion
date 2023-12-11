@@ -1130,32 +1130,6 @@ class Contraloria extends CI_Controller {
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
         if (in_array($cliente->proceso, [2, 4, 3, 5, 6])) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
-
-            $historialSaltoMovimientos = [];
-            $historialSaltoMovimientos[0]["idStatusContratacion"] = 7;
-            $historialSaltoMovimientos[0]["idMovimiento"] = 37;
-            $historialSaltoMovimientos[0]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[0]["comentario"] = $comentario;
-            $historialSaltoMovimientos[0]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[0]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[0]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[0]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[0]["idLote"] = $idLote;
-            $historialSaltoMovimientos[0]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[0]["idCliente"] = $idCliente;
-
-            $historialSaltoMovimientos[1]["idStatusContratacion"] = 8;
-            $historialSaltoMovimientos[1]["idMovimiento"] = 38;
-            $historialSaltoMovimientos[1]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[1]["comentario"] = $comentario;
-            $historialSaltoMovimientos[1]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[1]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[1]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[1]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[1]["idLote"] = $idLote;
-            $historialSaltoMovimientos[1]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
-
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
@@ -1293,12 +1267,6 @@ class Contraloria extends CI_Controller {
                 return;
             }
         }
-    }
-
-    if (!$this->General_model->insertBatch('historial_lotes', $historialSaltoMovimientos)) {
-        $data['message'] = 'ERROR';
-        echo json_encode($data);
-        return;
     }
 
     $numContrato = $this->generarNumContrato($idLote);
@@ -3265,47 +3233,69 @@ class Contraloria extends CI_Controller {
     }
 
     public function updateLoteMarcarParaLiberar() {
-        if (isset($_POST) && !empty($_POST)) {
+
+        if ( (isset($_POST) && !empty($_POST)) || (isset($_FILES) && !empty($_FILES)) ) {
             $idLote = $_POST['idLote'];
+            $idCondominio = $_POST['idCondominio'];
+            $idCliente = $_POST['idCliente'];
             $fecha = date("Y-m-d H:i:s");
-            
-            if ($_POST['tipoLiberacion'] == 1 ) { //Rescisión
-                //Proceso para subir archivo
-                    /* 
-                    /
-                    /
-                    */
-                //Proceso para realizar registro en bd del archivo
+            $fec = date("Y-m-d");
+            $pathBase = 'static\documentos\cliente\rescision';
+            $nombreArchivo = '\CM-Rescisión-Lote';
+
+            if ($_POST['selectTipoLiberacion'] == 1 ) { 
                 $data = array(
                     "idLote" => $idLote,
-                    "nombre_archivo" => 'Archivo' . $fecha . '.pdf',
-                    "nombre_rama" => $idLote.'/LIBERACIÓN/Archivo'.$fecha.'.pdf',
+                    "nombre_archivo" => 'CM-Rescisión-Lote:'.$idLote.'-'.$fec.'.pdf',
+                    "nombre_rama" => $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf',///////
                     "estatus" => 1,
                     "fecha_creacion" => $fecha,
                     "creado_por" => $this->session->userdata('id_usuario'),
                     "fecha_modificacion" => $fecha,
                     "modificado_por" =>$this->session->userdata('id_usuario')
                 );
+
                 $response = $this->General_model->addRecord('archivos_liberacion', $data);
-                //Hacer registro general
-                if ($response !== false) {
-                    $data = array(
-                        "idLote" => $idLote,
-                        "id_cat_tipo_liberacion" => 107,
-                        "id_tipo_liberacion" => 1,
-                        "id_cat_proceso" => 109,
-                        "id_proceso" => 1,
-                        "proceso_realizado" => 0,
-                        "justificacion_liberacion" => $_POST['justificacion'],
-                        "estatus" => 1,
-                        "modificado_por" => $this->session->userdata('id_usuario'),
-                        "fecha_modificacion" => $fecha,
-                    );
-                    $response = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-                }else {
-                    echo false;
+
+                $nomArc = 'CM-Rescisión-Lote'.$idLote.'-'.$fec.'.pdf';
+                if ($response) {
+                    $movement = move_uploaded_file($_FILES['archivo']['tmp_name'], $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf');
+
+                    if ($movement) {
+
+                        $updateDocumentData = array(
+                            "movimiento" => 'ARCHIVO RESCISIÓN',
+                            "expediente" => $nomArc, 
+                            "modificado" => date('Y-m-d H:i:s'),
+                            "idCliente" => $idCliente,
+                            "idCondominio" => $idCondominio,
+                            "idLote" => $idLote,
+                            "tipo_doc" => 51,
+                            "idUser" => $this->session->userdata('id_usuario')
+                        );
+            
+                        $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
+
+                        $data2 = array(
+                            "idLote" => $idLote,
+                            "id_cat_tipo_liberacion" => 107,
+                            "id_tipo_liberacion" => 1,
+                            "id_cat_proceso" => 109,
+                            "id_proceso" => 1,
+                            "proceso_realizado" => 0,
+                            "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
+                            "estatus" => 1,
+                            "modificado_por" => $this->session->userdata('id_usuario'),
+                            "fecha_modificacion" => $fecha,
+                        );
+                        $response = $this->General_model->addRecord('historial_liberacion_lotes', $data2);
+                        // 
+                        echo json_encode($response);
+                    }
+                    return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
                 }
-            }else if ($_POST['tipoLiberacion'] == 2){ //Devolución
+
+            }else if ($_POST['selectTipoLiberacion'] == 2){ //Devolución
                 //Nadamas hace el registro general
                 $data = array(
                     "idLote" => $idLote,
@@ -3314,7 +3304,7 @@ class Contraloria extends CI_Controller {
                     "id_cat_proceso" => 109,
                     "id_proceso" => 1,
                     "proceso_realizado" => 0,
-                    "justificacion_liberacion" => $_POST['justificacion'],
+                    "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
                     "estatus" => 1,
                     "modificado_por" => $this->session->userdata('id_usuario'),
                     "fecha_modificacion" => $fecha,
@@ -3339,7 +3329,6 @@ class Contraloria extends CI_Controller {
         }
     }
 
-
     public function get_tipo_liberaciones() {
         $response = $this->Contraloria_model->get_tipo_liberaciones();
         echo json_encode($response);
@@ -3351,12 +3340,12 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function historial_liberaciones() {//VISTA NUEVA
+    public function historial_liberaciones() {
         $this->load->view('template/header');
         $this->load->view("contraloria/historial_liberaciones_view");
     }
 
-    public function get_historial_liberaciones() //FUNCIÓN QUE TRAE Y MUESTRA DATOS EN LA VISTA
+    public function get_historial_liberaciones() 
     {
         $data['data'] = $this->Contraloria_model->get_historial_liberaciones()->result_array();
         echo json_encode($data);
@@ -3385,10 +3374,15 @@ class Contraloria extends CI_Controller {
         $data["id_cat_proceso"] = 109;
 
         if ($rol == 33) {
-            $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; //1
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; 
         }
         if ($rol == 2) {
-            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; //2
+            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; 
+
+            $replace = [",","$"];
+            $precio = str_replace($replace,"",$_POST['costoM2']);
+
+            $this->actualizar_precio($_POST['idLote'], $precio);
         }
         if ($rol == 12) {
             if ($_POST['accion'] == 1 || $_POST['accion'] == 3) {
@@ -3401,8 +3395,8 @@ class Contraloria extends CI_Controller {
                 $dataLiberacion["tipo"] = $_POST['tipo'];
                 $dataLiberacion["nombreLote"] = $_POST['nombreLote'];
                 $dataLiberacion["precio"] = $_POST['precio'];
-                $dataLiberacion["activeLE"] = $_POST['activeLE']; //PREGUNTAR SI SE USAN
-                $dataLiberacion["activeLP"] = $_POST['activeLP']; //PREGUNTAR SI SE USAN
+                $dataLiberacion["activeLE"] = $_POST['activeLE']; 
+                $dataLiberacion["activeLP"] = $_POST['activeLP']; 
                 $dataLiberacion["clausulas"] = $_POST['clausulas'];
                 
                 $resultado = $this->caja_modules($dataLiberacion);
@@ -3421,21 +3415,13 @@ class Contraloria extends CI_Controller {
         echo json_encode($resultado);
     }
 
-    public function actualizar_precio()
-    {
-        if(isset($_POST) && !empty($_POST))
-        {
-            $idLote = $_POST['idLote'];
-            $precio = $_POST['costoM2'];
-            
+    public function actualizar_precio($idLote, $precio)
+    {       
             $data = array(
                 "precio" => $precio,
             );
             $response=$this->General_model->updateRecord('lotes', $data, 'idLote', $idLote);
-            echo json_encode($response);
-        }else{
-            echo json_encode(array());
-        }
+            return $response;
     }
 
     function caja_modules($data) {
@@ -3446,8 +3432,8 @@ class Contraloria extends CI_Controller {
         $datos["idCondominio"] = $data['idCondominio'];
         $datos["nombreLote"] = $data['nombreLote'];
         $datos["precio"] = $data['precio'];
-        $datos["activeLE"] = $data['activeLE']; //PREGUNTAR SI SE USAN
-        $datos["activeLP"] = $data['activeLP']; //PREGUNTAR SI SE USAN
+        $datos["activeLE"] = $data['activeLE']; 
+        $datos["activeLP"] = $data['activeLP']; 
         $datos["comentarioLiberacion"] = 'LIBERADO';
         $datos["observacionLiberacion"] = 'LIBERADO POR CORREO';
         $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
@@ -3468,7 +3454,22 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    
+    public function lotes_contratados() {
+        $this->load->view('template/header');
+        $this->load->view("contraloria/lotes_contratados_view");
+    }
+
+    public function get_lotes_contratados()
+    {
+        $data['data'] = $this->Contraloria_model->get_lotes_contratados()->result_array();
+        echo json_encode($data);
+    }
+
+    public function actualiza_lotes_apartados(){
+        $data= $this->Contraloria_model->actualiza_lotes_apartados($_POST['idLote'], $_POST['isProrroga']);
+        echo json_encode($data);
+    }
+
     public function consultClients() {
         $this->validateSession();
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
@@ -3487,5 +3488,4 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
-
 }
