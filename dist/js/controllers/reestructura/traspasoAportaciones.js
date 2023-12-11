@@ -1,16 +1,16 @@
 let titulosTabla = [];
-$('#reubicacionClientes thead tr:eq(0) th').each(function (i) {
+$('#tablaTraspasoAportaciones thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($('#reubicacionClientes').DataTable().column(i).search() !== this.value)
-            $('#reubicacionClientes').DataTable().column(i).search(this.value).draw();
+        if ($('#tablaTraspasoAportaciones').DataTable().column(i).search() !== this.value)
+            $('#tablaTraspasoAportaciones').DataTable().column(i).search(this.value).draw();
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-reubicacionClientes = $('#reubicacionClientes').DataTable({
+tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -82,7 +82,15 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         { data: "idLoteDestino" },
         {
             data: function (d) {
-                return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas btn-traspaso"
+                let nombreLote = d.nombreLoteDestino;
+                let baseCarpeta = 'static/documentos/contratacion-reubicacion';
+                let linkCorrida = general_base_url+baseCarpeta+'/'+nombreLote+'/'+d.corrida;
+                let corridaButton = '<a class="btn-data btn-green" href="'+linkCorrida+'" target="_blank"><i class="fas fa-file-excel-o"></i></a>';
+
+
+                return `<div class="d-flex justify-center">
+                ${corridaButton}
+                <button class="btn-data btn-blueMaderas btn-traspaso"
                 data-toggle="tooltip" 
                 data-placement="left"
                 title="Confirmar traspaso / Editar cantidad traspasada"
@@ -113,7 +121,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
 
 $(document).on('click', '.btn-traspaso', function () {
     const tr = $(this).closest('tr');
-    const row = $('#reubicacionClientes').DataTable().row(tr);
+    const row = $('#tablaTraspasoAportaciones').DataTable().row(tr);
     $("#idLoteOrigen").val(row.data().idLoteOrigen);
     $("#idLoteDestino").val(row.data().idLoteDestino);
     $("#nombreLoteDestino").val(row.data().nombreLoteDestino);
@@ -166,7 +174,7 @@ $(document).on("click", "#guardarTraspaso", function (e) {
                 $("#guardarTraspaso").prop("disabled", false);
                 if (response) {
                     alerts.showNotification("top", "right", `La información ha sido capturada de manera exitosa.`, "success");
-                    $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                    $('#tablaTraspasoAportaciones').DataTable().ajax.reload(null, false);
                     $("#capturaTraspasoModal").modal("hide");
                 }
                 else

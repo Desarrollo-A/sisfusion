@@ -801,15 +801,17 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     public function getLiberacionesInformation($idCondominio) {
-        return $this->db->query("SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
+        return $this->db->query(" SELECT l.idLote, UPPER(l.nombreLote) nombreLote, l.referencia, 
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        cl.fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
-        (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion,
-        (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
+        cl.fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion, 
+        (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion, 
+        (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion, con.idResidencial, con.idCondominio, con.nombre, res.nombreResidencial, cl.id_cliente
         FROM lotes l
+		
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = $idCondominio
+        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = 164
+		INNER JOIN residenciales AS res ON con.idResidencial = res.idResidencial
         WHERE l.status = 1
         AND l.idLote NOT IN (
             SELECT idLote
@@ -821,10 +823,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 'N/A' nombreCliente,
                 '1900-01-01 00:00:00.000' fechaApartado, sl.nombre estatusContratacion, sl.color colorEstatusContratacion,
                 (CASE l.observacionContratoUrgente WHEN '1' THEN 'En proceso de liberación' ELSE 'Sin definir estatus' END) estatusLiberacion,
-                (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion
+                (CASE l.observacionContratoUrgente WHEN '1' THEN '28B463' ELSE '566573' END) colorEstatusLiberacion, con.idResidencial, con.idCondominio, con.nombre, res.nombreResidencial, cl.id_cliente
         FROM lotes l
+		
+		 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1
         INNER JOIN statuslote sl ON sl.idStatusLote = l.idStatusLote
-        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = $idCondominio
+        INNER JOIN condominios con ON con.idCondominio = l.idCondominio AND con.idCondominio = 164
+		INNER JOIN residenciales AS res ON con.idResidencial = res.idResidencial
         WHERE l.status = 1
         AND (l.idCliente IS NULL OR l.idCliente = 0)
         AND l.idLote NOT IN (
@@ -832,8 +837,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			FROM historial_liberacion_lotes AS hl
 			WHERE id_proceso <> 0 AND fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = hl.idLote)
         )
-        ORDER BY l.idLote; 
-        ");
+        ORDER BY l.idLote");
     }
 
     public function getInformation($beginDate, $endDate) {
@@ -1540,47 +1544,50 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
 
-        if ($rol == 17) {
-            $qry = "SELECT h.*, l.nombreLote, l.idCliente, l.precio, op.nombre AS estatus_proceso, 
+		if ($rol == 17) {
+            $qry = "SELECT h.*, hsd.idDocumento,l.nombreLote ,hsd.idDocumento, hsd.expediente, l.idCliente, l.precio, op.nombre AS estatus_proceso, 
             CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
             CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
-        FROM historial_liberacion_lotes h
-        INNER JOIN Lotes as l ON l.idLote = h.idLote 
-        INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
-        INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
-        LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
-        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
-        LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
-        WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
-        AND op.id_catalogo = 109;";
-        }
-
-        if ($rol == 33) {
-            $qry = "SELECT h.*, l.nombreLote, l.idCliente, l.precio, op.nombre as estatus_proceso, 
-            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
-            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
-        FROM historial_liberacion_lotes h
-        INNER JOIN Lotes as l ON l.idLote = h.idLote 
-        INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
-        INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
-        LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
-        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
-        LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
-        WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
-        AND op.id_catalogo = 109 AND (h.id_proceso = 1);";
-        }
-
-        if ($rol == 2) {
-            $qry = "SELECT h.*, l.nombreLote, l.idCliente, l.precio, op.nombre as estatus_proceso, 
-                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
-                CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
             FROM historial_liberacion_lotes h
             INNER JOIN Lotes as l ON l.idLote = h.idLote 
             INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
             INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
             LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
+            LEFT JOIN historial_documento hsd on hsd.idLote = l.idLote and hsd.tipo_doc = 51
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
+            WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
+            AND op.id_catalogo = 109;";
+        }
+
+        if ($rol == 33) {
+            $qry = "SELECT h.*, hsd.idDocumento,l.nombreLote ,hsd.idDocumento, hsd.expediente, l.idCliente, l.precio, op.nombre AS estatus_proceso, 
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
+            FROM historial_liberacion_lotes h
+            INNER JOIN Lotes as l ON l.idLote = h.idLote 
+            INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
+            INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
+            LEFT JOIN historial_documento hsd on hsd.idLote = l.idLote and hsd.tipo_doc = 51
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
+            WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
+            AND op.id_catalogo = 109 AND (h.id_proceso = 1);";
+        }
+
+        if ($rol == 2) {
+            $qry = "SELECT h.*, hsd.idDocumento,l.nombreLote ,hsd.idDocumento, hsd.expediente, l.idCliente, l.precio, op.nombre AS estatus_proceso, 
+            CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
+            FROM historial_liberacion_lotes h
+            INNER JOIN Lotes as l ON l.idLote = h.idLote 
+            INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
+            INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
+            LEFT JOIN historial_documento hsd on hsd.idLote = l.idLote and hsd.tipo_doc = 51
             INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
             INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
             LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
@@ -1590,21 +1597,21 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
 
         if ($rol == 12) {
-            $qry = "SELECT h.*, l.nombreLote, l.idCliente, l.precio, op.nombre as estatus_proceso, 
+            $qry = "SELECT h.*, hsd.idDocumento,l.nombreLote ,hsd.idDocumento, hsd.expediente, l.idCliente, l.precio, op.nombre AS estatus_proceso, 
             CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario, 
             CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, cond.tipo_lote, cl.nombre AS clausulas
-        FROM historial_liberacion_lotes h
-        INNER JOIN Lotes as l ON l.idLote = h.idLote 
-        INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
-        INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
-        LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
-        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
-        LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
-        WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
-        AND op.id_catalogo = 109 AND (h.id_proceso = 3);";
+            FROM historial_liberacion_lotes h
+            INNER JOIN Lotes as l ON l.idLote = h.idLote 
+            INNER JOIN usuarios AS u ON u.id_usuario = h.modificado_por
+            INNER JOIN opcs_x_cats AS op on op.id_opcion = h.id_proceso 
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente
+            LEFT JOIN historial_documento hsd on hsd.idLote = l.idLote and hsd.tipo_doc = 51
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
+            WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
+            AND op.id_catalogo = 109 AND (h.id_proceso = 3);";
         }
-
         return $this->db->query($qry);
     }
 
@@ -1786,5 +1793,49 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
     }
 
+    public function get_lotes_contratados() 
+    {   
+        $id_usuario = $this->session->userdata('id_usuario');
 
+        if($id_usuario == 2){
+            $qry ="	SELECT h.*, l.idLote, l.nombreLote, l.idCliente, l.prorroga,
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) AS nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, 
+            DATEDIFF(DAY, hl.fechaEstatus9, GETDATE()) - (DATEDIFF(WEEK, hl.fechaEstatus9, GETDATE()) * 2) AS dias_transcurridos, l.idStatusLote
+            FROM historial_liberacion h
+            INNER JOIN lotes AS l ON l.idLote = h.idLote
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente 
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) AS fechaEstatus9 FROM lotes WHERE idLote IN (SELECT idLote FROM lotes WHERE idStatusLote IN (1,3) AND idStatusContratacion = 9) 
+            AND status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl ON l.idLote = hl.idLote AND l.idCliente = hl.idCliente
+            WHERE l.idStatusLote IN (1,3) AND l.idStatusContratacion = 9";
+        }else{
+            $qry ="	SELECT h.*, l.idLote, l.nombreLote, l.idCliente, l.prorroga,
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) AS nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, 
+            DATEDIFF(DAY, hl.fechaEstatus9, GETDATE()) - (DATEDIFF(WEEK, hl.fechaEstatus9, GETDATE()) * 2) AS dias_transcurridos, l.idStatusLote
+            FROM historial_liberacion h
+            INNER JOIN lotes AS l ON l.idLote = h.idLote
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente 
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) AS fechaEstatus9 FROM lotes WHERE idLote IN (SELECT idLote FROM lotes WHERE idStatusLote IN (1,3) AND idStatusContratacion = 9) 
+            AND status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl ON l.idLote = hl.idLote AND l.idCliente = hl.idCliente
+            WHERE l.idStatusLote IN (1,3) AND l.idStatusContratacion = 9 AND res.id_subdirector = $id_usuario;";
+        }
+
+        return $this->db->query($qry);
+    }
+
+    public function actualiza_lotes_apartados($idLote, $isProrroga)
+    {
+        $stl = $isProrroga == 1 ? 1 : 3; 
+
+        $qry= "UPDATE lotes SET prorroga = $isProrroga, idStatusLote = $stl WHERE idLote = $idLote";
+
+        return $this->db->query($qry);
+    }
+
+    public function getFilename($idDocumento) {
+        return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
+    }
 }
