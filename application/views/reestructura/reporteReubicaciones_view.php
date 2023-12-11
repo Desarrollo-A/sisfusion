@@ -3,6 +3,7 @@
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
+        <?php include 'historialMovimientos.php' ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
