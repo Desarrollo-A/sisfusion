@@ -136,36 +136,7 @@
                                                     </select>
                                                 </div>
                                             </div> -->
-                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <div class="form-group">
-                                                                            <label for="proyecto">Mes</label>
-                                                            <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
-                                                                <?php
-                                                                    setlocale(LC_ALL, 'es_ES');
-                                                                    for ($i = 1; $i <= 12; $i++) {
-                                                                    $monthNum  = $i;
-                                                                    $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                                    $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                                    echo '<option value="' . $i . '">' . $monthName . '</option>';
-                                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                                    <div class="form-group">
-                                                                   <label>Año</label>
-                                                                   <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
-                                                                   <?php
-                                                                    setlocale(LC_ALL, 'es_ES');
-                                                                     for ($i = 2021; $i <= 2023; $i++) {
-                                                                     $yearName  = $i;
-                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                                    }
-                                                                    ?>
-                                                            </select>
-                                                        </div>
-                                            </div>
+                                              Z
                                         </div>
                                     </div>
                                 </div>
@@ -175,13 +146,15 @@
                                     <div class="form-group">
                                         <div class="table-responsive">
                                             <table class="table-striped table-hover"
-                                                   id="prestamos-table">
+                                                    id="prestamos-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID PAGO</th>
                                                         <th>ID PRÉSTAMO</th>
                                                         <th>USUARIO</th>
                                                         <th>PUESTO</th>
+                                                        <th>SEDE</th>
+                                                        <th>TIPO DESCUENTO</th>
+                                                        <th>ID PAGO</th>
                                                         <th>MONTO TOTAL</th>
                                                         <th>PAGADO</th>
                                                         <th>PENDIENTE</th>
@@ -189,8 +162,8 @@
                                                         <th>FECHA</th>
                                                         <th>COMENTARIOS</th>
                                                         <th>COMENTARIOS</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>TIPO DESCUENTO</th>
+                                                        <!-- <th>ESTATUS</th> -->
+                                                       
                                                         <th>OPCIONES</th>
                                                     </tr>
                                                 </thead>

@@ -3451,8 +3451,17 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior, $nuevo, $saldoNeo){
-        $cmd = "INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo', '$anterior', '$nuevo', $saldoNeo)";
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 'null' ){
+        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == '' ){
+            $anterior = null;
+            $nuevo = null;
+            $saldoNeo = $saldoNeo = null;
+        }else{
+            $anterior = $anterior;
+            $nuevo  = $nuevo;
+            $saldoNeo =  $saldoNeo;
+        }
+        $cmd = "INSERT INTO historial_log VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo', '$anterior', '$nuevo', $saldoNeo)";
         return (bool)($this->db->query($cmd));
     }
 

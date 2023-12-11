@@ -130,7 +130,7 @@ function createPrestamosDataTable(mes, anio) {
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,11,12],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11],
                     format: {
                         header: function (d, columnIndx) {
                             switch (columnIndx) {
@@ -166,98 +166,25 @@ function createPrestamosDataTable(mes, anio) {
         ordering: false,
         columns: [
             {
-                'name': 'ID PAGO',
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.id_pago_i+'</p>';
+                data: function( d ){
+                    return '<p class="m-0">' + d.id_prestamo + '</p>';
                 }
             },
             {
-                'width': "8%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.id_prestamo+'</p>';
+                data: function( d ){
+                    return '<p class="m-0">' + d.nombre_completo + '</p>';
                 }
             },
             {
-                'width': "20%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.nombre_completo+'</p>';
-                }
-            },
-            {
-                'width': "10%",
-                'data': function( d ){
+                //      
+                data: function( d ){
                     return '<p class="m-0">'+d.puesto+'</p>';
                 }
             },
             {
-                'width': "8%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.monto_prestado)+'</p>';
-                }
-            },
-            {
-                'width': "8%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.abono_neodata)+'</p>';
-                }
-            },
-            {
-                'width': "8%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.pendiente)+'</p>';
-                }
-            },
-            {
-                'width': "8%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.pago_individual)+'</p>';
-                }
-            },
-            {
-
-                visible: true ,
+                // sustituir por la sede
                 data: function( d ){
-                    return '<p class="m-0">'+d.fecha_creacion+'</p>';
-                }
-            },
-            {
-                'width': "8%",
-                'data': function( d){         
-                    
-                        return '<p class="m-0">'+d.comentario+'</p>';
-                    
-                }
-            },
-            {
-                'width': "8%",
-                'data': function( d){         
-                    const letras = d.comentario.split(" ");
-                    if(letras.length <= 4)
-                    {
-                        console.log(1) 
-                        return '<p class="m-0">'+d.comentario+'</p>';
-                    }else{
-                    
-                        console.log(2)
-                        return `<p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
-                        <a  data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
-                            <span class="lbl-blueMaderas">Ver más</span> 
-                        </a>
-
-                                <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                                <div class="card-body">
-                                ${d.comentario}
-                                </div>
-                                </div>
-                        `;
-                    }
-                }
-            },
-            {
-                'width': "5%",
-                'data': function(d) {
-                    return '<span class="label" style="background: #05A134;">PAGADO</span>';
+                    return '<p class="m-0">'+d.puesto+'</p>';
                 }
             },
             {
@@ -288,6 +215,89 @@ function createPrestamosDataTable(mes, anio) {
                 return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
                 }
             },
+            // {
+            //     'width': "8%",
+            //     'data': function( d ){
+            //         return '<p class="m-0">'+d.id_pago_i+'</p>';
+            //     }
+            // },
+
+            {
+                'width': "8%",
+                'data': function( d ){
+                    return '<p class="m-0">$'+formatMoney(d.monto_prestado)+'</p>';
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d ){
+                    return '<p class="m-0">$'+formatMoney(d.abono_neodata)+'</p>';
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d ){
+                    return '<p class="m-0">$'+formatMoney(d.pendiente)+'</p>';
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d ){
+                    return '<p class="m-0">$'+formatMoney(d.pago_individual)+'</p>';
+                }
+            },
+            {
+                'width': "5%",
+                'data': function(d) {
+                    return '<span class="label" style="background: #05A134;">PAGADO</span>';
+                }
+            },
+            {
+
+                visible: true ,
+                data: function( d ){
+                    return '<p class="m-0">'+d.fecha_creacion+'</p>';
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d){         
+                    const letras = d.comentario.split(" ");
+                    if(letras.length <= 4)
+                    {
+
+                        return '<p class="m-0">'+d.comentario+'</p>';
+                    }else{
+                        return `    
+                            <div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
+                                <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                                <a  data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                    onclick="esconder(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                    <span class="lbl-blueMaderas">Ver más</span> 
+                                    
+                                </a>
+                            </div>
+                            <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    ${d.comentario}</p> 
+                                    <a  data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                        onclick="mostrar(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                        <span class="lbl-blueMaderas">Ver menos</span> 
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+            },
+            {
+                'width': "8%",
+                'data': function( d){         
+                    
+                        return '<p class="m-0">'+d.comentario+'</p>';
+                    
+                }
+            },
             {
                 'width': "6%",
                 'orderable': false,
@@ -304,7 +314,7 @@ function createPrestamosDataTable(mes, anio) {
             }
         ],
         columnDefs: [{
-            targets: [ 9], visible: false,
+            targets: [ 12], visible: false,
             searchable: false,
         }],
         ajax: {
@@ -356,3 +366,16 @@ function formatMoney( n ) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
 
+function esconder(id){
+    // alert(1331)
+    $('#muestratexto'+id).addClass('hide');
+    // $('#muestratexto'+id).removeClass('hide');
+    
+}
+
+
+function mostrar(id){
+    // $('#muestratexto'+id).addClass('hide');
+    $('#muestratexto'+id).removeClass('hide');
+    
+}
