@@ -6,14 +6,15 @@ var getInfo6 = new Array(1);
 let titulosInventario = [];
 
 $('#tabla_ingresar_6 thead tr:eq(0) th').each(function (i) {
+  if (i != 0) {
     var title = $(this).text();
     titulosInventario.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($('#tabla_ingresar_6').DataTable().column(i).search() !== this.value) {
-            $('#tabla_ingresar_6').DataTable().column(i).search(this.value).draw();
-        }
+      if ($('#tabla_ingresar_6').DataTable().column(i).search() !== this.value)
+         $('#tabla_ingresar_6').DataTable().column(i).search(this.value).draw();
     });
+  }
 });
 
 $(document).ready(function () {
