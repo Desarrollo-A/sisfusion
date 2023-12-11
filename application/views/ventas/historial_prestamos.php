@@ -74,8 +74,7 @@
                                                     <th>PUESTO</th>
                                                     <th>SEDE</th>
                                                     <th>MONTO PRESTÁMO</th>
-                                                    <th>ABONADO</th>
-                                                    <th>MONTO DEL PAGO</th>
+                                                    <th>DESCONTADO</th>
                                                     <th>FECHA</th>
                                                     <th>COMENTARIOS</th>
                                                     <th>COMENTARIO OCULTO</th>
