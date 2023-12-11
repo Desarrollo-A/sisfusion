@@ -1,8 +1,6 @@
 $(document).ready(function () {
     $('#tabla_comisiones_liquidadas').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     let titulos_intxt = [];
@@ -16,10 +14,7 @@ $(document).ready(function () {
                 if ($('#tabla_comisiones_liquidadas').DataTable().column(i).search() !== this.value ) {
                     $('#tabla_comisiones_liquidadas').DataTable().column(i).search(this.value).draw();
                 }
-                var index = $('#tabla_comisiones_liquidadas').DataTable().rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = $('#tabla_comisiones_liquidadas').DataTable().rows({ selected: true, search: 'applied' }).indexes();
             });
         }
     });
@@ -29,23 +24,21 @@ $(document).ready(function () {
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Comisiones Liquidadas',
-                exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'Reporte Comisiones Liquidadas',
+            exportOptions: {
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,14],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         lengthMenu: [
@@ -61,29 +54,41 @@ $(document).ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [
-            {
-            "className": 'details-control',
-            "orderable": false,
-            "data" : null,
-            "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
-            },
-            {data: 'nombreResidencial'},
-            {data: 'nombreCondominio'},
-            { data: function (d) {
+        columns: [{
+        "className": 'details-control',
+        "orderable": false,
+        "data" : null,
+        "defaultContent": '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+        },
+        {
+            data: 'nombreResidencial'
+        },
+        {
+            data: 'nombreCondominio'
+        },
+        { 
+            data: function (d) {
                 if(d.id_cliente_reubicacion_2 >1 ) {
                     nombreLote =  d.nombreLoteReub;
                 } else{
                     nombreLote = d.nombreLote;
                 }
                 return nombreLote;
-            }},
-            {data: 'idLote'},
-            {data: 'nombreCliente'},
-            { data: function (d) {
-                    return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
-            }},
-            { data: function (d) {
+            }
+        },
+        {
+            data: 'idLote'
+        },
+        {
+            data: 'nombreCliente'
+        },
+        { 
+            data: function (d) {
+                return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span><br><span class="${d.colorProcesoCl}">${d.procesoCl}</span>`;
+            }
+        },
+        { 
+            data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
                     labelCompartida ='<span class="label lbl-yellow">Individual</span>';
@@ -91,8 +96,10 @@ $(document).ready(function () {
                     labelCompartida ='<span class="label lbl-orangeYellow">Compartida</span>';
                 }
                 return labelCompartida;
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 var labelStatus;
                 if(d.idStatusContratacion == 15) {
                     labelStatus ='<span class="label lbl-violetBoots">Contratado</span>';
@@ -100,8 +107,10 @@ $(document).ready(function () {
                     labelStatus ='<p class="m-0"><b>'+d.idStatusContratacion+'</b></p>';
                 }
                 return labelStatus;
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 var labelEstatus;
                 if(d.penalizacion == 1 && (d.bandera_penalizacion == 0 || d.bandera_penalizacion == 1) ){
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
@@ -120,18 +129,22 @@ $(document).ready(function () {
                 }
                 return labelEstatus;
             }},
-    
             { data: function (d) {
                 return formatMoney(d.abono_comisiones);;
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 return formatMoney(d.pendiente);;
-            }},
-
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 var rescisionLote;
                 var reactivo;
                 rescisionLote = '';
@@ -152,10 +165,11 @@ $(document).ready(function () {
                     } 
                 }
                 return rescisionLote+reactivo;
-            }},
-            { data: function (d) {
+            }
+        },
+        { 
+            data: function (d) {
                 var fechaActualizacion;
-
                 if(d.fecha_sistema == null) {
                     fechaActualizacion ='<span class="label lbl-gray">Sin Definir</span>';
                 }else {
@@ -199,9 +213,8 @@ $(document).ready(function () {
                         }
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
-            }} 
- 
-        ],
+            }
+        }],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -253,11 +266,9 @@ $(document).ready(function () {
         plan_comision = $(this).attr("data-plan");
         descripcion_plan = $(this).attr("data-descplan");
         tipo_venta = $(this).attr("data-tipov");
-
         ooamDispersion = $(this).attr("data-ooam");
-
-
         bandera_penalizacion = $(this).attr("data-banderaPenalizacion");
+
         if(parseFloat(totalNeto2) > 0){
             $("#modal_NEODATA .modal-body").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
@@ -295,8 +306,7 @@ $(document).ready(function () {
                                     cadena = `<h4>Bonificación: <b>${formatMoney(0)}</b></h4>`;
                                 }
                                 $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio del lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
-                                <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
-                                </div>`);
+                                <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div></div>`);
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
                                     $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                     let contador=0;
@@ -353,11 +363,9 @@ $(document).ready(function () {
                                             }
                                         }
                                         if( (parseFloat(saldo) + parseFloat(v.abono_pagado)) > (parseFloat(v.comision_total)+0.5 )){
-                                            //ENTRA AQUI AL CERO
                                             saldo = 0;
                                         }
-                                        $("#modal_NEODATA .modal-body").append(`
-                                        <div class="row">
+                                        $("#modal_NEODATA .modal-body").append(`<div class="row">
                                             <div class="col-md-3 ">
                                                 <label class="control-label labelNombre hide">USUARIO</label>
                                                 <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style=" font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
@@ -408,14 +416,12 @@ $(document).ready(function () {
                         }
                 }  
                 else{
-                    //QUERY SIN RESULTADOS
                     $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><b>No se encontró esta referencia en NEODATA de '+row.data().nombreLote+'.</b></h3><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12 d-flex justify-center"><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></div> </div>');
                 }
-            }); //FIN getStatusNeodata
-            
+            });
             $("#modal_NEODATA").modal();
         }
-    }); //FIN VERIFY_NEODATA
+    });
 });
 
 jQuery(document).ready(function(){
@@ -449,26 +455,21 @@ function showDetailModal(idPlan) {
             $('#detalle-plan-modal').modal();
             $('#detalle-tabla-div').hide();
             const roles = data.comisiones;
-            $('#detalle-tabla-div').append(`
-            <div class="row subBoxDetail" id="modalInformation">
+            $('#detalle-tabla-div').append(`<div class="row subBoxDetail" id="modalInformation">
                 <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div> 
-                <div class="prueba"></div>
-            `)
+                <div class="prueba"></div>`)
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#detalle-tabla-div .prueba').append(`
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                    $('#detalle-tabla-div .prueba').append(`<div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
                     <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
-                    `);
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>`);
                 }
                 
             });
-            $('#detalle-tabla-div').append(`
-            </div>`)
+            $('#detalle-tabla-div').append(`</div>`)
             $('#detalle-tabla-div').show();
             $('#spiner-loader').addClass('hide');
         },
@@ -480,7 +481,7 @@ function showDetailModal(idPlan) {
 }
 
 function responsive(maxWidth) {
-    if (maxWidth.matches ) { //true mayor 991
+    if (maxWidth.matches ) {
         $('.labelNombre').removeClass('hide');
         $('.labelPorcentaje').removeClass('hide');
         $('.labelTC').removeClass('hide');
@@ -488,7 +489,7 @@ function responsive(maxWidth) {
         $('.labelPendiente').removeClass('hide');
         $('.labelDisponible').removeClass('hide');
         $('.rowTitulos').addClass('hide');
-    } else { //false menor 991
+    } else { 
         $('.labelNombre').addClass('hide');
         $('.labelPorcentaje').addClass('hide');
         $('.labelTC').addClass('hide');

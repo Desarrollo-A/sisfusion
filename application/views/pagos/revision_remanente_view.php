@@ -107,11 +107,17 @@
                                                                         <th>PAGADO POR EL CLIENTE</th>
                                                                         <th>TOTAL A PAGAR</th>
                                                                         <th>TIPO DE VENTA</th>
+                                                                        <th>PLAN DE VENTA</th>
+                                                                        <th>PORCENTAJE</th>
+                                                                        <th>FECHA APARTADO</th>
+                                                                        <th>SEDE</th>
                                                                         <th>USUARIO</th>
+                                                                        <th>ESTATUS</th>
                                                                         <th>PUESTO</th>
+                                                                        <th>CÓDIGO POSTAL</th>
                                                                         <th>FECHA DE ENVÍO</th>
                                                                         <th>ACCIONES</th>
-                                                                    </tr>
+                                                                    </tr> 
                                                                 </thead>
                                                             </table>
                                                         </div>

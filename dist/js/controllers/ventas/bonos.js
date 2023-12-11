@@ -13,21 +13,21 @@ $("#form_bonos").on('submit', function(e){
         success: function(data) {
         if (data == 1) {
             $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            $('#miModalBonos').modal('hide');
+            $('#formato_bonos').modal('hide');
             alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
             document.getElementById("form_bonos").reset();
         } else if(data == 2) {
             $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            $('#miModalBonos').modal('hide');
+            $('#formato_bonos').modal('hide');
             alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
         }else if(data == 3){
             $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            $('#miModalBonos').modal('hide');
+            $('#formato_bonos').modal('hide');
             alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
         }
         },
         error: function(){
-        $('#miModalBonos').modal('hide');
+        $('#formato_bonos').modal('hide');
         alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
@@ -151,10 +151,10 @@ $("#tabla_bonos").ready( function(){
         {
             "data": function(d) {
                 if(parseFloat(d.pago) == parseFloat(d.impuesto1)){
-                return '<p class="m-0"><b>0%</b></p>';
+                    return '<p class="m-0"><b>0%</b></p>';
                 }
                 else{
-                return '<p class="m-0"><b>'+parseFloat(d.impuesto)+'%</b></p>';
+                    return '<p class="m-0"><b>'+parseFloat(d.impuesto)+'%</b></p>';
                 }
             }
         },
@@ -177,13 +177,21 @@ $("#tabla_bonos").ready( function(){
         {
             "orderable": false,
             "data": function( d ){
+                let btns = '';
+
+                const BTN_HISBON = `<button class="btn-data btn-gray consulta_abonos" value="${d.id_bono},${d.nombre}"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="HISTORIAL">bar_chart</i></button>`;
+                const BTN_ABOBON = `<button class="btn-data btn-green abonar" value="${d.id_bono}, ${d.pago}, ${d.id_usuario}, ${d.nombre}" data-toggle="tooltip" data-placement="top" title="ABONAR"><i class="fas fa-dollar-sign"></i></button>`;
+                const BTN_ELIBON = `<button class="btn-data btn-warning btn-delete" value="${d.id_bono}" data-toggle="tooltip" data-placement="top" title="ELIMINAR"><i class="fas fa-trash"></i></button></div>`;
+
                 if(d.estatus==1){
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-gray consulta_abonos" value="'+d.id_bono+','+ d.nombre+'"><i class="material-icons" data-toggle="tooltip" data-placement="left" title="HISTORIAL">bar_chart</i></button>'
-                    +'<button class="btn-data btn-green abonar" value="'+d.id_bono+','+d.pago+','+d.id_usuario+','+d.nombre+'" data-toggle="tooltip" data-placement="left" title="ABONAR"><i class="fas fa-dollar-sign"></i></button>'
-                    +'<button class="btn-data btn-warning btn-delete" value="'+d.id_bono+'" data-toggle="tooltip" data-placement="left" title="ELIMINAR"><i class="fas fa-trash"></i></button></div>';
+                    btns += BTN_HISBON;
+                    btns += BTN_ABOBON;
+                    btns += BTN_ELIBON;
                 }else{
-                    return '<button class="btn-data btn-gray consulta_abonos" value="'+d.id_bono+'"><i class="material-icons" data-toggle="tooltip" data-placement="left" title="HISTORIAL">trash</i></button>';
+                    btns += BTN_HISBON;
                 }
+
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -298,9 +306,7 @@ $("#tabla_bonos").ready( function(){
     });
 
     $('#tabla_bonos').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_bonos tbody").on("click", ".abonar", function(){
@@ -317,29 +323,29 @@ $("#tabla_bonos").ready( function(){
 
     $("#tabla_bonos tbody").on("click", ".btn-delete", function(){    
         id = $(this).val();
-        $("#modal-delete .modal-body").html('');
+        $("#modal_eliminar .modal-body").html('');
         $.getJSON(general_base_url + "Comisiones/TieneAbonos/" + id).done(function(data) {
         if(data == 1){
-            $("#modal-delete .modal-body").append(`<center><img style='width: 80%; height: 80%;' src='${general_base_url}dist/img/error.gif'><p style='color:#9D9D9D;'><b>No se puede eliminar este bono</b>, ya cuenta con saldo abonado.</p></center>`);
+            $("#modal_eliminar .modal-body").append(`<center><b>No se puede eliminar este bono</b>, ya cuenta con saldo abonado.</p></center>`);
         }
         else{
-            $("#modal-delete .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este bono?</b><br>No tiene saldo abonado aún.</p></center><input type="hidden" id="id_bono" name="id_bono" value="${id}"><button class="btn btn-danger btn-simple" onclick="CloseModalDelete2();">Cerrar</button><input type="submit"  class="btn btn-primary" style="margin: 15px;" value="Aceptar"></form></div>`);
+            $("#modal_eliminar .modal-body").append(`<div id="borrarBono"><form id="form-delete"><center><p style='color:#9D9D9D;'><b>¿Está seguro de eliminar este bono?</b><br>No tiene saldo abonado aún.</p></center><input type="hidden" id="id_bono" name="id_bono" value="${id}"><button class="btn btn-danger btn-simple" onclick="CloseModalDelete2();">Cerrar</button><input type="submit"  class="btn btn-primary" style="margin: 15px;" value="Aceptar"></form></div>`);
         }
         });
-        $('#modal-delete').modal('show');
+        $('#modal_eliminar').modal('show');
     });
 });
 
-function filterFloat(evt,input){
+function filtro_historial(evt,input){
     var key = window.Event ? evt.which : evt.keyCode;   
     var chark = String.fromCharCode(key);
     var tempValue = input.value+chark;
     var isNumber = (key >= 48 && key <= 57);
     var isSpecial = (key == 8 || key == 13 || key == 0 ||  key == 46);
+
     if(isNumber || isSpecial){
         return filter(tempValue);
-    }
-    
+    }  
     return false;     
 }
 
@@ -361,7 +367,7 @@ function CloseModalDelete2(){
     a = document.getElementById('borrarBono');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal-delete").modal('toggle');  
+    $("#modal_eliminar").modal('toggle');  
 }
 
 $(document).on('submit','#form-delete', function(e){ 
@@ -406,22 +412,22 @@ $("#form_abono").on('submit', function(e){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-            $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            closeModalEng();
-            $('#modal_abono').modal('hide');
-            alerts.showNotification("top", "right", "Abono registrado con éxito.", "success");
-            document.getElementById("form_abono").reset(); 
+                $('#tabla_bonos').DataTable().ajax.reload(null, false);
+                closeModalEng();
+                $('#modal_abono').modal('hide');
+                alerts.showNotification("top", "right", "Abono registrado con éxito.", "success");
+                document.getElementById("form_abono").reset(); 
             }
             else if(data == 2) {
-            $('#tabla_bonos').DataTable().ajax.reload(null, false);
-            closeModalEng();
-            $('#modal_abono').modal('hide');
-            alerts.showNotification("top", "right", "Pago liquidado.", "warning");
+                $('#tabla_bonos').DataTable().ajax.reload(null, false);
+                closeModalEng();
+                $('#modal_abono').modal('hide');
+                alerts.showNotification("top", "right", "Pago liquidado.", "warning");
             }
             else if(data == 3){
-            closeModalEng();
-            $('#modal_abono').modal('hide');
-            alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
+                closeModalEng();
+                $('#modal_abono').modal('hide');
+                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
             }
         },
         error: function(){
@@ -450,7 +456,7 @@ $("#roles").change(function() {
         }
 
         if(len<=0){
-        $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#usuarioid").selectpicker('refresh');
     }, 'json'); 
@@ -498,7 +504,7 @@ function verificar(){
 }
 
 function open_Mb(){
-    $("#miModalBonos").modal();   
+    $("#formato_bonos").modal();   
 }
 
 window.onload = function() {

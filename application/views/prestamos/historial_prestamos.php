@@ -5,27 +5,13 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade"
-             id="historial-modal"
-             tabindex="-1"
-             role="dialog"
-             aria-labelledby="myModalLabel"
-             aria-hidden="true"
-             data-backdrop="static"
-             data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable"
-                 role="document">
+        <div class="modal fade" id="historial-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
                         <h4 class="modal-title">Historial del pago</h4>
                     </div>
-
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -42,11 +28,9 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
-                            <div class="card-header card-header-icon"
-                                 data-background-color="goldMaderas">
+                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-book fa-2x"></i>
                             </div>
-
                             <div class="card-content">
                                 <div class="encabezadoBox">
                                     <h3 class="card-title center-align" >Historial de préstamos</h3>
@@ -54,7 +38,6 @@
                                         (Historial de todos los préstamos)
                                     </p>
                                 </div>
-
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
@@ -65,105 +48,62 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
-                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0"
-                                                           for="roles">Puesto</label>
-                                                    <select class="selectpicker select-gral"
-                                                            name="roles"
-                                                            id="roles"
-                                                            required>
-                                                        <option value=""
-                                                                disabled
-                                                                selected>
-                                                            Selecciona un rol
-                                                        </option>
-                                                        <option value="7">Asesor</option>
-                                                        <option value="9">Coordinador</option>
-                                                        <option value="3">Gerente</option>
-                                                        <option value="2">Sub director</option>
+                                                    <label for="proyecto">Mes</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
+                                                        <?php
+                                                            setlocale(LC_ALL, 'es_ES');
+                                                            for ($i = 1; $i <= 12; $i++) {
+                                                                $monthNum  = $i;
+                                                                $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                                $monthName = strftime('%B', $dateObj->getTimestamp());
+                                                                echo '<option value="' . $i . '">' . $monthName . '</option>';
+                                                            }
+                                                        ?>
                                                     </select>
                                                 </div>
-                                            </div> -->
-
-                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0"
-                                                           for="users">Usuario</label>
-                                                    <select class="selectpicker select-gral"
-                                                            id="users"
-                                                            name="users"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="SELECCIONA UN USUARIO"
-                                                            data-size="7"
-                                                            required>
+                                                    <label>Año</label>
+                                                    <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                    <?php
+                                                    setlocale(LC_ALL, 'es_ES');
+                                                    for ($i = 2021; $i <= 2022; $i++) {
+                                                        $yearName  = $i;
+                                                        echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                    }
+                                                    ?>
                                                     </select>
                                                 </div>
-                                            </div> -->
-                                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                        <div class="form-group">
-                                                                            <label for="proyecto">Mes</label>
-                                                            <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
-                                                                <?php
-                                                                    setlocale(LC_ALL, 'es_ES');
-                                                                    for ($i = 1; $i <= 12; $i++) {
-                                                                    $monthNum  = $i;
-                                                                    $dateObj   = DateTime::createFromFormat('!m', $monthNum);
-                                                                    $monthName = strftime('%B', $dateObj->getTimestamp());
-                                                                    echo '<option value="' . $i . '">' . $monthName . '</option>';
-                                                                                    }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                                    <div class="form-group">
-                                                                   <label>Año</label>
-                                                                   <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
-                                                                   <?php
-                                                                    setlocale(LC_ALL, 'es_ES');
-                                                                     for ($i = 2021; $i <= 2022; $i++) {
-                                                                     $yearName  = $i;
-                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                                    }
-                                                                    ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- END TOOLBAR -->
-
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table class="table-striped table-hover"
-                                                   id="prestamos-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>ID PAGO</th>
-                                                        <th>ID PRÉSTAMO</th>
-                                                        <th>USUARIO</th>
-                                                        <th>PUESTO</th>
-                                                        <th>LOTE</th>
-                                                        <th>MONTO TOTAL</th>
-                                                        <th>PAGADO</th>
-                                                        <th>PENDIENTE</th>
-                                                        <th>PAGO INDIVUAL</th>
-                                                        <th>FECHA</th>
-                                                        <th>COMENTARIOS</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>TIPO DESCUENTO</th>
-                                                        <th>OPCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <table class="table-striped table-hover" id="prestamos-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID PAGO</th>
+                                                    <th>ID PRÉSTAMO</th>
+                                                    <th>USUARIO</th>
+                                                    <th>PUESTO</th>
+                                                    <th>LOTE</th>
+                                                    <th>MONTO TOTAL</th>
+                                                    <th>PAGADO</th>
+                                                    <th>PENDIENTE</th>
+                                                    <th>PAGO INDIVUAL</th>
+                                                    <th>FECHA</th>
+                                                    <th>COMENTARIOS</th>
+                                                    <th>ESTATUS</th>
+                                                    <th>TIPO DESCUENTO</th>
+                                                    <th>OPCIONES</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -178,19 +118,9 @@
 
     <?php $this->load->view('template/footer'); ?>
 
-    <!--DATATABLE BUTTONS DATA EXPORT-->
     <script>
         const baseUrl = '<?=base_url()?>';
         let prestamosTabla;
-
     </script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_prestamos.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-
 </body>
