@@ -115,7 +115,7 @@ class Documentacion_model extends CI_Model {
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         }
 
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) {
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {
             if ($eliminarArchivo) {
                 return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
             }
@@ -150,9 +150,9 @@ class Documentacion_model extends CI_Model {
     private function obtenerPathNuevoContratacion($nombreLote, $tipoContratacion): string
     {
         $pathBase = 'static/documentos/';
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {// Reubicación
 
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) { // Reubicación
-            return "{$pathBase}contratacion-reubicacion/$nombreLote/";
+                return "{$pathBase}contratacion-reubicacion/$nombreLote/";
         }
 
         return $pathBase;
