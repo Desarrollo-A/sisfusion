@@ -24,7 +24,7 @@ class Reestructura_model extends CI_Model
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2) "; /* AND dxc2.flagProcesoContraloria = 0 */
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
-            $validacionAdicional = "AND lo.estatus_preproceso IN (3, 0, 1) AND u6.id_lider = $id_lider";
+            $validacionAdicional = "AND lo.estatus_preproceso IN (3, 0, 1, 2, 4, 5, 6) AND u6.id_lider = $id_lider";
         else if ($id_rol == 3 && $tipo == 2) // GERENTE && ES OOAM
             $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1) AND u6.id_lider = $id_usuario";
         else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
