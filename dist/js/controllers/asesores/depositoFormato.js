@@ -30,13 +30,9 @@ function validarCostos() {
     let costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));  
     let costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
     let tipoVenta = document.getElementById('tipo_venta').value;
-
-    // console.log('Costo por M2 Lista:', costoListaM2);
-    // console.log('Costo por M2 Final:', costoFinalM2);
-    // console.log("tipo_venta:", tipoVenta);
     
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
-        alerts.showNotification('top', 'right', 'El valor ingresado está vacío', 'info');
+        alerts.showNotification('top', 'right', 'Asegurate que el campo Precio por M2 Final tenga un valor', 'info');
         return;
     }
     const clienteInfo = obtenerCliente(cliente);
