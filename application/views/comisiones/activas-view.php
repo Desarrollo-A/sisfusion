@@ -11,7 +11,7 @@
                 z-index: 1041!important;
             }
         </style>
-
+        <!-- Modals -->
         <div class="modal fade modal-alertas" id="detenciones-modal" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -23,13 +23,16 @@
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="anterior" id="anterior">
                             <input type="hidden" name="saldoNeodata" id="saldoNeodata">
+                            
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
-                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" title="SELECCIONA UNA OPCIÓN" required>
-                                        <?php foreach($controversias as $controversia){ ?>
-                                            <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                        <?php } ?>
+                                    <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
+                                            <?php foreach($controversias as $controversia){ ?>
+                                                <?php if($controversia['id_opcion'] != 8 ){  ?>
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            
+                                            <?php }} ?>
                                     </select>
                                 </div>
                             </div>
@@ -51,12 +54,13 @@
             </div>
         </div>
 
-        <div class="modal fade" id="actualizarBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="actualizarBanderaForm" name="actualizarBanderaForm" method="post">
+                    <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
                         <div class="modal-header bg-red">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> 
+                                <i class="material-icons">clear</i></button>
                         </div>
                         <div class="modal-body" style="text-align: center;"></div>
                         <div class="modal-footer">
@@ -70,6 +74,7 @@
             </div>
         </div>
 
+        <!-- modal verifyNEODATA -->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -88,7 +93,8 @@
                 <div class="modal-content">
                     <div class="modal-body pb-0">
                         <div class="row">
-                            <div id="detalle-tabla-div"class="container-fluid"></div>
+                            <div id="detalle-tabla-div"class="container-fluid">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -97,6 +103,7 @@
                 </div>
             </div>
         </div>
+        <!-- modal -->
         
         <div class="content boxContent">
             <div class="container-fluid">
@@ -150,4 +157,12 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/activas.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 </body>

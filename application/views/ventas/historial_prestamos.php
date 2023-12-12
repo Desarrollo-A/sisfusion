@@ -75,6 +75,7 @@
                                                     <th>SEDE</th>
                                                     <th>MONTO PRESTÁMO</th>
                                                     <th>DESCONTADO</th>
+                                                    <th>No. #</th>
                                                     <th>FECHA</th>
                                                     <th>COMENTARIOS</th>
                                                     <th>COMENTARIO OCULTO</th>

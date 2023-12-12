@@ -251,7 +251,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
-    },
+    }
 });
 
 $(document).on('click', '.btn-reestructurar', function () {
@@ -1444,7 +1444,6 @@ const botonesAccionReubicacion = (d) => {
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}"
                             data-tipoEstatusRegreso="${d.tipo_estatus_regreso}">
                             ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
-                            
                         </button>`;
 
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
@@ -1586,8 +1585,6 @@ const botonesAccionReubicacion = (d) => {
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
         }else{
-            console.log('d.idLote retrurn II:', d.idLote);
-
             return (totalCorridas === totalCorridasRef && totalContratoFirmado==1)
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
@@ -1605,7 +1602,7 @@ const botonesAccionReubicacion = (d) => {
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
     return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
-    if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+    if (idEstatusPreproceso === 6 && id_rol_general == 7) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
