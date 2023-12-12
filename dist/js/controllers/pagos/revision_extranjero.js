@@ -1,3 +1,8 @@
+var tr;
+var tabla_extranjero ;
+var totaPago = 0;
+let titulos = [];
+
 $(document).ready(function() {
     $("#tabla_extranjero").prop("hidden", true);
     $.post(general_base_url+"Contratacion/lista_proyecto", function (data) {
@@ -5,151 +10,110 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#catalogoFactE").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#proyectoExtranjero").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogoFactE").selectpicker('refresh');
-        $("#tabla_extranjero").removeClass('hide');
+        $("#proyectoExtranjero").selectpicker('refresh');
     }, 'json');
 });
 
-$("#form_interes").submit( function(e) {
-    e.preventDefault();
-}).validate({
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
-        data.append("id_pago_i", id_pago_i);
-        $.ajax({
-            url: general_base_url + "Pagos/despausar_solicitud/",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-            method: 'POST',
-            type: 'POST',
-            success: function(data){
-                if( data[0] ){
-                    $("#modal_nuevas").modal('toggle' );
-                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
-                    setTimeout(function() {
-                        tabla_extranjero2.ajax.reload();
-                    }, 3000);
-                }
-                else{
-                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                }
-            },error: function( ){
-                alert("ERROR EN EL SISTEMA");
-            }
-        });
-    }
-});
-
-$('#catalogoFactE').change(function(ruta){
-    residencial = $('#catalogoFactE').val();
-    $("#condominioFactE").empty().selectpicker('refresh');
+$('#proyectoExtranjero').change(function(){
+residencial = $('#proyectoExtranjero').val();
+$("#condominioExtranjero").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos/getCondominioDesc/'+residencial,
         type: 'post',
         dataType: 'json',
         success:function(response){
             var len = response.length;
-            for( var i = 0; i<len; i++){
+            for( var i = 0; i<len; i++)
+            {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#condominioFactE").append($('<option>').val(id).text(name));
+                $("#condominioExtranjero").append($('<option>').val(id).text(name));
             }
-            $("#condominioFactE").selectpicker('refresh');
+            $("#condominioExtranjero").selectpicker('refresh');
         }
     });
 });
 
-$('#catalogoFactE').change(function(ruta){
-    proyecto = $('#catalogoFactE').val();
-    condominio = $('#condominioFactE').val();
+$('#proyectoExtranjero').change(function(){
+    proyecto = $('#proyectoExtranjero').val();
+    condominio = $('#condominioExtranjero').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getDataExtranjero(proyecto, condominio);
 });
 
-$('#condominioFactE').change(function(ruta){
-    proyecto = $('#catalogoFactE').val();
-    condominio = $('#condominioFactE').val();
+$('#condominioExtranjero').change(function(){
+    proyecto = $('#proyectoExtranjero').val();
+    condominio = $('#condominioExtranjero').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getDataExtranjero(proyecto, condominio);
 });
 
-var tr;
-var totaPen = 0;
-let titulos = [];
-
-$('#tabla_extranjero thead tr:eq(0) th').each( function (i) {
+$('#tabla_extranjero thead tr:eq(0) th').each(function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $('input', this).on('keyup change', function() {
-            if (tabla_extranjero2.column(i).search() !== this.value) {
-                tabla_extranjero2.column(i).search(this.value).draw();
-                var total = 0;
-                var index = tabla_extranjero2.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_extranjero2.rows(index).data();
-                $.each(data, function(i, v) { total += parseFloat(v.impuesto); });
-                document.getElementById("totpagarextranjero").textcontent = formatMoney(numberTwoDecimal(total));
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $( 'input', this ).on('keyup change', function () {
+            if ($('#tabla_extranjero').DataTable().column(i).search() !== this.value ) {
+                $('#tabla_extranjero').DataTable().column(i).search(this.value).draw();
             }
         });
-    }
-    else {
+    }else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getDataExtranjero(proyecto, condominio){
+    
     $('#tabla_extranjero').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("totpagarextranjero").textContent =to;
+        document.getElementById("disponibleExtranjero").textContent = to;
     });
+    
 
     $("#tabla_extranjero").prop("hidden", false);
-    tabla_extranjero2 = $("#tabla_extranjero").DataTable({
+    tabla_extranjero = $("#tabla_extranjero").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
         buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'EXTRANJERO_CONTRALORÍA_SISTEMA_COMISIONES',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx - 1] + ' ';
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title:'Comisiones Extranjero - Revisión Contraloría',
+                exportOptions: {
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx -1] + ' ';
+                        }
                     }
-                }
+                },
             },
-        },
-        {
+            {
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function() {
-                if ($('input[name="idTQ[]"]:checked').length > 0) {
+                if ($('input[name="idPagoExtranjero[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_extranjero2.$('input[name="idTQ[]"]:checked')).map(function() {
+                    var idcomision = $(tabla_extranjero.$('input[name="idPagoExtranjero[]"]:checked')).map(function() {
                         return this.value;
                     }).get();
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/acepto_internomex_remanente/',
+                        url : general_base_url + 'Pagos/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -159,11 +123,11 @@ function getAssimilatedCommissions(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#autorizarExtranjero").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                tabla_extranjero2.ajax.reload();
-                                var mensaje = "Comisiones de esquema <b>Factura extranjero</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                tabla_extranjero.ajax.reload();
+                                var mensaje = "Comisiones de esquema <b>extranjeros</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
@@ -177,14 +141,14 @@ function getAssimilatedCommissions(proyecto, condominio){
                         }
                     });
                 }else{
-                    alerts.showNotification("top", "right", "Favor de seleccionar una comision .", "warning");
+                    alerts.showNotification("top", "right", "Favor de seleccionar una comisión.", "warning");
                 }
             },
             attr: {
                 class: 'btn btn-azure',
+                style: 'position: relative;',
             }
-        }
-        ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -207,8 +171,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             data: function( d ){
                 return '<p class="m-0">'+d.proyecto+'</p>';
             }
-        },
-        {
+        },{
             data: function( d ){
                 return '<p class="m-0">'+d.condominio+'</p>';
             }
@@ -218,85 +181,113 @@ function getAssimilatedCommissions(proyecto, condominio){
                 return '<p class="m-0"><b>'+d.lote+'</b></p>';
             }
         },
+        
         {
             data: function( d ){
                 return '<p class="m-0">'+d.referencia+'</p>';
             }
         },
         {
-            data: function( d ){
-                if(d.precio_lote == "" || d.precio_lote == null || d.precio_lote == undefined)
-                    return '<p class="m-0"> $0.00 </p>';
+            data: function(d){
+                if( d.precio_lote == "" || d.precio_lote == null)
+                    return '<p class="m-0">$0.00</p>'
                 else
                     return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.precio_lote))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.empresa+'</p>';
+                return '<p class="m-0"><b>'+d.empresa+'</b></p>';
             }
         },
         {
             data: function( d ){
-                if(d.comision_total == "" || d.comision_total == null || d.comision_total == undefined)
-                    return '<p class="m-0"> $0.00 </p>';
+                if( d.comision_total == "" || d.comision_total == null)
+                    return '<p class="m-0">$0.00</p>'
                 else
                     return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
             data: function( d ){
-                if(d.pago_neodata == "" || d.pago_neodata == null || d.pago_neodata == undefined)
-                    return '<p class="m-0"> $0.00 </p>';
-                else    
+                if( d.pago_neodata == "" || d.pago_neodata == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
                     return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
             }
         },
         {
             data: function( d ){
-                if(d.impuesto == "" || d.impuesto == null || d.impuesto == undefined)
-                    return '<p class="m-0"> $0.00 </p>';
-                else  
+                if( d.impuesto == "" || d.impuesto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
                     return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {
             data: function( d ){
-                if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-                else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-            
+                return '<p class="m-0">'+d.tipo_venta+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                return '<p class="m-0">'+d.plan_descripcion+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                return '<p class="m-0">'+d.porcentaje_decimal+'%</p>';
             }
         },
         {
             data: function( d ){
-                if(d.fecha_creacion == null)
-                    return '<p class="m-0">SIN ESPECIFICAR</p>'
-                else
-                    return '<p class="m-0">'+d.fecha_creacion+'</p>';
-                
+                return '<p class="m-0">'+d.fecha_apartado+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.sede_nombre+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.usuario+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.estatus_usuario+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.codigo_postal+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                var BtnStats1;
+                BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
+                return BtnStats1;
             }
         },
         {
             "orderable": false,
             data: function( data ){
-                var BtnStats;
-                BtnStats = '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_extranjero" title="Detalles">' +'<i class="fas fa-info"></i></button>'+
-                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.id_pago_i+'" data-code="'+data.cbbtton+'" ' + 'class="btn-data btn-warning cambiar_estatus" title="Pausar solicitud">' + '<i class="fas fa-ban"></i></button>';
-                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+                let btns = '';
+
+                const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_extranjero" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+
+                btns += BTN_HISTORIAL;
+                btns += BTN_PAUSAR;
+
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -308,67 +299,65 @@ function getAssimilatedCommissions(proyecto, condominio){
             render: function (d, type, full, meta){
                 if(full.estatus == 4){
                     if(full.id_comision){
-                        return '<input type="checkbox" name="idTQ[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
-                    }
-                    else{
+                            return '<input type="checkbox" name="idPagoExtranjero[]" class="checkPagosIndividual" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                    }else{
                         return '';
                     }
-                }
-                else{
+                }else{
                     return '';
                 }
             },
-            select: {
-                style:    'os',
-                selector: 'td:first-child'
-            },
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasEContraloria/",
-            "type": "POST",
+            url: general_base_url + "Pagos/getDatosNuevasExContraloria/" ,
+            type: "POST",
             cache: false,
-            data : {
-                proyecto: proyecto,
-                condominio:condominio
+            data :{
+                proyecto : proyecto,
+                condominio : condominio,
             }
         },
+    });
+
+    $('#tabla_extranjero').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_extranjero tbody").on("click", ".consultar_logs_extranjero", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
+        $('#comments-list-extranjero').html('');
+        $('#nameLote').html('');
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
 
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-body">
-                <div role="tabpanel">
-                        <div id="nameLote"></div>
-                        <div id="nameLote"></div>
-                    </ul>
-                    <div id="nameLote"></div>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card card-plain">
-                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="comments-list-extranjero"></ul>
+                        <div role="tabpanel">
+                            <div id="nameLote"></div>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-extranjero"></ul>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
-            </div>`);
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                    </div>`);
         showModal();
 
-        $("#nameLote").append('<p class="text-center"><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $('#spiner-loader').removeClass('hide');
         $.getJSON(general_base_url+"Pagos/getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
@@ -390,41 +379,41 @@ function getAssimilatedCommissions(proyecto, condominio){
                 '  </div>\n' +
                 '</li>');
             });
-            $('#spiner-loader').addClass('hide');
+        $('#spiner-loader').addClass('hide');
         });
     });
 
     $('#tabla_extranjero').on('click', 'input', function() {
-        tr = $(this).closest('tr');
-        var row = tabla_extranjero2.row(tr).data();
-        if (row.pa == 0) {
-            row.pa = row.impuesto;
-            totaPen += parseFloat(row.pa);
-            tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
-        }
+        tr2 = $(this).closest('tr');
+        var row = tabla_extranjero.row(tr2).data();
+        if (row.monto == 0) {
+            row.monto = row.impuesto;
+            totaPago += parseFloat(row.monto);
+            tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+        } 
         else {
-            totaPen -= parseFloat(row.pa);
-            row.pa = 0;
+            totaPago -= parseFloat(row.monto);
+            row.monto = 0;
         }
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#autorizarExtranjero").html(formatMoney(numberTwoDecimal(totaPago)));
     });
 
     $("#tabla_extranjero tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_extranjero2.row( tr );
+        var row = tabla_extranjero.row( tr );
         id_pago_i = $(this).val();
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append(
+        $("#modalPausarExtranjero .modal-body").html("");
+        $("#modalPausarExtranjero .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
-                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p>'+
+                    '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
+                        '<i>'+row.data().usuario+'</i>?'+
+                    '</p>'+
                 '</div>'+
             '</div>'+
             '<div class="row">'+
                 '<div class="col-lg-12">'+
-                    '<input type="hidden" name="value_pago" value="1">'+
-                    '<input type="hidden" name="estatus" value="6">'+
-                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se va pausar nuevamente la solicitud"></input>'+
+                    '<input type="text" class="form-control input-gral observaciones" name="observaciones" required placeholder="Describe el motivo por el cual se pausara la solicitud"></input>'+
                 '</div>'+
             '</div>'+
             '<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">'+
@@ -434,204 +423,23 @@ function getAssimilatedCommissions(proyecto, condominio){
                     '<button type="submit" class="btn btn-primary" value="PAUSAR" id="btnPausar">PAUSAR</button>'+
                 '</div>'+
             '</div>'
-            );
-        $("#totpagarPen").html(formatMoney(0));
-        $("#all").prop('checked', false);
-        tabla_extranjero2.ajax.reload();
-        $("#modal_nuevas").modal();
+        );
+        const buttonPausar = document.getElementById('btnPausar');
+        buttonPausar.addEventListener('click', function handleClick() {
+            $("#autorizarExtranjero").html(formatMoney(0));
+        });
+        $("#modalPausarExtranjero").modal();
     });
 }
 
-$('#tabla_factura').ready(function () {
-    let titulosFactura = [];
-    $('#tabla_factura thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulosFactura.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $( 'input', this ).on('keyup change', function () {
-            if ($('#tabla_factura').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_factura').DataTable().column(i).search(this.value).draw();
-            }
-        });
-        $('[data-toggle="tooltip"]').tooltip();
-    })
-
-    $('#tabla_factura').on('xhr.dt', function (e, settings, json, xhr) {
-        let total = 0;
-        $.each(json.data, function (i, v) {
-            total += parseFloat(v.total);
-        });
-        document.getElementById('myText_proceso').textContent = `${formatMoney(numberTwoDecimal(total))}`;
-    });
-
-    $('#tabla_factura').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: "100%",
-        scrollX: true,
-        bAutoWidth:true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE COMPROBANTES FISCALES EXTRANJEROS',
-            exportOptions: {
-                columns: [0,1,2,3,4,5],
-                format: {
-                    header: function (d, columnIndex) {
-                        return ' '+titulosFactura[columnIndex] +' ';
-                    }
-                }
-            }
-        }],
-        pagingType: "full_numbers",
-        fixedHeader: true,
-        language: {
-            url: general_base_url+"/static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        destroy: true,
-        ordering: false,
-        columns: [{
-            data: function(d) {
-                return `<p class="m-0"><b>${d.id_usuario}</b></p>`;
-            }
-        },
-        {
-            data: function(d) {
-                return `<p class="m-0">${d.usuario}</p>`;
-            }
-        },
-        {
-            data: function (d) {
-                return `<p class="m-0">${formatMoney(numberTwoDecimal(d.total))}</p>`;
-            }
-        },
-        {
-            data: function (d) {
-                return `<p class="m-0">${d.forma_pago}</p>`;
-            }
-        },
-        {
-            data: function (d) {
-                return `<p class="m-0">${d.nacionalidad}</p>`;
-            }
-        },
-        {
-            data: function (d) {
-                return `<p class="m-0">${d.estatus_usuario}</p>`;
-            }
-        },
-        {
-            data: function (d) {
-                return `
-                    <div class="d-flex justify-center">
-                        <button data-usuario="${d.archivo_name}"
-                            class="btn-data btn-warning consultar-archivo"
-                            title="VER ARCHIVO">
-                                <i class="fas fa-file-pdf-o"></i>
-                        </button>
-                    </div>`;
-            }
-        }],
-        ajax: {
-            "url": general_base_url+"Pagos/getComprobantesExtranjero",
-            "type": "GET",
-            data: function(d) {}
-        },
-    });
-
-    $('#tabla_factura tbody').on('click', '.consultar-archivo', function () {
-        const $itself = $(this);
-        Shadowbox.open({
-            content: `
-                <div>
-                    <iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" 
-                        src="${general_base_url}static/documentos/extranjero/${$itself.attr('data-usuario')}">
-                    </iframe>
-                </div>`,
-            player: "html",
-            title: "Visualizando documento fiscal: " + $itself.attr('data-usuario'),
-            width: 985,
-            height: 660
-        });
-    });
-});
-
-$("#form_colaboradores").submit( function(e) {
+$("#formPausarExtranjero").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
-        $('#loader').removeClass('hidden');
         var data = new FormData( $(form)[0] );
-        let sumat=0;
-        let valor = parseFloat($('#pago_mktd').val()).toFixed(3);
-        let valor1 = parseFloat(valor-0.10);
-        let valor2 = parseFloat(valor)+0.010;
-    
-        for(let i=0;i<$('#cuantos').val();i++){
-            sumat += parseFloat($('#abono_marketing_'+i).val());
-        }
-        
-        let sumat2 =  parseFloat((sumat).toFixed(3));
-        document.getElementById('Sumto').innerHTML= ''+ parseFloat(sumat2.toFixed(3)) +'';
-        if(parseFloat(sumat2.toFixed(3)) < valor1){
-            alerts.showNotification("top", "right", "Falta dispersar", "warning");
-        }
-        else{
-            if(parseFloat(sumat2.toFixed(3)) >= valor1 && parseFloat(sumat2.toFixed(3)) <= valor2 ){
-                $.ajax({
-                    url: general_base_url + "Pagos/nueva_mktd_comision",
-                    data: data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    method: 'POST',
-                    type: 'POST',
-                    success: function(data){
-                        if(true){
-                            $('#loader').addClass('hidden');
-                            $("#modal_colaboradores").modal('toggle');
-                            plaza_2.ajax.reload();
-                            plaza_1.ajax.reload();
-                            alert("¡Se agregó con éxito!");
-                        }else{
-                            alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
-                            $('#loader').addClass('hidden');
-                        }
-                    },error: function( ){
-                        alert("ERROR EN EL SISTEMA");
-                    }
-                });
-            }
-            else if(parseFloat(sumat2.toFixed(3)) > valor1 && parseFloat(sumat2.toFixed(3)) > valor2 ){
-                alerts.showNotification("top", "right", "Cantidad excedida", "danger");
-            }
-        }
-    }
-});
-
-$("#form_MKTD").submit( function(e) {
-    e.preventDefault();        
-}).validate({
-    rules: {
-        'porcentajeUserMk[]':{
-            required: true,
-        }
-    },
-    messages: {
-        'porcentajeUserMk[]':{
-            required : "Dato requerido"
-        }
-    },
-    submitHandler: function( form ) {
-        var data = new FormData( $(form)[0] );
+        data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/save_new_mktd",
+            url: general_base_url + "Pagos/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -640,61 +448,59 @@ $("#form_MKTD").submit( function(e) {
             method: 'POST',
             type: 'POST',
             success: function(data){
-                if( data.resultado ){
-                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
-                        $("#modal_mktd").modal( 'toggle' );
+                if( data[0] ){
+                    $("#modalPausarExtranjero").modal('toggle' );
+                    alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
+                    setTimeout(function() {
+                        tabla_extranjero.ajax.reload();
+                    }, 3000);
                 }else{
-                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                    alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
-            },error: function(){
+            },error: function( ){
                 alert("ERROR EN EL SISTEMA");
             }
-        });   
+        });
     }
-}); 
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
 });
 
-$(document).on("click", ".individualCheck", function() {
-    totaPen = 0;
-    tabla_extranjero2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_extranjero2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_extranjero2.$('input[type="checkbox"]');
+$(document).on("click", ".checkPagosIndividual", function() {
+    totaPago = 0;
+    tabla_extranjero.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_extranjero.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_extranjero.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
-            row = tabla_extranjero2.row(tr).data();
-            totaPen += parseFloat(row.impuesto); 
+            row = tabla_extranjero.row(tr).data();
+            totaPago += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#autorizarExtranjero").html(formatMoney(numberTwoDecimal(totaPago)));
 });
-
+    
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_extranjero2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_extranjero.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
-            row = tabla_extranjero2.row(tr).data();
+            row = tabla_extranjero.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizarExtranjero").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_extranjero2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_extranjero.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#autorizarExtranjero").html(formatMoney(0));
     }
 }

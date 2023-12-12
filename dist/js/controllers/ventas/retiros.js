@@ -9,14 +9,14 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#directivo_resguardo").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(ruta) {
-    directivo = $('#filtro33').val();
+$('#directivo_resguardo').change(function(ruta) {
+    directivo = $('#directivo_resguardo').val();
     DescuentosxDirectivos(directivo);
     $("#spiner-loader").removeClass('hide');
     $("#tabla_descuentos").prop("hidden", false);
@@ -47,8 +47,8 @@ $("#form_descuentos").on('submit', function(e) {
                 $("#roles").selectpicker("refresh");
                 $('#usuarioid').val('default');
                 $("#usuarioid").selectpicker("refresh");
-                $('#filtro33').val('default');
-                $("#filtro33").selectpicker("refresh");
+                $('#directivo_resguardo').val('default');
+                $("#directivo_resguardo").selectpicker("refresh");
                 alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
             } else if (data == 2) {
                 $('#miModal').modal('hide');
@@ -72,31 +72,24 @@ $('#tabla_descuentos thead tr:eq(0) th').each(function(i) {
     titulos.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function() {
-
         if (tabla_nuevas.column(i).search() !== this.value) {
             tabla_nuevas.column(i).search(this.value).draw();
-            var total = 0;
-            var index = tabla_nuevas.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_nuevas.rows(index).data();
             $.each(data, function(i, v) {
             });
-            let to1 = 0;
         }
     });
 });
 
-
 function DescuentosxDirectivos(user) {
     let resto = 0;
     let total67 = 0;
-    $.post('getDisponbleResguardo/' + user, function(data) {
 
-        document.getElementById('totalp3').textContent = '';
+    $.post('getDisponbleResguardo/' + user, function(data) {
+        document.getElementById('total_disponible').textContent = '';
         let disponible = formatMoney(data.toFixed(3));
-        document.getElementById('totalp3').textContent = disponible;
+        document.getElementById('total_disponible').textContent = disponible;
         resto = 0;
         resto = data.toFixed(3);
     }, 'json');
@@ -109,23 +102,25 @@ function DescuentosxDirectivos(user) {
     }, 'json');
 
     $('#tabla_descuentos').on('xhr.dt', function(e, settings, json, xhr) {
-        document.getElementById('totalp2').textContent = '';
+        document.getElementById('total_aplicado').textContent = '';
         var total = 0;
         let sumaExtras=0;
         $.each(json.data, function(i, v) {
+
             if (v.estatus != 3 && v.estatus != 67) {
                 total += parseFloat(v.monto);
             }
+
             if(v.estatus == 67){
                 sumaExtras=sumaExtras +parseFloat(v.monto);
             }
         });
         let to = 0;
         to = formatMoney(total);
-        document.getElementById("totalp2").textContent = to;
+        document.getElementById("total_aplicado").textContent = to;
         let extra = 0;
         extra = formatMoney(sumaExtras);
-        document.getElementById("totalx").textContent = extra;
+        document.getElementById("total_extra").textContent = extra;
         let to2 = 0;
         to2 = parseFloat(resto) + parseFloat(total);
     });
@@ -189,6 +184,7 @@ function DescuentosxDirectivos(user) {
         },
         {
             "data": function(d) {
+
                 if (d.estatus == 1) {
                     return '<center><span class="label lbl-orange">ACTIVO</span><center>';
                 } else if (d.estatus == 3) {
@@ -216,19 +212,27 @@ function DescuentosxDirectivos(user) {
         {
             "orderable": false,
             "data": function(d) {
+
+                let btns = '';
+
+                const BTN_ACTRESS = `<button class="btn-data btn-sky btn-update" data-toggle="tooltip" data-placement="top" title="ACTUALIZAR INFORMACIÓN" value="${d.id_rc},${d.monto},${d.usuario}"><i class="fas fa-pencil-alt"></i></button>`;
+                const BTN_ELIREES = `<button class="btn-data btn-warning btn-delete" data-toggle="tooltip" data-placement="top" title="ELIMINAR" value="${d.id_rc},${d.monto},${d.usuario}" ><i class="fas fa-trash" ></i></button>`;
+                const BTN_INFREES = `<button class="btn-data btn-blueMaderas btn-log" data-toggle="tooltip" data-placement="top" title="DETALLE" value="${d.id_rc}"><i class="fas fa-info"></i></button>`;
+
                 if(id_rol_general != 17 ){
-                    return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}"><i class="fas fa-info"></i></button></div>`;
+                    btns += BTN_INFREES;
                 }else{
                     if (d.estatus == 1 || d.estatus == 67) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-warning btn-delete" data-toggle="tooltip" data-placement="top" title="ELIMINAR" value="${d.id_rc},${d.monto},${d.usuario}" ><i class="fas fa-trash" ></i></button>
-                        <button class="btn-data btn-sky btn-update" data-toggle="tooltip" data-placement="top" title="ACTUALIZAR INFORMACIÓN" value="${d.id_rc},${d.monto},${d.usuario}"><i class="fas fa-pencil-alt"></i></button>
-                        <button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}"><i class="fas fa-info"></i></button></div>`;
+                        btns += BTN_ELIREES;
+                        btns += BTN_ACTRESS;
+                        btns += BTN_INFREES;
                     } else if (d.estatus == 3 || d.estatus == 4) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+                        btns += BTN_INFREES;
                     } else if (d.estatus == 2) {
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-details-grey btn-log" data-toggle="tooltip" data-placement="top" title="HISTORIAL" value="${d.id_rc}" ><i class="fas fa-info"></i></button></div>`;
+                        btns += BTN_INFREES;
                     }
                 }
+                return `<div class="d-flex justify-center">${btns}</div>`;
             }
         }],
         columnDefs: [{
@@ -251,9 +255,7 @@ function DescuentosxDirectivos(user) {
     });
 
     $('#tabla_descuentos').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_descuentos tbody").on("click", ".btn-delete", function() {
@@ -266,60 +268,44 @@ function DescuentosxDirectivos(user) {
         $("#modal_nuevas").modal();
     });
 
-    $("#tabla_descuentos tbody").on("click", ".btn-log", function(e) {
+    $("#tabla_descuentos tbody").on("click", ".btn-log", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
         id_rc = $(this).val();
-        document.getElementsByClassName('modal_body').innerHTML = '';
-        $("#modal_log .modal-body").append("");
-        $("#modal_log .modal-body").html("");
-        $("#modal_log .modal-body").html("");
-        $("#modal_log .modal-body").append(`<h3><b>Historial</b></h3><br>`);
-        $("#modal_log .modal-body .timeline").html("");
-        $.post(general_base_url + "Comisiones/getHistoriRetiros/" + id_rc, function(data) {
-            var len = data.length;
-            let c = 0;
-            $("#modal_log .modal-body").append(`
-                <div class="row mt-5 mb-5">
-                <div class="col-md-12 offset-md-3 card-content scroll-styles" style="height: 350px; overflow: auto">
-                <ul class="timeline-3">`);
-            for (var i = 0; i < len; i++) {
-                if (c > 1) {
-                    break;
-                }
-                let fecha = data[i].fecha_creacion.substring(0, data[i].fecha_creacion.length - 4);
-                $("#modal_log .modal-body .timeline-3").append(`
-            <li>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                            <a><b>${data[i].usuario}</b></a><br>
+
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nombreLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comentariosAsimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="float-end text-right">
-                            <a>${fecha}</a>
-                        </div>
-                        <br>
-                        <div class="col-md-12">
-                            <p class="m-0"><b>  ${data[i].comentario} </b></p>
-                        </div>
-                        <h6>
-                        </h6>
                     </div>
                 </div>
-            </li>`);
-                if (i == len) {
-                    c = c + 1;
-                }
-            }
-            $("#modal_log .modal-body").append(`</ul>
-                </div>
-            </div><div class="text-right">
-            <button type="button" class="btn btn-danger btn-simple" onclick="cerrar();" data-dismiss="modal">Cerrar</button></div></p></div></div>
-            `);
-        }, 'json');
-        $("#modal_log").modal();
-    });
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
 
+        $("#nombreLote").append('<p><h5>HISTORIAL DESCUENTOS RESGUARDOS<b></b></h5></p>');
+        $.getJSON(general_base_url + "Comisiones/getHistoriRetiros/" + id_rc).done( function( data ){
+            $.each( data, function(i, v){
+                $("#comentariosAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_creacion + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
+            });
+        });
+    });
 
     $("#tabla_descuentos tbody").on("click", ".btn-update", function() {
         var tr = $(this).closest('tr');
@@ -337,13 +323,13 @@ function DescuentosxDirectivos(user) {
         $("#modal_nuevas .modal-header").append(`<h3><b>Actualizar Información</b></h3>`);
         $("#modal_nuevas .modal-body").append(`<div class="row"><div class="col-lg-12">
         <div class="form-group">
-        <label>Monto</label>
+        <label class="control-label">Monto</label>
         <input type="number" class="form-control input-gral" onblur="${funcion}" name="monto" id="monto" value="${row.data().monto}">
         <input type="hidden" id="userid" name="userid" value="${user}">
         </div>
         <div class="form-group">
         <input type="hidden" name='estatus' id="estatus" value='${row.data().estatus}'>
-        <label>Motivo</label>
+        <label class="control-label">Motivo</label>
         <textarea class="text-modal" id="conceptos" name="conceptos">${row.data().conceptos}</textarea>
         </div>
             <input type="hidden" name="id_descuento" id="id_descuento" value="${row.data().id_rc}"><input type="hidden" name="opcion" id="opcion" value="Actualizar"><br><div class="text-right"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button><input type="submit"  class="btn btn-primary" id="btnsub" value="Aceptar"></div></p></div></div>`);
@@ -369,6 +355,7 @@ function verificar2(resto, monto) {
 }
 
 function verificar67(total76,disponible, montoselect) {
+
 let  total67 =  replaceAll(total76, ',','');
 let  dato =  replaceAll(montoselect, ',','');
 let montoseleccionado = replaceAll(dato, '$','');
@@ -408,8 +395,8 @@ $("#form_aplicar").submit(function(e) {
                     setTimeout(function() {
                         tabla_nuevas.ajax.reload();
                         DescuentosxDirectivos(iduser);
-                        $('#filtro33').val('default');
-                        $("#filtro33").selectpicker("refresh");
+                        $('#directivo_resguardo').val('default');
+                        $("#directivo_resguardo").selectpicker("refresh");
                     }, 100);
                 } else {
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -441,8 +428,6 @@ $("#roles").change(function() {
         $("#usuarioid").selectpicker('refresh');
     }, 'json');
 });
-
-
 
 $("#usuarioid").change(function() {
     document.getElementById('monto1').value = '';
@@ -495,7 +480,6 @@ function verificar() {
             document.getElementById('btn_abonar').disabled = false;
         }
     }
-
 }
 
 function verificar3() {

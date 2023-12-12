@@ -74,6 +74,7 @@ $("#tabla_prestamos").ready(function() {
         {
             data: function(d) {
                 let abonado = d.n_p*d.pago;
+
                 if(abonado >= d.monto -.30 && abonado <= d.monto +.30){
                     abonado = d.monto;
                 }else{
@@ -85,6 +86,7 @@ $("#tabla_prestamos").ready(function() {
         {
             data: function(d) {
                 let pendiente = d.monto - (d.n_p*d.pago);
+
                 if(pendiente < 1){
                     pendiente = 0;
                 }else{
@@ -195,8 +197,7 @@ $("#tabla_prestamos").ready(function() {
             let monto = parseFloat(data[0].abono);
             let operacion = parseFloat(monto - ((impuesto/100)*monto));
             data[0].abono = operacion;
-            $("#modal_bonos .modal-body").append(`
-            <div class="row">
+            $("#modal_bonos .modal-body").append(`<div class="row">
                 <div class="ml-2">
                     <h6 class="m-0">PARA: <b>${nombre}</b></h6>
                 </div>
@@ -258,7 +259,7 @@ $("#tabla_prestamos").ready(function() {
         bono = $(this).val();
         var dat = bono.split(",");
         $("#modal_abono .modal-body").append(`
-        <div id="inputhidden">
+        <div class="text-center" id="inputhidden">
             <h6><em>¿Seguro que deseas autorizar el bono seleccionado de <b style="color:green;">${formatMoney(dat[1])}</em></b> ?</h6>
             <input type='hidden' name="id_abono" id="id_abono" value="${dat[0]}"><input type='hidden' name="pago" id="pago" value="${dat[1]}">
             <div class="row d-flex justify-end pr-2">
@@ -272,7 +273,6 @@ $("#tabla_prestamos").ready(function() {
     });
 });
 
-/**------------------------------------------------------------------TABLA REVISONES-------------------------------- */
 $("#tabla_bono_revision").ready(function() {
     let titulos = [];
     $('#tabla_bono_revision thead tr:eq(0) th').each(function(i) {
@@ -460,8 +460,7 @@ $("#tabla_bono_revision").ready(function() {
             let monto = parseFloat(data[0].abono);
             let operacion = parseFloat(monto - ((impuesto/100)*monto));
             data[0].abono = operacion;
-            $("#modal_bonos .modal-body").append(`
-            <div class="row">
+            $("#modal_bonos .modal-body").append(`<div class="row">
                 <div class="ml-2">
                     <h6 class="m-0">PARA: <b>${nombre}</b></h6>
                 </div>
@@ -475,8 +474,7 @@ $("#tabla_bono_revision").ready(function() {
                 <div class="col-md-6 m-0"><h6 class="m-0">Fecha: <b>${f[0]}</b></h6></div>
                 <div class="col-md-6 d-flex justify-end m-0"><span class="label label-danger" style="color:#${color}; background:#${color}18">${estatus}</span></h6></div>
             </div>`);
-            $("#modal_bonos .modal-body").append(`
-            <div role="tabpanel">
+            $("#modal_bonos .modal-body").append(`<div role="tabpanel">
                 <h5 class="text-center mt-4 mb-0"><b>BITÁCORA DE CAMBIOS</b></h5>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="changelogTab">
@@ -515,9 +513,8 @@ $("#tabla_bono_revision").ready(function() {
             $("#modal_bonos").modal();
         });
     });
-
 });
-/**---------------TABLA PAGADOS-------------------------------- */
+
 $("#tabla_bono_pagado").ready(function() {
     let titulos = [];
     $('#tabla_bono_pagado thead tr:eq(0) th').each(function(i) {
@@ -678,7 +675,7 @@ $("#tabla_bono_pagado").ready(function() {
         });
     });
 });
-/**---------------------------------TABLA PAGADOS-------------------------------- */
+
 $("#tabla_bono_otros").ready(function() {
     let titulos = [];
     $('#tabla_bono_otros thead tr:eq(0) th').each(function(i) {
@@ -849,14 +846,13 @@ $("#form_abono").on('submit', function(e) {
         processData: false,
         contentType: false,
         success: function(data) {
+
             if (data == 1) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#tabla_bono_revision').DataTable().ajax.reload(null, false);
-                
                 tabla_nuevas.ajax.reload();
                 closeModalEng();
                 alerts.showNotification("top", "right", "Abono autorizado con exito.", "success");
-            
                 document.getElementById("form_abono").reset();
             } else if (data == 2) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
@@ -878,10 +874,6 @@ $("#form_abono").on('submit', function(e) {
     });
 });
 
-$('body').tooltip({
-    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
-    trigger: 'hover',
-    container: 'body'
-}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+$('body').tooltip({ selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', trigger: 'hover', container: 'body' }).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });

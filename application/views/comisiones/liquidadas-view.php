@@ -11,56 +11,6 @@
                 z-index: 1041!important;
             }
         </style>
-        <div class="modal fade modal-alertas" id="detenciones-modal" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                    </div>
-                    <form method="post" class="row" id="detenidos-form" autocomplete="off">
-                        <div class="modal-body">
-                            <input type="hidden" name="id_pagoc" id="id-lote-detenido">
-                            <input type="hidden" name="statusLote" id="statusLote">
-                            <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
-                                </div>
-                            </div>
-                            <div class="col-lg-12">
-                                <div class="form-group label-floating">
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="myUpdateBanderaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form id="my_updatebandera_form" name="my_updatebandera_form" method="post">
-                        <div class="modal-header bg-red">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> <i class="material-icons">clear</i></button>
-                        </div>
-                        <div class="modal-body" style="text-align: center;"></div>
-                        <div class="modal-footer">
-                            <div class="col-lg-12">
-                                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="updateBandera" class="btn btn-primary">Registrar</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
@@ -110,9 +60,7 @@
                                     </div>
                                     <div class="toolbar">
                                         <div class="container-fluid">
-                                            <div class="row aligned-row">
-                                                
-                                            </div>
+                                            <div class="row aligned-row"></div>
                                         </div>
                                     </div>
                                     <div class="material-datatables">
@@ -131,7 +79,6 @@
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN DE VENTA</th>
                                                         <th>TOTAL</th>
-                                                        <!-- <th>TOTAL</th> -->
                                                         <th>PORCENTAJE</th>
                                                         <th>PENDIENTE</th>
                                                         <th>DETALLES</th>
@@ -152,9 +99,7 @@
                                     </div>
                                     <div class="toolbar">
                                         <div class="container-fluid">
-                                            <div class="row aligned-row">
-                                                
-                                            </div>
+                                            <div class="row aligned-row"></div>
                                         </div>
                                     </div>
                                     <div class="material-datatables">
@@ -169,7 +114,6 @@
                                                         <th>ID LOTE</th>
                                                         <th>CLIENTE</th>
                                                         <th>TIPO DE VENTA</th>
-                                                        <!-- <th>MODALIDAD</th> -->
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN DE VENTA</th>
                                                         <th>DETALLES</th>

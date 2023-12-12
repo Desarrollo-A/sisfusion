@@ -7,17 +7,17 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_pago").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyecto").selectpicker('refresh');
+        $("#catalogo_pago").selectpicker('refresh');
     }, 'json');
 });
 
-$('#proyecto').change( function(){
+$('#catalogo_pago').change( function(){
     $('#spiner-loader').removeClass('hide');
     index_proyecto = $(this).val();
     index_condominio = 0
-    $("#condominio").html("");
+    $("#condominio_pago").html("");
     $(document).ready(function(){
         $.post(general_base_url + "Contratacion/lista_condominio/"+index_proyecto, function(data) {
             var len = data.length;
@@ -25,20 +25,19 @@ $('#proyecto').change( function(){
             {
                 var id = data[i]['idCondominio'];
                 var name = data[i]['nombre'];
-                $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
+                $("#condominio_pago").append($('<option>').val(id).text(name.toUpperCase()));
             }
-            $("#condominio").selectpicker('refresh');
+            $("#condominio_pago").selectpicker('refresh');
         }, 'json');
     });
-    fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
+    comisionTablaSinPago(index_proyecto, index_condominio);
 });
 
-$('#condominio').change( function(){
-    index_proyecto = $('#proyecto').val();
+$('#condominio_pago').change( function(){
+    index_proyecto = $('#catalogo_pago').val();
     index_condominio = $(this).val();
-    fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
+    comisionTablaSinPago(index_proyecto, index_condominio);
 });
-
 
 var totaPen = 0;
 var tr;
@@ -56,8 +55,7 @@ $('#tabla_comisiones_sin_pago thead tr:eq(0) th').each( function (i) {
     $('[data-toggle="tooltip"]').tooltip();
     })
 
-
-function fillCommissionTableWithoutPayment (proyecto, condominio) {
+function comisionTablaSinPago (proyecto, condominio) {
     $("#tabla_comisiones_sin_pago").prop("hidden", false);
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",

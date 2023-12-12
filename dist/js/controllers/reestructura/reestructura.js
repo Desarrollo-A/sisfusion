@@ -9,7 +9,7 @@ $(document).ready(function () {
         }).join(',');
 
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-     
+    
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];            
@@ -400,7 +400,7 @@ function fillTable(index_proyecto) {
             { data: "comentarioReubicacion" },
             {
                 data: function (d) {
-                    if(d.idStatusLote ==  15) { // MJ: ESTÁ LIBERADO
+                    if(d.idStatusLote ==  15 || d.idStatusLote ==  16) { // MJ: ESTÁ LIBERADO
                         return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
