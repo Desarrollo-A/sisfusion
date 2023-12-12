@@ -95,6 +95,11 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
+                    return `<span class='label lbl-azure'>${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
                     if (d.idMovimiento == 4 || d.idMovimiento == 74 || d.idMovimiento == 93 || d.idMovimiento == 103)
                         return `<span class="label lbl-warning">CORRECIÓN</span>`;
                     else 
