@@ -16,7 +16,7 @@ class Descuentos extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
-    $this->load->model('Pagos_model');
+    $this->load->model('Descuentos_model');
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -40,4 +40,17 @@ class Descuentos extends CI_Controller
     }
 
 
+    public function panel_descuentos(){
+        $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
+        $this->load->view('template/header');
+        $this->load->view("descuentos/panel_descuentos", $datos);
+    }
+
+    public function lista_estatus_descuentos(){
+        echo json_encode($this->Comisiones_model->lista_estatus_descuentos()->result_array());
+    }
+
+    
+
+    
 }
