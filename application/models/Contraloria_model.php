@@ -978,6 +978,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $query->result_array();
     }
 
+    public function get_tipo_venta(){
+        return $this->db->query("SELECT * FROM tipo_venta WHERE status = 1");
+    }
+
     function get_sedes_lista(){
         return $this->db->query("SELECT * FROM sedes WHERE estatus = 1");
     }
