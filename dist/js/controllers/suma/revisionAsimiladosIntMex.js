@@ -1,12 +1,5 @@
 var totaPen = 0;
 
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
     $.post(general_base_url+"Suma/lista_roles", function (data) {
@@ -14,15 +7,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idRol'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#nuevas_asimildas").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#nuevas_asimildas").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(){
-    idRol = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#nuevas_asimildas').change(function(){
+    idRol = $('#nuevas_asimildas').val();
+    $("#usuario_asimildas").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + `Suma/lista_usuarios/${idRol}/3`,
         type: 'post',
@@ -32,16 +25,16 @@ $('#filtro33').change(function(){
             for( var i = 0; i<len; i++){
                 var id = response[i]['id_usuario'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#usuario_asimildas").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#usuario_asimildas").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro44').change( function() {
-    idRol = $('#filtro33').val();
-    idUsuario = $('#filtro44').val();
+$('#usuario_asimildas').change( function() {
+    idRol = $('#nuevas_asimildas').val();
+    idUsuario = $('#usuario_asimildas').val();
     if(idUsuario == '' || idUsuario == null || idUsuario == undefined){
         idUsuario = 0;
     }
@@ -63,7 +56,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-                document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
+                document.getElementById("total_asimilados").textContent = formatMoney(total);
             }
         });
     } 
@@ -77,7 +70,7 @@ $(document).on("click", ".individualCheck", function() {
     var row = tabla_asimilados.row(tr).data();
     if ($(this).prop('checked')) totaPen += parseFloat(row.impuesto);
     else totaPen -= parseFloat(row.impuesto);
-    $("#totpagarPen").html(formatMoney(totaPen));
+    $("#total_pendiente").html(formatMoney(totaPen));
 });
 
 function getAssimilatedCommissions(idRol, idUsuario){
@@ -87,7 +80,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(total);
-        document.getElementById("totpagarAsimilados").textContent = to;
+        document.getElementById("total_asimilados").textContent = to;
     });
     $("#tabla_asimilados").prop("hidden", false);
     tabla_asimilados = $("#tabla_asimilados").DataTable({
@@ -116,28 +109,20 @@ function getAssimilatedCommissions(idRol, idUsuario){
                             response = JSON.parse(data);
                             if(data) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#totpagarPen").html(formatMoney(0));
+                                $("#total_pendiente").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
                                 tabla_asimilados.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>");
+                                mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }
@@ -263,9 +248,7 @@ function getAssimilatedCommissions(idRol, idUsuario){
     });
 
     $('#tabla_asimilados').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -273,10 +256,36 @@ function getAssimilatedCommissions(idRol, idUsuario){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
-        $("#seeInformationModalAsimilados").modal();
+        
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nameLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
+
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>'+referencia+'</b></h5></p>');
         $.getJSON("getHistorial/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>COMENTARIO: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
@@ -319,7 +328,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data ){
                     $("#modal_nuevas").modal('toggle' );
@@ -349,11 +358,9 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
-    $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><center><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"><button type="button" class="btn btn-danger" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button></center></div>`);
-    $("#modal_multiples .modal-header").append(`<div class="row">
-    <div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+    $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><div class="col-lg-12"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary">ACEPTAR<buttton></div></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" title="SELECCIONA UNA OPCIÓN" class="form-control m-0 select-gral desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
     $.post('getDesarrolloSelectINTMEX/'+3, function(data) {
-        $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -460,7 +467,7 @@ function selectAll(e) {
                 $(v).prop("checked", true);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(tota2));
+        $("#total_pendiente").html(formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_asimilados.$('input[type="checkbox"]')).each(function (i, v) {
@@ -468,7 +475,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#total_pendiente").html(formatMoney(0));
     }
 }
 
@@ -495,7 +502,7 @@ $("#form_multiples").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data == 1){
                     CloseModalDelete2();

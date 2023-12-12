@@ -1,46 +1,3 @@
-function cleanCommentsPDF() {
-    $('#seeInformationModalPDF').modal('toggle');
-    var myCommentsList = document.getElementById('pdfbody');
-    var myCommentsLote = document.getElementById('pdffooter');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = ''; 
-}
-$("#EditarPerfilForm").on('submit', function(e){
-    document.getElementById('sendFile').disabled =true; 
-    $("#sendFile").prop("disabled", true);
-    e.preventDefault();	
-    var formData = new FormData(document.getElementById("EditarPerfilForm"));
-    formData.append("dato", "valor");   
-    $.ajax({
-        type: 'POST',
-        url: general_base_url+'index.php/Comisiones/SubirPDF',
-        data: formData,
-        contentType: false,
-        cache: false,
-        processData:false,
-        success: function(data) {
-            if (data == 1) {
-                cleanCommentsPDF();
-                $("#sendFile").prop("disabled", false);
-                setTimeout(function() {
-                    tabla_factura.ajax.reload();
-                }, 100);
-                alerts.showNotification("top", "right", "El registro se ha ingresado exitosamente.", "success");    
-            }
-            else {
-                cleanCommentsPDF();
-                $("#seeInformationModalPDF").modal('hide'); 
-                alerts.showNotification("top", "right", "Asegúrate de haber llenado todos los campos mínimos requeridos.", "warning");
-            }
-        },
-        error: function(){
-            $("#seeInformationModalPDF").modal('hide'); 
-            cleanCommentsPDF();
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
 let titulos_intxt = [];
 $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -50,19 +7,13 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
         if (tabla_factura.column(i).search() !== this.value) {
             tabla_factura.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_factura.rows({
-                selected: true,
-                search: 'applied'
-            }).indexes();
+            var index = tabla_factura.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_factura.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.total);
             });
             document.getElementById("totpagarfactura").textContent = formatMoney(total);
         }
-    });
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
     });
 });
 
@@ -191,11 +142,10 @@ tabla_factura = $("#tabla_factura").DataTable({
         }
     },
     initComplete: function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     },
 });
+
 $('#tabla_factura tbody').on('click', 'td.details-control', function () {
     var tr = $(this).closest('tr');
     var row = tabla_factura.row(tr);
@@ -278,47 +228,10 @@ $("#tabla_factura tbody").on("click", ".consultar_documentos", function(e){
     });
 });
 
-/*  FIN DE TABLA    */
-/*  REFACTURACIÓN   */
-function xml2(id_user) {
-    subir_xml2($("#xmlfile2"),id_user);
-}
-
-function subir_xml2(input,id_user) {
-    var data = new FormData();
-    documento_xml = input[0].files[0];
-    var xml = documento_xml;
-    data.append("xmlfile", documento_xml);
-    $.ajax({
-        url: general_base_url + "Comisiones/cargaxml2/"+id_user,
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        dataType: 'json',
-        method: 'POST',
-        type: 'POST', // For jQuery < 1.9
-        success: function(data) {
-            if (data.respuesta[0]) {
-                documento_xml = xml;
-                var informacion_factura = data.datos_xml;
-                cargar_info_xml2(informacion_factura);
-            }
-            else {
-                input.val('');
-                alert.showNotification("top", "right",data.respuesta[1], "warning");
-            }
-        },
-        error: function(data) {
-            input.val('');
-            alerts.showNotification("top", "right", "ERROR INTENTE COMUNICARSE CON EL PROVEEDOR.", "warning");    
-        }
-    });
-}
-
 function cargar_info_xml2(informacion_factura){
     let totalSeleccionado = $('#totalxml').val();
     let cantidadXml = Number.parseFloat(informacion_factura.total[0]);
+
     if((parseFloat(totalSeleccionado) + .10).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= (parseFloat(totalSeleccionado) - .10).toFixed(2)){
         var myCommentsList = document.getElementById('cantidadSeleccionadaMal');
         myCommentsList.setAttribute('style', 'color:green;');
@@ -347,18 +260,17 @@ function cargar_info_xml2(informacion_factura){
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
 $(document).on('click', '.verPDF', function () {
     var $itself = $(this);
     Shadowbox.open({
-        content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/cumplimiento/'+$itself.attr('data-usuario')+'"></iframe></div>',
-        player:     "html",
-        title:      "Visualizando archivo de cumplimiento: " + $itself.attr('data-usuario'),
-        width:      985,
-        height:     660
+        content: '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="<?=base_url()?>static/documentos/cumplimiento/'+$itself.attr('data-usuario')+'"></iframe></div>',
+        player: "html",
+        title: "Visualizando archivo de cumplimiento: " + $itself.attr('data-usuario'),
+        width: 985,
+        height: 660
     });
 });
 
