@@ -1862,7 +1862,7 @@ class Comisiones_model extends CI_Model {
         }
     }
     
-    function getPrestamos(){
+    function getPrestamos(){ 
         return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
@@ -3185,7 +3185,7 @@ class Comisiones_model extends CI_Model {
     public function getPrestamosTable($mes=0, $anio=0)
     {
         $result = $this->db->query("SELECT rpp.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
-		oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abonado, pa.pago_individual, 
+		oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abonado, pa.pago_individual, pa.num_pagos,
 		convert(nvarchar, rpp.fecha_creacion, 3) fecha_creacion, pa.comentario, lo.nombreLote, rpp.id_relacion_pp,
 		oxcest.nombre AS tipo, oxcest.id_opcion,
 
@@ -3209,7 +3209,7 @@ class Comisiones_model extends CI_Model {
         GROUP BY rpp.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, 
 		pa.monto, pa.pago_individual, pa.comentario, rpp.id_relacion_pp,oxcest.nombre, oxcest.id_opcion, oxcest.color, pci.abonado, rpp.fecha_creacion, 
 
-		res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre 
+		res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre, pa.num_pagos
 
         ORDER BY  pa.id_prestamo ASC, pa.id_usuario ASC");
         return $result->result_array();
