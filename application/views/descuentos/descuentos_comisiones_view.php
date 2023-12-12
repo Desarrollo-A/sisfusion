@@ -50,7 +50,7 @@
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label control-label">Puesto del usuario</label>
+                                <label class="label control-label">Puesto del usuariooo</label>
                                 <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                     <option value="7">Asesor</option>
                                     <option value="38">MKTD</option>
