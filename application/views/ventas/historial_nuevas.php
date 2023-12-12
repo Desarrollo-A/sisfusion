@@ -3,37 +3,7 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav" role="tablist">
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -52,21 +22,21 @@
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Acumulado:</h4>
-                                                    <p class="input-tot pl-1" name="totpagarAsimilados" id="totpagarAsimilados">$0.00</p>
+                                                    <p class="input-tot pl-1" name="pagar_asimilados" id="pagar_asimilados">$0.00</p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row aligned-row d-flex align-end">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="id_rol_hn">Puesto</label>
-                                                    <select name="id_rol_hn" id="id_rol_hn" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                    <label class="m-0" for="comisiones_nuevas">Puesto</label>
+                                                    <select name="comisiones_nuevas" id="comisiones_nuevas" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                                 <div class="form-group">
-                                                    <label class="m-0" for="id_usuario_hn">Usuario</label>
-                                                    <select class="selectpicker select-gral" id="id_usuario_hn" name="id_usuario_hn[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN " data-size="7" data-container="body" required></select>
+                                                    <label class="m-0" for="usuario_nuevas">Usuario</label>
+                                                    <select class="selectpicker select-gral" id="usuario_nuevas" name="usuario_nuevas[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN " data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -108,5 +78,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_nuevas.js"></script>
 </body>

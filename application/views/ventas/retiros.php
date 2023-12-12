@@ -23,7 +23,7 @@
                     <div class="modal-body" id="bod"></div>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -98,25 +98,25 @@
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
                                                 <h4 class="title-tot center-align m-0">Total resguardo</h4>
-                                                <p class="category input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
+                                                <p class="category input-tot pl-1" name="total_resguardo" id="total_resguardo">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
                                                 <h4 class="title-tot center-align m-0">Ingresos extras</h4>
-                                                <p class="category input-tot pl-1" name="totalx" id="totalx">$0.00</p>
+                                                <p class="category input-tot pl-1" name="total_extra" id="total_extra">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
                                                 <h4 class="title-tot center-align m-0">Saldo disponible</h4>
-                                                <p class="category input-tot pl-1" name="totalpv3" id="totalp3">$0.00</p>
+                                                <p class="category input-tot pl-1" name="total_disponible" id="total_disponible">$0.00</p>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                             <div class="form-group text-center">
                                                 <h4 class="title-tot center-align m-0">Descuentos aplicados</h4>
-                                                <p class="category input-tot pl-1" name="totalpv2" id="totalp2">$0.00</p>
+                                                <p class="category input-tot pl-1" name="total_aplicado" id="total_aplicado">$0.00</p>
                                             </div>
                                         </div>
                                     </div>
@@ -124,31 +124,29 @@
                                         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
                                             <div class="label-floating select-is-empty overflow-hidden">
                                                 <label for="proyecto">Directivo</label>
-                                                <select name="filtro33" id="filtro33"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <select name="directivo_resguardo" id="directivo_resguardo"  class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2 d-flex align-end">   
-                                                <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
+                                            <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">APLICAR RETIRO</button>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <div class="table-responsive">
-                                        <table id="tabla_descuentos" name="tabla_descuentos" class="table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>USUARIO</th>
-                                                    <th>$ DESCUENTO</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>CREADO POR</th>
-                                                    <th>FECHA CAPTURA</th>
-                                                    <th>OPCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
+                                    <table id="tabla_descuentos" name="tabla_descuentos" class="table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>USUARIO</th>
+                                                <th>DESCUENTO</th>
+                                                <th>MOTIVO</th>
+                                                <th>ESTATUS</th>
+                                                <th>CREADO POR</th>
+                                                <th>FECHA CAPTURA</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -162,4 +160,5 @@
 <?php $this->load->view('template/footer'); ?>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/ventas/retiros.js"></script>

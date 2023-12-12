@@ -81,7 +81,7 @@
                 </div>
             </div>
         </div>
- 
+
         <!-- inicia modal subir factura -->
          <div id="modal_formulario_solicitud_multiple" class="modal" style="position:fixed; top:0; left:0; margin-bottom: 1%;  margin-top: -5%;">
             <div class="modal-dialog modal-md">
@@ -343,7 +343,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -403,7 +403,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>                 
                                                 </thead>
                                             </table>
@@ -470,7 +470,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>                
                                                 </thead>
                                             </table>
@@ -531,7 +531,7 @@
                                                             <th>% COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
-                                                            <th>MÁS</th>
+                                                            <th>ACCIONES</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
@@ -592,7 +592,7 @@
                                                         <th>% COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
-                                                        <th>MÁS</th>
+                                                        <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
                                             </table>

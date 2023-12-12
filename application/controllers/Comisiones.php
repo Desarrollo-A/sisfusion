@@ -1715,7 +1715,7 @@ class Comisiones extends CI_Controller
   
   public function changeCommissionAgent(){
     $this->load->view('template/header');
-    $this->load->view("ventas/changeCommissionAgent");
+    $this->load->view("ventas/cambioComisionAgente");
   }
 
   public function getMktdCommissionsList(){
@@ -1745,8 +1745,8 @@ class Comisiones extends CI_Controller
       "comision_total" => $lote_data[0]['totalNeto2'] * 0.01,
       "estatus" => 1,
       "observaciones" => $comments,
-      "evidencia" => NULL,
-      "factura" => NULL,
+      // "evidencia" => NULL,
+      // "factura" => NULL,
       "creado_por" => $this->session->userdata('id_usuario'),
       "fecha_creacion" => date("Y-m-d H:i:s"),
       "porcentaje_decimal" => 1,

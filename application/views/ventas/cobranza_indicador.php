@@ -3,20 +3,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
-        <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <img src="<?=base_url()?>static/images/cob_mktd.gif" width="150" height="150">
-                    </div>
-                    <form method="post" id="form_aplicar">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
         
         <div class="content boxContent">
             <div class="container-fluid">
@@ -36,16 +22,13 @@
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label" for="mes">Año (<span class="isRequired">*</span>)</label>
-                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                
-                                                </select>
+                                                <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                             <div class="form-group">
                                                 <label class="control-label" for="mes">Mes</label>
-                                                <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required>
-                                                </select>
+                                                <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body"  required></select>
                                             </div>
                                         </div>
                                     </div>
