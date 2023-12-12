@@ -8,9 +8,7 @@
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons"></i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons"></i></button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
@@ -32,7 +30,7 @@
                                 <div class="encabezadoBox">
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <h3 class="card-title center-align" >Comisiones nuevas <b>XML Y OC</b></h3>
+                                            <h3 class="card-title center-align">Comisiones nuevas <b>XML Y OC</b></h3>
                                             <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de factura)</p>
                                         </div>
                                     </div>
