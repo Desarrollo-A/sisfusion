@@ -58,10 +58,7 @@ $('#tabla_remanentes thead tr:eq(0) th').each( function (i) {
             if (tabla_remanentes.column(i).search() !== this.value) {
                 tabla_remanentes.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_remanentes.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_remanentes.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_remanentes.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -126,25 +123,17 @@ function getRemanentesCommissions(idRol, idUsuario){
                                 $("#totpagarPen").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
                                 tabla_remanentes.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>remanentes</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>");
+                                mensaje = "Comisiones de esquema <b>remanentes</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }
@@ -270,9 +259,7 @@ function getRemanentesCommissions(idRol, idUsuario){
     });
 
     $('#tabla_remanentes').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_remanentes tbody").on("click", ".consultar_logs_remanentes", function(e){
@@ -305,8 +292,7 @@ function getRemanentesCommissions(idRol, idUsuario){
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
 $(window).resize(function(){
@@ -331,7 +317,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data ){
                     $("#modal_nuevas").modal('toggle' );
@@ -432,7 +418,7 @@ $("#form_refresh").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_refresh").modal('toggle' );
@@ -498,7 +484,6 @@ $("#form_multiples").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
-
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
