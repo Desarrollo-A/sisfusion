@@ -4,7 +4,7 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-    <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
+    <div class="modal fade modal-alertas" id="modal_eliminar" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content" >
                 <div class="modal-body"></div>
@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="modal fade modal-alertas" id="miModalBonos" role="dialog">
+    <div class="modal fade modal-alertas" id="formato_bonos" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header bg-red">
@@ -35,7 +35,7 @@
                             <div class="form-group row m-0">
                             <div class="col-md-4">
                                 <label class="control-label">Monto bono</label>
-                                <input class="form-control input-gral monto" type="text" id="monto" onblur="verificar();" name="monto" maxlength="10" autocomplete="off" value="" onkeypress="return filterFloat(event,this);"/>
+                                <input class="form-control input-gral monto" type="text" id="monto" onblur="verificar();" name="monto" maxlength="10" autocomplete="off" value="" onkeypress="return filtro_historial(event,this);"/>
                             </div>
                             <div class="col-md-4">
                                 <label class="control-label">Meses a pagar</label>
@@ -132,7 +132,7 @@
                                                 <th>IMPUESTO</th>
                                                 <th>TOTAL A PAGAR</th>
                                                 <th>FECHA DE REGISTRO</th>
-                                                <th>OPCIONES</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -149,12 +149,6 @@
 </div>
 </div>
 <?php $this->load->view('template/footer');?>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/ventas/bonos.js"></script>
 </body>

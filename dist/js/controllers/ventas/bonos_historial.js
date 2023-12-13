@@ -2,7 +2,7 @@ $("#tabla_bonos").prop("hidden", true);
     $('#roles').change(function(ruta){
         roles = $('#roles').val();
         param = $('#param').val();
-        $("#users").empty().selectpicker('refresh');
+        $("#usuarios_bono").empty().selectpicker('refresh');
         $.ajax({
         url: general_base_url + 'Comisiones/getUsuariosRolBonos/'+roles,
         type: 'post',
@@ -12,9 +12,9 @@ $("#tabla_bonos").prop("hidden", true);
             for( var i = 0; i<len; i++){
                 var id = response[i]['id_usuario'];
                 var name = response[i]['name_user'];
-                $("#users").append($('<option>').val(id).text(name));
+                $("#usuarios_bono").append($('<option>').val(id).text(name));
             }
-            $("#users").selectpicker('refresh');
+            $("#usuarios_bono").selectpicker('refresh');
         }
     });
 });
@@ -22,17 +22,17 @@ $("#tabla_bonos").prop("hidden", true);
 $('#roles').change(function(ruta){
     $("#spiner-loader").removeClass('hide');
     roles = $('#roles').val();
-    users = $('#users').val();
+    users = $('#usuarios_bono').val();
     if(users == '' || users == null || users == undefined){
         users = 0;
     }
     getBonusCommissions(roles, users);
 });
 
-$('#users').change(function(ruta){
+$('#usuarios_bono').change(function(ruta){
     $("#spiner-loader").removeClass('hide');
     roles = $('#roles').val();
-    users = $('#users').val();
+    users = $('#usuarios_bono').val();
     if(users == '' || users == null || users == undefined){
         users = 0;
     }
@@ -53,10 +53,7 @@ $('#tabla_bonos thead tr:eq(0) th').each( function (i) {
         if (tabla_bonos1.column(i).search() !== this.value) {
         tabla_bonos1.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_bonos1.rows({
-            selected: true,
-            search: 'applied'
-        }).indexes();
+            var index = tabla_bonos1.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_bonos1.rows(index).data();
             $.each(data, function(i, v) {
                 total += parseFloat(v.pago);
@@ -110,27 +107,27 @@ function getBonusCommissions(roles, users){
     ordering: false,
     columns: [{
         "data": function( d ){
-        return '<p class="m-0"><center>'+d.id_pago_bono+'</center></p>';
+            return '<p class="m-0"><center>'+d.id_pago_bono+'</center></p>';
         }
     },  
     {
         "data": function( d ){
-        return '<p class="m-0"><center>'+d.id_bono+'</center></p>';
+            return '<p class="m-0"><center>'+d.id_bono+'</center></p>';
         }
     },
     {
         "data": function( d ){
-        return '<p class="m-0"><b>'+d.nombre+'</b></p>';
+            return '<p class="m-0"><b>'+d.nombre+'</b></p>';
         }
     },
         {
         "data": function( d ){
-        return '<p class="m-0"><b>'+d.rfc+'</b></p>';
+            return '<p class="m-0"><b>'+d.rfc+'</b></p>';
         }
     },
     {
         "data": function( d ){
-        return '<p class="m-0">'+d.id_rol+'</p>';
+            return '<p class="m-0">'+d.id_rol+'</p>';
         }
     },
     {
@@ -170,12 +167,12 @@ function getBonusCommissions(roles, users){
     },
     {
         "data": function( d ){
-        return '<p class="m-0"><center><b>' +d.n_p+'</b>/'+d.num_pagos+ '</center></p>';
+            return '<p class="m-0"><center><b>' +d.n_p+'</b>/'+d.num_pagos+ '</center></p>';
         }
     },
     {
         "data": function( d ){
-        return '<p class="m-0"><center><b>'+formatMoney(d.pago)+'</b></center></p>';
+            return '<p class="m-0"><center><b>'+formatMoney(d.pago)+'</b></center></p>';
         }
     },
     {
@@ -201,7 +198,7 @@ function getBonusCommissions(roles, users){
     },
     {
         "data": function( d ){
-        return '<p class="m-0"><center>'+d.fecha_abono+'</center></p>';
+            return '<p class="m-0"><center>'+d.fecha_abono+'</center></p>';
         }
     },
     {
@@ -225,7 +222,7 @@ function getBonusCommissions(roles, users){
             estatus=d.est;
             color='4D7FA1';
         }
-        return '<span class="label" style="color:#'+color+'; background:#'+color+'18;">'+estatus+'</span>';
+            return '<span class="label" style="color:#'+color+'; background:#'+color+'18;">'+estatus+'</span>';
         }
     },
     {
@@ -258,89 +255,48 @@ function getBonusCommissions(roles, users){
     e.stopImmediatePropagation();
     id_pago = $(this).val();
     lote = $(this).attr("data-value");
-    $("#modal_bonos").modal();
-    $("#nameLote").append('<p><h5>HISTORIAL DE BONO</b></h5></p>');
+    $("#nombreLote").html('');
+    $("#comentarioListaAsimilados").html('');
+    
+    changeSizeModal('modal-md');
+    appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul>
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comentarioListaAsimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+    showModal();
+
+    $("#nombreLote").append('<p><h5>HISTORIAL DE BONO</b></h5></p>');
     $.getJSON("getHistorialAbono2/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
-        $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>COMENTARIO: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.date_final + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+            $("#comentarioListaAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>COMENTARIO: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.date_final + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
         });
     });
     });
 }
 
 $('#tabla_bonos').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
-
-$("#form_bonos").on('submit', function(e){ 
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_bonos"));
-    formData.append("dato", "valor");
-    $.ajax({
-    url: 'saveBono',
-    data: formData,
-    method: 'POST',
-    contentType: false,
-    cache: false,
-    processData:false,
-    success: function(data) {
-        if (data == 1) {
-        $('#tabla_bonos').DataTable().ajax.reload(null, false);
-        $('#miModalBonos').modal('hide');
-        alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
-        document.getElementById("form_bonos").reset();
-        } else if(data == 2) {
-        $('#tabla_bonos').DataTable().ajax.reload(null, false);
-        $('#miModalBonos').modal('hide');
-        alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
-        }else if(data == 3){
-        $('#tabla_bonos').DataTable().ajax.reload(null, false);
-        $('#miModalBonos').modal('hide');
-        alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
-        }
-    },
-    error: function(){
-        $('#miModalBonos').modal('hide');
-        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-    }
-    });
-});
-
-function filterFloat(evt,input){
-    var key = window.Event ? evt.which : evt.keyCode;   
-    var chark = String.fromCharCode(key);
-    var tempValue = input.value+chark;
-    var isNumber = (key >= 48 && key <= 57);
-    var isSpecial = (key == 8 || key == 13 || key == 0 ||  key == 46);
-    if(isNumber || isSpecial){
-    return filter(tempValue);
-    }        
-    
-    return false;    
-}
-
-function filter(__val__){
-    var preg = /^([0-9]+\.?[0-9]{0,2})$/; 
-    return (preg.test(__val__) === true);
-}
-
-function closeModalEng(){
-    document.getElementById("form_abono").reset();
-    a = document.getElementById('inputhidden');
-    padre = a.parentNode;
-    padre.removeChild(a);
-    $("#modal_abono").modal('toggle');
-}
 
 $(window).resize(function(){
     tabla_bonos1.columns.adjust();
 });
-
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}

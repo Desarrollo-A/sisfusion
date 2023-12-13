@@ -3,34 +3,28 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
+class ComisionesNeo extends CI_Controller{
 
-class ComisionesNeo extends CI_Controller
-{
-  private $gph;
-  public function __construct()
-  {
-    parent::__construct();
-    $this->load->model('ComisionesNeo_model');
-    $this->load->model('asesor/Asesor_model');
-    $this->load->library(array('session', 'form_validation'));
-    $this->load->helper(array('url', 'form'));
-    $this->load->database('default');
-    $this->gphsis = $this->load->database('GPHSIS', TRUE);
-  }
+    private $gph;
+    public function __construct(){
+        parent::__construct();
+        $this->load->model('ComisionesNeo_model');
+        $this->load->model('asesor/Asesor_model');
+        $this->load->library(array('session', 'form_validation'));
+        $this->load->helper(array('url', 'form'));
+        $this->load->database('default');
+        $this->gphsis = $this->load->database('GPHSIS', TRUE);
+    }
 
-  public function index()
-  {
-    redirect(base_url());
-  }
+    public function index(){
+        redirect(base_url());
+    }
 
-  public function getStatusNeodata($lote)
-  {
-    echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lote)->result_array(),JSON_NUMERIC_CHECK);
-  }
+    public function getStatusNeodata($lote){
+        echo json_encode($this->ComisionesNeo_model->getStatusNeodata($lote)->result_array(),JSON_NUMERIC_CHECK);
+    }
 
-
-     public function getGeneralStatusFromNeodataAdmon()
-    {
+    public function getGeneralStatusFromNeodataAdmon(){
         $datos = $this->ComisionesNeo_model->getLotesAAA();
         if(COUNT($datos) > 0){
             $data = array();
@@ -46,10 +40,7 @@ class ComisionesNeo extends CI_Controller
         }
     }
 
-
-
-public function getGeneralStatusFromNeodata($proyecto, $condominio)
-    {
+    public function getGeneralStatusFromNeodata($proyecto, $condominio){
         $datos = $this->ComisionesNeo_model->getLotesByAdviser($proyecto, $condominio);
         if(COUNT($datos) > 0){
             $data = array();

@@ -9,7 +9,7 @@ $(document).ready(function () {
         }).join(',');
 
         $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
-     
+    
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];            

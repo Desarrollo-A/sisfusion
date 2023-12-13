@@ -8,10 +8,7 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
             if (tabla_factura.column(i).search() !== this.value) {
                 tabla_factura.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_factura.rows({
-                selected: true,
-                search: 'applied'
-                }).indexes();
+                var index = tabla_factura.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_factura.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -23,9 +20,6 @@ $('#tabla_factura thead tr:eq(0) th').each( function (i) {
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
     }
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
 });
 
 $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
@@ -37,8 +31,6 @@ $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
     document.getElementById("totpagarfactura").textContent = to;
 });
 
-
-// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     var totaPen = 0;
     tabla_factura.$('input[type="checkbox"]').each(function () {
@@ -79,6 +71,7 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
+
 tabla_factura = $("#tabla_factura").DataTable({
     dom:  'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
@@ -107,26 +100,18 @@ tabla_factura = $("#tabla_factura").DataTable({
                             $("#totpagarPen").html(formatMoney(0));
                             $("#all").prop('checked', false);
                             var fecha = new Date();
-                            $("#myModalEnviadas").modal('toggle');
                             tabla_factura.ajax.reload();
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>");
+                            mensaje = "Comisiones de esquema <b>factura</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                            modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                         }
                         else {
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     },
                     error: function( data ){
                         $('#spiner-loader').addClass('hide');
-                        $("#myModalEnviadas").modal('toggle');
-                        $("#myModalEnviadas .modal-body").html("");
-                        $("#myModalEnviadas").modal();
-                        $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                        modalInformation(RESPUESTA_MODAL.FAIL);
                     }
                 });
             }
@@ -245,20 +230,45 @@ tabla_factura = $("#tabla_factura").DataTable({
         dataSrc: ""
     },
     initComplete: function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     },
 });
+
 $("#tabla_factura tbody").on("click", ".consultar_logs", function(e){
     e.preventDefault();
     e.stopImmediatePropagation();
     id_pago = $(this).val();
     referencia = $(this).attr("data-referencia");
-    $("#seeInformationModalfactura").modal();
+    
+    changeSizeModal("modal-md");
+    appendBodyModal(`<div class="modal-body">
+        <div role="tabpanel">
+            <ul class="nav" role="tablist">
+                <div id="nameLote"></div>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-plain">
+                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="comments-list-factura"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsfactura()"><b>Cerrar</b></button>
+    </div>`);
+    showModal();
+
     $("#nameLote").html("");
     $("#comments-list-factura").html("");
-    $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
+    $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>'+referencia+'</b></h5></p>');
     $.getJSON("getHistorial/"+id_pago).done( function( data ){
         $.each( data, function(i, v){
             $("#comments-list-factura").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small></small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>'+v.fecha_movimiento+'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' +v.modificado_por+ '</b></p></div><h6></h6></div></div></li>');
@@ -276,7 +286,7 @@ $("#tabla_factura tbody").on("click", ".cambiar_estatus", function(){
     $("#modal_nuevas .modal-body").append('<div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><input type="submit" class="btn btn-primary"></div>');
     $("#modal_nuevas").modal();
 });
- //Función para pausar la solicitud
+
 $("#form_interes").submit( function(e) {
     e.preventDefault();
 }).validate({
@@ -291,7 +301,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if(data){
                     $("#modal_nuevas").modal('toggle' );
@@ -309,6 +319,7 @@ $("#form_interes").submit( function(e) {
         });
     }
 });
+
 $(window).resize(function(){
     tabla_factura.columns.adjust();
 });

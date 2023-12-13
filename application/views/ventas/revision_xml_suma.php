@@ -4,35 +4,16 @@
     <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
-
         <div class="modal fade" id="seeInformationModalfactura" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons"></i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons"></i></button>
                     </div>
                     <div class="modal-body"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="seeInformationModalPDF" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsPDF()">clear</i>
-                        </button>
-                    </div>
-                    <form id="EditarPerfilForm" name="EditarPerfilForm" method="post">
-                        <div class="modal-body" id="pdfbody"></div>
-                        <div class="modal-footer" id="pdffooter"></div>
-                    </form>
                 </div>
             </div>
         </div>
@@ -49,7 +30,7 @@
                                 <div class="encabezadoBox">
                                     <div class="row">
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <h3 class="card-title center-align" >Comisiones nuevas <b>XML Y OC</b></h3>
+                                            <h3 class="card-title center-align">Comisiones nuevas <b>XML Y OC</b></h3>
                                             <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de factura)</p>
                                         </div>
                                     </div>
@@ -76,7 +57,7 @@
                                                     <th>USUARIO</th>
                                                     <th>MONTO</th>
                                                     <th>OPINIÓN CUMPLIMIENTO</th>
-                                                    <th>MÁS</th>
+                                                    <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -90,7 +71,6 @@
         </div>
         <?php $this->load->view('template/footer_legend');?>
     </div>
-    </div><!--main-panel close-->
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/controllers/suma/revisionXmlSuma.js"></script>
     <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">

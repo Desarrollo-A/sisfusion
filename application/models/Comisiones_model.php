@@ -1862,14 +1862,14 @@ class Comisiones_model extends CI_Model {
         }
     }
     
-    function getPrestamos(){
-        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado,opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
+    function getPrestamos(){ 
+        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
         FROM prestamos_aut p 
-        INNER JOIN usuarios u ON u.id_usuario=p.id_usuario 
+        INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN (18,19,20,21,22,23,24,25,26,28,29,30) AND pci.descuento_aplicado = 1
-        LEFT JOIN opcs_x_cats opc ON opc.id_opcion=p.tipo AND opc.id_catalogo=23
-        WHERE p.estatus in(1,2,3,0)
+        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
+        LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
+        WHERE p.estatus in(1,2,0)
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
     }
     
@@ -1878,7 +1878,7 @@ class Comisiones_model extends CI_Model {
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario AND u.id_usuario = ".$this->session->userdata('id_usuario')." 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
-        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN (18,19,20,21,22,23,24,25,26,28) AND pci.descuento_aplicado = 1
+        LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=p.tipo AND opc.id_catalogo=23
         WHERE p.estatus in(1,2,3,0) 
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
@@ -3022,7 +3022,9 @@ class Comisiones_model extends CI_Model {
     public function getDataDispersionPagoEspecial() {
         $this->db->query("SET LANGUAGE Español;");
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,  
-        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, l.tipo_venta, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, 
+        (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 7 THEN 'ESPECIAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
+        vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         CONVERT(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
         CONVERT(nvarchar, pc.fecha_neodata, 6) fecha_neodata, tipo_venta
         CONVERT(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre AS sede, l.registro_comision, l.referencia, cl.id_cliente,            
@@ -3182,22 +3184,34 @@ class Comisiones_model extends CI_Model {
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
-        $result = $this->db->query("SELECT pci.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abono_neodata, pa.pago_individual, convert(nvarchar, pci.fecha_pago_intmex, 3) fecha_creacion, pa.comentario, lo.nombreLote, rpp.id_relacion_pp, oxc2.nombre AS tipo, oxc2.id_opcion, pend.pendiente
+        $result = $this->db->query("SELECT rpp.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
+		oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abonado, pa.pago_individual, pa.num_pagos,
+		convert(nvarchar, rpp.fecha_creacion, 3) fecha_creacion, pa.comentario, lo.nombreLote, rpp.id_relacion_pp,
+		oxcest.nombre AS tipo, oxcest.id_opcion,
+
+        oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, oxcest.color,
+
+        res.nombreResidencial as proyecto, cond.nombre AS condominio, lo.nombreLote, sed.nombre as nombre_sede
         FROM prestamos_aut pa
-        JOIN usuarios u ON u.id_usuario = pa.id_usuario
-        JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-        JOIN comisiones co ON  pci.id_comision = co.id_comision
-        JOIN lotes lo ON lo.idCliente = co.idCliente 
-        JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
-        JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = pa.tipo AND oxc2.id_catalogo = 23
-        JOIN (SELECT (pa1.monto - SUM(pci1.abono_neodata)) AS pendiente, pa1.id_usuario FROM prestamos_aut pa1
-        JOIN relacion_pagos_prestamo rpp1 ON rpp1.id_prestamo = pa1.id_prestamo
-        JOIN pago_comision_ind pci1 ON pci1.id_pago_i = rpp1.id_pago_i 
-        GROUP BY pa1.monto, pa1.id_usuario) pend ON pend.id_usuario = pa.id_usuario AND pci.estatus in(18,19,20,21,22,23,24,25,26,28,29) AND pci.descuento_aplicado = 1
-        WHERE MONTH(pci.fecha_pago_intmex) = $mes AND YEAR(pci.fecha_pago_intmex) = $anio
-        GROUP BY pci.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, pa.monto, pci.abono_neodata, pa.pago_individual,pci.fecha_pago_intmex, pa.comentario, rpp.id_relacion_pp,oxc2.nombre, oxc2.id_opcion, pend.pendiente
-        ORDER BY pa.id_usuario ASC, pa.id_prestamo ASC");
+        INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
+        INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
+		LEFT JOIN (SELECT SUM(pin.abono_neodata) AS abonado, pin.id_pago_i, pin.id_comision
+		FROM pago_comision_ind pin WHERE MONTH(pin.fecha_pago_intmex) = $mes AND YEAR(pin.fecha_pago_intmex) = $anio
+		GROUP BY pin.id_pago_i, pin.id_comision) pci ON pci.id_pago_i = rpp.id_pago_i 
+	    INNER JOIN comisiones co ON  pci.id_comision = co.id_comision
+		INNER JOIN lotes lo ON lo.idCliente = co.idCliente 
+		INNER JOIN condominios cond ON lo.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pa.tipo AND oxcest.id_catalogo = 23
+		LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
+	    WHERE MONTH(rpp.fecha_creacion) = $mes AND YEAR(rpp.fecha_creacion) = $anio
+        GROUP BY rpp.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, 
+		pa.monto, pa.pago_individual, pa.comentario, rpp.id_relacion_pp,oxcest.nombre, oxcest.id_opcion, oxcest.color, pci.abonado, rpp.fecha_creacion, 
+
+		res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre, pa.num_pagos
+
+        ORDER BY  pa.id_prestamo ASC, pa.id_usuario ASC");
         return $result->result_array();
     }
 
@@ -3437,8 +3451,17 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior, $nuevo, $saldoNeo){
-        $cmd = "INSERT INTO historial_log ". "VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo', '$anterior', '$nuevo', $saldoNeo)";
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 'null' ){
+        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == '' ){
+            $anterior = null;
+            $nuevo = null;
+            $saldoNeo = $saldoNeo = null;
+        }else{
+            $anterior = $anterior;
+            $nuevo  = $nuevo;
+            $saldoNeo =  $saldoNeo;
+        }
+        $cmd = "INSERT INTO historial_log VALUES ($idLote, $idUsuario, GETDATE(), $estatus, '$comentario', '$tabla', '$motivo', '$anterior', '$nuevo', $saldoNeo)";
         return (bool)($this->db->query($cmd));
     }
 

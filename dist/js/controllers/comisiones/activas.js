@@ -155,7 +155,7 @@ $(document).ready(function () {
             { data: function (d) {
                 var BtnStats = '';
                 var RegresaActiva = '';
-                    if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
+                if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
                         BtnStats = 'Asignar Tipo Venta';

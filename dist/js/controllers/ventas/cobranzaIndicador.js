@@ -4,7 +4,7 @@ $('#mes').change(function() {
     if(anio == ''){
         anio=0;
     }else{
-        getAssimilatedCommissions(mes, anio);
+        asimiladosComisiones(mes, anio);
     }
     $('#tabla_historialGral').removeClass('hide');
 });
@@ -25,8 +25,7 @@ $('#anio').change(function() {
     }
 });
 
-let meses = [
-    {
+let meses = [{
         id: '01',
         mes:'ENERO'
     },
@@ -73,8 +72,8 @@ let meses = [
     {
         id:'12',
         mes:'DICIEMBRE'
-    }
-];
+    }];
+
 let anios = [2019,2020,2021,2022,2023];
 let datos = '';
 let datosA = '';
@@ -87,9 +86,7 @@ $('#anio').selectpicker('refresh');
 
 
 $('#tabla_historialGral').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
 
 
@@ -109,15 +106,14 @@ var tr;
 var tabla_historialGral2 ;
 var totaPen = 0;
 
-function getAssimilatedCommissions(mes, anio){
+function asimiladosComisiones(mes, anio){
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        buttons: [
-        {
+        buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
@@ -143,8 +139,7 @@ function getAssimilatedCommissions(mes, anio){
         },
         destroy: true,
         ordering: false,
-        columns: [
-        {
+        columns: [{
             data: function( d ){
             var lblStats;
             lblStats ='<p class="m-0">'+d.nombre+'</p>';
@@ -192,41 +187,7 @@ function getAssimilatedCommissions(mes, anio){
         order: [[ 1, 'asc' ]]
 });
 
-
-$("#form_aplicar").submit( function(e) {
-    e.preventDefault();
-    }).validate({
-        submitHandler: function( form ) {
-            var data = new FormData( $(form)[0] );
-            $.ajax({
-                // url: url + "Comisiones/pausar_solicitud/",
-                url: general_base_url+'Comisiones/agregar_comentarios',
-                data: data,
-                cache: false,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                method: 'POST',
-                type: 'POST', // For jQuery < 1.9
-                success: function(data){
-                    if( true ){
-                        $("#modal_nuevas").modal('toggle' );
-                        alerts.showNotification("top", "right", "Se guardó tu información correctamente", "success");
-                        setTimeout(function() {
-                            tabla_historialGral2.ajax.reload();
-                            // tabla_otras2.ajax.reload();
-                        }, 3000);
-                    }else{
-                        alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-                    }
-                },error: function( ){
-                    alert("ERROR EN EL SISTEMA");
-                }
-            });
-        }
-    });
-}
-
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
+}

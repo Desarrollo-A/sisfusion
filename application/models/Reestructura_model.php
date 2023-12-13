@@ -24,7 +24,7 @@ class Reestructura_model extends CI_Model
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2) "; /* AND dxc2.flagProcesoContraloria = 0 */
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
-            $validacionAdicional = "AND lo.estatus_preproceso IN (3, 0, 1) AND u6.id_lider = $id_lider";
+            $validacionAdicional = "AND lo.estatus_preproceso IN (3, 0, 1, 2, 4, 5, 6) AND u6.id_lider = $id_lider";
         else if ($id_rol == 3 && $tipo == 2) // GERENTE && ES OOAM
             $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1) AND u6.id_lider = $id_usuario";
         else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
@@ -497,6 +497,11 @@ class Reestructura_model extends CI_Model
     public function getListaAsignacionCartera() {
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
+        $filtroSede = '';
+        if( $this->session->userdata('id_rol')  != 2 ){
+            $filtroSede = 'AND sede_residencial = ' . $this->session->userdata('id_sede');
+        }
+        $id_sede = $this->session->userdata('id_sede');
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -522,7 +527,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $filtroSede")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
