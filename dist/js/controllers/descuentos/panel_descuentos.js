@@ -1,7 +1,7 @@
 var totaPen = 0;
 var tr;
 $(document).ready(function () {
-    $.post(general_base_url + "/Comisiones/lista_estatus_descuentos", function (data) {
+    $.post(general_base_url + "/descuentos/lista_estatus_descuentos", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -14,7 +14,7 @@ $(document).ready(function () {
 
 $('#tipo').change(function (ruta) {
     tipo = $('#tipo').val();
-    let m = $('#monto').val();
+    let m = $('#montoDescuentos').val();
     let texto = '';
 
     if (tipo == 18) {
@@ -39,7 +39,7 @@ $('#tipo').change(function (ruta) {
 function closeModalEng() {
     document.getElementById("form_prestamos").reset();
     $("#tipo").selectpicker("refresh");
-    $("#roles").selectpicker("refresh");
+    $("#rolesDescuento").selectpicker("refresh");
     document.getElementById("users").innerHTML = '';
     $("#miModal").modal('toggle');
 }
@@ -647,33 +647,33 @@ $(window).resize(function () {
     tabla_nuevas.columns.adjust();
 });
 
-$("#roles").change(function () {
+$("#rolesDescuento").change(function () {
     var parent = $(this).val();
     document.getElementById("users").innerHTML = '';
 
     $('#users').append(` <label class="label control-label">Usuario</label>   
-    <select id="usuarioid" name="usuarioid" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
+    <select id="usuarioidDescuento" name="usuarioidDescuento" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
     $.post('getUsuariosRol/' + parent + '/1', function (data) {
         var len = data.length;
 
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
-            $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#usuarioidDescuento").append($('<option>').val(id).attr('data-value', id).text(name));
         }
 
         if (len <= 0) {
-            $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#usuarioidDescuento").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
 
-        $("#usuarioid").selectpicker('refresh');
+        $("#usuarioidDescuento").selectpicker('refresh');
     }, 'json');
 });
 
 function verificar() {
-    var input1=  document.getElementById('monto');
+    var input1=  document.getElementById('montoDescuentos');
     var input2=  document.getElementById('numeroP');
-    let monto = parseFloat(replaceAll($('#monto').val(), ',', ''));
+    let monto = parseFloat(replaceAll($('#montoDescuentos').val(), ',', ''));
     input1.addEventListener('input',function(){
 
         if (this.value.length > 12) 
@@ -692,13 +692,13 @@ function verificar() {
         else {
             let cantidad = parseFloat(replaceAll($('#numeroP').val(), ',', ''));
             resultado = parseFloat(monto / cantidad);
-            $('#pago').val(formatMoney(parseFloat(resultado)));
+            $('#pagoDescuento').val(formatMoney(parseFloat(resultado)));
             document.getElementById('btn_abonar').disabled = false;
         }
     }
 
 }
-$(document).on('input', '.monto', function () {
+$(document).on('input', '.montoDescuentos', function () {
     verificar();
 });
 
