@@ -110,7 +110,7 @@ $("#historialLib").ready(function () {
           if(id_rol_general == 33)
           {
             if (d.id_proceso == 1) {
-              btns +='<button type="button" class="btn-data btn-green" type="button" data-toggle="tooltip"  data-placement="left" title="APROBAR" onclick="fillModal(1, '+d.idLote+', '+d.id_tipo_liberacion+',0,0,0,0)"> <i class="fas fa-check"></i></button>'
+              btns +='<button type="button" class="btn-data btn-green" type="button" data-toggle="tooltip" data-placement="left" title="APROBAR" onclick="fillModal(1, '+d.idLote+', '+d.id_tipo_liberacion+',0,0,0,0)"> <i class="fas fa-check"></i></button>'
               btns +='<button type="button" class="btn-data btn-warning" data-toggle="tooltip"  data-placement="left" title="RECHAZAR" onclick="fillModal(2, '+d.idLote+', '+d.id_tipo_liberacion+',0,0,0,0)"> <i class="fas fa-times"></i></button>'    
             }
             btns += '<button type="button" class="btn-data btn-blueMaderas" data-toggle="tooltip"  data-placement="left" title="HISTORIAL" onclick="openHistorialModal('+d.idLote+')"> <i class="fas fa-history"></i></button>';
@@ -134,7 +134,7 @@ $("#historialLib").ready(function () {
           if(id_rol_general == 12)
           {
             if (d.id_proceso == 3) {
-              btns += `<button type="button" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" title="APROBAR" onclick="fillModal(3,  ${d.idLote}, ${d.id_tipo_liberacion}, ${d.idCondominio}, ${d.idResidencial}, '${d.nombreLote}', ${d.precio}, ${d.tipo_lote}, '${d.clausulas}')"><i class="fas fa-check"></i></button>
+              btns += `<button type="button" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" id="aceptarButton" title="APROBAR" onclick="fillModal(3,  ${d.idLote}, ${d.id_tipo_liberacion}, ${d.idCondominio}, ${d.idResidencial}, '${d.nombreLote}', ${d.precio}, ${d.tipo_lote}, '${d.clausulas}')"><i class="fas fa-check"></i></button>
               <button type="button" class="btn-data btn-warning" data-toggle="tooltip"  data-placement="left" title="RECHAZAR" onclick="fillModal(2, ${d.idLote}, ${d.id_tipo_liberacion},0,0,0,0,0,0)"> <i class="fas fa-times"></i></button>`
             }
             btns += '<button type="button" class="btn-data btn-blueMaderas" data-toggle="tooltip"  data-placement="left" title="HISTORIAL" onclick="openHistorialModal('+d.idLote+')"> <i class="fas fa-history"></i></button>';
@@ -170,15 +170,16 @@ $(document).ready(function () {
   }
   
   if(id_rol_general == 12){
-    $.post(general_base_url + "Contraloria/get_catalogo", {id_catalogo:110},   function (data) {
+    $.post(general_base_url + "Contraloria/get_tipo_venta", function (data) {
       let len = data.length;
       for (let i = 0; i < len; i++) {
-        let id = data[i]['id_opcion'];
-        let name = data[i]['nombre'];            
+        let id = data[i]['id_tventa'];
+        let name = data[i]['tipo_venta'];            
         $("#selLib").append($('<option>').val(id).text(name.toUpperCase()));
       }
-      $("#selLib").selectpicker('refresh')
+      $("#selLib").selectpicker('refresh');
     }, 'json');
+
     $.post(general_base_url + "Contraloria/get_catalogo", {id_catalogo:48},   function (data) {
       let len = data.length;
       for (let i = 0; i < len; i++) {
@@ -186,12 +187,17 @@ $(document).ready(function () {
         let name = data[i]['nombre'];            
         $("#motLib").append($('<option>').val(id).text(name.toUpperCase()));
       }
-      $("#motLib").selectpicker('refresh')
+      $("#motLib").selectpicker('refresh');
     }, 'json');
   } else{
     $("#contenidoMot").addClass('hide');
     $("#contenidoTip").addClass('hide');
   } 
+});
+
+$(document).on('click', '#aceptarButton', function(){
+  $("#selLib").selectpicker('refresh')
+  $("#motLib").selectpicker('refresh')
 });
 
 $("#acceptModalButton").click(function() {
@@ -219,7 +225,7 @@ $("#acceptModalButton").click(function() {
           "accion": accion, 
           "idLiberacion": idLiberacion, 
           "comentario": comentario, 
-          "activeLE": selLib == 2 ? true : false,
+          "activeLE": selLib == 7 ? true : false,
           "activeLP": selLib == 1 ? true : false,
           "id_proy": idProyecto, 
           "idCondominio": idCondominio, 
@@ -233,11 +239,12 @@ $("#acceptModalButton").click(function() {
         dataType: 'JSON',
         success: function (data) {
           data=JSON.parse(data);  
+         
           if(data == true){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
-            $("#selLib").empty().selectpicker('refresh');
-            $("#motLib").empty().selectpicker('refresh');
+            $("#selLib").val('');
+            $("#motLib").val('');
             closeModal();
           }else{
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -273,7 +280,7 @@ $("#acceptModalButton").click(function() {
             "accion": accion,
             "idLiberacion": idLiberacion,
             "comentario": comentario,
-            "activeLE": selLib == 2 ? true : false,
+            "activeLE": selLib == 7 ? true : false,
             "activeLP": selLib == 1 ? true : false,
             "id_proy": idProyecto,
             "idCondominio": idCondominio,

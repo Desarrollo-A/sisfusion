@@ -55,6 +55,7 @@
                                                 <th>LOTE DESTINO</th>
                                                 <th>REFERENCIA DESTINO</th>                                                
                                                 <th>ID LOTE DESTINO</th>
+                                                <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
