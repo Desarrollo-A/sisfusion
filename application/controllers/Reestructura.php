@@ -2805,6 +2805,7 @@ class Reestructura extends CI_Controller{
         for ($i = 0; $i < count($registros); $i ++) {
             $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
             $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
+            $registros[$i]['estatusProceso'] = implode(', ', array_unique(explode(', ', $registros[$i]['estatusProceso'])));
         }
         echo json_encode($registros, JSON_NUMERIC_CHECK);
     }

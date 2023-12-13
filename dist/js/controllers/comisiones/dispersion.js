@@ -14,7 +14,10 @@ $(document).ready(function () {
                 if ($('#tabla_dispersar_comisiones').DataTable().column(i).search() !== this.value ) {
                     $('#tabla_dispersar_comisiones').DataTable().column(i).search(this.value).draw();
                 }
-                var index = $('#tabla_dispersar_comisiones').DataTable().rows({ selected: true, search: 'applied' }).indexes();
+                var index = $('#tabla_dispersar_comisiones').DataTable().rows({
+                    selected: true, 
+                    search: 'applied' 
+                    }).indexes();
                 var data = $('#tabla_dispersar_comisiones').DataTable().rows(index).data();
             });
         }
@@ -55,20 +58,16 @@ $(document).ready(function () {
         },
         destroy: true,
         ordering: false,
-        columns: [{
+        columns: [
+        {
             className: 'details-control',
             orderable: false,
             data : null,
             defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
         },
-        {
-            data: 'nombreResidencial'
-        },
-        {
-            data: 'nombreCondominio'
-        },
-        { 
-            data: function (d) {
+        {data: 'nombreResidencial'},
+        {data: 'nombreCondominio'},
+        { data: function (d) {
                 if(d.id_cliente_reubicacion_2 >1 ) {
                     nombreLote =  d.nombreLoteReub;
                 } else{

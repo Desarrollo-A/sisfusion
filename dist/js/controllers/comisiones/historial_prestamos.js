@@ -139,6 +139,11 @@ function fillTable(anio, mes){
         },
         {
             "data": function( d ){
+                return '<p class="m-0">'+d.num_pagos+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
                 return '<p class="m-0">'+d.fecha_creacion+'</p>';
             }
         },
