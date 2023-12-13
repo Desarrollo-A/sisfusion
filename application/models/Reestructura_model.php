@@ -897,5 +897,15 @@ class Reestructura_model extends CI_Model
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lf2.idLote AND cl.status = 1 AND cl.proceso IN (5, 6)
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97")->result_array();
     }
+
+    public function borrarPXL($id_lote){
+        $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);
+        return $this->db->affected_rows();
+    }
+
+    public function coopropietarioPorDR($idLote){
+        $query = $this->db->query('SELECT * FROM datos_x_copropietario WHERE idLote='.$idLote);
+        return $query->result_array();
+    }
     
 }
