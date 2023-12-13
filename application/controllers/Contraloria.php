@@ -3340,6 +3340,11 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function get_tipo_venta() {
+       
+        echo json_encode($this->Contraloria_model->get_tipo_venta()->result_array());
+    }
+
     public function historial_liberaciones() {
         $this->load->view('template/header');
         $this->load->view("contraloria/historial_liberaciones_view");
@@ -3415,8 +3420,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($resultado);
     }
 
-    public function actualizar_precio($idLote, $precio)
-    {       
+    public function actualizar_precio($idLote, $precio){       
             $data = array(
                 "precio" => $precio,
             );
@@ -3442,11 +3446,11 @@ class Contraloria extends CI_Controller {
         $datos["userLiberacion"] = $this->session->userdata('id_usuario');
         $datos["tipo"] = $data['tipo'];
 
-        if ($data['activeLP'] == true)
-
+        if ($data['activeLP'] == true){
         $datos["clausulas"] = $data['clausulas'];
         $update = $this->Contraloria_model->aplicaLiberacion($datos);
-
+        }
+        
         if ($update == TRUE) {
             return 1;
         } else {
@@ -3459,8 +3463,7 @@ class Contraloria extends CI_Controller {
         $this->load->view("contraloria/lotes_contratados_view");
     }
 
-    public function get_lotes_contratados()
-    {
+    public function get_lotes_contratados(){
         $data['data'] = $this->Contraloria_model->get_lotes_contratados()->result_array();
         echo json_encode($data);
     }
