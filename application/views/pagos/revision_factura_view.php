@@ -47,7 +47,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#facturaComercializacion" role="tab" data-toggle="tab">Facturas lotes</a></li>
-                        <li><a href="#facturaOOAM" role="tab" data-toggle="tab">Facturas ooam</a></li>
+                        <!-- <li><a href="#facturaOOAM" role="tab" data-toggle="tab">Facturas ooam</a></li> -->
                     </ul>
             
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -198,5 +198,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_ooam.js"></script>
+    <!-- <script src="<?= base_url() ?>dist/js/controllers/ooam/revision_factura_ooam.js"></script> -->
 </body>
