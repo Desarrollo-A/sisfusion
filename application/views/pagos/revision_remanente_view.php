@@ -105,6 +105,11 @@
                                                                         <th>EMPRESA</th>
                                                                         <th>TOTAL DE LA COMISIÓN</th>
                                                                         <th>PAGADO POR EL CLIENTE</th>
+
+                                                                        <th>SOLICITADO</th>
+                                                                        <th>IMPUESTO</th>
+                                                                        <th>DESCUENTO</th>
+                                                                        
                                                                         <th>TOTAL A PAGAR</th>
                                                                         <th>TIPO DE VENTA</th>
                                                                         <th>PLAN DE VENTA</th>
