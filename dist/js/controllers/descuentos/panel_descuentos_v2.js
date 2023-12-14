@@ -419,7 +419,7 @@ $("#roles").change(function() {
     $('#usuarioid option').remove();
     $.post('getUsuariosRol/'+parent+"/"+1, function(data) {
         var len = data.length;
-        $("#users").removeClass('hide');
+        $("#usersM2").removeClass('hide');
         for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name =data[i]['id_usuario']+' - '+data[i]['name_user'];

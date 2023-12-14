@@ -657,7 +657,7 @@ $("#tabla_prestamos").ready(function () {
                                 }
                             }
                         }
-                    }],
+                     }],
                     ordering: false,
                     "pageLength": 5,
                     "lengthMenu": [5, 10, 25, 50, 75, 100],

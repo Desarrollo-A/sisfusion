@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-    <!-- fin de modal boton 3  -->
+    <!-- fin de modal boton 3  --> 
 <!-- inicio de modal boton 2 -->
 				<div class="modal fade modal-alertas" id="miModal2" role="dialog">
 					<div class="modal-dialog">
@@ -111,7 +111,7 @@
 											<option value="1">Director</option> 
 										</select>
 									</div>
-									<div class="form-group hide" id="users">
+									<div class="form-group hide" id="usersM2">
 										<label class="label control-label" id="label_usuario">Usuario</label>
 										<select id="usuarioid" name="usuarioid" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" data-container="body" data-width="100%" data-live-search="true" title="SELECCIONA UNA OPCIÓN" required></select>
 									</div>
@@ -297,17 +297,17 @@
 										<div class="row">
 											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                 <div class="form-group d-flex justify-center align-center">
-													<button ype="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Agregar</button>
+													<button ype="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Prestamos</button>
 												</div>
 											</div>
 											<div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal2">Descuento de  pagos nuevos sin solicitar</button>
+                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal2">Descuento nuevos sin solicitar</button>
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal3">Descuento de  pagos en revisión contraloria</button>
+                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal3">Descuento revisión contraloria</button>
                                                 </div>
                                             </div>
 										</div>
