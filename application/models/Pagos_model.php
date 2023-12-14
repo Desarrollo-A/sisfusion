@@ -998,4 +998,44 @@ public function getCommissionsByMktdUserReport($estatus,$typeTransaction, $begin
         return $query->result();
     }
 
+function getDatosGralInternomex(){ 
+        return $this->db->query("SELECT pci1.id_pago_i, re.nombreResidencial AS proyecto, co.nombre AS condominio, lo.nombreLote AS lote, lo.referencia, lo.totalNeto2 precio_lote, re.empresa, pci1.abono_neodata pago_cliente, 
+        (CASE u.forma_pago WHEN 3 THEN sed.impuesto ELSE 0 END) valimpuesto, 
+        (CASE u.forma_pago WHEN 3 THEN (((sed.impuesto)/100)*pci1.abono_neodata) ELSE 0 END) dcto, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, 
+        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, pci1.fecha_pago_intmex, oxcfp.nombre forma_pago, sed.nombre, (CASE u.estatus WHEN 0 THEN 'BAJA' ELSE 'ACTIVO' END) estatus_usuario, u.rfc 
+        FROM pago_comision_ind pci1 
+        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (0,1) 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2,3,4)
+        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+        INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+        WHEN 2 THEN 2 
+        WHEN 3 THEN 2 
+        WHEN 1980 THEN 2 
+        WHEN 1981 THEN 2 
+        WHEN 1982 THEN 2 
+        WHEN 1988 THEN 2 
+        WHEN 4 THEN 5
+        WHEN 5 THEN 3
+        WHEN 607 THEN 1 
+        WHEN 7092 THEN 4
+        WHEN 9629 THEN 2
+        ELSE u.id_sede END) and sed.estatus = 1
+        INNER JOIN opcs_x_cats oxcfp ON oxcfp.id_opcion =  u.forma_pago AND oxcfp.id_catalogo = 16 
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+        LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
+        WHERE pci1.estatus IN (8)
+        GROUP BY pci1.id_comision, pci1.id_pago_i, re.nombreResidencial, 
+        co.nombre, lo.nombreLote, lo.referencia, lo.totalNeto2, re.empresa, 
+        pci1.abono_neodata, sed.impuesto, u.nombre, u.apellido_paterno, u.apellido_materno, 
+        oprol.nombre, pci1.fecha_pago_intmex, oxcfp.nombre, u.forma_pago, sed.nombre, u.estatus, 
+        u.rfc, cl.estructura, oprol2.nombre");
+    }
+
+
+
 }
