@@ -16,7 +16,7 @@ var tabla_asimilados2 ;
 var totaPen = 0;
 let titulos = [];
 $(document).ready(function () {
-    alert(23)
+
     tabla_general();
 
 })
@@ -185,8 +185,10 @@ $('#comisiones_solicitadas').on('xhr.dt', function(e, settings, json, xhr) {
         {
             "orderable": false,
             "data": function( data ){
-                var BtnStats;
-                BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas btn-historial-lo" title="Detalles">' +'<i class="fas fa-info"></i></button></div>';
+                var BtnStats = '';
+                BTN_DETASI11 = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas btn-historial-lo" title="Detalles">' +'<i class="fas fa-info"></i></button></div>';
+                const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
+                BtnStats += BTN_DETASI;
                 return BtnStats;
             }
         }],
@@ -228,9 +230,37 @@ $('#comisiones_solicitadas').on('xhr.dt', function(e, settings, json, xhr) {
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nameLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
+            if(data == ''){
+                $("#comments-list-asimilados").append('<p>Sin datos a mostrar   </p>');
+            }
+
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
             });
