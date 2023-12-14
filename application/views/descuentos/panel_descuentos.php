@@ -327,6 +327,9 @@
 													<th>ABONADO</th>
 													<th>PENDIENTE</th>
 													<th>COMENTARIO</th>
+													<!-- fila escondida -->
+													<th>COMENTARIO</th>
+													<!-- fila escondida -->
 													<th>ESTATUS</th>
 													<th>TIPO</th>
 													<th>FECHA DE REGISTRO</th>
