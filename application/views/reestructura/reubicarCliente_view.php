@@ -51,6 +51,14 @@
             font-size: 18px;
             margin-right: 5px;
         }
+        .tituloDeshacer{
+            font-weight: 500;
+            font-size: 1.4em;
+
+        }
+        .textoDeshacer{
+            font-size: 1.5rem;
+        }
     </style>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
@@ -131,6 +139,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="deshacerReestrucura" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <div class="modal-body text-center">
+                        <h4 id="tituloDeshacer" class="tituloDeshacer"></h4><br>
+                        <p id="textDeshacer" class="textoDeshacer"></p>
+                    </div>
+                    <div class="modal-footer mt-2" >
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="deshacerReestrucuraOK" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <div class="content boxContent">
             <div class="container-fluid">

@@ -960,5 +960,14 @@ class Reestructura_model extends CI_Model
         WHERE hp.idLote = $idLote
         ORDER BY lo.idLote, hp.fecha_modificacion")->result_array();
    }
+    public function borrarPXL($id_lote){
+        $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);
+        return $this->db->affected_rows();
+    }
+
+    public function coopropietarioPorDR($idLote){
+        $query = $this->db->query('SELECT * FROM datos_x_copropietario WHERE idLote='.$idLote);
+        return $query->result_array();
+    }
     
 }
