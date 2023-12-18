@@ -1120,8 +1120,20 @@ class Pagos extends CI_Controller
       }
       exit;
   }
+  
 
 
+  public function reporte_general(){
+    $this->load->view('template/header');
+    $this->load->view("pagos/general_internomex_view");
+  }
+  public function getDatosGralInternomex(){
+    $dat =  $this->Pagos_model->getDatosGralInternomex()->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+      $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
+  }
 
 }
 

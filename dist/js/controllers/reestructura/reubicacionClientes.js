@@ -1,3 +1,4 @@
+var arrayDeshacerRees = [];
 $(document).ready(function () {
     if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
@@ -1506,6 +1507,15 @@ const botonesAccionReubicacion = (d) => {
                     data-idCliente="${d.idCliente}">
                     <i class="fas fa-map-marker"></i>
                 </button>`;
+
+    const BTN_DESHACER_REESTRUCURA = `<button class="btn-data btn-warning deshacer-reestructura"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="DESHACER LA REESTRUCTURA"
+                    data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}">
+                    <i class="fa fa-reply"></i>
+                </button>`;
     const BTN_REUBICACION = `
         <button class="btn-data btn-sky btn-reubicar"
                 data-toggle="tooltip" 
@@ -1560,18 +1570,24 @@ const botonesAccionReubicacion = (d) => {
         ${botonFusionadoEstatus}>
         <i class="fas fa-hand-pointer"></i>
     </button>`;
+    let BUTTONREGRESO = '';
+
+    if(d.idStatusLote == 17)
+        BUTTONREGRESO = BTN_DESHACER_REESTRUCURA;
+
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
         return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA) ? (flagFusion==1)? BTN_PROPUESTAS :BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
-        else if (d.idLoteXcliente == null && d.idStatusLote == 17)
-            return BTN_INFOCLIENTE;
+        else if (d.idLoteXcliente == null && d.idStatusLote == 17){
+            return BTN_INFOCLIENTE + BUTTONREGRESO;
+        }
         else if (d.idLoteXcliente != null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
         else
-            return BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }
     if (idEstatusPreproceso === 1 && id_rol_general == 7){ // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
@@ -1863,3 +1879,50 @@ const obtenerEstadoCivilLista = () =>{
         });
     });
 }
+
+$(document).on('click', '.deshacer-reestructura', function(){
+    arrayDeshacerRees = [];
+    let id_cliente = $(this).attr('data-idcliente');
+    let id_lote = $(this).attr('data-idlote');
+    let arrayManejo = [];
+    arrayManejo['id_lote'] = id_lote;
+    arrayManejo['id_cliente'] = id_cliente;
+    arrayDeshacerRees.push(arrayManejo);
+    $('#tituloDeshacer').text('¿Deseas deshacer la reestrucura del lote '+ id_lote + ' ?' );
+    $('#textDeshacer').text('Se revertiran los cambios al hacer este lote como reestrucura');
+    $('#deshacerReestrucura').modal('toggle');
+});
+
+$(document).on('click', '#deshacerReestrucuraOK', function () {
+    $('#deshacerReestrucura').modal('toggle');
+
+    let data = new FormData();
+    data.append('id_cliente', arrayDeshacerRees[0]['id_cliente']);
+    data.append('id_lote', arrayDeshacerRees[0]['id_lote']);
+
+    $.ajax({
+        url: `${general_base_url}Reestructura/deshacerReestrucura`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: "POST",
+        success: function (response) {
+            response = JSON.parse(response);
+
+            $("#deshacerReestrucuraOK").prop("disabled", false);
+            if (response.resultado) {
+                alerts.showNotification("top", "right", response.message, "success");
+                $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                $("#deshacerReestrucura").modal("hide");
+            }
+            else
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+        },
+        error: function () {
+            $("#deshacerReestrucuraOK").prop("disabled", false);
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+
+});

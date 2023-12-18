@@ -143,7 +143,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'ASIMILADOS INTERNOMEX COMISIONES',
+            title:'Comisiones Asimilados - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
@@ -203,34 +203,51 @@ function getAssimilatedCommissions(proyecto, condominio){
             }
         },
         {
-            
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(d.comision_total)+'</p>';
+                if( d.comision_total == "" || d.comision_total == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(d.pago_neodata)+'</p>';
+                if( d.pago_cliente == "" || d.pago_cliente == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(d.pago_cliente)+'</p>';
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+formatMoney(d.valimpuesto)+'%</b></p>';
+                if( d.valimpuesto == "" || d.valimpuesto == null)
+                    return '<p class="m-0">-</p>'
+                else
+                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(d.dcto)+'</p>';
+                if( d.dcto == "" || d.dcto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+formatMoney(d.impuesto)+'</b></p>';
+                if( d.impuesto == "" || d.impuesto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
             }
         },
         {

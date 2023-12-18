@@ -792,7 +792,7 @@ class Asesor extends CI_Controller {
                 $arcusData = array(
                     "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
-                    "estatus" => 4
+                    "estatus" => "Propiedad apartada"
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }

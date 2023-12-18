@@ -326,7 +326,7 @@
                     $arcusData = array(
                         "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
-                        "estatus" => 6
+                        "estatus" => "No viable"
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }

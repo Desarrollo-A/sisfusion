@@ -360,7 +360,7 @@ $("#marcarLiberarForm").on('submit', function(e){
     data.append("archivo", archivo);
     data.append("idCondominio", idCondominio);
     data.append("idCliente", idCliente);
-    console.log(idCliente);
+  
     
     
     $.ajax({

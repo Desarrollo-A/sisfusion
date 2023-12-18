@@ -399,6 +399,7 @@ class Reestructura extends CI_Controller{
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
 
+
         foreach ($idLotes as $elementoLote) { 
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
@@ -569,6 +570,72 @@ class Reestructura extends CI_Controller{
             ));
         }
     }
+
+    /*nueva funcion para deshacer reestructura*/
+    public function deshacerReestrucura(){
+        $this->db->trans_begin();
+        $id_cliente = $this->input->post('id_cliente');
+        $id_lote    = $this->input->post('id_lote');
+        $banderaInterna = 2;
+        $banderaActualizar = 0;
+        //1: eliminar la propuesta por ote de este lote
+        $deletePXL = $this->Reestructura_model->borrarPXL($id_lote); //devuelte el numero de rows affectados
+        if ($deletePXL <= 0) {
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al borrar las propuestas por lote del lote: '.$id_lote,
+                'color' => 'danger'
+            ));
+            return;
+        }else{
+            $banderaActualizar = $banderaActualizar + 1;
+        }
+
+
+        $dataRegresoLote = array(
+            "idStatusLote" => 2,
+            "estatus_preproceso" => 0,
+            'usuario' => $this->session->userdata('id_usuario'),
+            'modificado' => date('Y-m-d H:i:s')
+        );
+        if(!$this->General_model->updateRecord('lotes', $dataRegresoLote, 'idLote', $id_lote)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar el lote: '.$id_lote,
+                'color' => 'danger'
+            ));
+            return;
+        }else{
+            $banderaActualizar = $banderaActualizar + 1;
+        }
+
+        if($banderaActualizar === $banderaInterna){
+            $this->db->trans_commit();
+            echo json_encode(array(
+                'titulo' => 'OK',
+                'resultado' => TRUE,
+                'message' => 'Se ha revertido la reestructura correctamente del lote <b>'.$id_lote.'</b>',
+                'color' => 'success'
+            ));
+             //se ejecuta el rollback porque es prueba y no se debe ejecutar nada
+        }else{
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'No se logró deshacer la reestructura, intentalo nuevamente',
+                'color' => 'danger'
+            ));
+            return;
+        }
+    }
+
+
+    /***/
 
     public function setReubicacion(){
         $this->db->trans_begin();
@@ -2473,10 +2540,20 @@ class Reestructura extends CI_Controller{
 
     public function copiarCopropietariosAnteriores($idCliente, $idLote): bool
     {
+
+
+
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idCliente);
 
         if (count($copropietarios) === 0) {
             return true;
+        }else{
+            //revisar si ya se habian insertado anteriormente los copropietarios
+            //y vuelven  pasar por este paso porque volvieron a aceptar (deshacer reestructura)
+            $coopropietarioPorDR = $this->Reestructura_model->coopropietarioPorDR($idLote);
+            if(count($copropietarios) == count($coopropietarioPorDR)){
+               return true;
+            }
         }
 
         $copropietariosInsertar = [];
@@ -2805,6 +2882,7 @@ class Reestructura extends CI_Controller{
         for ($i = 0; $i < count($registros); $i ++) {
             $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
             $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
+            $registros[$i]['estatusProceso'] = implode(', ', array_unique(explode(', ', $registros[$i]['estatusProceso'])));
         }
         echo json_encode($registros, JSON_NUMERIC_CHECK);
     }
