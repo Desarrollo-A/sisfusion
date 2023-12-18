@@ -203,7 +203,7 @@
 				<div class="modal-content">
 					<div class="modal-header bg-red">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">PRÉST AM OS Y PENALIZACIONES</h4>
+						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
 					</div>
 					<form method="post" id="form_prestamos">
 						<div class="modal-body">
@@ -261,15 +261,15 @@
                 </div>
             </div>
         </div>
+	
+
 
 		<div class="content boxContent">
+
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						<div class="card">
-							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="material-icons">dashboard</i>
-                            </div>
 							<div class="card-content">
 								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
 								<div class="toolbar">
