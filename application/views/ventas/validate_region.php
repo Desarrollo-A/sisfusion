@@ -69,5 +69,4 @@
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script src="<?=base_url()?>dist/js/controllers/ventas/validateRegion.js"></script>
-
 </body>

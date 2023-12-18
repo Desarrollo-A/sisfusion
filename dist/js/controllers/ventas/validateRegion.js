@@ -191,43 +191,42 @@ $("#tabla_validar_comisiones").ready(function () {
     });
 
     $(document).on("click", ".send-commissions-to-pay", function (e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            let id_lote = [];
-            tabla_validar_comisiones.rows().data().each(function(value, index) { 
-                if(value.ubicacion_dos != null){
-                id_lote.push(value.id_lote); 
-                }
-            });
-            if(id_lote.length==0){
-                alerts.showNotification("top", "right", "No hay sedes asignadas para comisiones ", "warning");
-                return false;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        let id_lote = [];
+        tabla_validar_comisiones.rows().data().each(function(value, index) { 
+            if(value.ubicacion_dos != null){
+            id_lote.push(value.id_lote); 
             }
-            $.ajax({
-                type: 'POST',
-                url: 'sendCommissionToPay',
-                data: {
-                    'id_lote': id_lote
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    $('#spiner-loader').removeClass('hide');
-                },
-                success: function (data) {
-                    if (data == true) {
-                        alerts.showNotification("top", "right", "Los registros se han enviado de manera exitosa.", "success");
-                        $("#tabla_validar_comisiones").DataTable().ajax.reload();
-                        $('#spiner-loader').addClass('hide');
-                    } else {
-                        $('#spiner-loader').addClass('hide');
-                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-                    }
-                }, error: function () {
+        });
+        if(id_lote.length==0){
+            alerts.showNotification("top", "right", "No hay sedes asignadas para comisiones ", "warning");
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: 'sendCommissionToPay',
+            data: {
+                'id_lote': id_lote
+            },
+            dataType: 'json',
+            beforeSend: function() {
+                $('#spiner-loader').removeClass('hide');
+            },
+            success: function (data) {
+                if (data == true) {
+                    alerts.showNotification("top", "right", "Los registros se han enviado de manera exitosa.", "success");
+                    $("#tabla_validar_comisiones").DataTable().ajax.reload();
                     $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                } else {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
                 }
-            });
+            }, error: function () {
+                $('#spiner-loader').addClass('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
     });
-
 });
 
