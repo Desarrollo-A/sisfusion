@@ -1235,7 +1235,7 @@ function crearTablas(datosTablas,numTabla = ''){
             {
                 data: function (d) {
                     return  `<span class="label lbl-sky">${d.rechazo}</span><span class="label lbl-sky" >${d.vencimiento}</span><br><br>
-                    <span class="label ${d.estatusAct == 'RECHAZO' ? 'lbl-danger' : 'lbl-green'}">${d.estatusAct}</span>`;
+                    <span class="label ${d.estatusAct == 'RECHAZO' ? 'lbl-warning' : 'lbl-green'}">${d.estatusAct}</span>`;
                 }
             },
             {   
