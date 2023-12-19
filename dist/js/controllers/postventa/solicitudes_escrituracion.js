@@ -1852,6 +1852,7 @@ function getBudgetInfo(idSolicitud) {
       $("#motivo").val(data.motivo);
       $("#superficie").val(data.superficie);
       $("#superficie").val(data.superficie);
+      $("#observaciones").val(data.observaciones);
       var str =
         data.modificado != null ? data.modificado.split(" ")[0].split("-") : "";
       var strM = data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : "";

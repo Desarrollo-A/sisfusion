@@ -377,6 +377,12 @@
                                     <textarea id="motivo" name="motivo" class="text-modal"></textarea>
                                 </div>
                             </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Observaciones</label>
+                                    <textarea id="observaciones" name="observaciones" class="text-modal"></textarea>
+                                </div>
+                            </div>
                         </div>
                        
                         <div class="row">
