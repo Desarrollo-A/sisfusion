@@ -122,7 +122,7 @@ $("#tabla_ingresar_6").ready(function () {
       },
       {
         data: function (d) {
-          return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+          return `<span class="label lbl-azure">${d.tipo_venta}</span>`;
         },
       },
       {

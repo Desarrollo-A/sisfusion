@@ -107,7 +107,7 @@
                                                                     <th>REFERENCIA</th>
                                                                     <th>PRECIO DEL LOTE</th>
                                                                     <th>EMPRESA</th>
-                                                                    <th>TOTAL DE LA COMPRA</th>
+                                                                    <th>TOTAL COMISIÓN</th>
                                                                     <th>PAGO DEL CLIENTE</th>
                                                                     <th>SOLICITADO</th>
                                                                     <th>IMPUESTO</th>

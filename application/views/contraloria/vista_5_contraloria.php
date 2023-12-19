@@ -142,6 +142,7 @@
 										<thead>
 											<tr>
 												<th></th>
+												<th>TIPO VENTA</th>
 												<th>TIPO DE EXPEDIENTE</th>
 												<th>TIPO DE PROCESO</th>
 												<th>PROYECTO</th>

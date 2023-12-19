@@ -3026,7 +3026,7 @@ class Comisiones_model extends CI_Model {
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 7 THEN 'ESPECIAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
         vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         CONVERT(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
-        CONVERT(nvarchar, pc.fecha_neodata, 6) fecha_neodata, tipo_venta
+        CONVERT(nvarchar, pc.fecha_neodata, 6) fecha_neodata,
         CONVERT(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre AS sede, l.registro_comision, l.referencia, cl.id_cliente,            
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor,
         CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador,
@@ -3856,6 +3856,35 @@ class Comisiones_model extends CI_Model {
         WHERE com.liquidada = 0 AND com.ooam IN (2) AND (com.comision_total-abonado) < 1
         
         ");
+    }
+    
+    function getCommissionsToValidate($id_usuario){
+        return $this->db->query("SELECT TOP 5 pci1.id_comision, pci1.id_pago_i, pci1.id_usuario, lo.nombreLote as lote, re.nombreResidencial as proyecto, sed.nombre, sed.id_sede,
+        lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, FORMAT(pci1.abono_neodata, 'C') pago_cliente, pci1.pago_neodata,
+        pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus,
+        cl.personalidad_juridica, pac.porcentaje_abono
+        ,contrato.expediente, com.id_lote,CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, sed2.nombre ubicacion_dos
+        FROM pago_comision_ind pci1
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11) OR descuento_aplicado = 1)
+        GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote
+        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN sedes sed ON sed.id_sede = lo.ubicacion
+        LEFT JOIN sedes sed2 ON sed2.id_sede = lo.ubicacion_dos
+        INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
+        AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
+        WHERE pci1.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) 
+        AND com.estatus IN (1,8,4,12)
+        AND lo.idLote NOT IN (select id_lote from reportes_marketing WHERE estatus = 1 AND dispersion = 1) 
+        GROUP BY cl.fechaApartado,lo.nombreLote, re.nombreResidencial, sed.nombre, sed.id_sede,
+        lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
+        pci2.abono_pagado, com.comision_total-pci2.abono_pagado, pci1.estatus,
+        cl.personalidad_juridica, pac.porcentaje_abono, sed2.nombre,
+        contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
 }

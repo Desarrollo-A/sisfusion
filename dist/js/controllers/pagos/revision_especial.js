@@ -48,7 +48,7 @@ function getDataEspeciales(){
                 titleAttr: 'Descargar archivo de Excel',
                 title:'Comisiones Especiales - Revisión Contraloría',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx -1] + ' ';
@@ -164,10 +164,34 @@ function getDataEspeciales(){
         },
         {
             data: function( d ){
-                if( d.pago_neodata == "" || d.pago_neodata == null)
+                if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.valimpuesto == "" || d.valimpuesto == null)
+                    return '<p class="m-0">-</p>'
+                else
+                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.dcto == "" || d.dcto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
