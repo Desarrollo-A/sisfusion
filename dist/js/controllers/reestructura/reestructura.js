@@ -1,3 +1,4 @@
+var datosCatalogo = [];
 $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
@@ -37,10 +38,12 @@ $(document).ready(function () {
 
 
 
-    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
+    $.post(general_base_url + "Reestructura/lista_catalogo_opciones",{id_catalogo:100}, function (data) {
         var len = data.length;
+        datosCatalogo = data;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];            
         }
         $('.indexCo').val($(this).attr(id));
         $('#spiner-loader').addClass('hide');
@@ -78,21 +81,20 @@ $(document).on('click', '.reesVal', function (){
 $(document).on('click', '.stat5Rev', function () {
     document.getElementById("idLoteCatalogo").value = "";
     document.getElementById("comentario2").value = "";
+    let idCatalogo =  $(this).attr('data-idCatalogo');
     $("#grabado").empty();
 
-    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
-        var len = data.length;
+        var len = datosCatalogo.length;
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];            
+            var id = datosCatalogo[i]['id_opcion'];
+            var name = datosCatalogo[i]['nombre'];            
             $("#grabado").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $('.indexCo').val($(this).attr(id));
-        $("#grabado").selectpicker('refresh');
-    }, 'json');
-
+    $("#grabado").selectpicker('refresh');
+    $("#grabado").selectpicker();
+    $("#grabado").val(idCatalogo);
+    $("select[name=grabado]").change();
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
-    $('#grabado').val('').trigger('change');
     $('#aceptarReestructura').modal();
 });
 
@@ -205,24 +207,21 @@ $(document).on('click', '#saveLi', function(){
 
 function open_Mb(){
     $("#catalogoRee").modal();
-    fillTableC(); 
+    fillTableCatalogo(100); 
 }
 
 function open_Mdc(){
     $("#catalogoNuevo").modal();
 }
-
-$(document).on('click', '#guardarCatalogo', function(){
-    var ipuntCat = $("#inputCatalogo").val();
-    var datos = new FormData();
+$(document).on("submit", "#addNewDesc", function(e){
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
     $("#spiner-loader").removeClass('hide');
-
-    datos.append("nombre", ipuntCat);
-
+    console.log(data);
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insertarOpcionN',
-        data: datos,
+        url: general_base_url + 'Reestructura/insertarOpcion',
+        data: data,
         processData: false,
         contentType: false,
         success: function(data) {
@@ -240,7 +239,7 @@ $(document).on('click', '#guardarCatalogo', function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-    return;
+    return false;
 });
 
 $(document).on('click', '#borrarOpcion', function () {
@@ -400,12 +399,12 @@ function fillTable(index_proyecto) {
             { data: "comentarioReubicacion" },
             {
                 data: function (d) {
-                    if(d.idStatusLote ==  15) { // MJ: ESTÁ LIBERADO
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                    if(d.idStatusLote ==  15 ) { // MJ: ESTÁ LIBERADO
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
                         return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>
-                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" data-idCatalogo="${d.idCatalogo}" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     }
                 }
@@ -418,7 +417,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
+            url: general_base_url + "Reestructura/getLotesRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -450,8 +449,7 @@ $('#tableCatalogo thead tr:eq(0) th').each(function (i) {
         }
     });
 });
-
-function fillTableC(index_proyecto) {
+function fillTableCatalogo(id_catalogo) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -475,9 +473,7 @@ function fillTableC(index_proyecto) {
         },
         processing: true,
         pageLength: 5,
-        bAutoWidth: true,
         bLengthChange: false,
-        scrollX: true,
         bInfo: true,
         searching: true,
         ordering: false,
@@ -494,7 +490,6 @@ function fillTableC(index_proyecto) {
             }
         }],
         columnDefs: [{
-            defaultContent: "",
             targets: "_all",
             searchable: true,
             orderable: false
@@ -505,14 +500,14 @@ function fillTableC(index_proyecto) {
             type: "POST",
             cache: false,
             data: {
-                "index_proyecto": index_proyecto,
+                "id_catalogo": id_catalogo,
             }
         },
         initComplete: function(){
             $("#spiner-loader").addClass('hide');
         },
         "order": [
-            [1, 'asc']
+            [0, 'asc']
         ],
     });
     
@@ -524,230 +519,16 @@ function fillTableC(index_proyecto) {
 }
 
 
-
-
-// tabla para liberar segunda tabla inicio 
-
-
-$(document).on('click', '.liberarBandera', function (){
-    document.getElementById('liberarBandera').disabled = true;
-    var bandera = document.getElementById('bandera').value;
-
-    var idLoteBandera = document.getElementById('idLoteBandera').value;
-    console.log(bandera)
-    console.log(idLoteBandera)
-    $.ajax({
-        url : 'cambiarBandera',
-        type : 'POST',
-        dataType: "json",
-        data: {
-        "bandera"    : bandera,
-        "idLoteBandera"     : idLoteBandera,
-            },
-            success: function(data) {
-            alerts.showNotification("top", "right", ""+data.message+"", ""+data.response_type+"");
-            document.getElementById('liberarBandera').disabled = false;
-            $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false );
-
-            // toastr[response.response_type](response.message);
-            $('#banderaLiberar').modal('toggle');
-        },
-        error : (a, b, c) => {
-            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
-        }
-    });
-
+$(window).resize(function(){
+    tabla_valores_catalogos.columns.adjust();
 });
-
-$(document).on('click', '.cambiarBandera', function (){
-    let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-  
-    lote   = $(this).attr("data-idLote");
-    activoDetenido  = $(this).attr("data-bandera");
-    if(activoDetenido == 0){ 
-        bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
-     
-    }
- 
-    
-    document.getElementById("tituloAD").innerHTML =   bandera;
- 
-    document.getElementById("bandera").value = activoDetenido;
-    document.getElementById("idLoteBandera").value = lote;
-
-    $('#banderaLiberar').modal();
-
-});
-
-
 let titulos_intxtLiberado = [];
-$('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
-    var title = $(this).text();
-    titulos_intxtLiberado.push(title);
-    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
-    $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_clientes_liberar').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_clientes_liberar').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
 
 $('#proyectoLiberado').change(function () {
     let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
     fillTable1(index_proyecto);
 });
 $('#proyectoLiberado').change(function () {
     let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
     fillTable1(index_proyecto);
 });
-
-function fillTable1(index_proyecto) {
-    tabla_valores_cliente = $("#tabla_clientes_liberar").DataTable({
-        width: '100%',
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [
-        {
-        extend: 'excelHtml5',
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: 'btn buttons-excel',
-        titleAttr: 'Reestructuración',
-        title: 'Reestructuración',
-            exportOptions: {
-                columns: [0,1,2,3,4,5,6],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_intxtLiberado[columnIdx] +' ';
-                    }
-                }
-            },
-        }],
-        pagingType: "full_numbers",
-        language: {
-            url: general_base_url + "static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        processing: true,
-        pageLength: 10,
-        bAutoWidth: true,
-        bLengthChange: false,
-        scrollX: true,
-        bInfo: true,
-        searching: true,
-        ordering: false,
-        fixedColumns: true,
-        destroy: true,
-        columns: [{
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreResidencial + '</p>';
-                // proyecto
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.condominio + '</p>';
-            // condominio
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreLote + '</p>';
-            /// lote
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.idLote + '</p>';
-            // IDlote
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.superficie + '</p>';
-            // superficie
-            }
-        },
-        {
-            data: function (d){
-                return '<p class="m-0">' + formatMoney(d.precio) + '</p>';
-        //    precio
-            }
-        },
-        {
-            data: function (d){
-                if (d.nombreCliente == null || d.nombreCliente == '' || d.nombreCliente == ' ') {
-                    return '<p class="m-0">SIN ESPECIFICAR</p>';
-        
-                }
-                return '<p class="m-0"> ' + d.nombreCliente + '</p>'
-            // NOMBRE
-            }
-        },
-        {
-            data: function (d){
-                if (d.liberaBandera == 1   ) {
-                    return '<p class="m-0">LIBERADO</p>';
-        
-                }else if(d.liberaBandera == 0){
-                    return '<p class="m-0">SIN LIBERAR</p>';
-                }      
-            // NOMBRE
-            }
-        },
-        {
-            data: function (d) {
-                    if(d.liberaBandera == 0){
-                    return `<div class="d-flex justify-center">
-                            <button class="btn-data btn-azure cambiarBandera" data-toggle="tooltip" data-placement="top"  
-                            title= "Liberar Lote" 
-                            data-idLote="${d.idLote}" data-bandera="1"><i class="fas fa-unlock"></i></button>`;
-                    }else{
-                    return `<div class="d-flex justify-center">
-                            <button class="btn-data btn-warning cambiarBandera" data-toggle="tooltip" data-placement="top" 
-                            title= "Quitar liberación de Lote" 
-                            data-idLote="${d.idLote}" data-bandera="0"><i class="fas fa-lock"></i></button>` ;
-                        }
-            }
-        }],
-        columnDefs: [{
-            defaultContent: "",
-            targets: "_all",
-            searchable: true,
-            orderable: false
-        }],
-        ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
-            dataSrc: "",
-            type: "POST",
-            cache: false,
-            data: {
-                "index_proyecto": index_proyecto,
-            }
-        },
-        initComplete: function(){
-            $("#spiner-loader").addClass('hide');
-        },
-        "order": [
-            [1, 'asc']
-        ],
-    });
-    
-    $('#tabla_clientes').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
-}
-
-
-// fin de la segunda tabla 

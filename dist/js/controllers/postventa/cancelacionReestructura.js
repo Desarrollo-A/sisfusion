@@ -1,15 +1,15 @@
 $(document).ready(function () {
     $("#tabla_cancelacion").addClass('hide');
     
-    $.post(general_base_url + "Reestructura/listaLiberacionRes", function (data) {
+    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
 
         $("#catalogoLiberar").append($('<option>').val(0).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
             var name = data[i]['descripcion'];
-            var lotes = data[i]['tipoLote'];            
-            $("#"+lotes+"").append($('<option>').val(id).text(name.toUpperCase()));
+           // var lotes = data[i]['tipoLote'];            
+            $("#catalogoLiberar").append($('<option>').val(id).text(name.toUpperCase()));
         }
         $("#catalogoLiberar").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
@@ -46,7 +46,7 @@ function cancelacionTable(index_proyecto) {
         titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
         title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6],
+                columns: [0,1,2,3,4,5],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -109,7 +109,7 @@ function cancelacionTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Postventa/getregistros",
+            url: general_base_url + "Postventa/getRegistrosCancelados",
             dataSrc: "",
             type: "POST",
             cache: false,
