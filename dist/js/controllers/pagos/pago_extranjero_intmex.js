@@ -202,17 +202,26 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                if( d.comision_total == "" || d.comision_total == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                if( d.pago_cliente == "" || d.pago_cliente == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {
@@ -282,7 +291,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasEContraloria/",
+            "url": general_base_url + "Pagos/getDatosNuevasExContraloria/",
             "type": "POST",
             cache: false,
             data:{
