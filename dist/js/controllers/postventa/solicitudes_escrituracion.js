@@ -1234,7 +1234,8 @@ function crearTablas(datosTablas,numTabla = ''){
             },
             {
                 data: function (d) {
-                    return  `<span class="label lbl-sky">${d.rechazo}</span><span class="label lbl-sky" >${d.vencimiento}</span>`;
+                    return  `<span class="label lbl-sky">${d.rechazo}</span><span class="label lbl-sky" >${d.vencimiento}</span><br><br>
+                    <span class="label ${d.estatusAct == 'RECHAZO' ? 'lbl-warning' : 'lbl-green'}">${d.estatusAct}</span>`;
                 }
             },
             {   
@@ -1852,6 +1853,7 @@ function getBudgetInfo(idSolicitud) {
       $("#motivo").val(data.motivo);
       $("#superficie").val(data.superficie);
       $("#superficie").val(data.superficie);
+      $("#observaciones").val(data.observaciones);
       var str =
         data.modificado != null ? data.modificado.split(" ")[0].split("-") : "";
       var strM = data.modificado != null ? `${str[2]}-${str[1]}-${str[0]}` : "";

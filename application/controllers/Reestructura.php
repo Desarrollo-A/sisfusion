@@ -107,24 +107,20 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-		echo json_encode($this->Reestructura_model->get_catalogo_reestructura()->result_array());
+        $id_catalogo = $_POST['id_catalogo'];
+		echo json_encode($this->Reestructura_model->get_catalogo_restructura($id_catalogo)->result_array());
 	}
 
-	public function insertarOpcionN (){
-		$idOpcion = $this->Reestructura_model->insertOpcion();
+	public function insertarOpcion(){
+		$idOpcion = $this->Reestructura_model->insertOpcion(100);
 		$idOpcion = $idOpcion->lastId;
-		$dataPost = $_POST;
 		$datos["id"] = $idOpcion;
-		$datos["nombre"] = $dataPost['nombre'];
+		$datos["nombre"] = $_POST['inputCatalogo'];
 		$datos["fecha_creacion"] = date('Y-m-d H:i:s');
-
 		$insert = $this->Reestructura_model->nuevaOpcion($datos);
-
 		if ($insert == TRUE) {
-			$response['message'] = 'SUCCESS';
 			echo json_encode(1);
 		} else {
-			$response['message'] = 'ERROR';
 			echo json_encode(0);
 		}
 	}
@@ -177,9 +173,9 @@ class Reestructura extends CI_Controller{
         echo ($update) ? json_encode(1) : json_encode(0);
     }
 
-	public function getRegistros(){
+	public function getLotesRegistros(){
         $index_proyecto = $this->input->post('index_proyecto');
-        $dato = $this->Reestructura_model->get_valor_lote($index_proyecto);
+        $dato = $this->Reestructura_model->getLotesRegistros($index_proyecto);
         if ($dato != null) {
             echo json_encode($dato);
         }else{
@@ -2644,16 +2640,11 @@ class Reestructura extends CI_Controller{
     }
 
     public function borrarOpcion(){
-
-		$dataPost = $_POST;
-		$datos["idOpcion"] = $dataPost['idOpcion'];
-		$update = $this->Reestructura_model->borrarOpcionModel($datos);
-
+		$idOpcion = $_POST['idOpcion'];
+		$update = $this->Reestructura_model->borrarOpcionModel(100,$idOpcion);
 		if ($update == TRUE) {
-			$response['message'] = 'SUCCESS';
 			echo json_encode(1);
 		} else {
-			$response['message'] = 'ERROR';
 			echo json_encode(0);
 		}
 	}
@@ -2890,5 +2881,15 @@ class Reestructura extends CI_Controller{
     public function getHistorialPorLote($idLote) {
         echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote));
     }
-    
+
+    public function removeLoteFusion(){
+        $datosPost = $_POST;
+        $result = false;
+        for ($i=0; $i < $datosPost['index'] ; $i++) { 
+            if(isset($datosPost['idFusion_'.$i])){
+                $result = $this->Reestructura_model->removeLoteFusion($datosPost['idFusion_'.$i],$this->session->userdata('id_usuario'));
+            }
+        }
+        echo json_encode($result);
+    }
 }

@@ -14,7 +14,7 @@ $('#liberacionesTable thead tr:eq(0) th').each( function (i) {
     titulos.push(title);
     $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
     $( 'input', this ).on('keyup change', function () {
-        console.log($("#liberacionesTable").DataTable().column(i).search(), this.value)
+
         if ($('#liberacionesTable').DataTable().column(i).search() !== this.value ) {
             $('#liberacionesTable').DataTable().column(i).search(this.value).draw();
         }
@@ -62,6 +62,7 @@ function updateLotesStatusLiberacion(e) {
             if (data == 0) {
                 alerts.showNotification("top", "right", "Los registros han sido actualizados de manera éxitosa.", "success");
                 $("#liberacionesTable").DataTable().ajax.reload();
+
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
@@ -306,7 +307,6 @@ $(document).on('click', '.marcar-para-liberar', function(e) {
   let id_cliente = $(this).attr("data-idcliente");
   let nombre_lote = $(this).attr("data-nombre-lote");
 
-  console.log(id_cliente);
 
   if(proceso == 1){
     document.getElementById('msj').innerHTML = 'Liberación del lote <b>' + id_lote + '</b> con nombre <b>' + nombre_lote + '</b>';
@@ -317,10 +317,7 @@ $(document).on('click', '.marcar-para-liberar', function(e) {
   }
 });
 
-$(document).on('click', '.delete-btn', function(e) {
-  let idArchivoLote = $(this).data('id-archivo');
-  console.log("Este es el id del archivo a borrar: ", idArchivoLote);
-});
+
 
 $("#marcarLiberarForm").on('submit', function(e){
   e.preventDefault();
@@ -361,8 +358,6 @@ $("#marcarLiberarForm").on('submit', function(e){
     data.append("idCondominio", idCondominio);
     data.append("idCliente", idCliente);
   
-    
-    
     $.ajax({
       url: general_base_url + 'Contraloria/updateLoteMarcarParaLiberar',
       type: 'POST',
@@ -374,6 +369,7 @@ $("#marcarLiberarForm").on('submit', function(e){
         if(response == true){
           alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
           $("#liberacionesTable").DataTable().ajax.reload();
+          $("#archivo").val('refresh');
           closeModal();
         }else if(response == false){
           document.getElementById('btnMarcarParaLiberar').disabled = true;
@@ -430,9 +426,7 @@ $('#selectResidenciales').change(function () {
   });
 });
 
-$('#uploadFile').on('submit', function(e){
-    console.log(e);
-});
+
 
 $('#selectCondominios').change(function () {
   let idCondominio = $(this).val();
@@ -464,144 +458,143 @@ $(document).ready(function () {
   });
 });
 
-
-  $(document).on("click", "#sendRequestButton", function (e) {
-    e.preventDefault();
-    const accion = parseInt($("#accion").val());
-    if (accion === AccionDoc.DOC_NO_CARGADO) {
-      // UPLOAD FILE
-      const uploadedDocument = document.getElementById("fileElm").value;
-      let validateUploadedDocument = uploadedDocument.length === 0;
-      // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVE A CABO EL REQUEST
-      if (validateUploadedDocument) {
-        alerts.showNotification(
-          "top",
-          "right",
-          "Asegúrate de haber seleccionado un archivo antes de guardar.",
-          "warning"
-        );
-        return;
-      }
-      const archivo = $("#fileElm")[0].files[0];
-      const tipoDocumento = parseInt($("#tipoDocumento").val());
-      let extensionDeDocumento = archivo.name.split(".").pop();
-      let extensionesPermitidas = getExtensionPorTipoDocumento(tipoDocumento);
-      let statusValidateExtension = validateExtension(
-        extensionDeDocumento,
-        extensionesPermitidas
+$(document).on("click", "#sendRequestButton", function (e) {
+  e.preventDefault();
+  const accion = parseInt($("#accion").val());
+  if (accion === AccionDoc.DOC_NO_CARGADO) {
+    // UPLOAD FILE
+    const uploadedDocument = document.getElementById("fileElm").value;
+    let validateUploadedDocument = uploadedDocument.length === 0;
+    // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVE A CABO EL REQUEST
+    if (validateUploadedDocument) {
+      alerts.showNotification(
+        "top",
+        "right",
+        "Asegúrate de haber seleccionado un archivo antes de guardar.",
+        "warning"
       );
-      if (!statusValidateExtension) {
-        // MJ: ARCHIVO VÁLIDO PARA CARGAR
-        alerts.showNotification(
-          "top",
-          "right",
-          `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. ` +
-            `Recuerda seleccionar un archivo ${extensionesPermitidas}`,
-          "warning"
-        );
-        return;
-      }
-      const nombreDocumento = $("#nombreDocumento").val();
-      let data = new FormData();
-      data.append("idLote", $("#idLoteValue").val());
-      data.append("idDocumento", $("#idDocumento").val());
-      data.append("tipoDocumento", tipoDocumento);
-      data.append("uploadedDocument", archivo);
-      data.append("accion", accion);
-      data.append("tituloDocumento", $("#tituloDocumento").val());
-      $.ajax({
-        url: `${general_base_url}Postventa/subirArchivo`,
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: "POST",
-        beforeSend: function () {
-          $("#uploadFileButton").prop("disabled", true);
-        },
-        success: function (response) {
-          const res = JSON.parse(response);
-          if (res.code === 200) {
-            alerts.showNotification(
-              "top",
-              "right",
-              `El documento ${nombreDocumento} se ha cargado con éxito.`,
-              "success"
-            );
-            $('#tabla_estatus3').DataTable().ajax.reload();
-            $("#addDeleteFileModal").modal("hide");
-          }
-          if (res.code === 400) {
-            alerts.showNotification("top", "right", res.message, "warning");
-          }
-          if (res.code === 500) {
-            alerts.showNotification(
-              "top",
-              "right",
-              "Oops, algo salió mal.",
-              "warning"
-            );
-          }
-        },
-        error: function () {
-          $("#sendRequestButton").prop("disabled", false);
+      return;
+    }
+    const archivo = $("#fileElm")[0].files[0];
+    const tipoDocumento = parseInt($("#tipoDocumento").val());
+    let extensionDeDocumento = archivo.name.split(".").pop();
+    let extensionesPermitidas = getExtensionPorTipoDocumento(tipoDocumento);
+    let statusValidateExtension = validateExtension(
+      extensionDeDocumento,
+      extensionesPermitidas
+    );
+    if (!statusValidateExtension) {
+      // MJ: ARCHIVO VÁLIDO PARA CARGAR
+      alerts.showNotification(
+        "top",
+        "right",
+        `El archivo que has intentado cargar con la extensión <b>${extensionDeDocumento}</b> no es válido. ` +
+        `Recuerda seleccionar un archivo ${extensionesPermitidas}`,
+        "warning"
+      );
+      return;
+    }
+    const nombreDocumento = $("#nombreDocumento").val();
+    let data = new FormData();
+    data.append("idLote", $("#idLoteValue").val());
+    data.append("idDocumento", $("#idDocumento").val());
+    data.append("tipoDocumento", tipoDocumento);
+    data.append("uploadedDocument", archivo);
+    data.append("accion", accion);
+    data.append("tituloDocumento", $("#tituloDocumento").val());
+    $.ajax({
+      url: `${general_base_url}Postventa/subirArchivo`,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      beforeSend: function () {
+        $("#uploadFileButton").prop("disabled", true);
+      },
+      success: function (response) {
+        const res = JSON.parse(response);
+        if (res.code === 200) {
+          alerts.showNotification(
+            "top",
+            "right",
+            `El documento ${nombreDocumento} se ha cargado con éxito.`,
+            "success"
+          );
+          $('#tabla_estatus3').DataTable().ajax.reload();
+          $("#addDeleteFileModal").modal("hide");
+        }
+        if (res.code === 400) {
+          alerts.showNotification("top", "right", res.message, "warning");
+        }
+        if (res.code === 500) {
           alerts.showNotification(
             "top",
             "right",
             "Oops, algo salió mal.",
-            "danger"
+            "warning"
+          );
+        }
+      },
+      error: function () {
+        $("#sendRequestButton").prop("disabled", false);
+        alerts.showNotification(
+          "top",
+          "right",
+          "Oops, algo salió mal.",
+          "danger"
+        );
+      },
+    });
+  }else {
+    // VA A ELIMINAR
+    const nombreDocumento = $("#nombreDocumento").val();
+    let data = new FormData();
+    data.append("idDocumento", $("#idDocumento").val());
+    data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
+    $.ajax({
+      url: `${general_base_url}Documentacion/eliminarArchivo`,
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (response) {
+        const res = JSON.parse(response);
+        $("#sendRequestButton").prop("disabled", false);
+        if (res.code === 200) {
+          alerts.showNotification(
+            "top",
+            "right",
+            `El documento ${nombreDocumento} se ha eliminado con éxito.`,
+            "success"
+          );
+          $('#tabla_estatus3').DataTable().ajax.reload();
+          $("#addDeleteFileModal").modal("hide");
+        }
+        if (res.code === 400) {
+          alerts.showNotification("top", "right", res.message, "warning");
+        }
+        if (res.code === 500) {
+          alerts.showNotification(
+            "top",
+            "right",
+            "Oops, algo salió mal.",
+            "warning"
+          );
+        }
+      },
+      error: function () {
+        $("#sendRequestButton").prop("disabled", false);
+        alerts.showNotification(
+          "top",
+          "right",
+          "Oops, algo salió mal.",
+          "danger"
           );
         },
       });
-    }else {
-        // VA A ELIMINAR
-        const nombreDocumento = $("#nombreDocumento").val();
-        let data = new FormData();
-        data.append("idDocumento", $("#idDocumento").val());
-        data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
-        $.ajax({
-          url: `${general_base_url}Documentacion/eliminarArchivo`,
-          data: data,
-          cache: false,
-          contentType: false,
-          processData: false,
-          type: "POST",
-          success: function (response) {
-            const res = JSON.parse(response);
-            $("#sendRequestButton").prop("disabled", false);
-            if (res.code === 200) {
-              alerts.showNotification(
-                "top",
-                "right",
-                `El documento ${nombreDocumento} se ha eliminado con éxito.`,
-                "success"
-              );
-              $('#tabla_estatus3').DataTable().ajax.reload();
-              $("#addDeleteFileModal").modal("hide");
-            }
-            if (res.code === 400) {
-              alerts.showNotification("top", "right", res.message, "warning");
-            }
-            if (res.code === 500) {
-              alerts.showNotification(
-                "top",
-                "right",
-                "Oops, algo salió mal.",
-                "warning"
-              );
-            }
-          },
-          error: function () {
-            $("#sendRequestButton").prop("disabled", false);
-            alerts.showNotification(
-              "top",
-              "right",
-              "Oops, algo salió mal.",
-              "danger"
-            );
-          },
-        });
-      }
+    }
 });
 
 const TipoDoc = {
@@ -657,34 +650,9 @@ function getExtensionPorTipoDocumento(tipoDocumento) {
  * @param {any} data
  * @returns {string}
  */
-
-
-$(document).on("click", ".verDocumento", function () {
-   
-    const $itself = $(this);
-
-    var expediente = $itself.attr("data-expediente");
-    var cadenaSinEspacios = expediente.replace(/\s/g, '');
-
-    let pathUrl = `${general_base_url}static/documentos/cliente/expediente/${cadenaSinEspacios}`;
-    console.log(pathUrl);
-
-    if (screen.width > 480 && screen.width < 800) {
-      window.location.href = `${pathUrl}`;
-    } else {
-      Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
-        player: "html",
-        title: `Visualizando archivo:  ${cadenaSinEspacios}  `,
-        width: 985,
-        height: 660,
-      });
-    }
-  });
-
 //cargar documentos
 function crearBotonAccion(type, data) {
-    //console.log(data);
+   
     const [
       buttonTitulo,
       buttonEstatus,
