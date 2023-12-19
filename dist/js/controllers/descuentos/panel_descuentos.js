@@ -1,7 +1,7 @@
 var totaPen = 0;
 var tr;
 $(document).ready(function () {
-    $.post(general_base_url + "/Comisiones/lista_estatus_descuentos", function (data) {
+    $.post(general_base_url + "/descuentos/lista_estatus_descuentos", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
@@ -14,7 +14,7 @@ $(document).ready(function () {
 
 $('#tipo').change(function (ruta) {
     tipo = $('#tipo').val();
-    let m = $('#monto').val();
+    let m = $('#montoDescuentos').val();
     let texto = '';
 
     if (tipo == 18) {
@@ -39,7 +39,7 @@ $('#tipo').change(function (ruta) {
 function closeModalEng() {
     document.getElementById("form_prestamos").reset();
     $("#tipo").selectpicker("refresh");
-    $("#roles").selectpicker("refresh");
+    $("#rolesDescuento").selectpicker("refresh");
     document.getElementById("users").innerHTML = '';
     $("#miModal").modal('toggle');
 }
@@ -187,7 +187,7 @@ $("#tabla_prestamos").ready(function () {
             titleAttr: 'Descargar archivo de Excel',
             title: 'PRÉSTAMOS Y PENALIZACIONES',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,  10, 11],
                 format: {
                     header: function (d, columnIdx) {
                         if (columnIdx >= 0) {
@@ -262,6 +262,38 @@ $("#tabla_prestamos").ready(function () {
         },
         { 
             data: 'comentario'
+        },{ 
+            data: function( d){         
+                const letras = d.comentario.split(" ");
+                if(letras.length <= 4)
+                {
+
+                    return '<p class="m-0">'+d.comentario+'</p>';
+                }else{
+                    
+                    letras[2] = undefined ? letras[2] = '' : letras[2];
+                    letras[3] = undefined ? letras[3] = '' : letras[3];
+                    return `    
+                        <div class="muestratexto${d.id_prestamo}" id="muestratexto${d.id_prestamo}">
+                            <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                            <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
+                                onclick="esconder(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_prestamo}">
+                                <span class="lbl-blueMaderas">Ver más</span> 
+                                
+                            </a>
+                        </div>
+                        <div id="collapseOne${d.id_prestamo}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                ${d.comentario}</p> 
+                                <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
+                                    onclick="mostrar(${d.id_prestamo})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
         },
         {
             data: function (d) {
@@ -336,6 +368,10 @@ $("#tabla_prestamos").ready(function () {
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
+        }],
+        columnDefs: [{
+            targets: [ 8], visible: false,
+            searchable: false,
         }],
         ajax: {
             url: general_base_url + "Comisiones/getPrestamos",
@@ -621,7 +657,7 @@ $("#tabla_prestamos").ready(function () {
                                 }
                             }
                         }
-                    }],
+                     }],
                     ordering: false,
                     "pageLength": 5,
                     "lengthMenu": [5, 10, 25, 50, 75, 100],
@@ -647,33 +683,33 @@ $(window).resize(function () {
     tabla_nuevas.columns.adjust();
 });
 
-$("#roles").change(function () {
+$("#rolesDescuento").change(function () {
     var parent = $(this).val();
     document.getElementById("users").innerHTML = '';
 
     $('#users').append(` <label class="label control-label">Usuario</label>   
-    <select id="usuarioid" name="usuarioid" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
+    <select id="usuarioidDescuento" name="usuarioidDescuento" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
     $.post('getUsuariosRol/' + parent + '/1', function (data) {
         var len = data.length;
 
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['id_usuario'] +' - '+ data[i]['name_user'];
-            $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#usuarioidDescuento").append($('<option>').val(id).attr('data-value', id).text(name));
         }
 
         if (len <= 0) {
-            $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#usuarioidDescuento").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
 
-        $("#usuarioid").selectpicker('refresh');
+        $("#usuarioidDescuento").selectpicker('refresh');
     }, 'json');
 });
 
 function verificar() {
-    var input1=  document.getElementById('monto');
+    var input1=  document.getElementById('montoDescuentos');
     var input2=  document.getElementById('numeroP');
-    let monto = parseFloat(replaceAll($('#monto').val(), ',', ''));
+    let monto = parseFloat(replaceAll($('#montoDescuentos').val(), ',', ''));
     input1.addEventListener('input',function(){
 
         if (this.value.length > 12) 
@@ -692,13 +728,13 @@ function verificar() {
         else {
             let cantidad = parseFloat(replaceAll($('#numeroP').val(), ',', ''));
             resultado = parseFloat(monto / cantidad);
-            $('#pago').val(formatMoney(parseFloat(resultado)));
+            $('#pagoDescuento').val(formatMoney(parseFloat(resultado)));
             document.getElementById('btn_abonar').disabled = false;
         }
     }
 
 }
-$(document).on('input', '.monto', function () {
+$(document).on('input', '.montoDescuentos', function () {
     verificar();
 });
 
@@ -716,4 +752,19 @@ $(document).on("click", "#preview", function () {
 
 function monthDiff(dateFrom, dateTo) {
     return dateTo.getMonth() - dateFrom.getMonth() + (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+}
+
+
+function esconder(id){
+    // alert(1331)
+    $('#muestratexto'+id).addClass('hide');
+    // $('#muestratexto'+id).removeClass('hide');
+    
+}
+
+
+function mostrar(id){
+    // $('#muestratexto'+id).addClass('hide');
+    $('#muestratexto'+id).removeClass('hide');
+    
 }

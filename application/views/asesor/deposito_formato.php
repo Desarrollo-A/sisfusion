@@ -749,6 +749,7 @@
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
                             <input class="form-control input-gral" name="costom2f" id="costom2f" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                            <input type="hidden" name="tipo_venta" id="tipo_venta" value="<?php echo $tipo_venta;?>">
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
