@@ -665,7 +665,7 @@ class Postventa_model extends CI_Model
 function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT se.*, hl.modificado, l.nombreLote,oxc4.nombre as tipoContrato,
         cond.nombre nombreCond, r.nombreResidencial, n.correo correoN, v.correo correoV, oxc2.nombre nombreConst, oxc.nombre nombrePago, oxc3.nombre tipoEscritura, n.nombre_notaria, 
-        n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre
+        n.nombre_notario, n.direccion, n.correo, n.telefono, n.pertenece,CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, se.observaciones
                 FROM solicitudes_escrituracion se 
                 INNER JOIN clientes c ON c.id_cliente = se.id_cliente
                 LEFT JOIN (SELECT idLote, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 GROUP BY idLote) hl ON hl.idLote=se.id_lote
