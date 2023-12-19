@@ -1021,12 +1021,12 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
     const flagFusion = $('#flagFusion').val()
-    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
 
-    // if (!existeSeleccion) {
-    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-    //     return;
-    // }
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+        return;
+    }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
