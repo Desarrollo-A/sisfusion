@@ -236,7 +236,8 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
                 :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
             }
@@ -1021,12 +1022,12 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
     const flagFusion = $('#flagFusion').val()
-    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
 
-    // if (!existeSeleccion) {
-    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-    //     return;
-    // }
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+        return;
+    }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
