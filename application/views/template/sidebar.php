@@ -45,7 +45,7 @@
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
-            <!-- <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;"> -->
+            <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;">
             <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div> 
@@ -213,7 +213,7 @@
 </ul>
 	</div>
 </div>
-<div class="spiner-loader hide" id="spiner-loader">
+<!-- <div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS">
         <div class="contentLS">
             <div class="center-align">
@@ -227,20 +227,20 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <!-- Sppiner navidad -->
-<!-- <div class="spiner-loader hide" id="spiner-loader">
+<div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS" style="background:#ffffffe6!important">
         <div class="contentLS">
-            <div class="center-align tracking-in-expand">
+            <div class="center-align tracking-in-expand" style="color: black">
                 Cargando
             </div>
             <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script> 
             <dotlottie-player src="https://lottie.host/f256169f-e78d-407c-a997-988bb01d7731/Y7RNCCxweg.json" background="transparent" speed="1" style="width: 300px; height: 300px;" loop autoplay></dotlottie-player>
         </div>
     </div>
-</div> -->
+</div>
 
 <?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
@@ -314,8 +314,6 @@
 			</div>
 		</div>
     </nav>
-
-
 <script>
     function AddTicket(){
         $.post("<?=base_url()?>index.php/Api/ServicePostTicket", function (data) {

@@ -452,9 +452,9 @@ const cerrarModalPropuestas = async (preproceso, flagFusion) => {
         dataFusionDes.data.forEach((fusionLotes) => {
             sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
         });
-        if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
-            return;
-        }
+        // if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
+        //     return;
+        // }
         hideModal();
     }
     else if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
@@ -1407,14 +1407,16 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && id_rol_general==17) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0 && id_rol_general==15) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
+        btnContratoFirmado = 'fa-eye';
+        tooltipCF = 'VER CONTRATO FIRMADO';
     }
     if(d.idContratoFirmado != null){
         btnContratoFirmado = 'fa-eye';
