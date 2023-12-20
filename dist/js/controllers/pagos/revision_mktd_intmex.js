@@ -396,7 +396,6 @@ $("#tabla_plaza_2").ready( function(){
         },
     });
 
-        
     $("#tabla_plaza_2 tbody").on("click", ".consultar_logs_asimilados", function(e){
         $("#nombreLote").html('');
         $("#comments-list-remanente").html('');

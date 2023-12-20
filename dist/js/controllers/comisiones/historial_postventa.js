@@ -15,34 +15,31 @@ $("#tabla_ingresar_9").ready(function () {
                         total += parseFloat(v.pago_cliente);
                     });
                     var to1 = formatMoney(total);
-                    document.getElementById("myText_nuevas").value = formatMoney(total);
+                    document.getElementById("myText_nuevas").value = to1;
                 }
             });
         }
     });
 
-    /*REPORTE_GENERAL_TOTALES_COMISIONES*/
     tabla_1 = $('#tabla_ingresar_9').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo EXCEL',
-                title: 'REPORTE GENERAL TOTALES COMISIONES',
-                exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo EXCEL',
+            title: 'REPORTE GENERAL TOTALES COMISIONES',
+            exportOptions: {
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
-            },
-        ],
+            }
+        }],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -150,9 +147,7 @@ $("#tabla_ingresar_9").ready(function () {
             }
         },
         initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
-            });
+            $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
         }
     });
 
@@ -185,10 +180,10 @@ $("#tabla_ingresar_9").ready(function () {
         objComisionistas = JSON.parse( jsonComisionistas );
         objComisionistas.forEach( comisionista => {
             informacion_adicional += '<div class="col-sm-4 col-md-12 col-lg-12">'+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">'+ comisionista.porcentaje_decimal+'% </div>  '+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.fechaCreacion + '</div>   '+
-                                        '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.nombre + '</div>'+
-                                        '</div>';
+            '<div class="col-sm-12 col-md-4 col-lg-4">'+ comisionista.porcentaje_decimal+'% </div>  '+
+            '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.fechaCreacion + '</div>   '+
+            '<div class="col-sm-12 col-md-4 col-lg-4">' + comisionista.nombre + '</div>'+
+            '</div>';
         });
             informacion_adicional += '  </div>';
             informacion_adicional += '</div>';

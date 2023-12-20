@@ -1079,7 +1079,7 @@ class Comisiones_model extends CI_Model {
     }
 
     function getDatosNuevasMktd_pre(){
-        if( $this->session->userdata('id_usuario') == 2042 ){
+        if( $this->session->userdata('id_usuario') == 2042){
             $filtro = " 2,3,4,6 ";
         } else{
             $filtro = " 1,5,8,9 ";

@@ -85,5 +85,5 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-    <script src="<?=base_url()?>dist/js/controllers/suma/revisionRemanentes.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/suma/revisionRemanentes.js"></script>
 </body>

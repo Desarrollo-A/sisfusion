@@ -234,9 +234,7 @@ $("#tabla_bono_revision").ready(function() {
     });
 
     $('#tabla_bono_revision').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $('#tabla_bono_revision').on('click', 'input', function() {

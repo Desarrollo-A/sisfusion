@@ -2,7 +2,6 @@ let tablaComisiones;
 
 $(document).ready(function () {
     $("#div-tabla").prop("hidden", true);
-    // $('#spiner-loader').removeClass('hide');
     $.ajax({
         url: `${general_base_url}Comisiones/getPuestoComisionesAsistentes`,
         type: 'GET',
@@ -14,7 +13,6 @@ $(document).ready(function () {
                 $('#puestos').append($('<option>').val(id).text(nombre));
             }
             $('#puestos').selectpicker('refresh');
-            // $('#spiner-loader').addClass('hide');
         }
     });
 
@@ -54,7 +52,6 @@ $('#puestos').on('change', function () {
     $("#div-tabla").prop("hidden", true);
 
     if (puesto !== '0') {
-        // $('#spiner-loader').removeClass('hide');
         $.ajax({
             url: `${general_base_url}Comisiones/findUsuariosByPuestoAsistente/${puesto}`,
             type: 'GET',
@@ -66,7 +63,6 @@ $('#puestos').on('change', function () {
                     $('#usuarios').append($('<option>').val(id).text(nombre));
                 }
                 $('#usuarios').selectpicker('refresh');
-                // $('#spiner-loader').addClass('hide');
             }
         });
     }
@@ -78,7 +74,6 @@ $('#usuarios').on('change', function () {
     const idEstatus = $('#estatus').val() || 0;
 
     if (idUsuario !== '') {
-        // $('#spiner-loader').removeClass('hide');
         loadTable(idUsuario, idProyecto, idEstatus);
     } else {
         $("#div-tabla").prop("hidden", true);
@@ -91,7 +86,6 @@ $('#proyectos').on('change', function () {
     const idEstatus = $('#estatus').val() || 0;
 
     if (idUsuario !== '0') {
-        // $('#spiner-loader').removeClass('hide');
         loadTable(idUsuario, idProyecto, idEstatus);
     }
 });
@@ -102,7 +96,6 @@ $('#estatus').on('change', function () {
     const idProyecto = $('#proyectos').val();
 
     if (idUsuario !== '0') {
-        // $('#spiner-loader').removeClass('hide');
         loadTable(idUsuario, idProyecto, idEstatus);
     }
 });
@@ -279,7 +272,6 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             "data": function( data ){
                 var BtnStats;
                 BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
-                // console.log(BtnStats);
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }],
@@ -299,39 +291,54 @@ function loadTable(idUsuario, idProyecto, idEstatus) {
             "cache": false,
             "data": function( d ) {}
         },
-        // initComplete: function(){
-        //     $('#spiner-loader').addClass('hide');
-        // },
         order: [[ 1, 'asc' ]]
     });
 
     $('#tabla-historial').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla-historial tbody").on("click", ".consultarDetalleDelPago", function(e){
-        // $("#spiner-loader").removeClass('hide');
+        $("#spiner-loader").removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         const id_pago = $(this).val();
         const lote = $(this).attr("data-value");
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nameLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain m-0">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+        </div>`);
+        showModal();
 
         $.getJSON("getComments/"+id_pago).done( function( data ){
-            $("#seeInformationModalAsimilados").modal();
+            $("#spiner-loader").addClass('hide');
             $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
-            // $("#spiner-l}oader").addClass('hide');
         });
     });
-}
-
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
 }

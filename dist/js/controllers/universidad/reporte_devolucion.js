@@ -4,19 +4,17 @@ $(document).ready(function() {
 });
 
 $('#tabla_devoluciones').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
 
-$('#filtro33').change(function(){
+$('#puesto_devolucion').change(function(){
     let tipo_usuario = $(this).val();
     query  = " AND com.rol_generado = "+ tipo_usuario +" " ;
     getAssimilatedCommissions(query);
 });
 
 var tr;
-var tabla_devoluciones ;
+var tabla_devoluciones;
 
 let titulos = [];
 $('#tabla_devoluciones thead tr:eq(0) th').each( function (i) {
@@ -52,8 +50,7 @@ function getAssimilatedCommissions(query ){
                     }
                 }
             }
-        },
-        ],
+        }],
         pagingType: "full_numbers",
         fixedHeader: true,
         lengthMenu: [
@@ -70,64 +67,61 @@ function getAssimilatedCommissions(query ){
         destroy: true,
         ordering: false,
         columns: [{
-            data: function( d )
-            {
-                return d.id_pago_i; //id pago
+                data: function( d ){
+                return d.id_pago_i; 
             }
-            },
-            {
-                data: function( d ){
-                    return d.nombreLote; //Nombre lote
-                }
-            },
-            {
-                data: function( d ){
-                    return d.empresa; //nombre de empresa
-                }
-            },
-            {
-                data: function( d ){
-                    return d.id_usuario; //nombre de usuario
-                }
-            },
-            {
-                data: function( d ){
-                    return d.user_names; //clave del usuario
-                }
-            },
-            {
-                data: function( d ){
-                    return d.puesto; //puesto actual
-                }
-            },
+        },
+        {
+            data: function( d ){
+                return d.nombreLote;
+            }
+        },
+        {
+            data: function( d ){
+                return d.empresa; 
+            }
+        },
+        {
+            data: function( d ){
+                return d.id_usuario;
+            }
+        },
+        {
+            data: function( d ){
+                return d.user_names;
+            }
+        },
+        {
+            data: function( d ){
+                return d.puesto;
+            }
+        },
+        {
+            data: function( d ){
+                return d.fecha_descuento; 
+            }
+        },
+        {
+            data: function( d ){
+                return d.fecha_devolucion;   
+            }
+        },  
+        {
+            data: function( d ){
+                return d.abono;      
+            }
+        },
+        {
+            data: function( d ){
+                return d.sede;  
+            }
             
-             {
-                data: function( d ){
-                    return d.fecha_descuento;    // fecha de pagoo
-                }
-            },
-            {
-                data: function( d ){
-                    return d.fecha_devolucion;    // fecha de pagoo
-                }
-            },  
-            {
-                data: function( d ){
-                    return d.abono; //abono_neodata      
-                }
-            },
-            {
-                data: function( d ){
-                    return d.sede; //SEDE      
-                }
-                
-            },
-            {
-                data: function( d ){
-                    return d.creado; 
-                } // Creado por
-            },
-                ],
+        },
+        {
+            data: function( d ){
+                return d.creado; 
+            }
+        }],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -139,7 +133,6 @@ function getAssimilatedCommissions(query ){
                 query : query 
             },
             cache: false,
-            
         }
     });
 }

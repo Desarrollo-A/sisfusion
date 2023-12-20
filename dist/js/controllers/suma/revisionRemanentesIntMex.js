@@ -1,12 +1,5 @@
 var totaPen = 0;
 
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-remanentes');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 $(document).ready(function() {
     $("#tabla_remanentes").prop("hidden", true);
     $.post(general_base_url+"Suma/lista_roles", function (data) {
@@ -14,15 +7,15 @@ $(document).ready(function() {
         for (var i = 0; i < len; i++) {
             var id = data[i]['idRol'];
             var name = data[i]['descripcion'];
-            $("#filtro33").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_remanente").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#filtro33").selectpicker('refresh');
+        $("#catalogo_remanente").selectpicker('refresh');
     }, 'json');
 });
 
-$('#filtro33').change(function(){
-    idRol = $('#filtro33').val();
-    $("#filtro44").empty().selectpicker('refresh');
+$('#catalogo_remanente').change(function(){
+    idRol = $('#catalogo_remanente').val();
+    $("#usuario_remanente").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + `Suma/lista_usuarios/${idRol}/4`,
         type: 'post',
@@ -32,16 +25,16 @@ $('#filtro33').change(function(){
             for( var i = 0; i<len; i++){
                 var id = response[i]['id_usuario'];
                 var name = response[i]['nombre'];
-                $("#filtro44").append($('<option>').val(id).text(name));
+                $("#usuario_remanente").append($('<option>').val(id).text(name));
             }
-            $("#filtro44").selectpicker('refresh');
+            $("#usuario_remanente").selectpicker('refresh');
         }
     });
 });
 
-$('#filtro44').change( function() {
-    idRol = $('#filtro33').val();
-    idUsuario = $('#filtro44').val();
+$('#usuario_remanente').change( function() {
+    idRol = $('#catalogo_remanente').val();
+    idUsuario = $('#usuario_remanente').val();
     if(idUsuario == '' || idUsuario == null || idUsuario == undefined){
         idUsuario = 0;
     }
@@ -58,10 +51,7 @@ $('#tabla_remanentes thead tr:eq(0) th').each( function (i) {
             if (tabla_remanentes.column(i).search() !== this.value) {
                 tabla_remanentes.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_remanentes.rows({
-                    selected: true,
-                    search: 'applied'
-                }).indexes();
+                var index = tabla_remanentes.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_remanentes.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
@@ -126,25 +116,17 @@ function getRemanentesCommissions(idRol, idUsuario){
                                 $("#totpagarPen").html(formatMoney(0));
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
-                                $("#myModalEnviadas").modal('toggle');
                                 tabla_remanentes.ajax.reload();
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><img style='width: 75%; height: 75%;' src='"+general_base_url+"dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones de esquema <b>remanentes</b>, fueron marcadas como <b>PAGADAS</b> correctamente.</p></center>");
+                                mensaje = "Comisiones de esquema <b>remanentes</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
+                                modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             } else {
                                 $('#spiner-loader').addClass('hide');
-                                $("#myModalEnviadas").modal('toggle');
-                                $("#myModalEnviadas .modal-body").html("");
-                                $("#myModalEnviadas").modal();
-                                $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                                modalInformation(RESPUESTA_MODAL.FAIL);
                             }
                         },
                         error: function( data ){
                             $('#spiner-loader').addClass('hide');
-                            $("#myModalEnviadas").modal('toggle');
-                            $("#myModalEnviadas .modal-body").html("");
-                            $("#myModalEnviadas").modal();
-                            $("#myModalEnviadas .modal-body").append("<center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center>");
+                            modalInformation(RESPUESTA_MODAL.FAIL);
                         }
                     });
                 }
@@ -270,9 +252,7 @@ function getRemanentesCommissions(idRol, idUsuario){
     });
 
     $('#tabla_remanentes').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_remanentes tbody").on("click", ".consultar_logs_remanentes", function(e){
@@ -280,7 +260,33 @@ function getRemanentesCommissions(idRol, idUsuario){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
-        $("#seeInformationModalRemanentes").modal();
+        
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
+                    <div id="nameLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-remanentes"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
+
         $("#nameLote").html("");
         $("#comments-list-remanentes").html("");
         $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+referencia+'</b></h5></p>');
@@ -305,8 +311,7 @@ function getRemanentesCommissions(idRol, idUsuario){
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-    .columns.adjust();
+    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
 
 $(window).resize(function(){
@@ -331,7 +336,7 @@ $("#form_interes").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data ){
                     $("#modal_nuevas").modal('toggle' );
@@ -361,8 +366,8 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples .modal-body").html("");
     $("#modal_multiples .modal-header").html("");
     $("#modal_multiples .modal-header").append('<h4 class="card-title"><b>Marcar pagadas</b></h4>');
-    $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><center><input type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"><button type="button" class="btn btn-danger" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button></center></div>`);
-    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="form-control desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
+    $("#modal_multiples .modal-footer").append(`<div class="row" id="borrarProyect"><div class="col-lg-12"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary">ACEPTAR</button></div></div>`);
+    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker m-0 select-gral desarrolloSelect ng-invalid ng-invalid-required" required data-live-search="true"></select></div></div>`);
     $.post('getDesarrolloSelectINTMEX/'+3, function(data) {
         $("#desarrolloSelect").append($('<option disabled>').val("default").text("Seleccione una opción"))
         var len = data.length;
@@ -432,7 +437,7 @@ $("#form_refresh").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data[0] ){
                     $("#modal_refresh").modal('toggle' );
@@ -454,13 +459,6 @@ $("#form_refresh").submit( function(e) {
 $(document).on("click", ".btn-historial-lo", function(){
     window.open(general_base_url+"Comisiones/getHistorialEmpresa", "_blank");
 });
-
-function cleanComments(){
-    var myCommentsList = document.getElementById('documents');
-    myCommentsList.innerHTML = '';
-    var myFactura = document.getElementById('facturaInfo');
-    myFactura.innerHTML = '';
-}
 
 function selectAll(e) {
     tota2 = 0;
@@ -485,20 +483,10 @@ function selectAll(e) {
     }
 }
 
-$(document).ready( function(){
-    $.getJSON( general_base_url + "Comisiones/getReporteEmpresa").done( function( data ){
-        $(".report_empresa").html();
-        $.each( data, function( i, v){
-            $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-        });
-    });
-});
-
 $("#form_multiples").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({
-
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
