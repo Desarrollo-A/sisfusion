@@ -4,10 +4,14 @@ var tabla_descuentos ;
 var totaPen = 0;
 let titulos = [];
 
+$(document).ready(function(){
+    $("#tabla_descuentos").addClass('hide');
+});
+
 $('#mes').change(function(){
     anio = $('#anio').val();
     mes = $('#mes').val();
-    // alert(}mes);
+    
     if(mes == '' || anio == ''){
     }else{
         fillTable(anio, mes);
@@ -15,16 +19,15 @@ $('#mes').change(function(){
 });
 
 $('#anio').change(function() {
-    // alert(mes);
     anio = $('#anio').val();
     mes = $('#mes').val();
     if(anio == '' || mes == ''){
     }else{
+        $("#tabla_descuentos").removeClass('hide');
         fillTable(anio, mes);
     }
     
 });
-
 
 $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
@@ -155,13 +158,11 @@ function fillTable(anio, mes){
 
                     return '<p class="m-0">'+d.comentario+'</p>';
                 }else{
-                    return `    
-                        <div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
+                    return `<div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
                             <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
                             <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
                                 onclick="esconder(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
                                 <span class="lbl-blueMaderas"><B>Ver más</B></span> 
-                                
                             </a>
                         </div>
                         <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
@@ -172,8 +173,7 @@ function fillTable(anio, mes){
                                     <span class="lbl-blueMaderas"><B>Ver menos</B></span> 
                                 </a>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 }
             }
         },
@@ -184,7 +184,7 @@ function fillTable(anio, mes){
         },
         {
             "data": function( d ){
-                return '<span class="label" style="background: #05A134;">PAGADO</span>';
+                return '<span class="label lbl-green" >PAGADO</span>';
             }
         },
         {
@@ -275,19 +275,13 @@ $(window).resize(function(){
 });
 
 function esconder(id){
-    // alert(1331)
     $('#muestratexto'+id).addClass('hide');
-    // $('#muestratexto'+id).removeClass('hide');
     
 }
-
 
 function mostrar(id){
-    // $('#muestratexto'+id).addClass('hide');
-    $('#muestratexto'+id).removeClass('hide');
-    
+    $('#muestratexto'+id).removeClass('hide'); 
 }
 
-// url: `${general_base_url}Comisiones/getPrestamosTable/${mes}/${anio}`,
         
 

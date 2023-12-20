@@ -124,7 +124,8 @@ function loadTable(tipoDescuento) {
                     }
                 }
             }
-        }, {
+        }, 
+        {
             text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
             action: function () {
                 aplicarDescuento();
