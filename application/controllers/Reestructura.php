@@ -1738,27 +1738,25 @@ class Reestructura extends CI_Controller{
         }
     }
     
-    public function cambiarBandera  ()
-    {
+    public function cambiarBandera  (){
         $bandera   =  $this->input->post('bandera');
         $idLote    =  $this->input->post('idLoteBandera');
-           $arr_update = array( 
-                            "liberaBandera"   => $bandera,
-                            );
-      $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
-      if($update){
-        $respuesta =  array(
-          "response_code" => 200, 
-          "response_type" => 'success',
-          "message" => "Se ha liberado  satisfactoriamente");
-      }else{
-        $respuesta =  array(
-          "response_code" => 400, 
-          "response_type" => 'warning',
-          "message" => "Lote no actualizado, inténtalo más tarde ");
-      }
-      echo json_encode ($respuesta);             
-  
+        $arr_update = array( 
+                        "liberaBandera"   => $bandera,
+                        );
+        $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
+        if($update){
+            $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Se ha liberado  satisfactoriamente");
+        }else{
+            $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'warning',
+            "message" => "Lote no actualizado, inténtalo más tarde ");
+        }
+        echo json_encode ($respuesta);             
     }
 
     function getListaLotesArchivosReestrucura(){
