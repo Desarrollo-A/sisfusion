@@ -2001,7 +2001,7 @@ class Reestructura extends CI_Controller{
             }
         }
         else {
-            $estatus_proceso = $idPreproceso + 1;
+            $estatus_proceso = ($idPreproceso + 1) == 5 ? 6 : $idPreproceso + 1 ;
             $updateFechaVencimientoBandera = 1;
         }
         
@@ -2373,7 +2373,7 @@ class Reestructura extends CI_Controller{
                 $dataUpdateLote['estatus_preproceso'] = 2;
                 $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             } else
-                $dataUpdateLote['estatus_preproceso'] = $idPreproceso - 1;
+                $dataUpdateLote['estatus_preproceso'] =  ($idPreproceso - 1) == 5 ? 3 : $idPreproceso - 1;
                 
             $dataHistorial = array(
                 'idLote' => $idLote,

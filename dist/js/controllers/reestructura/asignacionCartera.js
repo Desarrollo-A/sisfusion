@@ -371,11 +371,11 @@ function verificarCheck(valorActual){
         let indexDelete = buscarValor($(valorActual).val(),arrayValores);
         arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
     }
-    if(arrayValores.length>1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]) > 224)){
+    if(arrayValores.length>1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
      //se seleccionó más de uno, se habilita el botón para hacer el multiple
         botonEnviar[0].classList.remove('hide');
         $('#btn_'+$(valorActual).val()).prop("disabled", true);        
-    }else if((arrayValores.length == 1 && parseFloat(arrayValores[0][5]) < 224)){
+    }else if((arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
         $('#btn_'+$(valorActual).val()).prop("disabled", true);        
     }else{
         botonEnviar[0].classList.add('hide');

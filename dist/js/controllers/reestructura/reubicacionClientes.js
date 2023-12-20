@@ -64,7 +64,8 @@ const ESTATUS_PREPROCESO = [
     'OBTENCIÓN DE FIRMA DEL CLIENTE',
     'CONTRATO FIRMADO CONFIRMADO, PENDIENTE TRASPASO DE RECURSO',
     'RECURSO TRASPASADO, PENDIENTE EJECUCIÓN APARTADO NUEVO',
-    'PROCESO DE CONTRATACIÓN'
+    'PROCESO DE CONTRATACIÓN',
+    'REVISIÓN DE INFORMACIÓN DEL CLIENTE'
 ];
 
 const ROLES_PROPUESTAS = [2, 3, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
@@ -1410,7 +1411,6 @@ const botonesAccionReubicacion = (d) => {
         tooltipCF = 'VER CONTRATO FIRMADO';
     }
 
-
     const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
                             data-toggle="tooltip" 
                             data-placement="left"
@@ -1453,7 +1453,7 @@ const botonesAccionReubicacion = (d) => {
     const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.idStatusLote == 17 ? 8 : idEstatusPreproceso - 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
                     ${botonFusionadoEstatus}
@@ -1596,7 +1596,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
     return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
     if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION + BTN_RECHAZO ;
+        return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_RECHAZO : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
     return '';
