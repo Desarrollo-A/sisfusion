@@ -96,7 +96,7 @@ $("#form_descuentos2").on('submit', function(e){
             if (data == 1) {
                 document.getElementById('btn_abonar2').disabled=false;
                 document.getElementById("form_descuentos2").reset();
-                $('#tabla_descuentos2').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal3').modal('hide');
                 $('#idloteorigen2 option').remove();
                 $("#roles2").val('');
@@ -109,14 +109,14 @@ $("#form_descuentos2").on('submit', function(e){
             }
             else if(data == 2) {
                 document.getElementById('btn_abonar2').disabled=false;
-                $('#tabla_descuentos2').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                 $(".directorSelect2").empty();
             }
             else if(data == 3){
                 document.getElementById('btn_abonar2').disabled=false;
-                $('#tabla_descuentos2').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                 $(".directorSelect2").empty();

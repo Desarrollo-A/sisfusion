@@ -126,7 +126,7 @@ class Descuentos_model extends CI_Model {
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
         $insert_id = $this->db->insert_id();
 
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente) VALUES ($usuarioid, $monto, 1, $monto, 'DESCUENTO REVISIÓN2', 1, 0, $user, GETDATE(), $user, GETDATE(), 1,  $estatus, 0)");
+        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente) VALUES ($usuarioid, $monto, 1, $monto, 'DESCUENTO REVISIÓN2', 2, 0, $user, GETDATE(), $user, GETDATE(), 1,  $estatus, 0)");
         $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
 
         $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $user, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
