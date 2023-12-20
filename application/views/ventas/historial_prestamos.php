@@ -78,7 +78,7 @@
                                                     <th>No. #</th>
                                                     <th>FECHA</th>
                                                     <th>COMENTARIOS</th>
-                                                    <th>COMENTARIO OCULTO</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>ESTATUS PRESTÁMO</th>
                                                     <th>TIPO DESCUENTO</th>
                                                     <th>ACCIONES</th>
