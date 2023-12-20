@@ -52,7 +52,7 @@ class Contraloria_model extends CI_Model {
         $query = $this->db-> query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(varchar,l.modificado,120) as modificado, cl.rfc,
         CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120)as fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,s.nombre  as sede,
-  		l.observacionContratoUrgente as vl,  CASE WHEN l.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.background_sl,  sl.color, tv.tipo_venta,
+  		l.observacionContratoUrgente as vl,  CASE WHEN l.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.background_sl,  sl.color, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -78,7 +78,7 @@ class Contraloria_model extends CI_Model {
         GROUP BY l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sl.background_sl, sl.color,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        l.tipo_venta, tv.tipo_venta, l.observacionContratoUrgente,l.casa, sl.nombre, 
+        tv.tipo_venta, l.observacionContratoUrgente,l.casa, sl.nombre, 
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
@@ -1604,8 +1604,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
             LEFT JOIN clausulas AS cl ON cl.id_lote = l.idLote AND cl.estatus = 1
             WHERE h.fecha_modificacion = (SELECT MAX(fecha_modificacion) FROM historial_liberacion_lotes WHERE idLote = h.idLote)
-            AND op.id_catalogo = 109 AND (h.id_proceso = 2)
-            AND res.id_subdirector = $id_usuario;";
+            AND op.id_catalogo = 109 AND (h.id_proceso = 2) AND res.id_subdirector = $id_usuario;";
         }
 
         if ($rol == 12) {
@@ -1654,8 +1653,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         ON L.[idLote] = H.[idLote]
         LEFT JOIN [sisfusion].[dbo].[usuarios] AS U
         ON H.[modificado_por] = U.[id_usuario]
-        WHERE L.[idLote] = $idLote;
-        ";
+        WHERE L.[idLote] = $idLote;";
+        
         return $this->db->query($qry);
     }
 
@@ -1807,9 +1806,22 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function get_lotes_contratados() 
     {   
+        $rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
 
         if($id_usuario == 2){
+            $qry ="	SELECT h.*, l.idLote, l.nombreLote, l.idCliente, l.prorroga,
+            CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) AS nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, 
+            DATEDIFF(DAY, hl.fechaEstatus9, GETDATE()) - (DATEDIFF(WEEK, hl.fechaEstatus9, GETDATE()) * 2) AS dias_transcurridos, l.idStatusLote
+            FROM historial_liberacion h
+            INNER JOIN lotes AS l ON l.idLote = h.idLote
+            LEFT JOIN clientes AS c ON c.id_cliente = l.idCliente 
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) AS fechaEstatus9 FROM lotes WHERE idLote IN (SELECT idLote FROM lotes WHERE idStatusLote IN (1,3) AND idStatusContratacion = 9) 
+            AND status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl ON l.idLote = hl.idLote AND l.idCliente = hl.idCliente
+            WHERE l.idStatusLote IN (1,3) AND l.idStatusContratacion = 9";
+        }if ($rol == 6){
             $qry ="	SELECT h.*, l.idLote, l.nombreLote, l.idCliente, l.prorroga,
             CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) AS nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, 
             DATEDIFF(DAY, hl.fechaEstatus9, GETDATE()) - (DATEDIFF(WEEK, hl.fechaEstatus9, GETDATE()) * 2) AS dias_transcurridos, l.idStatusLote

@@ -24,6 +24,15 @@ class Asesor_model extends CI_Model {
         WHERE cl.id_cliente = $id_cliente");
     }
 
+    function getTipo_Venta(){
+        return $this ->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, lo.idCondominio, lo.idLote, cl.id_asesor, lo.tipo_venta
+		FROM lotes lo
+		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+		INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor AND u0.estatus = 1
+		WHERE lo.status = 1 AND ISNULL(lo.tipo_venta, 0) = 1
+		AND lo.idMovimiento IN (31, 73)");
+    }
+
     function getinfoCopropietario($id_cliente){
         return $this->db->query("SELECT id_copropietario, id_cliente, regimen_matrimonial as regimen_valor, estado_civil as estado_valor, co.nacionalidad as nacionalidad_valor, co.nombre as nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, originario_de, conyuge, domicilio_particular, personalidad_juridica, ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
         FROM copropietarios co 
