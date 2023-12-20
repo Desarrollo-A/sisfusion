@@ -544,7 +544,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
-        LEFT JOIN lotesFusion lf ON lf.idLote=lo.idLote
+        LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
         WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 $filtroSede")->result_array();
     }
 
@@ -928,12 +928,6 @@ class Reestructura_model extends CI_Model
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lf2.idLote AND cl.status = 1 AND cl.proceso IN (5, 6)
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97")->result_array();
     }
-
-    public function getLotesFusion($idLote){
-        $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
-        return $query->result_array();
-    }
-
     public function getReporteEstatus() {
         return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
         re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
