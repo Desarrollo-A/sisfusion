@@ -2190,11 +2190,6 @@ class Comisiones extends CI_Controller
     echo json_encode($this->Comisiones_model->getLideres($lider)->result_array());
   }
 
-  public function general_Intmex(){
-    $this->load->view('template/header');
-    $this->load->view("ventas/general_Intmex");
-  }
-
   public function getDatosGralInternomex(){
     $dat =  $this->Comisiones_model->getDatosGralInternomex()->result_array();
     for( $i = 0; $i < count($dat); $i++ ){

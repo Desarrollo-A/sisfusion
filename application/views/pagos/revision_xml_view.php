@@ -42,7 +42,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#xmlComercializacion" role="tab" data-toggle="tab">Xml lotes</a></li>
-                            <li><a href="#xmlOOAM" role="tab" data-toggle="tab">Xml ooam</a></li>
+                            <!-- <li><a href="#xmlOOAM" role="tab" data-toggle="tab">Xml ooam</a></li> -->
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">

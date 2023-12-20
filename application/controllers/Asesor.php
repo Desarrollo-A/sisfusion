@@ -792,7 +792,7 @@ class Asesor extends CI_Controller {
                 $arcusData = array(
                     "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
-                    "estatus" => 4
+                    "estatus" => "Propiedad apartada"
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
@@ -879,6 +879,10 @@ class Asesor extends CI_Controller {
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
             ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
             : [];
+
+        //prueba
+        $tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $tipo_venta_result->row()->tipo_venta ?? null;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -1824,6 +1828,8 @@ class Asesor extends CI_Controller {
         $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
         $costom2f = str_replace('$','', $costom2f);
+
+
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
         $importOferta = str_replace(',','',$this->input->post('importOferta'));

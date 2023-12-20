@@ -939,7 +939,7 @@ class Caja_outside extends CI_Controller {
             $arcusData = array(
                 "propiedadRelacionada" => $id_lote,
                 "uid" => $data['prospecto'][0]['id_arcus'],
-                "estatus" => 4
+                "estatus" => "Propiedad apartada"
             );
             $response = $this->arcus->sendLeadInfoRecord($arcusData);
         }
