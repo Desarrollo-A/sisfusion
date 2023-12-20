@@ -159,7 +159,7 @@
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
 						<h4 class="modal-title">PRÉSTAMOS Y PENALIZACIONES</h4>
 					</div>
-					<form >
+					<form method="post" id="form_prestamos_penalizaciones">
 						<div class="form-group row">
 							<div class="col-md-12">
 								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
@@ -175,7 +175,7 @@
 							</div>
 							<div class="col-md-4">
 								<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
-								<input class="form-control input-gral" onkeydown="return event.keyCode !== 69" id="numeroPagos" required  type="number"  maxlength="2" name="numeroP" min="1">
+								<input class="form-control input-gr4al" onkeydown="return event.keyCode !== 69" id="numeroPagos" required  type="number"  maxlength="2" name="numeroP" min="1">
 							</div>
 							<div class="col-md-4">
 								<label class="control-label">Pago</label>
@@ -220,15 +220,15 @@
 									<option value="2">Sub director</option>      
 								</select>
 							</div>
-							<div class="form-group" id="users"></div>
+							<div class="form-group" id="usersPrincipal"></div>
 							<div class="form-group row">
 								<div class="col-md-4">
 									<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="montoDescuentos"  min="1" name="montoDescuentos">
+									<input class="form-control input-gral" type="number" step="any" required onblur="verificarPanelDescuento();" id="montoDescuentos"  min="1" name="montoDescuentos">
 								</div>
 								<div class="col-md-4">
 									<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
-									<input class="form-control input-gral" id="numeroP" onblur="verificar();" type="number"  min="1" name="numeroP" required>
+									<input class="form-control input-gral" id="numeroP" onblur="verificarPanelDescuento();" type="number"  min="1" name="numeroP" required>
 								</div>
 								<div class="col-md-4">
 									<label class="control-label">Pago</label>
@@ -295,17 +295,12 @@
                                             </div>
                                         </div>
 										<div class="row">
-											<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+											<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group d-flex justify-center align-center">
 													<button ype="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Prestamos</button>
 												</div>
 											</div>
-											<div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
-                                                <div class="form-group">
-                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal2">Descuento nuevos sin solicitar</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12  col-md-4 col-lg-4">
+                                            <div class="col-xs-12 col-sm-12  col-md-6 col-lg-6">
                                                 <div class="form-group">
                                                     <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal3">Descuento revisión contraloria</button>
                                                 </div>

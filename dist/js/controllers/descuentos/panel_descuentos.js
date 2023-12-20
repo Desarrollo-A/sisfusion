@@ -22,25 +22,25 @@ $('#tipo').change(function (ruta) {
         document.getElementById("numeroP").value = 1;
 
         if (m != '') {
-            verificar();
+            verificarPanelDescuento();
         }
     } else {
         texto = 'Esté es un pago único que se hará en una sola exhibición.'
         document.getElementById("numeroP").value = 1;
 
         if (m != '') {
-            verificar();
+            verificarPanelDescuento();
         }
     }
     document.getElementById("texto").innerHTML = texto;
 
 });
 
-function closeModalEng() {
+function closeModalEngPrestamos() {
     document.getElementById("form_prestamos").reset();
     $("#tipo").selectpicker("refresh");
     $("#rolesDescuento").selectpicker("refresh");
-    document.getElementById("users").innerHTML = '';
+    document.getElementById("usersPrincipal").innerHTML = '';
     $("#miModal").modal('toggle');
 }
 
@@ -64,21 +64,21 @@ $("#form_prestamos").on('submit', function (e) {
 
             if (data == 1) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
+                closeModalEngPrestamos();
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
             } else if (data == 2) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
+                closeModalEngPrestamos();
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Pago liquidado.", "warning");
             } else if (data == 3) {
-                closeModalEng();
+                closeModalEngPrestamos();
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
             }
             else if (data == 4) {
-                closeModalEng();
+                closeModalEngPrestamos();
                 $('#miModal').modal('hide');
                 alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");
             }
@@ -116,17 +116,19 @@ $("#form_delete").on('submit', function (e) {
         }
     });
 });
+let titulos = [];
+$("#tabla_prestamos").ready( function(){
 
-$("#tabla_prestamos").ready(function () {
-    let titulos = [];
     $('#tabla_prestamos thead tr:eq(0) th').each(function (i) {
+
         var title = $(this).text();
+
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top"  class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
 
             if (tabla_nuevas.column(i).search() !== this.value) {
-                tabla_nuevas.column(i).search(this.value).draw();
+                tabla_nuevas.column(i).search(this.value).draw()
                 var total = 0;
                 var totalAbonado = 0;
                 var totalPendiente = 0;
@@ -371,10 +373,10 @@ $("#tabla_prestamos").ready(function () {
         }],
         columnDefs: [{
             targets: [ 8], visible: false,
-            searchable: false,
-        }],
+            searchable:true,
+            }],
         ajax: {
-            url: general_base_url + "Comisiones/getPrestamos",
+            url: general_base_url + "Descuentos/getPrestamos",
             type: "POST",
             cache: false,
             data: function (d) {
@@ -390,7 +392,7 @@ $("#tabla_prestamos").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
         Modalfooter.append(`<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
+				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
         $("#myModalDelete").modal();
     });
 
@@ -422,8 +424,8 @@ $("#tabla_prestamos").ready(function () {
     
         $("#ModalEdit").modal();
     });
-    $(document).on("click", ".updatePrestamo", function () {
-
+    $("#form_prestamos_penalizaciones").on('submit', function (e) {
+        e.preventDefault();
         montoPagos = document.getElementById("montoPagos").value;
         numeroPagos = document.getElementById("numeroPagos").value;
         pagoEdit = document.getElementById("pagoEdit").value;
@@ -431,12 +433,24 @@ $("#tabla_prestamos").ready(function () {
         prestamoId = document.getElementById("prestamoId").value;
         tipoD      = document.getElementById("tipoD").value;
         bandera_request = comentario == '' ? false : true;
-        pagoEdit = pagoEdit.replace(/,/g, "");
+        pagoEdit =  pagoEdit.replace(/[$,]/g,'');
         montoPagos = montoPagos.replace(/,/g, "");
         numeroPagos = numeroPagos.replace(/,/g, "");
-
+        console.log(1)
+        console.log(pagoEdit)
+        console.log(2)
+        console.log(numeroPagos)
+        console.log(3)
+        console.log(montoPagos)
+        console.log(4)
+        console.log(comentario)
+        console.log(5)
+        console.log(prestamoId)
+        console.log(6)
+        console.log(bandera_request)
         if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
-            if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
+           
+            if (parseInt(pagoEdit) > 0 && parseInt(montoPagos) > 0 && parseInt(numeroPagos) > 0) {
                 $.ajax({
                     url: 'updatePrestamos',
                     type: 'POST',
@@ -451,7 +465,7 @@ $("#tabla_prestamos").ready(function () {
                     },
                     success: function (data) {
                         alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-                        $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                        $('#tabla_prestamos').DataTable().ajax.reload(null, false);              
                         $('#ModalEdit').modal('toggle');
                     },
                     error: (a, b, c) => {
@@ -542,7 +556,7 @@ $("#tabla_prestamos").ready(function () {
         $('#spiner-loader').removeClass('hide');
         const idPrestamo = $(this).val();
         let importacion = '';
-        $.getJSON(`${general_base_url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
+        $.getJSON(`${general_base_url}Descuentos/getDetallePrestamo/${idPrestamo}`).done(function (data) {
             
             const { general, detalle } = data;
             $('#spiner-loader').addClass('hide');
@@ -685,9 +699,9 @@ $(window).resize(function () {
 
 $("#rolesDescuento").change(function () {
     var parent = $(this).val();
-    document.getElementById("users").innerHTML = '';
+    document.getElementById("usersPrincipal").innerHTML = '';
 
-    $('#users').append(` <label class="label control-label">Usuario</label>   
+    $('#usersPrincipal').append(` <label class="label control-label">Usuario</label>   
     <select id="usuarioidDescuento" name="usuarioidDescuento" class="selectpicker m-0 select-gral directorSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>`);
     $.post('getUsuariosRol/' + parent + '/1', function (data) {
         var len = data.length;
@@ -706,7 +720,7 @@ $("#rolesDescuento").change(function () {
     }, 'json');
 });
 
-function verificar() {
+function verificarPanelDescuento() {
     var input1=  document.getElementById('montoDescuentos');
     var input2=  document.getElementById('numeroP');
     let monto = parseFloat(replaceAll($('#montoDescuentos').val(), ',', ''));
@@ -735,7 +749,7 @@ function verificar() {
 
 }
 $(document).on('input', '.montoDescuentos', function () {
-    verificar();
+    verificarPanelDescuento();
 });
 
 $(document).on("click", "#preview", function () {
