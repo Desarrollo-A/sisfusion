@@ -216,21 +216,21 @@ class Reestructura extends CI_Controller{
         if (!$idClienteInsert) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
-        $dataLiberacion = [
+        $dataLiberacion = array(
             'tipoLiberacion' => 8,
             'idLote' => $loteAOcupar,
             'idClienteNuevo' => $idClienteInsert,
             'idClienteAnterior' => $idClienteAnterior
-        ];
+        );
 
         if (!$this->Reestructura_model->aplicaLiberacion($dataLiberacion)){
             $data['message'] = 'ERROR';
@@ -256,24 +256,24 @@ class Reestructura extends CI_Controller{
         if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         if (!$this->copiarDSAnteriorAlNuevo($idClienteAnterior, $idClienteInsert, $loteAOcupar)) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
@@ -284,14 +284,55 @@ class Reestructura extends CI_Controller{
         if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
+
+
+        //Copia del cliente
+        $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($loteAOcupar);
+        $dataUpdateClienteNew = array(
+            'nombre' => $datosClienteConfirm->nombre,
+            'apellido_paterno' => $datosClienteConfirm->apellido_paterno,
+            'apellido_materno' => $datosClienteConfirm->apellido_materno,
+            'estado_civil' => $datosClienteConfirm->estado_civil,
+            'domicilio_particular' => $datosClienteConfirm->domicilio_particular,
+            'correo' => $datosClienteConfirm->correo,
+            'telefono1' => $datosClienteConfirm->telefono1,
+            'ocupacion' => $datosClienteConfirm->ocupacion,
+            'modificado_por' => $this->session->userdata('id_usuario'),
+            'fecha_modificacion' => date('Y-m-d h:i:s')
+        );
+
+        //Se modifican datos a los ingresados como confirmación por los gerentes ooam
+        if (!$this->General_model->updateRecord("clientes", $dataUpdateClienteNew, "id_cliente", $idClienteInsert)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+        //funcion para actrualizar la propuestas final
+        if (!$this->Reestructura_model->setSeleccionPropuesta($loteAOcupar, $loteAOcupar)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
 
         $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
         if (!$this->moverExpediente(
@@ -300,46 +341,46 @@ class Reestructura extends CI_Controller{
         )) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         if (!$this->updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion)) {
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
 
-            echo json_encode([
+            echo json_encode(array(
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
                 'color' => 'danger'
-            ]);
+            ));
             return;
         }
 
         $this->db->trans_commit();
-		echo json_encode([
+		echo json_encode(array(
             'titulo' => 'OK',
             'resultado' => TRUE,
             'message' => 'Proceso realizado correctamente.',
             'color' => 'success'
-        ]);
+        ));
     }
 
     public function asignarPropuestasLotes(){
@@ -406,7 +447,7 @@ class Reestructura extends CI_Controller{
                         $arrayLote = array(
                             'idLote' => $idLoteOriginal,
                             'id_lotep' => $idLote,
-                            'estatus' =>  $proceso == 0,
+                            'estatus' =>  0,
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => date("Y-m-d H:i:s"),
                             'modificado_por' => $this->session->userdata('id_usuario')
@@ -522,6 +563,68 @@ class Reestructura extends CI_Controller{
                 'message' => 'Lotes no disponibles ' . $arrayNoDisponible.' Verifíquelos',
                 'color' => 'danger'
             ));
+        }
+    }
+
+    public function deshacerReestrucura(){
+        $this->db->trans_begin();
+        $id_cliente = $this->input->post('id_cliente');
+        $id_lote    = $this->input->post('id_lote');
+        $banderaInterna = 2;
+        $banderaActualizar = 0;
+        //1: eliminar la propuesta por ote de este lote
+        $deletePXL = $this->Reestructura_model->borrarPXL($id_lote); //devuelte el numero de rows affectados
+        if ($deletePXL <= 0) {
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al borrar las propuestas por lote del lote: '.$id_lote,
+                'color' => 'danger'
+            ));
+            return;
+        }else{
+            $banderaActualizar = $banderaActualizar + 1;
+        }
+
+
+        $dataRegresoLote = array(
+            "idStatusLote" => 2,
+            "estatus_preproceso" => 0,
+            'usuario' => $this->session->userdata('id_usuario'),
+            'modificado' => date('Y-m-d H:i:s')
+        );
+        if(!$this->General_model->updateRecord('lotes', $dataRegresoLote, 'idLote', $id_lote)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar el lote: '.$id_lote,
+                'color' => 'danger'
+            ));
+            return;
+        }else{
+            $banderaActualizar = $banderaActualizar + 1;
+        }
+
+        if($banderaActualizar === $banderaInterna){
+            $this->db->trans_commit();
+            echo json_encode(array(
+                'titulo' => 'OK',
+                'resultado' => TRUE,
+                'message' => 'Se ha revertido la reestructura correctamente del lote <b>'.$id_lote.'</b>',
+                'color' => 'success'
+            ));
+             //se ejecuta el rollback porque es prueba y no se debe ejecutar nada
+        }else{
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'No se logró deshacer la reestructura, intentalo nuevamente',
+                'color' => 'danger'
+            ));
+            return;
         }
     }
 
@@ -1635,27 +1738,25 @@ class Reestructura extends CI_Controller{
         }
     }
     
-    public function cambiarBandera  ()
-    {
+    public function cambiarBandera  (){
         $bandera   =  $this->input->post('bandera');
         $idLote    =  $this->input->post('idLoteBandera');
-           $arr_update = array( 
-                            "liberaBandera"   => $bandera,
-                            );
-      $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
-      if($update){
-        $respuesta =  array(
-          "response_code" => 200, 
-          "response_type" => 'success',
-          "message" => "Se ha liberado  satisfactoriamente");
-      }else{
-        $respuesta =  array(
-          "response_code" => 400, 
-          "response_type" => 'warning',
-          "message" => "Lote no actualizado, inténtalo más tarde ");
-      }
-      echo json_encode ($respuesta);             
-  
+        $arr_update = array( 
+                        "liberaBandera"   => $bandera,
+                        );
+        $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
+        if($update){
+            $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Se ha liberado  satisfactoriamente");
+        }else{
+            $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'warning',
+            "message" => "Lote no actualizado, inténtalo más tarde ");
+        }
+        echo json_encode ($respuesta);             
     }
 
     function getListaLotesArchivosReestrucura(){
@@ -1731,12 +1832,13 @@ class Reestructura extends CI_Controller{
                         $archivoSubido = $this->upload->data();
                         $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
                         $fileExtension = strtolower(end($fileNameCmps));
-                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
+                        $fechaActual = date('YmdHis');
+                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.$fechaActual.'.'.$fileExtension;
                         rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                         $idpxl = $this->input->post('idLoteArchivo'.$i);
                         $updateDocumentData = array(
                             $nameField => $nuevoNombre,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => $fechaActual,
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
@@ -1764,12 +1866,13 @@ class Reestructura extends CI_Controller{
                         $archivoSubido2 = $this->upload->data();
                         $fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
                         $fileExtension2 = strtolower(end($fileNameCmps2));
-                        $nuevoNombre2 = $nombreLoteOriginal.'-'.date('YmdHis').'.'.$fileExtension2;
+                        $fechaActual = date('YmdHis');
+                        $nuevoNombre2 = $nombreLoteOriginal.'-'.$fechaActual.'.'.$fileExtension2;
                         rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
         
                         $updateDocumentData = array(
                             "rescision" => $nuevoNombre2,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => $fechaActual,
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'datos_x_cliente';
@@ -2432,6 +2535,13 @@ class Reestructura extends CI_Controller{
 
         if (count($copropietarios) === 0) {
             return true;
+        }else{
+            //revisar si ya se habian insertado anteriormente los copropietarios
+            //y vuelven  pasar por este paso porque volvieron a aceptar (deshacer reestructura)
+            $coopropietarioPorDR = $this->Reestructura_model->coopropietarioPorDR($idLote);
+            if(count($copropietarios) == count($coopropietarioPorDR)){
+               return true;
+            }
         }
 
         $copropietariosInsertar = [];
@@ -2744,6 +2854,26 @@ class Reestructura extends CI_Controller{
         }
         echo json_encode(array_merge($registrosNormales, $registrosFusion), JSON_NUMERIC_CHECK);
     }
+
+    public function reporteEstatus(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/reporteEstatus_view");
+	}	
+
+    public function getReporteEstatus() {
+        $registros = $this->Reestructura_model->getReporteEstatus();
+        for ($i = 0; $i < count($registros); $i ++) {
+            $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
+            $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
+            $registros[$i]['estatusProceso'] = implode(', ', array_unique(explode(', ', $registros[$i]['estatusProceso'])));
+        }
+        echo json_encode($registros, JSON_NUMERIC_CHECK);
+    }
+
+    public function getHistorialPorLote($idLote) {
+        echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote));
+    }
+
     public function removeLoteFusion(){
         $datosPost = $_POST;
         $result = false;
@@ -2754,5 +2884,4 @@ class Reestructura extends CI_Controller{
         }
         echo json_encode($result);
     }
-    
 }

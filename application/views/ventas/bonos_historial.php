@@ -3,73 +3,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        
-        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content">
-                    <form method="post" id="form_espera_uno">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="modal-delete" role="dialog">
-            <div class="modal-dialog modal-sm">
-                <div class="modal-content" >
-                    <div class="modal-body"></div>
-                    <div class="modal-footer"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal_bonos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanCommentsAsimilados()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul>
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="modal fade modal-alertas" id="modal_abono" data-backdrop="static" data-keyboard="false" role="dialog">
-            <div class="modal-dialog ">
-                <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <form method="post" id="form_abono">
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -118,8 +51,8 @@
                                         </div>
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
                                             <div class="form-group">
-                                                <label class="control-label" for="users">Usuario</label>
-                                                <select class="selectpicker select-gral" id="users" name="users" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                <label class="control-label" for="usuarios_bono">Usuario</label>
+                                                <select class="selectpicker select-gral" id="usuarios_bono" name="usuarios_bono" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
                                     </div>
@@ -144,7 +77,7 @@
                                                 <th>TOTAL A PAGAR</th>
                                                 <th>FECHA DE CREACIÓN</th>
                                                 <th>ESTATUS</th>
-                                                <th>OPCIONES</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -159,5 +92,6 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/ventas/bonos_historial.js"></script>
 </body>

@@ -85,8 +85,7 @@
                                 <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-12 overflow-hidden">
                                         <label id="tvLbl">Comentario</label>
-                                        <select name="comentario3" id="comentario3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true"
-                                                title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                        <select name="comentario3" id="comentario3" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
                                             <option value="Transferencia no reflejada en Banco">Transferencia no reflejada en Banco</option>
                                             <option value="Cheque rebotado">Cheque rebotado</option>
                                             <option value="Rechazo por falta de dinero">Rechazo por falta de dinero</option>

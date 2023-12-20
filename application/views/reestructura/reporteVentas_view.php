@@ -17,6 +17,7 @@
                                     <table id="tablaReporteVentas" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>

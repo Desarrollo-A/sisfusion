@@ -217,7 +217,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'REMANENTE INTERNOMEX COMISIONES',
+            title:'Comisiones Remanente - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                 format: {
@@ -277,17 +277,26 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
+                if( d.comision_total == "" || d.comision_total == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.comision_total))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                if( d.pago_cliente == "" || d.pago_cliente == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.impuesto))+'</b></p>';
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
             }
         },
         {

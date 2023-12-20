@@ -1130,32 +1130,6 @@ class Contraloria extends CI_Controller {
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
         if (in_array($cliente->proceso, [2, 4, 3, 5, 6])) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
-
-            $historialSaltoMovimientos = [];
-            $historialSaltoMovimientos[0]["idStatusContratacion"] = 7;
-            $historialSaltoMovimientos[0]["idMovimiento"] = 37;
-            $historialSaltoMovimientos[0]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[0]["comentario"] = $comentario;
-            $historialSaltoMovimientos[0]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[0]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[0]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[0]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[0]["idLote"] = $idLote;
-            $historialSaltoMovimientos[0]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[0]["idCliente"] = $idCliente;
-
-            $historialSaltoMovimientos[1]["idStatusContratacion"] = 8;
-            $historialSaltoMovimientos[1]["idMovimiento"] = 38;
-            $historialSaltoMovimientos[1]["nombreLote"] = $nombreLote;
-            $historialSaltoMovimientos[1]["comentario"] = $comentario;
-            $historialSaltoMovimientos[1]["usuario"] = $this->session->userdata('id_usuario');
-            $historialSaltoMovimientos[1]["perfil"] = $this->session->userdata('id_rol');
-            $historialSaltoMovimientos[1]["modificado"] = date("Y-m-d H:i:s");
-            $historialSaltoMovimientos[1]["fechaVenc"] = $fechaVenc;
-            $historialSaltoMovimientos[1]["idLote"] = $idLote;
-            $historialSaltoMovimientos[1]["idCondominio"] = $idCondominio;
-            $historialSaltoMovimientos[1]["idCliente"] = $idCliente;
-
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
@@ -1293,12 +1267,6 @@ class Contraloria extends CI_Controller {
                 return;
             }
         }
-    }
-
-    if (!$this->General_model->insertBatch('historial_lotes', $historialSaltoMovimientos)) {
-        $data['message'] = 'ERROR';
-        echo json_encode($data);
-        return;
     }
 
     $numContrato = $this->generarNumContrato($idLote);

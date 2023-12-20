@@ -1,3 +1,4 @@
+var arrayDeshacerRees = [];
 $(document).ready(function () {
     if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
@@ -119,14 +120,24 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
             }
         }
     }],
-    columnDefs: [{
-        searchable: false,
-        visible: false
-    }],
+    columnDefs: [
+        {
+            searchable: false,
+            visible: false
+        },
+        { 
+            orderable: true, 
+            targets: [21, 22] 
+        },
+        { 
+            orderable: false, 
+            targets: '_all' 
+        }
+    ],
     pageLength: 10,
     bAutoWidth: false,
     fixedColumns: true,
-    ordering: false,
+    ordering: true,
     language: {
         url: general_base_url+"static/spanishLoader_v2.json",
         paginate: {
@@ -226,7 +237,8 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
                 :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
             }
@@ -242,7 +254,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
-    },
+    }
 });
 
 $(document).on('click', '.btn-reestructurar', function () {
@@ -441,9 +453,9 @@ const cerrarModalPropuestas = async (preproceso, flagFusion) => {
         dataFusionDes.data.forEach((fusionLotes) => {
             sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
         });
-        if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
-            return;
-        }
+        // if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
+        //     return;
+        // }
         hideModal();
     }
     else if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
@@ -1011,12 +1023,12 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
     const flagFusion = $('#flagFusion').val()
-    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
 
-    // if (!existeSeleccion) {
-    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-    //     return;
-    // }
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+        return;
+    }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
@@ -1396,14 +1408,16 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && id_rol_general==17) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0 && id_rol_general==15) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
+        btnContratoFirmado = 'fa-eye';
+        tooltipCF = 'VER CONTRATO FIRMADO';
     }
     if(d.idContratoFirmado != null){
         btnContratoFirmado = 'fa-eye';
@@ -1434,7 +1448,6 @@ const botonesAccionReubicacion = (d) => {
                             data-idEstatusMovimiento="${d.id_estatus_modificacion}"
                             data-tipoEstatusRegreso="${d.tipo_estatus_regreso}">
                             ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
-                            
                         </button>`;
 
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
@@ -1497,6 +1510,15 @@ const botonesAccionReubicacion = (d) => {
                     data-idCliente="${d.idCliente}">
                     <i class="fas fa-map-marker"></i>
                 </button>`;
+
+    const BTN_DESHACER_REESTRUCURA = `<button class="btn-data btn-warning deshacer-reestructura"
+                    data-toggle="tooltip" 
+                    data-placement="left"
+                    title="DESHACER LA REESTRUCTURA"
+                    data-idCliente="${d.idCliente}"
+                    data-idLote="${d.idLote}">
+                    <i class="fa fa-reply"></i>
+                </button>`;
     const BTN_REUBICACION = `
         <button class="btn-data btn-sky btn-reubicar"
                 data-toggle="tooltip" 
@@ -1551,18 +1573,24 @@ const botonesAccionReubicacion = (d) => {
         ${botonFusionadoEstatus}>
         <i class="fas fa-hand-pointer"></i>
     </button>`;
+    let BUTTONREGRESO = '';
+
+    if(d.idStatusLote == 17)
+        BUTTONREGRESO = BTN_DESHACER_REESTRUCURA;
+
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
         return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA) ? (flagFusion==1)? BTN_PROPUESTAS :BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
-        else if (d.idLoteXcliente == null && d.idStatusLote == 17)
-            return BTN_INFOCLIENTE;
+        else if (d.idLoteXcliente == null && d.idStatusLote == 17){
+            return BTN_INFOCLIENTE + BUTTONREGRESO;
+        }
         else if (d.idLoteXcliente != null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
         else
-            return BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }
     if (idEstatusPreproceso === 1 && id_rol_general == 7){ // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
@@ -1576,8 +1604,6 @@ const botonesAccionReubicacion = (d) => {
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
         }else{
-            console.log('d.idLote retrurn II:', d.idLote);
-
             return (totalCorridas === totalCorridasRef && totalContratoFirmado==1)
                 ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + BTN_SUBIR_CONTRATO_FIRMADO
                 : BTN_SUBIR_ARCHIVO + BTN_RECHAZO + BTN_SUBIR_CONTRATO_FIRMADO;
@@ -1595,7 +1621,7 @@ const botonesAccionReubicacion = (d) => {
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
     return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
-    if (idEstatusPreproceso === 6) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+    if (idEstatusPreproceso === 6 && id_rol_general == 7) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_RECHAZO : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
@@ -1856,3 +1882,50 @@ const obtenerEstadoCivilLista = () =>{
         });
     });
 }
+
+$(document).on('click', '.deshacer-reestructura', function(){
+    arrayDeshacerRees = [];
+    let id_cliente = $(this).attr('data-idcliente');
+    let id_lote = $(this).attr('data-idlote');
+    let arrayManejo = [];
+    arrayManejo['id_lote'] = id_lote;
+    arrayManejo['id_cliente'] = id_cliente;
+    arrayDeshacerRees.push(arrayManejo);
+    $('#tituloDeshacer').text('¿Deseas deshacer la reestrucura del lote '+ id_lote + ' ?' );
+    $('#textDeshacer').text('Se revertiran los cambios al hacer este lote como reestrucura');
+    $('#deshacerReestrucura').modal('toggle');
+});
+
+$(document).on('click', '#deshacerReestrucuraOK', function () {
+    $('#deshacerReestrucura').modal('toggle');
+
+    let data = new FormData();
+    data.append('id_cliente', arrayDeshacerRees[0]['id_cliente']);
+    data.append('id_lote', arrayDeshacerRees[0]['id_lote']);
+
+    $.ajax({
+        url: `${general_base_url}Reestructura/deshacerReestrucura`,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: "POST",
+        success: function (response) {
+            response = JSON.parse(response);
+
+            $("#deshacerReestrucuraOK").prop("disabled", false);
+            if (response.resultado) {
+                alerts.showNotification("top", "right", response.message, "success");
+                $('#reubicacionClientes').DataTable().ajax.reload(null, false);
+                $("#deshacerReestrucura").modal("hide");
+            }
+            else
+                alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+        },
+        error: function () {
+            $("#deshacerReestrucuraOK").prop("disabled", false);
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+
+});

@@ -3,6 +3,7 @@
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
+        <?php include 'historialMovimientos.php' ?>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -31,6 +32,7 @@
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -54,3 +56,4 @@
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/reestructura/reporteReubicaciones.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/reestructura/historialMovimientos.js"></script>

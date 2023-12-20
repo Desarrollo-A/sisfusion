@@ -50,49 +50,49 @@ class Pagos extends CI_Controller
   }
   
 
-  public function acepto_internomex_asimilados(){
-    $sol = $this->input->post('idcomision');  
-    $consulta_comisiones = $this->Pagos_model->consulta_comisiones( $sol );
-      if( $consulta_comisiones != FALSE){
-        $id_user_Vl = $this->session->userdata('id_usuario');
-          $sep = ',';
-          $id_pago_i = '';
-          $data=array();
-          foreach ($consulta_comisiones as $row) {
-            $id_pago_i .= implode($sep, $row);
-            $id_pago_i .= $sep;
-            $row_arr=array(
-              'id_pago_i' => $row['id_pago_i'],
-              'id_usuario' =>  $id_user_Vl,
-              'fecha_movimiento' => date('Y-m-d H:i:s'),
-              'estatus' => 1,
-              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
-            );
-            array_push($data,$row_arr);
-          }
-          $id_pago_i = rtrim($id_pago_i, $sep);
+  // public function updateRevisionaInternomex(){
+  //   $sol = $this->input->post('idcomision');  
+  //   $consulta_comisiones = $this->Pagos_model->consulta_comisiones( $sol );
+  //     if( $consulta_comisiones != FALSE){
+  //       $id_user_Vl = $this->session->userdata('id_usuario');
+  //         $sep = ',';
+  //         $id_pago_i = '';
+  //         $data=array();
+  //         foreach ($consulta_comisiones as $row) {
+  //           $id_pago_i .= implode($sep, $row);
+  //           $id_pago_i .= $sep;
+  //           $row_arr=array(
+  //             'id_pago_i' => $row['id_pago_i'],
+  //             'id_usuario' =>  $id_user_Vl,
+  //             'fecha_movimiento' => date('Y-m-d H:i:s'),
+  //             'estatus' => 1,
+  //             'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+  //           );
+  //           array_push($data,$row_arr);
+  //         }
+  //         $id_pago_i = rtrim($id_pago_i, $sep);
             
-            $arrayUpdateControlaria = array(
-              'estatus' => 8,
-              'modificado_por' => $id_user_Vl
-            );
+  //           $arrayUpdateControlaria = array(
+  //             'estatus' => 8,
+  //             'modificado_por' => $id_user_Vl
+  //           );
 
-            $up_b = $this->Pagos_model->update_acepta_contraloria($arrayUpdateControlaria , $id_pago_i);
-            $ins_b = $this->Pagos_model->insert_phc($data);
+  //           $up_b = $this->Pagos_model->update_acepta_contraloria($arrayUpdateControlaria , $id_pago_i);
+  //           $ins_b = $this->Pagos_model->insert_phc($data);
 
-      if($up_b == true && $ins_b == true){
-        $data_response = 1;
-        echo json_encode($data_response);
-      } else {
-        $data_response = 0;
-        echo json_encode($data_response);
-      }
-      }
-      else{
-        $data_response = 0;
-      echo json_encode($data_response);
-      }
-  }
+  //     if($up_b == true && $ins_b == true){
+  //       $data_response = 1;
+  //       echo json_encode($data_response);
+  //     } else {
+  //       $data_response = 0;
+  //       echo json_encode($data_response);
+  //     }
+  //     }
+  //     else{
+  //       $data_response = 0;
+  //     echo json_encode($data_response);
+  //     }
+  // }
 
   public function getBonosPorUserContra($estado){
     $dat = $this->Pagos_model->getBonosPorUserContra($estado);
@@ -280,7 +280,7 @@ class Pagos extends CI_Controller
       echo json_encode($this->Pagos_model->report_empresa());
   }
 
-  public function acepto_internomex_remanente(){
+  public function updateRevisionaInternomex(){
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
       if( $consulta_comisiones->num_rows() > 0 ){
@@ -302,7 +302,6 @@ class Pagos extends CI_Controller
             );
               array_push($data,$row_arr);
           }
-          // var_dump($id_pago_i );
           $id_pago_i = rtrim($id_pago_i, $sep);
             $arrayUpdateControlaria = array(
               'estatus' => 8,
@@ -382,14 +381,15 @@ class Pagos extends CI_Controller
   }
 
   public function getDatosNuevasFContraloria(){
-  $proyecto = $this->input->post("proyecto");
-  $condominio = $this->input->post("condominio");
-    $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
-  for( $i = 0; $i < count($dat); $i++ ){
+    $proyecto = $this->input->post('proyecto');  
+    $condominio =   $this->input->post('condominio');  
+    $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio);
+    for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
-  echo json_encode( array( "data" => $dat));
-  }
+
 
   function pausar_solicitudM(){
     $respuesta = array( FALSE );
@@ -653,11 +653,11 @@ class Pagos extends CI_Controller
       break;
     }
   }
-
-  public function getDatosNuevasEContraloria(){
-    $proyecto =  $this->input->post("proyecto");
-    $condominio =  $this->input->post("condominio");
-    $dat =  $this->Pagos_model->getDatosNuevasEContraloria($proyecto,$condominio)->result_array();
+ 
+  public function getDatosNuevasExContraloria(){
+    $proyecto = $this->input->post('proyecto');  
+    $condominio =   $this->input->post('condominio');  
+    $dat =  $this->Pagos_model->getDatosNuevasExContraloria($proyecto,$condominio);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }
@@ -719,7 +719,7 @@ class Pagos extends CI_Controller
       $arrayplaza = $this->input->post("plazaMKTDSelect[]");
       $arraysede = $this->input->post("sedeMKTDSelect[]");
       $arrayestatus = $this->input->post("estatusMk[]");
-     
+    
       $query_max = $this->db->query("SELECT MAX(numero_plan) AS nummax FROM porcentajes_mktd");
       $new_max = intval($query_max->row()->nummax)+1;
     
@@ -778,7 +778,7 @@ class Pagos extends CI_Controller
     }
 
 
-    public function acepto_internomex_especial(){
+    public function updateRevisionEspeciales(){
       $this->load->model("Comisiones_model");
       $sol=$this->input->post('idcomision');  
       $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where id_pago_i IN (".$sol.")");
@@ -825,13 +825,14 @@ class Pagos extends CI_Controller
         }
     }
 
-    public function getDatosEspecialRContraloria(){
-      $dat =  $this->Pagos_model->getDatosEspecialRContraloria()->result_array();
+    public function getDatosEspecialesContraloria(){
+      $dat =  $this->Pagos_model->getDatosEspecialesContraloria();
     for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
+        $dat[$i]['pa'] = 0;
     }
     echo json_encode( array( "data" => $dat));
     }
+
   
     public function getHistorialAbono2($id){
       echo json_encode($this->Pagos_model->getHistorialAbono2($id)->result_array());
@@ -1119,8 +1120,20 @@ class Pagos extends CI_Controller
       }
       exit;
   }
+  
 
 
+  public function reporte_general(){
+    $this->load->view('template/header');
+    $this->load->view("pagos/general_internomex_view");
+  }
+  public function getDatosGralInternomex(){
+    $dat =  $this->Pagos_model->getDatosGralInternomex()->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+      $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
+  }
 
 }
 

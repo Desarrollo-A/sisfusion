@@ -92,9 +92,9 @@ function getDataAsimilados(proyecto, condominio){
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title:'Comisiones nuevas asimilados',
+                title:'Comisiones Asimilados - Revisión Contraloría',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx -1] + ' ';
@@ -113,7 +113,7 @@ function getDataAsimilados(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/acepto_internomex_asimilados/',
+                        url : general_base_url + 'Pagos/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -127,7 +127,7 @@ function getDataAsimilados(proyecto, condominio){
                                 $("#all").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_asimilados.ajax.reload();
-                                var mensaje = "Comisiones de esquema <b>asimiladoss</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
+                                var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
                             else {
@@ -197,7 +197,7 @@ function getDataAsimilados(proyecto, condominio){
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.empresa+'</p>';
+                return '<p class="m-0"><b>'+d.empresa+'</b></p>';
             }
         },
         {
@@ -210,10 +210,34 @@ function getDataAsimilados(proyecto, condominio){
         },
         {
             data: function( d ){
-                if( d.pago_neodata == "" || d.pago_neodata == null)
+                if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.valimpuesto == "" || d.valimpuesto == null)
+                    return '<p class="m-0">-</p>'
+                else
+                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.dcto == "" || d.dcto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -226,23 +250,47 @@ function getDataAsimilados(proyecto, condominio){
         },
         {
             data: function( d ){
-                if(d.lugar_prospeccion == 6){
-                    return '<p class="m-0">COMISIÓN + MKTD <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-                else{
-                    return '<p class="m-0">COMISIÓN <br><b> ('+d.porcentaje_decimal+'% de '+d.porcentaje_abono+'%)</b></p>';
-                }
-            
+                return '<p class="m-0">'+d.tipo_venta+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><b>'+d.usuario+'</b></i></p>';
+                return '<p class="m-0">'+d.plan_descripcion+'</p>';
             }
         },
         {
             data: function( d ){
-                return '<p class="m-0"><i> '+d.puesto+'</i></p>';
+                return '<p class="m-0">'+d.porcentaje_decimal+'%</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.fecha_apartado+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.sede_nombre+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.usuario+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.estatus_usuario+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                return '<p class="m-0"><b>'+d.codigo_postal+'</b></p>';
             }
         },
         {
@@ -285,7 +333,7 @@ function getDataAsimilados(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasRContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasAContraloria/" ,
             type: "POST",
             cache: false,
             data :{
