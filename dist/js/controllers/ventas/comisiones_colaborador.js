@@ -101,7 +101,7 @@ $(document).on("submit", "#cpForm", function (e) {
         alerts.showNotification("top", "right", "Llenar la información solicitada.", "warning");
         return false;
     }
-    else if( cp.length != 5  ){
+    else if(cp.length != 5){
         alerts.showNotification("top", "right", "La longitud del código postal debe de ser de 5 caracteres.", "warning");
         return false;
     }
@@ -142,21 +142,36 @@ $(document).ready(function () {
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
-   
-    if (forma_pago == 3 && (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) || 
-    ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
-    ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
-    ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
-    ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin )) ||
-    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
-    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
-    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
-    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)))) {
-        requestCodigoPostal();
+
+    if(forma_pago == 3){
+        if(tipo_usuario == 2){
+            if (
+                (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
+                ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
+                ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16)
+                ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23)
+                ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28)
+                ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25)
+                ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23)
+                ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27)
+                ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24)
+                ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22)
+                ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
+                // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
+                ) {
+                requestCodigoPostal();
+            }
+
+        } else if(tipo_usuario == 1){
+
+            if (((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin))) {
+                requestCodigoPostal();
+            }
+        }
+
     }
+
 });
 
 $('#proyecto_wp').change(function () {
@@ -225,7 +240,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = '$' + to;
+        document.getElementById("myText_nuevas").textContent = to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
@@ -259,19 +274,28 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var dia = hoy.getDate();
                 var mes = hoy.getMonth() + 1;
                 var hora = hoy.getHours();
-                if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
-                    ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
-                    ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
-                    ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
-                    ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
-                    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
-                    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
-                    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
-                    (id_usuario_general == 7689)) {
+
+                if(
+                    (tipo_usuario == 2 && 
+                        (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                        ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
+                        ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
+                        ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16)
+                        ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23)
+                        ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28)
+                        ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25)
+                        ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23)
+                        ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27)
+                        ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24)
+                        ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22)
+                        ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
+                        // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
+                        ) 
+                        || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+
+                        || (id_usuario_general == 7689)
+                    ) {
+            
                     if ($('input[name="idT[]"]:checked').length > 0) {
 
                         var data = tabla_nuevas.row().data();
@@ -543,19 +567,28 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth() + 1;
                     var hora = hoy.getHours();
-                    if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
-                        ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
-                        ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
-                        ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
-                        ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-                        ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-                        ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-                        ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= fin)) ||
-                        ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= fin)) ||
-                        ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= fin)) ||
-                        ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= fin)) ||
-                        ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= fin)) ||
-                        (id_usuario_general == 7689)){
+
+                    if(
+                        (tipo_usuario == 2 && 
+                            (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                            ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
+                            ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
+                            ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16)
+                            ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23)
+                            ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28)
+                            ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25)
+                            ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23)
+                            ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27)
+                            ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24)
+                            ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22)
+                            ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
+                            // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
+                            ) 
+                            || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+    
+                            || (id_usuario_general == 7689)
+                        ){
+
                         switch (full.forma_pago) {
                             case '1': //SIN DEFINIR
                             case 1: //SIN DEFINIR
@@ -1500,19 +1533,28 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var dia = hoy.getDate();
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
-    if (((mes == 1 && dia == 9) || (mes == 1 && dia == 10 && hora <= 13)) ||
-    ((mes == 2 && dia == 13) || (mes == 2 && dia == 14 && hora <= 13)) ||
-    ((mes == 3 && dia == 13) || (mes == 3 && dia == 14 && hora <= 13)) ||
-    ((mes == 4 && dia == 10) || (mes == 4 && dia == 11 && hora <= 13)) ||
-    ((mes == 5 && dia == 8) || (mes == 5 && dia == 9 && hora <= 13)) ||
-    ((mes == 6 && dia == 12) || (mes == 6 && dia == 13 && hora <= 13)) ||
-    ((mes == 7 && dia == 10) || (mes == 7 && dia == 11 && hora <= fin)) ||
-    ((mes == 8 && dia == 9) || (mes == 8 && dia == 10 && hora <= 13)) ||
-    ((mes == 9 && dia == 11) || (mes == 9 && dia == 12 && hora <= 13)) ||
-    ((mes == 10 && dia == 9) || (mes == 10 && dia == 10 && hora <= 13)) ||
-    ((mes == 11 && dia == 13) || (mes == 11 && dia == 14 && hora <= 13)) ||
-    ((mes == 12 && dia == 11) || (mes == 12 && dia == 12 && hora <= 13)) ||
-    (id_usuario_general == 7689)) {
+
+    if(
+        (tipo_usuario == 2 && 
+            (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+            ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
+            ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
+            ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16)
+            ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23)
+            ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28)
+            ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25)
+            ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23)
+            ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27)
+            ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24)
+            ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22)
+            ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
+            // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
+            ) 
+            || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+
+            || (id_usuario_general == 7689)
+        ){
+
         $("#modal_multiples .modal-body").html("");
         $("#modal_multiples .modal-header").html("");
         $("#modal_multiples .modal-header").append(`<div class="row">
