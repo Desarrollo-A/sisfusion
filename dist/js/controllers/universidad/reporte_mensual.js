@@ -14,31 +14,28 @@ $(document).ready(function () {
         {id:'10',mes:'Octubre'},
         {id:'11',mes:'Noviembre'},
         {id:'12',mes:'Diciembre'}
-      ];
-      
-  let anios = [2019,2020,2021,2022,2023,2024];
-  
-let datos = '';
-let datosA = '';
+    ];
 
-for (let index = 0; index < meses.length; index++) {
-    datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
-    $('#mes').html(datos);
-    $('#mes').selectpicker('refresh');
-    }
- 
-for (let index = 0; index < anios.length; index++) {
-    datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
-}
-$('#anio').html(datosA);
-$('#anio').selectpicker('refresh');
+    let anios = [2019,2020,2021,2022,2023,2024];
+    let datos = '';
+    let datosA = '';
 
-$('#anio').change(function () {
     for (let index = 0; index < meses.length; index++) {
-    datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        $('#mes').html(datos);
+        $('#mes').selectpicker('refresh');
     }
-});
 
+    for (let index = 0; index < anios.length; index++) {
+        datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
+    }
+    $('#anio').html(datosA);
+    $('#anio').selectpicker('refresh');
+    $('#anio').change(function () {
+        for (let index = 0; index < meses.length; index++) {
+        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        }
+    });
 
     $('#mes').change(function() {
         anio = $('#anio').val();
@@ -64,7 +61,6 @@ $('#anio').change(function () {
         $('#tabla-historial').removeClass('hide');
     });
     
-
     $('body').tooltip({
         selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
         trigger: 'hover',
@@ -89,21 +85,17 @@ $('#tabla-historial thead tr:eq(0) th').each(function (i) {
 
 function loadTable(mes, anio) {
     $('#tabla-historial').ready(function () {
-
         $('#tabla-historial').on('xhr.dt', function (e, settings, json, xhr) {
             var general = 0;
-
             $.each(json.data, function (i, v) {
                 general += parseFloat(v.abono_neodata);
-             });
-
+            });
             var totalFinal = formatMoney(general);
             document.getElementById("totalGeneral").textContent = totalFinal;
-
         });
 
         tablaGeneral = $('#tabla-historial').DataTable({
-            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
@@ -169,18 +161,7 @@ function loadTable(mes, anio) {
                     return '<p style="font-size: 1em">' + d.fecha_descuento + '</p>';
                 }},
                 {"data": function (d) {
-                    
-                        base = `<button href="#" 
-                        value=${d.id_pago_i} 
-                        data-value=${d.nombreLote} 
-                        data-nameuser=${d.user_names} 
-                        data-puesto=${d.puesto} 
-                        data-monto=${d.abono_neodata} 
-                        data-code=${d.cbbtton} 
-                        class="btn btn-round btn-fab btn-fab-mini btn-data btn-yellow btn_devolucion"
-                        data-toggle="tooltip" data-placement="top" title="APLICAR DEVOLUCIÓN">
-                        <i class="fas fa-rotate-left"></i></button>`;
- 
+                    base = `<button href="#" value=${d.id_pago_i} data-value=${d.nombreLote} data-nameuser=${d.user_names} data-puesto=${d.puesto} data-monto=${d.abono_neodata} data-code=${d.cbbtton} class="btn btn-round btn-fab btn-fab-mini btn-data btn-yellow btn_devolucion" data-toggle="tooltip" data-placement="top" title="APLICAR DEVOLUCIÓN"><i class="fas fa-rotate-left"></i></button>`;
                     return '<div class="d-flex justify-center">'+base+'</div>';
                 }}],
             
@@ -193,14 +174,11 @@ function loadTable(mes, anio) {
         });
 
         $("#tabla-historial tbody").on("click", ".btn_devolucion", function (e) {
-
             e.preventDefault();
             e.stopImmediatePropagation();
-         
             $('#mensajeConfirmacion').html('');
             $('#comentarioDevolucion').html('');
             $('#montosDescuento').html('');
-    
             $('#pagoDevolver').val(0);
 
             id_pago_i = $(this).val();
@@ -211,23 +189,18 @@ function loadTable(mes, anio) {
             
             $('#mensajeConfirmacion').append('<p>¿Está seguro de devolver el pago al '+rolUsuario+' <b>'+ nombreUsuario+'</b>?</p>');
             $('#montosDescuento').append('<p>Total a devolver: <b>'+formatMoney(totalDescuento)+'</b></p><p>Lote correspondiente: <b>'+nombreLote+'</b></p>');
-            
             $('#pagoDevolver').val(id_pago_i);
             $("#modalDevolucionUM").modal();
-    
         });
-
-}); //END DATATABLE
-
+});
 
 $("#form_devolucion").submit(function (e) {
-    // $('#btn_topar').attr('disabled', 'true');
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-           $.ajax({
+        $.ajax({
             url: general_base_url+"Universidad/CancelarDescuento",
             data: data,
             cache: false,
@@ -235,8 +208,9 @@ $("#form_devolucion").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function (data) {
+
                 if (data) {
                     $("#modalDevolucionUM").modal('toggle');
                     alerts.showNotification("top", "right", "Se detuvo el descuento exitosamente", "success");
@@ -245,7 +219,6 @@ $("#form_devolucion").submit(function (e) {
                     }, 3000);
                 } else {
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
-
                 }
             }, error: function () {
                 alerts.showNotification("top", "right", "ERROR EN EL SISTEMA", "danger");
@@ -253,6 +226,4 @@ $("#form_devolucion").submit(function (e) {
         });
     }
 });
-
- 
 }

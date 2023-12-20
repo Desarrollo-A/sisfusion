@@ -4,9 +4,7 @@ $(document).on('click', '.update_bandera', function(e){
     param = $(this).attr("data-param");
 
     $("#myUpdateBanderaModal .modal-body").html('');
-
     $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param"><h4 class="modal-title">¿Está seguro de regresar el lote <b>'+nombreLote+'</b> a comisiones por dispersar?</h4><center><img src="../static/images/backaw2.gif" width="100" height="100"></center>');
-
     $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#nombreLote").val(nombreLote);
@@ -23,7 +21,6 @@ $("#my_updatebandera_form").on('submit', function(e){
         cache: false,
         processData:false,
         beforeSend: function(){
-            // Actions before send post
         },
         success: function(data) {
             if (data == 1) {

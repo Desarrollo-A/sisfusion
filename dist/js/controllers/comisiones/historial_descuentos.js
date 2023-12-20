@@ -10,8 +10,8 @@ var totaPen = 0;
 let titulos = [];
 
 function cleanCommentsfactura() {
-    var myCommentsList = document.getElementById('comments-list-factura');
-    var myCommentsLote = document.getElementById('nameLote');
+    var myCommentsList = document.getElementById('comentariosFactura');
+    var myCommentsLote = document.getElementById('nombreLote');
     myCommentsList.innerHTML = '';
     myCommentsLote.innerHTML = '';
 }
@@ -201,7 +201,6 @@ function getFacturaCommissions(proyecto, condominio) {
         }
         $("#totpagarPen").html(formatMoney(totaPen));
     });
-
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
