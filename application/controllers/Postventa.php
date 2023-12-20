@@ -994,7 +994,8 @@ public $controller = 'Postventa';
             "tipo_escritura" => $data['tipoE'],
            // "aportacion" => $data['aportaciones'],
            // "descuento" => $data['descuentos'],
-            "valor_escriturar" => $data['valor_escri']
+            "valor_escriturar" => $data['valor_escri'],
+            "observaciones" => $data['observaciones']
         );
         ($data['fechaCA2'] == '' || $data['fechaCA2'] == null || $data['fechaCA2'] == 'null' || $data['fechaCA2'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_anterior'] =  $data['fechaCA2'];
         ($data['fContrato'] == '' || $data['fContrato'] == null || $data['fContrato'] == 'null' || $data['fContrato'] == 'NaN-NaN-NaN') ? '': $updateData['fecha_contrato'] =date("Y-m-d", strtotime(str_replace('/', '-', $data['fContrato'])));
@@ -1465,6 +1466,13 @@ public $controller = 'Postventa';
                                                 ' .$data->valor_escriturar. '
                                             </td>
                                             
+                                            </tr>
+
+                                            <tr>
+                                                <td style="font-size: 1em;">
+                                                    <b>Observaciones:</b><br>
+                                                    ' .$data->observaciones. '
+                                                </td>
                                             </tr>
                                                
                                         </table>
