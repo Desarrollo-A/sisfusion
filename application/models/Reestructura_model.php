@@ -516,10 +516,10 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        if( $this->session->userdata('id_rol')  != 2 ){
+        if( $this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5 ){
             $filtroSede = 'AND sede_residencial = ' . $this->session->userdata('id_sede');
         }
-        $id_sede = $this->session->userdata('id_sede');
+
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -901,7 +901,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT * FROM lotesFusion WHERE idLotePvOrigen IN(SELECT idLotePvOrigen FROM lotesFusion where idLote=$idLote) AND origen=1");
         return $query->result_array();
     }
-    function get_catalogo_restructura($id_catalogo){
+    public function get_catalogo_restructura($id_catalogo){
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus=1");
     }
     public function removeLoteFusion($idFusion,$id_usuario){

@@ -217,7 +217,6 @@ $(document).on("submit", "#addNewDesc", function(e){
     e.preventDefault();
     let data = new FormData($(this)[0]);
     $("#spiner-loader").removeClass('hide');
-    console.log(data);
     $.ajax({
         method: 'POST',
         url: general_base_url + 'Reestructura/insertarOpcion',
@@ -399,7 +398,7 @@ function fillTable(index_proyecto) {
             { data: "comentarioReubicacion" },
             {
                 data: function (d) {
-                    if(d.idStatusLote ==  15 ) { // MJ: ESTÁ LIBERADO
+                    if(d.idStatusLote ==  15 || d.idStatusLote ==  16) { // MJ: ESTÁ LIBERADO
                         return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
@@ -490,6 +489,7 @@ function fillTableCatalogo(id_catalogo) {
             }
         }],
         columnDefs: [{
+            defaultContent: "",
             targets: "_all",
             searchable: true,
             orderable: false
@@ -518,10 +518,10 @@ function fillTableCatalogo(id_catalogo) {
     });
 }
 
-
 $(window).resize(function(){
     tabla_valores_catalogos.columns.adjust();
 });
+
 let titulos_intxtLiberado = [];
 
 $('#proyectoLiberado').change(function () {

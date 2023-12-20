@@ -395,7 +395,6 @@ class Reestructura extends CI_Controller{
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
 
-
         foreach ($idLotes as $elementoLote) { 
             $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
 
@@ -567,7 +566,6 @@ class Reestructura extends CI_Controller{
         }
     }
 
-    /*nueva funcion para deshacer reestructura*/
     public function deshacerReestrucura(){
         $this->db->trans_begin();
         $id_cliente = $this->input->post('id_cliente');
@@ -629,9 +627,6 @@ class Reestructura extends CI_Controller{
             return;
         }
     }
-
-
-    /***/
 
     public function setReubicacion(){
         $this->db->trans_begin();
@@ -2536,9 +2531,6 @@ class Reestructura extends CI_Controller{
 
     public function copiarCopropietariosAnteriores($idCliente, $idLote): bool
     {
-
-
-
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idCliente);
 
         if (count($copropietarios) === 0) {

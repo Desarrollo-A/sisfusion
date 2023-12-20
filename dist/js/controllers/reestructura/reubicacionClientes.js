@@ -236,7 +236,8 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
                 :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
             }
