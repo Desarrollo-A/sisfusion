@@ -106,7 +106,7 @@
                             <div class="col-md-4 col-sm-6 col-md-offset-4 col-sm-offset-3">
                                 <?=form_open(base_url().'login/new_user')?>
                                     <div class="card card-login card-hidden">
-                                        <!-- <img src="<?=base_url()?>static/images/gorro_navideno.png" width="50px" style="    position: absolute;top: -21%;width: 85px;z-index: 99;left: -4%;"> -->
+                                        <img src="<?=base_url()?>static/images/gorro_navideno.png" width="50px" style="    position: absolute;top: -21%;width: 85px;z-index: 99;left: -4%;">
                                         <div class="card-header text-center" data-background-color="goldMaderas">
                                             <h4 class="card-title"><img src="<?=base_url()?>static/images/ciudadmaderas_white_2.png"
         																style="width: 70%;margin: 0px;"></h4>

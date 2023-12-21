@@ -5,6 +5,26 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
+            <!-- moldaes 2da tabla inicio -->        
+            <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-small">
+				<div class="modal-content" > 
+					<div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4  id="tituloAD" name="tituloAD"></h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLoteBandera" id="idLoteBandera" >
+                        <input type="hidden" name="bandera" id="bandera" >        
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="liberarBandera" name="liberarBandera" class="btn btn-primary liberarBandera">Aceptar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- fin modales 2da tabla -->
         <div class="modal fade" id="liberarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 
@@ -193,6 +213,7 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
+                            <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
                        <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0"> 
@@ -238,6 +259,42 @@
                                 
                                 </div>
                             </div>
+                            <!-- nueva tabla libera  -->
+                            <div class="tab-pane" id="proceso-1">
+                                <div class="text-center">
+                                    <h3 class="card-title center-align">Liberar lotes</h3>
+                                </div>
+                                <div class="toolbar">
+                                    <div class="container-fluid p-0">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                <div class="form-group">
+                                                <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
+                                                <select name="proyectoLiberado" id="proyectoLiberado" class="selectpicker select-gral m-0" data-style="btn"
+                                                 data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <table class="table-striped table-hover" id="tabla_clientes_liberar" name="tabla_clientes_liberar">
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE </th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO M2</th>
+                                                <th>NOMBRE</th>
+                                                <th>ESTATUS</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                            <!-- fin de nueva tabla libera -->
                        </div>
                     </div>
                 </div>
