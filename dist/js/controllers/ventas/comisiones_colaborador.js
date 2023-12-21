@@ -144,7 +144,7 @@ $(document).ready(function () {
     var hora = hoy.getHours();
 
     if(forma_pago == 3){
-        if(tipo_usuario == 2){
+        if(tipo_usuario == 1){
             if (
                 (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
                 ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
@@ -163,9 +163,13 @@ $(document).ready(function () {
                 requestCodigoPostal();
             }
 
-        } else if(tipo_usuario == 1){
+        } else if(tipo_usuario == 3){
 
-            if (((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin))) {
+            if (
+                ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 21 && hora <= fin)) ||
+                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || //ENERO 2024
+                ((mes == 2 && dia == 8)  ||  (mes == 2 && dia == 9 && hora <= fin)) //FEBRERO 2024
+                ) {
                 requestCodigoPostal();
             }
         }
@@ -276,7 +280,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 var hora = hoy.getHours();
 
                 if(
-                    (tipo_usuario == 2 && 
+                    (tipo_usuario == 1 && 
                         (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
                         ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
                         ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
@@ -291,7 +295,11 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
                         // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
                         ) 
-                        || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+                        || (tipo_usuario == 3 && 
+                            ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 21 && hora <= fin)) ||
+                            ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || //ENERO 2024
+                            ((mes == 2 && dia == 8)  ||  (mes == 2 && dia == 9 && hora <= fin)) //FEBRERO 2024
+                            )//VALIDACION VENTAS NORMAL
 
                         || (id_usuario_general == 7689)
                     ) {
@@ -558,7 +566,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 searchable: false,
                 className: 'dt-body-center',
                 render: function (d, type, full, meta) {
-                    let actual=13;
+                    let actual = 13;
                     if(userSede == 8){
                         actual=15;
 
@@ -569,7 +577,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     var hora = hoy.getHours();
 
                     if(
-                        (tipo_usuario == 2 && 
+                        (tipo_usuario == 1 && //VALIDACION VENTAS 15 QUINCENAL OOAM
                             (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
                             ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
                             ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
@@ -584,7 +592,11 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
                             ) 
-                            || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+                            || (tipo_usuario == 3 && 
+                                ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 21 && hora <= fin)) ||
+                                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || //ENERO 2024
+                                ((mes == 2 && dia == 8)  ||  (mes == 2 && dia == 9 && hora <= fin)) //FEBRERO 2024
+                                )//VALIDACION VENTAS NORMAL
     
                             || (id_usuario_general == 7689)
                         ){
@@ -1535,7 +1547,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var hora = hoy.getHours();
 
     if(
-        (tipo_usuario == 2 && 
+        (tipo_usuario == 1 && 
             (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
             ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23)
             ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20)
@@ -1550,7 +1562,11 @@ $(document).on("click", ".subir_factura_multiple", function() {
             ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26)
             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024
             ) 
-            || (tipo_usuario == 1 && ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 20 && hora <= fin)))
+            || (tipo_usuario == 3 && 
+                ((mes == 12 && dia == 9)  ||  (mes == 12 && dia == 21 && hora <= fin)) ||
+                ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || //ENERO 2024
+                ((mes == 2 && dia == 8)  ||  (mes == 2 && dia == 9 && hora <= fin)) //FEBRERO 2024
+                )//VALIDACION VENTAS NORMAL
 
             || (id_usuario_general == 7689)
         ){
