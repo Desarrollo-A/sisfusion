@@ -45,6 +45,12 @@ class Descuentos extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("descuentos/panel_descuentos", $datos);
     }
+
+    public function historial_descuento(){
+        $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
+        $this->load->view('template/header');
+        $this->load->view("descuentos/historial_descuento", $datos);
+    }
  
     public function lista_estatus_descuentos(){
         echo json_encode($this->Descuentos_model->lista_estatus_descuentos()->result_array());
