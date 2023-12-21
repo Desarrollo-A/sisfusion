@@ -672,10 +672,10 @@ function fillTable1(index_proyecto) {
         {
             data: function (d){
                 if (d.liberaBandera == 1   ) {
-                    return '<p class="m-0">LIBERADO</p>';
+                    return '<label class="label lbl-blueMaderas">LIBERADO</label>';
         
                 }else if(d.liberaBandera == 0){
-                    return '<p class="m-0">SIN LIBERAR</p>';
+                    return '<label class="label lbl-warning">SIN LIBERAR</label>';
                 }      
             // NOMBRE
             }
@@ -688,10 +688,7 @@ function fillTable1(index_proyecto) {
                             title= "Liberar Lote" 
                             data-idLote="${d.idLote}" data-bandera="1"><i class="fas fa-unlock"></i></button>`;
                     }else{
-                    return `<div class="d-flex justify-center">
-                            <button class="btn-data btn-warning cambiarBandera" data-toggle="tooltip" data-placement="top" 
-                            title= "Quitar liberación de Lote" 
-                            data-idLote="${d.idLote}" data-bandera="0"><i class="fas fa-lock"></i></button>` ;
+                    return `` ;
                         }
             }
         }],
