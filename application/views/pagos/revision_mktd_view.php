@@ -404,6 +404,5 @@
 <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
 <script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
-<script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_mktd.js"></script>
 </body>

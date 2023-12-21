@@ -42,7 +42,7 @@ $("#form_descuentosModal2").on('submit', function(e){
 
             if (data == 1) {
                 document.getElementById("form_descuentosModal2").reset();
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 $('#idloteorigen option').remove();
                 $("#roles").selectpicker("refresh");
@@ -55,7 +55,7 @@ $("#form_descuentosModal2").on('submit', function(e){
             else if(data == 2) {
                 document.getElementById('btn_abonar').disabled=false;
 
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                 $(".directorSelect2").empty();
@@ -63,7 +63,7 @@ $("#form_descuentosModal2").on('submit', function(e){
             else if(data == 3){
                 document.getElementById('btn_abonar').disabled=false;
 
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                 $(".directorSelect2").empty();
@@ -96,7 +96,7 @@ $("#form_descuentos2").on('submit', function(e){
             if (data == 1) {
                 document.getElementById('btn_abonar2').disabled=false;
                 document.getElementById("form_descuentos2").reset();
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal3').modal('hide');
                 $('#idloteorigen2 option').remove();
                 $("#roles2").val('');
@@ -109,14 +109,14 @@ $("#form_descuentos2").on('submit', function(e){
             }
             else if(data == 2) {
                 document.getElementById('btn_abonar2').disabled=false;
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
                 $(".directorSelect2").empty();
             }
             else if(data == 3){
                 document.getElementById('btn_abonar2').disabled=false;
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 $('#miModal2').modal('hide');
                 alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un pago activo.", "warning");
                 $(".directorSelect2").empty();
@@ -130,19 +130,19 @@ $("#form_descuentos2").on('submit', function(e){
     });
 });
 
-let titulos = [];
-$("#tabla_descuentos").ready( function(){
-    $('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
+let titulosvs = [];
+$("#tabla_descuentos2").ready( function(){
+    $('#tabla_descuentos2 thead tr:eq(0) th').each( function (i) {
+        var title2 = $(this).text();
+        titulosvs.push(title2);
+        $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title2="${title2}" placeholder="${title2}"/>`);
         $( 'input', this ).on('keyup change', function () {
 
-            if (tabla_nuevas.column(i).search() !== this.value ) {
-                tabla_nuevas.column(i).search(this.value).draw();
+            if (tabla_nuevas2.column(i).search() !== this.value ) {
+                tabla_nuevas2.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_nuevas.rows( index ).data();
+                var index = tabla_nuevas2.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tabla_nuevas2.rows( index ).data();
                 $.each(data, function(i, v){
                     total += parseFloat(v.monto);
                 });
@@ -153,7 +153,7 @@ $("#tabla_descuentos").ready( function(){
         $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
     });
 
-    $('#tabla_descuentos').on('xhr.dt', function ( e, settings, json, xhr ) {
+    $('#tabla_descuentos2').on('xhr.dt', function ( e, settings, json, xhr ) {
         var total = 0;
         $.each(json.data, function(i, v){
             total += parseFloat(v.monto);
@@ -163,7 +163,7 @@ $("#tabla_descuentos").ready( function(){
     });
 
 
-    tabla_nuevas = $("#tabla_descuentos").DataTable({
+    tabla_nuevas2 = $("#tabla_descuentos2").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         scrollX: true,
         width:'100%',
@@ -177,7 +177,7 @@ $("#tabla_descuentos").ready( function(){
                 columns: [0,1,2,3,4,5,6,7],
                 format: {
                     header:  function (d, columnIdx) {
-                            return titulos[columnIdx];
+                            return titulosvs[columnIdx];
                     }
                 }
             },
@@ -267,7 +267,7 @@ $("#tabla_descuentos").ready( function(){
         }
     });
 
-    $("#tabla_descuentos tbody").on("click", ".abonar", function(){    
+    $("#tabla_descuentos2 tbody").on("click", ".abonar", function(){    
         bono = $(this).val();
         var dat = bono.split(",");
         $("#modal_abono .modal-body").append(`<div id="inputhidden">
@@ -286,7 +286,7 @@ $("#tabla_descuentos").ready( function(){
         $('#modal_abono').modal('show');
     });
 
-    $("#tabla_descuentos tbody").on("click", ".btn-delete", function(){    
+    $("#tabla_descuentos2 tbody").on("click", ".btn-delete", function(){    
         id = $(this).val();
         $("#modal-borrar .modal-body").append(`<div id="borrarBono"><form id="form-delete">
         <h5>¿Estas seguro que deseas eliminar este bono?</h5>
@@ -298,9 +298,9 @@ $("#tabla_descuentos").ready( function(){
         $('#modal-borrar').modal('show');
     });
 
-    $("#tabla_descuentos tbody").on("click", ".btn-update", function(){
+    $("#tabla_descuentos2 tbody").on("click", ".btn-update", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_nuevas.row( tr );
+        var row = tabla_nuevas2.row( tr );
         id_pago_i = $(this).val();
         $("#modal_nuevas .modal-body").html("");
         $("#modal_nuevas .modal-body").append(`
@@ -346,12 +346,12 @@ $(document).on('submit','#form-delete', function(e){
         contentType: false,
         success: function(data) {
             if (data == 1) {
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_descuentos2').DataTable().ajax.reload(null, false);
                 CloseModalDelete2();
                 alerts.showNotification("top", "right", "Abono borrado con exito.", "success");
                 document.getElementById("form_abono").reset();
             } else if(data == 0) {
-                $('#tabla_descuentos').DataTable().ajax.reload(null, false);
+                $('#tabla_descuentos2').DataTable().ajax.reload(null, false);
                 CloseModalDelete2();
                 alerts.showNotification("top", "right", "Pago liquidado.", "warning");
             }
@@ -384,7 +384,7 @@ $("#form_aplicar").submit( function(e) {
                     $("#modal_nuevas").modal('toggle' );
                     alerts.showNotification("top", "right", "Se aplicó el descuento correctamente", "success");
                     setTimeout(function() {
-                        tabla_nuevas.ajax.reload();
+                        tabla_nuevas2.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -406,7 +406,7 @@ function mandar_espera(idLote, nombre) {
 }
 
 $(window).resize(function(){
-    tabla_nuevas.columns.adjust();
+    tabla_nuevas2.columns.adjust();
 });
 
 $("#roles").change(function() {

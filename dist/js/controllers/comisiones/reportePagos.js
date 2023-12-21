@@ -3,36 +3,26 @@ $(document).ready(function() {
     $("#tabla_historialGral").prop("hidden", true);
 });
 
-$('#filtro33').change(function(){
+$('#puesto_reporte').change(function(){
     let tipo_usuario = $(this).val();
-    $("#filtro44").empty();
+    $("#nombre_reporte").empty();
     $.post('getByTypeOU/' + tipo_usuario, function (data) {
-        console.log("Data: ", data);
         data.map(function(element, index){
             let nombre = element.nombre + " " + element.apellido_paterno + " " + element.apellido_materno;
-            $("#filtro44").append($('<option>').val(element.id_usuario).text(nombre));
+            $("#nombre_reporte").append($('<option>').val(element.id_usuario).text(nombre));
         });
-        $("#filtro44").selectpicker('refresh');
+        $("#nombre_reporte").selectpicker('refresh');
     }, 'json');
 });
 
 $('#tabla_historialGral').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
+    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
 });
 
-$('#filtro44').change(function(ruta){
-    id_usuario = $('#filtro44').val();
+$('#nombre_reporte').change(function(ruta){
+    id_usuario = $('#nombre_reporte').val();
     getAssimilatedCommissions(id_usuario);
 });
-
-function cleanCommentsAsimilados() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
 
 let titulos = [];
 $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
@@ -48,7 +38,6 @@ $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
 
 var tr;
 var tabla_historialGral2 ;
-
 function getAssimilatedCommissions(id_usuario){
     $("#tabla_historialGral").prop("hidden", false);
     tabla_historialGral2 = $("#tabla_historialGral").DataTable({
@@ -233,16 +222,44 @@ function getAssimilatedCommissions(id_usuario){
     });
 
     $("#tabla_historialGral tbody").on("click", ".consultarDetalleDelPago", function(e){
+        $("#nombreLote").html('');
+        $("#comentarioAsimilado").html('');
         $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul>
+                    <div id="nombreLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content">
+                                        <ul class="timeline-3" id="comentarioAsimilado"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
+
+        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append(
+                $("#comentarioAsimilado").append(
                 '<li>\n' +
                     '  <div class="container-fluid">\n' +
                         '    <div class="row">\n' +
@@ -264,16 +281,8 @@ function getAssimilatedCommissions(id_usuario){
             $('#spiner-loader').addClass('hide');
         });
     });
-
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
-
-function cleanComments(){
-    var myCommentsList = document.getElementById('documents');
-    myCommentsList.innerHTML = '';
-    var myFactura = document.getElementById('facturaInfo');
-    myFactura.innerHTML = '';
-}

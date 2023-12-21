@@ -13,13 +13,7 @@ $(document).ready(function() {
         }
         $("#catalgo_facturas").selectpicker('refresh');
     }, 'json');
-
-    // $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
-    //     $(".report_empresa").html();
-    //     $.each( data, function( i, v){
-    //         $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
-    //     });
-    // });
+    
 });
 
 $('#catalgo_facturas').change(function(ruta){

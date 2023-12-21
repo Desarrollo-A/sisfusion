@@ -45,6 +45,12 @@ class Descuentos extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("descuentos/panel_descuentos", $datos);
     }
+
+    public function historial_descuento(){
+        $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
+        $this->load->view('template/header');
+        $this->load->view("descuentos/historial_descuento", $datos);
+    }
  
     public function lista_estatus_descuentos(){
         echo json_encode($this->Descuentos_model->lista_estatus_descuentos()->result_array());
@@ -179,4 +185,63 @@ class Descuentos extends CI_Controller
         }
         echo json_encode($dat);    
     }
+
+    public function getDetallePrestamo($idPrestamo){
+        $general = $this->Descuentos_model->getGeneralDataPrestamo($idPrestamo);
+        $detalle = $this->Descuentos_model->getDetailPrestamo($idPrestamo);
+        echo json_encode(array(
+            'general' => $general,
+            'detalle' => $detalle
+            ));
+    }
+
+    public function getHistorialPrestamos(){
+        $res["data"] = $this->Descuentos_model->getHistorialPrestamo()->result_array();
+        echo json_encode($res);
+    }
+
+    public function getPrestamos(){
+            $res["data"] = $this->Descuentos_model->getPrestamos()->result_array();
+            echo json_encode($res);
+    }
+
+    public function updatePrestamos (){
+        $pagoEdit = $this->input->post('pagoEdit');
+        $Numero_pagos = $this->input->post('numeroPagos'); 
+        $montoPagos = $this->input->post('montoPagos');
+        $comentario = $this->input->post('comentario');
+        $id_prestamo = $this->input->post('prestamoId');
+        $tipoD = $this->input->post('tipoD');
+        $arr_update = array(
+            "monto" => $pagoEdit,
+            "num_pagos" => $Numero_pagos,
+            "pago_individual" => $montoPagos,
+            "comentario" => $comentario,
+            "modificado_por" => 1,
+            "tipo" => $tipoD
+        );
+        
+        $update = $this->Descuentos_model->updatePrestamosEdit($id_prestamo  , $arr_update);
+        if($update){
+            $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Préstamo actualizado");
+        } else{
+            $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'error',
+            "message" => "Préstamo no actualizado, inténtalo más tarde ");
+        }
+        
+        echo json_encode ($respuesta);
+        }
+    
+        
+        public function BorrarPrestamo(){
+            $respuesta =  $this->Descuentos_model->BorrarPrestamo($this->input->post("idPrestamo"));
+            echo json_encode($respuesta);
+          }
+        
+
 }

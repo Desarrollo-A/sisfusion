@@ -1,5 +1,4 @@
 $(document).ready(function () {
-
     $.post(general_base_url + "Universidad/get_lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -15,7 +14,7 @@ $(document).ready(function () {
         rol = $('#puesto').val();
         $("#usuarios").empty().selectpicker('refresh');
         $.ajax({
-            url: general_base_url + 'Universidad/getUsuariosUM/'+rol,
+            url: general_base_url + 'Universidad/getUsuariosUM/' + rol,
             type: 'post',
             dataType: 'json',
             success:function(response){
@@ -77,14 +76,12 @@ $('#tabla-general thead tr:eq(0) th').each(function (i) {
 });
 
 function checkTypeOfDesc() {
-
     const tipoDescuento = $('#tipo_descuento').val();
     loadTable(tipoDescuento);
 }
 
 function loadTable(tipoDescuento) {
     $('#tabla-general').ready(function () {
-
         $('#tabla-general').on('xhr.dt', function (e, settings, json, xhr) {
             var general = 0;
             var recaudado = 0;
@@ -95,14 +92,12 @@ function loadTable(tipoDescuento) {
                 general += parseFloat(v.monto);
                 recaudado += parseFloat(v.total_descontado);
                 caja += parseFloat(v.pagado_caja);
-             });
-
-             pendiente = (general-recaudado-caja);
-
-             var totalFinal = formatMoney(general);
-             var recaudadoFinal = formatMoney(recaudado);
-             var cajaFinal = formatMoney(caja);
-             var pendienteFinal = formatMoney(pendiente);
+            });
+            pendiente = (general-recaudado-caja);
+            var totalFinal = formatMoney(general);
+            var recaudadoFinal = formatMoney(recaudado);
+            var cajaFinal = formatMoney(caja);
+            var pendienteFinal = formatMoney(pendiente);
 
             document.getElementById("totalGeneral").textContent = totalFinal;
             document.getElementById("totalRecaudado").textContent = recaudadoFinal;
@@ -111,7 +106,7 @@ function loadTable(tipoDescuento) {
         });
 
         tablaGeneral = $('#tabla-general').DataTable({
-            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
@@ -129,11 +124,11 @@ function loadTable(tipoDescuento) {
                     }
                 }
             }
-        }, {
+        }, 
+        {
             text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
             action: function () {
                 aplicarDescuento();
-
             },
             attr: {
                 class: ' btn-azure'
@@ -154,179 +149,124 @@ function loadTable(tipoDescuento) {
         },
         destroy: true,
         ordering: false,
-        columns:[
-                {"data": function (d) {
-                    return `<p style="font-size: 1em;">${d.id_usuario}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em;">${d.nombre}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em;">${d.puesto}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em;">${d.sede}</p>`;
-                }},
-                {"data": function (d) {
-                    if (d.saldo_comisiones < 12500) {
-                        color = 'color:gray';
-                    } else{
-                        color = 'color:blue';
-                    }
-                    return `<p style="font-size: 1em; ${color}">${formatMoney(d.saldo_comisiones)}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em">${formatMoney(d.total_descontado)}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pagado_caja)}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em; color:gray">${formatMoney(d.pendiente)}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em">${formatMoney(d.pago_individual)}</p>`;
-                }},
-                {"data": function (d) {
-                    reactivado = '';
+        columns:[{
+                "data": function (d) {
+                return `<p style="font-size: 1em;">${d.id_usuario}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em;">${d.nombre}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em;">${d.puesto}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em;">${d.sede}</p>`;
+            }},
+            {"data": function (d) {
+                if (d.saldo_comisiones < 12500) {
+                    color = 'color:gray';
+                } else{
+                    color = 'color:blue';
+                }
+                return `<p style="font-size: 1em; ${color}">${formatMoney(d.saldo_comisiones)}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em"><b>${formatMoney(d.monto)}</b></p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em">${formatMoney(d.total_descontado)}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em; color:gray">${formatMoney(d.pagado_caja)}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em; color:gray">${formatMoney(d.pendiente)}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em">${formatMoney(d.pago_individual)}</p>`;
+            }},
+            {"data": function (d) {
+                reactivado = '';
+                valor = '';
+
+                if(d.estatus == 5){
+                    reactivado = `<span class="label lbl-vividOrange">REACTIVADO ${(d.fecha_modificacion)}</span>`;
+                }
+                if(d.estado_usuario != 1){
+                    reactivado = `<span class="label lbl-warning">USUARIO BAJA</span>`;
+                }
+                if (d.saldo_comisiones < 12500 && d.estatus != 5 && d.estatus != 2 && d.estatus != 3 && d.estatus != 4) {
+                    valor = '<span class="label lbl-gray">SIN SALDO</span>';
+                } else if (d.estatus == 1 || d.banderaReactivado == 1 ) {
+                    valor = '<span class="label lbl-violetChin">DISPONIBLE</span>';
+                } else if (d.estatus == 2) {
+                    valor = '<span class="label lbl-blueMaderas">DESCUENTO APLICADO</span>';
+                } else if (d.estatus == 3) {
+                    valor = '<span class="label lbl-warning">Detenido</span>';
+                } else if (d.estatus == 4) {
+                    valor = '<span class="label lbl-green">LIQUIDADO</span>';
+                } else{
                     valor = '';
+                }
+                return valor+reactivado;
+            }},
+            {"data": function (d) {
+                pagosDescontar = 0;
+                color = '';
+                valor = 0;
+                pendiente = 0;
+                
+                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
+                    color = 'color:purple';
+                    valor = Math.floor(d.saldo_comisiones/12500);
+                    pendiente = Math.floor(d.pendiente/d.pago_individual);
+                    pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
+                }
+                return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
+            }},
+            {"data": function (d) {
+                return `<p style="font-size: 1em">${(d.primer_descuento) ? d.primer_descuento : 'SIN APLICAR'}</p>`;
+            }},
+            {"data": function (d) {
+                return '<p style="font-size: 1em">' + d.fecha_creacion + '</p>';
+            }},
+            {"data": function (d) {
+                if(d.certificacion == 0){
+                    return '<p style="font-size: 1em;">SIN ESTATUS</p>';
+                }else {
+                    return `<span class='label lbl-${(d.colorCertificacion)}'>${(d.certificacion)}</span>`;
+                }
+            }},
+            {"data": function (d) {
+                adicionales = '';
+                editar = '';
+                detener = '';      
 
-                    if(d.estatus == 5){
-                        reactivado = `<span class="label lbl-vividOrange">REACTIVADO ${(d.fecha_modificacion)}</span>`;
-                    }
-                    if(d.estado_usuario != 1){
-                        reactivado = `<span class="label lbl-warning">USUARIO BAJA</span>`;
-                    }
-                    if (d.saldo_comisiones < 12500 && d.estatus != 5 && d.estatus != 2 && d.estatus != 3 && d.estatus != 4) {
-                        valor = '<span class="label lbl-gray">SIN SALDO</span>';
-                    } else if (d.estatus == 1 || d.banderaReactivado == 1 ) {
-                        valor = '<span class="label lbl-violetChin">DISPONIBLE</span>';
-                    } else if (d.estatus == 2) {
-                        valor = '<span class="label lbl-blueMaderas">DESCUENTO APLICADO</span>';
-                    } else if (d.estatus == 3) {
-                        valor = '<span class="label lbl-warning">Detenido</span>';
-                    } else if (d.estatus == 4) {
-                        valor = '<span class="label lbl-green">LIQUIDADO</span>';
-                    } else{
-                        valor = '';
-                    }
-                    return valor+reactivado;
-                }},
-                {"data": function (d) {
-                    pagosDescontar = 0;
-                    color = '';
-                    valor = 0;
-                    pendiente = 0;
-                    
-                    if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
-                        color = 'color:purple';
-                        valor = Math.floor(d.saldo_comisiones/12500);
-                        pendiente = Math.floor(d.pendiente/d.pago_individual);
-                        pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
-                    }
-                    return `<p style="font-size: 1em; ${color}">${formatMoney(pagosDescontar)}</p>`;
-                }},
-                {"data": function (d) {
-                    return `<p style="font-size: 1em">${(d.primer_descuento) ? d.primer_descuento : 'SIN APLICAR'}</p>`;
-                }},
-                {"data": function (d) {
-                    return '<p style="font-size: 1em">' + d.fecha_creacion + '</p>';
-                }},
-                {"data": function (d) {
-                    if(d.certificacion == 0){
-                        return '<p style="font-size: 1em;">SIN ESTATUS</p>';
-                    }else {
-                        return `<span class='label lbl-${(d.colorCertificacion)}'>${(d.certificacion)}</span>`;
-                    }
-                }},
-                {"data": function (d) {
-                    adicionales = '';
-                    editar = '';
-                    detener = '';      
+                if(d.total_descontado > 1 ){
+                    base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Historial pagos"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
+                    <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
+                } else{
+                    base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
+                    <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
+                }
+                
+                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {
+                    valor = Math.floor(d.saldo_comisiones/12500);
+                    pendiente = Math.floor(d.pendiente/d.pago_individual);
+                    pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
+                    adicionales = `<button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i></button>`;
+                } 
 
-                    if(d.total_descontado > 1 ){//MIENTRAS TENGA SALDO APLICADO PODRA CONSULTAR LA INFO
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs_descuentos" title="Historial pagos"><i class="fas fa-info-circle"></i></button><button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
-                        
-                        <button href="#" 
-                        value="${d.id_usuario}" 
-                        data-value="${pagosDescontar}"
-                        data-saldoComisiones="${d.saldo_comisiones}"
-                        data-nombre="${d.nombre}" 
-                        data-code="${d.cbbtton}"
-                        data-descuento="${d.id_descuento}"
-                        data-certificacion="${d.idCertificacion}"
-                        class="btn-data btn-gray btn_certificacion"
-                        id="btn_certificacion" name="btn_certificacion"
-                        title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
-                        </button>
-                        `;
+                if(d.estado_usuario == 1){
+                    editar = `<button value="${d.id_usuario}" data-nombre="${d.nombre}" data-descuento="${d.id_descuento}" data-monto="${d.monto}" data-descontado="${d.total_descontado}" data-mensualidad="${d.pago_individual}" class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i></button>`;
+                }
 
-                    } else{
-                        base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
-                        <button href="#" 
-                        value="${d.id_usuario}" 
-                        data-value="${pagosDescontar}"
-                        data-saldoComisiones="${d.saldo_comisiones}"
-                        data-nombre="${d.nombre}" 
-                        data-code="${d.cbbtton}"
-                        data-descuento="${d.id_descuento}"
-                        data-certificacion="${d.idCertificacion}"
-                        class="btn-data btn-gray btn_certificacion"
-                        id="btn_certificacion" name="btn_certificacion"
-                        title="Asignar certificación"><i class="fas fa-closed-captioning"></i>
-                        </button>
-                        `;
-                    }
-                    
-                    if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {//TODAS SEDES
-                        valor = Math.floor(d.saldo_comisiones/12500);
-                        pendiente = Math.floor(d.pendiente/d.pago_individual);
-                        pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
-                                    
-                        adicionales = `<button href="#" 
-                        value="${d.id_usuario}" 
-                        data-value="${pagosDescontar}"
-                        data-saldoComisiones="${d.saldo_comisiones}"
-                        data-nombre="${d.nombre}" 
-                        data-code="${d.cbbtton}"
-                        class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i>
-                        </button>
-                                
-                        `;
-                    } 
+                if(d.estatus != 3){
+                    detener = `<button href="#" value="${d.id_usuario}" data-nombre="${d.nombre}" data-rol="${d.puesto}" data-totalDescuento="${d.monto}" data-abonado="${d.total_descontado}" class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i></button>`;
+                }
 
-                    if(d.estado_usuario == 1){
-
-                        editar = `<button value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-descuento="${d.id_descuento}"
-                        data-monto="${d.monto}"
-                        data-descontado="${d.total_descontado}"
-                        data-mensualidad="${d.pago_individual}"
-                        class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i>
-                        </button>
-                        `;
-                    }
-
-                    if(d.estatus != 3){
-
-                        detener = `<button href="#" 
-                        value="${d.id_usuario}"
-                        data-nombre="${d.nombre}"
-                        data-rol="${d.puesto}"
-                        data-totalDescuento="${d.monto}"
-                        data-abonado="${d.total_descontado}"
-                        class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i>
-                        </button>
-                        `;
-                    }
-
-                    return '<div class="d-flex justify-center">'+base+adicionales+editar+detener+'</div>';
-                }}],
-            
+                return '<div class="d-flex justify-center">'+base+adicionales+editar+detener+'</div>';
+            }}],
                 "ajax": {
                 "url": `getDescuentosUniversidad/`+tipoDescuento,
                 "type": "GET",
@@ -345,7 +285,36 @@ function loadTable(tipoDescuento) {
             id_user = $(this).val();
             usuario = $(this).attr("data-value");
 
-            $("#historialLogsPagos").modal();
+            changeSizeModal("modal-lg");
+            appendBodyModal(`<div class="modal-header">
+                <h3 class="modal-title text-center">Historial descuentos</h3>
+                <p class="category input-tot pl-1 text-center" id="nombreUsuario" name="nombreUsuario"></p>
+            </div>
+            <div class="modal-body">
+                <div role="tabpanel">
+                    <ul class="nav" role="tablist">
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="lista-comentarios-descuentos"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+            showModal();
+
             $("#nombreUsuario").append(usuario);
 
             $.getJSON("getCommentsDU/" + id_user).done(function (data) {
@@ -361,7 +330,7 @@ function loadTable(tipoDescuento) {
                     $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;">SIN </p></div>');
                 } else {
                     $.each(data, function (i, v) {
-                        $("#lista-comentarios-descuentos").append('<div class="col-lg-12"><p style="color:gray;font-size:1.1em;"><b>Comentario: </b>Se descontó la cantidad de <b>' + formatMoney(v.comentario) +'</b><br>' + v.comentario2 +''+saldo_comisiones+'<br><b style="color:#3982C0;font-size:0.9em;">Movimiento: ' + v.date_final + '</b><b style="color:#C6C6C6;font-size:0.9em;"> - ' + v.nombre_usuario + '</b></p></div>');
+                        $("#lista-comentarios-descuentos").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><b>Comentario: </b>Se descontó la cantidad de <b>' + formatMoney(v.comentario) +''+ v.comentario2 +''+saldo_comisiones+'</b></a><br></div><div class="float-end text-right"><a>'+ v.date_final +'</a></div><div class="col-md-12"><p class="m-0"><small>MODIFICADO POR: </small><b> ' + v.nombre_usuario +  '</b></p></div><h6></h6></div></div></li>');
                     });
                 }
             });
@@ -423,7 +392,6 @@ function loadTable(tipoDescuento) {
             $("#arrayLotes").val('');
             $("#listaLotesDisponibles").html('');
             $("#informacionGeneral").html('');
-            // $("#arrayLotes").val('');
             $("#usuarioId").val('');
             $("#nombre").val('');
             $("#saldoComisiones").val('');
@@ -452,7 +420,6 @@ function loadTable(tipoDescuento) {
             $.post('getLotesDescuentosUniversidad/' + id_user + '/' + monto, function (data) {
                 var len = data.length;
                 let  info = ''; 
-                // let  datosLotes = []; 
                 let sumaselected = 0;
                 for (var i = 0; i < len; i++) {
 
@@ -477,72 +444,96 @@ function loadTable(tipoDescuento) {
                 $("#totalDisponible").val(formatMoney(sumaselected));
                 $("#listaLotesDisponibles").selectpicker('refresh');
                 $("#arrayLotes").selectpicker('refresh');
-
             }, 'json'); 
         });
- 
-   
 
     $("#tabla-general tbody").on("click", ".consultar_fecha_pagos", function (e) {
 
         e.preventDefault();
         e.stopImmediatePropagation();
-        document.getElementById('nameUser').innerHTML = '';
-        document.getElementById('sumaMensualComisiones').innerHTML = '';
-        $('#userid').val(0);
-        id_user = $(this).val();
+        $("#nameUser").html('');
+        $('#sumaMensualComisiones').html('');
+        id_user = $(this).attr("data-code");
         usuario = $(this).attr("data-value");
-        $('#userid').val(id_user);
-        $("#seeInformationModalP").modal();
+
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-header">
+            <h3 class="modal-title text-center">Consulta de saldos</h3>
+            <div class="col-lg-12 form-group m-1" id="nameUser" name="nameUser"></div>
+            <input type="hidden" name="userid" id="userid">
+        </div>
+        <div class="modal-body">
+            <form method="post">
+                <div class="container-fluid p-0">
+                    <div class="row">
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Mes</label>
+                            <select class="selectpicker select-gral m-0" name="mes" id="mes" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        </div> 
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Año</label>
+                            <select class="selectpicker select-gral m-0" name="anio" id="anio" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                        </div> 
+                        <div class="col-lg-4 form-group m-0" id="select">
+                            <label class="label-gral">Monto</label>
+                            <p class="category input-tot pl-1" ><B id="sumaMensualComisiones">$0.00</B></p>
+                        </div> 
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>`);
+        showModal();
+
+        $('#mes').change(function() {
+            anio = $('#anio').val();
+            mes = $('#mes').val();
+    
+            if(anio == ''){
+                anio=0;
+            }else{
+                getPagosByUser(id_user,mes, anio);
+            }
+        });
+
+        $('#anio').change(function() {
+            mes = $('#mes').val();
+            anio = $('#anio').val();
+        
+            if(mes != '' && (anio != '' || anio != null || anio != undefined)){
+                getPagosByUser(id_user,mes, anio);
+            }
+        });
+
         $('#nameUser').append('<p>Usuario: <b>'+usuario+'</b></p>');
         let datos = '';
         let datosA = '';
         for (let index = 0; index < meses.length; index++) {
-             datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+            datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
         }
         for (let index = 0; index < anios.length; index++) {
-             datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
+            datosA = datosA + `<option value="${anios[index]}">${anios[index]}</option>`;
         }
         $('#mes').html(datos);
         $('#mes').selectpicker('refresh');
         $('#anio').html(datosA);
         $('#anio').selectpicker('refresh');
     });
-
-    $('#mes').change(function() {
-        anio = $('#anio').val();
-        mes = $('#mes').val();
-        let usuario = $('#userid').val();
-        if(anio == ''){
-            anio=0;
-        }else{
-    
-            getPagosByUser(usuario,mes, anio);
-        }
-    });
     
     function getPagosByUser(usuario,mes, anio){
-        document.getElementById('sumaMensualComisiones').innerHTML = 'Cargando...';
+        $("#sumaMensualComisiones").html('Cargando...');
         $.getJSON("getPagosByUser/" + usuario+"/"+mes+"/"+anio).done(function (data) {
-            document.getElementById('sumaMensualComisiones').innerHTML = formatMoney(data[0].suma);
+            $("#sumaMensualComisiones").html(formatMoney(data[0].suma));
         });
     }
-
-    $('#anio').change(function() {
-        let usuario = $('#userid').val();
-        mes = $('#mes').val();
-        anio = $('#anio').val();
-    
-        if(mes != '' && (anio != '' || anio != null || anio != undefined)){
-            getPagosByUser(usuario,mes, anio);
-        }
-    });
 
     $("#tabla-general tbody").on("click", ".topar_descuentos", function (e) {
 
         e.preventDefault();
         e.stopImmediatePropagation();
-     
+    
         $('#mensajeConfirmacion').html('');
         $('#comentarioTopar').html('');
         $('#montosDescuento').html('');
@@ -558,9 +549,8 @@ function loadTable(tipoDescuento) {
         $('#montosDescuento').append('<p>Total descuento: <b>'+formatMoney(totalDescuento)+'</b></p><p>Monto descontado: <b>'+formatMoney(abonado)+'</b></p>');
         $('#usuarioTopar').val(id_user);
         $("#modal_nuevas").modal();
-
     });
- 
+    
     $('#numeroMeses').change(function () {
 
     const totalDescuento = replaceAll($('#montoDescuento').val(), ',', '');
@@ -581,29 +571,25 @@ function loadTable(tipoDescuento) {
     }
 });
 
-$('#montoDescuento').change(function () {
-    const totalDescuento = replaceAll($('#montoDescuento').val(), ',', '');
-    const monto = replaceAll(totalDescuento, '$', '');
-    const meses = parseFloat($('#numeroMeses').val());
-    let resultado = 0;
+    $('#montoDescuento').change(function () {
+        const totalDescuento = replaceAll($('#montoDescuento').val(), ',', '');
+        const monto = replaceAll(totalDescuento, '$', '');
+        const meses = parseFloat($('#numeroMeses').val());
+        let resultado = 0;
 
-    if (isNaN(monto)||isNaN(meses)) {
-        alerts.showNotification("top", "right", "Revise la información ingresada.", "warning");
-        $('#montoMensualidad').val(resultado);
-    } else {
-        resultado = monto / meses;
-        if (resultado > 0) {
-            $('#montoMensualidad').val(formatMoney(resultado));
+        if (isNaN(monto)||isNaN(meses)) {
+            alerts.showNotification("top", "right", "Revise la información ingresada.", "warning");
+            $('#montoMensualidad').val(resultado);
         } else {
-            $('#montoMensualidad').val(formatMoney(0));
+            resultado = monto / meses;
+            if (resultado > 0) {
+                $('#montoMensualidad').val(formatMoney(resultado));
+            } else {
+                $('#montoMensualidad').val(formatMoney(0));
+            }
         }
-    }
+    });
 });
-
-
-}); //END DATATABLE
-
-
 
 $(document).on("click", ".btn_editarDescuento", function () {
     $("#modalEditarDescuento").modal();
@@ -621,13 +607,12 @@ $(document).on("click", ".btn_editarDescuento", function () {
     } else{
         fechaIncial = day+"/"+month+"/"+year;
     }
-   
+
     id_usuario = $(this).val();
     id_descuento = $(this).attr("data-descuento"); 
     total = $(this).attr("data-monto");    
     descontado = $(this).attr("data-descontado");    
-    mensualidad = $(this).attr("data-mensualidad");    
-     
+    mensualidad = $(this).attr("data-mensualidad");
     nombre = $(this).attr("data-nombre");    
 
     document.getElementById("fechaIncial").value = fechaIncial;
@@ -636,13 +621,11 @@ $(document).on("click", ".btn_editarDescuento", function () {
     document.getElementById("descontado").value = descontado;
     document.getElementById("nuevoMonto").value = formatMoney(total);
     document.getElementById("nuevoMontoMensual").value = formatMoney(mensualidad);
- 
     $('#tituloModalEditar').append('<h3>Editar descuento a usuario <b>'+nombre+'</b></h3>');
-
 });  
 
 $(document).on('change', '#numeroMensualidades', function() {
- 
+
     monto = document.getElementById("nuevoMonto").value;
     descontado = document.getElementById("descontado").value ;
     mensualidades = document.getElementById("numeroMensualidades").value;
@@ -655,7 +638,7 @@ $(document).on('change', '#numeroMensualidades', function() {
     document.getElementById("nuevoMontoMensual").value = formatMoney(totalMonto);
 
 });
- 
+
 function aplicarDescuento() {
     $("#puesto").val('');
     $("#puesto").selectpicker("refresh");
@@ -684,7 +667,6 @@ $("#form_certificado").submit(function (e) {
             cache: false,
             processData: false,
             success: function (data) {
-                // console.log(data)
                 alerts.showNotification("top", "right", "Préstamo actualizado", "success");
                 $('#tabla-general').DataTable().ajax.reload(null, false);
                 $('#modalCertificacion').modal('toggle');
@@ -700,9 +682,7 @@ $("#form_certificado").submit(function (e) {
 $("#formularioAplicarDescuento").submit(function (e) {
     $('#btn_abonar').prop('disabled', true);
     document.getElementById('btn_abonar').disabled = true;
-
     $('#idloteorigen').removeAttr('disabled');
-
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
@@ -725,7 +705,6 @@ $("#formularioAplicarDescuento").submit(function (e) {
                     $("#roles").selectpicker("refresh");
                     $('#usuarioid').val('default');
                     $('#usuarioid').val('default');
-
                     $("#usuarioid").selectpicker("refresh");
 
                     alerts.showNotification("top", "right", "Descuento registrado con exito.", "success");
@@ -756,16 +735,13 @@ $("#formularioAplicarDescuento").submit(function (e) {
     }
 });
 
-
-// Función para pausar la solicitud
 $("#form_interes").submit(function (e) {
-    // $('#btn_topar').attr('disabled', 'true');
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-           $.ajax({
+        $.ajax({
             url: general_base_url+"Universidad/toparDescuentoUniversidad",
             data: data,
             cache: false,
@@ -773,7 +749,7 @@ $("#form_interes").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST', 
             success: function (data) {
                 if (data[0]) {
                     $("#modal_nuevas").modal('toggle');
@@ -799,7 +775,7 @@ $("#formAltaDescuento").submit(function (e) {
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-           $.ajax({
+        $.ajax({
             url: general_base_url+"Universidad/altaNuevoDescuentoUM",
             data: data,
             cache: false,
@@ -807,7 +783,7 @@ $("#formAltaDescuento").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function (data) {
                 if (data) {
                     $("#modalAgregarNuevo").modal('toggle');
@@ -830,8 +806,6 @@ $("#formAltaDescuento").submit(function (e) {
     }
 });
 
-
-
 $("#formEditarDescuento").submit(function (e) {
     $('#btn_alta').attr('disabled', 'true');
     e.preventDefault();
@@ -839,7 +813,7 @@ $("#formEditarDescuento").submit(function (e) {
     submitHandler: function (form) {
 
         var data = new FormData($(form)[0]);
-           $.ajax({
+        $.ajax({
             url: general_base_url+"Universidad/editarDescuentoUM",
             data: data,
             cache: false,
@@ -847,7 +821,7 @@ $("#formEditarDescuento").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function (data) {
                 if (data) {
                     $("#modalEditarDescuento").modal('toggle');
@@ -872,22 +846,20 @@ $("#formEditarDescuento").submit(function (e) {
     }
 });
 
-
 let meses = [
-      {id:'01', mes:'Enero'},
-      {id:'02',mes:'Febrero'},
-      {id:'03',mes:'Marzo'},
-      {id:'04',mes:'Abril'},
-      {id:'05',mes:'Mayo'},
-      {id:'06',mes:'Junio'},
-      {id:'07',mes:'Julio'},
-      {id:'08',mes:'Agosto'},
-      {id:'09',mes:'Septiembre'},
-      {id:'10',mes:'Octubre'},
-      {id:'11',mes:'Noviembre'},
-      {id:'12',mes:'Diciembre'}
+    {id:'01', mes:'Enero'},
+    {id:'02',mes:'Febrero'},
+    {id:'03',mes:'Marzo'},
+    {id:'04',mes:'Abril'},
+    {id:'05',mes:'Mayo'},
+    {id:'06',mes:'Junio'},
+    {id:'07',mes:'Julio'},
+    {id:'08',mes:'Agosto'},
+    {id:'09',mes:'Septiembre'},
+    {id:'10',mes:'Octubre'},
+    {id:'11',mes:'Noviembre'},
+    {id:'12',mes:'Diciembre'}
     ];
-    
-    let anios = [2019,2020,2021,2022,2023,2024];
 
+    let anios = [2019,2020,2021,2022,2023,2024];
 }

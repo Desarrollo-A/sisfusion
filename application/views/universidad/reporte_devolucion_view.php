@@ -20,7 +20,7 @@
                                     <div class="col-sm-12 col-md-6 col-lg-6">
                                         <div class="form-group">
                                             <label class="control-label" for="proyecto">PUESTO</label>
-                                            <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
+                                            <select name="puesto_devolucion" id="puesto_devolucion" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                 <option value="3">GERENTE</option>
                                                 <option value="9">COORDINADOR DE VENTAS</option> 
                                                 <option value="7">ASESOR</option>
