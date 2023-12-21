@@ -1988,14 +1988,15 @@ class Reestructura extends CI_Controller{
                         $archivoSubido = $this->upload->data();
                         $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
                         $fileExtension = strtolower(end($fileNameCmps));
-                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
+                        $fechaActual = date_create(date('Y-m-d H:i:s'));
+                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension;
                         rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                         $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
                         $idpxl = $this->input->post('idLoteArchivo'.$i);
 
                         $updateDocumentData = array(
                             $nameField => $nuevoNombre,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
@@ -2026,12 +2027,13 @@ class Reestructura extends CI_Controller{
                         $archivoSubido2 = $this->upload->data();
                         $fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
                         $fileExtension2 = strtolower(end($fileNameCmps2));
-                        $nuevoNombre2 = $nombreLoteOriginal.'-'.date('YmdHis').'.'.$fileExtension2;
+                        $fechaActual = date_create(date('Y-m-d H:i:s'));
+                        $nuevoNombre2 = $nombreLoteOriginal.'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension2;
                         rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
 
                         $updateDocumentData = array(
                             "rescision" => $nuevoNombre2,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
 
