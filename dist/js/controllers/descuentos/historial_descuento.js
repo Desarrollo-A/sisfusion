@@ -1,7 +1,7 @@
 var totaPen = 0;
 var tr;
 // $(document).ready(function () {
-    
+//     console.log("I'm working")
 // });
 
 function replaceAll(text, busca, reemplaza) {
@@ -223,7 +223,7 @@ $("#tabla_prestamos").ready(function () {
             }
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getPrestamos",
+            url: general_base_url + "Descuentos/getHistorialPrestamos",
             type: "POST",
             cache: false,
             data: function (d) {
@@ -235,7 +235,7 @@ $("#tabla_prestamos").ready(function () {
         $('#spiner-loader').removeClass('hide');
         const idPrestamo = $(this).val();
         let importacion = '';
-        $.getJSON(`${general_base_url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
+        $.getJSON(`${general_base_url}Descuentos/getDetallePrestamo/${idPrestamo}`).done(function (data) {
             
             const { general, detalle } = data;
             $('#spiner-loader').addClass('hide');

@@ -11,6 +11,18 @@
 <div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
 
+        <div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>4
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+
 		<div class="content boxContent">
 			<div class="container-fluid">
 				<div class="row">
@@ -20,11 +32,11 @@
 								<i class="material-icons">dashboard</i>
                             </div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
+								<h3 class="card-title center-align">Historial descuentos</h3>
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
                                                     <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
@@ -79,6 +91,7 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/historial_descuento.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 </body>

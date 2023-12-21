@@ -193,14 +193,18 @@ class Descuentos extends CI_Controller
             'general' => $general,
             'detalle' => $detalle
             ));
-        }
+    }
+
+    public function getHistorialPrestamos(){
+        $res["data"] = $this->Descuentos_model->getHistorialPrestamo()->result_array();
+        echo json_encode($res);
+    }
+
     public function getPrestamos(){
             $res["data"] = $this->Descuentos_model->getPrestamos()->result_array();
             echo json_encode($res);
     }
 
-
-  
     public function updatePrestamos (){
         $pagoEdit = $this->input->post('pagoEdit');
         $Numero_pagos = $this->input->post('numeroPagos'); 
