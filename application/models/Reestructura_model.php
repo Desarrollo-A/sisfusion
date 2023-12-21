@@ -862,9 +862,13 @@ class Reestructura_model extends CI_Model
             $tipoOrigenDestino = '';
         }
 
-        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales,
+        hd.expediente, hd.idDocumento, c.nombre AS nombreCondominio, r.nombreResidencial
         FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
+        LEFT JOIN historial_documento hd ON hd.idLote=l.idLote AND hd.tipo_doc=30
+        LEFT JOIN condominios c ON c.idCondominio=l.idCondominio
+        LEFT JOIN residenciales r ON r.idResidencial = c.idResidencial
         LEFT JOIN (SELECT lf2.idLotePvOrigen , COUNT(idLotePvOrigen) as originales FROM lotesFusion lf2  WHERE origen=1 GROUP BY lf2.idLotePvOrigen ) co ON co.idLotePvOrigen = lf.idLotePvOrigen
         WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();

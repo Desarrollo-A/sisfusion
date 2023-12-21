@@ -1188,7 +1188,7 @@ $(document).on('click', '.btn-avanzar', async function () {
                 return;
             }
             nombreLote = row.data().nombreLote;
-        }   
+        }
     }
 
 
@@ -1372,8 +1372,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
-    if(superficiePropuestas < superficieFusion){
-        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
+    if((superficiePropuestas-100) < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+((superficiePropuestas-100)).toFixed(2)+'</b>) es menor al total de ' +
             'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
         return false;
     }
@@ -1396,7 +1396,7 @@ const botonesAccionReubicacion = (d) => {
 
     const totalResicion = parseInt( banderaFusion == 1 ? d.totalRescisionFusion : d.totalRescision);
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
-
+    const contratoFirmadoFile =  d.contratoFirmado;
 
 
     let editar = 0;
@@ -1550,7 +1550,8 @@ const botonesAccionReubicacion = (d) => {
             data-tipoTransaccion="${d.id_estatus_preproceso}"
             data-nombreResidencial = "${d.nombreResidencial}"
             data-nombreCondominio = "${d.nombreCondominio}"
-            data-contratoFirmado = "${d.contratoFirmado}">
+            data-contratoFirmado = "${d.contratoFirmado}"
+            data-fusion="${flagFusion}">
             <i class="fas ${btnContratoFirmado}"></i>
         </button>`;
 
