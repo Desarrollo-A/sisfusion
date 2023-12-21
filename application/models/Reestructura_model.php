@@ -485,7 +485,7 @@ class Reestructura_model extends CI_Model
 
     public function getLotes($id_proyecto){
         ini_set('memory_limit', -1);
-        return $this->db->query("SELECT lotx.idProyecto, res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
+        return $this->db->query("SELECT lotx.idProyecto,lot.liberaBandera, res.nombreResidencial,con.nombre AS condominio, lot.nombreLote, lot.idLote ,lot.sup AS superficie, lot.precio, CONCAT(cli.nombre,' ',cli.apellido_paterno,' ',cli.apellido_materno) nombreCliente,lot.observacionLiberacion AS observacion 
         FROM lotes lot
         INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
@@ -493,7 +493,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN clientes cli ON cli.id_cliente = lot.idCliente AND cli.status IN (1) AND cli.proceso IN (0, 1)
         WHERE ISNULL(lot.tipo_venta, 0) != 1 AND lot.status = 1 AND idStatusLote IN (2, 3)
         GROUP BY lotx.idProyecto, res.nombreResidencial,con.nombre, lot.nombreLote, lot.idLote ,lot.sup, lot.precio, 
-        cli.nombre, cli.apellido_paterno, cli.apellido_materno, lot.observacionLiberacion")->result();
+        cli.nombre, cli.apellido_paterno,lot.liberaBandera, cli.apellido_materno, lot.observacionLiberacion")->result();
     }
 
     public function getLotesEstatusSeisSinTraspaso(){

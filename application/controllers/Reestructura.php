@@ -1743,6 +1743,7 @@ class Reestructura extends CI_Controller{
         $idLote    =  $this->input->post('idLoteBandera');
         $arr_update = array( 
                         "liberaBandera"   => $bandera,
+                        "usuario" => $this->session->userdata('id_usuario')
                         );
         $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
         if($update){
