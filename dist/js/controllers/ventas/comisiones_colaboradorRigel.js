@@ -316,7 +316,7 @@ function comisionesTablaNueva(proyecto,condominio){
                                 ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
                                 ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
                                 ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                                ((mes == 12 && dia == 22)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
+                                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
                                 )//VALIDACION VENTAS NORMAL
     
                             || (id_usuario_general == 7689)
@@ -616,7 +616,7 @@ function comisionesTablaNueva(proyecto,condominio){
                             ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
                             ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
                             ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                            ((mes == 12 && dia == 22)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
+                            ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
                             )//VALIDACION VENTAS NORMAL
 
                         || (id_usuario_general == 7689)
@@ -1631,7 +1631,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                     ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
                     ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
                     ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                    ((mes == 12 && dia == 22)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
+                    ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
                     )//VALIDACION VENTAS NORMAL
 
                 || (id_usuario_general == 7689)
