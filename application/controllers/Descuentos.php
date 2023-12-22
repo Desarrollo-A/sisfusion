@@ -34,6 +34,9 @@ class Descuentos extends CI_Controller
         if ($this->session->userdata('id_usuario') == "" || $this->session->userdata('id_rol') == "")
         redirect(base_url() . "index.php/login");
     }
+
+
+    // vistas inicio de las vistas de este controlador
     public function historial_prestamos(){
     $this->load->view('template/header');
     $this->load->view("descuentos/historial_prestamo_view");
@@ -51,6 +54,14 @@ class Descuentos extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("descuentos/historial_descuento", $datos);
     }
+
+    public function anticipo_pago(){
+        $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
+        $this->load->view('template/header');
+        $this->load->view("descuentos/anticipo_pago_view", $datos);
+    }
+
+    // vistas fin de las vistas de este controlador
  
     public function lista_estatus_descuentos(){
         echo json_encode($this->Descuentos_model->lista_estatus_descuentos()->result_array());
@@ -242,6 +253,9 @@ class Descuentos extends CI_Controller
             $respuesta =  $this->Descuentos_model->BorrarPrestamo($this->input->post("idPrestamo"));
             echo json_encode($respuesta);
           }
+
+        
+        
         
 
 }
