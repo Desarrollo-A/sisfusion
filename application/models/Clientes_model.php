@@ -4081,13 +4081,25 @@ function getStatusMktdPreventa(){
             $condition_iddragon = "";
         }
 
+        if(!empty($data_search['id_salesforce'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce=".$data_search['id_salesforce'];
+        }else{
+            $condition_idsalesforce = "";
+        }
+
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion AS nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
-                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto,
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_salesforce, pr.id_prospecto,
                 CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
@@ -4101,13 +4113,14 @@ function getStatusMktdPreventa(){
                 $condition_telefono
                 $condition_sedes
                 $condition_iddragon
+                $condition_idsalesforce
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
                 $query = $this->db->query("SELECT UPPER(concat(pr.nombre,' ', pr.apellido_paterno, ' ', pr.apellido_materno)) AS nombre_prospecto,
                 pr.telefono, pr.telefono_2, UPPER(pr.correo) AS correo, pr.lugar_prospeccion, CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as nombre_asesor,
                 CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
-                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, UPPER(sedes.nombre) as sede_nombre,
+                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, pr.id_salesforce, UPPER(sedes.nombre) as sede_nombre,
                 sedes.abreviacion as abreviacion_sedes, pr.source, UPPER(opc.nombre) as lugar_prospeccion, pr.id_prospecto,
                 CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
                 FROM prospectos pr
@@ -4121,6 +4134,7 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_iddragon
+                $condition_idsalesforce
                 $condition_sedes");
                 break;
         }
@@ -4137,6 +4151,21 @@ function getStatusMktdPreventa(){
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
+        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
+    }
+
+    public function getSalesforceClientsList(){
+        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion,r.descripcion AS nombreProyecto,
+        c.nombre nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
+        cl.noRecibo, l.referencia, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, l.totalValidado engancheCliente, CONVERT(VARCHAR,cl.fechaEnganche,20) AS fechaEnganche, CONVERT(VARCHAR,pr.fecha_creacion,20) AS fechaCreacionProspecto,
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_salesforce, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
+        FROM clientes cl 
+        INNER JOIN lotes l ON cl.idLote = l.idLote 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 52
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
         LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
         WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();

@@ -29,11 +29,13 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 9187)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
                         $arrayData = array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr");
+                    else if ($data->id == 9187) // SALESFORCE
+                        $arrayData = array("username" => "xPmR71zA9!", "password" => "E4n@t2LsF#U7jWb");
                     else if ($data->id == 8134) // INTERNOMEX
                         $arrayData = array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@");
                     else if ($data->id == 5918) // ARCUS
@@ -55,7 +57,7 @@ class Api extends CI_Controller
             }
         }
     }
-
+    
     function addLeadRecord() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
@@ -1214,6 +1216,92 @@ class Api extends CI_Controller
                     }
                 }
             }
+    }
+
+    function addLeadRecordSalesforce() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9187);
+                $valida_token = json_decode($this->validateToken($token, 9187));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if(!isset($data->APELLIDOPATERNO))
+                            $data->APELLIDOPATERNO = '';
+                        if (!isset($data->APELLIDOMATERNO))
+                            $data->APELLIDOMATERNO = ''; 
+                        if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDSALESFORCE))
+                            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->NOMBRE == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '' || $data->IDSALESFORCE == '')
+                                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
+                                if ($result->id_rol != 7)
+                                    echo json_encode(array("status" => 400, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
+                                else {
+                                    $data = array(
+                                        "id_asesor" => $data->Owner,
+                                        "id_coordinador" => $result->id_coordinador,
+                                        "id_gerente" => $result->id_gerente,
+                                        "id_sede" => $data->id_sede,    
+                                        "id_subdirector" => $result->id_subdirector,
+                                        "id_regional" => $result->id_regional,
+                                        "personalidad_juridica" => 2,
+                                        "nombre" => $data->NOMBRE,
+                                        "apellido_paterno" => $data->APELLIDOPATERNO,
+                                        "apellido_materno" => $data->APELLIDOMATERNO,
+                                        "correo" => $data->Mail,
+                                        "telefono" => $data->Phone,
+                                        "lugar_prospeccion" => 52, 
+                                        "otro_lugar" => $data->CampaignID,
+                                        "plaza_venta" => 0,
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                        "observaciones" => $data->Comments,
+                                        "desarrollo" => $data->ProductID,
+                                        "score" => $data->iScore,
+                                        "source" => $data->Source,
+                                        "id_salesforce" => $data->IDSALESFORCE
+                                    );
+                                    $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                     
+                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                        echo json_encode(array("status" => 200, "message" => "Registro guardado con éxito.", "resultado" => $result), JSON_UNESCAPED_UNICODE);
+                                    else // ERROR TRANSACTION
+                                        echo json_encode(array("status" => 503, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                }
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
     }
 
 }

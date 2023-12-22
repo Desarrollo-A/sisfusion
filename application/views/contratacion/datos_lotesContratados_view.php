@@ -40,6 +40,7 @@
                                                     <th>REUBICACIÓN</th>
                                                     <th>FECHA DE REUBICACIÓN</th>
                                                     <th>CONTRATO FIRMADO</th>
+                                                    <th>ESTATUS LOTE</th>
                                                 </tr>
                                             </thead>
                                         </table>
