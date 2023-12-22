@@ -506,12 +506,14 @@
                                                             <div class="form-group d-flex justify-center align-center">
                                                                 <h4 class="title-tot center-align m-0">Saldo total:</h4>
                                                                 <p class="input-tot pl-1">
-                                                                <?php
+                                                                    <?php
                                                                     $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
+                                                                    
                                                                     foreach ($query->result() as $row){
                                                                         $number = $row->nuevo_general;
                                                                         echo '$' . number_format($number, 2).'';
-                                                                    } ?>
+                                                                    } 
+                                                                    ?>
                                                                 </p>
                                                             </div>
                                                         </div>
