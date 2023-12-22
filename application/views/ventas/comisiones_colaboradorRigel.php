@@ -337,8 +337,8 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                            <label class="control-label" for="proyecto_revision">Proyecto</label>
-                                                            <select name="proyecto_revision" id="proyecto_revision" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                                                            <label class="control-label" for="catalogo_revision">Proyecto</label>
+                                                            <select name="catalogo_revision" id="catalogo_revision" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                                                             <label class="control-label" for="condominio_revision">Condominio</label>

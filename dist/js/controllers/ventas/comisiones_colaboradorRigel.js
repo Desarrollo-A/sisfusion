@@ -10,6 +10,9 @@ var totaPen = 0;
 let titulos = [];
 
 $(document).ready(function() {
+
+    $("#tabla_comisiones_sin_pago").addClass('hide');
+
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
         var len = data.length;
@@ -18,9 +21,17 @@ $(document).ready(function() {
             var name = data[i]['descripcion'];
             $("#catalogo_pago").append($('<option>').val(id).text(name.toUpperCase()));
             $("#catalogo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_nuevas").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_revision").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_pagar").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_otras").append($('<option>').val(id).text(name.toUpperCase()));
         }
         $("#catalogo_pago").selectpicker('refresh');
         $("#catalogo_resguardo").selectpicker('refresh');
+        $("#catalogo_nuevas").selectpicker('refresh');
+        $("#catalogo_revision").selectpicker('refresh');
+        $("#catalogo_pagar").selectpicker('refresh');
+        $("#catalogo_otras").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 
@@ -62,6 +73,7 @@ $('#catalogo_pago').change( function(){
 $('#condominio_pago').change( function(){
     index_proyecto = $('#catalogo_pago').val();
     index_condominio = $(this).val();
+    $("#tabla_comisiones_sin_pago").removeClass('hide');
     comisionesTableSinPago(index_proyecto, index_condominio);
 });
 
@@ -146,7 +158,7 @@ $('#condominio1').change( function(){
     comisionesTablaNueva(index_proyecto, index_condominio);
 });
 
-$('#proyecto_revision').change( function(){
+$('#catalogo_revision').change( function(){
     index_proyecto = $(this).val();
     index_condominio = 0
     $('#condominio_revision').html("");
@@ -168,7 +180,7 @@ $('#proyecto_revision').change( function(){
 });
 
 $('#condominio_revision').change( function(){
-    index_proyecto = $('#proyecto_revision').val();
+    index_proyecto = $('#catalogo_revision').val();
     index_condominio = $(this).val();
     comisionTableRevision(index_proyecto, index_condominio);
 });
