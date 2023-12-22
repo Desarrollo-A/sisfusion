@@ -1561,13 +1561,14 @@
         UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
         CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
 		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
-		ISNULL(hd2.expediente, 0) documentoCargado
+		ISNULL(hd2.expediente, 0) documentoCargado, sl.idStatusLote as ID_Estatus_Lote
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
         LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
 		LEFT JOIN tipo_venta as tv ON tv.id_tventa = lotes.tipo_venta
+		LEFT JOIN statuslote sl ON sl.idStatusLote = lotes.idStatusLote
         LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
         LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
         LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
@@ -1584,7 +1585,7 @@
         cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
         lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia,  CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente, tv.tipo_venta");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente, tv.tipo_venta,  sl.idStatusLote ");
         return $query->result();
     }
 
