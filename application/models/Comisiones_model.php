@@ -2749,11 +2749,13 @@ class Comisiones_model extends CI_Model {
             $multiRegional = 'cA.id_regional';
             $numeroRegionales = $numAsesores;
         }
-        
+
+
+        $fragmento = $plan_comision == 74 ? " " : " u1.id_usuario = v1.id_asesor OR ";
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
 
         SET @idCliente = $clienteData  
-        SET @numAsesores = $numAsesores  
+        SET @numAsesores = $numAsesores 
         SET @numCoordinadores = $numCoordinadores 
         SET @numGerente = $numGerente 
         SET @numSubdir = $numSubdir 
@@ -2766,7 +2768,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_asesor OR u1.id_usuario = cA.id_asesor
+            INNER JOIN usuarios u1 ON $fragmento u1.id_usuario = cA.id_asesor
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.asesor not IN (0) 
             WHERE cA.id_cliente = @idCliente)
         
@@ -3451,11 +3453,11 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 'null' ){
-        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == '' ){
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 0 ){
+        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == 0 ){
             $anterior = null;
             $nuevo = null;
-            $saldoNeo = $saldoNeo = null;
+            $saldoNeo = 0;
         }else{
             $anterior = $anterior;
             $nuevo  = $nuevo;
