@@ -347,14 +347,14 @@ class Comisiones extends CI_Controller
     $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i,u.forma_pago FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
     $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
-    if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){//EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+    if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) AND DAY(GETDATE()) = DAY(fechaInicio) AND mes = $mesActual")->result_array();
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) AND DAY(GETDATE()) = DAY(fechaInicio) AND mes = $mesActual")->result_array();
 
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
-      if( $consulta_comisiones->num_rows() > 0 ){
+      if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){
         $validar_sede = $this->session->userdata('id_sede');
         $fecha_actual = strtotime($obtenerFechaSql);
         $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);

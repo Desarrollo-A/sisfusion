@@ -218,7 +218,7 @@
                                                                         foreach ($query->result() as $row)
                                                                         {
                                                                             $number = $row->nuevo_general;
-                                                                            echo '$'. number_format($number, 2).'';
+                                                                            echo '$'. number_format(!$number?0:$number, 2).'';
                                                                         }
                                                                     ?>
                                                                 </p>
@@ -322,7 +322,7 @@
                                                             foreach ($query->result() as $row)
                                                             {
                                                                 $number = $row->nuevo_general;
-                                                                echo '$' . number_format($number, 2).'';
+                                                                echo '$' . number_format(!$number?0:$number, 2).'';
                                                             }
                                                             ?>
                                                             </p>
@@ -385,7 +385,7 @@
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 2).'';
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -450,7 +450,7 @@
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 2).'';
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
                                                                     }
                                                                     ?>
                                                                 </p>
@@ -511,7 +511,7 @@
                                                                     
                                                                     foreach ($query->result() as $row){
                                                                         $number = $row->nuevo_general;
-                                                                        echo '$' . number_format($number, 2).'';
+                                                                        echo '$' . number_format(!$number?0:$number, 2).'';
                                                                     } 
                                                                     ?>
                                                                 </p>
@@ -607,7 +607,12 @@
     </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
-    <script> var formaPago = "<?= $this->session->userdata('forma_pago')?>"; </script>
+    <script>
+        var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
+        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
+        var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
+    </script>
+    
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>                                                        
     <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaboradorRigel.js"></script>
 </body>

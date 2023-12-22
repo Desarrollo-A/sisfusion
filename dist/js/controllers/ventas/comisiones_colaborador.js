@@ -146,7 +146,7 @@ $(document).ready(function () {
     if(forma_pago == 3){
         if(tipo_usuario == 2){
             if (
-                (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
                 ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
                 ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
                 ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
@@ -290,7 +290,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
                 if(
                     (tipo_usuario == 2 && 
-                        (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                        (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
                         ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
                         ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
                         ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
@@ -596,7 +596,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
                     if(
                         (tipo_usuario == 2 && 
-                            (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+                            (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
                             ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
                             ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
                             ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
@@ -1575,7 +1575,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
 
     if(
         (tipo_usuario == 2 && 
-            (mes == 12 && dia == 26)//DES-HABILITAR EN 2024
+            (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
             ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
             ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
             ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
