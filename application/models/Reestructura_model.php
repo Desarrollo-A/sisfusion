@@ -79,7 +79,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, COUNT(*) totalCorridas FROM propuestas_x_lote WHERE corrida IS NOT NULL GROUP BY idLote) pxl1 ON pxl1.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratos FROM propuestas_x_lote WHERE contrato IS NOT NULL GROUP BY idLote) pxl2 ON pxl2.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalRescision FROM datos_x_cliente WHERE rescision IS NOT NULL GROUP BY idLote) dxc ON dxc.idLote = lo.idLote
-		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc=30 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
+		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado FROM historial_documento WHERE tipo_doc = 30 AND status = 1 GROUP BY idLote) hdcount ON hdcount.idLote = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalCorridaFusion FROM lotesFusion WHERE destino=1 AND corrida IS NOT NULL GROUP BY idLotePvOrigen) lf1 ON  lf1.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalContratosFusion FROM lotesFusion WHERE destino=1 AND contrato IS NOT NULL GROUP BY idLotePvOrigen) lf3 ON lf3.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) AS totalContratoFirmadoFusionNumero FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lf5 ON lf5.idLotePvOrigen = lo.idLote
