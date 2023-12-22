@@ -1,49 +1,5 @@
 var totaPen = 0;
 var tr;
-$(document).ready(function () {
-    console.log("comentario");
-    $.post(general_base_url + "/Comisiones/lista_estatus_descuentos", function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));     
-        }
-        $("#tipo").selectpicker('refresh');
-    }, 'json');
-});
-
-$('#tipo').change(function (ruta) {
-    tipo = $('#tipo').val();
-    let m = $('#monto').val();
-    let texto = '';
-
-    if (tipo == 18) {
-        texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
-        document.getElementById("numeroP").value = 1;
-
-        if (m != '') {
-            verificar();
-        }
-    } else {
-        texto = 'Esté es un pago único que se hará en una sola exhibición.'
-        document.getElementById("numeroP").value = 1;
-
-        if (m != '') {
-            verificar();
-        }
-    }
-    document.getElementById("texto").innerHTML = texto;
-
-});
-
-function closeModalEng() {
-    document.getElementById("form_prestamos").reset();
-    $("#tipo").selectpicker("refresh");
-    $("#roles").selectpicker("refresh");
-    document.getElementById("users").innerHTML = '';
-    $("#miModal").modal('toggle');
-}
 
 function replaceAll(text, busca, reemplaza) {
     while (text.toString().indexOf(busca) != -1)
@@ -51,79 +7,12 @@ function replaceAll(text, busca, reemplaza) {
     return text;
 }
 
-$("#form_prestamos").on('submit', function (e) {
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_prestamos"));
-    $.ajax({
-        url: 'savePrestamo',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function (data) {
-
-            if (data == 1) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
-            } else if (data == 2) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Pago liquidado.", "warning");
-            } else if (data == 3) {
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
-            }
-            else if (data == 4) {
-                closeModalEng();
-                $('#miModal').modal('hide');
-                alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");
-            }
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
-$("#form_delete").on('submit', function (e) {
-    e.preventDefault();
-    let formData = new FormData(document.getElementById("form_delete"));
-    $.ajax({
-        url: 'BorrarPrestamo',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        success: function (data) {
-            
-            if (data == 1) {
-                $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                $('#myModalDelete').modal('hide');
-                alerts.showNotification("top", "right", "Préstamo eliminado con éxito.", "success");
-                document.getElementById("form_delete").reset();
-            } else {
-                $('#myModalDelete').modal('hide');
-                alerts.showNotification("top", "right", "Error.", "warning");
-            }
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
-
 $("#tabla_prestamos").ready(function () {
     let titulos = [];
     $('#tabla_prestamos thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" placeholder="' + title + '" title="' + title + '"/>');
         $('input', this).on('keyup change', function () {
 
             if (tabla_nuevas.column(i).search() !== this.value) {
@@ -152,6 +41,10 @@ $("#tabla_prestamos").ready(function () {
                 document.getElementById("totalAbonado").textContent = to2;
             }
         });
+    });
+
+    $('#tabla_prestamos').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $('#tabla_prestamos').on('xhr.dt', function (e, settings, json, xhr) {
@@ -323,192 +216,27 @@ $("#tabla_prestamos").ready(function () {
             data: function (d) {
                 var botonesModal = '';
 
-                if (d.id_prestamo2 == null && d.estatus == 1 && d.id_opcion != 28) {
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-name="${d.nombre}" class="btn-data btn-warning delete-prestamo" title="Eliminar"><i class="fas fa-trash"></i></button>`;
-                }
-
-                if (d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28 ) {
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" class="btn-data btn-sky edit-prestamo" title="Editar"><i class="fas fa-pen-nib"></i></button>`;
-                }
-
                 if (d.total_pagado != null || d.total_pagado > 0) {
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
+                    botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" data-toggle="tooltip" data-placement="top" title="Historial"><i class="fas fa-info"></i></button>`;
                 }
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getPrestamos",
+            url: general_base_url + "Descuentos/getHistorialPrestamos",
             type: "POST",
             cache: false,
             data: function (d) {
             }
         },
     });
-    
-    $('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
-        const idPrestamo = $(this).val();
-        const nombreUsuario = $(this).attr("data-name");
-        const Modalbody = $('#myModalDelete .modal-body');
-        const Modalfooter = $('#myModalDelete .modal-footer');
-        Modalbody.html('');
-        Modalfooter.html('');
-        Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
-        Modalfooter.append(`<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
-        $("#myModalDelete").modal();
-    });
-
-
-    $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
-        const idPrestamo = $(this).val();
-        const prestamoId = $(this).attr("data-idPrestamo");
-        const montoPagos = $(this).attr("data-individual");
-        const nombreUsuario = $(this).attr("data-name");
-        const numeroPagos = $(this).attr("data-npagos");
-        const pagoEdit = $(this).attr("data-monto");
-        const comentario = $(this).attr("data-comentario");
-        const tipo = $(this).attr("data-tipo");
-        const id_tipo = $(this).attr("data-idtipo");
-
-        document.getElementById("montoPagos").value = '';
-        document.getElementById("numeroPagos").value = '';
-        document.getElementById("pagoEdit").value = '';
-        document.getElementById("informacionText").value = '';
-        document.getElementById("prestamoId").value = '';
-
-        $("#tipoD").val(id_tipo).selectpicker('refresh');
-        
-        document.getElementById("montoPagos").value = pagoEdit;
-        document.getElementById("numeroPagos").value = numeroPagos;
-        document.getElementById("pagoEdit").value = montoPagos;
-        document.getElementById("informacionText").value = comentario;
-        document.getElementById("prestamoId").value = prestamoId;
-    
-        $("#ModalEdit").modal();
-    });
-    $(document).on("click", ".updatePrestamo", function () {
-
-        montoPagos = document.getElementById("montoPagos").value;
-        numeroPagos = document.getElementById("numeroPagos").value;
-        pagoEdit = document.getElementById("pagoEdit").value;
-        comentario = document.getElementById("informacionText").value;
-        prestamoId = document.getElementById("prestamoId").value;
-        tipoD      = document.getElementById("tipoD").value;
-        bandera_request = comentario == '' ? false : true;
-        pagoEdit = pagoEdit.replace(/,/g, "");
-        montoPagos = montoPagos.replace(/,/g, "");
-        numeroPagos = numeroPagos.replace(/,/g, "");
-
-        if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
-            if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
-                $.ajax({
-                    url: 'updatePrestamos',
-                    type: 'POST',
-                    dataType: "json",
-                    data: {
-                        "tipoD":    tipoD,
-                        "pagoEdit": parseInt(pagoEdit),
-                        "numeroPagos": parseInt(numeroPagos),
-                        "montoPagos": parseInt(montoPagos),
-                        "comentario": comentario,
-                        "prestamoId": prestamoId,
-                    },
-                    success: function (data) {
-                        alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-                        $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-                        $('#ModalEdit').modal('toggle');
-                    },
-                    error: (a, b, c) => {
-                        alerts.showNotification("top", "right", "Descuento No actualizado .", "error");
-                    }
-                });
-            } else {
-                alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "error");
-            }
-        } else {
-            alerts.showNotification("top", "right", "Es necesario revisar que no se tenga valores vacios.", "error");
-        }
-    });
-
-    $('#montoPagos').change(function () {
-        const bandera = true;
-        Monto = document.getElementById("montoPagos").value;
-        numeroPagos = document.getElementById("numeroPagos").value;
-        mensualidades = document.getElementById("pagoEdit").value;
-        comentario = document.getElementById("informacionText").value;
-        var input1=  document.getElementById('montoPagos');
-        var input2=  document.getElementById('numeroPagos');
-        
-        input1.addEventListener('input',function(){
-
-        if (this.value.length > 12) 
-            this.value = this.value.slice(0,12); 
-        })
-        input2.addEventListener('input',function(){
-
-            if (this.value.length > 3) 
-                this.value = this.value.slice(0,3); 
-            })
-
-        if (numeroPagos == null || numeroPagos == '') {
-            bandera = false;
-        }
-
-        if (Monto == null || Monto == '') {
-            bandera = false;
-        }
-
-        if (bandera) {
-            NuevasMensualidades = Monto / numeroPagos;
-            document.getElementById("pagoEdit").value = (formatMoney(NuevasMensualidades.toFixed(3)));
-        } else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
-
-        }
-    });
-    $('#numeroPagos').change(function () {
-        const bandera = true;
-        Monto = document.getElementById("montoPagos").value;
-        numeroPagos = document.getElementById("numeroPagos").value;
-        mensualidades = document.getElementById("pagoEdit").value;
-        comentario = document.getElementById("informacionText").value;
-        var input1=  document.getElementById('montoPagos');
-        var input2=  document.getElementById('numeroPagos');
-
-        input1.addEventListener('input',function(){
-
-        if (this.value.length > 12) 
-            this.value = this.value.slice(0,12); 
-        })
-        input2.addEventListener('input',function(){
-
-            if (this.value.length > 3) 
-                this.value = this.value.slice(0,3); 
-            })
-
-        if (numeroPagos == null || numeroPagos == '') {
-            bandera = false;
-        }
-
-        if (Monto == null || Monto == '') {
-            bandera = false;
-        }
-
-        if (bandera) {
-            NuevasMensualidades = Monto / numeroPagos;
-            document.getElementById("pagoEdit").value = (formatMoney(NuevasMensualidades.toFixed(3)));
-        } else {
-            alerts.showNotification("top", "right", "Todos los campos deben de estar llenos.", "error");
-        }
-    });
 
     $('#tabla_prestamos tbody').on('click', '.detalle-prestamo', function () {
         $('#spiner-loader').removeClass('hide');
         const idPrestamo = $(this).val();
         let importacion = '';
-        $.getJSON(`${general_base_url}Comisiones/getDetallePrestamo/${idPrestamo}`).done(function (data) {
+        $.getJSON(`${general_base_url}Descuentos/getDetallePrestamo/${idPrestamo}`).done(function (data) {
             
             const { general, detalle } = data;
             $('#spiner-loader').addClass('hide');

@@ -1738,27 +1738,25 @@ class Reestructura extends CI_Controller{
         }
     }
     
-    public function cambiarBandera  ()
-    {
+    public function cambiarBandera  (){
         $bandera   =  $this->input->post('bandera');
         $idLote    =  $this->input->post('idLoteBandera');
-           $arr_update = array( 
-                            "liberaBandera"   => $bandera,
-                            );
-      $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
-      if($update){
-        $respuesta =  array(
-          "response_code" => 200, 
-          "response_type" => 'success',
-          "message" => "Se ha liberado  satisfactoriamente");
-      }else{
-        $respuesta =  array(
-          "response_code" => 400, 
-          "response_type" => 'warning',
-          "message" => "Lote no actualizado, inténtalo más tarde ");
-      }
-      echo json_encode ($respuesta);             
-  
+        $arr_update = array( 
+                        "liberaBandera"   => $bandera,
+                        );
+        $update = $this->Reestructura_model->banderaLiberada($idLote,$arr_update);                           
+        if($update){
+            $respuesta =  array(
+            "response_code" => 200, 
+            "response_type" => 'success',
+            "message" => "Se ha liberado  satisfactoriamente");
+        }else{
+            $respuesta =  array(
+            "response_code" => 400, 
+            "response_type" => 'warning',
+            "message" => "Lote no actualizado, inténtalo más tarde ");
+        }
+        echo json_encode ($respuesta);             
     }
 
     function getListaLotesArchivosReestrucura(){
@@ -1834,12 +1832,13 @@ class Reestructura extends CI_Controller{
                         $archivoSubido = $this->upload->data();
                         $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
                         $fileExtension = strtolower(end($fileNameCmps));
-                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date('YmdHis').'.'.$fileExtension;
+                        $fechaActual = date('YmdHis');
+                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.$fechaActual.'.'.$fileExtension;
                         rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
                         $idpxl = $this->input->post('idLoteArchivo'.$i);
                         $updateDocumentData = array(
                             $nameField => $nuevoNombre,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => $fechaActual,
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
@@ -1867,12 +1866,13 @@ class Reestructura extends CI_Controller{
                         $archivoSubido2 = $this->upload->data();
                         $fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
                         $fileExtension2 = strtolower(end($fileNameCmps2));
-                        $nuevoNombre2 = $nombreLoteOriginal.'-'.date('YmdHis').'.'.$fileExtension2;
+                        $fechaActual = date('YmdHis');
+                        $nuevoNombre2 = $nombreLoteOriginal.'-'.$fechaActual.'.'.$fileExtension2;
                         rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
         
                         $updateDocumentData = array(
                             "rescision" => $nuevoNombre2,
-                            $columnFecha => date('Y-m-d H:i:s'),
+                            $columnFecha => $fechaActual,
                             $columnModificado => $this->session->userdata('id_usuario')
                         );
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'datos_x_cliente';
