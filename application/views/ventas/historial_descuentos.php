@@ -15,7 +15,7 @@
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #949494;">
-                                <div id="nameLote"></div>
+                                <div id="nombreLote"></div>
                             </ul>
                             <div class="tab-content">
                                 <div role="tabpanel" class="tab-pane active" id="changelogTab">

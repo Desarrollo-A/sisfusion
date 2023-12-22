@@ -154,7 +154,7 @@ class VentasAsistentes_model extends CI_Model {
                 }
             }
             else { // SON EEC
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
                 $filtroSede = "";
             }
         
@@ -351,7 +351,7 @@ class VentasAsistentes_model extends CI_Model {
                 }
             }
             else { // SON EEC
-                $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
                 $filtroSede = "";
             }
             

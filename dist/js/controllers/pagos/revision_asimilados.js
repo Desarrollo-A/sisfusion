@@ -94,7 +94,7 @@ function getDataAsimilados(proyecto, condominio){
                 titleAttr: 'Descargar archivo de Excel',
                 title:'Comisiones Asimilados - Revisión Contraloría',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx -1] + ' ';
@@ -210,10 +210,34 @@ function getDataAsimilados(proyecto, condominio){
         },
         {
             data: function( d ){
-                if( d.pago_neodata == "" || d.pago_neodata == null)
+                if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.valimpuesto == "" || d.valimpuesto == null)
+                    return '<p class="m-0">-</p>'
+                else
+                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.dcto == "" || d.dcto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -320,9 +344,7 @@ function getDataAsimilados(proyecto, condominio){
     });
 
     $('#tabla_asimilados').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
@@ -335,26 +357,26 @@ function getDataAsimilados(proyecto, condominio){
 
         changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-body">
-                        <div role="tabpanel">
-                            <div id="nameLote"></div>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
+            <div role="tabpanel">
+                <div id="nameLote"></div>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-                    </div>`);
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
         showModal();
 
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');

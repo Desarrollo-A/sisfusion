@@ -65,7 +65,8 @@ const ESTATUS_PREPROCESO = [
     'OBTENCIÓN DE FIRMA DEL CLIENTE',
     'CONTRATO FIRMADO CONFIRMADO, PENDIENTE TRASPASO DE RECURSO',
     'RECURSO TRASPASADO, PENDIENTE EJECUCIÓN APARTADO NUEVO',
-    'PROCESO DE CONTRATACIÓN'
+    'PROCESO DE CONTRATACIÓN',
+    'REVISIÓN DE INFORMACIÓN DEL CLIENTE'
 ];
 
 const ROLES_PROPUESTAS = [2, 3, 5, 6]; // ROLES PERMITIDOS PARA CARGA, EDICIÓN Y ENVÍO DE PROPUESTAS
@@ -236,7 +237,8 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         },
         {
             data: function (d) {
-                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
+                let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
+                return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
                 boton
                 :((d.idLotePvOrigen == null) ? boton : `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>`);
             }
@@ -451,9 +453,9 @@ const cerrarModalPropuestas = async (preproceso, flagFusion) => {
         dataFusionDes.data.forEach((fusionLotes) => {
             sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
         });
-        if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
-            return;
-        }
+        // if(!validarSuperficiesFusion(sumSuperficieD, superficieFusion)){
+        //     return;
+        // }
         hideModal();
     }
     else if (validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
@@ -1021,12 +1023,12 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
     const flagFusion = $('#flagFusion').val()
-    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
 
-    // if (!existeSeleccion) {
-    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-    //     return;
-    // }
+    if (!existeSeleccion) {
+        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+        return;
+    }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
@@ -1186,7 +1188,7 @@ $(document).on('click', '.btn-avanzar', async function () {
                 return;
             }
             nombreLote = row.data().nombreLote;
-        }   
+        }
     }
 
 
@@ -1370,8 +1372,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
-    if(superficiePropuestas < superficieFusion){
-        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
+    if((superficiePropuestas-100) < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+((superficiePropuestas-100)).toFixed(2)+'</b>) es menor al total de ' +
             'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
         return false;
     }
@@ -1394,7 +1396,7 @@ const botonesAccionReubicacion = (d) => {
 
     const totalResicion = parseInt( banderaFusion == 1 ? d.totalRescisionFusion : d.totalRescision);
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
-
+    const contratoFirmadoFile =  d.contratoFirmado;
 
 
     let editar = 0;
@@ -1406,21 +1408,22 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && id_rol_general==17) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
 
-    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalContrato === totalContratoRef && FLAGPROCESOJURIDICO === 0 && id_rol_general==15) { //subiendo contratos //&& FLAGPROCESOJURIDICO === 0  //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
+        btnContratoFirmado = 'fa-eye';
+        tooltipCF = 'VER CONTRATO FIRMADO';
     }
     if(d.idContratoFirmado != null){
         btnContratoFirmado = 'fa-eye';
         editarContratoFirmado = 1;
         tooltipCF = 'VER CONTRATO FIRMADO';
     }
-
 
     const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
                             data-toggle="tooltip" 
@@ -1463,7 +1466,7 @@ const botonesAccionReubicacion = (d) => {
     const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso - 1]}"
+                    title="ENVIAR A ${ESTATUS_PREPROCESO[d.idStatusLote == 17 ? 8 : idEstatusPreproceso - 1]}"
                     data-idCliente="${d.idCliente}"
                     data-tipoTransaccion="${idEstatusPreproceso}"
                     ${botonFusionadoEstatus}
@@ -1547,7 +1550,8 @@ const botonesAccionReubicacion = (d) => {
             data-tipoTransaccion="${d.id_estatus_preproceso}"
             data-nombreResidencial = "${d.nombreResidencial}"
             data-nombreCondominio = "${d.nombreCondominio}"
-            data-contratoFirmado = "${d.contratoFirmado}">
+            data-contratoFirmado = "${d.contratoFirmado}"
+            data-fusion="${flagFusion}">
             <i class="fas ${btnContratoFirmado}"></i>
         </button>`;
 
@@ -1608,10 +1612,7 @@ const botonesAccionReubicacion = (d) => {
 
     }
     if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-        if(totalContratoFirmado==1)
-            botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
-        else
-            botonJuridico = '';
+        botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
         return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
@@ -1619,7 +1620,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
     return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
     if (idEstatusPreproceso === 6 && id_rol_general == 7) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
-        return d.idStatusLote == 17 ? BTN_REESTRUCTURA : BTN_REUBICACION + BTN_RECHAZO ;
+        return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_RECHAZO : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
     return '';

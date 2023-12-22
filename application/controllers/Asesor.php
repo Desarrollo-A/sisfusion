@@ -1,5 +1,4 @@
-<?php
-
+ <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asesor extends CI_Controller {
     public function __construct() {
@@ -10,7 +9,6 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-
         $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
@@ -21,6 +19,7 @@ class Asesor extends CI_Controller {
         $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
+
     public function index()
     {
         if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7')
@@ -58,9 +57,35 @@ class Asesor extends CI_Controller {
         }
     }
 
+    public function lista_gerentes(){
+        echo json_encode($this->Asesor_model->get_gerentes_lista()->result_array());
+    }
+
+    public function lista_asesores($gerente){
+        echo json_encode($this->Asesor_model->get_asesores_lista($gerente)->result_array());
+    }
+    public function lista_proyecto(){
+        echo json_encode($this->Asesor_model->get_proyecto_lista()->result_array());
+    }
+    public function lista_condominio($proyecto){
+        echo json_encode($this->Asesor_model->get_condominio_lista($proyecto)->result_array());
+    }
+    public function lista_lote($condominio){
+        echo json_encode($this->Asesor_model->get_lote_lista($condominio)->result_array());
+    }
+    public function datos_dinamicos($lote, $asesor){
+        echo json_encode($this->Asesor_model->get_datos_dinamicos($lote, $asesor)->result_array());
+    }
+    public function forma_venta(){
+        echo json_encode($this->Asesor_model->get_datos_forma()->result_array());
+    }
     public function tipo_venta(){
         echo json_encode($this->Asesor_model->get_datos_tipo()->result_array());
     }
+    public function verificar_solicitud($lote){
+        echo json_encode($this->Asesor_model->get_validar_solicitud($lote)->result_array());
+      }
+  
     public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
@@ -94,6 +119,145 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
+    public function inventario() {
+        $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
+        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+        $this->load->view('template/header');
+        $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
+    }
+    
+    public function cf(){
+        $this->load->view("corrida/cf_view");
+    }
+    public function cf2(){
+        $this->load->view("corrida/cf_view2");
+    }
+
+    public function cf3()
+    {
+        $this->load->view("corrida/cf_view_PAC");
+    }
+
+    public function eliminar_propietario()
+    {
+        $json['resultado'] = FALSE;
+        if( $this->input->post("id_copropietario")){
+            $this->load->model("Asesor_model");
+            $id_copropietario = $this->input->post("id_copropietario");
+            $this->db->query('UPDATE copropietarios SET estatus = 0 WHERE id_copropietario = '.$id_copropietario.'');
+            $json['resultado'] = TRUE;
+         }
+
+        echo json_encode( $json );
+    }
+
+    public function agregar_propietario()
+    {
+
+        $json['resultado'] = FALSE;
+
+        if( $this->input->post("nombre_nuevo")){
+
+            $nuevo0 = $this->input->post("idd");
+            $nuevo1 = $this->input->post("nombre_nuevo");
+            $nuevo2 = $this->input->post("apellidop_nuevo");
+            $nuevo3 = $this->input->post("apellidom_nuevo");
+            $nuevo4 = $this->input->post("correo_nuevo");
+            $nuevo5 = $this->input->post("telefono1_nuevo");
+            $nuevo6 = $this->input->post("telefono2_nuevo");
+            $nuevo7 = $this->input->post("fnacimiento_nuevo");
+
+            $nuevo8 = $this->input->post("nacionalidad_nuevo");
+            $nuevo9 = $this->input->post("originario_nuevo");
+            $nuevo10 = $this->input->post("domicilio_particular_nuevo");
+
+            $nuevo11 = $this->input->post("estadocivil_nuevo");
+            $nuevo12 = $this->input->post("conyuge_nuevo");
+            $nuevo13 = $this->input->post("regimen_nuevo");
+
+            $nuevo14 = $this->input->post("ocupacion_nuevo");
+            $nuevo15 = $this->input->post("puesto_nuevo");
+            $nuevo16 = $this->input->post("empresa_nuevo");
+
+            $nuevo17 = $this->input->post("antiguedad_nuevo");
+            $nuevo18 = $this->input->post("edad_firma_nuevo");
+            $nuevo19 = $this->input->post("domempresa_nuevo");
+            $nuevo20 = 1;
+            $nuevo21 = $this->session->userdata('id_usuario');
+
+            $arreglo_nuevo=array();
+            $arreglo_nuevo["id_cliente"]=$nuevo0;
+            $arreglo_nuevo["nombre"]=$nuevo1;
+            $arreglo_nuevo["apellido_paterno"]=$nuevo2;
+            $arreglo_nuevo["apellido_materno"]=$nuevo3;
+
+            $arreglo_nuevo["correo"]=$nuevo4;
+            $arreglo_nuevo["telefono"]=$nuevo5;
+            $arreglo_nuevo["telefono_2"]=$nuevo6;
+            $arreglo_nuevo["fecha_nacimiento"]=$nuevo7;
+
+            $arreglo_nuevo["nacionalidad"]=$nuevo8;
+            $arreglo_nuevo["originario_de"]=$nuevo9;
+            $arreglo_nuevo["domicilio_particular"]=$nuevo10;
+
+            $arreglo_nuevo["estado_civil"]=$nuevo11;
+            $arreglo_nuevo["regimen_matrimonial"]=$nuevo13;
+            $arreglo_nuevo["conyuge"]=$nuevo12;
+
+            $arreglo_nuevo["ocupacion"]=$nuevo14;
+            $arreglo_nuevo["posicion"]=$nuevo15;
+            $arreglo_nuevo["empresa"]=$nuevo16;
+
+            $arreglo_nuevo["antiguedad"]=$nuevo17;
+            $arreglo_nuevo["edadFirma"]=$nuevo18;
+            $arreglo_nuevo["direccion"]=$nuevo19;
+            $arreglo_nuevo["estatus"]=$nuevo20;
+            $arreglo_nuevo["creado_por"]=$nuevo21;
+
+            $this->load->model("Asesor_model");
+            $this->db->insert('copropietarios', $arreglo_nuevo);
+
+            $json['resultado'] = TRUE;
+         }
+
+        echo json_encode( $json );
+    }
+
+    public function getGerente() {
+        $data = $this->registrolote_modelo->getGerente();
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function newProspect(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/prospectos", $datos);
+    }
+
+    public function consultProspects(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/consulta_prospectos", $datos);
+    }
+
+    public function consultStatistics(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/consult_statistics", $datos);
+    }
+
+    public function getProspectingPlaces(){
+        echo json_encode($this->Asesor_model->getProspectingPlaces()->result_array());
+    }
+
+    public function getNationality(){
+        echo json_encode($this->Asesor_model->getNationality()->result_array());
+    }
+    
     public function getinfoLoteDisponibleE() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
@@ -132,20 +296,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function inventario(){
-        $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
-        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
-        $this->load->view('template/header');
-        $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
-    }
-    public function getGerente(){
-        $data = $this->registrolote_modelo->getGerente();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+
     public function getLegalPersonality(){
         echo json_encode($this->Asesor_model->getLegalPersonality()->result_array());
     }
@@ -260,8 +411,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->updateProspect($data, $this->input->post("id_prospecto_ed"));
         echo json_encode($response);
     }
-    public function saveProspect()
-    {
+
+    public function saveProspect(){
         $specify = $_POST['specify'];
         if ($specify == '' || $specify == null) {
             $final_specification = 0;
@@ -315,8 +466,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->saveProspect($data);
         echo json_encode($response);
     }
-    public function saveCoOwner()
-    {
+
+    public function saveCoOwner(){
         $data = array(
             "nacionalidad" => $_POST['nationality_co'],
             "personalidad_juridica" => $_POST['legal_personality_co'],
@@ -354,8 +505,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->saveCoOwner($data);
         echo json_encode($response);
     }
-    public function toPrintProspectInfo($id_prospecto)
-    {
+
+    public function toPrintProspectInfo($id_prospecto){
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
@@ -535,8 +686,12 @@ class Asesor extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("asesor/depositoSeriedad");
     }
-    public function registrosLoteVentasAsesor()
+    public function depositoSeriedadConsulta()
     {
+        $this->load->view('template/header');
+        $this->load->view("asesor/DSConsult");
+    }
+    public function registrosLoteVentasAsesor(){
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -558,8 +713,8 @@ class Asesor extends CI_Controller {
             redirect(base_url() . "index.php/login");
         }
     }
-    public function getLotesInventarioGralTodosc()
-    {
+
+    public function getLotesInventarioGralTodosc(){
         $data = $this->Asesor_model->getInventarioTodosc();
         if ($data != null) {
             echo json_encode($data);
@@ -578,8 +733,7 @@ class Asesor extends CI_Controller {
         exit;
     }
     
-    public function getCondominioDescTodos()
-    {
+    public function getCondominioDescTodos() {
         $data = $this->Asesor_model->getCondominioDescTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -588,8 +742,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getSupOne($residencial)
-    {
+    public function getSupOne($residencial) {
         $data = $this->Asesor_model->getSupOne($residencial);
         if ($data != null) {
             echo json_encode($data);
@@ -598,8 +751,8 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getSupOneTodos()
-    {
+
+    public function getSupOneTodos() {
         $data = $this->Asesor_model->getSupOneTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -608,18 +761,16 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getPrecio($residencial)
-    {
+    public function getPrecio($residencial) {
         $data = $this->Asesor_model->getPrecio($residencial);
-        if ($data != null) {
+        if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
         exit;
     }
-    public function getPrecioTodos()
-    {
+    public function getPrecioTodos() {
         $data = $this->Asesor_model->getPrecioTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -628,8 +779,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getTotal($residencial)
-    {
+    public function getTotal($residencial) {
         $data = $this->Asesor_model->getTotal($residencial);
         if ($data != null) {
             echo json_encode($data);
@@ -638,8 +788,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getTotalTodos()
-    {
+    public function getTotalTodos() {
         $data = $this->Asesor_model->getTotalTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -648,6 +797,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
+
     public function getMeses($id, $type)
     {
         $data = $this->Asesor_model->getMeses($id, $type);
@@ -658,8 +808,8 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getMesesTodos()
-    {
+
+    public function getMesesTodos() {
         $data = $this->Asesor_model->getMesesTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -668,6 +818,70 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
+    public function getLotesInventarioXproyectoc($residencial){
+        $data = $this->Asesor_model->getInventarioXproyectoc($residencial);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getLotesInventarioGralc($residencial, $condominio){
+        $data = $this->registrolote_modelo->getInventarioc($residencial, $condominio);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    
+    public function getMesesResidencial($residencial, $meses){
+        $data = $this->Asesor_model->getMesesResidencial($residencial, $meses);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getMesesCluster($residencial, $condominio, $meses){
+        $data = $this->Asesor_model->getMesesCluster($residencial, $condominio, $meses);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getEmpy(){
+        $data = [];
+        echo json_encode($data);
+    }
+
+        function getTwoGroup($residencial, $grupo){
+        $data = $this->Asesor_model->getTwoGroup($residencial, $grupo);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    function getOneGroup($condominio, $grupo){
+        $data= $this->Asesor_model->getOneGroup($condominio, $grupo);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    
     public function tableClienteDS(){
         $dato = $this->Asesor_model->registroClienteDS($this->input->post('idCondominio'));
         $data = array();
@@ -879,6 +1093,10 @@ class Asesor extends CI_Controller {
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
             ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
             : [];
+
+        //prueba
+        $tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $tipo_venta_result->row()->tipo_venta ?? null;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -1824,6 +2042,8 @@ class Asesor extends CI_Controller {
         $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
         $costom2f = str_replace('$','', $costom2f);
+
+
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
         $importOferta = str_replace(',','',$this->input->post('importOferta'));

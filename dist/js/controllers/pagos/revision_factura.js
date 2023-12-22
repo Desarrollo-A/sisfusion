@@ -94,7 +94,7 @@ function getDataFactura(proyecto, condominio){
                 titleAttr: 'Descargar archivo de Excel',
                 title:'Comisiones Factura - Revisión Contraloría',
                 exportOptions: {
-                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                    columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx -1] + ' ';
@@ -210,10 +210,34 @@ function getDataFactura(proyecto, condominio){
         },
         {
             data: function( d ){
-                if( d.pago_neodata == "" || d.pago_neodata == null)
+                if( d.pago_cliente == "" || d.pago_cliente == null)
                     return '<p class="m-0">$0.00</p>'
                 else
-                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_neodata))+'</p>';
+                    return '<p class="m-0">'+formatMoney(numberTwoDecimal(d.pago_cliente))+'</p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.solicitado == "" || d.solicitado == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.solicitado))+'</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.valimpuesto == "" || d.valimpuesto == null)
+                    return '<p class="m-0">-</p>'
+                else
+                    return '<p class="m-0"><b>'+d.valimpuesto+'%</b></p>';
+            }
+        },
+        {
+            data: function( d ){
+                if( d.dcto == "" || d.dcto == null)
+                    return '<p class="m-0">$0.00</p>'
+                else
+                    return '<p class="m-0"><b>'+formatMoney(numberTwoDecimal(d.dcto))+'</b></p>';
             }
         },
         {
@@ -283,7 +307,6 @@ function getDataFactura(proyecto, condominio){
 
                 const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
                 const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
-
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
 
@@ -320,9 +343,7 @@ function getDataFactura(proyecto, condominio){
     });
 
     $('#tabla_factura').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $("#tabla_factura tbody").on("click", ".consultar_logs_factura", function(e){

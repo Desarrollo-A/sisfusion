@@ -1066,7 +1066,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) total, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooam ON ooam.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) total, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ventas ON ventas.id_lote = l.idLote
-        WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (7) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7)
+        WHERE l.idStatusContratacion BETWEEN 11 AND 15 AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (7) AND l.tipo_venta IS NOT NULL 
         ORDER BY l.idLote");
         return $query ;
     }
@@ -1079,7 +1079,7 @@ class Comisiones_model extends CI_Model {
     }
 
     function getDatosNuevasMktd_pre(){
-        if( $this->session->userdata('id_usuario') == 2042 ){
+        if( $this->session->userdata('id_usuario') == 2042){
             $filtro = " 2,3,4,6 ";
         } else{
             $filtro = " 1,5,8,9 ";
@@ -3026,7 +3026,7 @@ class Comisiones_model extends CI_Model {
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 7 THEN 'ESPECIAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
         vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, pc.fecha_modificacion, 
         CONVERT(nvarchar, pc.fecha_modificacion, 6) fecha_sistema, 
-        CONVERT(nvarchar, pc.fecha_neodata, 6) fecha_neodata, tipo_venta
+        CONVERT(nvarchar, pc.fecha_neodata, 6) fecha_neodata,
         CONVERT(nvarchar, cl.fechaApartado, 6) fechaApartado, se.nombre AS sede, l.registro_comision, l.referencia, cl.id_cliente,            
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor,
         CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador,
@@ -3184,33 +3184,22 @@ class Comisiones_model extends CI_Model {
 
     public function getPrestamosTable($mes=0, $anio=0)
     {
-        $result = $this->db->query("SELECT rpp.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, 
-		oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abonado, pa.pago_individual, pa.num_pagos,
-		convert(nvarchar, rpp.fecha_creacion, 3) fecha_creacion, pa.comentario, lo.nombreLote, rpp.id_relacion_pp,
-		oxcest.nombre AS tipo, oxcest.id_opcion,
-
-        oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, oxcest.color,
-
-        res.nombreResidencial as proyecto, cond.nombre AS condominio, lo.nombreLote, sed.nombre as nombre_sede
+        $result = $this->db->query("SELECT rpp.id_pago_i, pa.id_prestamo, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u .apellido_materno) AS nombre_completo, oxc.nombre AS puesto, pa.id_usuario, pa.monto AS monto_prestado, pci.abonado, pa.pago_individual, pa.num_pagos, convert(nvarchar, rpp.fecha_creacion, 3) fecha_creacion, pa.comentario, lo.nombreLote, rpp.id_relacion_pp, oxcest.nombre AS tipo, oxcest.id_opcion, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, oxcest.color, res.nombreResidencial as proyecto, cond.nombre AS condominio, lo.nombreLote, sed.nombre as nombre_sede
         FROM prestamos_aut pa
         INNER JOIN usuarios u ON u.id_usuario = pa.id_usuario
         INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
 		LEFT JOIN (SELECT SUM(pin.abono_neodata) AS abonado, pin.id_pago_i, pin.id_comision
-		FROM pago_comision_ind pin WHERE MONTH(pin.fecha_pago_intmex) = $mes AND YEAR(pin.fecha_pago_intmex) = $anio
+		FROM pago_comision_ind pin
 		GROUP BY pin.id_pago_i, pin.id_comision) pci ON pci.id_pago_i = rpp.id_pago_i 
-	    INNER JOIN comisiones co ON  pci.id_comision = co.id_comision
+        INNER JOIN comisiones co ON  pci.id_comision = co.id_comision
 		INNER JOIN lotes lo ON lo.idCliente = co.idCliente 
 		INNER JOIN condominios cond ON lo.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pa.tipo AND oxcest.id_catalogo = 23
 		LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
-	    WHERE MONTH(rpp.fecha_creacion) = $mes AND YEAR(rpp.fecha_creacion) = $anio
-        GROUP BY rpp.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, 
-		pa.monto, pa.pago_individual, pa.comentario, rpp.id_relacion_pp,oxcest.nombre, oxcest.id_opcion, oxcest.color, pci.abonado, rpp.fecha_creacion, 
-
-		res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre, pa.num_pagos
-
+        WHERE MONTH(rpp.fecha_creacion) = $mes AND YEAR(rpp.fecha_creacion) = $anio
+        GROUP BY rpp.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, pa.monto, pa.pago_individual, pa.comentario, rpp.id_relacion_pp,oxcest.nombre, oxcest.id_opcion, oxcest.color, pci.abonado, rpp.fecha_creacion, res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre, pa.num_pagos
         ORDER BY  pa.id_prestamo ASC, pa.id_usuario ASC");
         return $result->result_array();
     }
@@ -3856,6 +3845,35 @@ class Comisiones_model extends CI_Model {
         WHERE com.liquidada = 0 AND com.ooam IN (2) AND (com.comision_total-abonado) < 1
         
         ");
+    }
+    
+    function getCommissionsToValidate($id_usuario){
+        return $this->db->query("SELECT TOP 5 pci1.id_comision, pci1.id_pago_i, pci1.id_usuario, lo.nombreLote as lote, re.nombreResidencial as proyecto, sed.nombre, sed.id_sede,
+        lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, FORMAT(pci1.abono_neodata, 'C') pago_cliente, pci1.pago_neodata,
+        pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus,
+        cl.personalidad_juridica, pac.porcentaje_abono
+        ,contrato.expediente, com.id_lote,CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, sed2.nombre ubicacion_dos
+        FROM pago_comision_ind pci1
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11) OR descuento_aplicado = 1)
+        GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.idLote = lo.idLote
+        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN sedes sed ON sed.id_sede = lo.ubicacion
+        LEFT JOIN sedes sed2 ON sed2.id_sede = lo.ubicacion_dos
+        INNER JOIN (SELECT expediente, idCliente FROM historial_documento WHERE tipo_doc in (8)
+        AND status = 1 GROUP BY idCliente, expediente) contrato ON contrato.idCliente = cl.id_cliente
+        WHERE pci1.estatus IN (1, 41, 42, 51, 52, 61, 62, 12) 
+        AND com.estatus IN (1,8,4,12)
+        AND lo.idLote NOT IN (select id_lote from reportes_marketing WHERE estatus = 1 AND dispersion = 1) 
+        GROUP BY cl.fechaApartado,lo.nombreLote, re.nombreResidencial, sed.nombre, sed.id_sede,
+        lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata,
+        pci2.abono_pagado, com.comision_total-pci2.abono_pagado, pci1.estatus,
+        cl.personalidad_juridica, pac.porcentaje_abono, sed2.nombre,
+        contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
 }

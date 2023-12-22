@@ -1,3 +1,4 @@
+var datosCatalogo = [];
 $(document).ready(function () {
     $("#tabla_clientes").addClass('hide');
     $('#spiner-loader').removeClass('hide');
@@ -37,10 +38,12 @@ $(document).ready(function () {
 
 
 
-    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
+    $.post(general_base_url + "Reestructura/lista_catalogo_opciones",{id_catalogo:100}, function (data) {
         var len = data.length;
+        datosCatalogo = data;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];            
         }
         $('.indexCo').val($(this).attr(id));
         $('#spiner-loader').addClass('hide');
@@ -78,21 +81,20 @@ $(document).on('click', '.reesVal', function (){
 $(document).on('click', '.stat5Rev', function () {
     document.getElementById("idLoteCatalogo").value = "";
     document.getElementById("comentario2").value = "";
+    let idCatalogo =  $(this).attr('data-idCatalogo');
     $("#grabado").empty();
 
-    $.post(general_base_url + "Reestructura/lista_catalogo_opciones", function (data) {
-        var len = data.length;
+        var len = datosCatalogo.length;
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];            
+            var id = datosCatalogo[i]['id_opcion'];
+            var name = datosCatalogo[i]['nombre'];            
             $("#grabado").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $('.indexCo').val($(this).attr(id));
-        $("#grabado").selectpicker('refresh');
-    }, 'json');
-
+    $("#grabado").selectpicker('refresh');
+    $("#grabado").selectpicker();
+    $("#grabado").val(idCatalogo);
+    $("select[name=grabado]").change();
     $('#idLoteCatalogo').val($(this).attr('data-idLote'));
-    $('#grabado').val('').trigger('change');
     $('#aceptarReestructura').modal();
 });
 
@@ -205,24 +207,20 @@ $(document).on('click', '#saveLi', function(){
 
 function open_Mb(){
     $("#catalogoRee").modal();
-    fillTableC(); 
+    fillTableCatalogo(100); 
 }
 
 function open_Mdc(){
     $("#catalogoNuevo").modal();
 }
-
-$(document).on('click', '#guardarCatalogo', function(){
-    var ipuntCat = $("#inputCatalogo").val();
-    var datos = new FormData();
+$(document).on("submit", "#addNewDesc", function(e){
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
     $("#spiner-loader").removeClass('hide');
-
-    datos.append("nombre", ipuntCat);
-
     $.ajax({
         method: 'POST',
-        url: general_base_url + 'Reestructura/insertarOpcionN',
-        data: datos,
+        url: general_base_url + 'Reestructura/insertarOpcion',
+        data: data,
         processData: false,
         contentType: false,
         success: function(data) {
@@ -240,7 +238,7 @@ $(document).on('click', '#guardarCatalogo', function(){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-    return;
+    return false;
 });
 
 $(document).on('click', '#borrarOpcion', function () {
@@ -401,11 +399,11 @@ function fillTable(index_proyecto) {
             {
                 data: function (d) {
                     if(d.idStatusLote ==  15 || d.idStatusLote ==  16) { // MJ: ESTÁ LIBERADO
-                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-idCatalogo="${d.idCatalogo}" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     } else {
                         return `<div class="d-flex justify-center"><button class="btn-data btn-green reesVal" data-toggle="tooltip" data-placement="top" title= "LIBERAR LOTE" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}" data-precio="${d.precio}"><i class="fas fa-thumbs-up"></i></button>
-                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
+                        <button class="btn-data btn-deepGray stat5Rev" data-toggle="tooltip" data-placement="top" data-idCatalogo="${d.idCatalogo}" title= "VALIDAR REESTRUCTURACIÓN" data-idLote="${d.idLote}"><i class="fas fa-edit"></i></button>
                         <button class="btn-data btn-blueMaderas reesInfo" data-toggle="tooltip" data-placement="top" data-idLote="${d.idLote}" title="HISTORIAL"><i class="fas fa-info"></i></button></div>`;
                     }
                 }
@@ -418,7 +416,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
+            url: general_base_url + "Reestructura/getLotesRegistros",
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -450,8 +448,7 @@ $('#tableCatalogo thead tr:eq(0) th').each(function (i) {
         }
     });
 });
-
-function fillTableC(index_proyecto) {
+function fillTableCatalogo(id_catalogo) {
     tabla_valores_catalogos = $("#tableCatalogo").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -475,9 +472,7 @@ function fillTableC(index_proyecto) {
         },
         processing: true,
         pageLength: 5,
-        bAutoWidth: true,
         bLengthChange: false,
-        scrollX: true,
         bInfo: true,
         searching: true,
         ordering: false,
@@ -505,14 +500,14 @@ function fillTableC(index_proyecto) {
             type: "POST",
             cache: false,
             data: {
-                "index_proyecto": index_proyecto,
+                "id_catalogo": id_catalogo,
             }
         },
         initComplete: function(){
             $("#spiner-loader").addClass('hide');
         },
         "order": [
-            [1, 'asc']
+            [0, 'asc']
         ],
     });
     
@@ -523,19 +518,11 @@ function fillTableC(index_proyecto) {
     });
 }
 
-
-
-
 // tabla para liberar segunda tabla inicio 
-
-
 $(document).on('click', '.liberarBandera', function (){
     document.getElementById('liberarBandera').disabled = true;
     var bandera = document.getElementById('bandera').value;
-
     var idLoteBandera = document.getElementById('idLoteBandera').value;
-    console.log(bandera)
-    console.log(idLoteBandera)
     $.ajax({
         url : 'cambiarBandera',
         type : 'POST',
@@ -560,25 +547,23 @@ $(document).on('click', '.liberarBandera', function (){
 });
 
 $(document).on('click', '.cambiarBandera', function (){
-    let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';
-  
+    let bandera  = '¿Estás seguro de LIBERAR el lote para reestructura?';  
     lote   = $(this).attr("data-idLote");
     activoDetenido  = $(this).attr("data-bandera");
     if(activoDetenido == 0){ 
         bandera = '¿Estás seguro de REGRESAR el lote del proceso de reestructura?';
      
     }
- 
     
     document.getElementById("tituloAD").innerHTML =   bandera;
- 
     document.getElementById("bandera").value = activoDetenido;
     document.getElementById("idLoteBandera").value = lote;
-
     $('#banderaLiberar').modal();
-
 });
 
+$(window).resize(function(){
+    tabla_valores_catalogos.columns.adjust();
+});
 
 let titulos_intxtLiberado = [];
 $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
@@ -591,18 +576,9 @@ $('#tabla_clientes_liberar thead tr:eq(0) th').each(function (i) {
         }
     });
 });
-
 $('#proyectoLiberado').change(function () {
     let index_proyecto = $(this).val();
-
-    $("#spiner-loader").removeClass('hide');
-    $("#tabla_clientes_liberar").removeClass('hide');
-
-    fillTable1(index_proyecto);
-});
-$('#proyectoLiberado').change(function () {
-    let index_proyecto = $(this).val();
-
+    
     $("#spiner-loader").removeClass('hide');
     $("#tabla_clientes_liberar").removeClass('hide');
 
@@ -696,10 +672,10 @@ function fillTable1(index_proyecto) {
         {
             data: function (d){
                 if (d.liberaBandera == 1   ) {
-                    return '<p class="m-0">LIBERADO</p>';
+                    return '<label class="label lbl-blueMaderas">LIBERADO</label>';
         
                 }else if(d.liberaBandera == 0){
-                    return '<p class="m-0">SIN LIBERAR</p>';
+                    return '<label class="label lbl-warning">SIN LIBERAR</label>';
                 }      
             // NOMBRE
             }
@@ -712,10 +688,7 @@ function fillTable1(index_proyecto) {
                             title= "Liberar Lote" 
                             data-idLote="${d.idLote}" data-bandera="1"><i class="fas fa-unlock"></i></button>`;
                     }else{
-                    return `<div class="d-flex justify-center">
-                            <button class="btn-data btn-warning cambiarBandera" data-toggle="tooltip" data-placement="top" 
-                            title= "Quitar liberación de Lote" 
-                            data-idLote="${d.idLote}" data-bandera="0"><i class="fas fa-lock"></i></button>` ;
+                    return `` ;
                         }
             }
         }],
@@ -726,7 +699,7 @@ function fillTable1(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Reestructura/getRegistros",
+            url: general_base_url + "Reestructura/getregistrosLotes",
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -748,6 +721,4 @@ function fillTable1(index_proyecto) {
         });
     });
 }
-
-
 // fin de la segunda tabla 

@@ -47,7 +47,6 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">        
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos Solicitados</a></li>
-                            <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Invoice</a></li> -->
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">
@@ -102,7 +101,7 @@
                                                                     <th>REFERENCIA</th>
                                                                     <th>PRECIO DE LOTE</th>
                                                                     <th>EMPRESA</th>
-                                                                    <th>TOTAL DE LA COMPRA</th>
+                                                                    <th>TOTAL COMISIÓN</th>
                                                                     <th>PAGO DEL CLIENTE</th>
                                                                     <th>A PAGAR</th>
                                                                     <th>TIPO DE VENTA</th>

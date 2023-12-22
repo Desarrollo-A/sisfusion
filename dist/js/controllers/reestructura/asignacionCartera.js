@@ -23,7 +23,7 @@ $('#tablaAsignacionCartera thead tr:eq(0) th').each(function (i) {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-$('#tablaAsignacionCartera').DataTable({
+tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -89,9 +89,9 @@ $('#tablaAsignacionCartera').DataTable({
                 let lblInput = '';
 
                 if(d.idFusion==null && d.idLotePvOrigen==null ){
-                    lblInput = '<center><input type="checkbox" onChange="verificarCheck(this)" data-idAsesorAsignado="'+d.idAsesorAsignado+'"' +
+                    lblInput = '<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="'+d.idAsesorAsignado+'"' +
                         'data-nombreLote="'+d.nombreLote+'" data-idCliente="'+d.idCliente+'" ' +
-                        'data-totalNeto2="'+d.totalNeto2+'" name="lotesOrigen[]" value="'+d.idLote+'" ></center>';
+                        'data-totalNeto2="'+d.totalNeto2+'" data-sup="'+d.sup+'" name="lotesOrigen[]" value="'+d.idLote+'" ></center>';
                 }else{
                     lblInput = '<center><input type="checkbox" disabled></center>';
                 }
@@ -147,6 +147,7 @@ $('#tablaAsignacionCartera').DataTable({
                     btns = `<button class="btn-data btn-sky btn-asignar-venta"
                             data-toggle="tooltip" 
                             data-placement="left"
+                            id="btn_${d.idLote}"
                             title="ASIGNAR VENTA"
                             data-idCliente="${d.idCliente}"
                             data-idAsesorAsignado="${d.idAsesorAsignado}"
@@ -159,12 +160,23 @@ $('#tablaAsignacionCartera').DataTable({
                         btns = `<button class="btn-data btn-sky btn-asignar-venta"
                             data-toggle="tooltip" 
                             data-placement="left"
+                            id="btn_${d.idLote}"
                             title="LOTE PIVOTE ASIGNAR VENTA"
                             data-idCliente="${d.idCliente}"
                             data-LoteFusionado="1"
                             data-idLote="${d.idLote}"
                             data-idAsesorAsignado="${d.idAsesorAsignado}">
                             <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <button class="btn-data btn-warning btn-desFusionar"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="REMOVER LOTES DE LA FUSIÓN"
+                            data-idCliente="${d.idCliente}"
+                            data-LoteFusionado="1"
+                            data-idLote="${d.idLote}"
+                            data-idAsesorAsignado="${d.idAsesorAsignado}">
+                            <i class="fas fa-user-slash"></i>
                     </button>`;
                     }else{
                         btns = `<button class="btn-data btn-sky btn-asignar-venta"
@@ -191,7 +203,75 @@ $('#tablaAsignacionCartera').DataTable({
         });
     },
 });
-
+$(document).on('click', '.btn-desFusionar', function () {
+    let idLotePV = $(this).attr('data-idLote');
+    document.getElementById('lotesFusiones').innerHTML = '';
+    $.post('getFusion/', {idLote: idLotePV, tipoOrigenDestino: 1}, function(respuesta) {
+        respuesta.data.map((elemento, index)=>{
+            $('#lotesFusiones').append(`
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="" id="checkDS">
+                    <div class="container boxChecks p-0">
+                        <label class="m-0 checkstyleDS">
+                            <input type="checkbox" class="select-checkbox" id="idFusion_${index}" name="idFusion_${index}" value="${elemento.idFusion}" />
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Lote <b>${elemento.nombreLoteDO}</b></p>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            </div><br>
+            `);
+            if(index == (respuesta.data.length - 1)){
+                $('#lotesFusiones').append(`
+                    <div>
+                        <input type="hidden" id="index" name="index" value="${respuesta.data.length}" />
+                    </div>
+                    `);
+            }
+        });
+        $("#modalDropFusion").modal("show");
+    }, 'json');
+});
+$(document).on("submit", "#formDesFusion", function(e){
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+    let index = document.getElementById('index').value;
+    let contador = 0;
+    for (let m = 0; m < index; m++) {
+        if($("input[name='idFusion_"+m+"']").is(':checked') === true){
+            contador = contador + 1; 
+        }
+    }
+    if(contador == 0){
+        alerts.showNotification("top", "right", "Debe seleccionar al menos un lote para continuar", "warning");
+        return false;
+    }
+    $("#spiner-loader").removeClass('hide');
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/removeLoteFusion',
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data) {
+            $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
+            $("#spiner-loader").addClass('hide');
+            $('#modalDropFusion').modal('hide');
+            alerts.showNotification("top", "right", "Lote(s) removidos correctamente de la fusión.", "success");
+            document.getElementById('lotesFusiones').innerHTML = '';
+            }else{
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        },
+        error: function(){
+            $('#modalDropFusion').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
 $(document).on('click', '.btn-asignar-venta', function () {
     let flagFusionado = $(this).attr("data-lotefusionado");
 
@@ -272,6 +352,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
 
 function verificarCheck(valorActual){
+    const tr = $(this).closest('tr');
+    const row = $('#tablaAsignacionCartera').DataTable().row(tr);
     let botonEnviar = document.getElementsByClassName('botonEnviar');
     let arrayInterno = [];
 
@@ -281,20 +363,23 @@ function verificarCheck(valorActual){
         arrayInterno.push($(valorActual).attr('data-idAsesorAsignado'));//[2]
         arrayInterno.push($(valorActual).attr('data-totalNeto2'));//[3]
         arrayInterno.push($(valorActual).val());//[4]
+        arrayInterno.push($(valorActual).attr('data-sup'));//[5]
+
         arrayValores.push(arrayInterno);
     }
     else{
         let indexDelete = buscarValor($(valorActual).val(),arrayValores);
         arrayValores = arrayValores.slice(0, indexDelete).concat(arrayValores.slice(indexDelete + 1));
-
-
     }
-
-    if(arrayValores.length>1){
+    if(arrayValores.length>1 || (arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
      //se seleccionó más de uno, se habilita el botón para hacer el multiple
         botonEnviar[0].classList.remove('hide');
+        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
+    }else if((arrayValores.length == 1 && parseFloat(arrayValores[0][5]))){
+        $('#btn_'+$(valorActual).val()).prop("disabled", true);        
     }else{
         botonEnviar[0].classList.add('hide');
+        $('#btn_'+$(valorActual).val()).prop("disabled", false);        
     }
 }
 

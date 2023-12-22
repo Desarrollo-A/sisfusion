@@ -1,6 +1,7 @@
 var totaPen = 0;
 var tr;
 $(document).ready(function () {
+    console.log("comentario");
     $.post(general_base_url + "/Comisiones/lista_estatus_descuentos", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -345,6 +346,7 @@ $("#tabla_prestamos").ready(function () {
             }
         },
     });
+    
     $('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
         const idPrestamo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
