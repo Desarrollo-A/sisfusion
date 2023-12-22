@@ -26,6 +26,7 @@ $('#searchButton').click(()=>{
 	let telephone = $('#telephone').val();
 	let sede = $('#sede').val();
 	let id_dragon = $('#idDragon').val();
+	let id_salesforce = $('#idSales').val(); 
 	let fecha_init = $('#beginDate').val();
 	let fecha_end = $('#endDate').val();
 	name = (name!='') ? name : '';
@@ -33,10 +34,11 @@ $('#searchButton').click(()=>{
 	telephone = (telephone!='') ? telephone : '';
 	sede = (sede!='') ? sede.toString() : '';
 	id_dragon = (id_dragon!='') ? id_dragon: '';
+	id_salesforce = (id_salesforce!='') ? id_salesforce: '';
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
+	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!='' || id_salesforce!=''){
 		$('#tabla_prospectos').removeClass('hide');
 		array_data['idLote'] = '';
 		array_data['name'] = name;
@@ -44,6 +46,7 @@ $('#searchButton').click(()=>{
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
 		array_data['id_dragon'] = id_dragon;
+		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
 		fillTable(array_data);
@@ -61,6 +64,7 @@ $('#searchButtonC').click(()=>{
 	let telephone = $('#telephoneC').val();
 	let sede = $('#sedeC').val();
 	let id_dragon = $('#idDragonC').val();
+	let id_salesforce = $('#idSalesF').val();
 	let fecha_init = $('#beginDateC').val();
 	let fecha_end = $('#endDateC').val();
 	idLote = (idLote!='') ? idLote : '';
@@ -72,7 +76,7 @@ $('#searchButtonC').click(()=>{
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
-	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!=''){
+	if(idLote!='' || name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!='' || id_salesforce!=''){
 		$('#tabla_clientes').removeClass('hide');
 		let array_data = [];
 		array_data['idLote'] = idLote;
@@ -81,6 +85,7 @@ $('#searchButtonC').click(()=>{
 		array_data['telephone'] = telephone;
 		array_data['sede'] = sede;
 		array_data['id_dragon'] = id_dragon;
+		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
 		fillTableClientes(array_data);
@@ -241,6 +246,12 @@ function fillTable(data_search) {
 		},
 		{
 			data: function (d) {
+				let validateData = d.id_salesforce == 0 ? 'No disponible' : d.id_salesforce;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
 				return `<span class="label lbl-yellow">${d.source}</span>`;
 			}
 		},
@@ -271,6 +282,7 @@ function fillTable(data_search) {
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
 				"id_dragon" : data_search['id_dragon'],
+				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
 				"TB": 2
@@ -429,6 +441,12 @@ function fillTableClientes(data_search) {
 		},
 		{
 			data: function (d) {
+				let validateData = d.id_salesforce == 0 ? 'No disponible' : d.id_salesforce;
+				return `<span class="label lbl-azure">${validateData}</span>`;
+			}
+		},
+		{
+			data: function (d) {
 				return `<span class="label lbl-yellow">${d.source}</span>`;
 			}
 		},
@@ -460,6 +478,7 @@ function fillTableClientes(data_search) {
 				"telephone":data_search['telephone'],
 				"sede" : data_search['sede'],
 				"id_dragon" : data_search['id_dragon'],
+				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
 				"TB": 1
@@ -630,6 +649,8 @@ function cleanFiltersC(){
 		$('#mailC').val('');
 		$('#telephoneC').val('');
 		$('#idDragonC').val('');
+		$('#idSalesF').val('');
+		$('#').val('');
 		$("#sedeC").val('default');
 		$("#sedeC").selectpicker("refresh");
 		$('#fechasFiltroC').addClass('hide');
