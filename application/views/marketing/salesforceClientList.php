@@ -93,7 +93,6 @@
                                             <th>ID CRM</th>
                                             <th>ID SALESFORCE</th>
                                             <th>ESTATUS DEL LOTE</th>
-                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>

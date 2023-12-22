@@ -119,15 +119,6 @@ function fillSalesForceClientsTable() {
 			data: function (d) {
 				return `<span class="label lbl-violetDeep">${d.nombreStatusContratacion}</span>`;
 			}
-		},
-		{
-			data: function (d) {
-				let btns = `<div class="d-flex align-center justify-center">`;
-				btns += `<button class="btn-data btn-blueMaderas reviewEvidence" data-lote ="${d.nombreLote}" data-nombre-archivo="${d.nombre_archivo}" data-toggle="tooltip"  data-placement="top" title="VER EVIDENCIA"></body><i class="fas fa-file"></i></button>`;
-				btns += `<button class="btn-data btn-orangeYellow see-information" data-id-prospecto = "${d.id_prospecto}" data-toggle="tooltip"  data-placement="top" title="BITÁCORA DE CAMBIOS"></body><i class="fas fa-eye"></i></button>`;
-				btns += '</div>';
-				return btns;
-			}
 		}],
         columnDefs: [{
             visible: false,
