@@ -633,7 +633,7 @@ function comisionesTablaNueva(proyecto,condominio){
                         case '4': 
                         case 4: 
                         default:
-                            return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                            return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;" value="' + full.id_pago_i + '">';
                         break;
                     }
                 } 
