@@ -74,7 +74,7 @@ class ScheduleTasks_com extends CI_Controller{
         $this->flagPendiente();
 
         //UPDATE BANDERA QUE DEBEN ESTAR EN 7 Y ESTAN EN OTRO ESTATUS
-        $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE registro_comision not in (8) AND idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0))");
+        $this->db->query("UPDATE lotes SET registro_comision = 7 WHERE registro_comision not in (7,8) AND idLote IN (SELECT id_lote FROM pago_comision WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0))");
         $this->db->query("UPDATE pago_comision SET bandera = 7 WHERE pendiente BETWEEN -1 AND 1 AND bandera NOT IN (7,0)");
 
         //UPDATE BANDERA QUE DEBEN ESTAR EN ACTIVAS Y NO EN LIQUIDADAS
