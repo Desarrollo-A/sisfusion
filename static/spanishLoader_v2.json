@@ -10,7 +10,7 @@
   "sSearch": "<i class='fas fa-search pl-1 order-2' id='input_img'></i>",
   "sUrl": "",
   "sInfoThousands": ",",
-  "sLoadingRecords": "<br><br><div class=\"sk-folding-cube\"><div class=\"sk-cube1 sk-cube\"></div><div class=\"sk-cube2 sk-cube\"></div><div class=\"sk-cube4 sk-cube\"></div><div class=\"sk-cube3 sk-cube\"></div></div><p style=\"font-weight: lighter;font-size: 1.8em\">Cargando...</b>",
+  "sLoadingRecords": "<img src='https://maderascrm.gphsis.com/dist/img/Animation - 1703263756582.gif' class='img-reponsive' style='width:4% !important'><br><p style=\"font-weight: lighter;font-size: 1.8em\">Cargando...</b></p>",
   "oPaginate": {
   "sFirst": "<i class='fa fa-angle-double-left'></i>",
   "sLast": "<i class='fa fa-angle-double-right'></i>"

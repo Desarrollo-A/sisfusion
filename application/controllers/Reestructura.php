@@ -362,6 +362,22 @@ class Reestructura extends CI_Controller{
             return;
         }
 
+        //actualiza el parametro del preproceso
+        $dataUpdateLoteO = array(
+            'estatus_preproceso' => 7,
+        );
+        if (!$this->General_model->updateRecord("lotes", $dataUpdateLoteO, "idLote", $loteAOcupar)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar el estatus preproceso del lote, inténtalo nuevamente.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
 
@@ -1795,7 +1811,7 @@ class Reestructura extends CI_Controller{
             $arrayLotes = $nombreLoteOriginal;
         }   
             
-            for ($j=0; $j < $numeroArchivos ; $j++) { 
+            for ($j=0; $j < $numeroArchivos ; $j++) {
                 $nombreLoteOriginal = $arrayLotes[$j];
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
@@ -2260,7 +2276,8 @@ class Reestructura extends CI_Controller{
                 'corrida'   => null,
                 'rescision'   => null
             );
-        }else{
+        }
+        else{
             $tabla = 'propuestas_x_lote';
 
             $dataInsertPropuestaLote = array(
