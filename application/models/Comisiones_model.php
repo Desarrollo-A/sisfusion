@@ -3585,7 +3585,7 @@ class Comisiones_model extends CI_Model {
             $comentario = 'SE ACTUALIZÓ RETIRO POR MOTIVO DE: '.$datos["conceptos"].' POR LA CANTIDAD DE: '.$datos["monto"].' ';
         }
 
-        $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
+        $respuesta = $this->db->query("INSERT INTO historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
     
         if (! $respuesta ) {
         return 0;
