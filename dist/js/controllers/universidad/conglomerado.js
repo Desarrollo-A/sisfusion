@@ -250,7 +250,7 @@ function loadTable(tipoDescuento) {
                     <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
                 }
                 
-                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1) {
+                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && rolLogin != 49) {
                     valor = Math.floor(d.saldo_comisiones/12500);
                     pendiente = Math.floor(d.pendiente/d.pago_individual);
                     pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
