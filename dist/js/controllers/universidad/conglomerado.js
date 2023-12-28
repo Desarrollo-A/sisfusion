@@ -128,11 +128,15 @@ function loadTable(tipoDescuento) {
         {
             text: '<i class="fa fa-edit" id="btn-nuevo-descuento"></i> NUEVO DESCUENTO',
             action: function () {
-                aplicarDescuento();
+
+                if( rolLogin != 49 || userLogin == 6376){
+                    aplicarDescuento();
+                }
             },
             attr: {
                 class: ' btn-azure'
             }
+        
         }],
         pagingType: "full_numbers",
         fixedHeader: true,
@@ -250,18 +254,18 @@ function loadTable(tipoDescuento) {
                     <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
                 }
                 
-                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && rolLogin != 49) {
-                    valor = Math.floor(d.saldo_comisiones/12500);
+                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && (rolLogin != 49 || userLogin == 6376)) {
+                    valor = Math.floor(d.saldo_comisiones/12500 );
                     pendiente = Math.floor(d.pendiente/d.pago_individual);
                     pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     adicionales = `<button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i></button>`;
                 } 
 
-                if(d.estado_usuario == 1){
+                if(d.estado_usuario == 1  && (rolLogin != 49 || userLogin == 6376)){
                     editar = `<button value="${d.id_usuario}" data-nombre="${d.nombre}" data-descuento="${d.id_descuento}" data-monto="${d.monto}" data-descontado="${d.total_descontado}" data-mensualidad="${d.pago_individual}" class="btn-data btn-acidGreen btn_editarDescuento" title="Editar Descuento"><i class="fas fa-money-check-alt"></i></button>`;
                 }
 
-                if(d.estatus != 3){
+                if(d.estatus != 3 && (rolLogin != 49 || userLogin == 6376)){
                     detener = `<button href="#" value="${d.id_usuario}" data-nombre="${d.nombre}" data-rol="${d.puesto}" data-totalDescuento="${d.monto}" data-abonado="${d.total_descontado}" class="btn-data btn-orangeYellow topar_descuentos" title="Detener descuentos"><i class="fas fa-ban"></i></button>`;
                 }
 

@@ -8,6 +8,7 @@ class Resguardos_model extends CI_Model {
         parent::__construct();
     }
 
+    //MODELO DEDICADO A PROCESO DE RESGUARDO QUE APLICA UNICAMENTE PARA CONTRALORIA Y SUBDIRECTORES, DIRECTORES DE VENTAS
     function getRetiros($user,$opc){
         $query = '';
         if($opc == 2){

@@ -360,6 +360,7 @@
     <?php $this->load->view('template/footer');?>
     <script>
         var rolLogin = <?= $this->session->userdata('id_rol') ?>;
+        var userLogin = <?= $this->session->userdata('id_usuario') ?>;
     </script>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>

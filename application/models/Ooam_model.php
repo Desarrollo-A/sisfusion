@@ -7,6 +7,8 @@ class Ooam_model extends CI_Model {
         parent::__construct();
     }
 
+    //MODELO DEDICADO A LAS COMISIONES DE OOAM, SERVICIO LIGADO A OOAM MAJITO EL PROCESO ES EL MISMO PERO EN ESTE CASO SE GUARDA EL CLIENTE DE OOAM Y TIENE SUS PROPIAS TABLAS PARA COMISIONES Y PAGO DE COMISIONES
+
     function getRevisionAsimiladosOOAM($proyecto, $condominio){
         if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
