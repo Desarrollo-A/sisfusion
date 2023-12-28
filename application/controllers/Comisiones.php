@@ -286,7 +286,10 @@ class Comisiones extends CI_Controller
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
+          $this->load->view("ventas/comisiones_colaborador", $datos);
+        else
+          $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
         $this->load->view("ventas/comisiones_colaborador", $datos);
