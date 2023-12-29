@@ -600,7 +600,8 @@
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5></div>
+            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5>
+            </div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
@@ -762,7 +763,6 @@
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
-                   
                 </form> 
             </div>
         </div>
@@ -850,16 +850,17 @@
                 <h4 class="modal-title card-title"><b>Asignar estatus de Construcción</b></h4>
                 <p id="informacion_lote_construccion"></p>
             </div>
+
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
                     <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
                     </select>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
-
                 </div>
             </form>
         </div>
@@ -902,11 +903,13 @@
                 </button>
                 <h4 class="modal-title card-title"><b>Información del cliente</b></h4>
             </div>
-                <div class="modal-body" id="modalContent">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                </div>
+            
+            <div class="modal-body" id="modalContent">
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -991,18 +994,21 @@
                                     </select>
                                     </div>
                                 </div>
+
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group m-0 m-0">
                                         <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
                                         <input id="nombreI" name="nombreI"  class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0">
                                         <label class="control-label label-gral btn-round">Fecha del contrato anterior (<small style="color: red;">*</small>)</label>
                                         <input type="text" class="form-control input-gral datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0">
                                         <label class="control-label label-gral">RFC / Datos personales (<small style="color: red;">*</small>)</label>
@@ -1010,6 +1016,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
@@ -1017,12 +1024,14 @@
                                         <input id="aportacionesI" name="aportaciones" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
                                         <input id="descuentosI" name="descuentos" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
+
                                 <div class="col-md-12 pr-0">
                                     <label class="control-label label-gral">Motivo (<small style="color: red;">*</small>)</label>
                                     <textarea id="motivoI" name="motivo" class="text-modal" required></textarea>
@@ -1048,6 +1057,7 @@
                 <i data-dismiss="modal" class="fas fa-times fl-r"></i>
                 <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
             </div>
+
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">
                 <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
@@ -1057,58 +1067,69 @@
     </div>
 </div>
 
- 
-
-
-
-
-
-
 <!-- inicio de modal -->
 
 <div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
-                <div class="modal-dialog  modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
 
-                        </div>
-                        <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+            <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+            </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
-                                
-                            <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
-                            </div>
-                            <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
-                        </div>
+            <div class="modal-footer">
+                <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
+                    <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
+                </div>
+                <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fin modal -->   
+
+<!-- inicio modal -->
+<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title card-title"><b id="labelmodal">Borrar Documentos</b></h4>
+                <br>
+                <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="motivos_rechazo" name="motivos_rechazo" title="Seleccione una opción de rechazo" data-live-search="true" required></select>
+            </div>
+            <form id="formBorrar" name="formBorrar" method="post">
+                <div class="modal-body">                    
+                    <input type="hidden" name="id_solicitud" id="id_solicitud">
                     </div>
                 </div>
-            </div>
-<!-- fin modal -->   
-<!-- fin modal -->   
-<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                <div class="modal-header">
-                <h3 class="text-center">Validacion de documentos</h3>
-                    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="botonBorrar" class="btn btn-primary">Aceptar</button>
                 </div>
-                    <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
-                    
-                    </div>
-                <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
-                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                      
-                </div>
-                </div>
-            </div>
-            </div>     
-          
+            </form>
+        </div>
+    </div>
+</div>
 <!-- fin modal -->
 
-
-
-
-
-
+<!-- inicio modal -->   
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-center">Validacion de documentos</h3>     
+            </div>
+            <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
+            </div>
+            <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>      
+            </div>
+        </div>
+    </div>
+</div>     
+          
+<!-- fin modal -->
