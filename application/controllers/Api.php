@@ -1216,4 +1216,121 @@ class Api extends CI_Controller
             }
     }
 
+
+    function hacerAccionOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+
+                        //lógica interna
+                        if (!isset($data->tipoAccion))
+                            echo json_encode(array("status" => -1, "message" => "El tipo de acción a realizar no viene informado o no es el correcto. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if($data->tipoAccion == 1) {//Actualizar contraseña
+                                if (!isset($data->contrasena) || !isset($data->id_usuario)) {//verifica que venga en el json
+                                    echo json_encode(array("status" => -1, "message" => "La nueva contraseña y/o id de usuario para actualizar, no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                }
+                                else {
+                                    if ($data->contrasena == '' || $data->id_usuario == '') {//verifica que no venga vacio
+                                        echo json_encode(array("status" => -1, "message" => "La nueva contraseña y/o id de usuario para actualizar, no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                    } else {
+                                        $contrasenaEncriptada = encriptar($data->contrasena);
+                                        $dataUpdate = array("contrasena" => $contrasenaEncriptada);
+                                        $dbTransaction = $this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $data->id_usuario);
+                                        if ($dbTransaction) // SUCCESS TRANSACTION
+                                            echo json_encode(array("status" => 1, "message" => "Registro actualizado con éxito."), JSON_UNESCAPED_UNICODE);
+                                        else // ERROR TRANSACTION
+                                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                    }
+                                }
+                            }else if($data->tipoAccion == 2){//conultar estatus del ususario
+                                if(!isset($data->id_usuario)){
+                                    echo json_encode(array("status" => -1, "message" => "El id de usuario no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                }else{
+                                    if($data->id_usuario == ''){
+                                        echo json_encode(array("status" => -1, "message" => "El id de usuario no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                    }
+                                    else{
+                                        $dbTransaction = $this->Api_model->consultarInformacion($data->id_usuario);
+                                        $estatusUsuarioInt = $dbTransaction[0]['estatus'];
+                                        $nombreUsuario = $dbTransaction[0]['nombre'].' '.$dbTransaction[0]['apellido_paterno'].' '. $dbTransaction[0]['apellido_materno'];
+                                        $estatusUsuario = ($estatusUsuarioInt==0) ? 'no está activo' : (($estatusUsuarioInt==1) ? 'está activo': 'no disponible');
+                                        $id_usuario = $dbTransaction[0]['id_usuario'];
+                                        echo json_encode(array("status" => 1, "message" => "El usuario $nombreUsuario (ID:$id_usuario) $estatusUsuario"), JSON_UNESCAPED_UNICODE);
+                                    }
+                                }
+                            }else{
+                                echo json_encode(array("status" => -1, "message" => "Acción incorrecta, Verifique que todos los parámetros requeridos sean los correctos."), JSON_UNESCAPED_UNICODE);
+
+                            }
+                            /*if ($data->forma_pago == '' || $data->nombre == '' || $data->apellido_paterno == '' || $data->correo == '' || $data->usuario == '' || $data->contrasena == '' || $data->id_sede == '' || $data->id_lider == '' || $data->id_rol == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $result = $this->Api_model->verificarExistenciaUsuario($data->usuario);
+                                if (count($result) > 0) // EXISTE EL REGISTRO
+                                    echo json_encode(array("status" => -1, "message" => "El nombre de usuario asignado ya existe, inténtalo con otro valor."), JSON_UNESCAPED_UNICODE);
+                                else {
+                                    $data = array (
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "rfc" => $data->rfc,
+                                        "sesion_activa" => 0,
+                                        "estatus" => 1,
+                                        "tipo" => 2,
+                                        "forma_pago" => $data->forma_pago,
+                                        "nombre" => $data->nombre,
+                                        "apellido_paterno" => $data->apellido_paterno,
+                                        "apellido_materno" => $data->apellido_materno,
+                                        "correo" => $data->correo,
+                                        "telefono" => $data->telefono,
+                                        "usuario" => $data->usuario,
+                                        "contrasena" => encriptar($data->contrasena),
+                                        "id_sede" => $data->id_sede,
+                                        "id_lider" => $data->id_lider,
+                                        "id_rol" => $data->id_rol
+                                    );
+                                    $dbTransaction = $this->Api_model->agregarUsuarioOoam($data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito.", "data" => ['id_usuario' => $dbTransaction[0]['id_usuario']]), JSON_UNESCAPED_UNICODE);
+                                    else // ERROR TRANSACTION
+                                        echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                }
+                            }*/
+                        }
+                        //termina lógica interna
+
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
 }

@@ -29,7 +29,7 @@ class Reestructura extends CI_Controller{
 
 	public function reubicarCliente(){
 		$this->load->view('template/header');
-        if ($this->session->userdata('id_rol') == 11) // ES ADMINISTRACIÓN
+           if ($this->session->userdata('id_rol') == 11) // ES ADMINISTRACIÓN
             $this->load->view("reestructura/traspasoAportaciones_view");
         else // TODOS LOS DEMÁS
             $this->load->view("reestructura/reubicarCliente_view");
@@ -378,7 +378,7 @@ class Reestructura extends CI_Controller{
         }
 
 
-        if ($this->db->trans_status() === FALSE){
+            if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
 
             echo json_encode(array(
