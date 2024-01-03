@@ -89,7 +89,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="toolbar">
+                                            <div class="toolbar"> 
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
@@ -97,10 +97,11 @@
                                                             <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2023; $i++) {
+                                                                for ($i = 2019; $i <= 2024; $i++) {
                                                                     $yearName  = $i;
                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                 }
+
                                                                 ?>
                                                             </select>
                                                         </div>
@@ -160,7 +161,7 @@
                                                             <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2023; $i++) {
+                                                                for ($i = 2019; $i <= 2024; $i++) {
                                                                     $yearName  = $i;
                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                 }
