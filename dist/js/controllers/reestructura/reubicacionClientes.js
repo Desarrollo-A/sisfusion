@@ -1612,7 +1612,12 @@ const botonesAccionReubicacion = (d) => {
 
     }
     if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-        botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+
+        if(contratoFirmadoFile===null)
+            botonJuridico = '';
+        else
+            botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+
         return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
