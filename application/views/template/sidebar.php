@@ -45,7 +45,7 @@
 <div class="sidebar" data-active-color="blue" data-background-color="white" data-image="<?=base_url()?>/dist/img/sidebar-1.jpg">
 	<div class="logo"> 
 		<a href="<?=base_url()?>#" class="simple-text">
-            <img src="<?=base_url()?>static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;">
+            <!--<img src="--><?//=base_url()?><!--static/images/luces_navidenas.png" style=" width: 264px;left: 0%;top: -17%;position: absolute;">-->
             <img class="pt-2" src="<?=base_url()?>static/images/logo_CM.png" width="70%">
 		</a>
 	</div> 
