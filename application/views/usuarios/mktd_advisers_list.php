@@ -44,9 +44,5 @@
 </div>
 </div>
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
 <script src="<?= base_url() ?>dist/js/controllers/usuarios/mktdAdvisersList.js"></script>
-
-
-
 </body>

@@ -288,8 +288,6 @@
 </div><!--main-panel close-->
 </body>
 <?php $this->load->view('template/footer');?>
-<!--<script src="<?=base_url()?>dist/js/controllers/asesor/prospects-list-1.1.0.js"></script>-->
-
 <script>
     $(document).ready(function() {
 		var respYes = $('#recomendaCionClMaderas').val();

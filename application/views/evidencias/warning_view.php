@@ -19,8 +19,7 @@
 			</div>
 		</div>
 	</div>
-	</div><!--main-panel close-->
-	
+	</div>
 	<?php $this->load->view('template/footer');?>
 	</script>
 </body>
