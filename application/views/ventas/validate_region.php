@@ -67,7 +67,6 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
     <script src="<?=base_url()?>dist/js/controllers/ventas/validateRegion.js"></script>
 

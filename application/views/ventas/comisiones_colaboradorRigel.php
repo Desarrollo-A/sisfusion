@@ -648,7 +648,6 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-    <!--main-panel close-->
     <?php $this->load->view('template/footer'); ?>
     <script>
             var formaPago = "<?= $this->session->userdata('forma_pago')?>";
