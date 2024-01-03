@@ -146,18 +146,29 @@ $(document).ready(function () {
     if(forma_pago == 3){
         if(tipo_usuario == 2){
             if (
-                (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
-                ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
-                ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
-                ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
-                ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23) // ABR 2024 OOAM QUINCENAL
-                ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28) // MAY 2024 OOAM QUINCENAL
-                ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25) // JUN 2024 OOAM QUINCENAL
-                ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23) // JUL 2024 OOAM QUINCENAL
-                ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27) // AGO 2024 OOAM QUINCENAL
-                ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24) // SEP 2024 OOAM QUINCENAL
-                ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22) // OCT 2024 OOAM QUINCENAL
-                ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26) // NOV 2024 OOAM QUINCENAL
+                (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
+                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
+                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
+                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
+                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
+                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
+                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
+                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
+                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
+                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
+                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
+                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
+                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
+                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
+                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
+                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
+                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
+                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
+                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
+                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
+                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
+                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
+                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
                 // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                 ) {
                 requestCodigoPostal();
@@ -290,19 +301,30 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
                 if(
                     (tipo_usuario == 2 && 
-                        (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26) // NOV 2024 OOAM QUINCENAL
-                        // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
+                        (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
+                            ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
+                            ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
+                            ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
+                            ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
+                            ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
+                            ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
+                            ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
+                            ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
+                            ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
+                            ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
+                            ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
+                            ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
+                            ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
+                            ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
+                            ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
+                            ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
+                            ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
+                            ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
+                            ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
+                            ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
+                            ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
+                            ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
+                            // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                         ) 
                         || (tipo_usuario == 1 && 
                             ((mes == 1 && dia == 7)  ||  (mes == 1 && dia == 8 && hora <= fin)) || // ENE 2024 VENTAS
@@ -596,18 +618,29 @@ $("#tabla_nuevas_comisiones").ready(function () {
 
                     if(
                         (tipo_usuario == 2 && 
-                            (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
-                            ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
-                            ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
-                            ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
-                            ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23) // ABR 2024 OOAM QUINCENAL
-                            ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28) // MAY 2024 OOAM QUINCENAL
-                            ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25) // JUN 2024 OOAM QUINCENAL
-                            ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23) // JUL 2024 OOAM QUINCENAL
-                            ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27) // AGO 2024 OOAM QUINCENAL
-                            ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24) // SEP 2024 OOAM QUINCENAL
-                            ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22) // OCT 2024 OOAM QUINCENAL
-                            ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26) // NOV 2024 OOAM QUINCENAL
+                            (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
+                            ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
+                            ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
+                            ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
+                            ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
+                            ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
+                            ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
+                            ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
+                            ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
+                            ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
+                            ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
+                            ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
+                            ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
+                            ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
+                            ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
+                            ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
+                            ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
+                            ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
+                            ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
+                            ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
+                            ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
+                            ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
+                            ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                             ) 
                             || (tipo_usuario == 1 && 

@@ -1871,7 +1871,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
-        WHERE p.estatus in(1,2,0)
+        WHERE p.estatus in(1, 2, 0, 3)
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
     }
     
