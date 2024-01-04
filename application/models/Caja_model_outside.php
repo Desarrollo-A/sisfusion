@@ -209,12 +209,20 @@
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
         
-        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus, CASE WHEN lo.tipo_venta IS NULL THEN 'Sin especificar' ELSE CONVERT(VARCHAR(10), lo.tipo_venta) END AS tipo_venta
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
-        WHERE lo.idCondominio = $idCondominio AND lo.nombreLote = '$nombreLote' AND lo.status = 1");
-        
+        WHERE lo.idCondominio =  32 AND lo.nombreLote = 'CDMSLP-JACH-104' AND lo.status = 1");
+
+        $result = $query->result_array();
+
+        if (!empty($result)) {
+            $valor_tipo_venta = $result[0]['tipo_venta'];
+        } else {
+            echo "No existe algún tipo de venta";
+        }
+
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
@@ -248,9 +256,12 @@
                 'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
             $this->db->insert('historial_liberacion',$data_l);
+
             if ($datos['activeLE'] == 0) {
+
                 $st = ($datos['activeLP'] == 1) ? 1 : 1;
                 $tv = ($datos['activeLP'] == 1) ? 1 : 0;
+
                 if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
                     $data_lp = array(
                         'id_lote'=> $row['idLote'],
@@ -295,6 +306,7 @@
                 asig_jur = 0
                 WHERE idLote IN (".$row['idLote'].") and status = 1 ");
             } else if ($datos['activeLE'] == 1) {
+                $tipo_venta_2 = ($valor_tipo_venta == 1) ? 1 : null;
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, 
                 idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
                 fechaVenc = null, modificado = null, status8Flag = 0,
@@ -304,7 +316,7 @@
                 fechaSolicitudValidacion = null,
                 fechaRL = null, 
                 registro_comision = 8,
-                tipo_venta = null, 
+                tipo_venta = '".$tipo_venta_2."', 
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
