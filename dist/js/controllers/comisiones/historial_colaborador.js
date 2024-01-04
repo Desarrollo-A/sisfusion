@@ -463,15 +463,15 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 var etiqueta;
                         if(d.pago_neodata < 1){
                             etiqueta = '<p class="m-0">'+
-                                            '<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'
-                                                +d.estatus_actual+
-                                            '</span>'+
-                                        '</p>'+
-                                        '<p class="m-0">'+
-                                            '<span class="label lbl-green">'+
-                                                'IMPORTACIÓN'+
-                                            '</span>'+
-                                        '</p>';
+                                '<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'
+                                    +d.estatus_actual+
+                                '</span>'+
+                            '</p>'+
+                            '<p class="m-0">'+
+                                '<span class="label lbl-green">'+
+                                    'IMPORTACIÓN'+
+                                '</span>'+
+                            '</p>';
                         }else{
                             etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span></p>';
                         }

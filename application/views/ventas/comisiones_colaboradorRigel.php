@@ -298,7 +298,7 @@
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
                                                         <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
+                                                        <th>PORCENTAJE COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
@@ -358,7 +358,7 @@
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
                                                         <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
+                                                        <th>PORCENTAJE COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
@@ -425,7 +425,7 @@
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
                                                         <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
+                                                        <th>PORCENTAJE COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
@@ -446,7 +446,6 @@
                                                                 <p class="input-tot pl-1">
                                                                     <?php
                                                                     $query = $this->db->query("SELECT SUM (abono_neodata) nuevo_general FROM pago_comision_ind WHERE estatus in (8) AND id_comision IN (select id_comision from comisiones) AND id_usuario = ".$this->session->userdata('id_usuario')."");
-
                                                                     foreach ($query->result() as $row)
                                                                     {
                                                                         $number = $row->nuevo_general;
@@ -486,14 +485,14 @@
                                                             <th>PAGADO CLIENTE</th>
                                                             <th>DISPERSADO</th>
                                                             <th>SALDO A COBRAR</th>
-                                                            <th>% COMISIÓN</th>
+                                                            <th>PORCENTAJE COMISIÓN</th>
                                                             <th>DETALLE</th>
                                                             <th>ESTATUS</th>
                                                             <th>ACCIONES</th>
                                                         </tr>                            
                                                     </thead>
                                                 </table>
-                                        </div>
+                                            </div>
 
                                         <div class="tab-pane" id="otras-1">
                                             <div class="encabezadoBox">
@@ -547,7 +546,7 @@
                                                         <th>PAGADO CLIENTE</th>
                                                         <th>DISPERSADO</th>
                                                         <th>SALDO A COBRAR</th>
-                                                        <th>% COMISIÓN</th>
+                                                        <th>PORCENTAJE COMISIÓN</th>
                                                         <th>DETALLE</th>
                                                         <th>ESTATUS</th>
                                                         <th>ACCIONES</th>
