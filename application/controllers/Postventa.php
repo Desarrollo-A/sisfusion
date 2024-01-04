@@ -878,7 +878,7 @@ public $controller = 'Postventa';
     public function getDocumentsClient()
     {
         $idEscritura = $_POST['idEscritura'];
-        $idEstatus = $_POST['idEstatus'];
+        $idEstatus = $_POST['idEstatus']; //COPIAR Y BORRAR ESTA LÍNEA Y LOS ESTATUS
         $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
         $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
@@ -3270,9 +3270,23 @@ function saveNotaria(){
         $data = $this->Postventa_model->getInfoCliente($id_cliente)->result_array();
         echo json_encode($data);
     }
+
+    public function documentacion_escrituracion(){
+        $this->load->view('template/header');
+        $this->load->view("Postventa/documentacion_escrituracion_view");
+    }
+
+    public function getDocumentacionCliente()
+    {
+        $idEscritura = $_POST['idEscritura'];
+        $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
+        $data = $this->Postventa_model->getDocumentacionCliente($idEscritura, $notariaExterna);
+        if ($data != null)
+            echo json_encode($data,JSON_NUMERIC_CHECK);
+        else
+            echo json_encode(array());
+    }
 }
-
-
 //boton para subir documentos
 
 

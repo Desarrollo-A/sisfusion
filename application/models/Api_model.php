@@ -174,4 +174,9 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
+    public function consultarInformacion($id_usuario){
+        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario =".$id_usuario);
+        return $query->result_array();
+    }
+
 }

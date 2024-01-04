@@ -553,7 +553,7 @@ class Pagos extends CI_Controller
         $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
     
       }
-     
+    
     $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
     if( isset( $_FILES ) && !empty($_FILES) ){
         $config['upload_path'] = './UPLOADS/XMLS/';
@@ -571,7 +571,7 @@ class Pagos extends CI_Controller
               else{
     
                 if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
-           
+          
                 if($datos_xml['claveProdServ'][0]=='80131600' || (($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
                   $diasxmes = date('t');
                   $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
@@ -1067,7 +1067,7 @@ class Pagos extends CI_Controller
       $this->load->model("Comisiones_model");
       $sol=$this->input->post('idcomision');  
       $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_comision_ind where estatus = 8 AND id_usuario = 4394");
-     
+    
         if( $consulta_comisiones->num_rows() > 0 ){
           $consulta_comisiones = $consulta_comisiones->result_array();
           $id_user_Vl = $this->session->userdata('id_usuario');

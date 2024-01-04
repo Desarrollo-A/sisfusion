@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-
 class ScheduleTasks_dos extends CI_Controller
 {
   public function __construct()
@@ -20,8 +19,8 @@ class ScheduleTasks_dos extends CI_Controller
     redirect(base_url());
   }
 
-
 // ScheduleTasks_dos/LlenadoPlan
+//ESTE CRON SE UTILIZA PARA ASIGNARLE UN PLAN DE COMISION A CADA LOTE QUE LLEGA DISPONIBLE PARA COMISIONAR, EL PLAN SE ASIGNA SEGUN LA PRIORIDAD Y LAS CONDICIONES QUE TIENE CADA PLAN
 
   public function LlenadoPlan(){ //CRON diario
 
@@ -35,7 +34,6 @@ class ScheduleTasks_dos extends CI_Controller
         if(count($datos) > 0)
         {
             $data = array();
- 
             for($i = 0; $i < COUNT($datos); $i++){
                 $data[$i] = $this->ComisionesNeo_model->updatePlan($j, $datos[$i]['id_plan']);
             }
@@ -45,7 +43,5 @@ class ScheduleTasks_dos extends CI_Controller
     }
 }
 
- 
-  
 
 }

@@ -186,7 +186,7 @@ class ComisionesNeo_model extends CI_Model {
                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
                 INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-                WHERE l.status = 1 AND cl.status = 1 AND l.registro_comision = 0 AND l.idLote NOT IN (SELECT id_lote FROM comisiones) AND cl.fechaApartado >= '2020-03-01' AND c.idCondominio = $condominio AND idStatusContratacion BETWEEN 9 AND 15 AND tipo_venta IN (0,1,2)) 7
+                WHERE l.status = 1 AND cl.status = 1 AND l.registro_comision = 0 AND l.idLote NOT IN (SELECT id_lote FROM comisiones) AND cl.fechaApartado >= '2020-03-01' AND c.idCondominio = $condominio AND idStatusContratacion BETWEEN 9 AND 15 AND tipo_venta IN (0,1,2)) 
                 UNION 
                 (SELECT l.referencia, r.idResidencial, l.idLote 
                 FROM lotes l

@@ -23,7 +23,7 @@ class Prestamos extends CI_Controller
     $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
     $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
   }
-   public function index(){
+  public function index(){
     redirect(base_url());
   }
 
@@ -63,12 +63,12 @@ class Prestamos extends CI_Controller
           'detalle' => $detalle
       ));
   }
- 
+
   public function lista_estatus_descuentos()
   {
     echo json_encode($this->Prestamos_model->lista_estatus_descuentos()->result_array());
   }
- 
+
   public function getRoles()
   {
     $catalogo = $this->input->post("catalogo");
@@ -302,6 +302,5 @@ $pagos_apli = intval($this->input->post("pagos_aplicados"));
   echo json_encode($dat);    
 }
 
- 
 
 }

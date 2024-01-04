@@ -29,7 +29,7 @@ class Reestructura extends CI_Controller{
 
 	public function reubicarCliente(){
 		$this->load->view('template/header');
-        if ($this->session->userdata('id_rol') == 11) // ES ADMINISTRACIÓN
+           if ($this->session->userdata('id_rol') == 11) // ES ADMINISTRACIÓN
             $this->load->view("reestructura/traspasoAportaciones_view");
         else // TODOS LOS DEMÁS
             $this->load->view("reestructura/reubicarCliente_view");
@@ -362,7 +362,23 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        if ($this->db->trans_status() === FALSE){
+        //actualiza el parametro del preproceso
+        $dataUpdateLoteO = array(
+            'estatus_preproceso' => 7,
+        );
+        if (!$this->General_model->updateRecord("lotes", $dataUpdateLoteO, "idLote", $loteAOcupar)){
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al actualizar el estatus preproceso del lote, inténtalo nuevamente.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+
+            if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
 
             echo json_encode(array(
@@ -1795,7 +1811,7 @@ class Reestructura extends CI_Controller{
             $arrayLotes = $nombreLoteOriginal;
         }   
             
-            for ($j=0; $j < $numeroArchivos ; $j++) { 
+            for ($j=0; $j < $numeroArchivos ; $j++) {
                 $nombreLoteOriginal = $arrayLotes[$j];
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
@@ -2260,7 +2276,8 @@ class Reestructura extends CI_Controller{
                 'corrida'   => null,
                 'rescision'   => null
             );
-        }else{
+        }
+        else{
             $tabla = 'propuestas_x_lote';
 
             $dataInsertPropuestaLote = array(
@@ -2731,7 +2748,7 @@ class Reestructura extends CI_Controller{
         $bandera = $this->input->post('bandera');
 		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 10878 || $this->session->userdata('id_rol') == 4)
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
-		else if($this->session->userdata('id_usuario') == 5107 && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
+		else if(($this->session->userdata('id_usuario') == 5107 || $this->session->userdata('id_usuario') == 9897) && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
           echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
         else // MJ: SELECT DE LA VISTA reestructura
             echo json_encode($this->Reestructura_model->get_proyecto_lista(1)->result_array());
