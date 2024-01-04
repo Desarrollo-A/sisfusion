@@ -100,13 +100,8 @@
 	<?php $this->load->view('template/footer');?>
 	<script>userType = <?= $this->session->userdata('id_rol') ?> ; typeTransaction = 1;</script>
 	<script src="<?=base_url()?>dist/js/modal-steps.min.js"></script>
-	<?php
-	if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_usuario') == 826 || $this->session->userdata('id_usuario') == 1297)
-	{
-	?>
+	<?php if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_usuario') == 826 || $this->session->userdata('id_usuario') == 1297) { ?>
 		<script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
-	<?php
-	} 
-	?>
+	<?php } ?>
 	<script src="<?=base_url()?>dist/js/controllers/clientes/busDet_prospectos.js"></script>
 </body>

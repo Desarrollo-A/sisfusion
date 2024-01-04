@@ -143,16 +143,7 @@
     <?php $this->load->view('template/footer_legend'); ?>
 </div>
 </div>
-
 <?php $this->load->view('template/footer'); ?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://vjs.zencdn.net/7.19.2/video.min.js"></script>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
@@ -160,7 +151,6 @@
 <script src="//unpkg.com/videojs-record/dist/videojs.record.min.js"></script>
 
 <script>
-    let url = "<?=base_url()?>";
     let information = {
         idCliente:"<?= $information->data->idCliente?>",
         idLote: "<?= $information->data->idLote?>",

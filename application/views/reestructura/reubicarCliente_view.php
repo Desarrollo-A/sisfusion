@@ -113,7 +113,7 @@
                     </div>
                     <div class="modal-footer mt-2" >
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="button" id="sendRequestButtoncf" class="btn btn-primary">Guardar</button>
+                        <button type="button" id="sendRequestButtoncf" class="btn btn-primary <?php if($this->session->userdata('id_rol') != 17){echo'hidden'; } ?>">Guardar</button>
                     </div>
                 </div>
             </div>

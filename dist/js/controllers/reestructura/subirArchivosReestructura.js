@@ -740,7 +740,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
                 '  src="'+ruta+'">\n' +
                 '</iframe>';
 
-            if(estatusProceso==2){
+            if(estatusProceso==2 && id_rol_general==17){
                 contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
                     '                            <div class="" id="selectFileSectionResicioncf">\n' +
                     '                                <div class="file-gph">\n' +

@@ -348,9 +348,7 @@
                         
                     </div>
                 </div>
-                <!-- wizard container -->
             </div>
-
         </div>
     </div>
 
@@ -364,7 +362,6 @@
 <?php $this->load->view('template/footer');?>
 
 <script src="<?=base_url()?>dist/js/controllers/general-1.1.0.js"></script>
-<!-- <script src="<?=base_url()?>dist/js/controllers/newProspectMKTD.js"></script> -->
 <link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 <script src="<?=base_url()?>dist/js/controllers/select2/select2.full.min.js"></script>
 
