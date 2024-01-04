@@ -7,6 +7,8 @@ class Comisiones_model extends CI_Model {
         parent::__construct();
     }
 
+    //MODELO DEDICADO A PROCESOS DE CONTRALORIA REFERENTE A COMISIONES Y ENVIO DE COMISIONES POR PARTE DE VENTAS
+
     public function getDataActivasPago($val = '') {
         $this->db->query("SET LANGUAGE Español;");
         ini_set('memory_limit', -1);
