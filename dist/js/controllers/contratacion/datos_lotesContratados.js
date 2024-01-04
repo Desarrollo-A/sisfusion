@@ -119,6 +119,11 @@ $(document).ready(function () {
                     else
                         return '<span class="label lbl-orangeYellow">SIN REGISTRO</span>';
                 }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-azure'>${d.ID_Estatus_Lote}</span>`;
+                }
             }
         ]
     });

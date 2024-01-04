@@ -21,7 +21,7 @@ class SUMA_XML extends CI_Controller
     else{
       $filtro = " pci.estatus IN (2,4) ";
     }
-    $facturas_disponibles = array(); ;
+    $facturas_disponibles = array(); ; 
     $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) from facturas_suma fa
     INNER JOIN pagos_suma pci ON fa.id_pago_suma = pci.id_pago_suma
     WHERE $filtro
