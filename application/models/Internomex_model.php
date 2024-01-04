@@ -273,4 +273,72 @@ class Internomex_model extends CI_Model {
         tbl.tamanio_terreno, tbl.costo, tbl.monto_enganche, tbl.monto_comision, tbl.empresa, tbl.fechaEstatus9, tbl.fechaEstatus7")->result_array(); 
     }
 
+// ----------------------------------------------------------------------------------------------------------------------------------------
+
+    // CONSULTA PARA TRAER LOS REGISTROS PARA LLENAR LA TABLA DE LOTES PARA VER SUS ENGANCHES
+    function getRegistrosLotesEnganche($id_condominio){
+        return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_materno, ' ', cl.apellido_materno)) nombreCliente, fechaApartado,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_materno, ' ', u0.apellido_materno)) END nombreAsesor,
+        tv.tipo_venta tipoVenta, se.nombre ubicacion, FORMAT(lo.totalNeto, 'C') engancheContraloria, FORMAT(lo.totalValidado, 'C') engancheAdministracion
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $id_condominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+        LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+        LEFT JOIN sedes se ON se.id_sede = lo.ubicacion
+        WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result();
+    }
+
+    // CONSULTA PARA TRAR EL CATALOGO DE FORMAS DE PAGO
+    function getCatalogoFormaPago(){
+
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=110");
+	
+	}
+
+    // CONSULTA PARA TRAR EL CATALOGO DE INSTRUMENTO MONETARIO
+    function getInstrumentoMonetario(){
+
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=111");
+	
+	}
+
+    // CONSULTA PARA TRAR EL CATALOGO DE MONEDA DIVISA
+    function getMonedaDivisa(){
+
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=112");
+	
+	}
+
+    // CONSULTA PARA TRAER LOS DATOS DE LOS ENGANCHES DE UN LOTE
+    function getEnganches($idLote){
+
+        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa FROM enganche eng
+        INNER JOIN det_enganche det_eng ON det_eng.idEnganche=eng.idEnganche
+        INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.forma_pago AND opcFormaP.id_catalogo = 110
+        INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = det_eng.instrumento_monetario AND opcInsMon.id_catalogo = 111
+        INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = det_eng.moneda_divisa AND opcMonedaD.id_catalogo = 112
+        WHERE det_eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.id_lote=$idLote)");
+	
+	}
+
+    // CONSULTA PARA ACTUALIZAR LOS DATOS DE DETALLE DE DE ENGANCHE
+    function actualizarDetEnganche($data){
+        return $this->db->update_batch("det_enganche", $data, 'id_det_enganche');
+    }
+
+    // CONSULTA PARA GUARDAR NUEVO DATOS DE ENGANCHE
+    function insertarNuevoEnganche($data){
+        return $this->db->insert_batch("enganche", $data);
+    }
+
+    // CONSULTA PARA GUARDAR NUEVO DATOS DE DETALLE ENGANCHE
+    function insertarNuevoDetEnganche($data){
+        return $this->db->insert_batch("det_enganche", $data);
+    }
+
+// ----------------------------------------------------------------------------------------------------------------------------------------
+
 }

@@ -234,5 +234,129 @@
   }
 
 
+// ----------------------------------------------------------------------------------------------------------------------------------------
+
+// FUNCION PARA LANZAR LA VISTA DE DETALLE DE ENGANCHES
+  public function detEnganche(){
+		$this->load->view('template/header');
+		$datos["rol"] = $this->session->userdata('id_rol');
+		$this->load->view("internomex/detEnganche", $datos);
+	}
+
+  // FUNCION PARA CONSULTAR LA LISTA DE LOTES FILTRADOS POR PROYECTO CONDOMINIO Y SELCCIONAR UN PARA VALIDAR EL ENGANCHE
+  function getRegistroLotesEng(){
+        $data = json_decode(file_get_contents("php://input"));
+        $index_condominio = $this->input->post('index_condominio');
+        $dato = $this->Internomex_model->getRegistrosLotesEnganche($index_condominio);
+        if ($dato != null) {
+            echo json_encode($dato);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    // FUNCION PARA TRAER LOS CATALOGOS Y ENGANCHES REGISTRADOS DEL DETALLE DE ENGANCHE DEL LOTE
+    public function catalogosEnganche(){
+      $response = array("status"=>-1,"mensaje"=>"Ha ocurrido un error a","data"=>[]);
+    
+      $data = json_decode( file_get_contents('php://input') );
+        $idLote = $this->input->post('idLote');
+        $dtoFormaPago = $this->Internomex_model->getCatalogoFormaPago()->result_array();
+        $dtoInstrumentoMonetario = $this->Internomex_model->getInstrumentoMonetario()->result_array();
+        $dtoMonedaDivisa = $this->Internomex_model->getMonedaDivisa()->result_array();
+        $dtoEnganches = $this->Internomex_model->getEnganches($idLote)->result_array();
+        
+        if(count($dtoFormaPago)>0 || count($dtoInstrumentoMonetario)>0 || count($dtoMonedaDivisa)>0){
+          $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoFormaPago"=> $dtoFormaPago, "dtoInstrumentoMonetario"=> $dtoInstrumentoMonetario, "dtoMonedaDivisa"=> $dtoMonedaDivisa, "dtoEnganches"=> $dtoEnganches );
+        }else{
+          $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos", "dtoFormaPago"=> [], "dtoInstrumentoMonetario"=> [], "dtoMonedaDivisa"=> [] );
+        }
+      echo json_encode($response);
+    }
+
+    // FUNCION PARA AGREGAR ENGANCHE Y DETALLE DE ENGANCHE
+	function guardarEnganches() {
+
+    $data = $this->input->post('dtoEnganche');
+    
+    $dtoInstrumentoMonetario=[];
+    $response=$response = array( "status" => 3, "mensaje"=>"Error no entro a validaciones");
+
+    try {
+      $this->db->trans_begin();
+      if(array_key_exists('enganchesGuardados', $data)){
+        foreach ($data['enganchesGuardados'] as $key => $dto) {
+              $objActualizarDetEnganche[]=array(
+                "id_det_enganche"=>$dto['id_det_enganche'],
+                "instrumento_monetario"=>$dto['instrumento_monetario'],
+                "moneda_divisa"=>$dto['moneda_divisa'],
+                "fecha_pago"=>$dto['fecha_pago'],
+                "estatus"=>"1",
+                "idEnganche"=>$dto['idEnganche']
+              );
+          
+        }
+        if(count($objActualizarDetEnganche)>0){
+          $dtoInstrumentoMonetario = $this->Internomex_model->actualizarDetEnganche($objActualizarDetEnganche);
+        }
+      }
+      
+        if(array_key_exists('nuevoEnganche', $data)){
+          foreach ($data['nuevoEnganche'] as $key => $dtoN) {
+
+            $objNuevoEnganche=[];
+            $objNuevoDetEnganche=[];
+
+            $objNuevoEnganche[]=array(
+              "forma_pago"=>$dtoN['forma_pago'],
+              "id_lote"=>$dtoN['id_lote'],
+              "fecha_creacion"=>date('Y-m-d\TH:i:s'),
+              "id_creacion"=>$this->session->userdata('id_usuario'),
+              "fecha_modificacion"=>NULL,
+              "id_modificacion"=>NULL,
+              "estatus"=>"1"
+            );
+        
+            if(count($objNuevoEnganche)){
+              $dtoNuevoEnganche = $this->Internomex_model->insertarNuevoEnganche($objNuevoEnganche);
+              $idEnganche=$this->db->insert_id();
+  
+              if(!empty($idEnganche)){
+                $objNuevoDetEnganche[]=array(
+                  "instrumento_monetario"=>$dtoN['instrumento_monetario'],
+                  "moneda_divisa"=>$dtoN['moneda_divisa'],
+                  "fecha_pago"=>$dtoN['fecha_pago'],
+                  "estatus"=>1,
+                  "idEnganche"=>$idEnganche
+                );
+    
+                $dtoNuevoDetEnganche = $this->Internomex_model->insertarNuevoDetEnganche($objNuevoDetEnganche);
+              }else{
+                $response = array( "status" => 2, "mensaje"=>"Error al obtener el id del enganche");
+              }
+              
+            }else{
+              $response = array( "status" => 2, "mensaje"=>"Error al llenar arreglo de nuevo enganche");
+            }
+            
+            }
+        }
+        
+            if ($dtoInstrumentoMonetario || $response['status']!=2 || $this->db->trans_status() === TRUE ){
+              $this->db->trans_commit();
+              $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos");
+            }else{
+              $this->db->trans_rollback();
+              $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos");
+            }
+    } catch (\Throwable $th) {
+      $response = array( "status" => 0, "mensaje"=>"Error al ejecutar funcion de guardar enganche", "error"=> $th);
+    }
+
+  echo json_encode($response);
+  
+	}
+
+// ----------------------------------------------------------------------------------------------------------------------------------------
 
 }
