@@ -597,7 +597,8 @@ class Postventa_model extends CI_Model
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo=mrxd.id_motivo 
         WHERE opc.id_documento $tipo_doc 
         AND de.idSolicitud = $idSolicitud
-        AND de.estatus_validacion IN (NULL,1)
+        AND (de.estatus_validacion IS NULL OR de.estatus_validacion =1)
+
         GROUP BY de.idDocumento,de.documento_a_validar,se.estatus_construccion, de.movimiento,de.modificado,de.status ,opc.id_documento ,de.idUsuario,opc.fecha_creacion,se.id_solicitud ,
         opc.descripcion, de.expediente, de.tipo_documento, de.idSolicitud, 
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), de.fecha_creacion, se.id_estatus, 
