@@ -262,7 +262,7 @@ class Reporte_model extends CI_Model {
                 $comodin = "id_subdirector";
             }
         }
-        else if ($id_rol == 5 && ($id_usuario == 28 || $id_usuario == 30 || id == 4888)) { 
+        else if ($id_rol == 5 && ($id_usuario == 28 || $id_usuario == 30 || $id_usuario == 4888)) { 
             // MJ: Asistente dirección regional
             if ($render == 1) {
                 $filtro .= " AND (cl.id_regional = $id_lider OR cl.id_subdirector = $id_lider)";
@@ -271,7 +271,7 @@ class Reporte_model extends CI_Model {
                 $filtro .= "";
             }
         }
-        else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30 || id != 4888)) { // CONSULTA DE ASISTENTES DE SUBDIRECCIÓN
+        else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30 || $id_usuario != 4888)) { // CONSULTA DE ASISTENTES DE SUBDIRECCIÓN
             if ($render == 1) { // SE TRAE LOS GERENTES
                 $filtro .= " AND cl.id_subdirector = $id_lider";
                 $comodin = "id_gerente";

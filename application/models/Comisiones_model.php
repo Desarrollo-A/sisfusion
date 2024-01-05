@@ -1869,7 +1869,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
-        WHERE p.estatus in(1,2,0)
+        WHERE p.estatus in(1, 2, 0, 3)
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
     }
     
@@ -3192,7 +3192,7 @@ class Comisiones_model extends CI_Model {
 		FROM pago_comision_ind pin
 		GROUP BY pin.id_pago_i, pin.id_comision) pci ON pci.id_pago_i = rpp.id_pago_i 
         INNER JOIN comisiones co ON  pci.id_comision = co.id_comision
-		INNER JOIN lotes lo ON lo.idCliente = co.idCliente 
+		INNER JOIN lotes lo ON lo.idLote = co.id_lote 
 		INNER JOIN condominios cond ON lo.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -3585,7 +3585,7 @@ class Comisiones_model extends CI_Model {
             $comentario = 'SE ACTUALIZÓ RETIRO POR MOTIVO DE: '.$datos["conceptos"].' POR LA CANTIDAD DE: '.$datos["monto"].' ';
         }
 
-        $respuesta = $this->db->query("INSERT INTO  historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
+        $respuesta = $this->db->query("INSERT INTO historial_retiros VALUES ($id, ".$this->session->userdata('id_usuario').", GETDATE(), 1, '$comentario')");
     
         if (! $respuesta ) {
         return 0;

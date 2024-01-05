@@ -1,8 +1,5 @@
 var totaPen = 0;
 var tr;
-// $(document).ready(function () {
-//     console.log("I'm working")
-// });
 
 function replaceAll(text, busca, reemplaza) {
     while (text.toString().indexOf(busca) != -1)
@@ -15,7 +12,7 @@ $("#tabla_prestamos").ready(function () {
     $('#tabla_prestamos thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
+        $(this).html('<input type="text" data-toggle="tooltip" data-placement="top" placeholder="' + title + '" title="' + title + '"/>');
         $('input', this).on('keyup change', function () {
 
             if (tabla_nuevas.column(i).search() !== this.value) {
@@ -44,6 +41,10 @@ $("#tabla_prestamos").ready(function () {
                 document.getElementById("totalAbonado").textContent = to2;
             }
         });
+    });
+
+    $('#tabla_prestamos').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $('#tabla_prestamos').on('xhr.dt', function (e, settings, json, xhr) {
@@ -216,7 +217,7 @@ $("#tabla_prestamos").ready(function () {
                 var botonesModal = '';
 
                 if (d.total_pagado != null || d.total_pagado > 0) {
-                    botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial"><i class="fas fa-info"></i></button>`;
+                    botonesModal += `<button href="#" value="${d.id_prestamo}" class="btn-data btn-blueMaderas detalle-prestamo" data-toggle="tooltip" data-placement="top" title="Historial"><i class="fas fa-info"></i></button>`;
                 }
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
