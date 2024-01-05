@@ -3053,8 +3053,14 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
         GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
-        WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) AND l.idStatusContratacion >= 9
-        AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (1) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
+        WHERE (
+            (hl.idStatusContratacion = 9 
+            AND hl.idMovimiento = 39) OR l.idLote 
+            IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) 
+            AND l.idStatusContratacion >= 9
+        AND cl.status = 1 AND l.status IN (0,1) 
+        AND l.registro_comision IN (1) 
+        AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
         ORDER BY l.idLote");
         return $query;
     }
@@ -3351,7 +3357,13 @@ class Comisiones_model extends CI_Model {
 
     public function getVentasCanceladas()
     {
-        $query = $this->db->query("(SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, re.nombreResidencial, l.referencia
+        $query = $this->db->query("(
+        SELECT l.idLote, l.nombreLote, 
+        SUM(c.comision_total) AS comision_total, 
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, 
+        (CASE WHEN cl.plan_comision IN (0) 
+        OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, 
+        re.nombreResidencial, l.referencia
         FROM comisiones c
         LEFT JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
@@ -3366,7 +3378,7 @@ class Comisiones_model extends CI_Model {
         JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN condominios cd ON cd.idCondominio=l.idCondominio
+        INNER JOIN condominios cd ON cd.idCondominio=l.idCondomini
         INNER JOIN residenciales re ON re.idResidencial= cd.idResidencial
         WHERE l.status IN (0,1) AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
         GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente)

@@ -452,9 +452,10 @@ $(document).ready(function () {
 
     $("#tabla_dispersar_comisiones tbody").on("click", ".verify_neodata", async function(){
 
-        
+        $('#modal_NEODATA').modal({backdrop: 'static', keyboard: false})
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
+        
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
         var row = $('#tabla_dispersar_comisiones').DataTable().row(tr);
