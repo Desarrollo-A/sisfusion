@@ -161,7 +161,7 @@
                                                             <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2024; $i++) {
+                                                                for ($i = 2019; $i <= 2025; $i++) {
                                                                     $yearName  = $i;
                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                 }
@@ -186,7 +186,7 @@
                                                                 <th>PROYECTO</th>
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
-                                                                <th>REFERENCIA</th>
+                                                                <th>REFERENCIA1</th>
                                                                 <th>PRECIO DEL LOTE</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGO DEL CLIENTE</th>

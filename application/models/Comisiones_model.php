@@ -828,16 +828,18 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function getDatosAbonadoDispersion($idlote,$ooam){
-        $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
-        $estrucura = $request->estructura;
+    public function getDatosAbonadoDispersion($idlote,$ooam,$estructura){
+        //$request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
+        //$estrucura = $request->estructura;
         if($ooam == 1 || $ooam == 2){
             $filtroOOAM = 'AND ooam IN ('.$ooam.')';
         } else {
             $filtroOOAM = ' ';
         }
 
-        return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END AS rol, com.comision_total, pci.abono_pagado, com.rol_generado, com.descuento
+        return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, 
+        lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador,
+        CASE WHEN $estructura = 1 THEN oxc2.nombre ELSE oxc.nombre END AS rol, com.comision_total, pci.abono_pagado, com.rol_generado, com.descuento
         FROM comisiones com
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
         GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
@@ -859,7 +861,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
         LEFT JOIN pago_comision_ind pci ON pci.id_comision = c1.id_comision
         WHERE lo.status IN (0,1) AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote IN ($idlote)
-        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado,cl.estructura");
     }
 
     function update_pagada_comision($idLote,$estatus,$comentario,$comentarioPago) {
@@ -2751,11 +2753,13 @@ class Comisiones_model extends CI_Model {
             $multiRegional = 'cA.id_regional';
             $numeroRegionales = $numAsesores;
         }
-        
+
+
+        $fragmento = $plan_comision == 74 ? " " : " u1.id_usuario = v1.id_asesor OR ";
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
 
         SET @idCliente = $clienteData  
-        SET @numAsesores = $numAsesores  
+        SET @numAsesores = $numAsesores 
         SET @numCoordinadores = $numCoordinadores 
         SET @numGerente = $numGerente 
         SET @numSubdir = $numSubdir 
@@ -2768,7 +2772,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes  
             INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_asesor OR u1.id_usuario = cA.id_asesor
+            INNER JOIN usuarios u1 ON $fragmento u1.id_usuario = cA.id_asesor
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.asesor not IN (0) 
             WHERE cA.id_cliente = @idCliente)
         
@@ -3053,8 +3057,14 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
         LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado, idStatusContratacion, idMovimiento FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 
         GROUP BY idLote, idCliente, idStatusContratacion, idMovimiento) hl ON hl.idLote = l.idLote AND hl.idCliente = l.idCliente
-        WHERE ((hl.idStatusContratacion = 9 AND hl.idMovimiento = 39) OR l.idLote IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) AND l.idStatusContratacion >= 9
-        AND cl.status = 1 AND l.status IN (0,1) AND l.registro_comision IN (1) AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
+        WHERE (
+            (hl.idStatusContratacion = 9 
+            AND hl.idMovimiento = 39) OR l.idLote 
+            IN (7167, 7168, 10304, 15178, 17231, 18338, 18549, 23730, 27250)) 
+            AND l.idStatusContratacion >= 9
+        AND cl.status = 1 AND l.status IN (0,1) 
+        AND l.registro_comision IN (1) 
+        AND pc.bandera IN (0) AND tipo_venta IS NOT NULL AND tipo_venta IN (7)
         ORDER BY l.idLote");
         return $query;
     }
@@ -3351,7 +3361,13 @@ class Comisiones_model extends CI_Model {
 
     public function getVentasCanceladas()
     {
-        $query = $this->db->query("(SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, re.nombreResidencial, l.referencia
+        $query = $this->db->query("(
+        SELECT l.idLote, l.nombreLote, 
+        SUM(c.comision_total) AS comision_total, 
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, 
+        (CASE WHEN cl.plan_comision IN (0) 
+        OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, 
+        re.nombreResidencial, l.referencia
         FROM comisiones c
         LEFT JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
@@ -3366,7 +3382,7 @@ class Comisiones_model extends CI_Model {
         JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN condominios cd ON cd.idCondominio=l.idCondominio
+        INNER JOIN condominios cd ON cd.idCondominio=l.idCondomini
         INNER JOIN residenciales re ON re.idResidencial= cd.idResidencial
         WHERE l.status IN (0,1) AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
         GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente)
@@ -3442,11 +3458,11 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 'null' ){
-        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == '' ){
+    public function insertHistorialLog($idLote, $idUsuario, $estatus, $comentario, $tabla, $motivo, $anterior = 'null' , $nuevo = 'null' , $saldoNeo = 0 ){
+        if( $anterior == '' ||  $nuevo == '' || $saldoNeo == 0 ){
             $anterior = null;
             $nuevo = null;
-            $saldoNeo = $saldoNeo = null;
+            $saldoNeo = 0;
         }else{
             $anterior = $anterior;
             $nuevo  = $nuevo;
