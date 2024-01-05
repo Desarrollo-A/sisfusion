@@ -413,6 +413,8 @@ class Reestructura_model extends CI_Model
                     $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
                 }
             }
+        }else{
+            $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
         }
         
         if($row[0]['tipo_venta'] == 1){
