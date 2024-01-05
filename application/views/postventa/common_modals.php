@@ -156,7 +156,7 @@
             <div class="modal-header"></div>
             <div class="modal-body text-center">
                 <h4 class="card-title" id="mainLabelText"></h4>
-                <p id="secondaryLabelDetail"></p>
+                <p id="secondaryLabelDetail"></p>ssdsfds
                 <div class="file-gph" id="selectFileSection">
                     <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
                     <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
@@ -1090,25 +1090,31 @@
 <!-- fin modal -->   
 
 <!-- inicio modal -->
-<div class="modal fade" id="modalBorrar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title card-title"><b id="labelmodal">Borrar Documentos</b></h4>
+        <form id="formRechazar" name="formRechazar" method="post">    
+        <div class="modal-header">
+                <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
                 <br>
-                <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="motivos_rechazo" name="motivos_rechazo" title="Seleccione una opción de rechazo" data-live-search="true" required></select>
-            </div>
-            <form id="formBorrar" name="formBorrar" method="post">
-                <div class="modal-body">                    
-                    <input type="hidden" name="id_solicitud" id="id_solicitud">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
                     </div>
+                </div>
+
+                <!-- <div class='col-12 col-sm-12 col-md-12 col-lg-12 mb-1' id="mot_rechazo">
+                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="mot_rec" name="mot_rec" title="Selecciona motivos de rechazo" data-live-search="true" multiple required></select>
+                </div> -->
+                <br><br>
+            </div>
+                <input type="hidden" id="id_sol" name="id_sol">
+                <input type="hidden" id="index" name="index">
+                <div class="modal-body">                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" id="botonBorrar" class="btn btn-primary">Aceptar</button>
+                    <button type="submit" id="botonRechazar" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>
         </div>

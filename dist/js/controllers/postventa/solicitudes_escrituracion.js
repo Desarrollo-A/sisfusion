@@ -125,12 +125,14 @@ $(document).ready(function () {
         var id = data[i]['id_opcion'];
         var name = data[i]['nombre'];
         $("#tipoContratoAnt").append($('<option>').val(id).text(name));
+        
     }
     if (len <= 0) {
         $("#tipoContratoAnt").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
     }
     $("#tipoContratoAnt").selectpicker('refresh');
   }, 'json'); 
+  
   $.post(
     "getEstatusPago",
     function (data) {
@@ -378,143 +380,145 @@ $(document).on("click", ".upload", function () {
 });
 
 $(document).on("click", "#sendRequestButton", function (e) {
-    var info = escrituracionTable.page.info();
-    e.preventDefault();
-    let action = $("#action").val();
-    let id_estatus =  $('#id_estatus').val();
-    let documento_validar =  $('#documento_validar').val();
-    let sendRequestPermission = 0;
-    if (action == 1) { // UPLOAD FILE
-        let uploadedDocument = $("#uploadedDocument")[0].files[0];
-        let allowedExtensions = /(\.xls|\.xlsx|\.pdf|\.jpg|\.jpeg|\.png|\.doc|\.docx|\.csv|\.rar|\.zip)$/i;
-        let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
-        // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
-        if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
-        else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
-    } else if (action == 2) // MJ: DELETE FILE
-        sendRequestPermission = 1;
-    else if (action == 3)// MJ: VALIDATE OK
-        sendRequestPermission = 1;
-    else if (action == 4) { // MJ: VALIDATE NOK FILE
-        let rejectionReasons = $("#rejectionReasons").val();
-        if (rejectionReasons == '') { // THERE ARE NO OPTIONS
-            alerts.showNotification("top", "right", "Asegúrese de haber seleccionado al menos un motivo de rechazo", "warning");
-        } else sendRequestPermission = 1;
-    }
+  var info = escrituracionTable.page.info();
+  e.preventDefault();
+  let action = $("#action").val();
+  let id_estatus =  $('#id_estatus').val();
+  let documento_validar =  $('#documento_validar').val();
+  let sendRequestPermission = 0;
+  if (action == 1) { // UPLOAD FILE
+    let uploadedDocument = $("#uploadedDocument")[0].files[0];
+    let allowedExtensions = /(\.xls|\.xlsx|\.pdf|\.jpg|\.jpeg|\.png|\.doc|\.docx|\.csv|\.rar|\.zip)$/i;
+    let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
 
-    if (sendRequestPermission == 1) {
-        let idSolicitud = $("#idSolicitud").val();
-        let data = new FormData();
-        let details = $("#details").val();
-        data.append("idSolicitud", idSolicitud);
-        data.append("idDocumento", $("#idDocumento").val());
-        data.append("documentType", $("#documentType").val());
-        if($("#documentType").val() == 12){
-            data.append("presupuestoType", $("#presupuestoType").val());
-            data.append("idPresupuesto", $("#idPresupuesto").val());
-            data.append("idNxS", $("#idNxS").val());
-        }
-        data.append("uploadedDocument", $("#uploadedDocument")[0].files[0]);
-        data.append("rejectionReasons", $("#rejectionReasons").val());
-        data.append("action", action);
-        let documentName = $("#docName").val();
-        $('#uploadFileButton').prop('disabled', true);
-        $('#spiner-loader').removeClass('hide');
-        let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
-if(id_estatus == 19 || id_estatus == 22 ){
-    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
-    console.log(indexidDocumentos)
-    if(indexidDocumentos >= 0){
+    // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+    if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+    else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+  } else if (action == 2) // MJ: DELETE FILE
+  sendRequestPermission = 1;
+
+  else if (action == 3)// MJ: VALIDATE OK
+  sendRequestPermission = 1;
+
+  else if (action == 4) { // MJ: VALIDATE NOK FILE
+    let rejectionReasons = $("#rejectionReasons").val();
+    if (rejectionReasons == '') { // THERE ARE NO OPTIONS
+      alerts.showNotification("top", "right", "Asegúrese de haber seleccionado al menos un motivo de rechazo", "warning");
+    } else sendRequestPermission = 1;
+  }
+  
+  if (sendRequestPermission == 1) {
+    let idSolicitud = $("#idSolicitud").val();
+    let data = new FormData();
+    let details = $("#details").val();
+    data.append("idSolicitud", idSolicitud);
+    data.append("idDocumento", $("#idDocumento").val());
+    data.append("documentType", $("#documentType").val());
+
+    if($("#documentType").val() == 12){
+      data.append("presupuestoType", $("#presupuestoType").val());
+      data.append("idPresupuesto", $("#idPresupuesto").val());
+      data.append("idNxS", $("#idNxS").val());
+    }
+    data.append("uploadedDocument", $("#uploadedDocument")[0].files[0]);
+    data.append("rejectionReasons", $("#rejectionReasons").val());
+    data.append("action", action);
+    let documentName = $("#docName").val();
+    $('#uploadFileButton').prop('disabled', true);
+    $('#spiner-loader').removeClass('hide');
+    let contador = action == 1 ? 1 : action == 2 ? 2 : 0;
+    
+    if(id_estatus == 19 || id_estatus == 22 ){
+      var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+      if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].cargado = action == 1 ? 1 : 0;
+      }
     }
-}
-if(id_estatus == 20 || id_estatus == 25 || id_estatus == 12){
-    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
-    console.log(indexidDocumentos)
-    if(indexidDocumentos >= 0){
+    if(id_estatus == 20 || id_estatus == 25 || id_estatus == 12){
+      var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+      if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+      }
     }
-}
-if(id_estatus == 12){
-    var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
-    console.log(indexidDocumentos)
-    if(indexidDocumentos >= 0){
+    if(id_estatus == 12){
+      var indexidDocumentos = documentosObligatorios.findIndex(e => e.idDocumento == $("#idDocumento").val());
+      if(indexidDocumentos >= 0){
         documentosObligatorios[indexidDocumentos].validado = action == 3 ? 1 : 2;
+      }
     }
-}
-if(action == 1){
-    if($("#uploadedDocument")[0].files[0].size > 50000000){
-      alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
-      return false;
+    if(action == 1){
+      if($("#uploadedDocument")[0].files[0].size > 50000000){
+        alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+        return false;
+      }
     }
-}
-        $.ajax({
-            url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function (response) {
-                $("#sendRequestButton").prop("disabled", false);
-                if (response == 1) {
-                    alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
-                    if(details == 1){
-                        var tr = $(`#trees${idSolicitud}`).closest('tr');
-                        var row = escrituracionTable.row(tr);
-                        createDocRow(row, tr, $(`#trees${idSolicitud}`));
-                        if((id_estatus == 19 || id_estatus == 22) && (action == 1 || action == 2)){
-                            var index = documentosObligatorios.findIndex(e => e.cargado == 0);
-                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
-                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
-                            if((index < 0 && action == 1) || (action == 2 && index >= 0 )){
-                                escrituracionTable.ajax.reload(null,false);
-                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
-                            }
-                        }
-                        if((id_estatus == 20 || id_estatus == 25 || id_estatus == 12) && (action == 3 || action == 4)){
-                            var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
-                            var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
-                            // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
-                            //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
-                            if(((index2 < 0 && indexNull < 0) && action == 3) || (action == 4 && index2 >= 0 )){
-                                escrituracionTable.ajax.reload(null,false);
-                                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
-                            }
-                        }
-                        if((id_estatus == 26 || id_estatus == 30 || id_estatus == 31) ){
-                            escrituracionTable.ajax.reload(null,false);
-                            createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
-                        }
-                    }else if(details == 2){
-                        let idNxS = $("#idNxS").val();
-                        buildUploadCards(idNxS);
-                    }else if(details == 3){
-                        var tr = $(`#docs${idSolicitud}`).closest('tr');
-                        var row = escrituracionTable.row(tr);
-                        createDocRowOtros(row, tr, $(`#docs${idSolicitud}`),contador);
-                    }else if(details == 4){
-                        var tr = $(`#pago${idSolicitud}`).closest('tr');
-                        var row = escrituracionTable.row(tr);
-                        createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
-                    }
-                    else{
-                        escrituracionTable.ajax.reload(null,false);
-                        escrituracionTableTest.ajax.reload(null,false);
-                    }
-                    $("#uploadModal").modal("hide");
-                    $('#spiner-loader').addClass('hide');
-                } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-                else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
-                else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
-                $('#spiner-loader').addClass('hide');
-            }, error: function () {
-                $("#sendRequestButton").prop("disabled", false);
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                $('#spiner-loader').addClass('hide');
+    $.ajax({
+      url: action == 1 ? "uploadFile" : action == 2 ? "deleteFile" : "validateFile",
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: 'POST',
+      success: function (response) {
+        $("#sendRequestButton").prop("disabled", false);
+        if (response == 1) {
+          alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
+          if(details == 1){
+            var tr = $(`#trees${idSolicitud}`).closest('tr');
+            var row = escrituracionTable.row(tr);
+            createDocRow(row, tr, $(`#trees${idSolicitud}`));
+            if((id_estatus == 19 || id_estatus == 22) && (action == 1 || action == 2)){
+              var index = documentosObligatorios.findIndex(e => e.cargado == 0);
+              // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+              //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+              if((index < 0 && action == 1) || (action == 2 && index >= 0 )){
+                escrituracionTable.ajax.reload(null,false);
+                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+              }
             }
-        });
-    }
+            if((id_estatus == 20 || id_estatus == 25 || id_estatus == 12) && (action == 3 || action == 4)){
+              var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
+              var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
+              // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+              //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+              if(((index2 < 0 && indexNull < 0) && action == 3) || (action == 4 && index2 >= 0 )){
+                escrituracionTable.ajax.reload(null,false);
+                createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+              }
+            }
+            if((id_estatus == 26 || id_estatus == 30 || id_estatus == 31) ){
+              escrituracionTable.ajax.reload(null,false);
+              createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+            }
+          }else if(details == 2){
+            let idNxS = $("#idNxS").val();
+            buildUploadCards(idNxS);
+          }else if(details == 3){
+            var tr = $(`#docs${idSolicitud}`).closest('tr');
+            var row = escrituracionTable.row(tr);
+            createDocRowOtros(row, tr, $(`#docs${idSolicitud}`),contador);
+          }else if(details == 4){
+            var tr = $(`#pago${idSolicitud}`).closest('tr');
+            var row = escrituracionTable.row(tr);
+            createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
+          }
+          else{
+            escrituracionTable.ajax.reload(null,false);
+            escrituracionTableTest.ajax.reload(null,false);
+          }
+          $("#uploadModal").modal("hide");
+          $('#spiner-loader').addClass('hide');
+        } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+        else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+        else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
+        $('#spiner-loader').addClass('hide');
+      }, error: function () {
+        $("#sendRequestButton").prop("disabled", false);
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        $('#spiner-loader').addClass('hide');
+      }
+    });
+  }
 });
 
 $(document).on("submit", "#formPresupuesto", function (e) {
@@ -672,6 +676,19 @@ $(document).on("submit", "#formPausar", function (e) {
   });
 });
 
+// $(document).on("submit", "#formRechazar", function(e){
+//   e.preventDefault();
+
+//   $.ajax({
+//     url: jjj,
+//     data: data,
+//     cache: false,
+//     contentType: false,
+//     processData: false,
+//     type: "POST",
+//   });
+// });
+
 $(document).on("click", ".comentariosModel", function (e) {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -700,41 +717,68 @@ $(document).on("click", ".comentariosModel", function (e) {
   });
 });
 
-function openBorrarModal(id_solicitud) {
+function openRechazarModal(id_solicitud) {
   $("#documentTableBody").empty();
-  document.getElementById("motivos_rechazo").style.display = 'block';
-  document.getElementById("labelmodal").innerHTML = "Borrar Documentos";
+  $("#mot_rec").selectpicker();
 
+  $("#id_sol").val(id_solicitud);
+            
   $.post(
-    "getDocumentsClient",
+    "getDocumentsClient2",
     {
       "idEscritura": id_solicitud,
       "idEstatus": 20,
     },
     function (data) {
-      var len = data.length;
-      var solicitudes = '<table class="table subBoxDetail">';
+      let len = data.length;
+      $("#index").val(len);
+
+      let solicitudes = '<table class="table subBoxDetail">';
       solicitudes += `<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">
                         <td><b>SELECCIONA EL DOCUMENTO</b></td>
                         <td><b>#</b></td>
                         <td><b>DOCUMENTO</b></td>
                       </tr>`;
 
-      for (var i = 0; i < len; i++) {
+      for (var i = 0; i < len; i++) 
+      {
         var id = data[i]["idDocumento"];
-        var name = data[i]["nombre"];
+        var tipo_documento = data[i]["tipo_documento"];
         var documento = data[i]["tipo_documento"] == 12 ? data[i]["expediente"] : data[i]["descripcion"];
         solicitudes += `<tr>
-                          <td><input type="checkbox" class="docCheckbox" data-idDocumento="${id}"></td>
+                          <td><input type="checkbox" class="docCheckbox" value="${id},${tipo_documento}" id="selectDoc" name="selectDoc_${i}"></td>
                           <td>${i + 1}</td>
                           <td>${documento}</td>
                         </tr>`;
       }
       solicitudes += '</table>';
 
-      $("#modalBorrar .modal-body").html(solicitudes);
-      // $("#motivos_rechazo").selectpicker('refresh');
-      $('#modalBorrar').modal('show');
+      $("#modalRechazar .modal-body").html(solicitudes);
+
+      $.post(
+        "getRechazoDocs",
+        {
+          estatus: 1,
+        },
+        function (data) {
+          let len = data.dataMotivos.length;
+          $("#mot_rec").empty();
+          $("#mot_rec").append($('<option disabled>').text("Seleccione una opción"));
+
+          for (let i = 0; i < len; i++) {
+            let idMotivo = data.dataMotivos[i]['id_motivo'];
+            let nameMotivo = data.dataMotivos[i]['motivo'];
+            $("#mot_rec").append($('<option>').val(idMotivo).text(nameMotivo));
+          }
+
+          if (len <= 0) {
+            $("#mot_rec").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+          }
+          $("#mot_rec").selectpicker("refresh");
+          $('#modalRechazar').modal('show');
+        },
+        "json"
+      );
     },
     "json"
   );
@@ -1180,21 +1224,21 @@ $(document).on("click", ".modalPresupuestos", function () {
 });
 
 $(document).on('click', '.saveNotaria', function() {
-    let tr = $(this).closest('tr');
-    let select = tr.find('select').val();
-    if (tr.find('select').val()) {
-        saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
-    }else{
-        alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
-    }
+  let tr = $(this).closest('tr');
+  let select = tr.find('select').val();
+  if (tr.find('select').val()) {
+    saveNotaria($(this).attr('data-idSolicitud'), select, $(this));
+  }else{
+    alerts.showNotification("top", "right", "Debe seleccionar una notaría", "warning");
+  }
 });
 
 $(document).on('click', '.modalCopiaCertificada', function(){
-    let idNxS = $(this).attr('data-idNxS2');
-    $("#idNxS2").val(idNxS);
-    buildUploadCards(idNxS);
-    $('#loadPresupuestos').modal();
-    $('[data-toggle="tooltip"]').tooltip();
+  let idNxS = $(this).attr('data-idNxS2');
+  $("#idNxS2").val(idNxS);
+  buildUploadCards(idNxS);
+  $('#loadPresupuestos').modal();
+  $('[data-toggle="tooltip"]').tooltip();
 });
 
 function crearTablas(datosTablas,numTabla = ''){
@@ -1458,7 +1502,7 @@ function crearTablas(datosTablas,numTabla = ''){
               case 25:
                 if (userType == 57 && d.id_titulacion == idUser) { 
                   group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                  group_buttons += `<button id="" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Borrar documentos" onclick="openBorrarModal(${d.id_solicitud})"><i class="fas fa-times"></i></button>`;
+                  group_buttons += `<button id="" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Borrar documentos" onclick="openRechazarModal(${d.id_solicitud}, ${d.tipo_documento}, ${d.id_estatus})"><i class="fas fa-times"></i></button>`;
                   bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                   bandera_reject = 1;
                 }
@@ -1708,7 +1752,6 @@ function setInitialValues() {
   $('#startDate').val(finalBeginDate2);
   $('#finalDate').val(finalEndDate2);
 /*cuando se carga por primera vez, se mandan los valores en cero, para no filtar por mes*/
-console.log(arrayTables.length)
   for (let z = 0; z < arrayTables.length; z++) {
     arrayTables[z].data =  {
       "beginDate": 0,
@@ -2255,7 +2298,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
         "validado" : v.estatusValidacion,
         "cargado": v.expediente != null ? 1 : 0
       });
-      console.log(documentosObligatorios)
     }
     solicitudes += '</div></td></tr>';
   });
@@ -2445,6 +2487,32 @@ $(document).on("submit", "#newNotario", function (e) {
   });
 });
 
+$(document).on("submit", "#formRechazar", function (e) {
+  e.preventDefault();
+  // let data = new FormData($(this)[0]);
+  let idSolicitud = $("#idSolicitud").val();
+  let data = new FormData($(this)[0]);
+  data.append("rejectionReasons", $("#mot_rec").val());
+
+  // $('#uploadFileButton').prop('disabled', true);
+  // $('#spiner-loader').removeClass('hide');
+  
+  $.ajax({
+    url: "RechazoDocs",
+    data: data,
+    cache: false,
+    contentType: false, 
+    processData: false,
+    type: "POST",
+
+    succes: function (response){
+      // $("#escrituracionTable").DataTable().ajax.reload();
+      escrituracionTable.ajax.reload(null, false);
+    },
+  });
+  $("#modalRechazar").modal("hide");
+});
+
 
 $(document).on('click','#viewInfoClient',function(){
   var dataTable = escrituracionTable.row($(this).parents('tr')).data();
@@ -2563,6 +2631,8 @@ $(document).on("submit", "#rechazar", function (e) {
 });
 
 function filterSelectOptions(documentType) {
+  alert();
+  console.log(documentType);
   $("#rejectionReasons option").each(function () {
     if ($(this).attr("data-type") === documentType) {
       $(this).show();
@@ -2609,7 +2679,6 @@ function getEstatusConstruccion(estatus_construccion) {
 }
 
 function getEstatusPago() {
-  console.log(arrayEstatusLote)
   $("#spiner-loader").removeClass("hide");
   $("#estatusPago").find("option").remove();
   $("#liquidado").find("option").remove();
@@ -3162,7 +3231,6 @@ function buildUploadCards(idNxS) {
 function createDocRowOtros(row, tr, thisVar, contador = 0) {
   //FUNCIÓN PARA CREAR ROWDETAILS DE LA ACTIVIDAD APE004 CARGA DE CONTRATO Y OTROS
   var v = 0;
-  console.log(row)
   $.post("getDocumentsClient", {
     idEscritura: row.data().id_solicitud,
     idEstatus: row.data().id_estatus,
