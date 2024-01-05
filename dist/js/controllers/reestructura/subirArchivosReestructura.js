@@ -34,7 +34,6 @@ $(document).ready(function () {
     $('.collapse').collapse();
     $('[data-toggle="tooltip"]').tooltip();
 
-
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
@@ -44,8 +43,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
     var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
     flagProcesoJuridicoGlobal = flagProcesoJuridico;
     flagProcesoContraloriaGlobal = flagProcesoContraloria;
-    console.log(flagProcesoJuridico)
-    banderaFusion = banderaFusion == null ? 0 : banderaFusion
+    banderaFusion = banderaFusion == null ? 0 : banderaFusion;
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
     flagFusion = $(this).attr("data-fusion");
@@ -779,6 +777,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
     let flagFusion = arrayCF['flagFusion'];
     let data = new FormData();
     let mensajeGuardar = 'guardar';
+    $('#sendRequestButtoncf').attr('disabled', true);
 
 
 
@@ -926,12 +925,15 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
                         "warning"
                     );
                 }
+                $('#sendRequestButtoncf').attr('disabled', false);
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                $('#sendRequestButtoncf').attr('disabled', false);
             }
         });
     }else{
+        $('#sendRequestButtoncf').attr('disabled', false);
         $("#spiner-loader").addClass('hide');
         alerts.showNotification('top', 'right', 'Selecciona el o los contrato(s) firmado(s) para '+mensajeGuardar, 'warning');
     }

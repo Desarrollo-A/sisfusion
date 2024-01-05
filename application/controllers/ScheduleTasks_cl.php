@@ -1151,7 +1151,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             $key .= substr($pattern, mt_rand(0, $max), 1);
         }
         $data = array("contrasena" => encriptar($key), "modificado_por" => 1, "fecha_modificacion" => date('Y-m-d H:i:s'));
-        $response = $this->General_model->updateRecord('usuarios', $data, 'id_rol', '61');
+        $response = $this->General_model->updateRecord('usuarios', $data, 'id_usuario', '12874');
         $destroy = $this->scheduleTasks_model->SessionDestroy();
         $this->change_password_mail($key);
         echo json_encode($response);
@@ -1173,7 +1173,7 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         ];
 
         $contenido[] = [
-            'usuario'      =>  'ASESOR COMODÍN',
+            'usuario'      =>  'ASESORCOMODIN',
             'contraseña'   =>  $key,
             'diasVencer'   =>  '1 mes',
             'fechaAccion'  =>  date('Y-m-d H:i:s')
