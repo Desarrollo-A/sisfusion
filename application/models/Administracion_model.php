@@ -148,5 +148,62 @@ class Administracion_model extends CI_Model {
         ORDER BY nombreCliente");
         return $query->result_array();
     }
+    public function saveDatosMonetarios($arrayDatos){
 
+        $this->db->trans_begin();
+        $this->db->query("INSERT INTO datosMonetariosLote VALUES(".$arrayDatos['idLote'].",".$arrayDatos['idCliente'].",".$arrayDatos['formaP'].",1,'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].",'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].")");
+        $insert_id = $this->db->insert_id();
+        $this->db->query("INSERT INTO bodydatosMentarios VALUES($insert_id,".$arrayDatos['instrumento'].",".$arrayDatos['monedaDiv'].",'".$arrayDatos['fecha']."',1,'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].",'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].")");
+        if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+        }
+
+	}
+    public function registroClienteTwo($id_proyecto, $id_condominio)
+    {
+        if ($id_condominio == 0) { // SE FILTRA POR RESIDENCIAL
+            $where = "AND residencial.idResidencial = $id_proyecto";
+        } else { // SE FILTRA POR CONDOMINIO
+			$where = "AND cond.idCondominio = $id_condominio";
+        }
+
+		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
+		cl.id_sede, personalidad_juridica, cl.nacionalidad,opx.nombre as formaPago,
+		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
+		telefono3, fecha_nacimiento, lugar_prospeccion, otro_lugar,
+		medio_publicitario, plaza_venta, tp.tipo, estado_civil,
+		regimen_matrimonial, nombre_conyuge, domicilio_particular,
+		tipo_vivienda, ocupacion, cl.empresa, puesto, edadFirma,
+		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
+		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
+		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
+		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
+		cl.creado_por, cl.fecha_modificacion, cl.modificado_por,
+		cond.nombre AS nombreCondominio,
+		residencial.nombreResidencial AS nombreResidencial,
+		UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCompleto,
+		CONVERT(VARCHAR, fechaEnganche, 20) AS fechaEnganche,
+		CONVERT(VARCHAR, fechaApartado, 20) AS fechaAmpartado,
+		(SELECT UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))) AS asesor,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios 
+		WHERE cl.id_gerente=id_usuario ) AS gerente,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios
+		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status
+		FROM clientes as cl
+		LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
+		LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
+		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
+		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
+		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
+        LEFT JOIN datosMonetariosLote dml ON dml.idLote = lotes.idLote
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion=dml.formaPago AND opx.id_catalogo=112
+		WHERE cl.status = 1 $where
+		ORDER BY cl.id_cliente DESC")->result();
+    }
 }

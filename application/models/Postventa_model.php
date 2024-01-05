@@ -946,7 +946,13 @@ function checkBudgetInfo($idSolicitud){
     }
 
     function getOpcCat($id_cat){
-        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil' WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' WHEN CAT.nombre = 'Personalidad jurídica' THEN 'perj' END AS etq
+        return $this->db->query("SELECT OPCAT.id_opcion, OPCAT.nombre, CASE WHEN CAT.nombre = 'Estado civil' THEN 'ecivil'
+                                                                            WHEN CAT.nombre = 'Régimen matrimonial' THEN 'rconyugal' 
+                                                                            WHEN CAT.nombre = 'Personalidad jurídica' THEN 'perj'
+                                                                            WHEN CAT.nombre = 'Instrumento monetario' THEN 'instrumento'
+                                                                            WHEN CAT.nombre = 'Moneda o Divisa' THEN 'monedaDiv'
+                                                                            WHEN CAT.nombre = 'Forma de pago' THEN 'formaP' 
+                                                                            END AS etq
                                 FROM opcs_x_cats AS OPCAT
                                 INNER JOIN catalogos AS CAT
                                 ON OPCAT.id_catalogo = CAT.id_catalogo
