@@ -826,16 +826,18 @@ class Comisiones_model extends CI_Model {
         }
     }
 
-    public function getDatosAbonadoDispersion($idlote,$ooam){
-        $request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
-        $estrucura = $request->estructura;
+    public function getDatosAbonadoDispersion($idlote,$ooam,$estructura){
+        //$request = $this->db->query("SELECT lugar_prospeccion, estructura FROM clientes WHERE idLote = $idlote AND status = 1")->row();
+        //$estrucura = $request->estructura;
         if($ooam == 1 || $ooam == 2){
             $filtroOOAM = 'AND ooam IN ('.$ooam.')';
         } else {
             $filtroOOAM = ' ';
         }
 
-        return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador, CASE WHEN $estrucura = 1 THEN oxc2.nombre ELSE oxc.nombre END AS rol, com.comision_total, pci.abono_pagado, com.rol_generado, com.descuento
+        return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, 
+        lo.tipo_venta, com.id_lote, lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador,
+        CASE WHEN $estructura = 1 THEN oxc2.nombre ELSE oxc.nombre END AS rol, com.comision_total, pci.abono_pagado, com.rol_generado, com.descuento
         FROM comisiones com
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind 
         GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
@@ -849,7 +851,7 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getDatosAbonadoSuma11($idlote,$ooam){
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
@@ -857,7 +859,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
         LEFT JOIN pago_comision_ind pci ON pci.id_comision = c1.id_comision
         WHERE lo.status IN (0,1) AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote IN ($idlote)
-        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado");
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado,cl.estructura");
     }
 
     function update_pagada_comision($idLote,$estatus,$comentario,$comentarioPago) {

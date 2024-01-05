@@ -938,8 +938,8 @@ class Comisiones extends CI_Controller
     echo json_encode( $respuesta );
   }
   
-  function getDatosAbonadoDispersion($idlote,$ooam){
-    echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion($idlote, $ooam)->result_array());
+  function getDatosAbonadoDispersion($idlote,$ooam,$estructura){
+    echo json_encode($this->Comisiones_model->getDatosAbonadoDispersion($idlote, $ooam,$estructura)->result_array());
   }
 
   function getDatosAbonadoSuma11($idlote,$ooam){
