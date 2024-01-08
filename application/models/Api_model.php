@@ -176,7 +176,7 @@ class Api_model extends CI_Model
 
     public function getInventarioList($sedeRes)
     {
-        $query = $this->db->query("SELECT res.nombreResidencial, cond.nombre, l.nombre_lote, l.idLote, l.sup, l.total, l.precio, l.msi,
+        $query = $this->db->query("SELECT TOP 5 res.nombreResidencial, cond.nombre, l.nombre_lote, l.idLote, l.sup, l.total, l.precio, l.msi,
         CONCAT (u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) nomAsesor,
         CONCAT (u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) nomCoordinador,
         CONCAT (u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) nomGerente,
