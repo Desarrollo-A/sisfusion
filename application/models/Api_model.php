@@ -176,8 +176,7 @@ class Api_model extends CI_Model
 
     public function getInventarioList($sedeRes)
     {
-        // echo($sedeRes);
-        $query = $this->db->query("SELECT res.nombreResidencial, cond.nombre, l.nombre_lote, l.idLote, l.sup, l.total, l.precio, m.msi,
+        $query = $this->db->query("SELECT res.nombreResidencial, cond.nombre, l.nombre_lote, l.idLote, l.sup, l.total, l.precio, l.msi,
         CONCAT (u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) nomAsesor,
         CONCAT (u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) nomCoordinador,
         CONCAT (u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) nomGerente,
@@ -186,15 +185,13 @@ class Api_model extends CI_Model
         FROM lotes l
         INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
         INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
-        INNER JOIN autorizaciones_msi AS m ON cond.idCondominio = m.idCondominio
-        INNER JOIN historial_enganche AS he ON l.idLote = he.idLote
-        INNER JOIN clientes AS cl ON cl.id_cliente = l.idCliente
+        LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
         LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_asesor
         LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_gerente
         LEFT JOIN usuarios AS u4 ON u4.id_usuario = cl.id_subdirector
-        INNER JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
-        WHERE res.sede_residencial = $sedeRes");
+        LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
+        WHERE res.sede_residencial = $sedeRes AND l.status = 1");
 
         return $query->result_array();
     }
