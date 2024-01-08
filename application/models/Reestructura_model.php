@@ -414,6 +414,10 @@ class Reestructura_model extends CI_Model
                 }
             }
         }else{
+            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+            for ($i=0; $i <count($comisiones) ; $i++) {
+                $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
+            }
             $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
         }
         
