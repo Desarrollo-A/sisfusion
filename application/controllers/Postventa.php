@@ -878,7 +878,7 @@ public $controller = 'Postventa';
     public function getDocumentsClient()
     {
         $idEscritura = $_POST['idEscritura'];
-        $idEstatus = $_POST['idEstatus']; //COPIAR Y BORRAR ESTA LÍNEA Y LOS ESTATUS
+        $idEstatus = $_POST['idEstatus']; 
         $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
         $data = $this->Postventa_model->getDocumentsClient($idEscritura, $idEstatus, $notariaExterna);
         if ($data != null)
@@ -1597,12 +1597,17 @@ public $controller = 'Postventa';
 
     public function validateFile()
     {
+        // $data = $_POST;
+        // var_dump($data);
+
         $idDocumento = $this->input->post('idDocumento');
         $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
+
         $action = $this->input->post('action');
         if ($action == 4) {
             $rejectionReasons = explode(",", $this->input->post('rejectionReasons'));
+
             for ($i = 0; $i < count($rejectionReasons); $i++) {
                 $insertData[$i] = array(
                     "id_motivo" => $rejectionReasons[$i],
@@ -1631,6 +1636,7 @@ public $controller = 'Postventa';
         } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
     }
+
 
     public function getEstatusConstruccion()
     {
@@ -3084,7 +3090,6 @@ function saveNotaria(){
 
                 $fecha = $fechaAccion;
 
-
                 $i = 0;
                 while($i <= 2) {
                     $hoy_strtotime = strtotime($fecha);
@@ -3135,8 +3140,6 @@ function saveNotaria(){
             }
         }
 
-
-
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]= $idStatusContratacion;
         $arreglo2["idMovimiento"]=$idMovimiento;
@@ -3150,18 +3153,7 @@ function saveNotaria(){
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-
-
         $validate = $this->Postventa_model->validateSt3($idLote);
-
-
-//        print_r($arreglo);
-//        echo '<br><br>';
-//        print_r($arreglo);
-//        echo '<br><br>';
-//        print_r($validate);
-//
-//        exit;
 
         if($validate == 1){
 
@@ -3173,7 +3165,6 @@ function saveNotaria(){
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-
         }else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
@@ -3181,7 +3172,6 @@ function saveNotaria(){
 
     }
 
-    //Función para pausar solicitudes
     public function pausarSolicitud()
     {   
         $idSolicitud = $this->input->post("id_solicitud");
@@ -3207,11 +3197,9 @@ function saveNotaria(){
         $idLote = $this->input->post('idLote');
 
         if($banderaCliente == 1){
-            //EL CLIENTE SE CREO EN EL PROCESO DE ESCRITURACIÓN Y YA NO PROCEDE, SE DA DE BAJA, EN SILICITUDES SE ACTUALIZA LOTE Y CLIENTE A 0
-            //ACTUALIZAR idCliente,usuario,status EN LA TABLA LOTES
+
             $updateLote = array("idCliente" => 0, "usuario" => $idusuario);
             $updateResponse = $this->General_model->updateRecord("lotes", $updateLote, "idLote", $idLote);
-            //ACTUALIZAR idLote,modificado_por EN LA TABLA CLIENTES
             $updateCliente = array("idLote" => 0, "status" => 0, "modificado_por" => $idusuario);
             $updateResponse = $this->General_model->updateRecord("clientes", $updateCliente, "id_cliente", $idCliente);
         }
@@ -3286,10 +3274,80 @@ function saveNotaria(){
         else
             echo json_encode(array());
     }
+
+    public function getDocumentsClient2()
+    {
+        $idEscritura = $_POST['idEscritura'];
+        $idEstatus = $_POST['idEstatus']; 
+        $notariaExterna = $this->Postventa_model->existNotariaExterna($idEscritura);
+        $data = $this->Postventa_model->getDocumentsClient2($idEscritura, $idEstatus, $notariaExterna);
+        if ($data != null)
+            echo json_encode($data,JSON_NUMERIC_CHECK);
+        else
+            echo json_encode(array());
+    }
+
+    public function getRechazoDocs()
+    {
+        $estatus = $_POST['estatus'];
+        $dataMotivos = $this->Postventa_model->getRechazoDocs();
+        $dataEstatus = $this->Postventa_model->getStatusSiguiente($estatus);
+        $data = array("dataMotivos" => $dataMotivos,
+                     "dataEstatus" => $dataEstatus);
+        if ($data != null){
+            echo json_encode($data);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
+    public function RechazoDocs ()
+    {
+        // $mot_rec = explode(",", $this->input->post('mot_rec'));
+        $index = $this->input->post('index');
+        for($i = 0; $i < $index; $i++)
+        {
+            if(isset($_POST['selectDoc_'.$i]))
+            {
+                
+                $datos = explode(",", $this->input->post('selectDoc_'.$i));
+                $idSolicitud = $this->input->post('id_sol');            
+                $idDocumento = $datos[0];
+                $documentType = $datos[1];
+                $rejectionReasons = explode(",", $this->input->post('rejectionReasons'));
+
+              
+                for ($j = 0; $j < count($rejectionReasons); $j++) 
+                {
+                    $insertData[$j] = array(
+                        "id_motivo" => $rejectionReasons[$j],
+                        "id_documento" => $idDocumento,
+                        "tipo" => $documentType,
+                        "tipo_proceso" => 2,
+                        "creado_por" => $this->session->userdata('id_usuario')
+                    );
+                    // var_dump($insertData[$j]);
+                    // exit;
+                }
+                
+                $rejectionReasonsList = $this->Postventa_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
+                
+                if (count($rejectionReasonsList) >= 1) 
+                {
+                    for ($r = 0; $r < count($rejectionReasonsList); $r++) 
+                    {
+                        $updateArrayData[] = array(
+                            'id_mrxdoc' => $rejectionReasonsList[$r]["id_mrxdoc"],
+                            'estatus' => 0
+                        );
+                    }
+                    $this->General_model->updateBatch("motivos_rechazo_x_documento", $updateArrayData, "id_mrxdoc"); // MJ: SE MANDA CORRER EL UPDATE BATCH
+                }
+                $updateData = array("estatus_validacion" => 2, "validado_por" => $this->session->userdata('id_usuario'));
+                $updateResponse = $this->General_model->updateRecord("documentos_escrituracion", $updateData, "idDocumento", $idDocumento); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+                $insertResponse = $this->General_model->insertBatch("motivos_rechazo_x_documento", $insertData);
+            }
+        }
+        echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
+    }
 }
-//boton para subir documentos
-
-
-
-
- 
