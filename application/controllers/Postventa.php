@@ -988,12 +988,9 @@ public $controller = 'Postventa';
             "estatus_pago" => $data['estatusPago'],
             "superficie" => ($data['superficie'] == '' || $data['superficie'] == null) ? NULL : $data['superficie'],
             "clave_catastral" => ($data['catastral'] == '' || $data['catastral'] == null) ? NULL : $data['catastral'],
-            //"cliente_anterior" =>($data['cliente'] == 'default' || $data['cliente'] == null ? 2 : $data['cliente'] == 'uno') ? 1 : 2,
-            //"nombre_anterior" => $data['nombreT'] == '' || $data['nombreT'] == null || $data['nombreT'] == 'null' ? '' : $data['nombreT'],
-            //"RFC" => $data['rfcDatos'] == '' || $data['rfcDatos'] == 'N/A' || $data['rfcDatos'] == 'null' ? NULL : $data['rfcDatos'],
+            
             "tipo_escritura" => $data['tipoE'],
-           // "aportacion" => $data['aportaciones'],
-           // "descuento" => $data['descuentos'],
+         
             "valor_escriturar" => $data['valor_escri'],
             "observaciones" => $data['observaciones']
         );
@@ -1031,7 +1028,6 @@ public $controller = 'Postventa';
              count($updateArrayData) > 0 ? $this->General_model->updateBatch("copropietariosEscritura", $updateArrayData, "idCopropietario") : '';
         }
 
-
         $data = $this->Postventa_model->updatePresupuesto($updateData, $id_solicitud);
         if ($data != null)
             echo json_encode($data);
@@ -1048,11 +1044,7 @@ public $controller = 'Postventa';
 
             $informacion = $this->Postventa_model->asignarNotariaExterna($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, $id_solicitud);
           
-
-            //$informacion = $this->Postventa_model->newNotaria($nombre_notaria, $nombre_notario, $direccion, $correo, $telefono, 0, 2);
             return $informacion;
-    
-            //return $this->Postventa_model->newNotaria($idSolicitud);
         } 
 
     }
@@ -1102,18 +1094,18 @@ public $controller = 'Postventa';
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-        // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
+
         $pdf->SetTitle('Presupuesto Escrituración.');
         $pdf->SetSubject('Escrituración (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, presupuesto');
-        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+
         $pdf->SetAutoPageBreak(TRUE, 0);
-        //relación utilizada para ajustar la conversión de los píxeles
+
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $pdf->setPrintHeader(false);
-        // $pdf->setPrintFooter();
+
         $pdf->setFontSubsetting(true);
         $pdf->SetFont('Helvetica', '', 9, '', true);
         $pdf->SetMargins(7, 3, 10, true);
@@ -1279,8 +1271,6 @@ public $controller = 'Postventa';
         $pdf->writeHTMLCell(0, 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
 
         $pdf->Output(__DIR__ . "/../../static/documentos/postventa/escrituracion/SOLICITUD_PRESUPUESTO/solicitud_".$data->nombre_escrituras."_presupuesto.pdf", 'F');
-
-        // $pdf->Output(utf8_decode('Hola.pdf'), 'I');
     }
 
     public function mailPresupuesto()
@@ -1293,9 +1283,7 @@ public $controller = 'Postventa';
         $data = $this->Postventa_model->checkBudgetInfo($idSolicitud)->row();
 
         $documentName = $this->Postventa_model->getFileNameByDoctype($idSolicitud,11)->row();
-        //correos
-        //$data->correoN correos de la notaria
-        //$data->correoV correos del valuador
+    
         $this->presupuestoPDF($data);
 
         $this->email
@@ -1330,22 +1318,21 @@ public $controller = 'Postventa';
 
     public function pdfPresupuesto($idSolicitud)
     {
-
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
-        // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
+
         $pdf->SetTitle('Presupuesto Escrituracion.');
         $pdf->SetSubject('Escrituracion (CRM)');
         $pdf->SetKeywords('CRM, escrituracion, PERSONAL, presupuesto');
-        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+
         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+
         $pdf->SetAutoPageBreak(TRUE, 0);
-        //relación utilizada para ajustar la conversión de los píxeles
+
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
         $pdf->setPrintHeader(false);
-        // $pdf->setPrintFooter();
+
         $pdf->setFontSubsetting(true);
         $pdf->SetFont('Helvetica', '', 9, '', true);
         $pdf->SetMargins(7, 10, 10, true);
@@ -1414,7 +1401,6 @@ public $controller = 'Postventa';
                                                 </td>
                                             </tr>
                                             <tr>
-                                                
                                                 <td style="font-size: 1em;">
                                                     <b>Superficie:</b><br>
                                                     ' . number_format($data->superficie, 2, '.', ',') . '
@@ -1477,6 +1463,7 @@ public $controller = 'Postventa';
                                                
                                         </table>
                                     </div>';
+
                                             if(count($copropietarios) > 0){
                                                
                                                     $html .= '
@@ -1499,6 +1486,7 @@ public $controller = 'Postventa';
                                                 
                                                
                                             }
+
                                             if($data->cliente_anterior == 1){
                                                 $html .= '
                                                 <div class="row">                
@@ -1576,14 +1564,10 @@ public $controller = 'Postventa';
         $pdf->Output(utf8_decode($documentName), 'I');
 
         $this->updateDocumentBranch($file, $folder, $documentName, $idSolicitud, 11, 99, $documentInfo->idDocumento);
-
-
     }
 
     public function saveDate()
     {
-        // $signDate = date("Y-m-d", strtotime($_POST['signDate']));
-        // print_r($signDate);
         $idSolicitud = $_POST['idSolicitud'];
         $response = $this->Postventa_model->saveDate($_POST['signDate'], $idSolicitud);
         echo json_encode($response);
@@ -1597,9 +1581,6 @@ public $controller = 'Postventa';
 
     public function validateFile()
     {
-        // $data = $_POST;
-        // var_dump($data);
-
         $idDocumento = $this->input->post('idDocumento');
         $idSolicitud = $this->input->post('idSolicitud');
         $documentType = $this->input->post('documentType');
@@ -1619,7 +1600,7 @@ public $controller = 'Postventa';
             }
         }
         $rejectionReasonsList = $this->Postventa_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType
-        if (count($rejectionReasonsList) >= 1) { // SÍ ENCONTRÓ REGISTROS
+        if (count($rejectionReasonsList) >= 1) { 
             for ($r = 0; $r < count($rejectionReasonsList); $r++) {
                 $updateArrayData[] = array(
                     'id_mrxdoc' => $rejectionReasonsList[$r]["id_mrxdoc"],
@@ -1636,7 +1617,6 @@ public $controller = 'Postventa';
         } else
             echo json_encode($updateResponse == 1 ? 1 : 0);
     }
-
 
     public function getEstatusConstruccion()
     {
@@ -1656,7 +1636,6 @@ public $controller = 'Postventa';
             echo json_encode(array());
     }
 
-    //NOTARIA
     public function registrarNotaria()
     {
         $id_solicitud = $_POST['id_solicitud'];
@@ -1687,6 +1666,7 @@ public $controller = 'Postventa';
         else
             echo json_encode(array());
     }
+
     function getStatusSiguiente(){
         $actividad = $_POST['actividad'];
         $tipo = $_POST['tipo'];
@@ -1752,8 +1732,8 @@ public $controller = 'Postventa';
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-                $this->load->view('template/header');
-                $this->load->view("postventa/Reportes/reportes");
+        $this->load->view('template/header');
+        $this->load->view("postventa/Reportes/reportes");
     }
 
     public function getEstatusEscrituracion()
@@ -1768,7 +1748,7 @@ public $controller = 'Postventa';
     public function getFullReportContraloria(){
         $idSolicitud = $_POST['idEscritura'];
         $data = $this->Postventa_model->getFullReportContraloria($idSolicitud);
-        //var_dump($data);
+
         for ($i = 0; $i < count($data); $i++) {
             $a = 0;
             $dias = $data[$i]['dias_vencimiento'];
@@ -1779,7 +1759,6 @@ public $controller = 'Postventa';
                 $startDate = $data[$i]['fecha_creacion'];
                 $endDate = ( $i+1 < count($data) ) ? $data[$i+1]['fecha_creacion'] : date('Y-m-d h:i:s');
 
-                //$result = $this->getWorkingDays($startDate, $endDate, $data[$i]['tiempo']);
                 if($data[$i]['dias_vencimiento'] >= $data[$i]['dias']){
                     $data[$i]['atrasado'] = "EN TIEMPO";
                     $data[$i]['diferencia'] = $data[$i]['tiempo'];
@@ -1800,8 +1779,7 @@ public $controller = 'Postventa';
     }
 
     public function getTipoContratoAnt() {
-        $data = $this->Postventa_model->getTipoContratoAnt()->result_array()
-        ;
+        $data = $this->Postventa_model->getTipoContratoAnt()->result_array();
         if ($data != null)
             echo json_encode($data);
         else
@@ -1827,12 +1805,11 @@ public $controller = 'Postventa';
             "http" => array(
                 "header" => ["Content-type: application/x-www-form-urlencoded", "Origin: maderascrm.gphsis.com, localhost"],
                 "method" => "POST",
-                "content" => $datos, # Agregar el contenido definido antes
+                "content" => $datos,
             ),
         );
-        # Preparar petición
         $contexto = stream_context_create($opciones);
-        # Hacerla
+
         $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($resultado));
         return $resDecode;
@@ -1840,24 +1817,19 @@ public $controller = 'Postventa';
 
     public function insertPostventaDF($dataFiscal){
         $url = 'https://prueba.gphsis.com/backCobranza/index.php/PaginaCDM/updateDFiscales';
-       // $url = base_url().'backCobranza/index.php/PaginaCDM/updateDFiscales';
-        // $fields_string = http_build_query($dataFiscal);
         $ch = curl_init($url);
-        # Setup request to send json via POST.
+
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataFiscal);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-        # Return response instead of printing.
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        # Send request.
         $result = curl_exec($ch);
+
         curl_close($ch);
-        // $resultado = file_get_contents($url, false, $contexto);
         $resDecode = json_decode(base64_decode($result));
-      //  print_r($resDecode);
         return $resDecode; 
     }
 
-    //INFORMACIÓN ADMIN
     public function newInformacion() {
         $replace = ["$", ","];
         $data = $_POST;
@@ -1895,6 +1867,7 @@ public $controller = 'Postventa';
         else
             echo json_encode(array());
     }
+    
     function getWorkingDays2($startDate, $endDate, $tiempo){
         $dataTime=[];
         $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
@@ -1904,20 +1877,20 @@ public $controller = 'Postventa';
         echo $stop = strtotime($stop_date);
         echo "<br>";
         if ($begin > $stop) {
-            //echo 1111;
             return 0;
         } else {
             $no_days  = 0;
             $weekends = 0;
             while ($begin < $stop) {
                 $no_days++; // no of days in the given interval
-               echo $what_day = date("N", $begin);
+                echo $what_day = date("N", $begin);
+                
                 if ($what_day > 5) { // 6 and 7 are weekend days
                     $weekends++;
                 };
                 $begin += 86400; // +1 day
             };
-             $weekends;
+            $weekends;
             $working_days = $no_days - $weekends;
     
             $dt = new DateTime($startDate);
@@ -1932,142 +1905,107 @@ public $controller = 'Postventa';
                 $dataTime['diferencia'] = 0;
     
                 return $dataTime;
-            }
-            else{
-               // echo 121;
+            }else{
                 $dataTime['atrasado'] = "Atrasado";
-              $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-    
+                $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
                 return $dataTime;
             }        
         }
     }
-function getWorkingDays($startDate, $endDate, $tiempo){
-    $startDate;
-    //echo "<br>";
-     $endDate;
-    //echo "<br>";
-     $tiempo;
-    //echo "<br>";
-   // echo "<br>";
-    $dataTime=[];
-     $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
-    //"<br>";
-    $begin = strtotime($startDate);
-    $end   = strtotime($endDate);
-    $stop = strtotime($stop_date);
-    $validDays = 0;
-
+    
+    function getWorkingDays($startDate, $endDate, $tiempo){
+        $startDate;
+        $endDate;
+        $tiempo;
+        $dataTime=[];
+        $stop_date = date('Y-m-d H:i:s', strtotime($startDate . ' +'.$tiempo.' day'));
+        
+        $begin = strtotime($startDate);
+        $end   = strtotime($endDate);
+        $stop = strtotime($stop_date);
+        $validDays = 0;
+        
         $dt = new DateTime($startDate);
-       // var_dump($dt);
-        //echo "<br>";
         $dt2 = new DateTime($stop_date); 
-        //var_dump($dt2);
-        //echo "<br>";   
-         $timeStart = $dt->format('Y-m-d h:i:s');
-        //echo $dt->date;
-        //echo $dt["date"];
-       // echo "<br>";
-       $timeEnd = $dt2->format('Y-m-d H:i:s');
-      // echo $dt2["date"];
-      //  echo "<br>";
+        $timeStart = $dt->format('Y-m-d h:i:s');
+        $timeEnd = $dt2->format('Y-m-d H:i:s');
         $st_time    =   strtotime($timeStart);
-    //   echo "<br>";
         $end_time   =   strtotime($timeEnd);
-       //echo "<br>";
-       //echo "-----------------";
-
-       $no_days  = 0;
-            $weekends = 0;
-            while ($st_time <= $stop) {
-                $no_days++; // no of days in the given interval
-                $what_day = date("N", $st_time);
-                if ($what_day > 5) { // 6 and 7 are weekend days
-                    $weekends++;
-                };
-                $st_time  += 86400; // +1 day
+        
+        $no_days  = 0;
+        $weekends = 0;
+        while ($st_time <= $stop) {
+            $no_days++; // no of days in the given interval
+            $what_day = date("N", $st_time);
+            
+            if ($what_day > 5) { // 6 and 7 are weekend days
+                $weekends++;
             };
-             $weekends;
-            $working_days = $no_days - $weekends;
+            $st_time  += 86400; // +1 day
+        };
+        $weekends;
+        $working_days = $no_days - $weekends;
+        
         if( $end_time <= $st_time ){
             $dataTime['atrasado'] = "EN TIEMPO";
             $dataTime['diferencia'] = 0;
-             $dataTime;
+            $dataTime;
             return $dataTime;
         }
         else{
             $dataTime['atrasado'] = "ATRASADO";
             $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-             $dataTime;
+            $dataTime;
             return $dataTime;
-        }        
-    // while ($begin < $stop) {
+        }            
+    }
+
+    function getNotariasXUsuario(){
+        $idSolicitud = $_POST['idSolicitud'];
         
-    // };
-    /*$working_days = $no_days - $weekends;
-
-    $dt = new DateTime($startDate);
-    $dt2 = new DateTime($stop_date);    
-    $timeStart = $dt->format('h:i:s A');
-    $timeEnd = $dt2->format('h:i:s A');
-    $st_time    =   strtotime($timeStart);
-    $end_time   =   strtotime($timeEnd);
-
-    if( $end_time <= $st_time ){
-        $dataTime['atrasado'] = "En tiempo";
-        $dataTime['diferencia'] = 0;
-
-        return $dataTime;
-    }
-    else{
-        $dataTime['atrasado'] = "Atrasado";
-        $dataTime['diferencia'] = ( $working_days != 0 ) ? $working_days - 1 : $working_days;
-
-        return $dataTime;
-    }*/        
-}
-
-function getNotariasXUsuario(){
-    $idSolicitud = $_POST['idSolicitud'];
-    if($idSolicitud != ''){
-        $data = $this->Postventa_model->getNotariasXUsuario($idSolicitud);
-    }else{
-        $data = null;
-    }
-    if ($data != null)
-        echo json_encode($data);
-    else
-        echo json_encode(array());
-}
-
-function saveNotaria(){
-    $idSolicitud = $_POST['idSolicitud'];
-    $idNotaria = $_POST['idNotaria'];
-
-    $result = $this->Postventa_model->existeNotariaSolicitud($idSolicitud, $idNotaria);
-    if ($result) {
-        echo json_encode(array('message' => 'Notaría ya registrada. Favor de seleccionar otra'));
-        return;
+        if($idSolicitud != ''){
+            $data = $this->Postventa_model->getNotariasXUsuario($idSolicitud);
+        }else{
+            $data = null;
+        }
+        if ($data != null){
+            echo json_encode($data);
+        }
+        else{
+            echo json_encode(array());
+        }
     }
 
-
-    $arrayData = array(
-        "id_solicitud" => $idSolicitud,
-        "id_notaria" => $idNotaria,
-        "estatus" => 1
-    );
-    $notariaExterna = $this->Postventa_model->existNotariaExterna($idSolicitud);
-    if($notariaExterna->id_notaria != 0){ 
-         $this->updatePresupuestosNXU($idSolicitud, $idNotaria,1);
-    }else{
-        $this->updatePresupuestosNXU($idSolicitud, $idNotaria,0);
+    function saveNotaria(){
+        $idSolicitud = $_POST['idSolicitud'];
+        $idNotaria = $_POST['idNotaria'];
+        $result = $this->Postventa_model->existeNotariaSolicitud($idSolicitud, $idNotaria);
+        
+        if ($result) {
+            echo json_encode(array('message' => 'Notaría ya registrada. Favor de seleccionar otra'));
+            return;
+        }
+        
+        $arrayData = array(
+            "id_solicitud" => $idSolicitud,
+            "id_notaria" => $idNotaria,
+            "estatus" => 1
+        );
+        $notariaExterna = $this->Postventa_model->existNotariaExterna($idSolicitud);
+        
+        if($notariaExterna->id_notaria != 0){ 
+            $this->updatePresupuestosNXU($idSolicitud, $idNotaria,1);
+        }else{
+            $this->updatePresupuestosNXU($idSolicitud, $idNotaria,0);
+        }
+        $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
+        
+        if ($data != null){
+            echo json_encode($data);
+        }else{
+            echo json_encode(array());
+        }
     }
-    $data = $this->General_model->addRecord('notarias_x_usuario', $arrayData);
-    if ($data != null)
-        echo json_encode($data);
-    else
-        echo json_encode(array());
-}
 
     function getPresupuestosUpload(){
         $idNxS = $_POST['idNxS'];
@@ -2081,30 +2019,35 @@ function saveNotaria(){
     function updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria = 0){
         $data = $this->Postventa_model->updatePresupuestosNXU($idSolicitud, $idNotaria,$borrarNotaria);
     }
+
     public function getOpcCat(){
         $id_cat = $this->input->post("id_cat");
         $data = $this->Postventa_model->getOpcCat($id_cat)->result_array();
-        if ($data != null)
+
+        if ($data != null){
             echo json_encode($data);
-        else
+        }
+        else{
             echo json_encode(array());
+        }
     }
 
     public function solicitudes_usuario(){
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
+
         $datos['titulaciones'] = $this->Postventa_model->GetTitulaciones();
-                $this->load->view('template/header');
-                $this->load->view("postventa/solicitudes_usuario_view", $datos);
+        $this->load->view('template/header');
+        $this->load->view("postventa/solicitudes_usuario_view", $datos);
     } 
+
     public function SolicitudesEscrituracion()
     {
         $id_usuario = $this->input->post('id_usuario');
         $data['data'] =  $this->Postventa_model->SolicitudesEscrituracion($id_usuario);
       
         echo json_encode($data);
-
     }
     
     public function reasignacionSolicitudEsc(){
@@ -2142,64 +2085,56 @@ function saveNotaria(){
         }
         echo json_encode ($respuesta);
       } 
+
       public function getDocumentosPorSolicitud()
       {
-          $solicitud      = $this->input->post('solicitud');
-          $estatus        = $this->input->post('estatus');
-          $validacion     = true;
-
-            if($estatus == 8){
-                $opciones = ' (11,13,20,23)';
-            }else if($estatus == 11 ){
-                $opciones = ' (7)';
-            }else if($estatus == 12 ){
-                $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
-            }else if($estatus == 18 ){
-                $opciones = ' (17)';
-            }else if($estatus == 20 ){
-                $opciones = ' (15)';
-            }else if($estatus == 23 ){
-                $opciones = ' (22)';
-            }else if($estatus == 24 ){
-                $opciones = ' (16)';
-            }else {
-                $validacion = false;
-                $opciones = ' (0)';
-            }
-            
-
-          if($solicitud == '' || $estatus == '')
-          {
-              $validacion = false;
-          }
-          if($validacion){
-              $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
-              $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
-              $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
-          }else{
-              $respuesta = array();
-          }
-   
-          
-          echo json_encode($respuesta);
-      }
-
-      public function UParchivosFroms(){
-		$tamanoOfAuts = (1);
+        $solicitud      = $this->input->post('solicitud');
+        $estatus        = $this->input->post('estatus');
+        $validacion     = true;
+        
+        if($estatus == 8){
+            $opciones = ' (11,13,20,23)';
+        }else if($estatus == 11 ){
+            $opciones = ' (7)';
+        }else if($estatus == 12 ){
+            $opciones = ' (1,2,3,4,5,6,8,9,10,12,14,20,21)';
+        }else if($estatus == 18 ){
+            $opciones = ' (17)';
+        }else if($estatus == 20 ){
+            $opciones = ' (15)';
+        }else if($estatus == 23 ){
+            $opciones = ' (22)';
+        }else if($estatus == 24 ){
+            $opciones = ' (16)';
+        }else {
+            $validacion = false;
+            $opciones = ' (0)';
+        }    
+        
+        if($solicitud == '' || $estatus == '')
+        {
+            $validacion = false;
+        }
+        if($validacion){
+            $respuesta['misDocumentos'] = $this->Postventa_model->getDocumentosPorSolicituds($solicitud,$opciones);
+            $respuesta['losDocumentos'] = $this->Postventa_model->documentosNecesarios($opciones);
+            $respuesta['nuevosDocs'] = $this->Postventa_model->getDocumentsClient($solicitud, $estatus, $notariaExterna);
+        }else{
+            $respuesta = array();
+        }
+        echo json_encode($respuesta);
+    }
+    
+    public function UParchivosFroms(){
+        $tamanoOfAuts = (1);
     	$indexx = ($_POST['indexx']);
         $solicitud = ($_POST['solicitudId']);
         $tipoDocuemento = ($_POST['iddocumento']);
-        // $lote = ($_POST['lote']);
 
 			if ($_FILES["docSubir$indexx"]["name"] != '' && $_FILES["docSubir$indexx"]["name"] != null) {
 				$aleatorio = rand(100,1000);
 				$expediente=preg_replace('[^A-Za-z0-9]', '',$_FILES["docSubir$indexx"]["name"]);
-				// $proyecto = str_replace(' ', '',$nombreResidencial);
-				// $condominio = str_replace(' ', '',$nombreCondominio);
-				// $condominioQuitaN= str_replace(array('Ñ','ñ'),"N",$condominio);
-				// $condom = substr($condominioQuitaN, 0, 3);
-				// $cond= strtoupper($condom);
-				// $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
+				
 				$date = date('dmY');
 				 $expediente = $date."_".$aleatorio."_".$expediente;
                 $ruta = 'static/documentos/postventa/escrituracion/RFC/';
@@ -2265,7 +2200,7 @@ function saveNotaria(){
         force_download($Ruta, NULL);
      
     }
-    // public function 
+
     public function nuevoNotario()
     {
         $idSolicitud = $_POST['idSolicitud'];
