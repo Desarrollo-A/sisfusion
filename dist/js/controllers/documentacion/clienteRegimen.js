@@ -85,4 +85,10 @@ $(document).ready(function () {
             $("#spiner-loader").addClass('hide');
         }
     });
+
+    $('#tableClienteRegimen').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
+    });
 });
