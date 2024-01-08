@@ -284,6 +284,19 @@ class Documentacion extends CI_Controller {
         $this->load->view("documentacion/documentacion_view", $datos);
     }
 
+    public function clienteRegimen(){
+        $this->load->view('template/header');
+        $this->load->view("documentacion/clienteRegimenView");
+    }
+
+    public function getClienteRegimen(){
+        $data = $this->Documentacion_model->getClienteRegimen()->result_array();
+        if ($data != null)
+                echo json_encode($data);
+            else
+                echo json_encode(array());
+    }
+
     public function getLotesAll($condominio, $residencial) {
         $datos = array();
         $data = $this->Registrolote_modelo->getLotesGral($condominio, $residencial);
