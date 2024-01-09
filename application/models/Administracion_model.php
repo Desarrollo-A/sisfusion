@@ -148,45 +148,62 @@ class Administracion_model extends CI_Model {
         ORDER BY nombreCliente");
         return $query->result_array();
     }
+    public function saveDatosMonetarios($arrayDatos){
 
-    public function getReporteClientesFactura(){
-        return $this->db->query("SELECT ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, re.nombreResidencial, co.nombre nombreCondominio, 
-        lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-        cl.rfc, cl.cp_fac, opc1.nombre regimenFiscal, se.nombre nombreSede
-        FROM clientes cl
-        INNER JOIN lotes lo on lo.idCliente = cl.id_cliente
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        INNER JOIN sedes se ON se.id_sede = lo.ubicacion
-        LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        LEFT JOIN opcs_x_cats opc1 ON opc1.id_opcion = cl.regimen_fac AND opc1.id_catalogo = 92
-        WHERE cl.rfc != '' AND regimen_fac != 0 AND cl.status = 1");
-
-    public function reporteEstatus10($typeTransaction, $beginDate, $endDate) {
-        if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
-            $filter = " AND hd.modificado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        $this->db->trans_begin();
+        $this->db->query("INSERT INTO datosMonetariosLote VALUES(".$arrayDatos['idLote'].",".$arrayDatos['idCliente'].",".$arrayDatos['formaP'].",1,'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].",'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].")");
+        $insert_id = $this->db->insert_id();
+        $this->db->query("INSERT INTO bodydatosMentarios VALUES($insert_id,".$arrayDatos['instrumento'].",".$arrayDatos['monedaDiv'].",'".$arrayDatos['fecha']."',1,'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].",'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].")");
+        if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
         }
-        $query = $this->db->query("SELECT s.nombre nombreSede, res.nombreResidencial, cond.nombre nombreCondominio, l.nombreLote,
-			CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
-			l.sup, l.referencia, UPPER(st.nombre) estatusLote, cl.fechaApartado,
-			CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) nombreAsesor,
-			CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) nombreGerente,
-			ISNULL(oxc0.nombre, 'Normal') tipo_proceso, hd.modificado as modificadoFiltro
-			FROM historial_lotes hd
-			INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente AND cl.status = 1
-			INNER JOIN lotes l ON hd.idLote = l.idLote AND l.status = 1
-			INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
-			INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-			INNER JOIN sedes s ON s.id_sede = l.ubicacion
-			INNER JOIN statuslote st ON st.idStatusLote = l.idStatusLote
-			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-			LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-			WHERE (hd.idStatusContratacion = 10 and hd.idMovimiento  = 40) AND hd.status = 1 
-			$filter
-			ORDER BY hd.modificado ASC");
-        return $query->result_array();
-    }
 
+	}
+    public function registroClienteTwo($id_proyecto, $id_condominio)
+    {
+        if ($id_condominio == 0) { // SE FILTRA POR RESIDENCIAL
+            $where = "AND residencial.idResidencial = $id_proyecto";
+        } else { // SE FILTRA POR CONDOMINIO
+			$where = "AND cond.idCondominio = $id_condominio";
+        }
+
+		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
+		cl.id_sede, personalidad_juridica, cl.nacionalidad,opx.nombre as formaPago,
+		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
+		telefono3, fecha_nacimiento, lugar_prospeccion, otro_lugar,
+		medio_publicitario, plaza_venta, tp.tipo, estado_civil,
+		regimen_matrimonial, nombre_conyuge, domicilio_particular,
+		tipo_vivienda, ocupacion, cl.empresa, puesto, edadFirma,
+		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
+		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
+		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
+		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
+		cl.creado_por, cl.fecha_modificacion, cl.modificado_por,
+		cond.nombre AS nombreCondominio,
+		residencial.nombreResidencial AS nombreResidencial,
+		UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCompleto,
+		CONVERT(VARCHAR, fechaEnganche, 20) AS fechaEnganche,
+		CONVERT(VARCHAR, fechaApartado, 20) AS fechaAmpartado,
+		(SELECT UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))) AS asesor,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios 
+		WHERE cl.id_gerente=id_usuario ) AS gerente,
+		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
+		FROM usuarios
+		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status
+		FROM clientes as cl
+		LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
+		LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
+		LEFT JOIN condominios as cond on lotes.idCondominio=cond.idCondominio
+		LEFT JOIN residenciales as residencial on cond.idResidencial=residencial.idResidencial
+		LEFT JOIN tipopago as tp on cl.idTipoPago=tp.idTipoPago
+        LEFT JOIN datosMonetariosLote dml ON dml.idLote = lotes.idLote
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion=dml.formaPago AND opx.id_catalogo=112
+		WHERE cl.status = 1 $where
+		ORDER BY cl.id_cliente DESC")->result();
+    }
 }

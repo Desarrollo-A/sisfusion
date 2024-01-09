@@ -134,6 +134,7 @@ function loadTable(tipoDescuento) {
             attr: {
                 class: `btn-azure ${id_usuario_general != 6376 ? '' : 'hide'}`
             }
+        
         }],
         pagingType: "full_numbers",
         fixedHeader: true,

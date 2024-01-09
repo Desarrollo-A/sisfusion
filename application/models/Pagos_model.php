@@ -8,6 +8,8 @@ class Pagos_model extends CI_Model {
     {
         parent::__construct();
     }
+
+    //MODELO DEDICADO A EL PROCESO DE REVISION CONTRALORIA Y REVISION INTERNOMEX, VALIDAR Y ENVIAR PAGOS QUE SOLICITA VENTAS CADA CORTE
     
     function getBonosPorUserContra($estado){
         $filtro = '';

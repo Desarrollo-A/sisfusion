@@ -497,6 +497,38 @@ class Administracion extends CI_Controller{
             json_encode(array());
         }
     }
+	public function datosMonetarios()
+	{
+		$this->load->view('template/header');
+		$this->load->view("administracion/datosMonetariosView");
+	}
+	function getregistrosClientesTwo()
+    {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $index_proyecto = $this->input->post('index_proyecto');
+        $index_condominio = $this->input->post('index_condominio');
+        $dato = $this->Administracion_model->registroClienteTwo($index_proyecto, $index_condominio);
+        if ($dato != null) {
+            echo json_encode($dato);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+	public function saveDatosMonetarios(){
+		date_default_timezone_set('America/Mexico_City');
+        $hoy = date('Y-m-d H:i:s');  
+		$datos = $_POST;
+		//var_dump($datos);
+		$datos['usuario'] = $this->session->userdata('id_usuario');
+		$datos['fecha'] = $hoy;
+		$respuesta = $this->Administracion_model->saveDatosMonetarios($datos);
+		if($respuesta == TRUE){
+            echo json_encode(1);
+        }else{
+			echo json_encode(0);
+        }
+	}
 }
 
 
