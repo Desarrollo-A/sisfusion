@@ -3222,7 +3222,7 @@ public $controller = 'Postventa';
             echo json_encode(array());
     }
 
-    public function getRechazoDocs()
+    public function getRechazoDocs() // FUNCIÓN PARA CARGAR LOS MOTIVOS DE RECHAZO
     {
         $estatus = $_POST['estatus'];
         $dataMotivos = $this->Postventa_model->getRechazoDocs();
@@ -3236,22 +3236,19 @@ public $controller = 'Postventa';
         }
     }
 
-    public function RechazoDocs ()
+    public function RechazoDocs () // FUNCIÓN PARA RECHAZAR LOS DOCUMENTOS
     {
-        // $mot_rec = explode(",", $this->input->post('mot_rec'));
-        $index = $this->input->post('index');
+        $index = $this->input->post('index'); // POR MEDIO DEL INDEX SE ESTABLECE EL NÚMERO DE VECES QUE SE REALIZA LA FUNCIÓN POR MEDIO DEL NÚMERO DE DOCUMENTOS SELECCIONADOS
         for($i = 0; $i < $index; $i++)
         {
             if(isset($_POST['selectDoc_'.$i]))
-            {
-                
+            {   
                 $datos = explode(",", $this->input->post('selectDoc_'.$i));
-                $idSolicitud = $this->input->post('id_sol');            
+                $idSolicitud = $this->input->post('id_sol'); 
                 $idDocumento = $datos[0];
                 $documentType = $datos[1];
                 $rejectionReasons = explode(",", $this->input->post('rejectionReasons'));
 
-              
                 for ($j = 0; $j < count($rejectionReasons); $j++) 
                 {
                     $insertData[$j] = array(
@@ -3261,8 +3258,6 @@ public $controller = 'Postventa';
                         "tipo_proceso" => 2,
                         "creado_por" => $this->session->userdata('id_usuario')
                     );
-                    // var_dump($insertData[$j]);
-                    // exit;
                 }
                 
                 $rejectionReasonsList = $this->Postventa_model->getRejectReasonsTwo($idDocumento, $idSolicitud, $documentType)->result_array(); // MJ: LLEVA 3 PARÁMETROS $idDocumento, $idSolicitud, $documentType

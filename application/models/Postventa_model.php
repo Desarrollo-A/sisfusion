@@ -549,27 +549,8 @@ class Postventa_model extends CI_Model
         $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
         $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
 
-        if($status == 9){  
-            $tipo_doc = "IN (11,13 $docNotariaExterna)";
-        }elseif($status == 18){
-            $tipo_doc = 'IN (7)';
-        }elseif($status == 19 ||$status == 22 || $status == 24 || $status == 20 || $status == 25 || $status == 34){
+        if($status == 25 || $status == 20)
             $tipo_doc = "IN (1,3,4,5,6,7,8,9,11,17,18,23,24,25,26$docPersonalidadJuridica $docNotariaExterna)"; // DEJAR LÍNEA 
-        }elseif($status == 3 || $status == 4 || $status == 6 || $status == 8 || $status == 10 ){
-            $tipo_doc = 'IN (17,18)';
-        }elseif($status == 29 || $status == 35 || $status == 40){
-            $tipo_doc = 'IN (15)';
-        }elseif($status == 47 || $status == 50){
-            $tipo_doc = 'IN (14)';
-        }elseif($status == 42 || $status == 52){
-            $tipo_doc = 'IN (19)';
-        }elseif($status == 48 || $status == 51 || $status == 53){
-            $tipo_doc = 'IN (14,19)';
-        }elseif($status == 26 || $status == 27 || $status == 28 || $status == 30 || $status == 31){
-            $tipo_doc = 'IN (22)';
-        }elseif($status == 12 || $status == 59){
-            $tipo_doc = 'IN (11,17,18)';
-        }
 
         $query = $this->db->query("SELECT de.idDocumento, de.documento_a_validar, de.movimiento, de.expediente, de.modificado, de.status , de.idSolicitud, de.idUsuario, de.tipo_documento, 
         de.modificado as documento_modificado_por, 
@@ -1268,7 +1249,7 @@ function checkBudgetInfo($idSolicitud){
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo = 93");
     }
 
-    function getDocumentacionCliente($idSolicitud, $notariaExterna)
+    function getDocumentacionCliente($idSolicitud, $notariaExterna) //MUESTRA TODOS LOS DOCUMENTOS PARA LA VISTA DOCUMENTACIÓN
     {
         $docNotariaExterna = $notariaExterna->id_notaria == 0 ? '' : ',20';
         $docPersonalidadJuridica = $notariaExterna->personalidad_juridica == 2 ? ',2,10' : ($notariaExterna->personalidad_juridica == 1 ? ',16,21' : '' );
@@ -1322,7 +1303,7 @@ function checkBudgetInfo($idSolicitud){
         return $query->result();
     }
 
-    function getRechazoDocs()
+    function getRechazoDocs() //MODELO PARA MOSTRAR LOS MOTIVOS DE RECHAZO
     {
         $query = $this->db->query("SELECT * FROM motivos_rechazo WHERE tipo_proceso = 2 AND estatus = 1");
         return $query->result();
