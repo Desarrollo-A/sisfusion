@@ -29,7 +29,7 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 9187)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
@@ -44,6 +44,8 @@ class Api extends CI_Controller
                         $arrayData = array("username" => "004M_COM502", "password" => "2235&832SDVW");
                     else if ($data->id == 6489) // CAJA
                         $arrayData = array("username" => "caja");
+                    else if ($data->id == 2099) // INVENTARIO VIRTUAL
+                        $arrayData = array("username" => "Z72js34$99", "password" => "@HJgHuLP682asfd#");
                     $time = time();
                     $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
@@ -421,7 +423,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n');
                         $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month - 1);
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, 2023, 05); //CAMBIAR A SUS VARIABLES
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -453,6 +455,51 @@ class Api extends CI_Controller
                     } 
                     else
                         echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+    function inventarioVirtual($sedeRes) {
+        if (!isset(apache_request_headers()["Authorization"])){
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        }else{
+            if (apache_request_headers()["Authorization"] == ""){
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            }else{
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099);
+                $valida_token = json_decode($this->validateToken($token, 2099));
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token)){
+                        $valida_token = true;
+                    }
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dbTransaction = $this->Api_model->getInventarioList($sedeRes);
+                        $data2 = $dbTransaction;
+                            
+                        if ($dbTransaction){// SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
+                        }else{ // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }else{
+                        echo json_encode($checkSingup);
+                    }
                 }
             }
         }
@@ -749,9 +796,10 @@ class Api extends CI_Controller
                             }
                         }
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
                         header('Content-Type: application/json');
+                    }
                 }
             }
         }
@@ -791,7 +839,6 @@ class Api extends CI_Controller
                 }
             }
         }
-
     }
 
     function getAsesoresArcus($fecha = '') {
@@ -828,8 +875,9 @@ class Api extends CI_Controller
                         else // ERROR TRANSACTION
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
+                    }
                 }
             }
         }
@@ -874,13 +922,13 @@ class Api extends CI_Controller
                         $this->output->set_content_type('application/json');
                         $this->output->set_output(json_encode($consulta));
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
                         header('Content-Type: application/json');
+                    }
                 }
             }
         }
-
     }
 
     function getCatalogos() {
