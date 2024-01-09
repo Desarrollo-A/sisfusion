@@ -213,7 +213,7 @@
 </ul>
 	</div>
 </div>
-<!-- <div class="spiner-loader hide" id="spiner-loader">
+<div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS">
         <div class="contentLS">
             <div class="center-align">
@@ -227,10 +227,10 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>
 
 <!-- Sppiner navidad -->
-<div class="spiner-loader hide" id="spiner-loader">
+<!--<div class="spiner-loader hide" id="spiner-loader">
     <div class="backgroundLS" style="background:#ffffffe6!important">
         <div class="contentLS">
             <div class="center-align tracking-in-expand" style="color: black">
@@ -241,7 +241,7 @@
         </div>
     </div>
 </div>
-
+-->
 <?php $this->load->view('template/novedadesModal');?>
 <div class="main-panel">
 	<nav class="navbar navbar-transparent navbar-absolute">
