@@ -443,7 +443,7 @@
         return true;
     }
 
-    public function getDocsByType($typeOfPersona, $tipo_venta) {
+    public function getDocsByType($typeOfPersona, $tipo_venta = NULL) {
         $extraWhere = "";
         if ($tipo_venta == 1) // VENTA DE PARTICULAES
             $extraWhere = "OR (id_catalogo = $typeOfPersona AND id_opcion IN (50))";
