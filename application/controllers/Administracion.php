@@ -465,6 +465,20 @@ class Administracion extends CI_Controller{
             echo json_encode(array());
         }
 	}
+
+	public function reporteClientesFactura(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/reporteClientesFacturaView");
+    }
+
+    public function getReporteClientesFactura(){
+        $data = $this->Administracion_model->getReporteClientesFactura()->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+	
 }
 
 

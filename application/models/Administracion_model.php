@@ -149,4 +149,19 @@ class Administracion_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getReporteClientesFactura(){
+        return $this->db->query("SELECT ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, re.nombreResidencial, co.nombre nombreCondominio, 
+        lo.nombreLote, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        cl.rfc, cl.cp_fac, opc1.nombre regimenFiscal, se.nombre nombreSede
+        FROM clientes cl
+        INNER JOIN lotes lo on lo.idCliente = cl.id_cliente
+        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+        INNER JOIN sedes se ON se.id_sede = lo.ubicacion
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        LEFT JOIN opcs_x_cats opc1 ON opc1.id_opcion = cl.regimen_fac AND opc1.id_catalogo = 92
+        WHERE cl.rfc != '' AND regimen_fac != 0 AND cl.status = 1");
+    }
+
 }
