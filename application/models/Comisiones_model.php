@@ -3382,7 +3382,7 @@ class Comisiones_model extends CI_Model {
         JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         JOIN lotes l ON l.idLote = c.id_lote
-        INNER JOIN condominios cd ON cd.idCondominio=l.idCondomini
+        INNER JOIN condominios cd ON cd.idCondominio=l.idCondominio
         INNER JOIN residenciales re ON re.idResidencial= cd.idResidencial
         WHERE l.status IN (0,1) AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
         GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente)
