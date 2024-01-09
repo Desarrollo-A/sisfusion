@@ -49,5 +49,5 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
 <?php $this->load->view('template/footer'); ?>
-<script src="<?= base_url() ?>dist/js/controllers/documentacion/clienteRegimen.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/administracion/clienteRegimen.js"></script>
 </body>

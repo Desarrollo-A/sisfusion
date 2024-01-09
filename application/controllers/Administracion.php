@@ -442,6 +442,19 @@ class Administracion extends CI_Controller{
         $this->load->view("administracion/validadoStatus11");
     }
 
+	public function clienteRegimen(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/clienteRegimenView");
+    }
+
+    public function getClienteRegimen(){
+        $data = $this->Administracion_model->getClienteRegimen()->result_array();
+        if ($data != null)
+                echo json_encode($data);
+            else
+                echo json_encode(array());
+    }
+
     public function getDateStatus11(){
 	    $data = $this->Administracion_model->getDateStatus11();
 	    if($data == TRUE){

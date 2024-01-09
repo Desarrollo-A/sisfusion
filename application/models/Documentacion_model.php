@@ -97,30 +97,6 @@ class Documentacion_model extends CI_Model {
 		return count($result) > 0 ? $result: array();
 	}
 
-    public function getClienteRegimen(){
-        return $this->db->query("SELECT lot.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.regimen_fac, cl.cp_fac, opcs2.nombre,
-        lot.nombreLote, lot.idStatusContratacion, lot.idMovimiento, CONVERT(varchar, lot.modificado, 20) modificado, cl.rfc, lot.totalNeto, lot.totalValidado, CONVERT(varchar, lot.fechaSolicitudValidacion, 20) fechaSolicitudValidacion,
-        CAST(lot.comentario AS varchar(MAX)) as comentario, CONVERT(varchar, lot.fechaVenc, 20) fechaVenc, lot.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, lot.ubicacion,
-        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, lot.observacionContratoUrgente as vl,
-        concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-        concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-        concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-        cond.idCondominio, cl.expediente, mo.descripcion, se.nombre nombreSede, cl.proceso, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
-		from clientes cl
-		INNER JOIN lotes lot on lot.idCliente = cl.id_cliente
-		INNER JOIN condominios cond ON lot.idCondominio=cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		INNER JOIN movimientos mo ON mo.idMovimiento = lot.idMovimiento
-        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-        INNER JOIN sedes se ON se.id_sede = lot.ubicacion
-        LEFT JOIN tipo_venta tv ON tv.id_tventa = lot.tipo_venta
-		LEFT JOIN opcs_x_cats opcs2 ON opcs2.id_opcion = cl.regimen_fac and id_catalogo = 92
-		LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		where cl.rfc != '' and regimen_fac != 0");
-    }
-
     /**
      * Función para buscar el path donde se encuentra el archivo en los diferentes tipos de proceso de contratación
      *
