@@ -118,7 +118,7 @@ class Reestructura_model extends CI_Model
         dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6) 
-        LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote AND dxc2.tipo_proceso = 4
+        LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote --AND dxc2.tipo_proceso = 4
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         LEFT JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion WHERE estatus = 1) lr ON lr.idProyecto = re.idResidencial
@@ -663,13 +663,17 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 $filtroSede")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 AND lo.estatus_preproceso IN(1, 0) $filtroSede")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
+        $filtro = '';
+        if($this->session->userdata('id_rol') == 3){
+            $filtro = ' AND id_lider='.$this->session->userdata('id_usuario');
+        }
         return $this->db->query("SELECT id_usuario, UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno)) nombreUsuario 
         FROM usuarios 
-        WHERE estatus = 1 AND tipo = 2 AND id_rol = 7
+        WHERE estatus = 1 AND tipo = 2 AND id_rol = 7 $filtro
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 
@@ -683,8 +687,8 @@ class Reestructura_model extends CI_Model
         catch(Exception $e) {
             return $e->getMessage();
         }
+
     }
-    
     function getListaLotesArchivosReestrucura(){
         $query = $this->db->query("SELECT l.nombreLote, dxc.* FROM datos_x_cliente dxc INNER JOIN lotes l ON l.idLote = dxc.idLote");
         return $query->result_array();
