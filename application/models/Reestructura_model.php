@@ -413,6 +413,12 @@ class Reestructura_model extends CI_Model
                     $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
                 }
             }
+        }else{
+            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+            for ($i=0; $i <count($comisiones) ; $i++) {
+                $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
+            }
+            $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
         }
         
         if($row[0]['tipo_venta'] == 1){
@@ -663,7 +669,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 AND id_usuario_asignado = 0 $filtroSede")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 AND lo.estatus_preproceso IN(1, 0) $filtroSede")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
