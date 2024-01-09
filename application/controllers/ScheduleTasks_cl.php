@@ -1005,29 +1005,8 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     $date = date("Y-m-d");
     $mod_date = strtotime($date."- 1000 days");
     $finalDate = date("Y-m-d", $mod_date);
-    $data_first_report = $this->scheduleTasks_model->getReportInformation(1, $finalDate);
     $data_second_report = $this->scheduleTasks_model->getReportInformation(2, $finalDate);
-    // MJ: FIRST EMAIL - ESTATUS 10
-    if (count($data_first_report) > 0) {
-      $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, $finalDate, 1);
-      //echo $data_enviar_mail;
-      if ($data_enviar_mail > 0) {
-        $data_request['msg'] = 'Correo enviado correctamente.';
-        echo $data_request['msg'];
-      } else {
-        $data_request['msg'] = 'Correo no enviado.';
-        echo $data_request['msg'];
-      }
-    } else {
-        $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, $finalDate, 3);
-        if ($data_enviar_mail > 0) {
-            $data_request['msg'] = 'Correo enviado correctamente.';
-            echo $data_request['msg'];
-        } else {
-            $data_request['msg'] = 'Correo no enviado.';
-            echo $data_request['msg'];
-        }
-    }
+
 
     // MJ: SECOND EMAIL - LIBERACIONES
     if (count($data_second_report) > 0) {
@@ -1049,23 +1028,9 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 
     public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
     {
-        $encabezados = ($typeTransaction === 1)
-            ? [
-                'tipo_proceso'      => 'TIPO DE PROCESO',
-                'nombreSede'        => 'SEDE',
-                'nombreResidencial' => 'PROYECTO',
-                'nombreCondominio'  => 'CONDOMINIO',
-                'nombreLote'        => 'LOTE',
-                'nombreCliente'     => 'CLIENTE',
-                'sup'               => 'SUPERFICIE',
-                'referencia'        => 'REFERENCIA',
-                'nombreGerente'     => 'GERENTE',
-                'nombreAsesor'      => 'ASESOR',
-                'estatusLote'       => 'ESTATUS',
-                'fechaApartado'     => 'FECHA APARTADO'
-            ]
-            : [
-                'nombreResidencial' =>  'PROYECTO',
+        $encabezados = ($typeTransaction === 2)
+            ? 
+                array('nombreResidencial' =>  'PROYECTO',
                 'nombreCondominio'  =>  'CONDOMINIO',
                 'nombreLote'        =>  'LOTE',
                 'sup'               =>  'SUPERFICIE',
@@ -1074,12 +1039,11 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'nombreAsesor'      =>  'ASESOR',
                 'estatusLote'       =>  'ESTATUS',
                 'fechaApartado'     =>  'FECHA APARTADO',
-                'fechaLiberacion'   =>  'FECHA LIBERACIÓN'
-            ];
+                'fechaLiberacion'   =>  'FECHA LIBERACIÓN')
 
-        if ($typeTransaction === 1) {
-            $comentario = '¿Cómo estás?, espero que bien. El día de hoy no hay registros de lotes cuyo contrato se envió a firma de RL.';
-        } else if ($typeTransaction === 2) {
+            : [];
+
+        if ($typeTransaction === 2) {
             $comentario = '¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes que se marcaron para liberación.';
         } else {
             $comentario = '¿Cómo estás?, espero que bien. El día de hoy no hay registros de lotes cuyo contrato se envió a firma de RL.';
