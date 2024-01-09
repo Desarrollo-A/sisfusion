@@ -1057,7 +1057,6 @@
                 <i data-dismiss="modal" class="fas fa-times fl-r"></i>
                 <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
             </div>
-
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">
                 <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
@@ -1093,22 +1092,19 @@
 <div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-        <form id="formRechazar" name="formRechazar" method="post">    
-        <div class="modal-header">
-                <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
-                <br>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
+            <form id="formRechazar" name="formRechazar" method="post">    
+                <div class="modal-header">
+                    <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
+                    <br>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                            <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
+                        </div>
                     </div>
+                    <br><br>
                 </div>
-
-                <!-- <div class='col-12 col-sm-12 col-md-12 col-lg-12 mb-1' id="mot_rechazo">
-                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="mot_rec" name="mot_rec" title="Selecciona motivos de rechazo" data-live-search="true" multiple required></select>
-                </div> -->
-                <br><br>
-            </div>
                 <input type="hidden" id="id_sol" name="id_sol">
+                <input type="hidden" id="id_estat" name="id_estat">
                 <input type="hidden" id="index" name="index">
                 <div class="modal-body">                    
                 </div>
