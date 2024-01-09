@@ -208,16 +208,12 @@ class Api extends CI_Controller
     public function setStatusContratacion()
     {
         $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
-        //$newDatos = json_decode($objDatos, true);
-        // echo var_dump($objDatos);
-        // echo $objDatos['idusuario'];
+       
         $datos = array('status_contratacion' => $objDatos['bandera'],
             'fecha_modificacion' => date("Y-m-d H:i:s"),
             'modificado_por' => $objDatos['modificado_por']);
         $result = $this->Api_model->updateUserContratacion($datos, $objDatos['idusuario']);
 
-
-        //  echo $result;
         if ($result == 1) {
             $row = json_encode(array('resultado' => true));
         } else {
@@ -271,8 +267,6 @@ class Api extends CI_Controller
         }
 
         echo base64_encode($row);
-//print_r($result);
-
     }
 
     /**------------FUNCIÓN PARA MANDAR SERVICIO PARA EL SISTEMA DE TICKETS */
@@ -421,7 +415,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n');
                         $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, 2023, 05); //CAMBIAR A SUS VARIABLES
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month - 1);//CAMBIAR A SUS VARIABLES
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -458,7 +452,7 @@ class Api extends CI_Controller
         }
     }
 
-    function inventarioVirtual($sedeRes) {
+    function inventarioVirtual($sedeRes) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -466,8 +460,8 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             }else{
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099);
-                $valida_token = json_decode($this->validateToken($token, 2099));
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); // SE ACTUALIZA EL PARÁMETRO DE USER PARA QUE CARGUE LA KEY
+                $valida_token = json_decode($this->validateToken($token, 2099)); // VALIDAMOS EL TOKEN PARA EL USUARIO QUE DECLARAMOS
                 if ($valida_token->status !== 200){
                     echo json_encode($valida_token);
                 }else {
@@ -487,8 +481,8 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->getInventarioList($sedeRes);
-                        $data2 = $dbTransaction;
+                        $dbTransaction = $this->Api_model->getInventarioList($sedeRes); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
+                        $data2 = $dbTransaction; // DENTRO DE LA VARIABLE "data2" VAMOS A GUARDAR EL ARREGLO DE LOS DATOS QUE MANDA NUESTRA FUNCIÓN
                             
                         if ($dbTransaction){// SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
