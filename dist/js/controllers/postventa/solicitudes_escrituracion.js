@@ -2477,7 +2477,7 @@ $(document).on("submit", "#newNotario", function (e) {
 $(document).on("submit", "#formRechazar", function (e) { // BOTÓN RECHAZO DE DOCUMENTOS
   e.preventDefault();
   let data = new FormData($(this)[0]);
-  data.append("rejectionReasons", $("#selectDoc").val());
+  data.append("rejectionReasons", $("#mot_rec").val());
 
 
   if( $('#selectDoc').prop('checked') ) { // SE REALIZA LA VALIDACIÓN PARA DETERMINAR SI SE SELECCIONÓ LA OPCIÓN 
