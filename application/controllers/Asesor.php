@@ -1056,6 +1056,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -1095,8 +1096,10 @@ class Asesor extends CI_Controller {
             : [];
 
         //prueba
-        $tipo_venta_result = $this->Asesor_model->getTipo_Venta();
-        $datos['tipo_venta'] = $tipo_venta_result->row()->tipo_venta ?? null;
+        //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
+        //print_r($datos["cliente"][0]->tipo_venta);
+        //exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
