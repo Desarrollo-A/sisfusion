@@ -2620,7 +2620,6 @@ $(document).on("submit", "#rechazar", function (e) {
 });
 
 function filterSelectOptions(documentType) {
-  alert();
   $("#rejectionReasons option").each(function () {
     if ($(this).attr("data-type") === documentType) {
       $(this).show();
