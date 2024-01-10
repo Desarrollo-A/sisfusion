@@ -94,34 +94,6 @@ $(document).ready(function () {
   );
 });
 
-$(document).on("click", "#searchByDateRange", function () {
-  let finalBeginDate = $("#beginDate").val();
-  let finalEndDate = $("#endDate").val();
-  let fDate = formatDate(finalBeginDate);
-  let fEDate = formatDate(finalEndDate);
-  arrayTables[0].data = {
-    "beginDate": fDate,
-    "endDate": fEDate,
-    "estatus":$('#estatusE').val(),
-    "tipo_tabla":arrayTables[0].numTable 
-  };
-  crearTablas(arrayTables[0],arrayTables[0].numTable);    
-});
-
-$(document).on("click", "#searchByDateTest", function (){
-  let finalBeginDate = $("#startDate").val();
-  let finalEndDate = $("#finalDate").val();
-  let fDate = formatDate(finalBeginDate);
-  let fEDate = formatDate(finalEndDate);
-  arrayTables[1].data = {
-    "beginDate": fDate,
-    "endDate": fEDate,
-    "estatus":0,
-    "tipo_tabla":arrayTables[1].numTable 
-  };
-  crearTablas(arrayTables[1],arrayTables[1].numTable);
-})
-
 $(document).on("click", ".comentariosModel", function (e) { // MODAL DE COMENTARIO DEL PROCESO DEL LOTE
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -332,45 +304,11 @@ function setInitialValues() {
   $('[data-toggle="tooltip"]').tooltip();
 }
 
-function getDocumentsClient(idEscritura) {
-  $("#spiner-loader").removeClass("hide");
-  $("#documents").find("option").remove();
-  $("#documents").append(
-    $("<option disabled>").val("0").text("Seleccione una opción")
-  );
-  $.post(
-    "getDocumentacionCliente",
-    {
-      idEscritura: idEscritura,
-      idEstatus: idEstatus,
-    },
-    function (data) {
-      var len = data.length;
-      for (var i = 0; i < len; i++) {
-        var id = data[i]["idDocumento"];
-        var name = data[i]["nombre"];
-        $("#documents").append($("<option>").val(id).text(name));
-      }
-      if (len <= 0) {
-        $("#documents").append(
-          '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>'
-        );
-      }
-      $("#documents").selectpicker("refresh");
-      $("#spiner-loader").addClass("hide");
-    },
-    "json"
-  );
-}
-
 let documentosObligatorios = [];
 function buildTableDetail(data, permisos,proceso = 0) {
   documentosObligatorios = [];
   var filtered = data.filter(function(value){ 
-    if((value.tipo_documento == 12 && (value.estatus_solicitud == 20 || value.estatus_solicitud == 25 || value.estatus_solicitud == 34) && value.estatusPresupuesto != 1) || (value.tipo_documento == 12 && (value.estatus_solicitud == 48 || value.estatus_solicitud == 51 || value.estatus_solicitud == 53))){
-    }else{
-      return value;
-    }
+    return value;
   });
   var solicitudes = '<table class="table subBoxDetail">';
   solicitudes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
@@ -447,88 +385,6 @@ function getEstatusEscrituracion() {
 $(document).on("click", "#preview", function () {
   var itself = $(this);
   var folder;
-  switch (itself.attr('data-documentType')) {
-    case '1':
-      folder = "INE";
-    break;
-    case '2':
-      folder = "RFC";
-    break;
-    case '3':
-      folder = "COMPROBANTE_DE_DOMICILIO";
-    break;
-    case '4':
-      folder = "ACTA_DE_NACIMIENTO";
-    break;
-    case '5':
-      folder = "ACTA_DE_MATRIMONIO";
-    break;
-    case '6':
-      folder = "CURP";
-    break;
-    case '7':
-      folder = "FORMAS_DE_PAGO";
-    break;
-    case '8':
-      folder = "BOLETA_PREDIAL";
-    break;
-    case '9':
-      folder = "CONSTANCIA_MANTENIMIENTO";
-    break;
-    case '10':
-      folder = "CONSTANCIA_AGUA";
-    break;
-    case '11':
-      folder = "SOLICITUD_PRESUPUESTO";
-    break;
-    case '12':
-      folder = "PRESUPUESTO";
-    break;
-    case '13':
-      folder = "FACTURA";
-    break;
-    case '14':
-      folder = "TESTIMONIO";
-    break;
-    case '15':
-      folder = "PROYECTO_ESCRITURA";
-    break;
-    case '16':
-      folder = "ACTA_CONSTITUTIVA";
-    break;
-    case '17':
-      folder = "OTROS";
-    break;
-    case '18':
-      folder = "CONTRATO";
-    break;
-    case '19':
-      folder = "COPIA_CERTIFICADA";
-    break;
-    case '20':
-      folder = "PRESUPUESTO_NOTARIA_EXTERNA";
-    break;
-    case '21':
-      folder = "RFC_MORAL";
-    break;
-    case '22':
-      folder = "FORMAS_PAGO_FECHA";
-    break;
-    case '23':
-      folder = "CHECK_LIST";
-    break; 
-    case '24':
-      folder = "BENEFICIARIO_CONTROLADOR";
-    break; 
-    case '25':
-      folder = "CARATULAS_BANCARIAS";
-    break;  
-    case '26':
-      folder = "ESTADOS_DE_CUENTA";
-    break;
-    default:
-    break;
-  }
   Shadowbox.open({
     content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
     player: "html",
