@@ -174,29 +174,33 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
-    public function getInventarioList($sedeRes)
+    public function getInventarioList($idRes)
     {
         $query = $this->db->query(
-        "SELECT TOP 5 (cond.nombre) condominio, l.nombreLote, l.idLote, (res.descripcion) proyecto, l.sup, l.total, l.precio, l.msi,
-            CONCAT (u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) nomAsesor,
-            CONCAT (u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) nomCoordinador,
-            CONCAT (u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) nomGerente,
-            CONCAT (u4.nombre,' ', u4.apellido_paterno,' ', u4.apellido_materno) nomSubDir,
-            CONCAT (u5.nombre,' ', u5.apellido_paterno,' ', u5.apellido_materno) nomDir, st.nombre, cl.fechaApartado, cl.fechaEnganche
-        FROM lotes l
-        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
-        LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
-        LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_asesor
-        LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_coordinador
-        LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_gerente
-        LEFT JOIN usuarios AS u4 ON u4.id_usuario = cl.id_subdirector
-        LEFT JOIN usuarios AS u5 ON u5.id_usuario = 2
-        LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
-        WHERE res.sede_residencial = $sedeRes
-        AND l.status = 1"
-        );
-
+            "SELECT (cond.nombre) condominio, (l.nombreLote) lote, l.idLote, (res.descripcion) proyecto, (l.sup) superficie, (l.total) precioLista, (l.precio) m2, l.msi,
+                CONCAT (u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) asesor,
+                CONCAT (u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) coordinador,
+                CONCAT (u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) gerente,
+                CONCAT (u4.nombre,' ', u4.apellido_paterno,' ', u4.apellido_materno) subDirector,
+                CONCAT (u5.nombre,' ', u5.apellido_paterno,' ', u5.apellido_materno) director, (st.nombre) estatus, cl.fechaApartado, cl.fechaEnganche
+            FROM lotes l
+            INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+            INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial
+            LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
+            LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios AS u4 ON u4.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios AS u5 ON u5.id_usuario = 2
+            LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
+            WHERE res.idResidencial = $idRes
+            AND l.status = 1"
+            );
         return $query->result_array();
+    }
+
+    public function listaResidenciales()
+    {
+        return $this->db->query("SELECT * FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)")->result_array();
     }
 }

@@ -734,7 +734,7 @@ function openRechazarModal(id_solicitud, id_estatus) { // MODAL QUE MUESTRA EL L
         var tipo_documento = data[i]["tipo_documento"];
         var documento = data[i]["tipo_documento"] == 12 ? data[i]["expediente"] : data[i]["descripcion"];
         solicitudes += `<tr>
-                          <td><input type="checkbox" class="docCheckbox" value="${id},${tipo_documento}" id="selectDoc" name="selectDoc_${i}"></td>
+                          <td><input type="checkbox" class="chk" value="${id},${tipo_documento}" id="selectDoc_${i}" name="selectDoc_${i}"></td>
                           <td>${i + 1}</td>
                           <td>${documento}</td>
                         </tr>`;
@@ -2478,29 +2478,27 @@ $(document).on("submit", "#formRechazar", function (e) { // BOTÓN RECHAZO DE DO
   e.preventDefault();
   let data = new FormData($(this)[0]);
   data.append("rejectionReasons", $("#mot_rec").val());
-
-
-  if( $('#selectDoc').prop('checked') ) { // SE REALIZA LA VALIDACIÓN PARA DETERMINAR SI SE SELECCIONÓ LA OPCIÓN 
+  
+  if ($('.chk:checked').length >= 1) { // SE REALIZA LA SIGUIENTE CONDICIÓN PARA VALIDAR QUE SE SELECCIONE POR LO MENOS UNA CASILLA
     $.ajax({
-      url: "RechazoDocs", // FUNCIÓN PARA EL BOTÓN ACEPTAR RECHAZO
+      url: "RechazoDocs",
       data: data,
       cache: false,
-      contentType: false, 
+      contentType: false,
       processData: false,
       type: "POST",
-      success: function (response){
+      success: function (response) {
         if (response == 1) {
           alerts.showNotification("top", "right", "Se rechazaron los documentos", "success");
           $("#modalRechazar").modal("hide");
           escrituracionTable.ajax.reload();
-          
         } else {
           alerts.showNotification("top", "right", "Error en rechazo.", "warning");
         }
       },
     });
-  }else{
-    alerts.showNotification("top", "right", "Selecciona por lo menos un documento.", "warning"); 
+  } else {
+    alerts.showNotification("top", "right", "Selecciona al menos una casilla", "warning");
   }
 });
 
@@ -2622,8 +2620,6 @@ $(document).on("submit", "#rechazar", function (e) {
 });
 
 function filterSelectOptions(documentType) {
-  alert();
-  console.log(documentType);
   $("#rejectionReasons option").each(function () {
     if ($(this).attr("data-type") === documentType) {
       $(this).show();

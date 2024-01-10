@@ -118,7 +118,7 @@ class Postventa_model extends CI_Model
         FROM solicitudes_escrituracion se
         JOIN historial_escrituracion he ON se.id_solicitud = he.id_solicitud
         JOIN usuarios us ON he.creado_por = us.id_usuario
-        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0 
+        WHERE se.id_solicitud = $id_solicitud AND he.tipo_movimiento = 0
 		UNION
         (SELECT CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre, Concat('Rechazo: ',mr.motivo) as descripcion, he.fecha_creacion as fecha_creacion, he.tipo_movimiento, '#B03A2E' AS color
         FROM solicitudes_escrituracion se
@@ -578,7 +578,8 @@ class Postventa_model extends CI_Model
         LEFT JOIN motivos_rechazo mr ON mr.id_motivo=mrxd.id_motivo 
         WHERE opc.id_documento $tipo_doc 
         AND de.idSolicitud = $idSolicitud
-        AND (de.estatus_validacion IS NULL OR de.estatus_validacion =1)
+        AND (de.estatus_validacion IS NULL OR de.estatus_validacion = 1)
+        AND de.documento_obligatorio = 1
 
         GROUP BY de.idDocumento,de.documento_a_validar,se.estatus_construccion, de.movimiento,de.modificado,de.status ,opc.id_documento ,de.idUsuario,opc.fecha_creacion,se.id_solicitud ,
         opc.descripcion, de.expediente, de.tipo_documento, de.idSolicitud, 
