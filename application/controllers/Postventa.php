@@ -35,12 +35,8 @@ public $controller = 'Postventa';
     public function validarMenu(){
             $rutaAc = $this->input->post('ruta');
             $origen = $this->input->post('origen');
-     //   echo    $rutaAc = $rutaAc == 1 ? $rutaAc : $_SESSION['rutaActual'].$rutaAc ;
-            // echo $_SESSION['rutaActual'];
-             //echo "<br>";
             $menuGral = $this->session->userdata('datos');
             $ruta = explode($_SESSION['rutaActual'], $rutaAc);
-           //  echo  $ruta[1];
             $existe = 0;
             foreach ($menuGral['datos2'] as $key => $objeto) {
                     if($objeto->pagina == $ruta[1]){
@@ -58,11 +54,6 @@ public $controller = 'Postventa';
     //visualizar documento postventa
     public function subirArchivo() {
         $lote = $this->Postventa_model->getNameLote($this->input->post('idLote'));
-
-        // if ($lote->observacionContratoUrgente && intval($lote->observacionContratoUrgente) === 1) {
-        //     echo json_encode(['code' => 400, 'message' => 'El registro se encuentra en proceso de liberación.']);
-        //     return;
-        // }
             
         $file = $_FILES["uploadedDocument"];
         $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
@@ -197,7 +188,6 @@ public $controller = 'Postventa';
         $idClient = $this->Postventa_model->getClient($idLote);
         $idClient = empty($idClient) ? -1 : $idClient;
         $resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
-        // print_r(!empty($resDecode->data));
         if(!empty($resDecode->data)){
             $resDecode->data[0]->bandera_exist_cli = true;
         }else{
@@ -205,7 +195,6 @@ public $controller = 'Postventa';
             $resDecode->data[0]->bandera_exist_cli = false;
         }
         if(is_object($idClient->row()) AND $idClient->row()->num_cli > 0){
-            //$resDecode = $this->servicioPostventa($data1[0]['referencia'], $data1[0]['empresa']);
             if (count($resDecode->data) > 0 && $resDecode->data[0]->bandera_exist_cli == true) {
                 $resDecode->data[0]->id_cliente = $idClient->row()->id_cliente;
                 $resDecode->data[0]->referencia = $data1[0]['referencia'];
@@ -460,7 +449,6 @@ public $controller = 'Postventa';
  
         $dataFiscal = base64_encode(json_encode($dataFiscal));
         $responseInsert = $this->insertPostventaDF($dataFiscal);
-       // print_r($responseInsert);
         if($responseInsert->resultado == 1){
             
             $usuarioJuridico = $this->Postventa_model->obtenerJuridicoAsignacion();
@@ -470,18 +458,7 @@ public $controller = 'Postventa';
             }
 
             $this->Postventa_model->asignarJuridicoActivo($usuarioJuridico->id_usuario);
-            // echo "Persona juridica dato".$personalidad."<br>";
-            // echo "<br>";
-            // echo $idLote;
-            // echo "<br>";
-            // echo $idCliente;
-            // echo "<br>";
-            // echo $idPostventa;
-            // echo "<br>";
-            // print_r($resDecode->data[0]);
-            // echo "<br>";
-            // echo $usuarioJuridico->id_usuario;
-            // echo "<br>";
+       
             $informacion = $this->Postventa_model->setEscrituracion( $personalidad, $idLote,$idCliente, $idPostventa,$resDecode->data[0], $usuarioJuridico->id_usuario,$valor_contrato);
             echo json_encode($informacion);
         }else{
@@ -2191,11 +2168,9 @@ public $controller = 'Postventa';
         $this->load->helper('download');
         $name = $this->input->post('name');
         $documentType = $this->input->post('documentType');
-        var_dump( $documentType,  $name);
         $folders = $this->getFolderFile($documentType);
         
         $Ruta = $folders.$name;
-        var_dump(  $Ruta );
      
         force_download($Ruta, NULL);
      
