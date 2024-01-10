@@ -111,7 +111,7 @@ class Api_model extends CI_Model
         $validacionFecha")->result_array(); 
     }
 
-    public function getInformacionProspectos($year, $month){
+    public function getInformacionProspectos(int $year, int $month){
         $month1 = $month;
         $month2 = $month;
         
@@ -146,11 +146,13 @@ class Api_model extends CI_Model
                                 INNER JOIN
                                     usuarios us ON us.id_usuario = pr.id_asesor
                                 WHERE 
-                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
+                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?
+                                ORDER BY 
+                                    DAY(pr.fecha_creacion)",
                             array( $year, $month1, $month2 )
                         );
 
-        return $query->result_array();
+        return $query->result();
     }
 
     public function getCatalogos() {
