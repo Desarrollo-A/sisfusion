@@ -79,7 +79,7 @@ class Usuarios_modelo extends CI_Model
                 else if(in_array($this->session->userdata('id_usuario'), array(10924, 7097, 7096, 7324, 5620, 13094))) // GRISELL / EDGAR LEONARDO VE 4 (CIUDAD DE MÉXICO) Y 9 (SAN MIGUEL DE ALLENDE)
                     $id_sede = "(usuarios.id_sede LIKE '%4%' OR usuarios.id_sede LIKE '%9%' OR usuarios.id_sede LIKE '%13%') AND usuarios.id_usuario != ".$this->session->userdata('id_lider_2')."";
                 else if($this->session->userdata('id_usuario') == 29 || $this->session->userdata('id_usuario') == 7934) // 29 FERNANDA MONJARAZ VE LO DE LEÓN Y GUADALAJARA
-                    $id_sede = "(usuarios.id_sede LIKE '%5%' OR usuarios.id_sede LIKE '%12%')";
+                    $id_sede = "(usuarios.id_sede IN ('5', '12', '16'))";
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
                 else if($this->session->userdata('id_usuario') == 30) // 30 VALERIA PALACIOS
@@ -128,8 +128,12 @@ class Usuarios_modelo extends CI_Model
                     $id_lider = $this->session->userdata('id_lider') . ', 4223';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 }
-                else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMÍREZ
-                    $id_lider = $this->session->userdata('id_lider') . ', 11196, 5637, 2599, 1507';
+                else if ($this->session->userdata('id_usuario') == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                }
+                else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 1916, 11196';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 }
                 else
@@ -410,20 +414,32 @@ class Usuarios_modelo extends CI_Model
 
     function saveUser($data)
     {
-        if ($data != '' && $data != null) {
-            $response = $this->db->insert("usuarios", $data);
-            $query = $this->db->query("SELECT IDENT_CURRENT('clientes') as lastId")->result_array();
+        $nombre_usuario = $data['usuario'];
+        $query = $this->db->query("SELECT * FROM usuarios WHERE usuario='".$nombre_usuario."'")->result_array();
+
+        if(count($query)>0){
             $arrayResponse = array(
-              "response" =>   $response,
-              "data_lastInset" => $query
-            );
-            return $query;
-        } else {
-            $arrayResponse = array(
-                "response" =>   0,
+                "response" =>   -1,
                 "data_lastInset" => array()
             );
+        } else{
+            if ($data != '' && $data != null) {
+                $response = $this->db->insert("usuarios", $data);
+                $query = $this->db->query("SELECT IDENT_CURRENT('usuarios') as lastId")->result_array();
+                $arrayResponse = array(
+                    "response" =>   $response,
+                    "data_lastInset" => $query
+                );
+
+            } else {
+                $arrayResponse = array(
+                    "response" =>   0,
+                    "data_lastInset" => array()
+                );
+            }
         }
+
+        return $arrayResponse;
     }
 
     function changeUserStatus($data, $id_usuario)
@@ -438,7 +454,9 @@ class Usuarios_modelo extends CI_Model
 
     function getUserInformation($id_usuario)
     {
-        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario . "");
+//        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario = " . $id_usuario . "");
+        $query = $this->db->query("SELECT (SELECT count(*) FROM menu_usuario WHERE id_usuario = ".$id_usuario.")  AS menuUsuario, * 
+            FROM usuarios WHERE id_usuario = ".$id_usuario);
         return $query->result_array();
     }
 
@@ -1173,6 +1191,11 @@ class Usuarios_modelo extends CI_Model
 
     public function getOptionByIdRol($id_rol){
         $query = $this->db->query("SELECT * FROM menu2 WHERE rol=".$id_rol." AND estatus=1");
+        return $query->result_array();
+    }
+
+    public function getMenuUsuarioByIdUsuario($id_usuario){
+        $query = $this->db->query("SELECT * FROM menu_usuario WHERE id_usuario=".$id_usuario);
         return $query->result_array();
     }
 }

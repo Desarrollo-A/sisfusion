@@ -115,7 +115,7 @@ class Documentacion_model extends CI_Model {
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         }
 
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) {
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {
             if ($eliminarArchivo) {
                 return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
             }
@@ -135,19 +135,14 @@ class Documentacion_model extends CI_Model {
     private function obtenerPathViejoContratacion($tipoDocumento): string
     {
         $pathBase = 'static/documentos/cliente/';
-
-        if ($tipoDocumento == 7 || $tipoDocumento == 39) { // CORRIDA FINANCIERA: CONTRALORÍA
+        if ($tipoDocumento == 7 || $tipoDocumento == 39) // CORRIDA FINANCIERA: CONTRALORÍA
             return "{$pathBase}corrida/";
-        }
-
-        if ($tipoDocumento == 8 || $tipoDocumento == 40) { // CONTRATO: JURÍDICO
+        if ($tipoDocumento == 8 || $tipoDocumento == 40) // CONTRATO: JURÍDICO
             return "{$pathBase}contrato/";
-        }
-
-        if ($tipoDocumento == 30) { // CONTRATO FIRMADO: CONTRALORÍA
+        if ($tipoDocumento == 30) // CONTRATO FIRMADO: CONTRALORÍA
             return "{$pathBase}contratoFirmado/";
-        }
-
+        if ($tipoDocumento == 50) // ANEXO VENTA DE PARTICUALES: POSTVENTA
+            return "{$pathBase}anexo_vp/";
         // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
         return "{$pathBase}expediente/";
     }
@@ -155,9 +150,9 @@ class Documentacion_model extends CI_Model {
     private function obtenerPathNuevoContratacion($nombreLote, $tipoContratacion): string
     {
         $pathBase = 'static/documentos/';
+        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {// Reubicación
 
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4) { // Reubicación
-            return "{$pathBase}contratacion-reubicacion/$nombreLote/";
+                return "{$pathBase}contratacion-reubicacion/$nombreLote/";
         }
 
         return $pathBase;

@@ -490,10 +490,12 @@ function getStatusMktdPreventa(){
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
             if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
                 $where = "pr.id_gerente IN ($id_lider, 113) AND pr.id_sede IN (4, 13)";
-            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMÍREZ
-                $where = "pr.id_gerente IN ($id_lider, 11196, 5637, 2599, 1507) AND pr.id_sede IN (8, 10)";
             else if ($id_usuario == 479) // MARBELLA DEL SOCORRO DZUL CALÁN
                 $where = "pr.id_gerente IN ($id_lider, 4223) AND pr.id_sede IN (3, 15)";
+            else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
+                $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
+            else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
+                $where = "pr.id_gerente IN ($id_lider, 1916, 11196) AND pr.id_sede IN (10, 8)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -4079,13 +4081,25 @@ function getStatusMktdPreventa(){
             $condition_iddragon = "";
         }
 
+        if(!empty($data_search['id_salesforce'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' OR ';
+            }
+            $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce=".$data_search['id_salesforce'];
+        }else{
+            $condition_idsalesforce = "";
+        }
+
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
                 $query = $this->db->query("SELECT cl.idLote,  l.idStatusContratacion, r.descripcion AS nombreProyecto,
                 c.nombre as nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
-                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_prospecto,
+                sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_salesforce, pr.id_prospecto,
                 CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
@@ -4099,13 +4113,14 @@ function getStatusMktdPreventa(){
                 $condition_telefono
                 $condition_sedes
                 $condition_iddragon
+                $condition_idsalesforce
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
                 $query = $this->db->query("SELECT UPPER(concat(pr.nombre,' ', pr.apellido_paterno, ' ', pr.apellido_materno)) AS nombre_prospecto,
                 pr.telefono, pr.telefono_2, UPPER(pr.correo) AS correo, pr.lugar_prospeccion, CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as nombre_asesor,
                 CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
-                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, UPPER(sedes.nombre) as sede_nombre,
+                CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, pr.id_salesforce, UPPER(sedes.nombre) as sede_nombre,
                 sedes.abreviacion as abreviacion_sedes, pr.source, UPPER(opc.nombre) as lugar_prospeccion, pr.id_prospecto,
                 CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
                 FROM prospectos pr
@@ -4119,6 +4134,7 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_iddragon
+                $condition_idsalesforce
                 $condition_sedes");
                 break;
         }
@@ -4135,6 +4151,21 @@ function getStatusMktdPreventa(){
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
+        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
+        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
+    }
+
+    public function getSalesforceClientsList(){
+        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion,r.descripcion AS nombreProyecto,
+        c.nombre nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
+        cl.noRecibo, l.referencia, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, l.totalValidado engancheCliente, CONVERT(VARCHAR,cl.fechaEnganche,20) AS fechaEnganche, CONVERT(VARCHAR,pr.fecha_creacion,20) AS fechaCreacionProspecto,
+        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_salesforce, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
+        FROM clientes cl 
+        INNER JOIN lotes l ON cl.idLote = l.idLote 
+        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
+        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 52
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
         LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
         WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
@@ -4385,4 +4416,32 @@ function getStatusMktdPreventa(){
 
         $this->db->query("UPDATE prospectos SET $set WHERE id_asesor = $idOwner AND becameClient IS NULL");
     }
+
+    public function getListaClientesArcus() {
+        return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, 
+        lo.idLote, lo.idCliente, lo.referencia, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        cl.correo, cl.telefono1, FORMAT(ISNULL(lo.total, 0), 'C') precioLista , FORMAT(ISNULL(lo.totalNeto2, 0), 'C') precioFinal, cl.fechaApartado,
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+        CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+        CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+        sl.nombre estatusLote, sc.nombreStatus estatusContratacion
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
+        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
+        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+        LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+        WHERE lo.status = 1")->result_array();
+    }
+
 }

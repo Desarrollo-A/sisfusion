@@ -66,7 +66,7 @@
                         <div class="card-content" style="padding: 50px 20px;">
                             <h4 class="card-title"></h4>
                             <div class="toolbar">
-                                <h3 class="card-title center-align">Corridas Financieras por lote</h3>
+                                <h3 class="card-title center-align">Corridas financieras por lote</h3>
                                 <div class="container-fluid" style="padding: 20px 0px;">
                                     <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                         <div class="form-group label-floating select-is-empty">
@@ -130,7 +130,7 @@
                                             <th class="text-center">RESPONSABLE</th>
                                             <!--<th class="text-center">UBICACIÓN</th>-->
                                             <th class="text-center">CORRIDA FINANCIERA</th>
-                                            <th class="text-center">ESTATUS </th>
+                                            <th class="text-center">ACCIONES </th>
 
                                         </tr>
                                         </thead>
@@ -146,18 +146,9 @@
     <?php $this->load->view('template/footer_legend');?>
 </div>
 </div>
-
-</div><!--main-panel close-->
+</div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>static/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>static/js/shadowbox.js"></script>
 <script src="<?= base_url() ?>dist/assets/js/dataTables.select.js"></script>

@@ -152,26 +152,164 @@ $(document).ready(function () {
                                 '" class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
                                 '<i class="far fa-thumbs-down"></i></button>';
 
-                            cntActions += 
-                                '<button href="#" data-idLote="' + data.idLote + 
-                                '" data-nomLote="' + data.nombreLote + 
-                                '" data-idCond="' + data.idCondominio +
-                                '" data-idCliente="' + data.id_cliente + 
-                                '" data-fecVen="' + data.fechaVenc + 
-                                '" data-ubic="' + data.ubicacion + 
-                                '" data-code="' + data.cbbtton +
-                                '" class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
-                                '<i class="far fa-thumbs-down"></i></button>';
-                        }                                               
-                        else {
-                            cntActions = 'N/A';
-                        }
-                    }
-                    return '<div class="d-flex justify-center">' + cntActions + '</div>';
-                }
-                else {
-                    return  `<span class="label lbl-warning">N/A</span>`;
-                }
+                cntActions +=
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                  '<i class="far fa-thumbs-down"></i></button>';
+              } else if (
+                (data.idStatusContratacion == 7 &&
+                  data.idMovimiento == 37 &&
+                  data.perfil == 15) ||
+                (data.idStatusContratacion == 7 &&
+                  data.idMovimiento == 7 &&
+                  data.perfil == 15) ||
+                (data.idStatusContratacion == 7 &&
+                  data.idMovimiento == 77 &&
+                  data.perfil == 15) ||
+                (data.idStatusContratacion == 11 &&
+                  data.idMovimiento == 41)
+              ) {
+                cntActions =
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '" ' +
+                  'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                  '<i class="far fa-thumbs-up"></i></button>';
+
+                cntActions +=
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '"  ' +
+                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
+                  '<i class="far fa-thumbs-down"></i></button>';
+
+                cntActions +=
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                  '<i class="far fa-thumbs-down"></i></button>';
+              } else if (
+                data.idStatusContratacion == 7 &&
+                data.idMovimiento == 66 &&
+                data.perfil == 11
+              ) {
+                cntActions =
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '" ' +
+                  'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
+                  '<i class="far fa-thumbs-up"></i></button>';
+
+                cntActions +=
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '"  ' +
+                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
+                  '<i class="far fa-thumbs-down"></i></button>';
+
+                cntActions +=
+                  '<button href="#" data-idLote="' +
+                  data.idLote +
+                  '" data-nomLote="' +
+                  data.nombreLote +
+                  '" data-idCond="' +
+                  data.idCondominio +
+                  '"' +
+                  'data-idCliente="' +
+                  data.id_cliente +
+                  '" data-fecVen="' +
+                  data.fechaVenc +
+                  '" data-ubic="' +
+                  data.ubicacion +
+                  '" data-code="' +
+                  data.cbbtton +
+                  '" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
+                  '<i class="far fa-thumbs-down"></i></button>';
+              } else {
+                cntActions = "N/A";
+              }
             }
         }],
         columnDefs: [{

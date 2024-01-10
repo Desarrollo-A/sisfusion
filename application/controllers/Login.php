@@ -219,7 +219,7 @@ class Login extends CI_Controller
 							$id_rol = 92;
 						else if ($check_user[0]->tipo == 2 && $check_user[0]->id_rol == 6)
 							$id_rol = 94;
-						else if ($check_user[0]->tipo == 2 && ($check_user[0]->id_rol == 2 ||  $check_user[0]->id_rol == 4))
+						else if ($check_user[0]->tipo == 2 && ($check_user[0]->id_rol == 2 ||  $check_user[0]->id_rol == 5))
 							$id_rol = 93;
 						else
 							$id_rol = $check_user[0]->id_rol;

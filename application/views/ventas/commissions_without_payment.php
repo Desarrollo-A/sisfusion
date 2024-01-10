@@ -21,14 +21,14 @@
                                         <div class="row">
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="proyecto">Proyecto</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="catalogo_pago">Proyecto</label>
+                                                    <select name="catalogo_pago" id="catalogo_pago" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                             <div class="col-12 col-sm-6 col-md-6 col-lg-6">
                                                 <div class="form-group overflow-hidden">
-                                                    <label class="control-label" for="condominio">Condominio</label>
-                                                    <select name="condominio" id="condominio" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" data-container="body" required></select>
+                                                    <label class="control-label" for="condominio_pago">Condominio</label>
+                                                    <select name="condominio_pago" id="condominio_pago" class="selectpicker select-gral" data-style="btn btn-second"data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
                                         </div>

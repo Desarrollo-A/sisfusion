@@ -112,11 +112,13 @@
 										<thead>
 											<tr>
 												<th></th>
+												<th>TIPO VENTA</th>
 												<th>TIPO DE EXPEDIENTE</th>
 												<th>TIPO DE PROCESO</th>
 												<th>PROYECTO</th>
 												<th>CONDOMINIO</th>
 												<th>LOTE</th>
+												<th>ESTATUS</th>
 												<th>REFERENCIA</th>
 												<th>CLIENTE</th>
 												<th>GERENTE</th>

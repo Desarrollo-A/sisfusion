@@ -46,7 +46,7 @@ $("#tabla_ingresar_5").ready(function () {
                 titleAttr: 'Registro estatus 5',
                 title: "Registro estatus 5",
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx - 1] + ' ';
@@ -63,7 +63,7 @@ $("#tabla_ingresar_5").ready(function () {
                 orientation: 'landscape',
                 pageSize: 'LEGAL',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosInventario[columnIdx - 1]  + ' ';
@@ -92,7 +92,12 @@ $("#tabla_ingresar_5").ready(function () {
             },
             {
                 data: function (d) {
-                    if ([4, 74, 93, 103].includes(d.idMovimiento))
+                    return `<span class='label lbl-azure'>${d.tipo_venta}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idMovimiento == 4 || d.idMovimiento == 74 || d.idMovimiento == 93 || d.idMovimiento == 103)
                         return `<span class="label lbl-warning">CORRECIÓN</span>`;
                     else 
                         return `<span class="label lbl-green">NUEVO</span>`;
@@ -116,6 +121,14 @@ $("#tabla_ingresar_5").ready(function () {
             {
                 data: function (d) {
                     return '<p class="m-0">' + d.nombreLote + '</p>';
+                }
+            },
+            {
+                data: function (d) {
+                    let libContraloria = (d.vl == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                    return d.tipo_venta == null ?
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria}<center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">SIN ESPECIFICAR</span> ${libContraloria} <center>`;
                 }
             },
             {

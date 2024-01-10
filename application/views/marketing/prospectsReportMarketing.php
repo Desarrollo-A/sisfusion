@@ -79,6 +79,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group m-0">
+                                                                <label class="control-label m-0">ID SALESFORCE</label>
+                                                                <input id="idSales" name="idSalesF" type="text" class="form-control input-gral" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group">
                                                                 <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-container="body" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"required="" multiple="" tabindex="-98" onchange="changeSede()">
                                                                 </select>
@@ -120,6 +126,7 @@
                                                                     <th>FECHA DE CREACIÓN</th>
                                                                     <th>ID CRM</th>
                                                                     <th>ID DRAGON</th>
+                                                                    <th>ID SALESFORCE</th>
                                                                     <th>ORIGEN</th>
                                                                     <th>SEDE</th>
                                                                 </tr>
@@ -159,7 +166,7 @@
                                                             <input id="mailC" name="mailC" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-3">
                                                         <div class="form-group m-0">
                                                             <label class="control-label m-0">TELÉFONO</label>
                                                             <input id="telephoneC" name="telephoneC" type="text" class="form-control input-gral" required>
@@ -168,6 +175,12 @@
                                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
                                                         <div class="form-group">
                                                             <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required="" multiple="" tabindex="-98" onchange="changeSedeC()"></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                                        <div class="form-group m-0">
+                                                            <label class="control-label m-0">ID SALESFORCE</label>
+                                                            <input id="idSalesF" name="idSalesF" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 hide" id="fechasFiltroC">
@@ -183,7 +196,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 center-align centered" id="insideC">
+                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-12 justify-end" id="insideC">
                                                         <div class="form-group div_last_name d-flex justify-end">
                                                             <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
                                                             <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
@@ -208,6 +221,7 @@
                                                                     <th>FECHA DE CREACIÓN DEL PROSPECTO</th>
                                                                     <th>ID CRM</th>
                                                                     <th>ID DRAGON</th>
+                                                                    <th>ID SALESFORCE</th>
                                                                     <th>ORIGEN</th>
                                                                     <th>ESTATUS DEL LOTE</th>
                                                                     <th>ACCIONES</th>

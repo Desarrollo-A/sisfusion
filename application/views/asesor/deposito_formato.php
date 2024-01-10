@@ -4,7 +4,7 @@
 <body>
 <div class="wrapper">
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, )) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -27,7 +27,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
 			<?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931)) AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
@@ -56,12 +56,30 @@
                 <!-- encabezados -->
                 <div class="row pt-2" id="radioDS">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <h6 class="label-on-left mb-0">DESARROLLO</h6>
+                        <h6 class="label-on-left mb-0">DESARROLLO </h6>
                         <div class="radio_container">
+                            <?php
+                            $inputRender = '';
+                            foreach ($desarrollos as $elemento){
+                                $statusEnabled = '';
+                                if($cliente[0]->sede_residencial == $elemento['id_sede']){
+                                    $statusEnabled = ' checked=true ';
+                                }
+                                $inputRender .= '<input type="radio" id="desarrollo'.$elemento['abreviacion'].'" 
+                                onclick="return false;" name="desarrollo" required '.$statsInput.' '.$statusEnabled.' 
+                                value="'.$elemento['id_sede'].'"/> <label for="desarrollo'.$elemento['abreviacion'].'">'.$elemento['abreviacion'].'</label>';
+                            }
+
+                            print_r($inputRender);
+                            ?>
+
+                        </div>
+                        <br>
+                        <!--<div class="radio_container">
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
-                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 || $cliente[0]->desarrollo == 35) {echo "checked=true";} ?>  value="1"/>
+                            <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 || $cliente[0]->desarrollo == 35 || $cliente[0]->desarrollo == 37) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
-                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31) { echo "checked=true"; } ?>  value="2"/>
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 3 || $cliente[0]->desarrollo == 13 || $cliente[0]->desarrollo == 22 || $cliente[0]->desarrollo == 31 || $cliente[0]->desarrollo == 38) { echo "checked=true"; } ?>  value="2"/>
                             <label for="two">LN</label>
 
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 9 || $cliente[0]->desarrollo == 10) { echo "checked=true"; } ?> value="3"/>
@@ -70,15 +88,15 @@
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 4 || $cliente[0]->desarrollo == 14 || $cliente[0]->desarrollo == 28 || $cliente[0]->desarrollo == 30) { echo "checked=true"; } ?> value="4"/>
                             <label for="four">SLP</label>
 
-                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 12 || $cliente[0]->desarrollo == 17 || $cliente[0]->desarrollo == 25) { echo "checked=true"; } ?> value="5"/>
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 12 || $cliente[0]->desarrollo == 17 || $cliente[0]->desarrollo == 25 || $cliente[0]->desarrollo == 39) { echo "checked=true"; } ?> value="5"/>
                             <label for="five">MER</label>
 
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 23) { echo "checked=true"; } ?> value="5"/>
                             <label for="six">SMA</label>
-                            
-                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 32) { echo "checked=true"; } ?> value="5"/> 
+
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 32) { echo "checked=true"; } ?> value="5"/>
                             <label for="seven">CNC</label>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <h4 class="label-on-left mb-0">TIPO LOTE</h4>
@@ -748,7 +766,8 @@
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                         <div class="form-group label-floating">
                             <label class="label-on-left m-0">COSTO POR M<sup>2</sup> FINAL (<small style="color: red;">*</small>)</label>
-                            <input class="form-control input-gral" name="costom2f" id="costom2f" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" echo $readOnly; step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                            <input class="form-control input-gral" name="costom2f" id="costom2f" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" <?php echo $readOnly; ?> step="any" required="true" value="<?=$cliente[0]->costom2f?>"/>
+                            <input type="hidden" name="tipo_venta" id="tipo_venta" value="<?php echo $tipo_venta;?>">
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
@@ -1070,23 +1089,12 @@
 </div>
 
 </div>
-</div><!--main-panel close-->
+</div>
 <div id="mensaje"></div>
 </body>
 <?php $this->load->view('template/footer');?>
-<!--DATATABLE BUTTONS DATA EXPORT-->
-
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
-<!-- Modal general -->
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
-    // Variables
     const cliente = "<?=$cliente[0]->id_cliente?>";
     const onlyView = <?=$onlyView?>;
 </script>

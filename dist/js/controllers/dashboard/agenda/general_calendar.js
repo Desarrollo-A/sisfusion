@@ -9,7 +9,7 @@
     $("#coordinador").empty().selectpicker('refresh');
   });
 
-  $(document).on('change', '#coordinador', function(e){
+  $(document).on('change', '#coordinador', function(){
     const idCoordinador = $("#coordinador").val();
     $("#labelAses").show();
 
@@ -107,7 +107,6 @@
       },
       success: function(data) {
         $('#spiner-loader').addClass('hide');
-
         if(data.length == 0) {
           alerts.showNotification("top", "right", "Aún no hay ningún evento registrado", "success");
         }
@@ -145,9 +144,9 @@
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     } else if(userType == 9){ /* Coordinador */
         getAsesores(idUser, firstLoad).then( response => {
-        getEventos(idUser).then( response => {
-          setSourceEventCRM(response);
-        }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
+          getEventos(idUser).then( response => {
+            setSourceEventCRM(response);
+          }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
       }).catch( error => { alerts.showNotification("top", "right", "Oops, algo salió mal. "+error, "danger"); });
     }
   }
@@ -158,7 +157,21 @@ function removeCRMEvents(){
     srcEventos.forEach(event => {
       if(
           event['internalEventSource']['extendedProps'].hasOwnProperty('title') &&
-          event['internalEventSource']['extendedProps']['title'] == "sourceCRM"
+          event['internalEventSource']['extendedProps']['title'] === "sourceCRM"
+      ) {
+        event.remove();
+      }
+    });
+  }
+}
+
+const removeGoogleEvents = () => {
+  if (typeof calendar !== 'undefined') {
+    const srcEventos = calendar.getEventSources();
+    srcEventos.forEach(event => {
+      if(
+          event['internalEventSource']['extendedProps'].hasOwnProperty('title') &&
+          event['internalEventSource']['extendedProps']['title'] !== "sourceCRM"
       ) {
         event.remove();
       }

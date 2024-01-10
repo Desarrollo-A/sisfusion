@@ -14,15 +14,14 @@ class Api extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo', 'Ooam_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
     }
 
-    function getToken()
-    {
+    function getToken() {
         $data = json_decode(file_get_contents("php://input"));
         if (!isset($data->id))
             echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
@@ -30,17 +29,23 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
                         $arrayData = array("username" => "ojqd58DY3@", "password" => "I2503^831NQqHWxr");
+                    else if ($data->id == 9187) // SALESFORCE
+                        $arrayData = array("username" => "xPmR71zA9!", "password" => "E4n@t2LsF#U7jWb");
                     else if ($data->id == 8134) // INTERNOMEX
                         $arrayData = array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@");
                     else if ($data->id == 5918) // ARCUS
                         $arrayData = array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj");
+                    else if ($data->id == 9347) // OOAM COMISIONES
+                        $arrayData = array("username" => "004M_COM502", "password" => "2235&832SDVW");
                     else if ($data->id == 6489) // CAJA
                         $arrayData = array("username" => "caja");
+                    else if ($data->id == 2099) // INVENTARIO VIRTUAL
+                        $arrayData = array("username" => "Z72js34$99", "password" => "@HJgHuLP682asfd#");
                     $time = time();
                     $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
@@ -54,7 +59,7 @@ class Api extends CI_Controller
             }
         }
     }
-
+    
     function addLeadRecord() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
@@ -418,7 +423,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n');
                         $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month - 1);
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, 2023, 05); //CAMBIAR A SUS VARIABLES
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -450,6 +455,51 @@ class Api extends CI_Controller
                     } 
                     else
                         echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+    function inventarioVirtual($sedeRes) {
+        if (!isset(apache_request_headers()["Authorization"])){
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        }else{
+            if (apache_request_headers()["Authorization"] == ""){
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            }else{
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099);
+                $valida_token = json_decode($this->validateToken($token, 2099));
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token)){
+                        $valida_token = true;
+                    }
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dbTransaction = $this->Api_model->getInventarioList($sedeRes);
+                        $data2 = $dbTransaction;
+                            
+                        if ($dbTransaction){// SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
+                        }else{ // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }else{
+                        echo json_encode($checkSingup);
+                    }
                 }
             }
         }
@@ -695,92 +745,63 @@ class Api extends CI_Controller
                             else {
                                 $result = $this->Api_model->getAdviserLeaderInformation($data->idAsesor);
                                 if(empty($result) || $result == '')
-                                    echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no corresponde a un asesor."), JSON_UNESCAPED_UNICODE);
+                                    echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no ha sido encontrado o se encuentra inactivo."), JSON_UNESCAPED_UNICODE);
                                 else {
                                     if ($result->id_rol != 7)
                                         echo json_encode(array("status" => -1, "message" => "El valor ingresado para IdAsesor no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                                     else {
-                                        $data = array(
-                                            "id_sede" => $result->id_sede,
-                                            "id_asesor" => $data->idAsesor,
-                                            "id_coordinador" => $result->id_coordinador,
-                                            "id_gerente" => $result->id_gerente,
-                                            "id_subdirector" => $result->id_subdirector,
-                                            "id_regional" => $result->id_regional,
-                                            "personalidad_juridica" => 2,
-                                            "nombre" => $data->nombreCompleto,
-                                            "apellido_paterno" => '',
-                                            "apellido_materno" => '',
-                                            "correo" => $data->email,
-                                            "telefono" => $data->telefono,
-                                            "lugar_prospeccion" => 47,
-                                            "otro_lugar" => 0,
-                                            "plaza_venta" => 0,
-                                            "fecha_creacion" => date("Y-m-d H:i:s"),
-                                            "creado_por" => 1,
-                                            "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                            "modificado_por" => 1,
-                                            "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
-                                            "observaciones" => '',
-                                            "id_arcus"  =>  $data->uid,
-                                            "origen_referido"   =>  $data->origenReferido,
-                                            "asesor_asignado"   =>  $data->asesorAsignado,
-                                            "ciudad_interes"   =>  $data->ciudadInteres,
-                                            "desarrollo_interes"   =>  $data->desarrolloInteres
-                                        );
-                                        $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                                        if ($dbTransaction){ // SUCCESS TRANSACTION
-                                            echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
-                                            header('Content-Type: application/json');
-                                        }
-                                        else{ // ERROR TRANSACTION
-                                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
-                                            header('Content-Type: application/json');
+                                        $validacionCorreoTelefono = $this->Api_model->validarCorreoTelefono($data->telefono, $data->email);
+                                        if (count($validacionCorreoTelefono) > 0) // SE ENCONTRARON COINCIDENCIAS DE CORREO O TELÉFONO
+                                            echo json_encode(array("status" => -1, "message" => "Información no guardada. El correo o teléfono que ingresaste ya existe en CRM."), JSON_UNESCAPED_UNICODE);
+                                        else {
+                                            $data = array(
+                                                "id_sede" => $result->id_sede,
+                                                "id_asesor" => $data->idAsesor,
+                                                "id_coordinador" => $result->id_coordinador,
+                                                "id_gerente" => $result->id_gerente,
+                                                "id_subdirector" => $result->id_subdirector,
+                                                "id_regional" => $result->id_regional,
+                                                "personalidad_juridica" => 2,
+                                                "nombre" => $data->nombreCompleto,
+                                                "apellido_paterno" => '',
+                                                "apellido_materno" => '',
+                                                "correo" => $data->email,
+                                                "telefono" => $data->telefono,
+                                                "lugar_prospeccion" => 47,
+                                                "otro_lugar" => 0,
+                                                "plaza_venta" => 0,
+                                                "fecha_creacion" => date("Y-m-d H:i:s"),
+                                                "creado_por" => 1,
+                                                "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                                "modificado_por" => 1,
+                                                "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                                "observaciones" => '',
+                                                "id_arcus"  =>  $data->uid,
+                                                "origen_referido"   =>  $data->origenReferido,
+                                                "ciudad_interes"   =>  $data->ciudadInteres,
+                                                "desarrollo_interes"   =>  $data->desarrolloInteres
+                                            );
+                                            $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                            if ($dbTransaction){ // SUCCESS TRANSACTION
+                                                echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                                header('Content-Type: application/json');
+                                            }
+                                            else{ // ERROR TRANSACTION
+                                                echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                                header('Content-Type: application/json');
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
                         header('Content-Type: application/json');
+                    }
                 }
             }
-        }
-    }
-
-    function sendLeadInfoRecord() {
-        $data = json_decode(file_get_contents('php://input'));
-        if(!isset($data->fechaDeCompra) || !isset($data->propiedadRelacionada) || !isset($data->uid) || !isset($data->id) || !isset($data->montoDelNegocio))
-            echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."), JSON_UNESCAPED_UNICODE);
-        else {
-            $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
-            $time = time();
-            $datos = array(
-                "iat" => $time, // Tiempo en que inició el token
-                "exp" => $time + (24 * 60 * 60), // Tiempo en el que expirará el token (24 horas)
-                "data" => array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj"),
-            );
-            $token = '';
-            // $url = curl_init('https://prueba.gphsis.com/sisfusion/api/exitoArcus');
-            $url = curl_init();
-            curl_setopt($url, CURLOPT_URL, 'https://hook.us1.make.com/l3mh2xcfdsxob8l2ip28iv53ctikfwbm');
-            curl_setopt($url, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($url, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Authorization:'. $token
-            ));
-            $data->montoDelNegocio = doubleval($data->montoDelNegocio);
-            curl_setopt($url, CURLOPT_POSTFIELDS, json_encode($data));
-            $response = curl_exec($url);
-            $status = curl_getinfo($url, CURLINFO_HTTP_CODE);
-            curl_close($url);
-            $result = array(
-                'response'  =>  $response,
-                'status'    =>  $status
-            );
-            echo json_encode($result);
         }
     }
 
@@ -818,7 +839,6 @@ class Api extends CI_Controller
                 }
             }
         }
-
     }
 
     function getAsesoresArcus($fecha = '') {
@@ -855,8 +875,9 @@ class Api extends CI_Controller
                         else // ERROR TRANSACTION
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
+                    }
                 }
             }
         }
@@ -901,13 +922,551 @@ class Api extends CI_Controller
                         $this->output->set_content_type('application/json');
                         $this->output->set_output(json_encode($consulta));
                     } 
-                    else
+                    else{
                         echo ($checkSingup);
                         header('Content-Type: application/json');
+                    }
                 }
             }
         }
+    }
 
+    function getCatalogos() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $dbTransaction = $this->Api_model->getCatalogos();
+                        $data['formas_pago'] = array();
+                        $data['sedes'] = array();
+                        $data['roles'] = array();
+                        for ($i = 0; $i < COUNT($dbTransaction); $i++) {
+                            if ($dbTransaction[$i]['id_catalogo'] == 16) // FORMAS DE PAGO
+                                array_push($data['formas_pago'], ['id_opcion' => $dbTransaction[$i]['id_opcion'], 'nombre' => $dbTransaction[$i]['nombre']]);
+                            if ($dbTransaction[$i]['id_catalogo'] == 0) // SEDES
+                                array_push($data['sedes'], ['id_opcion' => $dbTransaction[$i]['id_opcion'], 'nombre' => $dbTransaction[$i]['nombre']]);
+                            if ($dbTransaction[$i]['id_catalogo'] == 1) // ROLES
+                                array_push($data['roles'], ['id_opcion' => $dbTransaction[$i]['id_opcion'], 'nombre' => $dbTransaction[$i]['nombre']]);
+                        }
+                        if ($dbTransaction) // SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data), JSON_UNESCAPED_UNICODE);
+                        else // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+    function agregarUsuarioOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if (!isset($data->forma_pago) || !isset($data->nombre) || !isset($data->apellido_paterno) || !isset($data->correo) || !isset($data->usuario) || !isset($data->contrasena) || !isset($data->id_sede) || !isset($data->id_lider) || !isset($data->id_rol) || !isset($data->telefono))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->forma_pago == '' || $data->nombre == '' || $data->apellido_paterno == '' || $data->correo == '' || $data->usuario == '' || $data->contrasena == '' || $data->id_sede == '' || $data->id_lider == '' || $data->id_rol == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $result = $this->Api_model->verificarExistenciaUsuario($data->usuario);
+                                if (count($result) > 0) // EXISTE EL REGISTRO
+                                    echo json_encode(array("status" => -1, "message" => "El nombre de usuario asignado ya existe, inténtalo con otro valor."), JSON_UNESCAPED_UNICODE);
+                                else {
+                                    $data = array (
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "rfc" => $data->rfc,
+                                        "sesion_activa" => 0,
+                                        "estatus" => 1,
+                                        "tipo" => 2,
+                                        "forma_pago" => $data->forma_pago,
+                                        "nombre" => $data->nombre,
+                                        "apellido_paterno" => $data->apellido_paterno,
+                                        "apellido_materno" => $data->apellido_materno,
+                                        "correo" => $data->correo,
+                                        "telefono" => $data->telefono,
+                                        "usuario" => $data->usuario,
+                                        "contrasena" => encriptar($data->contrasena),
+                                        "id_sede" => $data->id_sede,
+                                        "id_lider" => $data->id_lider,
+                                        "id_rol" => $data->id_rol
+                                    );
+                                    $dbTransaction = $this->Api_model->agregarUsuarioOoam($data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito.", "data" => ['id_usuario' => $dbTransaction[0]['id_usuario']]), JSON_UNESCAPED_UNICODE);
+                                    else // ERROR TRANSACTION
+                                        echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                }
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+    function desactivarUsuarioOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if (!isset($data->id_usuario))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->id_usuario == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {                
+                                $dataUpdate = array(
+                                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                    "modificado_por" => 1,
+                                    "estatus" => 3
+                                );
+                                $dbTransaction = $this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $data->id_usuario);
+                                if ($dbTransaction) // SUCCESS TRANSACTION
+                                    echo json_encode(array("status" => 1, "message" => "Registro actualizado con éxito."), JSON_UNESCAPED_UNICODE);
+                                else // ERROR TRANSACTION
+                                    echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+
+    function insertComisionesOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dataReturn = json_decode(file_get_contents("php://input"));
+                        if (!isset($dataReturn->referencia) || !isset($dataReturn->empresa) || !isset($dataReturn->estatusContratacion) || !isset($dataReturn->totalLote) || !isset($dataReturn->idCliente) || !isset($dataReturn->nombreCliente))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if (($dataReturn->referencia == '') || ($dataReturn->empresa == '') || ($dataReturn->estatusContratacion == '') || ($dataReturn->totalLote == '') || ($dataReturn->idCliente == '') ||($dataReturn->nombreCliente  == ''))
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $getLoteComision = $this->Ooam_model->validaLoteComision($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                if(count($getLoteComision) > 0 )
+                                    echo (json_encode(array("status" => -1, "message" => "El Lote ingresado ya se encuentra registrado.")));
+                                    else {
+                                        $consultarReferencia = $this->Ooam_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                        if(empty($consultarReferencia))
+                                        echo (json_encode(array("status" => -1, "message" => "Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.")));
+                                    
+                                    else {
+                                        $datosComisionistas = count($dataReturn->comisionistas);
+                                        $totalLote = json_decode($dataReturn->totalLote);
+                                        $dataComisiones = array();
+                                        $generalComisiones = 0;
+                                        $porcentajesComisiones = 0;
+                                        $dataPago = array();
+                                        $getInfoLote = $this->Ooam_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                        
+                                        for($i = 0; $i < $datosComisionistas; $i++ ){
+                                            $getPlanComision = $this->Ooam_model->getPlanComision($dataReturn->comisionistas[$i]->rolGenerado,1);
+                                            $porcentajeComision = json_decode($getPlanComision->porcentajeComision);
+                                            $comisionTotal = (($porcentajeComision/100)*$totalLote);
+                                            $generalComisiones =  $generalComisiones + $comisionTotal;
+                                            $porcentajesComisiones =  $porcentajesComisiones + $porcentajeComision;
+                                            $dataComisiones['id_lote'] = $getInfoLote->idLote;                            
+                                            $dataComisiones['id_usuario'] = $dataReturn->comisionistas[$i]->idUsuario;      
+                                            $dataComisiones['comision_total'] = $comisionTotal;                                  
+                                            $dataComisiones['estatus'] = 1; 
+                                            $dataComisiones['observaciones'] = "COMISION OOAM";                                 
+                                            $dataComisiones['porcentaje_decimal'] = $porcentajeComision;                             
+                                            $dataComisiones['rol_generado'] = $dataReturn->comisionistas[$i]->rolGenerado;    
+                                            $dataComisiones['descuento'] = 0;                                              
+                                            $dataComisiones['idCliente'] = $dataReturn->idCliente;                          
+                                            $dataComisiones['modificado_por'] = 1;                                              
+                                            $dataComisiones['fecha_modificado'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_creacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_autorizacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['creado_por'] = 1;            
+                                            
+                                            if($dataReturn->comisionistas[$i]->rolGenerado == 7){
+                                                $dataLineaVenta['idAsesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
+                                                $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){
+                                                $dataLineaVenta['idGerente'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 2){
+                                                $dataLineaVenta['idSubdirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 1){
+                                                $dataLineaVenta['idDirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else{
+                                                $dataLineaVenta['idOtro'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }
+
+                                            
+                                            if (isset($dataComisiones) && !empty($dataComisiones)) {
+                                                $dbTransaction = $this->Ooam_model->insertComisionOOAM('comisiones_ooam',$dataComisiones);
+                                                if($dbTransaction != 1){
+                                                    echo (json_encode($dbTransaction));
+                                                }
+                                            }
+                                        }
+                                        $dataLineaVenta['idLote'] = $getInfoLote->idLote;                            
+                                        $dataLineaVenta['estatus'] = 1;                            
+                                        $dataLineaVenta['idCliente'] = $dataReturn->idCliente;
+                                        $dataLineaVenta['totalLote'] = $totalLote;
+                                        $dataLineaVenta['modificadoPor'] = 'SOOAM';
+                                        
+                                            $dataPago['id_lote'] = $getInfoLote->idLote;                       
+                                            $dataPago['total_comision'] = $generalComisiones; 
+                                            $dataPago['abonado'] = 0;                    
+                                            $dataPago['porcentaje_abono'] = $porcentajeComision; 
+                                            $dataPago['pendiente'] = $generalComisiones;                                
+                                            $dataPago['creado_por'] = 1;  
+                                            $dataPago['fecha_modificacion'] = date("Y-m-d H:i:s");                             
+                                            $dataPago['fecha_abono'] = date("Y-m-d H:i:s");
+                                            $dataPago['bandera'] = 0;
+                                            $dataPago['ultimo_pago'] = 0;
+                                            $dataPago['bonificacion'] = 0; 
+                                            $dataPago['fecha_neodata'] = date("Y-m-d H:i:s"); 
+                                            $dataPago['new_neo'] = 0; 
+                                            $dataPago['monto_anticipo'] = 0; 
+                                            $dataPago['numero_dispersion'] = 0; 
+                                            $dataPago['ultima_dispersion'] = date("Y-m-d H:i:s"); 
+                                            $dataPago['plan_comision'] = 1; 
+                                            $dataPago['nombreCliente'] = $dataReturn->nombreCliente;
+                                            $dataPago['estatusContratacion'] = $dataReturn->estatusContratacion;
+                                            $dataPago['totalLote'] = $dataReturn->totalLote;
+
+                                            if (isset($dataLineaVenta) && !empty($dataLineaVenta)) {
+                                                $dbTransactionLV = $this->Ooam_model->insertComisionOOAM('clientes_ooam',$dataLineaVenta);
+                                                if($dbTransactionLV != 1){
+                                                    echo (json_encode($dbTransactionLV));
+                                                } 
+                                                }
+                                            
+                                            if (isset($dataPago) && !empty($dataPago)) {
+                                                $dbTransactionPago = $this->Ooam_model->insertComisionOOAM('pago_ooam',$dataPago);
+                                                if($dbTransactionPago != 1){
+                                                    echo (json_encode($dbTransactionPago));
+                                                } 
+                                                }
+                                                
+                                                if ($dbTransaction&&$dbTransactionPago&&$dbTransactionLV){ // SUCCESS TRANSACTION
+                                                    echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                                    header('Content-Type: application/json');
+                                                } else{ // ERROR TRANSACTION
+                                                    echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                                    header('Content-Type: application/json');
+                                                }
+                                            }
+                                        }
+                                    }
+                                    }
+                                } else
+                        echo json_encode($checkSingup);
+                    }
+                }
+            }
+    }
+
+    function addLeadRecordSalesforce() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9187);
+                $valida_token = json_decode($this->validateToken($token, 9187));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if(!isset($data->APELLIDOPATERNO))
+                            $data->APELLIDOPATERNO = '';
+                        if (!isset($data->APELLIDOMATERNO))
+                            $data->APELLIDOMATERNO = ''; 
+                        if (!isset($data->NOMBRE) || !isset($data->Mail) || !isset($data->Phone) || !isset($data->Comments) || !isset($data->iScore) || !isset($data->ProductID) || !isset($data->CampaignID) || !isset($data->Source) || !isset($data->Owner) || !isset($data->IDSALESFORCE))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->NOMBRE == '' || $data->Mail == '' || $data->Phone == '' || $data->Comments == '' || $data->iScore == '' || $data->ProductID == '' || $data->CampaignID == '' || $data->Source == '' || $data->Owner == '' || $data->IDSALESFORCE == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $result = $this->Api_model->getAdviserLeaderInformation($data->Owner);
+                                if ($result->id_rol != 7)
+                                    echo json_encode(array("status" => -1, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
+                                else {
+                                    $data = array(
+                                        "id_asesor" => $data->Owner,
+                                        "id_coordinador" => $result->id_coordinador,
+                                        "id_gerente" => $result->id_gerente,
+                                        "id_sede" => $result->id_sede,    
+                                        "id_subdirector" => $result->id_subdirector,
+                                        "id_regional" => $result->id_regional,
+                                        "personalidad_juridica" => 2,
+                                        "nombre" => $data->NOMBRE,
+                                        "apellido_paterno" => $data->APELLIDOPATERNO,
+                                        "apellido_materno" => $data->APELLIDOMATERNO,
+                                        "correo" => $data->Mail,
+                                        "telefono" => $data->Phone,
+                                        "lugar_prospeccion" => 52, 
+                                        "otro_lugar" => $data->CampaignID,
+                                        "plaza_venta" => 0,
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                        "observaciones" => $data->Comments,
+                                        "desarrollo" => $data->ProductID,
+                                        "score" => $data->iScore,
+                                        "source" => $data->Source,
+                                        "id_salesforce" => $data->IDSALESFORCE
+                                    );
+                                    $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                     
+                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                    else // ERROR TRANSACTION
+                                        echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                }
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+
+    function hacerAccionOoam() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(9347);
+                $valida_token = json_decode($this->validateToken($token, 9347));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+
+                        //lógica interna
+                        if (!isset($data->tipoAccion))
+                            echo json_encode(array("status" => -1, "message" => "El tipo de acción a realizar no viene informado o no es el correcto. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if($data->tipoAccion == 1) {//Actualizar contraseña
+                                if (!isset($data->contrasena) || !isset($data->id_usuario)) {//verifica que venga en el json
+                                    echo json_encode(array("status" => -1, "message" => "La nueva contraseña y/o id de usuario para actualizar, no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                }
+                                else {
+                                    if ($data->contrasena == '' || $data->id_usuario == '') {//verifica que no venga vacio
+                                        echo json_encode(array("status" => -1, "message" => "La nueva contraseña y/o id de usuario para actualizar, no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                    } else {
+                                        $contrasenaEncriptada = encriptar($data->contrasena);
+                                        $dataUpdate = array("contrasena" => $contrasenaEncriptada);
+                                        $dbTransaction = $this->General_model->updateRecord('usuarios', $dataUpdate, 'id_usuario', $data->id_usuario);
+                                        if ($dbTransaction) // SUCCESS TRANSACTION
+                                            echo json_encode(array("status" => 1, "message" => "Registro actualizado con éxito."), JSON_UNESCAPED_UNICODE);
+                                        else // ERROR TRANSACTION
+                                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                    }
+                                }
+                            }else if($data->tipoAccion == 2){//conultar estatus del ususario
+                                if(!isset($data->id_usuario)){
+                                    echo json_encode(array("status" => -1, "message" => "El id de usuario no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                }else{
+                                    if($data->id_usuario == ''){
+                                        echo json_encode(array("status" => -1, "message" => "El id de usuario no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                    }
+                                    else{
+                                        $dbTransaction = $this->Api_model->consultarInformacion($data->id_usuario);
+                                        $estatusUsuarioInt = $dbTransaction[0]['estatus'];
+                                        $nombreUsuario = $dbTransaction[0]['nombre'].' '.$dbTransaction[0]['apellido_paterno'].' '. $dbTransaction[0]['apellido_materno'];
+                                        $estatusUsuario = ($estatusUsuarioInt==0) ? 'no está activo' : (($estatusUsuarioInt==1) ? 'está activo': 'no disponible');
+                                        $id_usuario = $dbTransaction[0]['id_usuario'];
+                                        echo json_encode(array("status" => 1, "message" => "El usuario $nombreUsuario (ID:$id_usuario) $estatusUsuario"), JSON_UNESCAPED_UNICODE);
+                                    }
+                                }
+                            }else{
+                                echo json_encode(array("status" => -1, "message" => "Acción incorrecta, Verifique que todos los parámetros requeridos sean los correctos."), JSON_UNESCAPED_UNICODE);
+
+                            }
+                            /*if ($data->forma_pago == '' || $data->nombre == '' || $data->apellido_paterno == '' || $data->correo == '' || $data->usuario == '' || $data->contrasena == '' || $data->id_sede == '' || $data->id_lider == '' || $data->id_rol == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $result = $this->Api_model->verificarExistenciaUsuario($data->usuario);
+                                if (count($result) > 0) // EXISTE EL REGISTRO
+                                    echo json_encode(array("status" => -1, "message" => "El nombre de usuario asignado ya existe, inténtalo con otro valor."), JSON_UNESCAPED_UNICODE);
+                                else {
+                                    $data = array (
+                                        "fecha_creacion" => date("Y-m-d H:i:s"),
+                                        "creado_por" => 1,
+                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                        "modificado_por" => 1,
+                                        "rfc" => $data->rfc,
+                                        "sesion_activa" => 0,
+                                        "estatus" => 1,
+                                        "tipo" => 2,
+                                        "forma_pago" => $data->forma_pago,
+                                        "nombre" => $data->nombre,
+                                        "apellido_paterno" => $data->apellido_paterno,
+                                        "apellido_materno" => $data->apellido_materno,
+                                        "correo" => $data->correo,
+                                        "telefono" => $data->telefono,
+                                        "usuario" => $data->usuario,
+                                        "contrasena" => encriptar($data->contrasena),
+                                        "id_sede" => $data->id_sede,
+                                        "id_lider" => $data->id_lider,
+                                        "id_rol" => $data->id_rol
+                                    );
+                                    $dbTransaction = $this->Api_model->agregarUsuarioOoam($data); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                    if ($dbTransaction) // SUCCESS TRANSACTION
+                                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito.", "data" => ['id_usuario' => $dbTransaction[0]['id_usuario']]), JSON_UNESCAPED_UNICODE);
+                                    else // ERROR TRANSACTION
+                                        echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                                }
+                            }*/
+                        }
+                        //termina lógica interna
+
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
     }
 
 }

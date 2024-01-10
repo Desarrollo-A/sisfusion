@@ -1,323 +1,287 @@
 
-$("#prestamos-table").prop('hidden', true);
+var tr;
+var tabla_descuentos ;
+var totaPen = 0;
+let titulos = [];
 
-// $('#roles').change(function () {
-//     const rol = $(this).val();
-//     // $("#users").empty().selectpicker('refresh');
+$(document).ready(function(){
+    $("#tabla_descuentos").addClass('hide');
+});
 
-//     $.ajax({
-//         url: `${baseUrl}Comisiones/getUserPrestamoByRol/${rol}`,
-//         type: 'GET',
-//         dataType: 'json',
-//         success: function (data) {
-//             const len = data.length;
-//             for(let i = 0; i < len; i++){
-//                 const id = data[i]['id_usuario'];
-//                 const name = data[i]['name_user'].toUpperCase();
-//                 $("#users").append($('<option>').val(id).text(name));
-//             }
-
-//             $("#users").selectpicker('refresh');
-//         }
-//     });
-
-//     // createPrestamosDataTable(rol, user, mes, anio);
-// });
-
-// $('#users').change(function () {
-//     const rol = $('#roles').val();
-//     let user = $(this).val();
-//     mes = $('#mes').val();
-//     rol = $('#rol').val();
-
-//     if (user === undefined || user === null || user === '') {
-//         user = 0;
-//     }
-
-//     // createPrestamosDataTable(rol, user, mes, anio);
-// });
-
-$('#mes').change(function(ruta){
+$('#mes').change(function(){
     anio = $('#anio').val();
     mes = $('#mes').val();
     
     if(mes == '' || anio == ''){
     }else{
-       createPrestamosDataTable(mes, anio);
+        fillTable(anio, mes);
     }
 });
 
-$('#anio').change(function(ruta) {
+$('#anio').change(function() {
     anio = $('#anio').val();
     mes = $('#mes').val();
-    // rol = $('#roles').val();
-    // users = $('#users').val();
-    console.log(anio);
     if(anio == '' || mes == ''){
     }else{
-        createPrestamosDataTable(mes, anio);
+        $("#tabla_descuentos").removeClass('hide');
+        fillTable(anio, mes);
     }
     
 });
 
-//     $('#rol').change( function(){
-//     mes = $('#mes').val();
-//     anio = $('#anio').val();
-//     rol = $('#rol').val();
+$('#tabla_descuentos thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+    $('input', this).on('keyup change', function() {
+        if (tabla_descuentos.column(i).search() !== this.value) {
+            tabla_descuentos.column(i).search(this.value).draw();
+            var total = 0;
+            var index = tabla_descuentos.rows({ selected: true, search: 'applied' }).indexes();
+            var data = tabla_descuentos.rows(index).data();
+            $.each(data, function(i, v) {
+                total += parseFloat(v.abonado);
+            });
+            document.getElementById("pagar_descuentos").textContent = formatMoney(total);
+        }
+    });
+});
 
-//     if(mes == '' || anio == '' ){
-//    //     alerts.showNotification("top", "right", "Debe seleccionar las dos fechas y el estatus", "warning");
-//     }else{
-//         createPrestamosDataTable(anio,rol);
-//     }
-// });
+function fillTable(anio, mes){
 
-$('#prestamos-table thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-
-    if ( i != 13) {
-        $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
-        $('input', this).on('keyup change', function () {
-            if (prestamosTabla.column(i).search() !== this.value) {
-                prestamosTabla.column(i).search(this.value).draw();
-
-                var total = 0;
-                    var index = prestamosTabla.rows({ selected: true, search: 'applied' }).indexes();
-                    var data = prestamosTabla.rows( index ).data();
-                    $.each(data, function(i, v){
-                        total += parseFloat(v.abono_neodata);
-                    });
-                    document.getElementById('total-pago').textContent = '$' + formatMoney(total);
-            }
-        });
-    }
-}); 
-
-function createPrestamosDataTable(mes, anio) {
-    console.log(anio);
-    if (prestamosTabla) {
-        prestamosTabla.clear();
-        prestamosTabla.destroy();
-        $('#prestamos-table tbody').empty();
-    }
-
-    $("#prestamos-table").prop('hidden', false);
-
-    $('#prestamos-table').on('xhr.dt', function (e, settings, json) {
-        let total = 0;
-
+    $('#tabla_descuentos').on('xhr.dt', function(e, settings, json, xhr) {
+        var total = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.abono_neodata);
+            total += parseFloat(v.abonado);
         });
-
-        document.getElementById('total-pago').textContent = '$' + formatMoney(total);
+        var to = formatMoney(total);
+        document.getElementById("pagar_descuentos").textContent = to;
     });
 
-    prestamosTabla = $('#prestamos-table').DataTable({
-        dom: 'Brt'+ "<'row'<'col-xs-12 col-sm-12 col-md-6 col-lg-6'i><'col-xs-12 col-sm-12 col-md-6 col-lg-6'p>>",
-        width: 'auto',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,9,10,11,12],
-                    format: {
-                        header: function (d, columnIndx) {
-                            switch (columnIndx) {
-                                case 0: return 'ID PAGO';
-                                case 1: return 'ID PRÉSTAMO';
-                                case 2: return 'USUARIO';
-                                case 4: return 'LOTE';
-                                case 5: return 'PUESTO';
-                                case 6: return 'MONTO TOTAL';
-                                case 7: return 'PAGADO';
-                                case 8: return 'PENDIENTE';
-                                case 9: return 'PAGO INDIVIDUAL';
-                                case 10: return 'FECHA';
-                                case 11: return 'COMENTARIOS';
-                                case 12: return 'TIPO DESCUENTO';
-                                case 13: return 'ESTATUS';
-                                default: return 'NA';
-                            }
-                        }
+    $("#tabla_descuentos").prop("hidden", false);
+    tabla_descuentos = $("#tabla_descuentos").DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'Reporte General Prestámos',
+            exportOptions: {
+                columns: [0,1,2,3,4,5,6,7,8,9,10,11,13,14,15],
+                format: {
+                    header:  function (d, columnIdx) {
+                        return ' ' + titulos[columnIdx] + ' ';
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
-        fixedHeader: true,
-        language: {
-            url: `${baseUrl}/static/spanishLoader_v2.json`,
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
+            fixedHeader: true,
+            language: {
+                url: `${general_base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
         destroy: true,
         ordering: false,
         columns: [
-            {
-                'name': 'ID PAGO',
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.id_pago_i+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.id_prestamo+'</p>';
-                }
-            },
-            {
-                'width': "20%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.nombre_completo+'</p>';
-                }
-            },
-            {
-                'width': "10%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.puesto+'</p>';
-                }
-            },
-            {
-                'width': "10%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.nombreLote+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.monto_prestado)+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.abono_neodata)+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.pendiente)+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">$'+formatMoney(d.pago_individual)+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.fecha_creacion+'</p>';
-                }
-            },
-            {
-                'width': "10%",
-                'data': function( d ){
-                    return '<p class="m-0">'+d.comentario+'</p>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function(d) {
-                    return '<span class="label" style="background: #05A134;">PAGADO</span>';
-                }
-            },
-            {
-                'width': "5%",
-                'data': function(d) {
-                    let etiqueta = '';
-                color='000';
-                if(d.id_opcion == 18){ //PRESTAMO
-                    color='89C86C';
-                } else if(d.id_opcion == 19){ //SCIO
-                    color='72EDD6';
-                }else if(d.id_opcion == 20){ //PLAZA
-                    color='72CBED';
-                }else if(d.id_opcion == 21){ //LINEA TELEFÓNICA
-                    color='7282ED';
-                }else if(d.id_opcion == 22){ //MANTENIMIENTO
-                    color='CA72ED';
-                }else if(d.id_opcion == 23){ //NÓMINA - ANALISTAS DE COMISIONES
-                    color='CA15ED';
-                }else if(d.id_opcion == 24){ //NÓMINA - ASISTENTES CDMX
-                    color='CA9315';
-                }else if(d.id_opcion == 25){ //NÓMINA - IMSS
-                    color='34A25C';
-                }else if(d.id_opcion == 26){ //NÓMINA -LIDER DE PROYECTO E INNOVACIÓN
-                    color='165879';
-                }
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.proyecto+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.condominio+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombreLote+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.id_pago_i+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.id_prestamo+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                    return '<p class="m-0"><b>'+d.nombre_completo+'</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.puesto+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.nombre_sede+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+formatMoney(d.monto_prestado)+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0"><b>'+formatMoney(d.abonado)+'</b></p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.num_pagos+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.fecha_creacion+'</p>';
+            }
+        },
+        {
+            data: function( d){         
+                const letras = d.comentario.split(" ");
+                if(letras.length <= 4)
+                {
 
-                return '<p><span class="label" style="background:#'+color+';">'+d.tipo+'</span></p>';
-                }
-            },
-            {
-                'width': "5%",
-                'orderable': false,
-                'data': function( d ) {
-                    return `
-                        <button class="btn-data btn-blueMaderas consulta-historial"
-                            value="${d.id_relacion_pp}"
-                            title="Historial">
-                            <i class="fas fa-info"></i>
-                        </button>
-`                           ;
+                    return '<p class="m-0">'+d.comentario+'</p>';
+                }else{
+                    return `<div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
+                            <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                            <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                onclick="esconder(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                <span class="lbl-blueMaderas"><B>Ver más</B></span> 
+                            </a>
+                        </div>
+                        <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                ${d.comentario}</p> 
+                                <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                    onclick="mostrar(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                    <span class="lbl-blueMaderas"><B>Ver menos</B></span> 
+                                </a>
+                            </div>
+                        </div>`;
                 }
             }
-        ],
-        columnDefs: [],
-        ajax: {
-            url: `${baseUrl}Comisiones/getPrestamosTable/${mes}/${anio}`,
-            type: "GET",
-            cache: false,
-            data: function( d ){}
         },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.comentario+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<span class="label lbl-green" >PAGADO</span>';
+            }
+        },
+        {
+            "data": function( d ){
+                var etiqueta;
+
+                    if(d.pago_neodata < 1){
+                        etiqueta = '<p class="m-1">'+'<span class="label" style="background:'+d.color+'18; color:'+d.color+'">'+d.estatus_actual+'</span>'+'</p>'+'<p class="m-1">'+'<span class="label lbl-green">IMPORTACIÓN</span></p>';
+                    }else{
+                        etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
+                    }
+
+                return etiqueta;
+            }
+        },
+        { 
+            "orderable": false,
+            "data": function( data ){
+                var BtnStats;
+                BtnStats = `<button href="#" value="${data.id_pago_i}" data-value='"${data.nombreLote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="DETALLES" data-toggle="tooltip" data-placement="top"><i class="fas fa-info"></i></button>`;
+                return '<div class="d-flex justify-center">'+BtnStats+'</div>';
+            }
+        }],
+        columnDefs: [{
+            targets: [13], visible: false,
+            searchable: false,
+        }],
+        
+        ajax: {
+            url: `${general_base_url}Comisiones/getPrestamosTable/${mes}/${anio}`,
+            type: "POST",
+            cache: false,
+            data: function( d ){
+            }
+        },
+        initComplete: function(){
+            $("#spiner-loader").addClass('hide');
+        }
     });
 
-    $('#prestamos-table tbody').on('click', '.consulta-historial', function (e) {
+    $('#tabla_descuentos').on('draw.dt', function() {
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    });
+
+    $("#tabla_descuentos tbody").on("click", ".consultarDetalleDelPago", function(e){
         e.preventDefault();
         e.stopImmediatePropagation();
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
 
-        const idRelacion = $(this).val();
+        changeSizeModal("modal-md");
+        appendBodyModal(`<div class="modal-body">
+            <div role="tabpanel">
+                <ul class="nav" role="tablist">
+                    <div id="nombreLote"></div>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comentariosDescuentos"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+        </div>`);
+        showModal();
 
-        $('#historial-prestamo-content').html('');
-        $.getJSON(`${baseUrl}Comisiones/getHistorialPrestamoAut/${idRelacion}`)
-            .done(function (data) {
-                $.each(data, function(i, v) {
-                    $("#historial-prestamo-content").append(`
-                        <p style="color:gray;font-size:1.1em;">
-                            ${v.comentario}
-                            <br>
-                            <b style="color:#3982C0;font-size:0.9em;">
-                                ${v.fecha}
-                            </b>
-                            <b style="color:gray;font-size:0.9em;">
-                            - ${v.nombre_usuario}
-                            </b>
-                        </p>
-                    `);
-                });
-
-                $('#historial-modal').modal();
+        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $.getJSON("getComments/"+id_pago).done( function( data ){
+            $.each( data, function(i, v){
+                $("#comentariosDescuentos").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
+        });
     });
 }
 
-function formatMoney( n ) {
-    var c = isNaN(c = Math.abs(c)) ? 2 : c,
-        d = d === undefined ? "." : d,
-        t = t === undefined ? "," : t,
-        s = n < 0 ? "-" : "",
-        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-        j = (j = i.length) > 3 ? j % 3 : 0;
-    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+$(window).resize(function(){
+    tabla_descuentos.columns.adjust();
+});
+
+function esconder(id){
+    $('#muestratexto'+id).addClass('hide');
+    
 }
+
+function mostrar(id){
+    $('#muestratexto'+id).removeClass('hide'); 
+}
+
+        
+

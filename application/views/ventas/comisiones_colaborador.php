@@ -567,11 +567,12 @@
     </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
-    <script src="<?= base_url()?>dist/js/funciones-generales.js"></script>
+    <!-- <script src="<?= base_url()?>dist/js/funciones-generales.js"></script> -->
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
+        var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>

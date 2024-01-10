@@ -5,9 +5,8 @@ $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value) {
+            if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value)
                 $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
-            }
         });
     }
 });
@@ -27,7 +26,7 @@ $("#tabla_ingresar_9").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx -1]  + ' ';
+                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
                     }
                 }
             }
@@ -44,7 +43,7 @@ $("#tabla_ingresar_9").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx -1]  + ' ';
+                        return ' ' + titulosInventario[columnIdx - 1] + ' ';
                     }
                 }
             }
@@ -72,7 +71,7 @@ $("#tabla_ingresar_9").ready(function () {
         },
         {
             data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_venta}</span>`;
+                return `<span class="label lbl-azure">${d.tipo_venta}</span>`;
             }
         },
         {
@@ -80,31 +79,11 @@ $("#tabla_ingresar_9").ready(function () {
                 return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
         },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreResidencial + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + (d.nombreCondominio).toUpperCase(); +'</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombreLote + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.nombre + " " + d.apellido_paterno + " " + d.apellido_materno + '</p>';
-            }
-        },
-        {
-            data: function (d) {
-                return '<p class="m-0">' + d.gerente + '</p>';
-            }
-        },
+        { data: 'nombreResidencial' },
+        { data: 'nombreCondominio' },
+        { data: 'nombreLote' },
+        { data: 'nombreCliente' },
+        { data: 'gerente' },
         {
             data: function (d) {
                 let respuesta = '';
@@ -122,24 +101,14 @@ $("#tabla_ingresar_9").ready(function () {
         },
         {
             orderable: false,
-            data: function (data) {
+            data: function (d) {
                 var cntActions;
-                if (data.vl == '1')
-                    cntActions = 'EN PROCESO LIBERACIÓN';
+                if (d.vl == '1')
+                    cntActions = 'EN PROCESO DE LIBERACIÓN';
                 else {
-                    if (data.idStatusContratacion == 8 && data.idMovimiento == 38 || data.idStatusContratacion == 8 && data.idMovimiento == 65 || data.idStatusContratacion == 11 && data.idMovimiento == 41) {
-                        cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-residencia="' + data.residencia + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                            'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
-                            'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                            '<i class="fas fa-thumbs-up"></i></button>';
-                        if (data.tipo_proceso == 'Normal') {
-                            cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' +
-                                'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
-                                'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS">' +
-                                '<i class="fas fa-thumbs-down"></i></button>';
-                        }
-                    } else
-                        cntActions = 'N/A';
+                    cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                    if (d.tipo_proceso == 'Normal')
+                        cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS"><i class="fas fa-thumbs-down"></i></button>`;
                 }
                 return "<div class='d-flex justify-center'>" + cntActions + "</div>";
             }
@@ -161,11 +130,11 @@ $("#tabla_ingresar_9").ready(function () {
         order: [[1, 'asc']]
     });
 
-    $('#tabla_ingresar_9').on('draw.dt', function() {
+    $('#tabla_ingresar_9').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
-    });    
+    });
 
     $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
@@ -179,15 +148,15 @@ $("#tabla_ingresar_9").ready(function () {
             var fechaVenc;
             if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38)
                 status = 'Status 8 listo (Asistentes de Gerentes)';
-            else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) 
+            else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65)
                 status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-            else 
+            else
                 status = 'N/A';
             if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
                 row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
                 fechaVenc = row.data().fechaVenc;
             }
-            else 
+            else
                 fechaVenc = 'N/A';
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';
@@ -218,9 +187,10 @@ $("#tabla_ingresar_9").ready(function () {
         getInfo1[5] = $(this).attr("data-idLote");
         getInfo1[6] = $(this).attr("data-fecven");
         getInfo1[7] = $(this).attr("data-code");
+        getInfo1[8] = $(this).attr("data-idArcus"); // ID DE ARCUS
+        getInfo1[9] = $(this).attr("data-lugarProspeccion"); // LUGAR DE PROSPECCIÓN
         nombreLote = $(this).data("nomlote");
         let residencia = $(this).attr("data-residencia") != 1 ? 0 : 1;
-        console.log(residencia);
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
         $("#rl").val("");
@@ -228,7 +198,7 @@ $("#tabla_ingresar_9").ready(function () {
         $("#rl").selectpicker('refresh');
         $("#residencia").selectpicker('refresh');
     });
-    
+
     $("#tabla_ingresar_9 tbody").on("click", ".cancelReg", function (e) {
         e.preventDefault();
         getInfo3[0] = $(this).attr("data-idCliente");
@@ -265,6 +235,12 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
     dataExp1.append("residencia", residencia);
+
+    // INFORMACIÓN PARA ENVIAR A ARCUS
+    dataExp1.append("uid", getInfo1[8]); // id_arcus
+    dataExp1.append("lugar_prospeccion", getInfo1[9]); // idProspecto
+    dataExp1.append("estatus", 5); // SE CONSUME SERVICIO CUANDO SE REGISTRA ESTATUS 9 (9. Contrato recibido con firma de cliente (Contraloria)) Y SE ENVÍA ID ARCUS
+
     if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
     if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {
@@ -282,7 +258,7 @@ $(document).on('click', '#save1', function (e) {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');
                     $('#tabla_ingresar_9').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", "Estatus enviado.", "success");
+                    alerts.showNotification('top', 'right', "Estatus enviado correctamente.", 'success');
                 } else if (response.message == 'FALSE') {
                     $('#save1').prop('disabled', false);
                     $('#editReg').modal('hide');

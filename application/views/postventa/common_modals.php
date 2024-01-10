@@ -156,7 +156,7 @@
             <div class="modal-header"></div>
             <div class="modal-body text-center">
                 <h4 class="card-title" id="mainLabelText"></h4>
-                <p id="secondaryLabelDetail"></p>
+                <p id="secondaryLabelDetail"></p>ssdsfds
                 <div class="file-gph" id="selectFileSection">
                     <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
                     <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
@@ -377,6 +377,12 @@
                                     <textarea id="motivo" name="motivo" class="text-modal"></textarea>
                                 </div>
                             </div>
+                            <div class="col-md-12 pr-0">
+                                <div class="form-group text-left m-0">
+                                    <label class="control-label label-gral m-0">Observaciones</label>
+                                    <textarea id="observaciones" name="observaciones" class="text-modal"></textarea>
+                                </div>
+                            </div>
                         </div>
                        
                         <div class="row">
@@ -594,7 +600,8 @@
 <div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5></div>
+            <div class="modal-header"><h5 id="mainLabelText">Nueva Notaría</h5>
+            </div>
             <div class="modal-body text-center">
                <form id="newNotario" name="newNotario" method="post">
                     <input type="text" class="hide" id="idSolicitud" name="idSolicitud">
@@ -756,7 +763,6 @@
                         <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
                         </div>
                     </div>
-                   
                 </form> 
             </div>
         </div>
@@ -844,16 +850,17 @@
                 <h4 class="modal-title card-title"><b>Asignar estatus de Construcción</b></h4>
                 <p id="informacion_lote_construccion"></p>
             </div>
+
             <form id="formEstatusLote" name="formEstatusLote" method="post">
                 <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
                 <div class="modal-body">
                     <select class="form-control select-const select-gral m-0" title="Estatus construcción" id="construccion" name="construccion" required>
                     </select>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
-
                 </div>
             </form>
         </div>
@@ -896,11 +903,13 @@
                 </button>
                 <h4 class="modal-title card-title"><b>Información del cliente</b></h4>
             </div>
-                <div class="modal-body" id="modalContent">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                </div>
+            
+            <div class="modal-body" id="modalContent">
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -985,18 +994,21 @@
                                     </select>
                                     </div>
                                 </div>
+
                                 <div class="col-md-12 pr-0">
                                     <div class="form-group m-0 m-0">
                                         <label class="control-label label-gral">Nombre del titular anterior (<small style="color: red;">*</small>)</label>
                                         <input id="nombreI" name="nombreI"  class="form-control input-gral" type="text" >
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0">
                                         <label class="control-label label-gral btn-round">Fecha del contrato anterior (<small style="color: red;">*</small>)</label>
                                         <input type="text" class="form-control input-gral datepicker" id="fechaCAI" name="fechaCAI" >
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0">
                                         <label class="control-label label-gral">RFC / Datos personales (<small style="color: red;">*</small>)</label>
@@ -1004,6 +1016,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div>
                                 <div class="col-md-6 pr-0">
                                     <div class="form-group m-0 is-focused">
@@ -1011,12 +1024,14 @@
                                         <input id="aportacionesI" name="aportaciones" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 pr-0">
                                       <div class="form-group m-0 is-focused">
                                         <label class="control-label label-gral">Descuentos (<small style="color: red;">*</small>)</label>
                                         <input id="descuentosI" name="descuentos" data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" required class="form-control input-gral" type="text">
                                       </div>
                                 </div>
+
                                 <div class="col-md-12 pr-0">
                                     <label class="control-label label-gral">Motivo (<small style="color: red;">*</small>)</label>
                                     <textarea id="motivoI" name="motivo" class="text-modal" required></textarea>
@@ -1042,6 +1057,7 @@
                 <i data-dismiss="modal" class="fas fa-times fl-r"></i>
                 <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
             </div>
+
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">
                 <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
@@ -1051,58 +1067,75 @@
     </div>
 </div>
 
- 
-
-
-
-
-
-
 <!-- inicio de modal -->
 
 <div class="modal fade" id="documentTreeAr" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
-                <div class="modal-dialog  modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+            </div>
 
-                        </div>
-                        <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+            <div class="modal-body text-center"  id='subir_documento' name='subir_documento'>
+            </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
-                                
-                            <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
-                            </div>
-                            <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
-                        </div>
+            <div class="modal-footer">
+                <div  class="col-4 col-sm-4 col-md-4 col-lg-4 " id="mandarSolicitud" name="mandarSolicitud" >
+                    <button type="button" class="btn btn-blueMaderas  btn-simple" data-dismiss="modal">ENVIAR</button>
+                </div>
+                <button type="button" class="btn btn-danger btn-simple" id="botonCancelarDoc" name="botonCancelarDoc">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fin modal -->   
+
+<!-- inicio modal -->
+<div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <form id="formRechazar" name="formRechazar" method="post">    
+        <div class="modal-header">
+                <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
+                <br>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
                     </div>
                 </div>
+
+                <!-- <div class='col-12 col-sm-12 col-md-12 col-lg-12 mb-1' id="mot_rechazo">
+                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="mot_rec" name="mot_rec" title="Selecciona motivos de rechazo" data-live-search="true" multiple required></select>
+                </div> -->
+                <br><br>
             </div>
-<!-- fin modal -->   
-<!-- fin modal -->   
-<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                <div class="modal-header">
-                <h3 class="text-center">Validacion de documentos</h3>
-                    
+                <input type="hidden" id="id_sol" name="id_sol">
+                <input type="hidden" id="index" name="index">
+                <div class="modal-body">                    
                 </div>
-                    <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
-                    
-                    </div>
-                <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
-                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                      
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" id="botonRechazar" class="btn btn-primary">Aceptar</button>
                 </div>
-                </div>
-            </div>
-            </div>     
-          
+            </form>
+        </div>
+    </div>
+</div>
 <!-- fin modal -->
 
-
-
-
-
-
+<!-- inicio modal -->   
+<div class="modal fade" tabindex="-1"  id="documentosRevisar" name="documentosRevisar" data-keyboard="false" data-backdrop="static" style="z-index:  99;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-center">Validacion de documentos</h3>     
+            </div>
+            <div class="modal-body" id='documentos_revisar' name='documentos_revisar'>
+            </div>
+            <div class="modal-footer "  id='cerrarModal' name='cerrarModal'>
+                <button type="button" id="CancelarRevisarDocs" name="CancelarRevisarDocs" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>      
+            </div>
+        </div>
+    </div>
+</div>     
+          
+<!-- fin modal -->

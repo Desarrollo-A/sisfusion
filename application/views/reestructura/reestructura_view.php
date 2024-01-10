@@ -5,10 +5,8 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- moldaes 2da tabla inicio -->
-
-        
-        <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
+            <!-- moldaes 2da tabla inicio -->        
+            <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-small">
 				<div class="modal-content" > 
 					<div class="modal-body">
@@ -26,8 +24,6 @@
 				</div>
 			</div>
 		</div>
-
-
         <!-- fin modales 2da tabla -->
         <div class="modal fade" id="liberarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
@@ -97,7 +93,6 @@
 				</div>
 			</div>
 		</div>
-
         <div class="modal fade modal-alertas" id="catalogoNuevo" role="dialog">
 			<div class="modal-dialog modal-sm">
 				<div class="modal-content">
@@ -108,7 +103,7 @@
 						<input type="hidden" value="0" name="id_opcion" id="id_opcion">
 						<div class="form-group d-flex justify-center">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								<input type="text" class="form-control input-gral" id="inputCatalogo" name="inputCatalogo" required>
+								<input type="text" class="form-control input-gral" placeholder="Ingrese el nombre de la opción" id="inputCatalogo" name="inputCatalogo" required>
 							</div>
 						</div>
 						<div class="container-fluid">
@@ -117,7 +112,7 @@
 									<input type="button" class="btn btn-danger btn-simple m-0" data-dismiss="modal" value="CANCELAR">
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-primary" name="guardarCatalogo"  id="guardarCatalogo" value="GUARDAR">
+									<input type="submit" class="btn btn-primary" name="guardarCatalogo"  id="guardarCatalogo" value="GUARDAR">
 								</div>
 							</div>
 						</div>
@@ -132,7 +127,7 @@
 					<div class="modal-header">
 						<h5 class="modal-title text-center">Editar opción</h5>
 					</div>
-					<form id="addNewDesc">
+					<form id="updateNewDesc">
 						<input type="hidden" value="0" name="id_opcionEdit" id="id_opcionEdit">
 						<div class="form-group d-flex justify-center">
 							<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -145,7 +140,7 @@
 									<input type="button" class="btn btn-danger btn-simple m-0 align-center" data-dismiss="modal" value="CANCELAR">
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-									<input type="button" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">
+									<input type="submit" class="btn btn-primary" name="guardarEdit"  id="guardarEdit" value="GUARDAR">
 								</div>
 							</div>
 						</div>
@@ -216,7 +211,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
+                        <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Liberar para reestructura</a></li>
                             <li><a href="#proceso-1" role="tab" data-toggle="tab">Liberar</a></li>
                         </ul>
@@ -229,10 +224,6 @@
                                         <div class="encabezadoBox">
                                          <h3 class="card-title center-align">Liberar para reestructura</h3>
                                         </div>
-                                        <!-- tap -->
-                                        
-                                        <!--fin tap  -->
-                    
                                     <div class="toolbar">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -287,20 +278,20 @@
                                         </div>
                                     </div>
                                     <table class="table-striped table-hover" id="tabla_clientes_liberar" name="tabla_clientes_liberar">
-                                                <thead>
-                                                    <tr>
-                                                        <th>PROYECTO</th>
-                                                        <th>CONDOMINIO</th>
-                                                        <th>LOTE</th>
-                                                        <th>ID LOTE </th>
-                                                        <th>SUPERFICIE</th>
-                                                        <th>PRECIO M2</th>
-                                                        <th>NOMBRE</th>
-                                                        <th>ESTATUS</th>
-                                                        <th>ACCIONES</th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
+                                        <thead>
+                                            <tr>
+                                                <th>PROYECTO</th>
+                                                <th>CONDOMINIO</th>
+                                                <th>LOTE</th>
+                                                <th>ID LOTE </th>
+                                                <th>SUPERFICIE</th>
+                                                <th>PRECIO M2</th>
+                                                <th>NOMBRE</th>
+                                                <th>ESTATUS</th>
+                                                <th>ACCIONES</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
                                 </div>
                             </div>
                             <!-- fin de nueva tabla libera -->
@@ -315,13 +306,6 @@
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reestructura.js"></script>
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 <script>
     Shadowbox.init();
 </script>

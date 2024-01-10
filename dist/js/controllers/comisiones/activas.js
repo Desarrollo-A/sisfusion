@@ -109,7 +109,7 @@ $(document).ready(function () {
                     labelEstatus =`<p class="m-0"><b>Penalización ${d.dias_atraso} días</b></p><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 else{
-                    if(d.totalNeto2 == null) {
+                    if(d.totalNeto2 == null && d.proceso == 0) {
                         labelEstatus ='<p class="m-0"><b>Sin Precio Lote</b></p>';
                     }else if(d.registro_comision == 2){
                         labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
@@ -155,7 +155,7 @@ $(document).ready(function () {
             { data: function (d) {
                 var BtnStats = '';
                 var RegresaActiva = '';
-                    if(d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) {
+                if((d.totalNeto2==null || d.totalNeto2==''|| d.totalNeto2==0) && d.proceso == 0) {
                         BtnStats = 'Asignar Precio';
                     }else if(d.tipo_venta==null || d.tipo_venta==0) {
                         BtnStats = 'Asignar Tipo Venta';
@@ -325,7 +325,7 @@ $("#tabla_comisiones_activas tbody").on('click', '.btn-detener', function () {
                                 $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio del lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                 <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                 </div>`);
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion).done( function( data ){
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/0"+"/"+data1[0].estructura).done( function( data ){
                                     $("#modal_NEODATA .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
                                     let contador=0;
                                     let coor = data.length;

@@ -1,3 +1,9 @@
+
+const RESPUESTA_MODAL = Object.freeze({
+  SUCCESS: 1,
+  FAIL: 2
+}); 
+
 $().ready(function () {
   myFunctions = {
     validateEmptyField(field) {
@@ -292,8 +298,8 @@ function formatNumberG(n) {
  */
 function convertDateDDMMYYYYToYYYYMMDD(date)
 {
-  const parts = date.split('/');
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  const [day, month, year] = date.split('/');
+  return `${year}-${(month.length > 1) ? month : '0'+month}-${(day.length > 1) ? day : '0'+day}`;
 }
 
 /** Función para dejar solo dos decimales */
@@ -334,10 +340,6 @@ function cleanElement(e) {
 
 
 function visorArchivo(rutaArchivo, nombreArchivo){
-  //ruta: completa
-  // nombreArchivo: para mostrar su nombre
-  //esta funcion abre un shadowbox
-  //en la vista se debe llamar el JS así como los CSS para quefuncione
   Shadowbox.open({
     content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute  " src="${rutaArchivo}"></iframe></div>`,
     player: "html",
@@ -348,3 +350,24 @@ function visorArchivo(rutaArchivo, nombreArchivo){
   });
   $('#sb-container').css('z-index', 9999);
 }
+
+
+function replaceAll(text, busca, reemplaza) {
+  while (text.toString().indexOf(busca) != -1)
+      text = text.toString().replace(busca, reemplaza);
+  return text;
+}
+
+function modalInformation(bandera, mensaje){
+  
+  changeSizeModal('modal-sm');
+    if(bandera == RESPUESTA_MODAL.SUCCESS){
+      appendBodyModal(`<div class="modal-body"><center><img style="width: 75%; height: 75%;" src="${general_base_url}dist/img/send_intmex.gif"><p style='color:#676767;'>${mensaje}</p></center></div>`);
+    }else{
+      appendBodyModal(`<div class="modal-body"><center><P>ERROR AL ENVIAR COMISIONES </P><BR><i style='font-size:12px;'>NO SE HA PODIDO EJECUTAR ESTA ACCIÓN, INTÉNTALO MÁS TARDE.</i></P></center></div>`);
+    } 
+  showModal();
+}
+
+
+

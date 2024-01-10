@@ -4,7 +4,6 @@
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        <!-- Modals -->
 
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
@@ -19,12 +18,10 @@
         <div class="modal fade modal-alertas" id="modal_colaboradores" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-            
                     <form method="post" id="form_colaboradores">
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -44,49 +41,12 @@
             </div>
         </div>
 
-        <div class="modal fade" id="seeInformationModalExtranjero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons" onclick="cleanComments()">clear</i>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul>
-                                <div id="nameLote"></div>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                    <ul class="timeline-3" id="comments-list-extranjeros"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()"><b>Cerrar</b></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- END Modals -->
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">        
                         <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                             <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos Solicitados</a></li>
-                            <li><a href="#proceso-1" role="tab" data-toggle="tab">Invoice</a></li>
                         </ul>
                         <div class="card no-shadow m-0 border-conntent__tabs">
                             <div class="card-content p-0">
@@ -116,15 +76,14 @@
                                                     <div class="row">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                             <div class="form-group">
-                                                                <label class="control-label" for="filtro33">Proyecto</label>
-                                                                <select name="filtro33" id="filtro33" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                                </select>
+                                                                <label class="control-label" for="catalogoFacturaE">Proyecto</label>
+                                                                <select name="catalogoFacturaE" id="catalogoFacturaE" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                             <div class="form-group">
-                                                                <label class="control-label" for="filtro44">Condominio</label>
-                                                                <select class="selectpicker select-gral" id="filtro44" name="filtro44[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
+                                                                <label class="control-label" for="condominioFacturaEx">Condominio</label>
+                                                                <select class="selectpicker select-gral" id="condominioFacturaEx" name="condominioFacturaEx[]" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required/></select>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -142,7 +101,7 @@
                                                                     <th>REFERENCIA</th>
                                                                     <th>PRECIO DE LOTE</th>
                                                                     <th>EMPRESA</th>
-                                                                    <th>TOTAL DE LA COMPRA</th>
+                                                                    <th>TOTAL COMISIÓN</th>
                                                                     <th>PAGO DEL CLIENTE</th>
                                                                     <th>A PAGAR</th>
                                                                     <th>TIPO DE VENTA</th>
@@ -150,7 +109,7 @@
                                                                     <th>RFC</th>
                                                                     <th>PUESTO</th>
                                                                     <th>FECHA DE ENVÍO</th>
-                                                                    <th>MÁS</th>
+                                                                    <th>ACCIONES</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
@@ -184,7 +143,7 @@
                                                             <th>FORMA DE PAGO</th>
                                                             <th>NACIONALIDAD</th>
                                                             <th>ESTATUS</th>
-                                                            <th>MÁS</th>
+                                                            <th>ACCIONES</th>
                                                         </tr>
                                                     </thead>
                                                 </table>
@@ -201,6 +160,7 @@
     <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/pago_extranjero_intmex.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script>

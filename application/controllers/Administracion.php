@@ -465,6 +465,70 @@ class Administracion extends CI_Controller{
             echo json_encode(array());
         }
 	}
+
+	public function reporteClientesFactura(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/reporteClientesFacturaView");
+    }
+
+    public function getReporteClientesFactura(){
+        $data = $this->Administracion_model->getReporteClientesFactura()->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+	
+	public function reporteEstatus10(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/reporteEstatus10");
+    }
+
+    public function getReporteEstatus10(){
+        if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $data = $this->Administracion_model->reporteEstatus10($typeTransaction, $beginDate, $endDate);
+            echo json_encode($data);
+        } else {
+            json_encode(array());
+        }
+    }
+	public function datosMonetarios()
+	{
+		$this->load->view('template/header');
+		$this->load->view("administracion/datosMonetariosView");
+	}
+	function getregistrosClientesTwo()
+    {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $index_proyecto = $this->input->post('index_proyecto');
+        $index_condominio = $this->input->post('index_condominio');
+        $dato = $this->Administracion_model->registroClienteTwo($index_proyecto, $index_condominio);
+        if ($dato != null) {
+            echo json_encode($dato);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+	public function saveDatosMonetarios(){
+		date_default_timezone_set('America/Mexico_City');
+        $hoy = date('Y-m-d H:i:s');  
+		$datos = $_POST;
+		//var_dump($datos);
+		$datos['usuario'] = $this->session->userdata('id_usuario');
+		$datos['fecha'] = $hoy;
+		$respuesta = $this->Administracion_model->saveDatosMonetarios($datos);
+		if($respuesta == TRUE){
+            echo json_encode(1);
+        }else{
+			echo json_encode(0);
+        }
+	}
 }
 
 

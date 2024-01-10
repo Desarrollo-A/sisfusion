@@ -86,6 +86,7 @@ $(document).ready(function () {
                 }
             },
             { data: 'comentario' },
+            { data: 'tipo_venta' },
             { data: 'modificado' },
             { data: 'fechaApartado' },
             {
@@ -102,6 +103,7 @@ $(document).ready(function () {
                         return `<span class="label lbl-gray">NO APLICA</span>`;
                 }
             },
+            
             {
                 data: function (d) {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
@@ -116,6 +118,11 @@ $(document).ready(function () {
                         return '<span class="label lbl-green">CARGADO</span>';
                     else
                         return '<span class="label lbl-orangeYellow">SIN REGISTRO</span>';
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-azure'>${d.ID_Estatus_Lote}</span>`;
                 }
             }
         ]

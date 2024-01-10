@@ -1,16 +1,14 @@
-<?php
-
+ <?php
 if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Asesor extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('asesor/Asesor_model');
-        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model'));
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-
         $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
@@ -21,6 +19,7 @@ class Asesor extends CI_Controller {
         $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
+
     public function index()
     {
         if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7')
@@ -58,9 +57,35 @@ class Asesor extends CI_Controller {
         }
     }
 
+    public function lista_gerentes(){
+        echo json_encode($this->Asesor_model->get_gerentes_lista()->result_array());
+    }
+
+    public function lista_asesores($gerente){
+        echo json_encode($this->Asesor_model->get_asesores_lista($gerente)->result_array());
+    }
+    public function lista_proyecto(){
+        echo json_encode($this->Asesor_model->get_proyecto_lista()->result_array());
+    }
+    public function lista_condominio($proyecto){
+        echo json_encode($this->Asesor_model->get_condominio_lista($proyecto)->result_array());
+    }
+    public function lista_lote($condominio){
+        echo json_encode($this->Asesor_model->get_lote_lista($condominio)->result_array());
+    }
+    public function datos_dinamicos($lote, $asesor){
+        echo json_encode($this->Asesor_model->get_datos_dinamicos($lote, $asesor)->result_array());
+    }
+    public function forma_venta(){
+        echo json_encode($this->Asesor_model->get_datos_forma()->result_array());
+    }
     public function tipo_venta(){
         echo json_encode($this->Asesor_model->get_datos_tipo()->result_array());
     }
+    public function verificar_solicitud($lote){
+        echo json_encode($this->Asesor_model->get_validar_solicitud($lote)->result_array());
+      }
+  
     public function getinfoLoteDisponible() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorrida($objDatos->lote);
@@ -94,6 +119,145 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
+    public function inventario() {
+        $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
+        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+        $this->load->view('template/header');
+        $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
+    }
+    
+    public function cf(){
+        $this->load->view("corrida/cf_view");
+    }
+    public function cf2(){
+        $this->load->view("corrida/cf_view2");
+    }
+
+    public function cf3()
+    {
+        $this->load->view("corrida/cf_view_PAC");
+    }
+
+    public function eliminar_propietario()
+    {
+        $json['resultado'] = FALSE;
+        if( $this->input->post("id_copropietario")){
+            $this->load->model("Asesor_model");
+            $id_copropietario = $this->input->post("id_copropietario");
+            $this->db->query('UPDATE copropietarios SET estatus = 0 WHERE id_copropietario = '.$id_copropietario.'');
+            $json['resultado'] = TRUE;
+         }
+
+        echo json_encode( $json );
+    }
+
+    public function agregar_propietario()
+    {
+
+        $json['resultado'] = FALSE;
+
+        if( $this->input->post("nombre_nuevo")){
+
+            $nuevo0 = $this->input->post("idd");
+            $nuevo1 = $this->input->post("nombre_nuevo");
+            $nuevo2 = $this->input->post("apellidop_nuevo");
+            $nuevo3 = $this->input->post("apellidom_nuevo");
+            $nuevo4 = $this->input->post("correo_nuevo");
+            $nuevo5 = $this->input->post("telefono1_nuevo");
+            $nuevo6 = $this->input->post("telefono2_nuevo");
+            $nuevo7 = $this->input->post("fnacimiento_nuevo");
+
+            $nuevo8 = $this->input->post("nacionalidad_nuevo");
+            $nuevo9 = $this->input->post("originario_nuevo");
+            $nuevo10 = $this->input->post("domicilio_particular_nuevo");
+
+            $nuevo11 = $this->input->post("estadocivil_nuevo");
+            $nuevo12 = $this->input->post("conyuge_nuevo");
+            $nuevo13 = $this->input->post("regimen_nuevo");
+
+            $nuevo14 = $this->input->post("ocupacion_nuevo");
+            $nuevo15 = $this->input->post("puesto_nuevo");
+            $nuevo16 = $this->input->post("empresa_nuevo");
+
+            $nuevo17 = $this->input->post("antiguedad_nuevo");
+            $nuevo18 = $this->input->post("edad_firma_nuevo");
+            $nuevo19 = $this->input->post("domempresa_nuevo");
+            $nuevo20 = 1;
+            $nuevo21 = $this->session->userdata('id_usuario');
+
+            $arreglo_nuevo=array();
+            $arreglo_nuevo["id_cliente"]=$nuevo0;
+            $arreglo_nuevo["nombre"]=$nuevo1;
+            $arreglo_nuevo["apellido_paterno"]=$nuevo2;
+            $arreglo_nuevo["apellido_materno"]=$nuevo3;
+
+            $arreglo_nuevo["correo"]=$nuevo4;
+            $arreglo_nuevo["telefono"]=$nuevo5;
+            $arreglo_nuevo["telefono_2"]=$nuevo6;
+            $arreglo_nuevo["fecha_nacimiento"]=$nuevo7;
+
+            $arreglo_nuevo["nacionalidad"]=$nuevo8;
+            $arreglo_nuevo["originario_de"]=$nuevo9;
+            $arreglo_nuevo["domicilio_particular"]=$nuevo10;
+
+            $arreglo_nuevo["estado_civil"]=$nuevo11;
+            $arreglo_nuevo["regimen_matrimonial"]=$nuevo13;
+            $arreglo_nuevo["conyuge"]=$nuevo12;
+
+            $arreglo_nuevo["ocupacion"]=$nuevo14;
+            $arreglo_nuevo["posicion"]=$nuevo15;
+            $arreglo_nuevo["empresa"]=$nuevo16;
+
+            $arreglo_nuevo["antiguedad"]=$nuevo17;
+            $arreglo_nuevo["edadFirma"]=$nuevo18;
+            $arreglo_nuevo["direccion"]=$nuevo19;
+            $arreglo_nuevo["estatus"]=$nuevo20;
+            $arreglo_nuevo["creado_por"]=$nuevo21;
+
+            $this->load->model("Asesor_model");
+            $this->db->insert('copropietarios', $arreglo_nuevo);
+
+            $json['resultado'] = TRUE;
+         }
+
+        echo json_encode( $json );
+    }
+
+    public function getGerente() {
+        $data = $this->registrolote_modelo->getGerente();
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function newProspect(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/prospectos", $datos);
+    }
+
+    public function consultProspects(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/consulta_prospectos", $datos);
+    }
+
+    public function consultStatistics(){
+        $datos=array();
+        $this->load->view('template/header');
+        $this->load->view("asesor/consult_statistics", $datos);
+    }
+
+    public function getProspectingPlaces(){
+        echo json_encode($this->Asesor_model->getProspectingPlaces()->result_array());
+    }
+
+    public function getNationality(){
+        echo json_encode($this->Asesor_model->getNationality()->result_array());
+    }
+    
     public function getinfoLoteDisponibleE() {
         $objDatos = json_decode(file_get_contents("php://input"));
         $data = $this->Asesor_model->getLotesInfoCorridaE($objDatos->lote);
@@ -132,20 +296,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function inventario(){
-        $datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
-        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
-        $this->load->view('template/header');
-        $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
-    }
-    public function getGerente(){
-        $data = $this->registrolote_modelo->getGerente();
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
+
     public function getLegalPersonality(){
         echo json_encode($this->Asesor_model->getLegalPersonality()->result_array());
     }
@@ -260,8 +411,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->updateProspect($data, $this->input->post("id_prospecto_ed"));
         echo json_encode($response);
     }
-    public function saveProspect()
-    {
+
+    public function saveProspect(){
         $specify = $_POST['specify'];
         if ($specify == '' || $specify == null) {
             $final_specification = 0;
@@ -315,8 +466,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->saveProspect($data);
         echo json_encode($response);
     }
-    public function saveCoOwner()
-    {
+
+    public function saveCoOwner(){
         $data = array(
             "nacionalidad" => $_POST['nationality_co'],
             "personalidad_juridica" => $_POST['legal_personality_co'],
@@ -354,8 +505,8 @@ class Asesor extends CI_Controller {
         $response = $this->Asesor_model->saveCoOwner($data);
         echo json_encode($response);
     }
-    public function toPrintProspectInfo($id_prospecto)
-    {
+
+    public function toPrintProspectInfo($id_prospecto){
         $this->load->library('Pdf');
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
         $pdf->SetCreator(PDF_CREATOR);
@@ -384,7 +535,7 @@ class Asesor extends CI_Controller {
         $informacion = $this->Asesor_model->getPrintableInformation($id_prospecto)->row();
         $informacion_lugar = $this->Asesor_model->getProspectSpecification($id_prospecto)->row();
         if ($informacion) {
-            $html = '
+            $html = '                                                                      
             <!DOCTYPE html>
             <html lang="es_mx"  ng-app="CRM">
         <head>
@@ -535,8 +686,12 @@ class Asesor extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("asesor/depositoSeriedad");
     }
-    public function registrosLoteVentasAsesor()
+    public function depositoSeriedadConsulta()
     {
+        $this->load->view('template/header');
+        $this->load->view("asesor/DSConsult");
+    }
+    public function registrosLoteVentasAsesor(){
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
@@ -558,8 +713,8 @@ class Asesor extends CI_Controller {
             redirect(base_url() . "index.php/login");
         }
     }
-    public function getLotesInventarioGralTodosc()
-    {
+
+    public function getLotesInventarioGralTodosc(){
         $data = $this->Asesor_model->getInventarioTodosc();
         if ($data != null) {
             echo json_encode($data);
@@ -568,8 +723,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getCondominioDesc($residenciales)
-    {
+    public function getCondominioDesc($residenciales){
         $data = $this->Asesor_model->getCondominioDesc($residenciales);
         if ($data != null) {
             echo json_encode($data);
@@ -578,8 +732,8 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getCondominioDescTodos()
-    {
+    
+    public function getCondominioDescTodos() {
         $data = $this->Asesor_model->getCondominioDescTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -588,8 +742,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getSupOne($residencial)
-    {
+    public function getSupOne($residencial) {
         $data = $this->Asesor_model->getSupOne($residencial);
         if ($data != null) {
             echo json_encode($data);
@@ -598,8 +751,8 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getSupOneTodos()
-    {
+
+    public function getSupOneTodos() {
         $data = $this->Asesor_model->getSupOneTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -608,18 +761,16 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getPrecio($residencial)
-    {
+    public function getPrecio($residencial) {
         $data = $this->Asesor_model->getPrecio($residencial);
-        if ($data != null) {
+        if($data != null) {
             echo json_encode($data);
         } else {
             echo json_encode(array());
         }
         exit;
     }
-    public function getPrecioTodos()
-    {
+    public function getPrecioTodos() {
         $data = $this->Asesor_model->getPrecioTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -628,8 +779,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getTotal($residencial)
-    {
+    public function getTotal($residencial) {
         $data = $this->Asesor_model->getTotal($residencial);
         if ($data != null) {
             echo json_encode($data);
@@ -638,8 +788,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getTotalTodos()
-    {
+    public function getTotalTodos() {
         $data = $this->Asesor_model->getTotalTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -648,6 +797,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
+
     public function getMeses($id, $type)
     {
         $data = $this->Asesor_model->getMeses($id, $type);
@@ -658,8 +808,8 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getMesesTodos()
-    {
+
+    public function getMesesTodos() {
         $data = $this->Asesor_model->getMesesTodos();
         if ($data != null) {
             echo json_encode($data);
@@ -668,6 +818,70 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
+    public function getLotesInventarioXproyectoc($residencial){
+        $data = $this->Asesor_model->getInventarioXproyectoc($residencial);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    function getLotesInventarioGralc($residencial, $condominio){
+        $data = $this->registrolote_modelo->getInventarioc($residencial, $condominio);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    
+    public function getMesesResidencial($residencial, $meses){
+        $data = $this->Asesor_model->getMesesResidencial($residencial, $meses);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getMesesCluster($residencial, $condominio, $meses){
+        $data = $this->Asesor_model->getMesesCluster($residencial, $condominio, $meses);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getEmpy(){
+        $data = [];
+        echo json_encode($data);
+    }
+
+        function getTwoGroup($residencial, $grupo){
+        $data = $this->Asesor_model->getTwoGroup($residencial, $grupo);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    function getOneGroup($condominio, $grupo){
+        $data= $this->Asesor_model->getOneGroup($condominio, $grupo);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+    
     public function tableClienteDS(){
         $dato = $this->Asesor_model->registroClienteDS($this->input->post('idCondominio'));
         $data = array();
@@ -786,8 +1000,18 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
+
+            if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
+            //if (TRUE) {
+                $arcusData = array(
+                    "propiedadRelacionada" => $this->input->post('idLote'),
+                    "uid" => $data_prospecto[0]->id_arcus,
+                    "estatus" => "Propiedad apartada"
+                );
+                $response = $this->arcus->sendLeadInfoRecord($arcusData);
+            }
+
             if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
-                //echo "acciones realizadas correctamente";
                 $data_response['prospecto_update'] = 'OK';
             } else {
                 $data_response['prospecto_update'] = 'FAIL';
@@ -832,6 +1056,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -869,6 +1094,12 @@ class Asesor extends CI_Controller {
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
             ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
             : [];
+
+        //prueba
+        //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
+        //print_r($datos["cliente"][0]->tipo_venta);
+        //exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -1814,6 +2045,8 @@ class Asesor extends CI_Controller {
         $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
         $costom2f = str_replace('$','', $costom2f);
+
+
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
         $importOferta = str_replace(',','',$this->input->post('importOferta'));
@@ -2972,24 +3205,11 @@ class Asesor extends CI_Controller {
 
     }
     public function intExpAsesor() {
-        $idLote = $this->input->post('idLote', true);
-        $idCondominio = $this->input->post('idCondominio', true);
-        $nombreLote = $this->input->post('nombreLote', true);
-        $id_cliente = $this->input->post('idCliente', true);
-        $comentario = $this->input->post('comentario', true);
-        $fechaVenc= $this->input->post('fechaVenc', true);
-        $tipo_comprobante = $this->input->post('tipo_comprobante', true);
-        $idMovimiento = intval($this->input->post('idMovimiento'));
-        $idCliente = $this->input->post('idCliente', true);
-        $idStatNuevo = 0;
-        $idMovNuevo = 0;
-
-        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-
-        if($valida_tventa[0]['tipo_venta'] == 1){
-                $idStatNuevo = 3;
-                $idMovNuevo = 98;
-        }
+        $idLote = $this->input->post('idLote');
+        $nombreLote = $this->input->post('nombreLote');
+        $id_cliente = $this->input->post('idCliente');
+        $tipo_comprobante = $this->input->post('tipo_comprobante');
+        $comentario=$this->input->post('comentario');
 
         /*if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
@@ -3000,83 +3220,34 @@ class Asesor extends CI_Controller {
             }
         }*/
 
-        switch($idMovimiento){
-            case in_array($idMovimiento, [31, 85, 102, 104, 107, 108, 109, 111]):
-                
-                if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-                    return;
-                }
-                $data = $this->Asesor_model->revisaOU($idLote);
-    
-                if(count($data) >= 1) {
-                    $data['status'] = false;
-                    $data['message'] = 'EN PROCESO DE LIBERACIÓN. No podrás avanzar la solicitud hasta que el proceso de liberación haya concluido';
-                    echo json_encode($data);
-                    return;
-                }
-
-                if($valida_tventa[0]['tipo_venta'] == 1) {
-                    if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                        $idStatNuevo = 2;                
-                        $idMovNuevo = 105;
-                    } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 || $valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ) {
-                        $idStatNuevo = 2;
-                        $idMovNuevo = 110;
-                    } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
-                        $idStatNuevo = 2;
-                        $idMovNuevo = 113;
-                    } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                        $idStatNuevo = 2;
-                        $idMovNuevo = 114;
-                    }
-                }
-                else{
-                    $idStatNuevo= 2;
-                    $idMovNuevo = 84;
-                }
-                break;
-            
-            case 20:
-                if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-                    return;
-                }
-                if($valida_tventa[0]['tipo_venta'] != 1){
-                    $idStatNuevo = 2;
-                    $idMovNuevo  = 4;
-                }
-
-                break;
-
-            case 63:
-                if($valida_tventa[0]['tipo_venta'] != 1){
-                    $idStatNuevo = 2;
-                    $idMovNuevo  = 62;
-                }
-                break;
-
-            case 73:
-                if($valida_tventa[0]['tipo_venta'] != 1){
-                    $idStatNuevo = 2;
-                    $idMovNuevo = 74;
-                }
-                break;
-
-            case 82:
-                if($valida_tventa[0]['tipo_venta'] != 1){
-                    $idStatNuevo = 7;
-                    $idMovNuevo  = 83;
-                }
-                break;
-
-            case 92:
-                $idStatNuevo = 2;
-                $idMovNuevo  = 93;
-                break;
-
-            case 96:
-                $idStatNuevo = 6;
-                $idMovNuevo  = 97;
-                break;
+        $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
+        if($valida_tventa[0]['tipo_venta'] == 1 ) {
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+                $statusContratacion = 1;
+                $idMovimiento = 89;
+            } 
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+                $statusContratacion = 7;
+                $idMovimiento = 83;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+                $statusContratacion = 2;
+                $idMovimiento = 110;
+            }
+            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+                $statusContratacion = 2;
+                $idMovimiento = 113;
+            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+                $statusContratacion = 5;
+                $idMovimiento = 106;
+            } else {
+                $statusContratacion = 3;
+                $idMovimiento = 98;
+            }
+        } 
+        else {
+            $statusContratacion = 2;
+            $idMovimiento = 84;
         }
         
 
@@ -3087,6 +3258,7 @@ class Asesor extends CI_Controller {
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
+
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3214,10 +3386,43 @@ class Asesor extends CI_Controller {
 
         $validate = $this->Asesor_model->validateSt2($idLote);
 
+        if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+            $encabezados = [
+                'nombreResidencial' =>  'PROYECTO',
+                'nombre'            =>  'CONDOMINIO',
+                'nombreLote'        =>  'LOTE',
+                'motivoRechazo'     =>  'MOTIVO DE RECHAZO',
+                'fechaHora'         =>  'FECHA/HORA'
+            ];
+            
+            $infoLote = (array)$this->Asesor_model->getNameLote($idLote);
+
+            $contenido[] = array_merge($infoLote, ['motivoRechazo' => $comentario, 'fechaHora' => date("Y-m-d H:i:s")]);
+
+            $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to(['coord.bd@ciudadmaderas.com', 'supervisor.bd@ciudadmaderas.com'])
+            //->to('mariadejesus.garduno@ciudadmaderas.com')
+            //->to('programador.analista35@ciudadmaderas.com')
+            ->subject('EXPEDIENTE CONFIRMADO')
+            ->view($this->load->view('mail/asesor/confirmacion-Asesor_Contraloria', [
+                'encabezados' => $encabezados,
+                'contenido' => $contenido,
+                'comentario' => $comentario
+            ], true));
+        }
+    
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
-                $data['status'] = true;
-                $data['message'] = 'Estatus enviado.';
+                if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
+                    if ($this->email->send())
+                        $data['message_email'] = 'OK'; // El correo se envió correctamente
+                    else
+                        $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
+                }
+                $data['message'] = 'OK';
+                echo json_encode($data);
             } else {
                 $data['status'] = false;
                 $data['message'] = 'Error al enviar la solicitud.';
@@ -3238,11 +3443,26 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $leyendaResiciones = '';
+        $leyendaResicionesFirmada = '';
+        //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
         if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
             $documentsNumber = 3;
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
         } else { // ES COMERCIALIZACIÓN
+            $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
+
+            $leyendaMsgValidacion = '';
+            foreach($documentosContrato as $documento){
+                if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 1 CANCELADO ';
+                }else if($documento['movimiento']=='CONTRATO 2 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 2 CANCELADO ';
+                }
+            }
+
+
             if($tipo_comprobante == 1) {
                 $comprobante_domicilio = "";
                 $comprobante_domicilio_label = "";
@@ -3250,24 +3470,47 @@ class Asesor extends CI_Controller {
             }
             else
                 $documentsNumber = 4;
+
+
+
+            $totalResiciones = 0;
+            $totalResicionesFirmadas = 0;
+            foreach ($documentosContrato as $documento){
+                if($documento['tipo_doc'] == 33 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResiciones += 1;
+                }
+                if($documento['tipo_doc'] == 35 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResicionesFirmadas += 1;
+                }
+            }
+            $documentsNumber += ($totalResiciones + $totalResicionesFirmadas);
+            $leyendaResiciones = ($totalResiciones >= 1) ? ', RESICIONES DE CONTRATO ('.$totalResiciones.')' : '' ;
+            $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
+
+
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
                     $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", 34, 35, 41, 42, 43"
+                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
                         : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 5 : 0;
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
                     $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO"
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
                         : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
-                    $documentosExtra = ", 35, 41, 42, 43";
-                    $documentsNumber += 4;
-                    $documentosExtra_label = ", RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE, CONTRATO 1 CANCELADO, CONTRATO 2 CANCELADO";
+
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
+                    $documentsNumber += 2; // 4
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
                 }
             }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
+
+
+
+
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
@@ -3293,6 +3536,37 @@ class Asesor extends CI_Controller {
             if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
                 $data['status'] = false;
                 $data['message'] = 'Autorización de mensualidad pendiente.';
+                echo json_encode($data);
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+    public function validarDocumentacion($idLote, $idCliente, $documentOptions, $documentsNumber, $errorMessage): bool
+    {
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote, $idCliente);
+        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $idCliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
+
+        if(COUNT($documentsValidation) !== $documentsNumber) {
+            $data['message'] = 'MISSING_DOCUMENTS';
+            $data['error_message'] = $errorMessage;
+            echo json_encode($data);
+            return false;
+        }
+
+        if($validacion) {
+            $data['message'] = 'MISSING_AUTORIZATION';
+            echo json_encode($data);
+            return false;
+        }
+
+        if(count($validacionIM) > 0) {
+            if($validacionIM[0]['tipoPM'] == 3 AND $validacionIM[0]['expediente'] == ''){
+                $data['message'] = 'MISSING_AUTFI';
                 echo json_encode($data);
                 return false;
             }
@@ -3473,6 +3747,7 @@ class Asesor extends CI_Controller {
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
         $id_rol = $this->session->userdata('id_rol');
+        
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
             return;
@@ -3484,8 +3759,8 @@ class Asesor extends CI_Controller {
         $idMovimiento = 4;
         if($valida_tventa[0]['tipo_venta'] == 1) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 20) {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
+                $statusContratacion = 2;
+                $idMovimiento = 103;
             }
         }
 
@@ -3665,10 +3940,15 @@ class Asesor extends CI_Controller {
         $comentario = $this->input->post('comentario');
         $fechaVenc = $this->input->post('fechaVenc');
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ){
+        if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ){
+            $statusContratacion = 7;
+            $idMovimiento = 83;
+        }
+        elseif($valida_tventa[0]['tipo_venta'] == 1){
             $statusContratacion = 3;
             $idMovimiento = 98;
-        }else{
+        }
+        else{
             $statusContratacion = 7;
             $idMovimiento = 83;
         }

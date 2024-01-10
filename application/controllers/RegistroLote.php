@@ -2928,6 +2928,26 @@ class RegistroLote extends CI_Controller
 			$procesoContratacion = "11. Validación de enganche (Administración)";
 		else if ($idStatusContratacion == 13 && $idMovimiento == 68)
 			$procesoContratacion = "14. Firma Acuse cliente (Asistentes Gerentes)";
+
+        else if ($idStatusContratacion == 14 && $idMovimiento == 80)
+            $procesoContratacion = "14. Firma Acuse cliente (Asistentes Gerentes)";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 101)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 103)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 93)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 3 && $idMovimiento == 99)
+            $procesoContratacion = "3. Revisión Postventa (Postventa)";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 96)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 74)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 82)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 92)
+            $procesoContratacion = "2. Integración de Expediente (Asesor)";
+
 		else
 			$procesoContratacion = "Sin especificar";
 		return $procesoContratacion;
@@ -3008,6 +3028,29 @@ class RegistroLote extends CI_Controller
 			$status = "Regreso a ventas 3 de (Status 7 jurídico)";
 		else if ($idStatusContratacion == 7 && $idMovimiento == 83)
 			$status = "Revisión de ventas 3 a (Status 7 jurídico)";
+
+        else if ($idStatusContratacion == 14 && $idMovimiento == 80)
+            $status = "Regreso Contratación de 15 al 14";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 101)
+            $status = "Listo Postventa status 3";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 103)
+            $status = "Revisión de Postventa a Contraloria 3";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 93)
+            $status = "Revisión Asesor 2 a Contraloría 5";
+        else if ($idStatusContratacion == 3 && $idMovimiento == 99)
+            $status = "Rechazo Postventa Revisión a Ventas-asesor status 1";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 96)
+            $status = "Rechazo Jurídico a Ventas-asesor status 2";
+        else if ($idStatusContratacion == 2 && $idMovimiento == 74)
+            $status = "Revisión Elite 2 a Contraloría status 5";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 82)
+            $status = "Regreso a Ventas(asesor) de (Status 7 jurídico)";
+        else if ($idStatusContratacion == 1 && $idMovimiento == 92)
+            $status = "Rechazo Contraloría 5 a Asesor 2";
+
+
+
+
 		else
 			$status = "Sin especificar";
 		return $status;

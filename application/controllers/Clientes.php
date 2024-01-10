@@ -2676,6 +2676,7 @@ public function getStatusMktdPreventa(){
         $telephone = $this->input->post("telephone");
         $sede = $this->input->post("sede");
         $id_dragon = $this->input->post("id_dragon");
+        $id_salesforce = $this->input->post("id_salesforce");
         $tipo_busqueda = $this->input->post("TB");
 
         $fechaInicio = explode('/', $this->input->post("fecha_init"));
@@ -2690,6 +2691,7 @@ public function getStatusMktdPreventa(){
             'telefono' => $telephone,
             'sede' => $sede,
             'id_dragon' => $id_dragon,
+            'id_salesforce' => $id_salesforce,
             'tipo_busqueda' => $tipo_busqueda,
             'fecha_init' => $fecha_init,
             'fecha_end' => $fecha_end
@@ -2716,8 +2718,18 @@ public function getStatusMktdPreventa(){
         $this->load->view("marketing/dragonsClientsList");
     }
 
+    public function salesforceClientList() {
+        $this->load->view('template/header');
+        $this->load->view("marketing/salesforceClientList");
+    }
+
     public function getDragonsClientsList() {
         $result['data'] = $this->Clientes_model->getDragonsClientsList();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
+    }
+
+    public function getSalesforceClientsList() {
+        $result['data'] = $this->Clientes_model->getSalesforceClientsList();
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
@@ -2781,4 +2793,15 @@ public function getStatusMktdPreventa(){
         $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
         echo json_encode($data);
     }
+
+    public function listaClientesArcus() {
+        $this->load->view('template/header');
+        $this->load->view("marketing/listaClientesArcus");
+    }
+
+    public function getListaClientesArcus() {
+        $result['data'] = $this->Clientes_model->getListaClientesArcus();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
+    }
+    
 }

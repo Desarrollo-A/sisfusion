@@ -3,26 +3,24 @@ $(document).ready(function () {
     
     $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
         var len = data.length;
-        const ids = data.map((row) => {
-            return row.idResidencial;
-        }).join(',');
 
-        $("#proyecto").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
+        $("#catalogoLiberar").append($('<option>').val(0).text('SELECCIONAR TODOS'));
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];            
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            var name = data[i]['descripcion'];
+           // var lotes = data[i]['tipoLote'];            
+            $("#catalogoLiberar").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#proyecto").selectpicker('refresh');
+        $("#catalogoLiberar").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
 });
 
-$('#proyecto').change(function () {
-    $("#spiner-loader").removeClass('hide');
+$('#catalogoLiberar').change(function () {
     let index_proyecto = $(this).val();
+    $("#spiner-loader").removeClass('hide');
     $("#tabla_cancelacion").removeClass('hide');
-    fillTable(index_proyecto);
+    cancelacionTable(index_proyecto);
 });
 
 let titulos_intxt = [];
@@ -37,7 +35,7 @@ $('#tabla_cancelacion thead tr:eq(0) th').each(function (i) {
     });
 });
 
-function fillTable(index_proyecto) {
+function cancelacionTable(index_proyecto) {
     tabla_cancelacion = $("#tabla_cancelacion").DataTable({
         width: '100%',
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -48,7 +46,7 @@ function fillTable(index_proyecto) {
         titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
         title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6],
+                columns: [0,1,2,3,4,5],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
@@ -111,7 +109,7 @@ function fillTable(index_proyecto) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Postventa/getregistros",
+            url: general_base_url + "Postventa/getRegistrosCancelados",
             dataSrc: "",
             type: "POST",
             cache: false,

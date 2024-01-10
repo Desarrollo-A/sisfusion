@@ -61,6 +61,8 @@ $('#anio').selectpicker('refresh');
 
 
 $(document).ready(function(){
+    $("#formTableComision").addClass('hide');
+    $("#formTableEstatus").addClass('hide');
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth("#beginDate", "#endDate");
@@ -74,7 +76,7 @@ $(document).ready(function(){
     fillTableR(1, finalBeginDate, finalEndDate, 0, 0);
 });
 
-sp = { //  SELECT PICKER
+sp = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -95,6 +97,7 @@ sp = { //  SELECT PICKER
 }
 
 $(document).on("click", "#searchByDateRange", function () {
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($("#selectEstatus").val() == '') ? 0 : $("#selectEstatus").val();
@@ -194,29 +197,13 @@ $.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
     for (var i = 0; i < len; i++) {
         var id = data[i]['id_opcion'];
         var name = data[i]['nombre'];
+        $("#selectEstatusN").append($('<option>').val(id).text(name.toUpperCase()));
+        $("#selectEstatusR").append($('<option>').val(id).text(name.toUpperCase()));
         $("#selectEstatus").append($('<option>').val(id).text(name.toUpperCase()));
     }
-    $("#selectEstatus").selectpicker('refresh');
-}, 'json');
-
-$.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        var id = data[i]['id_opcion'];
-        var name = data[i]['nombre'];
-        $("#selectEstatusN").append($('<option>').val(id).text(name.toUpperCase()));
-    }
     $("#selectEstatusN").selectpicker('refresh');
-}, 'json');
-
-$.post(general_base_url + "Pagos/getEstatusPagosMktd", function (data) {
-    var len = data.length;
-    for (var i = 0; i < len; i++) {
-        var id = data[i]['id_opcion'];
-        var name = data[i]['nombre'];
-        $("#selectEstatusR").append($('<option>').val(id).text(name.toUpperCase()));
-    }
     $("#selectEstatusR").selectpicker('refresh');
+    $("#selectEstatus").selectpicker('refresh');
 }, 'json');
 
 $('#mes').change(function() {
@@ -687,12 +674,9 @@ $("#tabla_plaza_2").ready( function(){
             text: '<i class="fa fa-check"></i> ENVIAR A INTERNOMEX',
             action: function(){
                 $.get(general_base_url + "Pagos/acepto_contraloria_MKTD/").done(function () {
-                    $("#myModalEnviadas").modal('toggle');
                     plaza_2.ajax.reload();
                     plaza_1.ajax.reload();
-                    $("#myModalEnviadas .modal-body").html("");
-                    $("#myModalEnviadas").modal();
-                    $("#myModalEnviadas .modal-body").append(`<center><img style='width: 75%; height: 75%;' src='${general_base_url}dist/img/send_intmex.gif'><p style='color:#676767;'>Comisiones del área <b>Marketing Dígital</b> fueron enviadas a <b>INTERNOMEX</b> correctamente.</p></center>`);
+                    modalInformation(1);
                 });
             },
             attr: {
@@ -796,11 +780,7 @@ $("#tabla_plaza_2").ready( function(){
             "orderable": false,
             "data": function( data ){
                 var BtnStats;
-                BtnStats = '<div class="d-flex justify-center">'+
-                                '<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLE">' 
-                                    +'<i class="fas fa-info"></i>'+
-                                '</button>'+
-                            '</div>';
+                BtnStats = '<div class="d-flex justify-center">'+'<button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-sky consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLE">'+'<i class="fas fa-info"></i>'+'</button>'+'</div>';
                 return BtnStats;
             }
         }],
@@ -829,7 +809,33 @@ $("#tabla_plaza_2").ready( function(){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModal").modal();
+        $("nameLote").html('');
+        $("comments-list-asimilados").html('');
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                        <div role="tabpanel">
+                            <div id="nameLote" class="text-center"></div>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+                    </div>`);
+        showModal();
+
         $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
@@ -859,10 +865,11 @@ $('#fecha1').change( function(){
 
 $('#fecha2').change( function(){
     fecha2 = $(this).val();
-    let fecha1 = $('#fecha1').val();
+    $('#fecha1').val();
 });
 
 $('#selectEstatus').change( function(){
+    $("#formTableComision").removeClass('hide');
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -899,6 +906,7 @@ $('#fechaR2').change( function(){
 });
 
 $('#selectEstatusR').change( function(){
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($(this).val() == '') ? 0 : $(this).val();
@@ -919,7 +927,6 @@ $('#tabla_total_comisionistas2 thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v){
                 total += parseFloat(v.total);
             });
-
             document.getElementById("myText_nuevas_tc2").textContent = formatMoney(numberTwoDecimal(total));
         }
     });
@@ -1009,6 +1016,7 @@ function fillTableR(typeTransaction, beginDate, endDate, where, estatus){
 }
 
 $(document).on("click", "#searchByDateRangeR", function () {
+    $("#formTableEstatus").removeClass('hide');
     let finalBeginDate = $(".beginDateR").val();
     let finalEndDate = $(".endDateR").val();
     let estatus =($("#selectEstatusR").val() == '') ? 0 : $("#selectEstatusR").val();
@@ -1044,7 +1052,7 @@ $("#form_colaboradores").submit( function(e) {
                 processData: false,
                 dataType: 'json',
                 method: 'POST',
-                type: 'POST', // For jQuery < 1.9
+                type: 'POST',
                 success: function(data){
                     if(true){
                         $('#loader').addClass('hidden');
@@ -1090,7 +1098,7 @@ $("#form_MKTD").submit( function(e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST', // For jQuery < 1.9
+            type: 'POST',
             success: function(data){
                 if( data.resultado ){
                     alert("LA FACTURA SE SUBIO CORRECTAMENTE");
@@ -1144,21 +1152,9 @@ function preview_info(archivo){
     }
 }
 
-function cleanComments() {
-    var myCommentsList = document.getElementById('comments-list-asimilados');
-    var myCommentsLote = document.getElementById('nameLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
-
 $(window).resize(function(){
     plaza_1.columns.adjust();
     plaza_2.columns.adjust();
-});
-
-$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable()
-        .columns.adjust();
 });
 
 $(document).ready( function(){

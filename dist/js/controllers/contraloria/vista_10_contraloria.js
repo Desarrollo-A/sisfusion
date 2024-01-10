@@ -45,38 +45,8 @@ var url = "<?=base_url()?>";
 	"defaultContent": '<i class="material-icons" style="color:#003D82;" title="Click para más detalles">play_circle_filled</i>'
 },
 {
-	"width": "15%",
-	"data": function (d) {
-		var lblStats;
-
-		if(d.tipo_venta==1)
-		{
-			lblStats ='<br><br><small class="label" style="background: red" >Venta Particular</small>';
-		}
-		else if(d.tipo_venta==2)
-		{
-			lblStats ='<br><br><small class="label" style="background: #0931a0">Venta normal</small>';
-		}
-		else if(d.tipo_venta==3)
-		{
-			lblStats ='<br><br><small class="label" style="background: #f5ee2c;color:black">Bono</small>';
-		}
-		else if(d.tipo_venta==4)
-		{
-			lblStats ='<br><br><small class="label" style="background: green">Donación</small>';
-		}
-		else if(d.tipo_venta==5)
-		{
-			lblStats ='<br><br><small class="label" style="background: grey">Intercambio</small>';
-		}
-		else if(d.tipo_venta==6) {
-            lblStats ='<span class="label label-info">Reubicación</span>';
-        }
-        else if(d.tipo_venta==7) {
-            lblStats ='<span class="label label-info">Venta especial</span>';
-        }
-
-		return '<p style="font-size: .8em">' + d.nombreResidencial + lblStats + '</p>';
+    data: function (d) {
+        return `<span class='label lbl-azure'>${d.tipo_venta}</span>`;
 	}
 },
 {

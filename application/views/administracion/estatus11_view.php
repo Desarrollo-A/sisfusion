@@ -159,6 +159,7 @@
     </div>
     </div>
     <?php $this->load->view('template/footer');?>
+    <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/administracion/estatus11.js"></script>
 </body>
