@@ -17,6 +17,8 @@ class Comisiones extends CI_Controller
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
     $this->load->model('Pagos_model');
+    $this->load->model('reporteContratacion_model');
+    
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -132,6 +134,11 @@ class Comisiones extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("ventas/revision_cobranza_mktd");
   }
+
+  public function reporteContratacion(){
+    $this->load->view('template/header');
+    $this->load->view("comisiones/reporteContratacion-view");
+}
   
   public function getDatosNuevasMktd_pre(){
     $dat =  $this->Comisiones_model->getDatosNuevasMktd_pre()->result_array();
@@ -3115,4 +3122,16 @@ class Comisiones extends CI_Controller
       $this->Comisiones_model->validarLiquidadas();
   }
 
+  public function comisiones_reporteDatos(){
+    $beginDate = $this->input->post('beginDate');
+    $endDate = $this->input->post('endDate');
+    $data['data']=$this->reporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
+    echo json_encode($data);
+  }
+
+  public function usuarios_rol_7(){
+    $result=$this->reporteContratacion_model->usuarios_rol_7();
+    echo json_encode($result);
+  }
+  
 }
