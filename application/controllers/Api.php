@@ -452,7 +452,7 @@ class Api extends CI_Controller
         }
     }
 
-    function inventarioVirtual($idRes) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO // BORRAR PARAMETRO
+    function inventarioVirtual($idRes) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
