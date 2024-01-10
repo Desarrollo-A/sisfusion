@@ -146,8 +146,6 @@
                                 <div class="form-group m-0">
                                     <h4 class="label-on-left m-0">LADA (<small style="color: red;">*</small>)</h4>
                                     <select name="ladaAut" title="SELECCIONA UNA OPCIÓN" id="ladaAut" class="selectpicker m-0 select-gral" data-live-search="true" data-container="body" data-width="100%" required>
-                                        <option value="52">+52</option>
-                                        <option value="1">+1</option>
                                     </select>
                                 </div>
                             </div>
@@ -349,3 +347,4 @@
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/asesores/depositoSeriedad.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/ladas.js"></script>
