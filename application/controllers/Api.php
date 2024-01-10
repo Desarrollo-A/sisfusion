@@ -499,7 +499,7 @@ class Api extends CI_Controller
         }
     }
 
-    function ResidencialList() { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO // BORRAR PARAMETRO
+    function ResidencialList() { 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -507,8 +507,8 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             }else{
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); // SE ACTUALIZA EL PARÁMETRO DE USER PARA QUE CARGUE LA KEY
-                $valida_token = json_decode($this->validateToken($token, 2099)); // VALIDAMOS EL TOKEN PARA EL USUARIO QUE DECLARAMOS
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); 
+                $valida_token = json_decode($this->validateToken($token, 2099));
                 if ($valida_token->status !== 200){
                     echo json_encode($valida_token);
                 }else {
@@ -528,12 +528,12 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->listaResidenciales(); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
-                        $data2 = $dbTransaction; // DENTRO DE LA VARIABLE "data2" VAMOS A GUARDAR EL ARREGLO DE LOS DATOS QUE MANDA NUESTRA FUNCIÓN
+                        $dbTransaction = $this->Api_model->listaResidenciales(); 
+                        $data2 = $dbTransaction; 
                             
-                        if ($dbTransaction){// SUCCESS TRANSACTION
+                        if ($dbTransaction){
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
-                        }else{ // ERROR TRANSACTION
+                        }else{ N
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
                     }else{
