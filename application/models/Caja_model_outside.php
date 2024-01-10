@@ -208,6 +208,7 @@
     public function aplicaLiberacion($datos) {
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
+        $userLiberacion = $datos['userLiberacion'];
         
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus
         FROM lotes lo
@@ -275,7 +276,7 @@
                     }
                 }
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = '".$userLiberacion."', perfil = 'NULL ', 
                 fechaVenc = null, modificado = null, status8Flag = 0, 
                 ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                 casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
@@ -326,7 +327,7 @@
                     $arcusData = array(
                         "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
-                        "estatus" => "No viable"
+                        "estatus" => 6
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -755,7 +756,7 @@
         return $query->result_array();
     }
 
-
+ 
     public function editaEstatus($id, $dato)
     {
         $this->db->where("idLote", $id);
