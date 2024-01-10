@@ -201,7 +201,6 @@ class Api_model extends CI_Model
 
     public function listaResidenciales()
     {
-        $query = $this->db->query("SELECT * FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)");
-        return $query->result_array();
+        return $this->db->query("SELECT * FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)")->result_array();
     }
 }
