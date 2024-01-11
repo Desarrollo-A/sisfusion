@@ -1002,14 +1002,13 @@ class Reestructura_model extends CI_Model
 
     public function reestructuraLotes($id_proyecto){
         ini_set('memory_limit', -1);
-        $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) as modificado, cl.rfc,
-		UPPER(CAST(l.comentario AS varchar(MAX))) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
-		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.firmaRL, l.validacionEnganche, 
+        $query = $this->db-> query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
+		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.firmaRL, 
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
-		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede, mov.descripcion as movimientoLote,stcon.nombreStatus,ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+		cond.idCondominio, mov.descripcion as movimientoLote, se.nombre as nombreSede, stcon.nombreStatus, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.proceso NOT IN (1,0)
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -1022,17 +1021,15 @@ class Reestructura_model extends CI_Model
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
 		LEFT JOIN movimientos mov ON mov.idMovimiento = l.idMovimiento
-		LEFT JOIN opcs_x_cats opcs2 ON opcs2.id_opcion = cl.proceso and opcs2.id_catalogo = 86
 		LEFT JOIN statuscontratacion stcon ON stcon.idStatusContratacion = l.idStatusContratacion
 		WHERE l.status = 1 AND l.idStatusContratacion IN ($id_proyecto)
-		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-		tv.tipo_venta, l.firmaRL, l.validacionEnganche,
+		GROUP BY cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+		tv.tipo_venta, l.firmaRL,
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),  opx.nombre ,
-		cond.idCondominio, l.observacionContratoUrgente, se.nombre, ISNULL(oxc0.nombre, 'Normal'),mov.descripcion,stcon.nombreStatus
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'),mov.descripcion,stcon.nombreStatus,se.nombre
 		ORDER BY l.nombreLote");
         return $query->result();
     }
