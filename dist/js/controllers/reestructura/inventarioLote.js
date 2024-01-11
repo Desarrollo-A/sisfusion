@@ -7,8 +7,6 @@ $(document).ready(function(){
         const ids = data.map((row) => {
             return row.idStatusContratacion;
         }).join(',');
-
-        $("#estatus_lotes").append($('<option>').val(ids).text('SELECCIONAR TODOS'));
     
         for (var i = 0; i < len; i++) {
             var id = data[i]['idStatusContratacion'];
@@ -113,16 +111,17 @@ function fillTable(index_estatus) {
         },
         {
             data: function (d) {
-                return '<p class="m-0">' + d.gerente + '</p>';
+                return '<p class="m-0">' + d.nombreAsesor + '</p>';
             }
         },
         {
             data: function (d) {
-                if (d.RL == null || d.RL == '') {
-                    return '<p class="m-0"> NO DEFINIDO  </p>';
-                } else {
-                    return '<p class="m-0">' + d.RL + '</p>';
-                }
+                return '<p class="m-0">' + d.nombreCoordinador + '</p>';
+            }
+        },
+        {
+            data: function (d) {
+                return '<p class="m-0">' + d.nombreGerente + '</p>';
             }
         },
         {
