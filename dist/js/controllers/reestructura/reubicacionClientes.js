@@ -37,7 +37,8 @@ const TIPO_PROCESO = Object.freeze({
 
 const PROYECTO = Object.freeze({
     NORTE: 21,
-    PRIVADAPENINSULA: 25
+    PRIVADAPENINSULA: 25,
+    CANADA: 22
 });
 
 const STATUSLOTE = Object.freeze({
@@ -1581,7 +1582,7 @@ const botonesAccionReubicacion = (d) => {
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA) ? (flagFusion==1)? BTN_PROPUESTAS :BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
