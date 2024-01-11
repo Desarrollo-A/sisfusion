@@ -1,16 +1,10 @@
 Shadowbox.init();
-let getInfo2A = new Array(7);
-let getInfo2_2A = new Array(7);
-let getInfo5A = new Array(7);
-let getInfo6A = new Array(7);
-let getInfo2_3A = new Array(7);
-let getInfo2_7A = new Array(7);
-let getInfo5_2A = new Array(7);
-let return1a = new Array(7);
+let getInfoData = new Array(7);
 let tipo_comprobante ;
 let aut;
 let titulos_intxt = [];
 let cliente = null;
+let titulo_modal = '';
 
 const MOVIMIENTOS = Object.freeze({
     RECHAZO_CONTRALORIA_ESTATUS_5: 20,
@@ -298,122 +292,30 @@ $("#tabla_deposito_seriedad").ready( function(){
 
 $(document).on("click", ".getInfo2", function (e) {
     e.preventDefault();
-    getInfo2A[0] = $(this).attr("data-idCliente");
-    getInfo2A[1] = $(this).attr("data-nombreResidencial");
-    getInfo2A[2] = $(this).attr("data-nombreCondominio");
-    getInfo2A[3] = $(this).attr("data-idCondominio");
-    getInfo2A[4] = $(this).attr("data-nombreLote");
-    getInfo2A[5] = $(this).attr("data-idLote");
-    getInfo2A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
+    getInfoData[0] = $(this).attr("data-idCliente");
+    getInfoData[1] = $(this).attr("data-nombreResidencial");
+    getInfoData[2] = $(this).attr("data-nombreCondominio");
+    getInfoData[3] = $(this).attr("data-idCondominio");
+    getInfoData[4] = $(this).attr("data-nombreLote");
+    getInfoData[5] = $(this).attr("data-idLote");
+    getInfoData[6] = $(this).attr("data-fechavenc");
+    getInfoData[7] = $(this).attr("data-idMov");
+
+      (getInfoData[7] == MOVIMIENTOS.NUEVO_APARTADO) ? titulo_modal = "Integración de Expediente - "
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6) ? titulo_modal = "Integración de Expediente (Rechazo estatus 6 Contraloría) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_VENTAS_ESTATUS_8) ? titulo_modal = "Integración de Expediente (Rechazo estatus 8 Ventas) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7) ? titulo_modal = "Integración de Expediente (Rechazo estatus 7 Jurídico) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? titulo_modal = "Integración de expediente (Rechazo estatus 5 Contraloría) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) ? titulo_modal = "Integración de Expediente (Rechazo estatus 7 Jurídico) -"
+    : (getInfoData[7] == MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) ? titulo_modal = 'Enviar nuevamente a postventa (despúes de un rechazo de postventa) -'
+    :  titulo_modal = "Integración de Expediente - ";
+
+    $(".lote").html(getInfoData[4]);
+    $(".titulo_modal").html(titulo_modal);
     tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
     $('#modal1').modal('show');
-});
-
-$(document).on("click", ".getInfo2_2", function (e) {
-    e.preventDefault();
-    getInfo2_2A[0] = $(this).attr("data-idCliente");
-    getInfo2_2A[1] = $(this).attr("data-nombreResidencial");
-    getInfo2_2A[2] = $(this).attr("data-nombreCondominio");
-    getInfo2_2A[3] = $(this).attr("data-idCondominio");
-    getInfo2_2A[4] = $(this).attr("data-nombreLote");
-    getInfo2_2A[5] = $(this).attr("data-idLote");
-    getInfo2_2A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal2').modal('show');
-});
-
-$(document).on("click", ".getInfo5", function (e) {
-    e.preventDefault();
-    getInfo5A[0] = $(this).attr("data-idCliente");
-    getInfo5A[1] = $(this).attr("data-nombreResidencial");
-    getInfo5A[2] = $(this).attr("data-nombreCondominio");
-    getInfo5A[3] = $(this).attr("data-idCondominio");
-    getInfo5A[4] = $(this).attr("data-nombreLote");
-    getInfo5A[5] = $(this).attr("data-idLote");
-    getInfo5A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal3').modal('show');
-});
-
-$(document).on("click", ".getInfo6", function (e) {
-    e.preventDefault();
-    getInfo6A[0] = $(this).attr("data-idCliente");
-    getInfo6A[1] = $(this).attr("data-nombreResidencial");
-    getInfo6A[2] = $(this).attr("data-nombreCondominio");
-    getInfo6A[3] = $(this).attr("data-idCondominio");
-    getInfo6A[4] = $(this).attr("data-nombreLote");
-    getInfo6A[5] = $(this).attr("data-idLote");
-    getInfo6A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal4').modal('show');
-});
-
-$(document).on("click", ".getInfo2_3", function (e) {
-    e.preventDefault();
-    getInfo2_3A[0] = $(this).attr("data-idCliente");
-    getInfo2_3A[1] = $(this).attr("data-nombreResidencial");
-    getInfo2_3A[2] = $(this).attr("data-nombreCondominio");
-    getInfo2_3A[3] = $(this).attr("data-idCondominio");
-    getInfo2_3A[4] = $(this).attr("data-nombreLote");
-    getInfo2_3A[5] = $(this).attr("data-idLote");
-    getInfo2_3A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal5').modal('show');
-});
-
-$(document).on("click", ".getInfo2_7", function (e) {
-    e.preventDefault();
-    getInfo2_7A[0] = $(this).attr("data-idCliente");
-    getInfo2_7A[1] = $(this).attr("data-nombreResidencial");
-    getInfo2_7A[2] = $(this).attr("data-nombreCondominio");
-    getInfo2_7A[3] = $(this).attr("data-idCondominio");
-    getInfo2_7A[4] = $(this).attr("data-nombreLote");
-    getInfo2_7A[5] = $(this).attr("data-idLote");
-    getInfo2_7A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal6').modal('show');
-});
-
-$(document).on("click", ".getInfo5_2", function (e) {
-    e.preventDefault();
-    getInfo5_2A[0] = $(this).attr("data-idCliente");
-    getInfo5_2A[1] = $(this).attr("data-nombreResidencial");
-    getInfo5_2A[2] = $(this).attr("data-nombreCondominio");
-    getInfo5_2A[3] = $(this).attr("data-idCondominio");
-    getInfo5_2A[4] = $(this).attr("data-nombreLote");
-    getInfo5_2A[5] = $(this).attr("data-idLote");
-    getInfo5_2A[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal7').modal('show');
-});
-
-$(document).on("click", ".return1", function (e) {
-    e.preventDefault();
-    return1a[0] = $(this).attr("data-idCliente");
-    return1a[1] = $(this).attr("data-nombreResidencial");
-    return1a[2] = $(this).attr("data-nombreCondominio");
-    return1a[3] = $(this).attr("data-idCondominio");
-    return1a[4] = $(this).attr("data-nombreLote");
-    return1a[5] = $(this).attr("data-idLote");
-    return1a[6] = $(this).attr("data-fechavenc");
-    nombreLote = $(this).data("nomlote");
-    tipo_comprobante = $(this).attr('data-ticomp');
-    $(".lote").html(nombreLote);
-    $('#modal_return1').modal('show');
 });
 
 function fillDataTable(idCondominio) {
@@ -701,7 +603,42 @@ function fillDataTable(idCondominio) {
                     ) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}" data-idLote="${d.idLote}"> <i class="fas fa-user-check"></i></button>`;
                     }
+                    else {
+                        buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo');
 
+                        if(idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION){
+                            if (d.id_prospecto == 0 && (d.id_coordinador !== 10807 || d.id_coordinador !== 10806 || d.id_gerente !== 10807 || d.id_gerente !== 10806)) {
+                                buttons = construirBotonEstatus(d, d.id_coordinador, 'disabled', 'disabled');
+                                atributoButton = 'disabled';
+                            }
+                            buttons += generarBotonesAutorizacion(d);          
+                        }                         
+                                            
+                        if (d.dsType == 1){
+                            buttons += '<button class="btn-data btn-blueMaderas btn_ds'+d.id_cliente+'" '+atributoButton+' id="btn_ds'+d.id_cliente+'" onclick="openLink('+ d.id_cliente +')" data-toggle="tooltip" data-placement="top" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></button>';
+                        } 
+                        if(d.dsType == 2) { // DATA FROM DEPOSITO_SERIEDAD_CONSULTA OLD VERSION
+                            buttons += '<a class="btn-data btn-blueMaderas" href="'+general_base_url+'Asesor/deposito_seriedad_ds/'+d.id_cliente+'/0" data-toggle="tooltip" data-placement="left" title="DEPÓSITO DE SERIEDAD" target=”_blank”><i class="fas fa-print"></i></a>';
+                        }
+
+                        if (d.dsType == 1 && (d.idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && d.idStatusContratacion == STATUS_CONTRATACION) &&
+                             d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)) {
+                             buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
+                            }
+                        }
+
+                    // Botón para descargar la carta de reubicación
+                    if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
+                            if ([2,4].includes(parseInt(d.proceso))) {
+                                const url = `${general_base_url}Reestructura/imprimirCartaReubicacion/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
+                            }
+                            if (d.proceso == 3) {
+                                const url = `${general_base_url}Reestructura/imprimirCartaReestructura/${d.id_cliente}`;
+                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REESTRUCTURA"><i class="fas fa-download"></i></a>`;
+                            }
+                    }
+                    
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
@@ -718,28 +655,78 @@ function fillDataTable(idCondominio) {
     });
 }
 
+function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
+    return `<button href='#' ${atributoButton} 
+                data-tiComp='${data.tipo_comprobanteD}' 
+                data-nomLote='${data.nombreLote}' 
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}' 
+                data-nombreCondominio='${data.nombreCondominio}' 
+                data-nombreLote='${data.nombreLote}' 
+                data-idCondominio='${data.idCondominio}' 
+                data-idLote='${data.idLote}' 
+                data-fechavenc='${fechaVenc}'
+                data-idMov='${data.idMovimiento}' 
+                class="btn-data btn-green ${classButton}" 
+                data-toggle="tooltip" data-placement="top" 
+                title="${titulo}"> <i class="fas fa-check"></i></button>`;
+}
+
+function generarBotonesAutorizacion(clienteData) {
+    let botones = '';
+    if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
+        botones += `
+            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion" data-toggle="tooltip"  data-placement="left" title="ENVÍO DE VERIFICACIONES" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-send"></i></button>
+        `;
+    }
+    if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
+        botones += `
+            <button class="btn-data btn-azure btn-rounded btn-reenvio" data-toggle="tooltip" data-placement="left" title="REENVÍO DE VERIFICACIÓN" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-rotate-right"></i></button>
+        `;
+    }
+
+    if ((parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
+         parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
+        (parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
+         parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
+        botones += `<button class="btn-data btn-yellow btn-rounded btn-solicitar" data-toggle="tooltip" data-placement="left" title="SOLICITAR EDICIÓN DEL REGISTRO" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-hand-paper-o"></i></button>`;
+    }
+    
+    return botones;
+}
+
+function openLink(id_cliente){
+        window.open(general_base_url+'Asesor/deposito_seriedad/'+ id_cliente+'/0', '_blank');
+}
+
 $(document).on('click', '#save1', function(e) {
     e.preventDefault();
     const comentario = $("#comentario").val();
-    const validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
+    var validaComent = (document.getElementById("comentario").value.trim() == '') ? 0 : 1;
+    var complementoUrl = 'asesor/intExpAsesor/'
+
     let dataExp1 = new FormData();
-    dataExp1.append("idCliente", getInfo2A[0]);
-    dataExp1.append("nombreResidencial", getInfo2A[1]);
-    dataExp1.append("nombreCondominio", getInfo2A[2]);
-    dataExp1.append("idCondominio", getInfo2A[3]);
-    dataExp1.append("nombreLote", getInfo2A[4]);
-    dataExp1.append("idLote", getInfo2A[5]);
+    dataExp1.append("idCliente", getInfoData[0]);
+    dataExp1.append("nombreResidencial", getInfoData[1]);
+    dataExp1.append("nombreCondominio", getInfoData[2]);
+    dataExp1.append("idCondominio", getInfoData[3]);
+    dataExp1.append("nombreLote", getInfoData[4]);
+    dataExp1.append("idLote", getInfoData[5]);
     dataExp1.append("comentario", comentario);
-    dataExp1.append("fechaVenc", getInfo2A[6]);
+    dataExp1.append("fechaVenc", getInfoData[6]);
     dataExp1.append('tipo_comprobante', tipo_comprobante);
-    let comprobante_domicilio = (tipo_comprobante==1) ? '' : ', COMPROBANTE DE DOMICILIO';
+    dataExp1.append('idMovimiento', getInfoData[7]);
+
+    if(getInfoData[7] == 99)
+        complementoUrl = 'Postventa/enviarLoteARevisionPostVenta3/';
+
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
     }
-    if (validaComent == 1) {
+    else {
         $('#save1').prop('disabled', true);
         $.ajax({
-            url : general_base_url+'asesor/intExpAsesor/',
+            url : general_base_url + complementoUrl,
             data: dataExp1,
             cache: false,
             contentType: false,
@@ -1642,67 +1629,8 @@ jQuery(document).ready(function(){
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
     })
-    jQuery('#modal2').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario2').val('');
-    })
-    jQuery('#modal3').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario3').val('');
-    })
-    jQuery('#modal4').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario4').val('');
-    })
-    jQuery('#modal5').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario5').val('');
-    })
-    jQuery('#modal6').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario6').val('');
-    })
-    jQuery('#modal7').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario7').val('');
-    })
-    jQuery('#modal_return1').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario8').val('');
-    })
 })
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
 });
-
-function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
-    return `<a href='#' ${atributoButton} data-tiComp='${data.tipo_comprobanteD}' data-nomLote='${data.nombreLote}' data-idCliente='${data.id_cliente}' data-nombreResidencial='${data.nombreResidencial}' data-nombreCondominio='${data.nombreCondominio}' data-nombreLote='${data.nombreLote}' data-idCondominio='${data.idCondominio}' data-idLote='${data.idLote}' data-fechavenc='${fechaVenc}' class="btn-data btn-green ${classButton}" data-toggle="tooltip" data-placement="top" title="${titulo}"> <i class="fas fa-check"></i></a>`;
-}
-
-function generarBotonesAutorizacion(clienteData) {
-    let botones = '';
-    if (clienteData.autorizacion_correo === null || clienteData.autorizacion_sms === null) {
-        botones += `
-            <button class="btn-data btn-violetDeep btn-rounded btn-autorizacion" data-toggle="tooltip"  data-placement="left" title="ENVÍO DE VERIFICACIONES" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-send"></i></button>
-        `;
-    }
-    if (parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO || parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO) {
-        botones += `
-            <button class="btn-data btn-azure btn-rounded btn-reenvio" data-toggle="tooltip" data-placement="left" title="REENVÍO DE VERIFICACIÓN" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-rotate-right"></i></button>
-        `;
-    }
-
-    if (
-        (parseInt(clienteData.total_sol_correo_pend) === 0 && parseInt(clienteData.total_sol_correo_aut) === 0) &&
-            parseInt(clienteData.autorizacion_correo) === ESTATUS_AUTORIZACION.ENVIADO ||
-        (parseInt(clienteData.total_sol_sms_pend) === 0 && parseInt(clienteData.total_sol_sms_aut) === 0) &&
-            parseInt(clienteData.autorizacion_sms) === ESTATUS_AUTORIZACION.ENVIADO
-    ) {
-        botones += `
-            <button class="btn-data btn-yellow btn-rounded btn-solicitar" data-toggle="tooltip" data-placement="left" title="SOLICITAR EDICIÓN DEL REGISTRO" data-idCliente='${clienteData.id_cliente}'><i class="fas fa-hand-paper-o"></i></button>
-        `;
-    }
-
-    return botones;
-}

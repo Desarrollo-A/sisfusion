@@ -1,9 +1,5 @@
 $(document).ready(function () {
-    let seeAll = 0;
-    if (id_rol_general == 1 || id_rol_general == 4 || id_rol_general == 18 || id_rol_general == 63)
-        seeAll = 1;
-
-    $.post('getOpcionesParaReporteComisionistas', { seeAll: seeAll }, function (data) {
+    $.post('getOpcionesParaReporteComisionistas', function (data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({ 'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2'] }).text(data[i]['nombre']));

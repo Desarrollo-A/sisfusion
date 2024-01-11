@@ -3249,24 +3249,15 @@ class Asesor extends CI_Controller {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
+        
+
         $arreglo = array();
-        $arreglo["idStatusContratacion"] = $statusContratacion;
-        $arreglo["idMovimiento"] = $idMovimiento;
+        $arreglo["idStatusContratacion"] = $idStatNuevo;
+        $arreglo["idMovimiento"] = $idMovNuevo;
+        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["comentario"] = $this->input->post('comentario');
-        $data = $this->Asesor_model->revisaOU($idLote);
-
-        if(count($data) >= 1) {
-            $data['message'] = 'OBSERVACION_CONTRATO';
-            echo json_encode($data);
-            return;
-        }
-
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-            return;
-        }
 
 
         date_default_timezone_set('America/Mexico_City');
@@ -3381,17 +3372,18 @@ class Asesor extends CI_Controller {
         }
 
         $arreglo2 = array();
-        $arreglo2["idStatusContratacion"] = $statusContratacion;
-        $arreglo2["idMovimiento"] = $idMovimiento;
+        $arreglo2["idStatusContratacion"] = $idStatNuevo;
+        $arreglo2["idMovimiento"] = $idMovNuevo;
         $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
+        $arreglo2["fechaVenc"] = $fechaVenc;
         $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
-        $arreglo2["idCliente"] = $this->input->post('idCliente');
-        $arreglo2["comentario"] = $this->input->post('comentario');
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+
         $validate = $this->Asesor_model->validateSt2($idLote);
 
         if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
@@ -3432,13 +3424,15 @@ class Asesor extends CI_Controller {
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
             }
         } else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya fue registrado.';
         }
+
+        echo json_encode($data);
     }
 
     public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
@@ -3524,21 +3518,24 @@ class Asesor extends CI_Controller {
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-            $data['message'] = 'MISSING_DOCUMENTS';
+            $data['status'] = false;
+            $data['message'] = $error_message;
             $data['error_message'] = $error_message;
             echo json_encode($data);
             return false;
         }
 
         if($validacion) {
-            $data['message'] = 'MISSING_AUTORIZATION';
+            $data['status'] = false;
+            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
         if(count($validacionIM) > 0) {
             if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['message'] = 'MISSING_AUTFI';
+                $data['status'] = false;
+                $data['message'] = 'Autorización de mensualidad pendiente.';
                 echo json_encode($data);
                 return false;
             }

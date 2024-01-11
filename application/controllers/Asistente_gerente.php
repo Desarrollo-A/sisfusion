@@ -264,17 +264,22 @@ class Asistente_gerente extends CI_Controller {
         $validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
         if($validate == 1) {
-        if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
-          $data['message'] = 'OK';
-          echo json_encode($data);
-        } else {
-          $data['message'] = 'ERROR';
-          echo json_encode($data);
+            if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
+                $data['status'] = true;
+                $data['message'] = 'Estatus enviado.';
+            } 
+            else {
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
+            }
+        } 
+        else {
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya esta registrado.';
+            
         }
-        } else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
-        }
+
+        echo json_encode($data);
     }
 
     public function editar_registro_loteRechazoAstatus2_asistentes_proceceso8() {
@@ -384,225 +389,27 @@ class Asistente_gerente extends CI_Controller {
         $validate = $this->VentasAsistentes_model->validateSt8($idLote);
 
         if($validate == 1){
-
-          if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-            if ($this->email->send()) {
-              $data['status_msg'] = 'Correo enviado correctamente';
-            } else {
-              $data['status_msg'] = 'Correo no enviado';
-            }
-            $data['message'] = 'OK';
-            echo json_encode($data);
-
-            }else{
-              $data['message'] = 'ERROR';
-              echo json_encode($data);
-            }
-        }else {
-          $data['message'] = 'FALSE';
-          echo json_encode($data);
-        }
-    }
-
-    public function editar_registro_loteRevision_asistentesAadministracion11_proceceso8(){
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado=date("Y-m-d H:i:s");
-        $fechaVenc=$this->input->post('fechaVenc');
-
-        $arreglo=array();
-        $arreglo["idStatusContratacion"]=8;
-        $arreglo["idMovimiento"]=67;
-        $arreglo["comentario"]=$comentario;
-        $arreglo["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
-        $arreglo["fechaSolicitudValidacion"]=$modificado;
-        $arreglo["status8Flag"] = 1;
-
-        $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
-        if($valida_rama[0]['tipo_nc']==1){
-          $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
-          if($validacionCarta[0]['tipo_comprobanteD']==1) {
-              if(count($validacionCarta)<=0){
-                  $data['message'] = 'MISSING_CARTA_RAMA';
-                  echo json_encode($data);
-                  exit;
-              }else{
-                  if($validacionCarta[0]['tipo_comprobanteD']==1) {
-                      if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
-                          $data['message'] = 'MISSING_CARTA_UPLOAD';
-                          echo json_encode($data);
-                          exit;
-                      }
-                  }
-              }
-          }
-        }
-
-        $horaActual = date('H:i:s');
-        $horaInicio = date("08:00:00");
-        $horaFin = date("16:00:00");
-
-        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                 $sig_fecha_feriado2 == "25-12") {
-
-                $fecha = $fechaAccion;
-
-                $i = 0;
-
-                while($i <= 1) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                        //
-                    }else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-               }
-
-               $arreglo["fechaVenc"]= $fecha;
-            } else {
-                $fecha = $fechaAccion;
-                $i = 0;
-
-                while($i <= 0) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                        //
-                    } else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
+            if ($this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+                if ($this->email->send()) {
+                    $data['status_msg'] = 'Correo enviado correctamente';
+                } 
+                else {
+                    $data['status_msg'] = 'Correo no enviado';
                 }
-               $arreglo["fechaVenc"]= $fecha;
+                
+                $data['status'] = true;
+                $data['message'] = 'Estatus enviado.';                
             }
-
-        } elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                $sig_fecha_feriado2 == "25-12") {
-
-                $fecha = $fechaAccion;
-                $i = 0;
-
-                while($i <= 1) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                        //
-                    } else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-
-                $arreglo["fechaVenc"]= $fecha;
-
-            } else {
-
-                $fecha = $fechaAccion;
-
-                $i = 0;
-                while($i <= 1) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {
-                        //
-                    } else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVenc"]= $fecha;
+            else{
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
             }
         }
-
-        $arreglo2=array();
-        $arreglo2["idStatusContratacion"]=8;
-        $arreglo2["idMovimiento"]=67;
-        $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
-        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo2["perfil"]=$this->session->userdata('id_rol');
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $fechaVenc;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
-
-        $validate = $this->VentasAsistentes_model->validateSt8($idLote);
-        if ($validate != 1) {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
-            return;
+        else {
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya esta registrado.';        
         }
 
-        if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
-            $data['message'] = 'ERROR';
-            echo json_encode($data);
-            return;
-        }
-
-        $data['message'] = 'OK';
         echo json_encode($data);
     }
 
@@ -977,27 +784,44 @@ class Asistente_gerente extends CI_Controller {
         }
    }
 
-    public function editar_registro_loteRevision_asistentes_proceceso8(){
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
+    public function editar_registro_loteRevision_asistentes_proceso8(){
+        $idLote=$this->input->post('idLote', true);
+        $idCondominio=$this->input->post('idCondominio', true);
+        $nombreLote=$this->input->post('nombreLote', true);
+        $idCliente=$this->input->post('idCliente', true);
+        $comentario=$this->input->post('comentario', true);
         $modificado=date("Y-m-d H:i:s");
-        $fechaVenc=$this->input->post('fechaVenc');
-
+        $fechaVenc=$this->input->post('fechaVenc', true);
+        $idMovimiento = $this->input->post("idMovimiento", true);
+        $perfil = $this->input->post("perfil", true);
         $arreglo=array();
+        $arreglo2=array();
+        $idMovNuevo = 0;
+        $validNecesaria = false; // variable para 2 los estados en los que se checa documentación
+
+        if($idMovimiento == 64 && in_array($perfil, [13, 17, 32, 70])){
+            $idMovNuevo = 65;
+        }
+        if(in_array($idMovimiento, [7, 37, 77]) && in_array($perfil, [15])){
+            $idMovNuevo = 38;
+            $validNecesaria = true;
+        }
+        if ($idMovimiento == 66 && $perfil == 11){
+            $arreglo["fechaSolicitudValidacion"]=$modificado;
+            $idMovNuevo = 67;
+            $validNecesaria = true;
+        }
+        
         $arreglo["idStatusContratacion"]=8;
-        $arreglo["idMovimiento"]=65;
+        $arreglo["idMovimiento"]=$idMovNuevo;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
         $arreglo["modificado"]=date("Y-m-d H:i:s");
         $arreglo["status8Flag"] = 1;
 
-        $arreglo2=array();
         $arreglo2["idStatusContratacion"]=8;
-        $arreglo2["idMovimiento"]=65;
+        $arreglo2["idMovimiento"]=$idMovNuevo;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -1008,20 +832,73 @@ class Asistente_gerente extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
+        if($validNecesaria){
+            $valida_rama = $this->VentasAsistentes_model->check_carta($idCliente);
+
+            if($valida_rama[0]['tipo_nc']==1){
+                $validacionCarta = $this->VentasAsistentes_model->validaCartaCM($idCliente);
+                if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                    if(count($validacionCarta)<=0){
+                        $data['status'] = false;
+                        $data['message'] = 'Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente';
+                        echo json_encode($data);
+                        exit;
+                    }else{
+                        if($validacionCarta[0]['tipo_comprobanteD']==1) {
+                            if ($validacionCarta[0]['expediente'] == '' || $validacionCarta[0]['expediente'] == NULL) {
+                                $data['status'] = false;
+                                $data['message'] = 'Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente';
+                                echo json_encode($data);
+                                exit;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         $validate = $this->VentasAsistentes_model->validateSt8($idLote);
         if ($validate != 1) {
-            $data['message'] = 'FALSE';
+            $data['status'] = false;
+            $data['message'] = 'El status ya fue registrado.';
             echo json_encode($data);
             return;
         }
 
         if (!$this->VentasAsistentes_model->updateSt($idLote,$arreglo,$arreglo2)){
-            $data['message'] = 'ERROR';
+            $data['status'] = false;
+            $data['message'] = 'Error al enviar la solicitud.';
             echo json_encode($data);
             return;
         }
 
-        $data['message'] = 'OK';
+        $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
+
+        if (!in_array($cliente->proceso, [2,4])) {
+            $data['status'] = true;
+            $data['message'] = 'Estatus enviado.';
+            echo json_encode($data);
+            return;
+        }
+
+        $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
+        if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
+            $data = [
+                'tipoLiberacion' => 7,
+                'idLote' => $loteAnterior->idLote,
+                'idLoteNuevo' => $idLote
+            ];
+
+            if (!$this->Reestructura_model->aplicaLiberacion($data)) {
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
+                echo json_encode($data);
+                return;
+            }
+        }
+
+        $data['status'] = true;
+        $data['message'] = 'Estatus enviado';
         echo json_encode($data);
     }
 
