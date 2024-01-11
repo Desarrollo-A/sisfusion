@@ -54,10 +54,10 @@ function fillTable(index_estatus) {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Inventario lotes Reestructura',
-            title: 'Inventario lotes Reestructura',
+            titleAttr: 'Inventario lotes reestructura',
+            title: 'Inventario lotes reestructura',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: [0,1,2,3,4,5,6,7,8,9,10],
                 format: {
                     header: function (d, columnIdx) {
                         return ' '+titulos_intxt[columnIdx] +' ';
