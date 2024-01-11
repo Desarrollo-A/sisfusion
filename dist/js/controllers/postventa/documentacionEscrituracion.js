@@ -12,17 +12,6 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-// $("#carga-datatable thead tr:eq(0) th").each(function (i) {
-//   var title = $(this).text();
-//   $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>`);
-//   $("input", this).on("keyup change", function () {
-//     if ($("#carga-datatable").DataTable().column(i).search() !== this.value) {
-//       $("#carga-datatable").DataTable().column(i).search(this.value).draw();
-//     }
-//   });
-//   $('[data-toggle="tooltip"]').tooltip();
-// });
-
 sp = {
   initFormExtendedDatetimepickers: function () {
     var today = new Date();
@@ -94,7 +83,7 @@ $(document).ready(function () {
   );
 });
 
-$(document).on("click", ".comentariosModel", function (e) { // MODAL DE COMENTARIO DEL PROCESO DEL LOTE
+$(document).on("click", ".comentariosModel", function (e) { 
   e.preventDefault();
   e.stopImmediatePropagation();
   id_solicitud = $(this).attr("data-idSolicitud");
@@ -129,7 +118,7 @@ function cleanCommentsAsimilados() {
   myCommentsLote.innerHTML = "";
 }
 
-let integracionExpediente = new Object(); /////SIRVE
+let integracionExpediente = new Object(); 
 
 $(document).on("click", ".details-control", function () {
   var detailRows = [];
@@ -241,7 +230,7 @@ function crearTablas(datosTablas,numTabla = ''){
       },
       {
         data: function (d) {
-          var group_buttons = '';    //variable para botones que se muestran en el datatable 
+          var group_buttons = '';    
           $('[data-toggle="tooltip"]').tooltip();
           group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
           group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="HISTORIAL DE COMENTARIOS"><i class="fa fa-history"></i></button>`;
