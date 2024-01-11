@@ -39,8 +39,9 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>ASESOR</th>
+                                                <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
-                                                <th>RL</th>
                                                 <th>ESTATUS</th>
                                                 <th>MOVIMIENTO</th>
                                                 <th>UBICACIÓN</th>
