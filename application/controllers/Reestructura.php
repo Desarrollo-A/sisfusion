@@ -111,6 +111,25 @@ class Reestructura extends CI_Controller{
 		echo json_encode($this->Reestructura_model->get_catalogo_restructura($id_catalogo)->result_array());
 	}
 
+    public function inventarioLotes(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/inventarioLotes_view");
+    }
+
+    public function getEstatusLote(){
+        echo json_encode($this->Reestructura_model->EstatusLote()->result_array());
+    }
+
+    public function reestructuraLotes(){
+        $index_estatus = $this->input->post('index_estatus');
+        $dato = $this->Reestructura_model->reestructuraLotes($index_estatus);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
+
 	public function insertarOpcion(){
 		$idOpcion = $this->Reestructura_model->insertOpcion(100);
 		$idOpcion = $idOpcion->lastId;

@@ -94,59 +94,25 @@
                                                         <label class="control-label">
                                                             Nacionalidad (<span class="isRequired">*</span>)
                                                         </label>
-                                                        <select id="nationality" 
-                                                                name="nationality"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                data-live-search="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                data-container="body"
-                                                                onchange="validateSelect('nationality')"
-                                                                required>
-                                                        </select>
+                                                        <select id="nationality" name="nationality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateSelect('nationality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Personalidad jurídica (<span class="isRequired">*</span>)</label>
-                                                        <select id="legal_personality" 
-                                                                name="legal_personality"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                data-container="body"
-                                                                onchange="validatePersonality(), validateSelect('legal_personality')"
-                                                                required>
-                                                        </select>
+                                                        <select id="legal_personality" name="legal_personality" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validatePersonality(), validateSelect('legal_personality')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">CURP</label>
-                                                        <input  id="curp" 
-                                                                name="curp"
-                                                                type="text"
-                                                                class="form-control input-gral" 
-                                                                minlength="18" 
-                                                                maxlength="18" 
-                                                                readonly
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="curp" name="curp" type="text" class="form-control input-gral" minlength="18" maxlength="18" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">RFC</label>
-                                                        <input  id="rfc"
-                                                                name="rfc"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                minlength="12"
-                                                                maxlength="13" 
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="rfc" name="rfc" type="text" class="form-control input-gral" minlength="12" maxlength="13" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                             </div>
@@ -155,42 +121,25 @@
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Nombre / Razón social (<span class="isRequired">*</span>)</label>
-                                                        <input  id="name"
-                                                                name="name"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();"
-                                                                onchange="validateInputs(this);"
-                                                                required>
+                                                        <input  id="name" name="name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Apellido paterno</label>
-                                                        <input  id="last_name"
-                                                                name="last_name"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="last_name" name="last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Apellido materno</label>
-                                                        <input  id="mothers_last_name"
-                                                                name="mothers_last_name"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="mothers_last_name" name="mothers_last_name" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Fecha de nacimiento</label>
-                                                        <input  id="date_birth"
-                                                                name="date_birth"
-                                                                type="date"
-                                                                class="form-control input-gral" onchange="getAge(1)"/>
+                                                        <input  id="date_birth" name="date_birth" type="date" class="form-control input-gral" onchange="getAge(1)"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -199,47 +148,25 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Edad</label>
-                                                        <input  id="company_antiquity"
-                                                                name="company_antiquity"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                readonly
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="company_antiquity" name="company_antiquity" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <div class="form-group ">
                                                         <label class="control-label">Correo electrónico</label>
-                                                        <input  id="email"
-                                                                name="email"
-                                                                type="email"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();"
-                                                                onchange="validateInputs(this);">
+                                                        <input  id="email" name="email" type="email" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();" onchange="validateInputs(this);">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Teléfono celular (<span class="isRequired">*</span>)</label>
-                                                        <input  id="phone_number"
-                                                                name="phone_number"
-                                                                type="number"
-                                                                class="form-control input-gral"
-                                                                maxlength="15"
-                                                                required
-                                                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onchange="validateInputs(this);"
-                                                                required>
+                                                        <input  id="phone_number" name="phone_number" type="number" class="form-control input-gral" maxlength="15" required oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" onchange="validateInputs(this);" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Teléfono casa</label>
-                                                        <input  id="phone_number2"
-                                                                name="phone_number2"
-                                                                type="number"
-                                                                class="form-control input-gral"
-                                                                maxlength="15"
-                                                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                        <input  id="phone_number2" name="phone_number2" type="number" class="form-control input-gral" maxlength="15" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                     </div>
                                                 </div>
                                             </div>
@@ -248,61 +175,31 @@
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Estado civil</label>
-                                                        <select id="civil_status"
-                                                                name="civil_status"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                data-container="body">
-                                                        </select>
+                                                        <select id="civil_status" name="civil_status" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-container="body"></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">Régimen matrimonial</label>
-                                                        <select id="matrimonial_regime"
-                                                                name="matrimonial_regime"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                data-container="body"
-                                                                onchange="validateMatrimonialRegime(1)">
-                                                        </select>
+                                                        <select id="matrimonial_regime" name="matrimonial_regime" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateMatrimonialRegime(1)"></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Cónyugue</label>
-                                                        <input  id="spouce"
-                                                                name="spouce"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                readonly
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="spouce" name="spouce" type="text" class="form-control input-gral" readonly onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="form-group ">
                                                         <label class="control-label">Originiario de</label>
-                                                        <input  id="from"
-                                                                name="from"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="from" name="from" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-3">
                                                     <div class="form-group ">
                                                         <label class="control-label">Domicilio particular</label>
-                                                        <input  id="home_address"
-                                                                name="home_address"
-                                                                type="text"
-                                                                class="form-control input-gral"
-                                                                onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                        <input  id="home_address" name="home_address" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                     </div>
                                                 </div>
                                             </div>
@@ -312,30 +209,21 @@
                                             <div class="col-sm-12 col-sm-offset-1">
                                                 <div class="col-sm-2">
                                                     <div class="choice" data-toggle="wizard-radio">
-                                                        <input  id="own"
-                                                                name="lives_at_home"
-                                                                type="radio"
-                                                                value="1">
+                                                        <input  id="own" name="lives_at_home" type="radio" value="1">
                                                         <div class="icon"><i class="fa fa-home"></i></div>
                                                         <h6>Propia</h6>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="choice" data-toggle="wizard-radio">
-                                                        <input  id="rented"
-                                                                name="lives_at_home"
-                                                                type="radio"
-                                                                value="2">
+                                                        <input  id="rented" name="lives_at_home" type="radio" value="2">
                                                         <div class="icon"><i class="fa fa-file"></i></div>
                                                         <h6>Rentada</h6>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="choice" data-toggle="wizard-radio">
-                                                        <input  id="paying"
-                                                                name="lives_at_home"
-                                                                type="radio"
-                                                                value="3">
+                                                        <input  id="paying" name="lives_at_home" type="radio" value="3">
                                                         <div class="icon">
                                                             <i class="fa fa-money"></i>
                                                         </div>
@@ -344,20 +232,14 @@
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="choice" data-toggle="wizard-radio">
-                                                        <input  id="family"
-                                                                name="lives_at_home"
-                                                                type="radio"
-                                                                value="4">
+                                                        <input  id="family" name="lives_at_home" type="radio" value="4">
                                                         <div class="icon"><i class="fa fa-group"></i></div>
                                                         <h6>Familiar</h6>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-2">
                                                     <div class="choice" data-toggle="wizard-radio">
-                                                        <input  id="other"
-                                                                name="lives_at_home"
-                                                                type="radio"
-                                                                value="5">
+                                                        <input  id="other" name="lives_at_home" type="radio" value="5">
                                                         <div class="icon"><i class="fa fa-circle"></i></div>
                                                         <h6>Otro</h6>
                                                     </div>
@@ -371,52 +253,31 @@
                                             <div class="col-sm-4 col-sm-offset-1">
                                                 <div class="form-group ">
                                                     <label class="control-label">Ocupación</label>
-                                                    <input  id="occupation"
-                                                            name="occupation"
-                                                            type="text"
-                                                            class="form-control input-gral"
-                                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    <input  id="occupation" name="occupation" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group ">
                                                     <label class="control-label">Empresa</label>
-                                                    <input  id="company"
-                                                            name="company"
-                                                            type="text"
-                                                            class="form-control input-gral"
-                                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    <input  id="company" name="company" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                 </div>
                                             </div>
                                             <div class="col-sm-2 col-sm-offset-1">
                                                 <div class="form-group ">
                                                     <label class="control-label">Puesto</label>
-                                                    <input  id="position"
-                                                            name="position"
-                                                            type="text"
-                                                            class="form-control input-gral"
-                                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    <input  id="position" name="position" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
                                                 <div class="form-group ">
                                                     <label class="control-label">Antigüedad (años)</label>
-                                                    <input  id="antiquity"
-                                                            name="antiquity"
-                                                            type="number"
-                                                            class="form-control input-gral"
-                                                            maxlength="2"
-                                                            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                                    <input  id="antiquity" name="antiquity" type="number" class="form-control input-gral" maxlength="2" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group ">
                                                     <label class="control-label">Domicilio</label>
-                                                    <input  id="residence"
-                                                            name="company_residence"
-                                                            type="text"
-                                                            class="form-control input-gral"
-                                                            onkeyup="javascript:this.value=this.value.toUpperCase();">
+                                                    <input  id="residence" name="company_residence" type="text" class="form-control input-gral" onkeyup="javascript:this.value=this.value.toUpperCase();">
                                                 </div>
                                             </div>
                                         </div>
@@ -430,18 +291,7 @@
                                                 <div class="col-sm-4">
                                                     <div class="form-group  select-is-empty">
                                                         <label class="control-label">¿Cómo nos contactaste? (<span class="isRequired">*</span>)</label>
-                                                        <select id="prospecting_place"
-                                                                name="prospecting_place"
-                                                                class="selectpicker select-gral m-0"
-                                                                data-style="btn"
-                                                                data-show-subtext="true"
-                                                                data-live-search="true"
-                                                                title="Selecciona una opción"
-                                                                data-size="7"
-                                                                data-container="body"
-                                                                onchange="validateProspectingPlace(), validateSelect('prospecting_place')"
-                                                                required>
-                                                        </select>
+                                                        <select id="prospecting_place" name="prospecting_place" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" onchange="validateProspectingPlace(), validateSelect('prospecting_place')" required></select>
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-4">
@@ -493,17 +343,9 @@
                                     <div class="col-md-12" id="savingProspect"></div>
                                     <div class="pull-right">
                                         <input  type="hidden" name="asesor_prospecto" id="asesor_prospecto" value="0">
-                                        
                                         <input  type='button' class='btn btn-next btn-fill btn-wd' name='next' value='Siguiente' style="background-color: #4caf50"/>
-                                        
-                                        <button type='button' class='btn btn-finish btn-fill btn-wd' name='finish' id="finish" value='Finalizar' style="background-color: #4caf50">
-                                            Finalizar
-                                        </button>
-
-                                        <button type="submit" id="submt" class="hide">
-                                            Enviar final
-                                        </button>
-
+                                        <button type='button' class='btn btn-finish btn-fill btn-wd' name='finish' id="finish" value='Finalizar' style="background-color: #4caf50">Finalizar</button>
+                                        <button type="submit" id="submt" class="hide">Enviar final</button>
                                     </div>
                                     <div class="pull-left">
                                         <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Anterior' />
@@ -515,14 +357,7 @@
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content" style="height: 250px;">
                                         <div class="modal-header">
-                                            <button type="button"
-                                                    class="close"
-                                                    data-dismiss="modal"
-                                                    aria-label="Close">
-                                                <span aria-hidden="true">
-                                                    &times;
-                                                </span>
-                                            </button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             <br>
                                             <h5 class="modal-title" id="exampleModalLongTitle">
                                                     <em>Recuerda que dependiendo del lugar de prospección que selecciones se calculará tu comisión. El valor no podrá ser modificado una vez guardado.</em><br>¿Estás seguro que deseas continuar?
@@ -530,7 +365,7 @@
                                         </div>
                                         <div class="modal-footer"><br><br>
                                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                                            <button type="submit" id="btns" onclick="save();" class="btn btn-primary">Guardar</button>
+                                            <button type="submit" id="btns" class="btn btn-primary">Guardar</button>
                                         </div>
                                     </div>
                                 </div>
