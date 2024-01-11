@@ -3255,4 +3255,15 @@ public $controller = 'Postventa';
         }
         echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
     }
+
+    public function getSolicitudesDocs()
+    {
+        $data['data'] = $this->Postventa_model->getSolicitudesDocs()->result_array();
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }    
+    }
+
 }

@@ -454,7 +454,7 @@ class Api extends CI_Controller
         }
     }
 
-    function inventarioVirtual($idRes) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
+    function inventarioVirtual($idResidencial) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -483,11 +483,10 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->getInventarioList($idRes); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
-                        $data2 = $dbTransaction; // DENTRO DE LA VARIABLE "data2" VAMOS A GUARDAR EL ARREGLO DE LOS DATOS QUE MANDA NUESTRA FUNCIÓN
+                        $dbTransaction = $this->Api_model->getInventarioLista($idResidencial); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
                             
                         if ($dbTransaction){// SUCCESS TRANSACTION
-                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
                         }else{ // ERROR TRANSACTION
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
@@ -499,7 +498,7 @@ class Api extends CI_Controller
         }
     }
 
-    function ResidencialList() { 
+    function residencialLista() { 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -528,12 +527,11 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->listaResidenciales(); 
-                        $data2 = $dbTransaction; 
+                        $dbTransaction = $this->Api_model->getListaResidenciales(); 
                             
                         if ($dbTransaction){
-                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
-                        }else{ N
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                        }else{ 
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
                     }else{
