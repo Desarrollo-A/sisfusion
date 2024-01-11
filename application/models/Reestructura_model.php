@@ -31,6 +31,8 @@ class Reestructura_model extends CI_Model
             $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1)";
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAdicional = "AND lo.id_usuario_asignado = $id_usuario AND lo.estatus_preproceso NOT IN (7)";
+        else if ($id_rol == 4) // ASISTENTE SUBDIRECCION
+            $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1, 2, 3, 4, 5, 6)";
 
         return $this->db->query("
         SELECT null as rescision, cl.plan_comision, lo.registro_comision,

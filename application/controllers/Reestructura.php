@@ -532,6 +532,9 @@ class Reestructura extends CI_Controller{
                 $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
             }
 
+
+
+
             if (!$lotesOrigenUpdated) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
