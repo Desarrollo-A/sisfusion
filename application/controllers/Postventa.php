@@ -3255,4 +3255,20 @@ public $controller = 'Postventa';
         }
         echo json_encode(($updateResponse == 1 && $insertResponse == 1) == TRUE ? 1 : 0);
     }
+
+    public function getSolicitudesDocs()
+    {
+        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+        $estatus = $this->input->post("estatus");
+        $tipo_tabla = $this->input->post("tipo_tabla");
+
+
+        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla )->result_array();
+        if ($data != null) {
+            echo json_encode($data, JSON_NUMERIC_CHECK);
+        } else {
+            echo json_encode(array());
+        }    }
+
 }

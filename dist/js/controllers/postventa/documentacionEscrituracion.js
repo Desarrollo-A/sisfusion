@@ -12,19 +12,70 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-$("#carga-datatable thead tr:eq(0) th").each(function (i) {
-  var title = $(this).text();
-  $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>`);
-  $("input", this).on("keyup change", function () {
-    if ($("#carga-datatable").DataTable().column(i).search() !== this.value) {
-      $("#carga-datatable").DataTable().column(i).search(this.value).draw();
-    }
-  });
-  $('[data-toggle="tooltip"]').tooltip();
-});
+// $("#carga-datatable thead tr:eq(0) th").each(function (i) {
+//   var title = $(this).text();
+//   $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>`);
+//   $("input", this).on("keyup change", function () {
+//     if ($("#carga-datatable").DataTable().column(i).search() !== this.value) {
+//       $("#carga-datatable").DataTable().column(i).search(this.value).draw();
+//     }
+//   });
+//   $('[data-toggle="tooltip"]').tooltip();
+// });
+
+sp = {
+  initFormExtendedDatetimepickers: function () {
+    var today = new Date();
+    var date =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes();
+    $(".datepicker").datetimepicker({
+      format: "DD/MM/YYYY",
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: "fa fa-chevron-left",
+        next: "fa fa-chevron-right",
+        today: "fa fa-screenshot",
+        clear: "fa fa-trash",
+        close: "fa fa-remove",
+        inline: true,
+      },
+    });
+  },
+};
+
+sp2 = {
+  initFormExtendedDatetimepickers: function () {
+    $(".datepicker2").datetimepicker({
+      format: "DD/MM/YYYY LT",
+      icons: {
+        time: "fa fa-clock-o",
+        date: "fa fa-calendar",
+        up: "fa fa-chevron-up",
+        down: "fa fa-chevron-down",
+        previous: "fa fa-chevron-left",
+        next: "fa fa-chevron-right",
+        today: "fa fa-screenshot",
+        clear: "fa fa-trash",
+        close: "fa fa-remove",
+        inline: true,
+      },
+      minDate: new Date(),
+    });
+  },
+};
 
 var arrayEstatusLote = [];
 $(document).ready(function () {
+  sp.initFormExtendedDatetimepickers();
+  sp2.initFormExtendedDatetimepickers();
   $(".datepicker").datetimepicker({ locale: "es" });
   getEstatusEscrituracion();
   setInitialValues();
@@ -43,7 +94,7 @@ $(document).ready(function () {
   );
 });
 
-$(document).on("click", ".comentariosModel", function (e) { 
+$(document).on("click", ".comentariosModel", function (e) { // MODAL DE COMENTARIO DEL PROCESO DEL LOTE
   e.preventDefault();
   e.stopImmediatePropagation();
   id_solicitud = $(this).attr("data-idSolicitud");
@@ -78,7 +129,8 @@ function cleanCommentsAsimilados() {
   myCommentsLote.innerHTML = "";
 }
 
-let integracionExpediente = new Object(); 
+let integracionExpediente = new Object(); /////SIRVE
+
 $(document).on("click", ".details-control", function () {
   var detailRows = [];
   var tr = $(this).closest("tr");
@@ -189,7 +241,7 @@ function crearTablas(datosTablas,numTabla = ''){
       },
       {
         data: function (d) {
-          var group_buttons = '';    
+          var group_buttons = '';    //variable para botones que se muestran en el datatable 
           $('[data-toggle="tooltip"]').tooltip();
           group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
           group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="HISTORIAL DE COMENTARIOS"><i class="fa fa-history"></i></button>`;
@@ -208,9 +260,8 @@ function crearTablas(datosTablas,numTabla = ''){
       cache: false,
       data: datosTablas.data
     },
-    initComplete: function(settings, json) {
+    initComplete: function() {
       numTabla == 0 ? escrituracionTable = $('#escrituracion-datatable').DataTable() : ''; 
-      numTabla == 1 ?  escrituracionTableTest = $('#carga-datatable').DataTable() : ''; 
     },
   });
 }
@@ -218,7 +269,7 @@ function crearTablas(datosTablas,numTabla = ''){
 var arrayTables = [
   {'nombreTabla' : 'escrituracion-datatable',
   'data':{},
-  'url':'getSolicitudes',
+  'url':'getSolicitudesDocs',
   'numTable':0
 }];
 
@@ -250,8 +301,9 @@ function setInitialValues() {
   $('[data-toggle="tooltip"]').tooltip();
 }
 
-let documentosObligatorios = [];
-function buildTableDetail(data, permisos,proceso = 0) {
+let documentosObligatorios = []; 
+
+function buildTableDetail(data) {
   documentosObligatorios = [];
   var filtered = data.filter(function(value){ 
     return value;
@@ -283,7 +335,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
     if (v.expediente == null || v.expediente == ''){
       solicitudes +=  `<span class="label lbl-gray"> No se ha cargado el archivo </span>`;
     } else{
-
       let expe = v.tipo_documento == 12 ? v.movimiento : v.expediente;
       solicitudes +=  `<button id="preview" data-documentType="${v.tipo_documento}" data-doc="${expe}" class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
     }
@@ -291,6 +342,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
   });
   return solicitudes += '</table>';
 }
+
 
 function createDocRow(row, tr, thisVar) { 
   $.post("getDocumentacionCliente", {
@@ -321,12 +373,98 @@ function createDocRow(row, tr, thisVar) {
 
 function getEstatusEscrituracion() {
   $("#spiner-loader").removeClass("hide");
+  $("#estatusE").find("option").remove();
+  $("#estatusE").append($("<option selected>").val("0").text("Propios"));
+  $("#estatusE").append($("<option>").val("1").text("Todos"));
+  $("#estatusE").selectpicker("refresh");
   $("#spiner-loader").addClass("hide");
 }
 
 $(document).on("click", "#preview", function () {
   var itself = $(this);
   var folder;
+  switch (itself.attr('data-documentType')) {
+    case '1':
+      folder = "INE";
+    break;
+    case '2':
+      folder = "RFC";
+    break;
+    case '3':
+      folder = "COMPROBANTE_DE_DOMICILIO";
+    break;
+    case '4':
+      folder = "ACTA_DE_NACIMIENTO";
+    break;
+    case '5':
+      folder = "ACTA_DE_MATRIMONIO";
+    break;
+    case '6':
+      folder = "CURP";
+    break;
+    case '7':
+      folder = "FORMAS_DE_PAGO";
+    break;
+    case '8':
+      folder = "BOLETA_PREDIAL";
+    break;
+    case '9':
+      folder = "CONSTANCIA_MANTENIMIENTO";
+    break;
+    case '10':
+      folder = "CONSTANCIA_AGUA";
+    break;
+    case '11':
+      folder = "SOLICITUD_PRESUPUESTO";
+    break;
+    case '12':
+      folder = "PRESUPUESTO";
+    break;
+    case '13':
+      folder = "FACTURA";
+    break;
+    case '14':
+      folder = "TESTIMONIO";
+    break;
+    case '15':
+      folder = "PROYECTO_ESCRITURA";
+    break;
+    case '16':
+      folder = "ACTA_CONSTITUTIVA";
+    break;
+    case '17':
+      folder = "OTROS";
+    break;
+    case '18':
+      folder = "CONTRATO";
+    break;
+    case '19':
+      folder = "COPIA_CERTIFICADA";
+    break;
+    case '20':
+      folder = "PRESUPUESTO_NOTARIA_EXTERNA";
+    break;
+    case '21':
+      folder = "RFC_MORAL";
+    break;
+    case '22':
+      folder = "FORMAS_PAGO_FECHA";
+    break;
+    case '23':
+      folder = "CHECK_LIST";
+    break; 
+    case '24':
+      folder = "BENEFICIARIO_CONTROLADOR";
+    break; 
+    case '25':
+      folder = "CARATULAS_BANCARIAS";
+    break;  
+    case '26':
+      folder = "ESTADOS_DE_CUENTA";
+    break;
+    default:
+    break;
+  }
   Shadowbox.open({
     content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
     player: "html",
