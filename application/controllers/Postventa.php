@@ -3258,17 +3258,12 @@ public $controller = 'Postventa';
 
     public function getSolicitudesDocs()
     {
-        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
-        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
-        $estatus = $this->input->post("estatus");
-        $tipo_tabla = $this->input->post("tipo_tabla");
-
-
-        $data['data'] = $this->Postventa_model->getSolicitudes($beginDate, $endDate, $estatus, $tipo_tabla )->result_array();
+        $data['data'] = $this->Postventa_model->getSolicitudesDocs()->result_array();
         if ($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
-        }    }
+        }    
+    }
 
 }

@@ -169,39 +169,39 @@ class Postventa_model extends CI_Model
     }
     
 
-    function getSolicitudes()
+    function getSolicitudes($begin, $end, $estatus, $tipo_tabla)
     {   
                 
-        // $idUsuario = $this->session->userdata('id_usuario');
-        // $rol = $this->session->userdata('id_rol');
-        // $filtroTabla = "";
-        // $AddWhere = "";
-        // $WhereFechas = "";      
+        $idUsuario = $this->session->userdata('id_usuario');
+        $rol = $this->session->userdata('id_rol');
+        $filtroTabla = "";
+        $AddWhere = "";
+        $WhereFechas = "";      
 
-        // if($estatus == 0){
-        //     if($rol == 57 && $idUsuario!= 10865){
-        //         $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
-        //     }else if($rol == 11){
-        //         $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL) ";
-        //     }else if($rol == 56){
-        //         $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (3,2) AND se.bandera_comite IS NULL) ";
-        //     }else{
-        //         $AddWhere  =   " WHERE cp.area_actual in ($rol) ";
-        //     }
-        // }else{
-        //     $AddWhere = " ";
-        // }
+        if($estatus == 0){
+            if($rol == 57 && $idUsuario!= 10865){
+                $AddWhere  =   " WHERE se.id_titulacion = $idUsuario ";
+            }else if($rol == 11){
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (4,2) AND se.bandera_admin IS NULL) ";
+            }else if($rol == 56){
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) OR (se.id_estatus IN (3,2) AND se.bandera_comite IS NULL) ";
+            }else{
+                $AddWhere  =   " WHERE cp.area_actual in ($rol) ";
+            }
+        }else{
+            $AddWhere = " ";
+        }
 
-        // if($tipo_tabla == 1){
-        //     $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (47,50)" : " WHERE se.id_estatus in (47,50)" ;
-        // }else if($tipo_tabla == 0){
-        // $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50,49,54)" : " WHERE se.id_estatus not in (47,50,49,54)";
-        // }else if($tipo_tabla == 2){
-        //     $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (54)" : " WHERE se.id_estatus in (54)";
-        //     }
-        // if($begin != 0){
-        // $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
-        // }
+        if($tipo_tabla == 1){
+            $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (47,50)" : " WHERE se.id_estatus in (47,50)" ;
+        }else if($tipo_tabla == 0){
+        $filtroTabla = $estatus == 0 ? " AND se.id_estatus not in (47,50,49,54)" : " WHERE se.id_estatus not in (47,50,49,54)";
+        }else if($tipo_tabla == 2){
+            $filtroTabla = $estatus == 0 ? " AND se.id_estatus in (54)" : " WHERE se.id_estatus in (54)";
+            }
+        if($begin != 0){
+        $WhereFechas = " AND se.fecha_creacion >= '$begin' AND se.fecha_creacion <= '$end' ";
+        }
         
         return $this->db->query("SELECT distinct(se.id_solicitud),CONCAT(creado.nombre, ' ', creado.apellido_paterno, ' ', creado.apellido_materno) as creado,se.creado_por,se.id_cliente,se.id_lote,c.banderaEscrituracion,se.id_titulacion, se.valor_contrato, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre nombreCondominio, r.nombreResidencial, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) as cliente, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ar.id_opcion as id_area, (CASE WHEN se.id_estatus IN (4,2,3) AND (se.bandera_admin IS NULL OR se.bandera_comite IS NULL) THEN 'Administración / Comité técnico' ELSE ar.nombre END) area, cp.area_actual, dc.expediente, dc.tipo_documento, dc.idDocumento, cr.area_sig, CONCAT(cp.clave_actividad ,' - ', ae.nombre) AS nombre_estatus, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, se.cliente_anterior, (CASE when cp.tipo_permiso = 3 THEN 'RECHAZO' ELSE '' END ) rechazo, concat((select[dbo].[DiasLaborales]( (dateadd(day,1,se.fecha_modificacion)) ,GETDATE())), ' día(s) de ',ae.dias_vencimiento) vencimiento, de4.contrato,pr.banderaPresupuesto,presup2.presupuestoAprobado,se.id_notaria, se.fecha_firma, a.descripcion ultimo_comentario,CONCAT(userAsig.nombre, ' ', userAsig.apellido_paterno, ' ', userAsig.apellido_materno) asignada_a,de2.documentosCargados, 
         de2.estatusValidacion,de2.no_rechazos,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,doc22.no_editados22,de5.formasPago, 
@@ -253,10 +253,11 @@ class Postventa_model extends CI_Model
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) != COUNT(CASE WHEN estatus_validacion=1 THEN 1 END) THEN 0 ELSE 1 END formasPago
         FROM documentos_escrituracion WHERE tipo_documento = 7 GROUP BY idSolicitud) de5 ON de5.idSolicitud = se.id_solicitud
         LEFT JOIN (SELECT idSolicitud, CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END presupuestoAprobado FROM Presupuestos WHERE estatus = 1 GROUP BY idSolicitud) presup2 ON presup2.idSolicitud = se.id_solicitud
-       
         LEFT JOIN (SELECT DISTINCT(cl.clave_actividad), cl.estatus_actual as estatus_siguiente, cl.clasificacion, cl.tipo_permiso, ar2.nombre as area_sig, CONCAT(av.clave,' - ', av.nombre, '-', ar2.nombre) as nombre_estatus_siguiente FROM control_permisos cl INNER JOIN actividades_escrituracion av ON cl.clave_actividad LIKE av.clave INNER JOIN opcs_x_cats ar2 ON ar2.id_opcion = cl.area_actual AND ar2.id_catalogo = 1 WHERE cl.clasificacion in (1,2)
         GROUP BY cl.estatus_actual, cl.clave_actividad, cl.clasificacion, cl.estatus_actual, cl.tipo_permiso, av.nombre, av.clave, ar2.nombre) cr ON cr.estatus_siguiente = cs.estatus_siguiente
+        $AddWhere $filtroTabla $WhereFechas
         GROUP BY doc22.no_editados22,creado.nombre,creado.apellido_paterno,creado.apellido_materno,doc22.documentosCargados22,se.creado_por, doc22.estatusValidacion22,doc22.no_rechazos22,se.id_solicitud,c.banderaEscrituracion,se.id_cliente,se.id_lote,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,de2.documentosCargados,presup2.presupuestoAprobado,de2.estatusValidacion,de2.no_rechazos,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, a.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato,de5.formasPago ORDER BY se.id_solicitud DESC");
+
 
     }
 
