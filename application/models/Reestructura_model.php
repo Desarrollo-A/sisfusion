@@ -332,7 +332,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function aplicaLiberacion($datos){
-
+        $modificado_por = $this->session->userdata('id_usuario');
         $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
         $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
         $datos["comentarioLiberacion"] = $comentarioLiberacion;
@@ -378,11 +378,11 @@ class Reestructura_model extends CI_Model
         $id_cliente = $this->db->query("SELECT id_cliente,plan_comision FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
         $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
         $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
-        $this->db->query("UPDATE clientes SET status = 0, tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
+        $this->db->query("UPDATE clientes SET status = 0,modificado_por='".$modificado_por."', tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
         $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdClienteAnt");
         $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
 
-        $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote']." WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
+        $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
         //$arrayRegistroComision = [0,8,9];
         if(!in_array($row[0]['registro_comision'],array(7))){
             $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
@@ -410,7 +410,7 @@ class Reestructura_model extends CI_Model
                         }
                         $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
                     }
-                    $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
+                    $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0,modificado_por='".$modificado_por."'  WHERE id_lote=".$row[0]['idLote']." ");
                 }
             }
         }else{
@@ -418,7 +418,7 @@ class Reestructura_model extends CI_Model
             for ($i=0; $i <count($comisiones) ; $i++) {
                 $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
-            $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  WHERE id_lote=".$row[0]['idLote']." ");
+            $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0,modificado_por='".$modificado_por."'  WHERE id_lote=".$row[0]['idLote']." ");
         }
         
         if($row[0]['tipo_venta'] == 1){
@@ -464,7 +464,7 @@ class Reestructura_model extends CI_Model
         $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
         $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
         $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
-                    idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = 'NULL', perfil = 'NULL ', 
+                    idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = '".$modificado_por."', perfil = 'NULL ', 
                     fechaVenc = null, modificado = null, status8Flag = 0, 
                     ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                     casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
@@ -1112,7 +1112,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
         WHERE hp.idLote = $idLote
         ORDER BY lo.idLote, hp.fecha_modificacion")->result_array();
-   }
+    }
     public function borrarPXL($id_lote){
         $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);
         return $this->db->affected_rows();
@@ -1121,5 +1121,44 @@ class Reestructura_model extends CI_Model
     public function coopropietarioPorDR($idLote){
         $query = $this->db->query('SELECT * FROM datos_x_copropietario WHERE idLote='.$idLote);
         return $query->result_array();
-    }   
+    }
+
+    public function EstatusLote(){
+        $query = $this->db->query('SELECT idStatusContratacion, nombreStatus FROM statuscontratacion WHERE idStatusContratacion not in (4, 12)');
+        return $query;
+    }
+
+    public function reestructuraLotes($id_proyecto){
+        ini_set('memory_limit', -1);
+        $query = $this->db-> query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
+		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.firmaRL, 
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
+		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
+		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
+		cond.idCondominio, mov.descripcion as movimientoLote, se.nombre as nombreSede, stcon.nombreStatus, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+		FROM lotes l
+		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.proceso NOT IN (1,0)
+		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN opcs_x_cats opx ON cl.rl  = opx.id_opcion AND opx.id_catalogo = 77
+		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
+		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+		LEFT JOIN movimientos mov ON mov.idMovimiento = l.idMovimiento
+		LEFT JOIN statuscontratacion stcon ON stcon.idStatusContratacion = l.idStatusContratacion
+		WHERE l.status = 1 AND l.idStatusContratacion IN ($id_proyecto)
+		GROUP BY cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+		l.nombreLote, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+		tv.tipo_venta, l.firmaRL,
+		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
+		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),  opx.nombre ,
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'),mov.descripcion,stcon.nombreStatus,se.nombre
+		ORDER BY l.nombreLote");
+        return $query->result();
+    }
 }

@@ -42,11 +42,7 @@
                         <img  class="w-100" src="<?=base_url()?>static/images/Logo_CM&TP_1.png" alt="Servicios Condominales" title="Servicios Condominales"/>
                     </div>
                     <div class="col-12 col-sm-6 col-md-7 col-lg-7">
-                        <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD
-
-                                <i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i>
-
-                        </h3>
+                        <h3 class="m-0 mb-1">DEPÓSITO DE SERIEDAD<i class="fas fa-info-circle" style="cursor: pointer;" onclick="historial()"></i></h3>
                         <h6 class="m-0">Modificación: <?php echo $cliente[0]->fecha_modificacion;?></h6>
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
                         <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
