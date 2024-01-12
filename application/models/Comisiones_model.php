@@ -852,8 +852,8 @@ class Comisiones_model extends CI_Model {
         WHERE com.id_lote = $idlote AND com.estatus = 1 $filtroOOAM  ORDER BY com.rol_generado asc");
     }
 
-    public function getDatosAbonadoSuma11($idlote,$ooam){
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
+    public function getDatosAbonadoSuma11($idlote,$ooam=null){
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
