@@ -210,16 +210,12 @@ class Api extends CI_Controller
     public function setStatusContratacion()
     {
         $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
-        //$newDatos = json_decode($objDatos, true);
-        // echo var_dump($objDatos);
-        // echo $objDatos['idusuario'];
+       
         $datos = array('status_contratacion' => $objDatos['bandera'],
             'fecha_modificacion' => date("Y-m-d H:i:s"),
             'modificado_por' => $objDatos['modificado_por']);
         $result = $this->Api_model->updateUserContratacion($datos, $objDatos['idusuario']);
 
-
-        //  echo $result;
         if ($result == 1) {
             $row = json_encode(array('resultado' => true));
         } else {
@@ -273,8 +269,6 @@ class Api extends CI_Controller
         }
 
         echo base64_encode($row);
-//print_r($result);
-
     }
 
     /**------------FUNCIÓN PARA MANDAR SERVICIO PARA EL SISTEMA DE TICKETS */
@@ -423,7 +417,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n');
                         $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, 2023, 05); //CAMBIAR A SUS VARIABLES
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month - 1);//CAMBIAR A SUS VARIABLES
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -460,7 +454,7 @@ class Api extends CI_Controller
         }
     }
 
-    function inventarioVirtual($sedeRes) {
+    function inventarioVirtual($idResidencial) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -468,7 +462,51 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             }else{
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099);
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); // SE ACTUALIZA EL PARÁMETRO DE USER PARA QUE CARGUE LA KEY
+                $valida_token = json_decode($this->validateToken($token, 2099)); // VALIDAMOS EL TOKEN PARA EL USUARIO QUE DECLARAMOS
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token)){
+                        $valida_token = true;
+                    }
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $dbTransaction = $this->Api_model->getInventarioLista($idResidencial); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
+                            
+                        if ($dbTransaction){// SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                        }else{ // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                        }
+                    }else{
+                        echo json_encode($checkSingup);
+                    }
+                }
+            }
+        }
+    }
+
+    function residencialLista() { 
+        if (!isset(apache_request_headers()["Authorization"])){
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        }else{
+            if (apache_request_headers()["Authorization"] == ""){
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            }else{
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); 
                 $valida_token = json_decode($this->validateToken($token, 2099));
                 if ($valida_token->status !== 200){
                     echo json_encode($valida_token);
@@ -489,12 +527,11 @@ class Api extends CI_Controller
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->getInventarioList($sedeRes);
-                        $data2 = $dbTransaction;
+                        $dbTransaction = $this->Api_model->getListaResidenciales(); 
                             
-                        if ($dbTransaction){// SUCCESS TRANSACTION
-                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
-                        }else{ // ERROR TRANSACTION
+                        if ($dbTransaction){
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                        }else{ 
                             echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                         }
                     }else{

@@ -235,7 +235,7 @@ $(document).on("click", "#searchByDateRange", function () {
         "estatus":$('#estatusE').val(),
         "tipo_tabla":arrayTables[0].numTable 
     };
-        crearTablas(arrayTables[0],arrayTables[0].numTable);    
+    crearTablas(arrayTables[0],arrayTables[0].numTable);    
 });
 
 $(document).on("click", "#createDate", function () {
@@ -269,7 +269,7 @@ $(document).on("click", "#searchByDateTest", function (){
         "estatus":0,
         "tipo_tabla":arrayTables[1].numTable 
     };
-        crearTablas(arrayTables[1],arrayTables[1].numTable);
+    crearTablas(arrayTables[1],arrayTables[1].numTable);
 })
 
 $(document).on("click", "#dateSubmit", function () {
@@ -676,19 +676,6 @@ $(document).on("submit", "#formPausar", function (e) {
   });
 });
 
-// $(document).on("submit", "#formRechazar", function(e){
-//   e.preventDefault();
-
-//   $.ajax({
-//     url: jjj,
-//     data: data,
-//     cache: false,
-//     contentType: false,
-//     processData: false,
-//     type: "POST",
-//   });
-// });
-
 $(document).on("click", ".comentariosModel", function (e) {
   e.preventDefault();
   e.stopImmediatePropagation();
@@ -717,17 +704,18 @@ $(document).on("click", ".comentariosModel", function (e) {
   });
 });
 
-function openRechazarModal(id_solicitud) {
+function openRechazarModal(id_solicitud, id_estatus) { // MODAL QUE MUESTRA EL LISTADO DE DOCUMENTOS A RECHAZAR
   $("#documentTableBody").empty();
   $("#mot_rec").selectpicker();
 
   $("#id_sol").val(id_solicitud);
+  $("#id_estat").val(id_estatus);
             
   $.post(
-    "getDocumentsClient2",
+    "getDocumentsClient2", // FUNCIÓN PARA CARGAR LOS DOCUMENTOS
     {
       "idEscritura": id_solicitud,
-      "idEstatus": 20,
+      "idEstatus": id_estatus,
     },
     function (data) {
       let len = data.length;
@@ -746,17 +734,16 @@ function openRechazarModal(id_solicitud) {
         var tipo_documento = data[i]["tipo_documento"];
         var documento = data[i]["tipo_documento"] == 12 ? data[i]["expediente"] : data[i]["descripcion"];
         solicitudes += `<tr>
-                          <td><input type="checkbox" class="docCheckbox" value="${id},${tipo_documento}" id="selectDoc" name="selectDoc_${i}"></td>
+                          <td><input type="checkbox" class="chk" value="${id},${tipo_documento}" id="selectDoc_${i}" name="selectDoc_${i}"></td>
                           <td>${i + 1}</td>
                           <td>${documento}</td>
                         </tr>`;
       }
       solicitudes += '</table>';
-
       $("#modalRechazar .modal-body").html(solicitudes);
 
       $.post(
-        "getRechazoDocs",
+        "getRechazoDocs", // FUNCIÓN PARA CARGAR LOS MOTIVOS DE RECHAZO
         {
           estatus: 1,
         },
@@ -910,7 +897,7 @@ $(document).on("change", "#tipoNotaria", function (e) {
       $("#direccion").attr("required", true);
       $("#correo").attr("required", true);
       $("#telefono").attr("required", true);
-    } else {
+    }else {
       $("#div_notaria").hide();
       $("#nombre_notaria").removeAttr("required");
       $("#nombre_notario").removeAttr("required");
@@ -1046,7 +1033,7 @@ $(document).on("click", ".details-control-otros", function () {
     tr.removeClass("details");
     row.child.hide();
     detailRows.splice(idx, 1);
-  } else {
+  }else {
     $("#spiner-loader").removeClass("hide");
     tr.addClass("details");
     rowOtros = {
@@ -1502,7 +1489,7 @@ function crearTablas(datosTablas,numTabla = ''){
               case 25:
                 if (userType == 57 && d.id_titulacion == idUser) { 
                   group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
-                  group_buttons += `<button id="" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Borrar documentos" onclick="openRechazarModal(${d.id_solicitud}, ${d.tipo_documento}, ${d.id_estatus})"><i class="fas fa-times"></i></button>`;
+                  group_buttons += `<button id="" data-idSolicitud=${d.id_solicitud} class="btn-data btn-warning" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Rechazar documentos" onclick="openRechazarModal(${d.id_solicitud}, ${d.id_estatus})"><i class="fas fa-times"></i></button>`;
                   bandera_request = d.estatusValidacion == 1 ? 1 : 0;                                        
                   bandera_reject = 1;
                 }
@@ -2487,30 +2474,32 @@ $(document).on("submit", "#newNotario", function (e) {
   });
 });
 
-$(document).on("submit", "#formRechazar", function (e) {
+$(document).on("submit", "#formRechazar", function (e) { // BOTÓN RECHAZO DE DOCUMENTOS
   e.preventDefault();
-  // let data = new FormData($(this)[0]);
-  let idSolicitud = $("#idSolicitud").val();
   let data = new FormData($(this)[0]);
   data.append("rejectionReasons", $("#mot_rec").val());
-
-  // $('#uploadFileButton').prop('disabled', true);
-  // $('#spiner-loader').removeClass('hide');
   
-  $.ajax({
-    url: "RechazoDocs",
-    data: data,
-    cache: false,
-    contentType: false, 
-    processData: false,
-    type: "POST",
-
-    succes: function (response){
-      // $("#escrituracionTable").DataTable().ajax.reload();
-      escrituracionTable.ajax.reload(null, false);
-    },
-  });
-  $("#modalRechazar").modal("hide");
+  if ($('.chk:checked').length >= 1) { // SE REALIZA LA SIGUIENTE CONDICIÓN PARA VALIDAR QUE SE SELECCIONE POR LO MENOS UNA CASILLA
+    $.ajax({
+      url: "RechazoDocs",
+      data: data,
+      cache: false,
+      contentType: false,
+      processData: false,
+      type: "POST",
+      success: function (response) {
+        if (response == 1) {
+          alerts.showNotification("top", "right", "Se rechazaron los documentos", "success");
+          $("#modalRechazar").modal("hide");
+          escrituracionTable.ajax.reload();
+        } else {
+          alerts.showNotification("top", "right", "Error en rechazo.", "warning");
+        }
+      },
+    });
+  } else {
+    alerts.showNotification("top", "right", "Selecciona al menos una casilla", "warning");
+  }
 });
 
 
@@ -2631,8 +2620,6 @@ $(document).on("submit", "#rechazar", function (e) {
 });
 
 function filterSelectOptions(documentType) {
-  alert();
-  console.log(documentType);
   $("#rejectionReasons option").each(function () {
     if ($(this).attr("data-type") === documentType) {
       $(this).show();

@@ -295,7 +295,7 @@
                                             </div>
                                         </div><!-- End tab HISTORIAL DESCUENTOS validado -->
                                         <?php } ?>
-                                     </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

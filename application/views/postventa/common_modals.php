@@ -156,7 +156,7 @@
             <div class="modal-header"></div>
             <div class="modal-body text-center">
                 <h4 class="card-title" id="mainLabelText"></h4>
-                <p id="secondaryLabelDetail"></p>ssdsfds
+                <p id="secondaryLabelDetail"></p>
                 <div class="file-gph" id="selectFileSection">
                     <input class="d-none" type="file" name="uploadedDocument" id="uploadedDocument">
                     <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
@@ -648,76 +648,6 @@
         </div>
     </div>
 </div>
-<!--<div class="modal fade" id="altaNotario" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title card-title"><b>Asignación de notaría</b></h4>
-                <i id="informacion_lote"></i>
-
-            </div>
-            <div class="modal-body text-center">
-               <form id="asignarNotaria" name="asignarNotaria" method="post">
-               <input type="hidden" class="hide" id="id_solicitud" name="id_solicitud">
-               <input type="hidden" class="hide" id="tipo_notaria" name="tipo_notaria">
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row">
-
-                           <div class="col-md-12 pr-0" >
-                                    <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral">Tipo de Notaría</label>
-                                        <select class="selectpicker m-0" data-style="btn btn-round" title="Tipo de notaría" data-size="7" id="tipoNotaria" name="tipoNotaria" data-live-search="true" required !important>
-                                        <option value="" disabled selected>Selecciona una opción</option>
-                                        <option value="1">Interna</option>
-                                        <option value="2">Externa</option>
-                                        </select>
-                                    </div>
-                                </div>
- 
-                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notaria">
-                                    <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Nombre de la Notaría</label>
-                                        <input type="text" id="nombre_notaria" name="nombre_notaria" class="form-control input-gral">
-                                    </div>
-                                </div>  
-                                <div class="col-md-6 pr-0 pr-0" id="divnombre_notario">
-                                    <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Nombre del notario</label>
-                                        <input type="text" id="nombre_notario" name="nombre_notario" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-md-12 pr-0 pr-0" id="divdireccion">
-                                    <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Dirección</label>
-                                        <input type="text" id="direccion" name="direccion" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0 pr-0" id="divcorreo">
-                                    <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Correo</label>
-                                        <input type="email" id="correo" name="correo" class="form-control input-gral">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 pr-0 pr-0" id="divtelefono">
-                                    <div class="form-group text-left m-0">
-                                        <label class="control-label label-gral">Teléfono</label>
-                                        <input type="number" id="telefono" name="telefono" class="form-control input-gral">
-                                    </div>
-                                </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="submit" class="btn btn-success btn-simple">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                </div>
-                </form> 
-            </div>
-        </div>
-    </div>
-</div>-->
 
 <div class="modal fade" id="gestionNotaria" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
@@ -804,42 +734,6 @@
 </div>            
 
 
-<!--<div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    <i class="material-icons">clear</i>
-                </button>
-                <h4 class="modal-title card-title"><b>Estatus de construcción</b></h4>
-                <i id="actividad_siguiente"></i>
-
-            </div>
-
-            
-            <form id="approveForm" name="approveForm" method="post">
-                <div class="modal-body">
-                <div class="col-md-12 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Selecciona un estatus</label>
-                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                         required>
-                                    </select>
-                                </div>
-                            </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" id="requestEstatusLote" class="btn btn-success btn-simple">Aceptar</button>
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>--->
-
-
 <div class="modal fade" id="estatusLModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -914,37 +808,6 @@
     </div>
 </div>
 
-
-<!-- <div class="modal fade" id="estatusLModal" data-keyboard="false" data-backdrop="static">
-    <div class="modal-dialog boxContent">
-        <div class="modal-content card">
-            <form class="card-content" id="formEstatusLote" name="formEstatusLote" method="post">
-                <input type="hidden" name="id_solicitudEstatus" id="id_solicitudEstatus">
-                <div class="modal-body text-center toolbar m-0 p-0">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12 pr-0">
-                                <div class="form-group text-left m-0">
-                                    <label class="control-label label-gral m-0">Estatus construcción</label>
-                                    <select class="form-control m-0" data-style="btn btn-primary btn-round"
-                                            title="Estatus construcción" data-size="7" id="construccion" name="construccion"
-                                         required>
-                                    </select>
-                                </div>ASAS
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 d-flex justify-end p-0">
-                                <button type="button" class="btn btn-danger btn-simple mt-2" data-dismiss="modal">Cancelar</button>
-                                <button type="submit" id="requestEstatusLote" class="btn btn-primary mt-2">Guardar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> -->
 
  
 <div class="modal fade" id="informacionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
@@ -1057,7 +920,6 @@
                 <i data-dismiss="modal" class="fas fa-times fl-r"></i>
                 <h4 class="modal-title card-title fw-500 ">CARGA DE PRESUPUESTOS</h4>
             </div>
-
             <div class="modal-body text-center toolbar m-0 p-0">
                 <input type="text" class="hide" id="idNxS">
                 <div class="d-flex direction-row  p-1 gg-1" id="body_uploads">
@@ -1093,22 +955,19 @@
 <div class="modal fade" id="modalRechazar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
-        <form id="formRechazar" name="formRechazar" method="post">    
-        <div class="modal-header">
-                <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
-                <br>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
-                        <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
+            <form id="formRechazar" name="formRechazar" method="post">    
+                <div class="modal-header">
+                    <h4 class="modal-title card-title"><b id="labelmodal">Rechazar Documentos</b></h4>
+                    <br>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 mb-1" id="mot_rechazo">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 pr-0">
+                            <select class="selectpicker" data-style="btn btn-primary btn-round" title="Seleccione un motivo de rechazo" data-size="7" data-show-subtext="true" id="mot_rec" name="mot_rec" data-live-search="true" multiple required></select>
+                        </div>
                     </div>
+                    <br><br>
                 </div>
-
-                <!-- <div class='col-12 col-sm-12 col-md-12 col-lg-12 mb-1' id="mot_rechazo">
-                    <select class="selectpicker m-0" data-style="btn btn-primary btn-round" data-size="5" id="mot_rec" name="mot_rec" title="Selecciona motivos de rechazo" data-live-search="true" multiple required></select>
-                </div> -->
-                <br><br>
-            </div>
                 <input type="hidden" id="id_sol" name="id_sol">
+                <input type="hidden" id="id_estat" name="id_estat">
                 <input type="hidden" id="index" name="index">
                 <div class="modal-body">                    
                 </div>
