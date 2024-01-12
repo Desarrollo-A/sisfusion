@@ -1,4 +1,5 @@
 var arrayDeshacerRees = [];
+var idProyectoRE = 0; //id de proyecto reestrucura excedente, sólo para ese caso
 $(document).ready(function () {
     if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
@@ -799,6 +800,9 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $("#loteAOcupar").html("").selectpicker('refresh');
 
     const idProyecto = $(this).val();
+    if(idProyecto==21){
+        idProyectoRE = idProyecto;
+    }
     const superficie = $("#superficie").val();
     const flagFusion = $("#flagFusion").val();
 
@@ -821,8 +825,9 @@ $(document).on("change", "#condominioAOcupar", function(e){
     const idCondominio = $(this).val();
     const superficie = $("#superficie").val();
     const flagFusion = $("#flagFusion").val();
+    const idProyecto = $('#proyectoAOcupar').val();
 
-    $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie, "flagFusion":flagFusion}, function(data) {
+    $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie, "flagFusion":flagFusion, "idProyecto":idProyecto}, function(data) {
         const len = data.length;
         for (let i = 0; i < len; i++) {
             const id = data[i]['idLote'];
@@ -852,6 +857,20 @@ $(document).on("change", "#loteAOcupar", function(e){
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     let flagFusion = $('#flagFusion').val();
     let numeroMaximoLotes = (flagFusion==1) ? 1000 : 2;
+    const idLoteSeleccionado = $itself.val();
+    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
+    const idProyecto = $(this).attr("data-idProyecto");
+    const superficieLoteOriginal = $(this).attr('data-superficie');
+    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
+    let mensajeMaxLotes = '';
+    // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
+
+    if(idProyecto == 21){//si es norte limitamos a una sola propuesta
+        numeroMaximoLotes = 0; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
+        mensajeMaxLotes = ' más de un lote';
+    }else{
+        mensajeMaxLotes = ' más de tres lotes';
+    }
 
     if ($itself.val() === '') {
         alerts.showNotification("top", "right", "Debe seleccionar un lote", "danger");
@@ -873,16 +892,11 @@ $(document).on("change", "#loteAOcupar", function(e){
     }
 
     if (numberLotes > numeroMaximoLotes) {
-        alerts.showNotification("top", "right", "No puedes seleccionar más de tres lotes", "danger");
+        alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
         return;
     }
 
-    const idLoteSeleccionado = $itself.val();
-    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
-    const idProyecto = $(this).attr("data-idProyecto");
-    const superficieLoteOriginal = $(this).attr('data-superficie');
-    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
-    // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
+
 
     if (statusPreproceso != 1) {
         const nombreLote = $itself.attr("data-nombre");
@@ -1100,8 +1114,14 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
-    data.append("proceso", TIPO_PROCESO.REUBICACION);
+
     data.append("flagFusion", flagFusion);
+    if(idProyectoRE==21){
+        data.append('idProyecto', idProyectoRE);
+        data.append("proceso", TIPO_PROCESO.REESTRUCTURA);
+    }else{
+        data.append("proceso", TIPO_PROCESO.REUBICACION);
+    }
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
