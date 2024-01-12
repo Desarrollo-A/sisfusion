@@ -84,6 +84,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
     destroy: true,
     columns: [
         {
+            "visible": (id_rol_general == 4) ? false : true,
             "width": "30%",
             "data": function (d) {
                 let lblInput = '';
