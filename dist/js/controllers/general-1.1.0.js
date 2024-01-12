@@ -1,7 +1,5 @@
     $(document).ready(function() {
-
     $(".select-is-empty").removeClass("is-empty");
-
     $("#myselectgerente").empty().selectpicker('refresh');
     $("#myselectgerente2").empty().selectpicker('refresh');
     $("#subdirectorSelect").empty().selectpicker('refresh');
