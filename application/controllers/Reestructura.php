@@ -92,8 +92,9 @@ class Reestructura extends CI_Controller{
 		$idCondominio = $this->input->post('idCondominio');
         $superficie = $this->input->post('superficie');
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
-		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie, $flagFusion);
+		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie, $flagFusion, $idProyecto);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -429,12 +430,17 @@ class Reestructura extends CI_Controller{
         $flagConteo = 0;
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
+        $varibaleCiertoFalso = '';
+        if($idProyecto == 21){
+            $varibaleCiertoFalso = true;
+        }
         foreach ($idLotes as $elementoLote) { 
-            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
+            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote, $idProyecto);
 
             if (count($dataDisponible) > 0) {
-                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2 || $varibaleCiertoFalso)) {//se checa que el devuelto si este en 15 y sea el que s emandó
                     $flagConteo = $flagConteo + 1;
                     $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
                 }
@@ -482,7 +488,7 @@ class Reestructura extends CI_Controller{
                         $arrayLote = array(
                             'idLote' => $idLoteOriginal,
                             'id_lotep' => $idLote,
-                            'estatus' =>  0,
+                            'estatus' =>  0,//se coloca en 0 porque aun no es la oficial
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => date("Y-m-d H:i:s"),
                             'modificado_por' => $this->session->userdata('id_usuario')
@@ -504,9 +510,11 @@ class Reestructura extends CI_Controller{
             }
 
             foreach ($idLotes as $idLote) {
+                //2:reubicacion
+                //3: reestructura
                 $arrayLoteApartado = array(
                     'idLote' => $idLote,
-                    'idStatusLote' => ($proceso == 2) ? 16 : 17,
+                    'idStatusLote' => ($proceso == 2) ? 16 : (($idProyecto==21) ? 20 :17), //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
@@ -550,6 +558,9 @@ class Reestructura extends CI_Controller{
 
                 $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
             }
+
+
+
 
             if (!$lotesOrigenUpdated) {
                 $this->db->trans_rollback();
@@ -931,20 +942,29 @@ class Reestructura extends CI_Controller{
             $idCondominio = $loteSelected->idCondominio;
             $nuevaSup = floatval($loteSelected->sup);
             $anteriorSup = floatval($clienteAnterior->sup);
-            
-            if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
-                $proceso = 2;
-            }
-            else{
-                $metrosGratuitos = $anteriorSup * 0.05;
-                $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
+
+            $proyectosValidacion = $this->Reestructura_model->getProyectosByIdLote($idLoteOriginal);
+            $proyectosValidacion = $proyectosValidacion[0];
+            if($proyectosValidacion['idProyectoOriginal'] == 21){
+                if($proyectosValidacion['idProyectoOriginal'] == $proyectosValidacion['idProyectoPropuesta']){
+                    $proceso = 7;
+                }
+            }else{
+                if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
+                    $proceso = 2;
+                }
+                else{
+                    $metrosGratuitos = $anteriorSup * 0.05;
+                    $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
+                }
+
+                if ($proceso == 4){
+                    $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup);
+                    $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
+                    $total8P = floatval(number_format($total8P, 2, '.', ''));
+                }
             }
 
-            if ($proceso == 4){
-                $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
-                $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
-                $total8P = floatval(number_format($total8P, 2, '.', ''));
-            }
 
             $validateLote = $this->caja_model_outside->validate($loteAOcupar);
             if ($validateLote == 0) {
@@ -1197,7 +1217,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
+                $dataCliente = array_merge([$clave => ($proceso == 3 || $proceso == 7) ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'status') {
                 $dataCliente = array_merge([$clave =>  1], $dataCliente);
