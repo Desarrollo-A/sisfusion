@@ -192,7 +192,7 @@ class Api_model extends CI_Model
         LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios AS u4 ON u4.id_usuario = 2
         LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
-        AND l.status = 1");
+        WHERE l.status = 1");
         return $query->result_array();
     }
 
