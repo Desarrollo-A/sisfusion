@@ -1191,6 +1191,8 @@ class Reestructura_model extends CI_Model
 		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'),mov.descripcion,stcon.nombreStatus,se.nombre
 		ORDER BY l.nombreLote");
         return $query->result();
+    }
+        
     public function getProyectosByIdLote($idLoteOriginal){//Reubicación reestructura excedente
         $query = $this->db->query("SELECT re.idResidencial as idProyectoOriginal, pxl.idLote as idLoteOriginal, pl1.idResidencial as idProyectoPropuesta,
         pxl.id_lotep as idLotePropuesta
