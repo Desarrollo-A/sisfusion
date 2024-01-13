@@ -1,5 +1,8 @@
 var arrayDeshacerRees = [];
+var arrayProyIdProp = [];
 var idProyectoRE = 0; //id de proyecto reestrucura excedente, sólo para ese caso
+var idProyectoConteo=[];
+var idProyectoCO=0;
 $(document).ready(function () {
     if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
@@ -804,6 +807,8 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     if(idProyecto==21){
         idProyectoRE = idProyecto;
     }
+    idProyectoConteo.push($(this).val());
+    idProyectoCO = $(this).val();
     const superficie = $("#superficie").val();
     const flagFusion = $("#flagFusion").val();
 
@@ -866,9 +871,11 @@ $(document).on("change", "#loteAOcupar", function(e){
     let mensajeMaxLotes = '';
     // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
 
-    if(idProyecto == 21){//si es norte limitamos a una sola propuesta
-        numeroMaximoLotes = 0; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
-        mensajeMaxLotes = ' más de un lote';
+    if(idProyecto == 21 ){//si es norte limitamos a una sola propuesta
+        arrayProyIdProp.push(idProyectoRE);
+
+        numeroMaximoLotes = 1000; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
+        mensajeMaxLotes = '';
     }else{
         mensajeMaxLotes = ' más de tres lotes';
     }
@@ -893,8 +900,14 @@ $(document).on("change", "#loteAOcupar", function(e){
     }
 
     if (numberLotes > numeroMaximoLotes) {
-        alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
-        return;
+            alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
+            return;
+    }else{
+        let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
+        if(conteoRepeticiones>=2 && idProyectoCO==21){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
+            return;
+        }
     }
 
 
@@ -1954,3 +1967,13 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
     });
 
 });
+
+function contarRepeticiones(numero, array) {
+    // Usamos el método filter para crear un nuevo array con solo las ocurrencias del número
+    var ocurrencias = array.filter(function(elemento) {
+        return elemento === numero;
+    });
+
+    // Devolvemos la longitud del nuevo array, que representa la cantidad de repeticiones
+    return ocurrencias.length;
+}
