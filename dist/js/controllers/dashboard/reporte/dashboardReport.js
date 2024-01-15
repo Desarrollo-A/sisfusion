@@ -205,8 +205,10 @@ function createAccordions(option, render, rol){
                     <thead>
                         <tr>
                             <th class="detail">MÁS</th>
-                            <th class="encabezado">`+option.toUpperCase()+`</th>
+                            <th class="encabezado text-center">`+option.toUpperCase()+`</th>
                             <th>GRAN TOTAL</th>
+                            <th class="text-center">SEDES CARGO</th>
+                            <th>ROL</th>
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -265,6 +267,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
     generalDataTable = $("#table"+option).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
+        
         buttons: [
             {
                 extend: 'excelHtml5',
@@ -347,6 +350,24 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                }
+            },
+            {
+                data: function (d) {
+                    if(d.sedeNombre != null){
+                    return "<b>" + d.sedeNombre +"</b>";
+                    }else{
+                        return "<b>NO APLICA</b>";
+                    }
+                }
+            },
+            {
+                data: function (d) {
+                    if(d.sedeNombre != null){
+                        return "<b>" + d.rolNombre +"</b>";
+                    }else{
+                        return "<b>NO APLICA</b>";
+                    } 
                 }
             },
             {
@@ -994,8 +1015,8 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-          title = 'Reporte de ventas por dirección regional';
-          break;
+            title = 'Reporte de ventas por dirección regional';
+            break;
         case 'gerente':
             title = 'Reporte de ventas por gerencia';
             break;
