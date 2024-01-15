@@ -509,15 +509,19 @@ class Reestructura extends CI_Controller{
                 }
             }
 
-            foreach ($idLotes as $idLote) {
-                //2:reubicacion
-                //3: reestructura
+            $dataLoteDis = $this->Reestructura_model->checarDisponibleRe($idLote);
+
+            foreach ($dataLoteDis as $dataLote) {
                 $arrayLoteApartado = array(
-                    'idLote' => $idLote,
-                    'idStatusLote' => ($proceso == 2) ? 16 : (($idProyecto==21) ? 20 :17), //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
+                    'idLote' => $dataLote[idLote],
+                    //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
+                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[idResidencial] == 21 ) ? 20 : ($dataLoteDis[idResidencial] != 21) ? 16 : 17,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
+            }
+                
+                
             }
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
