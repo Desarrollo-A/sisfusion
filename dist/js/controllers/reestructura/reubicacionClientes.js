@@ -916,7 +916,7 @@ $(document).on("change", "#loteAOcupar", function(e){
         const nombreLote = $itself.attr("data-nombre");
         const superficie = parseFloat($itself.attr("data-superficie"));
         sumatoriaLS = sumatoriaLS + superficie;
-        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso, idProyectoCO);
         $("#infoLotesSeleccionados").append(html);
         getProyectosAOcupar(idProyecto, superficieLoteOriginal, flagFusion);
         return;
@@ -938,12 +938,38 @@ $(document).on("change", "#loteAOcupar", function(e){
     });
 })
 
+function borrarElementoDelArray(valorAEliminar){
+    let miArray = idProyectoConteo;
+    let valorBuscado = valorAEliminar;
+    if(valorAEliminar == 21){
+        let indice = idProyectoConteo.indexOf(valorAEliminar.toString());
+
+        while (indice !== -1) {
+            // Mientras se encuentre el número en el array, eliminarlo
+            idProyectoConteo.splice(indice, 1);
+            indice = idProyectoConteo.indexOf(valorAEliminar.toString());
+        }
+
+    }else{
+        let indice = miArray.indexOf(valorBuscado);
+
+        if (indice !== -1) {
+            // El valor existe en el array, eliminarlo
+            miArray.splice(indice, 1);
+        }
+    }
+
+
+}
+
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoEstatusRegreso, tipoProceso, flagFusion) {
     if (statusPreproceso != 1 && tipoProceso != 3) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
+        borrarElementoDelArray(idProyecto.toString());
         return;
     }
+
 
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
     $('#spiner-loader').removeClass('hide');
