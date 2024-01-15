@@ -86,7 +86,17 @@ $(document).ready(function () {
                 }
             },
             { data: 'comentario' },
-            { data: 'tipo_venta' },
+            { 
+                data: function(d){
+                  if( d.tipo_venta == null){
+                    return `<span class="label lbl-azure">SIN ESPECIFICAR</span>`
+                  }
+                  else{
+                    return `<span class="label lbl-azure">${d.tipo_venta}</span>`;
+                  }
+                }
+            },    
+                
             { data: 'modificado' },
             { data: 'fechaApartado' },
             {
