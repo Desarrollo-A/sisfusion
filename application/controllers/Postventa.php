@@ -578,6 +578,7 @@ public $controller = 'Postventa';
 
     }
     // Funcion para agregar a un nuevo notario
+
     public function insertNotaria(){
 
         $nombre_notaria = $this->input->post('notaria_nombre');
@@ -608,7 +609,6 @@ public $controller = 'Postventa';
         $motivos_rechazo = $_POST['comentarios'];
         $area_rechazo = $_POST['area_rechazo'];
         $informacion = $this->Postventa_model->changeStatus($id_solicitud, $type, $motivos_rechazo,$area_rechazo);
-
 
         echo json_encode($informacion);
     }
@@ -644,9 +644,7 @@ public $controller = 'Postventa';
     public function uploadFile2()
     {
         $file = $_FILES["uploadedDocument2"];
-        // $idSolicitud = $this->input->post('idSolicitud');
         $idDocumento = $this->input->post('idDocumento');
-        // $documentType = $this->input->post('documentType');
         $documentName = $this->Postventa_model->generateFilename2($idDocumento)->row();
         $documentInfo = $documentName;
         $documentName = $documentName->fileName . '.' . substr(strrchr($_FILES["uploadedDocument2"]["name"], '.'), 1);
@@ -3171,7 +3169,7 @@ public $controller = 'Postventa';
 
     public function documentacion_escrituracion(){
         $this->load->view('template/header');
-        $this->load->view("Postventa/documentacion_escrituracion_view");
+        $this->load->view("postventa/documentacion_escrituracion_view");
     }
 
     public function getDocumentacionCliente()
