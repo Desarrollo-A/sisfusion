@@ -1072,6 +1072,14 @@ class Reestructura_model extends CI_Model
 		ORDER BY l.nombreLote");
         return $query->result();
     }
+    function getProyectoIdByLote($idLote){
+        $query = $this->db->query("SELECT re.idResidencial as idProyecto, co.idCondominio, lo.idLote
+        FROM lotes lo
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        WHERE lo.idLote=".$idLote);
+        return $query->result_array();
+    }
         
     public function getProyectosByIdLote($idLoteOriginal){//Reubicación reestructura excedente
         $query = $this->db->query("SELECT re.idResidencial as idProyectoOriginal, pxl.idLote as idLoteOriginal, pl1.idResidencial as idProyectoPropuesta,
