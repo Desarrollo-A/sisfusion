@@ -5286,6 +5286,7 @@ class Asesor extends CI_Controller {
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $tipo,
             CURLOPT_POSTFIELDS =>json_encode( $body ),
