@@ -342,7 +342,7 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
 
 $(document).on('click', '.btn-asignar-propuestas', async function (){
     $("#spiner-loader").removeClass('hide');
-
+    idProyectoConteo = [];
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -873,7 +873,7 @@ $(document).on("change", "#loteAOcupar", function(e){
     if(idProyecto == 21 ){//si es norte limitamos a una sola propuesta
         arrayProyIdProp.push(idProyectoRE);
 
-        numeroMaximoLotes = 1000; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
+        numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
         mensajeMaxLotes = '';
     }else{
         mensajeMaxLotes = ' más de tres lotes';
