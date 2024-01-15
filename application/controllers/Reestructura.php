@@ -432,6 +432,7 @@ class Reestructura extends CI_Controller{
         $flagFusion = $this->input->post('flagFusion');
         $idProyecto = $this->input->post('idProyecto');
 
+
         $varibaleCiertoFalso = '';
         if($idProyecto == 21){
             $varibaleCiertoFalso = true;
@@ -509,20 +510,21 @@ class Reestructura extends CI_Controller{
                 }
             }
 
-            $dataLoteDis = $this->Reestructura_model->checarDisponibleRe($idLote);
+            $lotesString = implode(",", $idLotes);
+            $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
 
-            foreach ($dataLoteDis as $dataLote) {
+            foreach ($dataLoteDis as $index => $dataLote) {
                 $arrayLoteApartado = array(
-                    'idLote' => $dataLote[idLote],
+                    'idLote' => $dataLote['idLote'],
                     //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
-                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[idResidencial] == 21 ) ? 20 : ($dataLoteDis[idResidencial] != 21) ? 16 : 17,
+                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[$index]['idResidencial'] == 21) ? 20 : (($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) : (($dataLoteDis[$index]['idResidencial'] == 21) ? 17 :(($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) ),
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
             }
-                
-                
-            }
+
+
+
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
@@ -2270,9 +2272,9 @@ class Reestructura extends CI_Controller{
         $idProyecto = $this->input->post('idProyecto');
 
         $dataUpdateLote = array(
-            'idStatusLote' => $tipoEstatusRegreso == 1 ? ($idProyecto != 21 ) ? 15 : $idProyecto == 21 ? 21 : 1,
+            'idStatusLote' => $tipoEstatusRegreso == 1 ? ($idProyecto != 21 ) ? 15 : 21 : 1,
             'usuario' => $id_usuario,
-            'estatus_preproceso' => $tipoProceso == 3 ? 0 : 1
+            'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
         );
 
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
