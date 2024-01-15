@@ -166,7 +166,7 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
-    public function getInventarioLista($idResidencial)
+    public function getInventarioVirtual($idResidencial)
     {
         $query = $this->db->query("SELECT (cond.nombre) condominio, (l.nombreLote) lote, l.idLote, (res.descripcion) proyecto, (l.sup) superficie, (l.total) precioLista, (l.precio) m2, l.msi,
         CASE WHEN u0.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u0.nombre,' ', u0.apellido_paterno,' ', u0.apellido_materno) END asesor,
