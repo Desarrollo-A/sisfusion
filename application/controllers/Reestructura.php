@@ -2269,11 +2269,12 @@ class Reestructura extends CI_Controller{
         $idLote = $this->input->post('idLote');
         $id_pxl = $this->input->post('id_pxl');
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
         $dataUpdateLote = array(
-            'idStatusLote' => $tipoEstatusRegreso == 1 ? 15: 1,
+            'idStatusLote' => $tipoEstatusRegreso == 1 ? ($idProyecto != 21 ) ? 15 : 21 : 1,
             'usuario' => $id_usuario,
-            'estatus_preproceso' => $tipoProceso == 3 ? 0 : 1
+            'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
         );
 
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
