@@ -36,7 +36,8 @@ const TIPO_LOTE = Object.freeze({
 
 const TIPO_PROCESO = Object.freeze({
     REUBICACION: 2,
-    REESTRUCTURA: 3
+    REESTRUCTURA: 3,
+    REESTRUCTURA_EXCEDENTE: 4
 });
 
 const PROYECTO = Object.freeze({
@@ -1158,10 +1159,9 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     data.append("flagFusion", flagFusion);
     if(idProyectoRE==21){
         data.append('idProyecto', idProyectoRE);
-        data.append("proceso", TIPO_PROCESO.REESTRUCTURA);
-    }else{
-        data.append("proceso", TIPO_PROCESO.REUBICACION);
     }
+    data.append("proceso", TIPO_PROCESO.REUBICACION);
+
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
