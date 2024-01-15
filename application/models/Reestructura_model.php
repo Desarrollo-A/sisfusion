@@ -1133,17 +1133,17 @@ class Reestructura_model extends CI_Model
         $query = $this->db-> query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
 		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.firmaRL, 
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,opx.nombre as RL,
-		cond.idCondominio, mov.descripcion as movimientoLote, se.nombre as nombreSede, stcon.nombreStatus, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+        CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+        opx.nombre as RL, cond.idCondominio, mov.descripcion as movimientoLote, se.nombre as nombreSede, stcon.nombreStatus, ISNULL(oxc0.nombre, 'Normal') tipo_proceso
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.proceso NOT IN (1,0)
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
 		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+		LEFT JOIN usuarios u0 ON cl.id_asesor = u0.id_usuario
+		LEFT JOIN usuarios u1 ON cl.id_coordinador = u1.id_usuario
+		LEFT JOIN usuarios u2 ON cl.id_gerente = u2.id_usuario
 		LEFT JOIN opcs_x_cats opx ON cl.rl  = opx.id_opcion AND opx.id_catalogo = 77
 		LEFT JOIN sedes se ON se.id_sede = l.ubicacion
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
@@ -1154,9 +1154,9 @@ class Reestructura_model extends CI_Model
 		GROUP BY cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
 		tv.tipo_venta, l.firmaRL,
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),  opx.nombre ,
+		concat(u0.nombre,' ', u0.apellido_paterno, ' ', u0.apellido_materno),
+		concat(u1.nombre,' ', u1.apellido_paterno, ' ', u1.apellido_materno),
+		concat(u2.nombre,' ', u2.apellido_paterno, ' ', u2.apellido_materno),opx.nombre ,u0.id_usuario,u1.id_usuario,u2.id_usuario,
 		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'),mov.descripcion,stcon.nombreStatus,se.nombre
 		ORDER BY l.nombreLote");
         return $query->result();

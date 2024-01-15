@@ -1,7 +1,8 @@
 
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','CREADA POR','COMENTARIOS','OBSERVACIONES','ACCIONES'];
+
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
-  var title = $(this).text();
+  let title = $(this).text();
   let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? '' : '';     
   $(this).html(`<input class="${width}" id="head_${i}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
   $( 'input', this ).on('keyup change', function () {
@@ -12,27 +13,15 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-$("#carga-datatable thead tr:eq(0) th").each(function (i) {
-  var title = $(this).text();
-  $(this).html(`<input  placeholder="${title}" data-toggle="tooltip" data-placement="top" title="${title}"/>`);
-  $("input", this).on("keyup change", function () {
-    if ($("#carga-datatable").DataTable().column(i).search() !== this.value) {
-      $("#carga-datatable").DataTable().column(i).search(this.value).draw();
-    }
-  });
-  $('[data-toggle="tooltip"]').tooltip();
-});
 
-var arrayEstatusLote = [];
+let arrayEstatusLote = [];
+
 $(document).ready(function () {
-  $(".datepicker").datetimepicker({ locale: "es" });
-  getEstatusEscrituracion();
-  setInitialValues();
   $(document).on(
     "fileselect",
     ".btn-file :file",
     function (event, numFiles, label) {
-      var input = $(this).closest(".input-group").find(":text"),
+      let input = $(this).closest(".input-group").find(":text"),
         log = numFiles > 1 ? numFiles + " files selected" : label;
       if (input.length) {
         input.val(log);
@@ -52,38 +41,22 @@ $(document).on("click", ".comentariosModel", function (e) {
   $("#titulo_comentarios").append(
     "<h4>Movimientos de Lote: <b>" + lote + "</b></h4>"
   );
-  $.getJSON("getDetalleNota/" + id_solicitud).done(function (data) {
-    if (data != "") {
-      $.each(data, function (i, v) {
-        let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
-        $("#comments-list-asimilados").append(
-          `<div class="col-lg-12" style="padding-left:40px;">
-          <li>
-            <a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li>
-          </div>`
-        );
-      });
-    } else {
-      $("#comments-list-asimilados").append(
-        `<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`
-      );
-    }
-  });
 });
 
 function cleanCommentsAsimilados() {
-  var myCommentsList = document.getElementById("comments-list-asimilados");
-  var myCommentsLote = document.getElementById("titulo_comentarios");
+  let myCommentsList = document.getElementById("comments-list-asimilados");
+  let myCommentsLote = document.getElementById("titulo_comentarios");
   myCommentsList.innerHTML = "";
   myCommentsLote.innerHTML = "";
 }
 
 let integracionExpediente = new Object(); 
+
 $(document).on("click", ".details-control", function () {
-  var detailRows = [];
-  var tr = $(this).closest("tr");
-  var row = escrituracionTable.row(tr);
-  var idx = $.inArray(tr.attr("id"), detailRows);
+  let detailRows = [];
+  let tr = $(this).closest("tr");
+  let row = escrituracionTable.row(tr);
+  let idx = $.inArray(tr.attr("id"), detailRows);
   if (row.child.isShown()) {
     tr.removeClass("details");
     row.child.hide();
@@ -189,7 +162,7 @@ function crearTablas(datosTablas,numTabla = ''){
       },
       {
         data: function (d) {
-          var group_buttons = '';    
+          let group_buttons = '';    
           $('[data-toggle="tooltip"]').tooltip();
           group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
           group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="HISTORIAL DE COMENTARIOS"><i class="fa fa-history"></i></button>`;
@@ -208,55 +181,37 @@ function crearTablas(datosTablas,numTabla = ''){
       cache: false,
       data: datosTablas.data
     },
-    initComplete: function(settings, json) {
+    initComplete: function() {
       numTabla == 0 ? escrituracionTable = $('#escrituracion-datatable').DataTable() : ''; 
-      numTabla == 1 ?  escrituracionTableTest = $('#carga-datatable').DataTable() : ''; 
     },
   });
 }
 
-var arrayTables = [
+let arrayTables = [
   {'nombreTabla' : 'escrituracion-datatable',
   'data':{},
-  'url':'getSolicitudes',
+  'url':'getSolicitudesDocs',
   'numTable':0
 }];
 
-function setInitialValues() {
-  const fechaInicio = new Date();
-  const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-  const fechaFin = new Date();
-
-  const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-  finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-  finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-  finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-  finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');  
-  
-  $('#beginDate').val(finalBeginDate2);
-  $('#endDate').val(finalEndDate2);
-  $('#startDate').val(finalBeginDate2);
-  $('#finalDate').val(finalEndDate2);
-
-  for (let z = 0; z < arrayTables.length; z++) {
-    arrayTables[z].data =  {
-      "beginDate": 0,
-      "endDate": 0,
-      "estatus": z == 0 ? $('#estatusE').val() : z == 1 ? 0 : 2,
-      "tipo_tabla":arrayTables[z].numTable 
-    };
-    crearTablas(arrayTables[z]);
-  }
-  $('[data-toggle="tooltip"]').tooltip();
+for (let z = 0; z < arrayTables.length; z++) {
+  arrayTables[z].data =  {
+    "beginDate": 0,
+    "endDate": 0,
+    "estatus": 0,
+    "tipo_tabla":arrayTables[z].numTable 
+  };
+  crearTablas(arrayTables[z]);
 }
 
-let documentosObligatorios = [];
-function buildTableDetail(data, permisos,proceso = 0) {
+let documentosObligatorios = []; 
+
+function buildTableDetail(data) {
   documentosObligatorios = [];
-  var filtered = data.filter(function(value){ 
+  let filtered = data.filter(function(value){ 
     return value;
   });
-  var solicitudes = '<table class="table subBoxDetail">';
+  let solicitudes = '<table class="table subBoxDetail">';
   solicitudes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
   solicitudes += '<td>' + '<b>' + '# ' + '</b></td>';
   solicitudes += '<td>' + '<b>' + 'DOCUMENTO ' + '</b></td>';
@@ -283,7 +238,6 @@ function buildTableDetail(data, permisos,proceso = 0) {
     if (v.expediente == null || v.expediente == ''){
       solicitudes +=  `<span class="label lbl-gray"> No se ha cargado el archivo </span>`;
     } else{
-
       let expe = v.tipo_documento == 12 ? v.movimiento : v.expediente;
       solicitudes +=  `<button id="preview" data-documentType="${v.tipo_documento}" data-doc="${expe}" class="btn-data btn-gray" data-toggle="tooltip" data-placement="left" title="Vista previa"><i class="fas fa-eye"></i></button>`;
     }
@@ -292,7 +246,7 @@ function buildTableDetail(data, permisos,proceso = 0) {
   return solicitudes += '</table>';
 }
 
-function createDocRow(row, tr, thisVar) { 
+function createDocRow(row, tr, thisVar) { //BORRAR (TAL VEZ)
   $.post("getDocumentacionCliente", {
     idEscritura: row.data().id_solicitud,
     idEstatus: row.data().id_estatus,
@@ -325,8 +279,90 @@ function getEstatusEscrituracion() {
 }
 
 $(document).on("click", "#preview", function () {
-  var itself = $(this);
-  var folder;
+  let itself = $(this);
+  let folder;
+  switch (itself.attr('data-documentType')) {
+    case '1':
+      folder = "INE";
+    break;
+    case '2':
+      folder = "RFC";
+    break;
+    case '3':
+      folder = "COMPROBANTE_DE_DOMICILIO";
+    break;
+    case '4':
+      folder = "ACTA_DE_NACIMIENTO";
+    break;
+    case '5':
+      folder = "ACTA_DE_MATRIMONIO";
+    break;
+    case '6':
+      folder = "CURP";
+    break;
+    case '7':
+      folder = "FORMAS_DE_PAGO";
+    break;
+    case '8':
+      folder = "BOLETA_PREDIAL";
+    break;
+    case '9':
+      folder = "CONSTANCIA_MANTENIMIENTO";
+    break;
+    case '10':
+      folder = "CONSTANCIA_AGUA";
+    break;
+    case '11':
+      folder = "SOLICITUD_PRESUPUESTO";
+    break;
+    case '12':
+      folder = "PRESUPUESTO";
+    break;
+    case '13':
+      folder = "FACTURA";
+    break;
+    case '14':
+      folder = "TESTIMONIO";
+    break;
+    case '15':
+      folder = "PROYECTO_ESCRITURA";
+    break;
+    case '16':
+      folder = "ACTA_CONSTITUTIVA";
+    break;
+    case '17':
+      folder = "OTROS";
+    break;
+    case '18':
+      folder = "CONTRATO";
+    break;
+    case '19':
+      folder = "COPIA_CERTIFICADA";
+    break;
+    case '20':
+      folder = "PRESUPUESTO_NOTARIA_EXTERNA";
+    break;
+    case '21':
+      folder = "RFC_MORAL";
+    break;
+    case '22':
+      folder = "FORMAS_PAGO_FECHA";
+    break;
+    case '23':
+      folder = "CHECK_LIST";
+    break; 
+    case '24':
+      folder = "BENEFICIARIO_CONTROLADOR";
+    break; 
+    case '25':
+      folder = "CARATULAS_BANCARIAS";
+    break;  
+    case '26':
+      folder = "ESTADOS_DE_CUENTA";
+    break;
+    default:
+    break;
+  }
   Shadowbox.open({
     content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/postventa/escrituracion/${folder}/${itself.attr('data-doc')}"></iframe></div>`,
     player: "html",
