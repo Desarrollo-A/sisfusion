@@ -2478,7 +2478,8 @@ $(document).on("submit", "#formRechazar", function (e) { // BOTÓN RECHAZO DE DO
   e.preventDefault();
   let data = new FormData($(this)[0]);
   data.append("rejectionReasons", $("#mot_rec").val());
-  
+  let mot_rec = ("#mot_rec").val();
+
   if ($('.chk:checked').length >= 1) { // SE REALIZA LA SIGUIENTE CONDICIÓN PARA VALIDAR QUE SE SELECCIONE POR LO MENOS UNA CASILLA
     $.ajax({
       url: "RechazoDocs",

@@ -1,7 +1,8 @@
 
 let headersTable = ['ID SOLICITUD','PROYECTO','LOTE','CLIENTE','VALOR DE OPEACIÓN','FECHA CREACIÓN','ESTATUS','ÁREA','ASIGANADA A','CREADA POR','COMENTARIOS','OBSERVACIONES','ACCIONES'];
+
 $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
-  var title = $(this).text();
+  let title = $(this).text();
   let width = i == 0 || i == 1 || i == 7 || i == 4 || i == 10 || i==2 || i == 5 || i == 8 ? '' : '';     
   $(this).html(`<input class="${width}" id="head_${i}" data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${headersTable[i]}"/>` );
   $( 'input', this ).on('keyup change', function () {
@@ -12,67 +13,15 @@ $('#escrituracion-datatable thead tr:eq(0) th').each( function (i) {
   $('[data-toggle="tooltip"]').tooltip();
 });
 
-sp = {
-  initFormExtendedDatetimepickers: function () {
-    var today = new Date();
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes();
-    $(".datepicker").datetimepicker({
-      format: "DD/MM/YYYY",
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: "fa fa-chevron-left",
-        next: "fa fa-chevron-right",
-        today: "fa fa-screenshot",
-        clear: "fa fa-trash",
-        close: "fa fa-remove",
-        inline: true,
-      },
-    });
-  },
-};
 
-sp2 = {
-  initFormExtendedDatetimepickers: function () {
-    $(".datepicker2").datetimepicker({
-      format: "DD/MM/YYYY LT",
-      icons: {
-        time: "fa fa-clock-o",
-        date: "fa fa-calendar",
-        up: "fa fa-chevron-up",
-        down: "fa fa-chevron-down",
-        previous: "fa fa-chevron-left",
-        next: "fa fa-chevron-right",
-        today: "fa fa-screenshot",
-        clear: "fa fa-trash",
-        close: "fa fa-remove",
-        inline: true,
-      },
-      minDate: new Date(),
-    });
-  },
-};
+let arrayEstatusLote = [];
 
-var arrayEstatusLote = [];
 $(document).ready(function () {
-  sp.initFormExtendedDatetimepickers();
-  sp2.initFormExtendedDatetimepickers();
-  $(".datepicker").datetimepicker({ locale: "es" });
-  getEstatusEscrituracion();
-  setInitialValues();
   $(document).on(
     "fileselect",
     ".btn-file :file",
     function (event, numFiles, label) {
-      var input = $(this).closest(".input-group").find(":text"),
+      let input = $(this).closest(".input-group").find(":text"),
         log = numFiles > 1 ? numFiles + " files selected" : label;
       if (input.length) {
         input.val(log);
@@ -92,28 +41,11 @@ $(document).on("click", ".comentariosModel", function (e) {
   $("#titulo_comentarios").append(
     "<h4>Movimientos de Lote: <b>" + lote + "</b></h4>"
   );
-  $.getJSON("getDetalleNota/" + id_solicitud).done(function (data) {
-    if (data != "") {
-      $.each(data, function (i, v) {
-        let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
-        $("#comments-list-asimilados").append(
-          `<div class="col-lg-12" style="padding-left:40px;">
-          <li>
-            <a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li>
-          </div>`
-        );
-      });
-    } else {
-      $("#comments-list-asimilados").append(
-        `<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`
-      );
-    }
-  });
 });
 
 function cleanCommentsAsimilados() {
-  var myCommentsList = document.getElementById("comments-list-asimilados");
-  var myCommentsLote = document.getElementById("titulo_comentarios");
+  let myCommentsList = document.getElementById("comments-list-asimilados");
+  let myCommentsLote = document.getElementById("titulo_comentarios");
   myCommentsList.innerHTML = "";
   myCommentsLote.innerHTML = "";
 }
@@ -121,10 +53,10 @@ function cleanCommentsAsimilados() {
 let integracionExpediente = new Object(); 
 
 $(document).on("click", ".details-control", function () {
-  var detailRows = [];
-  var tr = $(this).closest("tr");
-  var row = escrituracionTable.row(tr);
-  var idx = $.inArray(tr.attr("id"), detailRows);
+  let detailRows = [];
+  let tr = $(this).closest("tr");
+  let row = escrituracionTable.row(tr);
+  let idx = $.inArray(tr.attr("id"), detailRows);
   if (row.child.isShown()) {
     tr.removeClass("details");
     row.child.hide();
@@ -230,7 +162,7 @@ function crearTablas(datosTablas,numTabla = ''){
       },
       {
         data: function (d) {
-          var group_buttons = '';    
+          let group_buttons = '';    
           $('[data-toggle="tooltip"]').tooltip();
           group_buttons += `<button id="trees${d.id_solicitud}" data-idSolicitud=${d.id_solicitud} class="btn-data btn-details-grey details-control" data-permisos="2" data-id-prospecto="" data-toggle="tooltip" data-placement="top" title="Desglose documentos"><i class="fas fa-chevron-down"></i></button>`;
           group_buttons += `<button data-idSolicitud=${d.id_solicitud} data-lotes=${d.nombreLote} class="btn-data btn-details-grey comentariosModel" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="HISTORIAL DE COMENTARIOS"><i class="fa fa-history"></i></button>`;
@@ -255,49 +187,31 @@ function crearTablas(datosTablas,numTabla = ''){
   });
 }
 
-var arrayTables = [
+let arrayTables = [
   {'nombreTabla' : 'escrituracion-datatable',
   'data':{},
   'url':'getSolicitudesDocs',
   'numTable':0
 }];
 
-function setInitialValues() {
-  const fechaInicio = new Date();
-  const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-  const fechaFin = new Date();
-
-  const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-  finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-  finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-  finalBeginDate2 = [('0' + beginDate.getDate()).slice(-2), ('0' + (beginDate.getMonth() + 1)).slice(-2), beginDate.getFullYear()].join('/');
-  finalEndDate2 = [('0' + endDate.getDate()).slice(-2), ('0' + (endDate.getMonth() + 1)).slice(-2), endDate.getFullYear()].join('/');  
-  
-  $('#beginDate').val(finalBeginDate2);
-  $('#endDate').val(finalEndDate2);
-  $('#startDate').val(finalBeginDate2);
-  $('#finalDate').val(finalEndDate2);
-
-  for (let z = 0; z < arrayTables.length; z++) {
-    arrayTables[z].data =  {
-      "beginDate": 0,
-      "endDate": 0,
-      "estatus": z == 0 ? $('#estatusE').val() : z == 1 ? 0 : 2,
-      "tipo_tabla":arrayTables[z].numTable 
-    };
-    crearTablas(arrayTables[z]);
-  }
-  $('[data-toggle="tooltip"]').tooltip();
+for (let z = 0; z < arrayTables.length; z++) {
+  arrayTables[z].data =  {
+    "beginDate": 0,
+    "endDate": 0,
+    "estatus": 0,
+    "tipo_tabla":arrayTables[z].numTable 
+  };
+  crearTablas(arrayTables[z]);
 }
 
 let documentosObligatorios = []; 
 
 function buildTableDetail(data) {
   documentosObligatorios = [];
-  var filtered = data.filter(function(value){ 
+  let filtered = data.filter(function(value){ 
     return value;
   });
-  var solicitudes = '<table class="table subBoxDetail">';
+  let solicitudes = '<table class="table subBoxDetail">';
   solicitudes += '<tr style="border-bottom: 1px solid #fff; color: #4b4b4b;">';
   solicitudes += '<td>' + '<b>' + '# ' + '</b></td>';
   solicitudes += '<td>' + '<b>' + 'DOCUMENTO ' + '</b></td>';
@@ -332,8 +246,7 @@ function buildTableDetail(data) {
   return solicitudes += '</table>';
 }
 
-
-function createDocRow(row, tr, thisVar) { 
+function createDocRow(row, tr, thisVar) { //BORRAR (TAL VEZ)
   $.post("getDocumentacionCliente", {
     idEscritura: row.data().id_solicitud,
     idEstatus: row.data().id_estatus,
@@ -362,16 +275,12 @@ function createDocRow(row, tr, thisVar) {
 
 function getEstatusEscrituracion() {
   $("#spiner-loader").removeClass("hide");
-  $("#estatusE").find("option").remove();
-  $("#estatusE").append($("<option selected>").val("0").text("Propios"));
-  $("#estatusE").append($("<option>").val("1").text("Todos"));
-  $("#estatusE").selectpicker("refresh");
   $("#spiner-loader").addClass("hide");
 }
 
 $(document).on("click", "#preview", function () {
-  var itself = $(this);
-  var folder;
+  let itself = $(this);
+  let folder;
   switch (itself.attr('data-documentType')) {
     case '1':
       folder = "INE";
