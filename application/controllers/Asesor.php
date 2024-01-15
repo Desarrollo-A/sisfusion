@@ -5258,19 +5258,14 @@ class Asesor extends CI_Controller {
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: ".$url."\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
             'Recipient' => $telefono,
             'CampaignCode' => 'null',
-            'DynamicFields' => [
-                [
-                    "N" => "URL",
-                    "V" => $url
-                ]
-            ],
-            'isUnicode' => 0
+            'DynamicFields' => [],
+            'isUnicode' => 1
         ];
 
         $sms = $this->apiExternoSms('https://sendsms.mailup.com/api/v2.0/sms/163369/1','POST', $camposSms);
