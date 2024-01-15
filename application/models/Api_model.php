@@ -120,36 +120,28 @@ class Api_model extends CI_Model
             $month2 = 12;
         }
         
-        $query = $this->db->query("select 
+        $query = $this->db->query("SELECT 
                             pr.id_prospecto, 
                             pr.nombre,
                             pr.apellido_paterno,
                             pr.apellido_materno,
                             opx.nombre personalidad_juridica,
-                            COALESCE(pr.rfc, '') as rfc,
-                            COALESCE(pr.correo, '') as correo,
+                            COALESCE(pr.rfc, '') AS rfc,
+                            COALESCE(pr.correo, '') AS correo,
                             pr.telefono,
-                            COALESCE(pr.telefono_2, '') as telefono_2,
+                            COALESCE(pr.telefono_2, '') AS telefono_2,
                             opx2.nombre tipo,
                             opx1.nombre lugar_prospeccion,
                             pr.fecha_creacion,
                             pr.id_asesor,
-                            Upper(concat(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) as nombre_asesor
-                                FROM
-                                    prospectos pr
-                                INNER JOIN 
-                                    opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
-                                INNER JOIN 
-                                    opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
-                                INNER JOIN
-                                    opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
-                                INNER JOIN
-                                    usuarios us ON us.id_usuario = pr.id_asesor
-                                WHERE 
-                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
-                            array( $year, $month1, $month2 )
-                        );
-
+                            UPPER(CONCAT(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) AS nombre_asesor
+                            FROM prospectos pr
+                            INNER JOIN opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
+                            INNER JOIN opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
+                            INNER JOIN opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
+                            INNER JOIN usuarios us ON us.id_usuario = pr.id_asesor
+                            WHERE YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
+                            array( $year, $month1, $month2 ));
         return $query->result_array();
     }
 

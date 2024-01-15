@@ -454,7 +454,7 @@ class Api extends CI_Controller
         }
     }
 
-    function inventarioVirtual($idResidencial) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
+    function getInventarioVirtual($idResidencial) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -498,7 +498,7 @@ class Api extends CI_Controller
         }
     }
 
-    function residencialLista() { 
+    function getListaResidenciales() { 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
