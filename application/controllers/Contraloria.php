@@ -3260,7 +3260,6 @@ class Contraloria extends CI_Controller {
                 $movement = move_uploaded_file($_FILES['archivo']['tmp_name'], $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf');
                 
                 if ($movement) {
-                    
                     $updateDocumentData = array(
                         "movimiento" => 'ARCHIVO RESCISIÓN',
                         "expediente" => $nomArc, 
