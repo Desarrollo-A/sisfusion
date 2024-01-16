@@ -922,7 +922,7 @@ $(document).on("change", "#loteAOcupar", function(e){
         getProyectosAOcupar(idProyecto, superficieLoteOriginal, flagFusion);
         return;
     }
-    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado, flagFusion}, (data) => {
+    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado, flagFusion, idProyecto:idProyectoCO}, (data) => {
         const response = JSON.parse(data);
         if (response.code === 200) {
             getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal, flagFusion);
@@ -973,6 +973,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
 
 
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
+    borrarElementoDelArray(idProyecto.toString());
     $('#spiner-loader').removeClass('hide');
     let data = new FormData();
     data.append("idLote", idLote);
@@ -980,6 +981,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     data.append("tipoEstatusRegreso", tipoEstatusRegreso);
     data.append("tipoProceso", tipoProceso);
     data.append("flagFusion", flagFusion);
+    data.append("idProyecto", idProyectoCO);
     $.ajax({
         url : 'setLoteDisponible',
         data: data,
