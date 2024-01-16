@@ -2260,7 +2260,7 @@ class Reestructura extends CI_Controller{
             'color' => 'success'
         ));
     }
-    
+
     public function setLoteDisponible()
     {
         $tipoEstatusRegreso = $this->input->post('tipoEstatusRegreso');
@@ -2269,10 +2269,31 @@ class Reestructura extends CI_Controller{
         $idLote = $this->input->post('idLote');
         $id_pxl = $this->input->post('id_pxl');
         $flagFusion = $this->input->post('flagFusion');
-        $idProyecto = $this->input->post('idProyecto');
+        //$idProyecto = $this->input->post('idProyecto');
+
+        $getProyecto = $this->Reestructura_model->getProyectoIdByLote($idLote);
+        $idProyecto = $getProyecto[0]['idProyecto'];
+
+        if($tipoEstatusRegreso == 1){
+            if($idProyecto != 21){
+                $a = 15;
+            }
+            else{
+                $a = 21;
+            }
+        }
+        else{
+            if($idProyecto != 21){
+                $a = 1;;
+            }
+            else{
+                $a = 21;
+            }
+
+        }
 
         $dataUpdateLote = array(
-            'idStatusLote' => $tipoEstatusRegreso == 1 ? ($idProyecto != 21 ) ? 15 : 21 : 1,
+            'idStatusLote' => $a,
             'usuario' => $id_usuario,
             'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
         );
@@ -2293,15 +2314,16 @@ class Reestructura extends CI_Controller{
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idLotePropuesta = $this->input->post('idLotePropuesta');
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
-        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
+        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta, $idProyecto);
         if (count($lote) === 0) {
             echo json_encode(['code' => 400, 'message' => 'Lote no disponible. Favor de verificarlo']);
             return;
         }
 
         $dataUpdateLote = array(
-            'idStatusLote' => 16,
+            'idStatusLote' => ($idProyecto==21) ? 20 : 16,
             'usuario' => $this->session->userdata('id_usuario')
         );
         if($flagFusion==1){
