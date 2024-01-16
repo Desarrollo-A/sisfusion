@@ -570,8 +570,7 @@
     }
 
     //VERIFICAMOS PARA EL APARTADO EN LINEA QUE SE ENCUENTRE EN ESTATUS 99
-    public function validar_aOnline($idLote)
-    {
+    public function validar_aOnline( $idLote ){
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', array('99'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
