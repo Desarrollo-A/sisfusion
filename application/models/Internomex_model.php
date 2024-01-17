@@ -272,5 +272,4 @@ class Internomex_model extends CI_Model {
         tbl.fecha_nacimiento_constitucion, tbl.curp, tbl.rfc, tbl.nacionalidad, tbl.direccion, tbl.tipo_propiedad, tbl.nombrePropiedad, 
         tbl.tamanio_terreno, tbl.costo, tbl.monto_enganche, tbl.monto_comision, tbl.empresa, tbl.fechaEstatus9, tbl.fechaEstatus7")->result_array(); 
     }
-
 }

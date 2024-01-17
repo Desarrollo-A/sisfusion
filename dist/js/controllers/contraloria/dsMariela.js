@@ -167,7 +167,7 @@ $(document).ready (function() {
                             return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
                         }
                     },
-                    { data: "fecApartado" },
+                    { data: "fechaApartado" },
                     { data: "fechaVenc" },
                     {
                         data: function( d ){

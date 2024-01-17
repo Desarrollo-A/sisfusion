@@ -673,151 +673,39 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function editar_registro_lote_contraloria_proceceso5() {
+    public function editar_registro_lote_contraloria_proceso5() {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
         $idCliente=$this->input->post('idCliente');
         $comentario=$this->input->post('comentario');
-        $modificado=date('Y-m-d H:i:s');
+        $modificado = date('Y-m-d H:i:s');
         $fechaVenc=$this->input->post('fechaVenc');
         $ubicacion=$this->input->post('ubicacion');
         $tipo_venta=$this->input->post('tipo_venta');
+        $idMovimiento = $this->input->post("idMovimiento");
 
         $arreglo=array();
+
+        if(in_array($idMovimiento, [4, 84, 101, 103])){
+            $idMovRegistro = 35;
+            $arreglo["ubicacion"]= $ubicacion;
+            $arreglo["tipo_venta"]= $tipo_venta;
+        }   
+        else if(in_array($idMovimiento, [74, 93])){
+            $idMovRegistro = 75;
+        }
+        
         $arreglo["idStatusContratacion"]= 5;
-        $arreglo["idMovimiento"]=35;
+        $arreglo["idMovimiento"]=$idMovRegistro;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
-        $arreglo["ubicacion"]= $ubicacion;
-        $arreglo["tipo_venta"]= $tipo_venta;
+        $arreglo["modificado"] = date("Y-m-d H:i:s");
 
-        $horaActual = date('H:i:s');
-        $horaInicio = date("08:00:00");
-        $horaFin = date("16:00:00");
-
-        if ($horaActual > $horaInicio and $horaActual < $horaFin) {
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-
-            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                $sig_fecha_feriado2 == "25-12") {
-                $fecha = $fechaAccion;
-
-                $i = 0;
-                while($i <= 2) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-
-                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVenc"]= $fecha;
-            }else{
-                $fecha = $fechaAccion;
-
-                $i = 0;
-                while($i <= 1) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if( $sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVenc"]= $fecha;
-            }
-
-        }elseif ($horaActual < $horaInicio || $horaActual > $horaFin) {
-            $fechaAccion = date("Y-m-d H:i:s");
-            $hoy_strtotime2 = strtotime($fechaAccion);
-            $sig_fecha_dia2 = date('D', $hoy_strtotime2);
-            $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
-
-            if($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
-                $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
-                $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
-                $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
-                $sig_fecha_feriado2 == "25-12") {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while($i <= 2) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVenc"]= $fecha;
-            }else{
-                $fecha = $fechaAccion;
-                $i = 0;
-                while($i <= 2) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-
-
-                    if($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
-                        $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
-                        $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
-                        $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
-                        $fecha= $sig_fecha;
-                        $i++;
-                    }
-                    $fecha = $sig_fecha;
-                }
-                $arreglo["fechaVenc"]= $fecha;
-            }
-        }
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]= 5;
-        $arreglo2["idMovimiento"]=35;
+        $arreglo2["idMovimiento"]=$idMovRegistro;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -827,21 +715,24 @@ class Contraloria extends CI_Controller {
         $arreglo2["idLote"]= $idLote;
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
+        
         $validate = $this->Contraloria_model->validateSt5($idLote);
 
         if($validate == 1){
 
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $data['message'] = 'OK';
-                echo json_encode($data);
+                $data['status'] = true;
+                $data['message'] = "Estatus enviado";
             }else{
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
+                $data['status'] = false;
+                $data['message'] = "Error al enviar la solicitud";
             }
         }else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
+            $data['status'] = false;
+            $data['message'] = "El estatus ya fue registrado";
         }
+
+        echo json_encode($data);
     }
 
     public function get_sede() {
@@ -856,42 +747,54 @@ class Contraloria extends CI_Controller {
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
-        $idStatusContratacion=$this->input->post('idStatusContratacion');
-        $idMovimiento=$this->input->post('idMovimiento');
         $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $perfil=$this->input->post('perfil');
+        $motivoRechazo=$this->input->post('motivoRechazo');
+        $fechaVenc = $this->input->post('fechaVenc');
+        $nombreResidencial = $this->input->post('nombreResidencial');
+        $nombreCondominio = $this->input->post('nombreCondominio');
+        $idMovimiento = $this->input->post('idMovimiento');
         $modificado=date("Y-m-d H:i:s");
 
-        $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+        $arreglo=array();
+        
+        if(in_array($idMovimiento, [4, 84, 101, 103])){
+            $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
+            $arreglo["fechaVenc"]= $fechaVenc;
+            $idStatC1 = 1;
+            $idMov1 = 20;
 
-        if($valida_tl[0]['tipo_venta'] == 1){
-            $idStaC = 1;
-            $idMov = 102;
-        }else{
-            $idStaC = 1;
-            $idMov = 20;
+            if($valida_tl[0]['tipo_venta'] == 1){
+                $idStaC = 1;
+                $idMov = 102;
+            }
+            else{
+                $idStaC = 1;
+                $idMov = 20;
+            }
+        }
+        if(in_array($idMovimiento, [74, 93])){
+            $idStatC1 = 1;
+            $idMov1 = 92;
+            $idMov = 92;
         }
 
-        $arreglo=array();
-        $arreglo["idStatusContratacion"]= 1;
-        $arreglo["idMovimiento"]=20;
-        $arreglo["comentario"]=$comentario;
+        
+        $arreglo["idStatusContratacion"]= $idStatC1;
+        $arreglo["idMovimiento"]=$idMov1;
+        $arreglo["comentario"]=$motivoRechazo;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
-        $arreglo["fechaVenc"]= $modificado;
-
+        $arreglo["modificado"]=$modificado;
 
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]=$idStaC;
         $arreglo2["idMovimiento"]=$idMov;
         $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
+        $arreglo2["comentario"]=$motivoRechazo;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
         $arreglo2["perfil"]=$this->session->userdata('id_rol');
         $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $modificado;
+        $arreglo2["fechaVenc"]= $fechaVenc;
         $arreglo2["idLote"]= $idLote;
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
@@ -936,13 +839,13 @@ class Contraloria extends CI_Controller {
 
         $encabezados = [
             'nombreResidencial' => 'PROYECTO',
-            'nombre' => 'CONDOMINIO',
-            'nombreLote' => 'LOTE',
-            'motivoRechazo' => 'MOTIVO DE RECHAZO',
-            'fechaHora' => 'FECHA/HORA'
+            'nombre'            => 'CONDOMINIO',
+            'nombreLote'        => 'LOTE',
+            'motivoRechazo'     => 'MOTIVO DE RECHAZO',
+            'fechaHora'         => 'FECHA/HORA'
         ];
 
-        $contenido[] = array_merge($infoLote, ["motivoRechazo" => $comentario, "fechaHora" => date("Y-m-d H:i:s")]);
+        $contenido[] = array_merge($infoLote, ["motivoRechazo" => $motivoRechazo, "fechaHora" => date("Y-m-d H:i:s")]);
 
         $this->email
             ->initialize()
@@ -952,7 +855,7 @@ class Contraloria extends CI_Controller {
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
                 'encabezados' => $encabezados,
                 'contenido' => $contenido,
-                'comentario' => $comentario
+                'comentario' => $motivoRechazo
             ], true));
 
         $this->email->send();
@@ -961,17 +864,20 @@ class Contraloria extends CI_Controller {
 
 
         if($validate == 1){
+
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $data['message'] = 'OK';
-                echo json_encode($data);
+                $data['status'] = true;
+                $data['message'] = "Estatus enviado";
             }else{
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
+                $data['status'] = false;
+                $data['message'] = "Error al enviar la solicitud";
             }
         }else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
+            $data['status'] = false;
+            $data['message'] = "El estatus ya fue registrado";
         }
+
+        echo json_encode($data);
     }
 
    
@@ -1003,25 +909,29 @@ class Contraloria extends CI_Controller {
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
         $horaFin = date("16:00:00");
+        
         if ($horaActual > $horaInicio and $horaActual < $horaFin) {
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
             $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
             if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                 $sig_fecha_feriado2 == "25-12") {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= 2) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                    $fecha = $fechaAccion;
+                    $i = 0;
+                    
+                    while ($i <= 2) {
+                        $hoy_strtotime = strtotime($fecha);
+                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                        $sig_fecha_dia = date('D', $sig_strtotime);
+                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
@@ -1033,6 +943,7 @@ class Contraloria extends CI_Controller {
                     $fecha = $sig_fecha;
                 }
                 $arreglo["fechaVenc"] = $fecha;
+
             } else {
                 $fecha = $fechaAccion;
                 $i = 0;
@@ -1262,11 +1173,12 @@ class Contraloria extends CI_Controller {
             ];
 
             if (!$this->Reestructura_model->aplicaLiberacion($data)) {
-                $data['message'] = 'ERROR';
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud';
                 echo json_encode($data);
                 return;
             }
-        }
+        } 
     }
 
     $numContrato = $this->generarNumContrato($idLote);
@@ -1280,7 +1192,6 @@ class Contraloria extends CI_Controller {
     $data['message'] = 'OK';
     echo json_encode($data);
 }
-
 
     public function editar_registro_loteRechazo_contraloria_proceceso6() {
         $idLote=$this->input->post('idLote');
@@ -1304,7 +1215,6 @@ class Contraloria extends CI_Controller {
             $statusContratacion = 1;
             $idMovimiento = 63;
         }
-
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= $statusContratacion;
@@ -1345,7 +1255,6 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso6', [
                 'encabezados' => $encabezados,
@@ -1382,14 +1291,28 @@ class Contraloria extends CI_Controller {
         $idCliente=$this->input->post('idCliente');
         $comentario=$this->input->post('comentario');
         $modificado=date('Y-m-d H:i:s');
-        $fechaVenc=$this->input->post('fechaVenc');
+        $fechaVenc=$this->input->post('fechaVenc', true);
         $charactersNoPermit = array('$', ',');
-        $totalNeto = $this->input->post('totalNeto');
+        $totalNeto = $this->input->post('totalNeto', true);
+        $idMovimiento = intval($this->input->post('idMovimiento', true));
+        $perfil = intval($this->input->post('perfil', true));
         $totalNeto = str_replace($charactersNoPermit, '', $totalNeto);
+        $idMovNuevo = 0;
+        
+        if($idMovimiento == 22 && $perfil == 15)
+            $idMovNuevo = 6;
+            
+        if($idMovimiento == 75 && in_array($perfil, [13, 17, 32, 70]))
+            $idMovNuevo = 76;
+
+        if($idMovimiento == 94 && $perfil == 15)
+            $idMovNuevo = 95;
+
+
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]=6;
-        $arreglo["idMovimiento"]=6;
+        $arreglo["idMovimiento"]=$idMovNuevo;
         $arreglo["comentario"]=$comentario;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -1426,8 +1349,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else{
+                        $sig_fecha_feriado == "25-12") {
+                    }else{
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1449,8 +1372,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else{
+                        $sig_fecha_feriado == "25-12") {
+                    }else{
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1459,7 +1382,7 @@ class Contraloria extends CI_Controller {
                 $arreglo["fechaVenc"]= $fecha;
             }
 
-        }elseif($horaActual < $horaInicio || $horaActual > $horaFin){
+        }else if($horaActual < $horaInicio || $horaActual > $horaFin){
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
@@ -1508,8 +1431,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
+                        $sig_fecha_feriado == "25-12"){
+                    }else {
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1521,7 +1444,7 @@ class Contraloria extends CI_Controller {
 
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]=6;
-        $arreglo2["idMovimiento"]=6;
+        $arreglo2["idMovimiento"]=$idMovNuevo;
         $arreglo2["nombreLote"]=$nombreLote;
         $arreglo2["comentario"]=$comentario;
         $arreglo2["usuario"]=$this->session->userdata('id_usuario');
@@ -1546,55 +1469,54 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function editar_registro_loteRevision_contraloria5_Acontraloria6() {
+    // public function editar_registro_loteRevision_contraloria5_Acontraloria6() {
 
-        $idLote=$this->input->post('idLote');
-        $idCondominio=$this->input->post('idCondominio');
-        $nombreLote=$this->input->post('nombreLote');
-        $idCliente=$this->input->post('idCliente');
-        $comentario=$this->input->post('comentario');
-        $modificado=date('Y-m-d H:i:s');
-        $fechaVenc=$this->input->post('fechaVenc');
+    //     $idLote=$this->input->post('idLote');
+    //     $idCondominio=$this->input->post('idCondominio');
+    //     $nombreLote=$this->input->post('nombreLote');
+    //     $idCliente=$this->input->post('idCliente');
+    //     $comentario=$this->input->post('comentario');
+    //     $modificado=date('Y-m-d H:i:s');
 
-        $arreglo=array();
-        $arreglo["idStatusContratacion"]=5;
-        $arreglo["idMovimiento"]=75;
-        $arreglo["comentario"]=$comentario;
-        $arreglo["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo["perfil"]=$this->session->userdata('id_rol');
-        $arreglo["modificado"]=date("Y-m-d H:i:s");
+    //     $arreglo=array();
+    //     $arreglo["idStatusContratacion"]=5;
+    //     $arreglo["idMovimiento"]=75;
+    //     $arreglo["comentario"]=$comentario;
+    //     $arreglo["usuario"]=$this->session->userdata('id_usuario');
+    //     $arreglo["perfil"]=$this->session->userdata('id_rol');
+    //     $arreglo["modificado"]=date("Y-m-d H:i:s");
 
-        $arreglo2=array();
-        $arreglo2["idStatusContratacion"]=5;
-        $arreglo2["idMovimiento"]=75;
-        $arreglo2["nombreLote"]=$nombreLote;
-        $arreglo2["comentario"]=$comentario;
-        $arreglo2["usuario"]=$this->session->userdata('id_usuario');
-        $arreglo2["perfil"]=$this->session->userdata('id_rol');
-        $arreglo2["modificado"]=date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"]= $modificado;
-        $arreglo2["idLote"]= $idLote;
-        $arreglo2["idCondominio"]= $idCondominio;
-        $arreglo2["idCliente"]= $idCliente;
+    //     $arreglo2=array();
+    //     $arreglo2["idStatusContratacion"]=5;
+    //     $arreglo2["idMovimiento"]=75;
+    //     $arreglo2["nombreLote"]=$nombreLote;
+    //     $arreglo2["comentario"]=$comentario;
+    //     $arreglo2["usuario"]=$this->session->userdata('id_usuario');
+    //     $arreglo2["perfil"]=$this->session->userdata('id_rol');
+    //     $arreglo2["modificado"]=date("Y-m-d H:i:s");
+    //     $arreglo2["fechaVenc"]= $modificado;
+    //     $arreglo2["idLote"]= $idLote;
+    //     $arreglo2["idCondominio"]= $idCondominio;
+    //     $arreglo2["idCliente"]= $idCliente;
 
-        $validate = $this->Contraloria_model->validateSt5($idLote);
+    //     $validate = $this->Contraloria_model->validateSt5($idLote);
 
-        if($validate == 1){
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
-                $data['message'] = 'OK';
-                echo json_encode($data);
-            }else{
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-            }
-        }else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
-        }
-    }
+    //     if($validate == 1){
+    //         if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE){
+    //             $data['message'] = 'OK';
+    //             echo json_encode($data);
+    //         }else{
+    //             $data['message'] = 'ERROR';
+    //             echo json_encode($data);
+    //         }
+    //     }else {
+    //         $data['message'] = 'FALSE';
+    //         echo json_encode($data);
+    //     }
+    // }
 
     public function editar_registro_loteRechazo_contraloria_proceceso5_2() {
-        //phpmailer_lib
+        
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -1623,42 +1545,6 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-//        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-//        $lp = $this->Contraloria_model->get_lp($idLote);
-//        $infoCliente = $this->Clientes_model->buscarPorId($idCliente);
-//        $correosEntregar = [];
-//
-//        if(empty($lp)){
-//            $correos = array_unique(explode(',', $datos[0]["correos"]));
-//        } else {
-//            $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
-//        }
-//
-//        foreach($correos as $email)
-//        {
-//            if (trim($email) == 'gustavo.mancilla@ciudadmaderas.com') {
-//                continue;
-//            }
-//            if (trim($email) == '') {
-//                continue;
-//            }
-//            if (trim($email) == 'diego.perez@ciudadmaderas.com') {
-//                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
-//                continue;
-//            }
-//
-//            array_push($correosEntregar, $email);
-//        }
-//
-//        // Validación especial por el ticket 58603
-//        if (in_array(intval($infoCliente->id_gerente), [1904, 1206, 113])) {
-//            array_push($correosEntregar, 'asistente.cdmx13@ciudadmaderas.com');
-//        }
-//        // Validación especial por el ticket 59123
-//        if (intval($infoCliente->id_gerente) === 113) {
-//            array_push($correosEntregar, 'asistente.cdmx19@ciudadmaderas.com');
-//        }
-
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
         $encabezados = [
@@ -1675,7 +1561,6 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5-2', [
                 'encabezados' => $encabezados,
@@ -1957,7 +1842,6 @@ class Contraloria extends CI_Controller {
                         }
 
                     }
-
                 } else {
                     $data['message'] = 'VOID';
                     echo json_encode($data);
@@ -2109,9 +1993,7 @@ class Contraloria extends CI_Controller {
                 }
                 $arreglo["fechaVenc"]= $fecha;
             }
-
         }
-
 
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]=13;
@@ -2385,7 +2267,6 @@ class Contraloria extends CI_Controller {
         //si es 0: quiere decir que es por los lotes subidos
         //echo 'lotes a actualizar<br>';
 
-
         $array_update = array();
         $array_diferentes = array();
         $valorRepetidomveces = array();
@@ -2429,15 +2310,14 @@ class Contraloria extends CI_Controller {
                         echo json_encode($data);
                     }
                 }
+            break;
 
-                break;
             case 0: //lotes
                 $array_msi = array();
 
                 foreach ($arrayMsi as $index => $result){
                     $array_msi[$index]=$arrayMsi[$index]->MSNI;
                 }
-
 
                 $countedValues = array_count_values($array_msi);
                 $valorRepetidomveces = array_search(max($countedValues), $countedValues);
@@ -2452,7 +2332,6 @@ class Contraloria extends CI_Controller {
 
                 $array_diferentes = json_encode($array_diferentes, JSON_UNESCAPED_SLASHES);
                 $condominioValue = ($typeTranscation == 1) ? '' : '';
-
 
                 $insert_aut = array(
                     //id_autorizacion: AUTO_INCREMENT
@@ -2490,8 +2369,7 @@ class Contraloria extends CI_Controller {
                     $data['message'] = 'ERROR';
                 }
                 echo json_encode($data);
-
-                break;
+            break;
         }
         exit;
     }
@@ -2855,10 +2733,10 @@ class Contraloria extends CI_Controller {
         $id_autorizacion = $this->input->post('id_autorizacion');
         $modo = $this->input->post("modo");
 
-        if($modo==1){//normal
+        if($modo == 1){//normal
             $data = $this->Contraloria_model->getHistorialAutorizacionMSI($id_autorizacion);
         }
-        else if($modo==2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $data = array();
@@ -2914,7 +2792,7 @@ class Contraloria extends CI_Controller {
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
 
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $data_vista = json_decode($data_vista);
@@ -2961,6 +2839,7 @@ class Contraloria extends CI_Controller {
                 "fecha_modificacion" => $fecha_insercion,
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
+
             $data_historial = array(
                 "idAutorizacion"        => $id_autorizacion,
                 "tipo"                  => 2,
@@ -2984,10 +2863,11 @@ class Contraloria extends CI_Controller {
                 $update_lotes = true;
             }
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $fecha_insercion = date('Y-m-d H:i:s');
+
             foreach($arrayAutorizaciones as $id_aut){
                 $data_actualizar = array(
                     "estatus_autorizacion" => $estatus_autorizacion,
@@ -3010,7 +2890,6 @@ class Contraloria extends CI_Controller {
                 $table_historial = 'historial_autorizacionesPMSI';
                 $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-
 
                 if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
                     $array_update_lotes = $this->actualizaMSI($id_aut, $modo);
@@ -3063,7 +2942,7 @@ class Contraloria extends CI_Controller {
             $updateData = $arrayVista;
             return $updateData;
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
             $idCondominio    = $data_autorizacion[0]['idCondominio'];
             $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
@@ -3081,7 +2960,6 @@ class Contraloria extends CI_Controller {
     public function inventarioComisionistas() {
         $this->load->view('template/header');
         $this->load->view("contraloria/inventarioComisionistas_view");
-
     }
 
     public function getInvientarioComisionista($estatus, $condominio, $proyecto) {
@@ -3106,8 +2984,9 @@ class Contraloria extends CI_Controller {
             $where = $this->input->post("where");
             $data = $this->Contraloria_model->getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
-        } else
+        } else{
             json_encode(array());
+        }
     }
 
     public function lineaVentaInventario() {
@@ -3135,6 +3014,7 @@ class Contraloria extends CI_Controller {
        
         echo json_encode($data,JSON_NUMERIC_CHECK);
     }
+
     public function allUserVentas()
     {
         $datos = $this->Contraloria_model->allUserVentas();
@@ -3188,9 +3068,9 @@ class Contraloria extends CI_Controller {
 
         $dataToUpdate = array("rl"=> $rl, "modificado_por" => $this->session->userdata('id_usuario'));
         $responseUpdate = $this->General_model->updateRecord("clientes", $dataToUpdate, "idLote", $idLote);
-
-            $data['message'] = 'OK';
-            echo json_encode($data);
+        
+        $data['message'] = 'OK';
+        echo json_encode($data);
     }
 
     public function updateSede()
@@ -3233,8 +3113,7 @@ class Contraloria extends CI_Controller {
     }
 
     public function updateLoteMarcarParaLiberar() {
-
-        if ( (isset($_POST) && !empty($_POST)) || (isset($_FILES) && !empty($_FILES)) ) {
+        if ((isset($_POST) && !empty($_POST)) || (isset($_FILES) && !empty($_FILES))) {
             $idLote = $_POST['idLote'];
             $idCondominio = $_POST['idCondominio'];
             $idCliente = $_POST['idCliente'];
@@ -3247,75 +3126,50 @@ class Contraloria extends CI_Controller {
                 $data = array(
                     "idLote" => $idLote,
                     "nombre_archivo" => 'CM-Rescisión-Lote:'.$idLote.'-'.$fec.'.pdf',
-                    "nombre_rama" => $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf',///////
+                    "nombre_rama" => $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf',
                     "estatus" => 1,
                     "fecha_creacion" => $fecha,
                     "creado_por" => $this->session->userdata('id_usuario'),
                     "fecha_modificacion" => $fecha,
                     "modificado_por" =>$this->session->userdata('id_usuario')
                 );
-
+                
                 $response = $this->General_model->addRecord('archivos_liberacion', $data);
-
                 $nomArc = 'CM-Rescisión-Lote'.$idLote.'-'.$fec.'.pdf';
-                if ($response) {
-                    $movement = move_uploaded_file($_FILES['archivo']['tmp_name'], $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf');
 
-                    if ($movement) {
-
-                        $updateDocumentData = array(
-                            "movimiento" => 'ARCHIVO RESCISIÓN',
-                            "expediente" => $nomArc, 
-                            "modificado" => date('Y-m-d H:i:s'),
-                            "idCliente" => $idCliente,
-                            "idCondominio" => $idCondominio,
-                            "idLote" => $idLote,
-                            "tipo_doc" => 51,
-                            "idUser" => $this->session->userdata('id_usuario')
-                        );
-            
-                        $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
-
-                        $data2 = array(
-                            "idLote" => $idLote,
-                            "id_cat_tipo_liberacion" => 107,
-                            "id_tipo_liberacion" => 1,
-                            "id_cat_proceso" => 109,
-                            "id_proceso" => 1,
-                            "proceso_realizado" => 0,
-                            "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
-                            "estatus" => 1,
-                            "modificado_por" => $this->session->userdata('id_usuario'),
-                            "fecha_modificacion" => $fecha,
-                        );
-                        $response = $this->General_model->addRecord('historial_liberacion_lotes', $data2);
-                        // 
-                        echo json_encode($response);
-                    }
-                    return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
+                $movement = move_uploaded_file($_FILES['archivo']['tmp_name'], $pathBase.$nombreArchivo.$idLote.'-'.$fec.'.pdf');
+                
+                if ($movement) {
+                    $updateDocumentData = array(
+                        "movimiento" => 'ARCHIVO RESCISIÓN',
+                        "expediente" => $nomArc, 
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "idCliente" => $idCliente,
+                        "idCondominio" => $idCondominio,
+                        "idLote" => $idLote,
+                        "tipo_doc" => 51,
+                        "idUser" => $this->session->userdata('id_usuario')
+                    );
+                    $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
                 }
-
-            }else if ($_POST['selectTipoLiberacion'] == 2){ //Devolución
-                //Nadamas hace el registro general
-                $data = array(
-                    "idLote" => $idLote,
-                    "id_cat_tipo_liberacion" => 107,
-                    "id_tipo_liberacion" => 2,
-                    "id_cat_proceso" => 109,
-                    "id_proceso" => 1,
-                    "proceso_realizado" => 0,
-                    "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
-                    "estatus" => 1,
-                    "modificado_por" => $this->session->userdata('id_usuario'),
-                    "fecha_modificacion" => $fecha,
-                );
-                $response = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-            }else { //Algun otro tipo de liberación
-                echo json_encode(array());
             }
+            
+            $data2 = array(
+                "idLote" => $idLote,
+                "id_cat_tipo_liberacion" => 107,
+                "id_tipo_liberacion" => $_POST['selectTipoLiberacion'] == 1 ? 1 : 2,
+                "id_cat_proceso" => 109,
+                "id_proceso" => 1,
+                "proceso_realizado" => 0,
+                "justificacion_liberacion" => $_POST['justificacionMarcarLiberar'],
+                "estatus" => 1,
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "fecha_modificacion" => $fecha,
+            );                    
+            $response = $this->General_model->addRecord('historial_liberacion_lotes', $data2);
+            
             echo json_encode($response);
-        } else {
-            echo json_encode(array());
+            return ['code' => 400, 'message' => 'No fue posible almacenar el archivo en el servidor.'];
         }
     }
 
@@ -3369,7 +3223,6 @@ class Contraloria extends CI_Controller {
 
     public function avance_estatus_liberacion(){   
 
-        $resultado = 0;
         $accion = $_POST['accion'];
         $rol = $this->session->userdata('id_rol');
         $fecha = date("Y-m-d H:i:s");
@@ -3381,16 +3234,23 @@ class Contraloria extends CI_Controller {
         if ($rol == 33) {
             $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; 
         }
+
         if ($rol == 2) {
-            $data["id_proceso"] = $_POST['accion'] == '1' ? 3 : 1; 
-
-            $replace = [",","$"];
-            $precio = str_replace($replace,"",$_POST['costoM2']);
-
-            $this->actualizar_precio($_POST['idLote'], $precio);
+            if($accion == 1){  
+                $data["id_proceso"]= 3;
+                $replace = [",","$"];
+                $precio = str_replace($replace,"",$_POST['costoM2']);
+                $resultado = $this->actualizar_precio($_POST['idLote'], $precio);
+                
+            }
+            else if ($accion == 2){
+               $data["id_proceso"] = 1;
+            }
+            
         }
+
         if ($rol == 12) {
-            if ($_POST['accion'] == 1 || $_POST['accion'] == 3) {
+            if ($accion == 3) {
                 $data["id_proceso"] = 4;
                 $data["idLote"] = $_POST['idLote'];
 
@@ -3416,8 +3276,7 @@ class Contraloria extends CI_Controller {
         $data["modificado_por"] = $this->session->userdata('id_usuario');
         $data["fecha_modificacion"] = $fecha;
         $resultado = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-        
-        echo json_encode($resultado);
+        echo($resultado);
     }
 
     public function actualizar_precio($idLote, $precio){       

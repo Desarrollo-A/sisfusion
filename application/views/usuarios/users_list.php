@@ -365,6 +365,7 @@
                                                 <th>NOMBRE</th>
                                                 <th>CORREO</th>
                                                 <th>TELÉFONO</th>
+                                                <th>ROL</th>
                                                 <th>TIPO</th>
                                                 <th>SEDE</th>
                                                 <th>JEFE DIRECTO</th>
