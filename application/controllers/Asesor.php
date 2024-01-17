@@ -3210,6 +3210,9 @@ class Asesor extends CI_Controller {
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $comentario=$this->input->post('comentario');
+        $fechaVenc = $this->input->post('fechaVenc');
+        $idCondominio = $this->input->post('idCondomio');
+        $idCliente = $this->input->post('idCliente');
 
         if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
