@@ -446,7 +446,7 @@
         return true;
     }
 
-    public function getDocsByType($typeOfPersona, $tipo_venta) {
+    public function getDocsByType($typeOfPersona, $tipo_venta = NULL) {
         $extraWhere = "";
         if ($tipo_venta == 1) // VENTA DE PARTICULAES
             $extraWhere = "OR (id_catalogo = $typeOfPersona AND id_opcion IN (50))";
@@ -564,7 +564,7 @@
     public function validate($idLote)
     {
         $this->db->where("idLote", $idLote);
-        $this->db->where_in('idStatusLote', array('1', '101', '102', '16'));
+        $this->db->where_in('idStatusLote', array('1', '101', '102', '16', '20'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
@@ -572,8 +572,7 @@
     }
 
     //VERIFICAMOS PARA EL APARTADO EN LINEA QUE SE ENCUENTRE EN ESTATUS 99
-    public function validar_aOnline($idLote)
-    {
+    public function validar_aOnline( $idLote ){
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', array('99'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");

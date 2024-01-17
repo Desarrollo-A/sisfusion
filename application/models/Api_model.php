@@ -111,7 +111,7 @@ class Api_model extends CI_Model
         $validacionFecha")->result_array(); 
     }
 
-    public function getInformacionProspectos($year, $month){
+    public function getInformacionProspectos(int $year, int $month){
         $month1 = $month;
         $month2 = $month;
         

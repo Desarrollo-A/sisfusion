@@ -6,8 +6,10 @@ function validarMensaje(tipoMensaje) {
         return;
     } else if (tipoMensaje === 'danger_2') {
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+        return;
     } else if (tipoMensaje === 'success') {
         alerts.showNotification('top', 'right', 'El costo FINAL ingresado es válido', 'success');
+        return;
     }
 }
 
@@ -20,6 +22,7 @@ $(document).ready(function() {
 
     $('#costoM2, #costom2f').on('change', function() {
         const tipoMensaje = validarCostos();
+        console.log('tipoMensaje', tipoMensaje);
         validarMensaje(tipoMensaje);
     });
 
@@ -37,7 +40,9 @@ function validarCostos() {
     }
     const clienteInfo = obtenerCliente(cliente);
 
-    if (tipoVenta === '1') {
+    if (tipoVenta == '1') {
+        console.log('tipoVenta', tipoVenta);
+
         if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
             return 'danger_2';
         } else {
@@ -45,6 +50,7 @@ function validarCostos() {
         }
     } else {
         const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
+
 
         if (![2, 3, 4].includes(clienteInfo.proceso)) {
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {

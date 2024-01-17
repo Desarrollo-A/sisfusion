@@ -171,8 +171,34 @@ class Administracion_model extends CI_Model {
         ORDER BY nombreCliente");
         return $query->result_array();
     }
-    public function saveDatosMonetarios($arrayDatos){
 
+    public function reporteEstatus10($typeTransaction, $beginDate, $endDate) {
+        if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
+            $filter = " AND hd.modificado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
+        }
+        $query = $this->db->query("SELECT s.nombre nombreSede, res.nombreResidencial, cond.nombre nombreCondominio, l.nombreLote,
+			CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+			l.sup, l.referencia, UPPER(st.nombre) estatusLote, cl.fechaApartado,
+			CONCAT(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) nombreAsesor,
+			CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) nombreGerente,
+			ISNULL(oxc0.nombre, 'Normal') tipo_proceso, hd.modificado as modificadoFiltro
+			FROM historial_lotes hd
+			INNER JOIN clientes cl ON hd.idCliente = cl.id_cliente AND cl.status = 1
+			INNER JOIN lotes l ON hd.idLote = l.idLote AND l.status = 1
+			INNER JOIN condominios cond ON cond.idCondominio = l.idCondominio
+			INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+			INNER JOIN sedes s ON s.id_sede = l.ubicacion
+			INNER JOIN statuslote st ON st.idStatusLote = l.idStatusLote
+			LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+			LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+			LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+			WHERE (hd.idStatusContratacion = 10 and hd.idMovimiento  = 40) AND hd.status = 1 
+			$filter
+			ORDER BY hd.modificado ASC");
+        return $query->result_array();
+    }
+
+    public function saveDatosMonetarios($arrayDatos){
         $this->db->trans_begin();
         $this->db->query("INSERT INTO datosMonetariosLote VALUES(".$arrayDatos['idLote'].",".$arrayDatos['idCliente'].",".$arrayDatos['formaP'].",1,'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].",'".$arrayDatos['fecha']."',".$arrayDatos['usuario'].")");
         $insert_id = $this->db->insert_id();
@@ -186,6 +212,7 @@ class Administracion_model extends CI_Model {
         }
 
 	}
+
     public function registroClienteTwo($id_proyecto, $id_condominio)
     {
         if ($id_condominio == 0) { // SE FILTRA POR RESIDENCIAL

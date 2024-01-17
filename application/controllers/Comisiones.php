@@ -17,6 +17,8 @@ class Comisiones extends CI_Controller
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
     $this->load->model('Pagos_model');
+    $this->load->model('reporteContratacion_model');
+    
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -132,6 +134,11 @@ class Comisiones extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("ventas/revision_cobranza_mktd");
   }
+
+  public function reporteContratacion(){
+    $this->load->view('template/header');
+    $this->load->view("comisiones/reporteContratacion-view");
+}
   
   public function getDatosNuevasMktd_pre(){
     $dat =  $this->Comisiones_model->getDatosNuevasMktd_pre()->result_array();
@@ -287,12 +294,12 @@ class Comisiones extends CI_Controller
       case '1':
       case '2':
         if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
-          $this->load->view("ventas/comisiones_colaborador", $datos);
+          $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
         else
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
-        $this->load->view("ventas/comisiones_colaborador", $datos);
+        $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
@@ -321,12 +328,17 @@ class Comisiones extends CI_Controller
     echo json_encode( $datos );
   }
 
-  public function getDatosComisionesAsesor($a){
-    $dat =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
-    for ($i = 0; $i < count($dat); $i++) {
-      $dat[$i]['pa'] = 0;
-    }
-    echo json_encode(array("data" => $dat));
+  public function getDatosComisionesAsesor($a = ''){
+    $respuesta =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
+    // echo json_encode($respuesta["Datos"][0]["estatus"]) ;
+
+      
+      
+    
+      for ($i = 0; $i < count($respuesta); $i++) {
+        $respuesta[$i]['pa'] = 0;
+      }   
+    echo json_encode($respuesta);
   }
 
   public function getDatosComisionesAsesorBaja($a){
@@ -353,7 +365,7 @@ class Comisiones extends CI_Controller
     if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) AND DAY(GETDATE()) = DAY(fechaFinGeneral) AND mes = $mesActual")->result_array();
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
 
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
@@ -733,7 +745,7 @@ class Comisiones extends CI_Controller
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
     $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) AND DAY(GETDATE()) = DAY(fechaInicio) AND mes = $mesActual")->result_array();
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -3115,4 +3127,16 @@ class Comisiones extends CI_Controller
       $this->Comisiones_model->validarLiquidadas();
   }
 
+  public function comisiones_reporteDatos(){
+    $beginDate = $this->input->post('beginDate');
+    $endDate = $this->input->post('endDate');
+    $data['data']=$this->reporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
+    echo json_encode($data);
+  }
+
+  public function usuarios_rol_7(){
+    $result=$this->reporteContratacion_model->usuarios_rol_7();
+    echo json_encode($result);
+  }
+  
 }
