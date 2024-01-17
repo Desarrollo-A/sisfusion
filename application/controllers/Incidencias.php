@@ -18,6 +18,7 @@ class Incidencias extends CI_Controller
         $this->load->model('Incidencias_model');
         $this->load->model('PagoInvoice_model');
         $this->load->model('General_model');
+        $this->load->model('reporteContratacion_model');
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -251,6 +252,39 @@ class Incidencias extends CI_Controller
       $respuesta = $this->Incidencias_model->getPagosByComision($id_comision);
       echo json_encode($respuesta); 
     }
+
+    //mio
+    public function getModalidadCambio() {
+      $descripcion = $this->input->post('descripcion');
+      $estatus = $this->input->post('compartida');
+      $id_cliente = $this->input->post('cliente_modalidad');
+      $idLote = $this->input->post('idLote');
+
+      if($estatus !== NULL){
+        $estatus = 0;
+      }
+
+      $result = $this->Incidencias_model->getModalidadCambio($estatus, $id_cliente);
+      $result_2 = $this->Incidencias_model->agregarComentario($id_cliente, $descripcion, $idLote);
+      //$result_3 = $this->Incidencias_model->getRol_Nombre($id_cliente,$idLote);
+
+  
+      echo json_encode($result,$result_2);
+    }
+
+    public function getRol_Nombre(){
+      $id_cliente = $this->input->post('id_cliente');
+      $idLote = $this->input->post('idLote');
+      // $id_comision = $this->input->post('id_comision');
+      // $id_usuario = $this->input->post('id_usuario');
+
+      $result = $this->Incidencias_model->getRol_Nombre($id_cliente, $idLote);
+      //$result2 = $this->Incidencias_model->UpdateRol_Nombre($id_comision, $id_usuario);
+      
+
+      echo json_encode($result);
+    }
+  
 
     public function cambioSede(){
       $sede     = $this->input->post("sedesCambio");
