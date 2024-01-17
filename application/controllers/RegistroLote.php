@@ -1328,10 +1328,7 @@ class RegistroLote extends CI_Controller
 	{
 		$this->validateSession();
 		$this->load->view("template/header");
-		if ($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096)
-			$this->load->view("juridico/datos_status7Contratacion_juridico_view_two");
-		else
-			$this->load->view("juridico/datos_status7Contratacion_juridico_view");
+		$this->load->view("juridico/datos_status7Contratacion_juridico_view");
 	}
 	public function getStatus7ContratacionJuridico()
 	{

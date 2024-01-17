@@ -357,6 +357,7 @@ $(document).on("click", ".ver_historial", function () {
     consultarVentasCompartidas(idLote);
     //CONSULTA EL HISTORIAL DE LOS MOVIMIENTOS DEL IDSTTAUSLOTE
     if (rolesContraloria.includes(id_rol_general)) {
+        $('#HistorialEstatus').empty();
         $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
             if (data.length == 0)
                 $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b');

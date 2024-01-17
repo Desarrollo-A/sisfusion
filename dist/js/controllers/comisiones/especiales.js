@@ -69,19 +69,24 @@ $(document).ready(function () {
             {data: 'nombreLote'},
             {data: 'idLote'},
             {data: 'nombreCliente'},
-            { data: function (d) {
-                var labelTipoVenta;
-                if(d.tipo_venta == 1) {
-                    labelTipoVenta ='<span class="label" style="color:#78281F;background:#F5B7B1;">Particular</span>';
-                }else if(d.tipo_venta == 2) {
-                    labelTipoVenta ='<span class="label" style="color:#186A3B;background:#ABEBC6;">Normal</span>';
-                }else if(d.tipo_venta == 7) {
-                    labelTipoVenta ='<span class="label" style="color:#512E5F;background:#D7BDE2;">Especial</span>';
-                }else{
-                    labelTipoVenta ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
+            {
+                data: 'tipo_venta',
+                render: function(data) {
+                    const dataVenta = data.toLowerCase();
+                    if (dataVenta === "especial") {
+                        return `<span class="label" style="color:#512E5F;background:#D7BDE2;">${data}</span>`;
+                    } 
+                    else if(dataVenta === "normal"){
+                        return `<span class="label" style="color:#186A3B;background:#ABEBC6;">${data}</span>`;
+                    }
+                    else if(dataVenta === "particular"){
+                        return `<span class="label" style="color:#78281F;background:#F5B7B1;">${data}</span>`;
+                    }
+                    else {
+                        return '<span class="label" style="color:#626567;background:#E5E7E9;">Sin especificar</span>';
+                    }
                 }
-                return labelTipoVenta;
-            }},  
+            },
             { data: function (d) {
                 var labelCompartida;
                 if(d.compartida == null) {
@@ -155,7 +160,7 @@ $(document).ready(function () {
                                         <i class="material-icons">block</i>
                                     </button>
                                 `;
-                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipov="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
+                            BtnStats += '<button href="#" value="'+d.idLote+'" data-value="'+d.registro_comision+'" data-totalNeto2 = "'+d.totalNeto2+'" data-estatus="'+d.idStatusContratacion+'" data-cliente="'+d.id_cliente+'" data-plan="'+d.plan_comision+'"  data-tipo_venta="'+d.tipo_venta+'"data-descplan="'+d.plan_descripcion+'" data-code="'+d.cbbtton+'" ' +'class="btn-data '+varColor+' verify_neodata" title="Verificar en NEODATA">'+'<span class="material-icons">verified_user</span></button> '+RegresaActiva+'';
                         }
                         return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
@@ -202,8 +207,10 @@ $(document).ready(function () {
             const idLote = $(this).val();
             const nombreLote = $(this).attr("data-value");
             const statusLote = $(this).attr("data-statusLote");
+            const tipo_venta = $(this).attr("data-tipo_venta");
             $('#id-lote-detenido').val(idLote);
             $('#statusLote').val(statusLote);
+            $('#tipo_venta').val(tipo_venta);
             $("#detenciones-modal .modal-header").html("");
             $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
             $("#detenciones-modal").modal();
@@ -260,7 +267,7 @@ $(document).ready(function () {
             registro_status = $(this).attr("data-value");
             compartida = $(this).attr("data-compartida");
             id_estatus = $(this).attr("data-estatus");
-            tipo_venta = $(this).attr("data-tipov");
+            tipo_venta = $(this).attr("data-tipo_venta");
             lugar_prospeccionLote = $(this).attr("data-lugarP");
             totalNeto2 = $(this).attr("data-totalNeto2");
             let idCliente = $(this).attr("data-idCliente");
@@ -403,7 +410,7 @@ $(document).ready(function () {
                                         });
                                     }
                                     else{
-                                        $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
+                                        $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote + "/1").done( function( data1 ){
                                             let total0 = parseFloat((data[0].Aplicado));
                                             let total = 0;
                                             if(total0 > 0){
@@ -987,15 +994,18 @@ $(document).on('click', '.update_bandera', function(e){
     $("#param").val(1);
 });
 
-
+//este
 $("#tabla_dispersar_especiales tbody").on('click', '.btn-detener', function () {
     $("#motivo").val("");
+    $("#motivo").selectpicker('refresh');
     $("#descripcion").val("");
     const idLote = $(this).val();
     const nombreLote = $(this).attr("data-value");
     const statusLote = $(this).attr("data-statusLote");
+    const tipo_venta = $(this).attr("data-tipo_venta");
     $('#id-lote-detenido').val(idLote);
     $('#statusLote').val(statusLote);
+    $('#tipo_venta').val(tipo_venta);
     $("#detenciones-modal .modal-header").html("");
     $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
     $("#detenciones-modal").modal();

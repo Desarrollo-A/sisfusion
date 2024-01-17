@@ -232,9 +232,9 @@ class Cobranza extends CI_Controller
     }
 
     public function getOpcionesParaReporteComisionistas() {
-        $seeAll = $this->input->post("seeAll");
         $condicionXUsuario = '';
-        if ($seeAll == 0 ){
+        
+        if ( !in_array($this->session->userdata('id_rol'), [1, 4, 5, 6, 18, 63]) ){
             $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
         }
         echo json_encode($this->Cobranza_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());

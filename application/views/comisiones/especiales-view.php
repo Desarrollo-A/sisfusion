@@ -103,14 +103,26 @@
                             <input type="hidden" name="statusLote" id="statusLote">
                             
                             <div class="col-lg-12">
-                                <div class="form-group is-empty">
-                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                <div class="form-group">
+                                     <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
+                                     <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
+                                            <?php foreach($controversias as $controversia){ ?>
+                                                <?php if($controversia['id_opcion'] != 8 ){  ?>
+                                                <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                            
+                                            <?php }} ?>
+                                    </select>
+
                                 </div>
+                                <!-- <div class="form-group is-empty">
+                                    <input id="motivo" name="motivo" type="text" class="form-control input-gral" placeholder="Escriba un motivo corto." minlength="3" maxlength="50" required />
+                                </div> -->
                             </div>
 
                             <div class="col-lg-12">
-                                <div class="form-group label-floating">
-                                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
+                                <div class="form-group mt-0">
+                                    <label class="control-label">Detalles de la controversia (<span class="isRequired">*</span>)</label>
+                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles de la controversia." required></textarea>
                                 </div>
                             </div>
                         </div>
@@ -118,7 +130,7 @@
                         <div class="modal-footer">
                         <div class="col-lg-12">
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" id="detenerLote" class="btn btn-primary">Registrar</button>
+                            <button type="submit" id="detenerLote" class="btn btn-primary">ACEPTAR</button>
                         </div>
                         </div>
                     </form>

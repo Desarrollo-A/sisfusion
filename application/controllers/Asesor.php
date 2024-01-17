@@ -1056,6 +1056,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -1095,8 +1096,10 @@ class Asesor extends CI_Controller {
             : [];
 
         //prueba
-        $tipo_venta_result = $this->Asesor_model->getTipo_Venta();
-        $datos['tipo_venta'] = $tipo_venta_result->row()->tipo_venta ?? null;
+        //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
+        //print_r($datos["cliente"][0]->tipo_venta);
+        //exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -3208,14 +3211,14 @@ class Asesor extends CI_Controller {
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $comentario=$this->input->post('comentario');
 
-        /*if ($this->session->userdata('id_rol') != 17) {
+        if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
                 $data['message'] = 'VERIFICACION CORREO/SMS';
                 echo json_encode($data);
                 return;
             }
-        }*/
+        }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ) {
@@ -3246,24 +3249,15 @@ class Asesor extends CI_Controller {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
+        
+
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $statusContratacion;
         $arreglo["idMovimiento"] = $idMovimiento;
+        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["comentario"] = $this->input->post('comentario');
-        $data = $this->Asesor_model->revisaOU($idLote);
-
-        if(count($data) >= 1) {
-            $data['message'] = 'OBSERVACION_CONTRATO';
-            echo json_encode($data);
-            return;
-        }
-
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-            return;
-        }
 
 
         date_default_timezone_set('America/Mexico_City');
@@ -3381,14 +3375,15 @@ class Asesor extends CI_Controller {
         $arreglo2["idStatusContratacion"] = $statusContratacion;
         $arreglo2["idMovimiento"] = $idMovimiento;
         $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
+        $arreglo2["fechaVenc"] = $fechaVenc;
         $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
-        $arreglo2["idCliente"] = $this->input->post('idCliente');
-        $arreglo2["comentario"] = $this->input->post('comentario');
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+
         $validate = $this->Asesor_model->validateSt2($idLote);
 
         if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
@@ -3429,13 +3424,15 @@ class Asesor extends CI_Controller {
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
             }
         } else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya fue registrado.';
         }
+
+        echo json_encode($data);
     }
 
     public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
@@ -3521,21 +3518,24 @@ class Asesor extends CI_Controller {
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-            $data['message'] = 'MISSING_DOCUMENTS';
+            $data['status'] = false;
+            $data['message'] = $error_message;
             $data['error_message'] = $error_message;
             echo json_encode($data);
             return false;
         }
 
         if($validacion) {
-            $data['message'] = 'MISSING_AUTORIZATION';
+            $data['status'] = false;
+            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
         if(count($validacionIM) > 0) {
             if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['message'] = 'MISSING_AUTFI';
+                $data['status'] = false;
+                $data['message'] = 'Autorización de mensualidad pendiente.';
                 echo json_encode($data);
                 return false;
             }
@@ -5258,19 +5258,14 @@ class Asesor extends CI_Controller {
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: ".$url."\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
             'Recipient' => $telefono,
             'CampaignCode' => 'null',
-            'DynamicFields' => [
-                [
-                    "N" => "URL",
-                    "V" => $url
-                ]
-            ],
-            'isUnicode' => 0
+            'DynamicFields' => [],
+            'isUnicode' => 1
         ];
 
         $sms = $this->apiExternoSms('https://sendsms.mailup.com/api/v2.0/sms/163369/1','POST', $camposSms);
@@ -5291,6 +5286,7 @@ class Asesor extends CI_Controller {
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $tipo,
             CURLOPT_POSTFIELDS =>json_encode( $body ),

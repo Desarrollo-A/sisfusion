@@ -478,6 +478,38 @@ class Administracion extends CI_Controller{
             echo json_encode(array());
         }
 	}
+
+	public function reporteClientesFactura(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/reporteClientesFacturaView");
+    }
+
+    public function getReporteClientesFactura(){
+        $data = $this->Administracion_model->getReporteClientesFactura()->result_array();
+        if ($data != null)
+            echo json_encode($data);
+        else
+            echo json_encode(array());
+    }
+	
+	public function reporteEstatus10(){
+        $this->load->view('template/header');
+        $this->load->view("administracion/reporteEstatus10");
+    }
+
+    public function getReporteEstatus10(){
+        if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $data = $this->Administracion_model->reporteEstatus10($typeTransaction, $beginDate, $endDate);
+            echo json_encode($data);
+        } else {
+            json_encode(array());
+        }
+    }
 	public function datosMonetarios()
 	{
 		$this->load->view('template/header');

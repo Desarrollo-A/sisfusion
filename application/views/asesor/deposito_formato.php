@@ -52,8 +52,26 @@
                 <!-- encabezados -->
                 <div class="row pt-2" id="radioDS">
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
-                        <h6 class="label-on-left mb-0">DESARROLLO</h6>
+                        <h6 class="label-on-left mb-0">DESARROLLO </h6>
                         <div class="radio_container">
+                            <?php
+                            $inputRender = '';
+                            foreach ($desarrollos as $elemento){
+                                $statusEnabled = '';
+                                if($cliente[0]->sede_residencial == $elemento['id_sede']){
+                                    $statusEnabled = ' checked=true ';
+                                }
+                                $inputRender .= '<input type="radio" id="desarrollo'.$elemento['abreviacion'].'" 
+                                onclick="return false;" name="desarrollo" required '.$statsInput.' '.$statusEnabled.' 
+                                value="'.$elemento['id_sede'].'"/> <label for="desarrollo'.$elemento['abreviacion'].'">'.$elemento['abreviacion'].'</label>';
+                            }
+
+                            print_r($inputRender);
+                            ?>
+
+                        </div>
+                        <br>
+                        <!--<div class="radio_container">
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?>
                             <?php if ($cliente[0]->desarrollo == 1 || $cliente[0]->desarrollo == 2 || $cliente[0]->desarrollo == 5 || $cliente[0]->desarrollo == 6 || $cliente[0]->desarrollo == 7 || $cliente[0]->desarrollo == 8 || $cliente[0]->desarrollo == 11 || $cliente[0]->desarrollo == 21 || $cliente[0]->desarrollo == 26 || $cliente[0]->desarrollo == 29 || $cliente[0]->desarrollo == 34 || $cliente[0]->desarrollo == 33 || $cliente[0]->desarrollo == 36 || $cliente[0]->desarrollo == 35 || $cliente[0]->desarrollo == 37) {echo "checked=true";} ?>  value="1"/>
                             <label for="one">QRO</label>
@@ -71,10 +89,10 @@
 
                             <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 23) { echo "checked=true"; } ?> value="5"/>
                             <label for="six">SMA</label>
-                            
-                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 32) { echo "checked=true"; } ?> value="5"/> 
+
+                            <input type="radio" id="desarrollo" onclick="return false;" name="desarrollo" required <?php echo $statsInput; ?> <?php if ($cliente[0]->desarrollo == 27 || $cliente[0]->desarrollo == 32) { echo "checked=true"; } ?> value="5"/>
                             <label for="seven">CNC</label>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                         <h4 class="label-on-left mb-0">TIPO LOTE</h4>
