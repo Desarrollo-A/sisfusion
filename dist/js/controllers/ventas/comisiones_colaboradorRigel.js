@@ -126,19 +126,17 @@ $('#catalogo_nuevas').change( function(){
 function modalHistorial(){
     changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-header">
-                    <h5><b>BITÁCORA DE CAMBIOS</b></h5>
-                </div>
-                <div class="modal-body">
-                    <div role="tabpanel">
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="historialTap">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="card card-plain">
-                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                                <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                            </div>
-                                        </div>
+            <h5><b>BITÁCORA DE CAMBIOS</b></h5>
+        </div>
+        <div class="modal-body">
+            <div role="tabpanel">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="historialTap">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card card-plain">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
                                     </div>
                                 </div>
                             </div>
@@ -146,9 +144,11 @@ function modalHistorial(){
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
-            </div>`);
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" ><b>Cerrar</b></button>
+    </div>`);
     showModal();
 }
 
@@ -858,7 +858,7 @@ function comisionesTableResguardo(proyecto,condominio){
         lote = $(this).attr("data-value");
 
         modalHistorial();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#22CB99; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">'+lote+'</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DEL LOTE <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
                 $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>NOMBRE DEL USUARIO: </small><b>'+ v.nombre_usuario +' </b></a><br></div><div class="float-end text-right"><a> '+ v.fecha_movimiento +' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIO: </small><b>'+ v.comentario+'</b></p></div><h6></h6></div></div></li>');

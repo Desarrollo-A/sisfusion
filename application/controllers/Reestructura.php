@@ -92,8 +92,9 @@ class Reestructura extends CI_Controller{
 		$idCondominio = $this->input->post('idCondominio');
         $superficie = $this->input->post('superficie');
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
-		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie, $flagFusion);
+		$data = $this->Reestructura_model->getLotesDisponibles($idCondominio, $superficie, $flagFusion, $idProyecto);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -110,6 +111,25 @@ class Reestructura extends CI_Controller{
         $id_catalogo = $_POST['id_catalogo'];
 		echo json_encode($this->Reestructura_model->get_catalogo_restructura($id_catalogo)->result_array());
 	}
+
+    public function inventarioLotes(){
+		$this->load->view('template/header');
+        $this->load->view("reestructura/inventarioLotes_view");
+    }
+
+    public function getEstatusLote(){
+        echo json_encode($this->Reestructura_model->EstatusLote()->result_array());
+    }
+
+    public function reestructuraLotes(){
+        $index_estatus = $this->input->post('index_estatus');
+        $dato = $this->Reestructura_model->reestructuraLotes($index_estatus);
+        if ($dato != null) {
+            echo json_encode($dato);
+        }else{
+            echo json_encode(array());
+        }
+    }
 
 	public function insertarOpcion(){
 		$idOpcion = $this->Reestructura_model->insertOpcion(100);
@@ -410,12 +430,18 @@ class Reestructura extends CI_Controller{
         $flagConteo = 0;
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
+
+        $varibaleCiertoFalso = '';
+        if($idProyecto == 21){
+            $varibaleCiertoFalso = true;
+        }
         foreach ($idLotes as $elementoLote) { 
-            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote);
+            $dataDisponible = $this->Reestructura_model->checarDisponibleRe($elementoLote, $idProyecto);
 
             if (count($dataDisponible) > 0) {
-                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2)) {//se checa que el devuelto si este en 15 y sea el que s emandó
+                if ($dataDisponible[0]['idLote'] == $elementoLote && ($dataDisponible[0]['idStatusLote'] == 15 || $dataDisponible[0]['idStatusLote'] == 1 || $dataDisponible[0]['idStatusLote'] == 2 || $varibaleCiertoFalso)) {//se checa que el devuelto si este en 15 y sea el que s emandó
                     $flagConteo = $flagConteo + 1;
                     $arrayNoDisponible .= '- ID LOTE: ' . $dataDisponible[0]['idLote'] . ' (' . $dataDisponible[0]['nombreLote'] . '),';
                 }
@@ -463,7 +489,7 @@ class Reestructura extends CI_Controller{
                         $arrayLote = array(
                             'idLote' => $idLoteOriginal,
                             'id_lotep' => $idLote,
-                            'estatus' =>  0,
+                            'estatus' =>  0,//se coloca en 0 porque aun no es la oficial
                             'creado_por' => $this->session->userdata('id_usuario'),
                             'fecha_modificacion' => date("Y-m-d H:i:s"),
                             'modificado_por' => $this->session->userdata('id_usuario')
@@ -484,14 +510,19 @@ class Reestructura extends CI_Controller{
                 }
             }
 
-            foreach ($idLotes as $idLote) {
+            $lotesString = implode(",", $idLotes);
+            $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
+
+            foreach ($dataLoteDis as $index => $dataLote) {
                 $arrayLoteApartado = array(
-                    'idLote' => $idLote,
-                    'idStatusLote' => ($proceso == 2) ? 16 : 17,
+                    'idLote' => $dataLote['idLote'],
+                    //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
+                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[$index]['idResidencial'] == 21) ? 20 : (($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) : (($dataLoteDis[$index]['idResidencial'] == 21) ? 17 :(($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) ),
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
             }
+
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
@@ -912,19 +943,27 @@ class Reestructura extends CI_Controller{
             $idCondominio = $loteSelected->idCondominio;
             $nuevaSup = floatval($loteSelected->sup);
             $anteriorSup = floatval($clienteAnterior->sup);
-            
-            if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
-                $proceso = 2;
-            }
-            else{
-                $metrosGratuitos = $anteriorSup * 0.05;
-                $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
-            }
 
-            if ($proceso == 4){
-                $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup); 
-                $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
-                $total8P = floatval(number_format($total8P, 2, '.', ''));
+            $proyectosValidacion = $this->Reestructura_model->getProyectosByIdLote($idLoteOriginal);
+            $proyectosValidacion = $proyectosValidacion[0];
+            if($proyectosValidacion['idProyectoOriginal'] == 21){
+                if($proyectosValidacion['idProyectoOriginal'] == $proyectosValidacion['idProyectoPropuesta']){
+                    $proceso = 7;
+                }
+            }else{
+                if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
+                    $proceso = 2;
+                }
+                else{
+                    $metrosGratuitos = $anteriorSup * 0.05;
+                    $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
+                }
+
+                if ($proceso == 4){
+                    $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup);
+                    $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
+                    $total8P = floatval(number_format($total8P, 2, '.', ''));
+                }
             }
 
             $validateLote = $this->caja_model_outside->validate($loteAOcupar);
@@ -1178,7 +1217,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
+                $dataCliente = array_merge([$clave => ($proceso == 3 || $proceso == 7) ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'status') {
                 $dataCliente = array_merge([$clave =>  1], $dataCliente);
@@ -2215,7 +2254,7 @@ class Reestructura extends CI_Controller{
             'color' => 'success'
         ));
     }
-    
+
     public function setLoteDisponible()
     {
         $tipoEstatusRegreso = $this->input->post('tipoEstatusRegreso');
@@ -2225,10 +2264,30 @@ class Reestructura extends CI_Controller{
         $id_pxl = $this->input->post('id_pxl');
         $flagFusion = $this->input->post('flagFusion');
 
+        $getProyecto = $this->Reestructura_model->getProyectoIdByLote($idLote);
+        $idProyecto = $getProyecto[0]['idProyecto'];
+
+        if($tipoEstatusRegreso == 1){
+            if($idProyecto != 21){
+                $statusLote = 15;
+            }
+            else{
+                $statusLote = 21;
+            }
+        }
+        else{
+            if($idProyecto != 21){
+                $statusLote = 1;
+            }
+            else{
+                $statusLote = 21;
+            }
+        }
+
         $dataUpdateLote = array(
-            'idStatusLote' => $tipoEstatusRegreso == 1 ? 15: 1,
+            'idStatusLote' => $statusLote,
             'usuario' => $id_usuario,
-            'estatus_preproceso' => $tipoProceso == 3 ? 0 : 1
+            'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
         );
 
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
@@ -2247,15 +2306,16 @@ class Reestructura extends CI_Controller{
         $idLoteOriginal = $this->input->post('idLoteOriginal');
         $idLotePropuesta = $this->input->post('idLotePropuesta');
         $flagFusion = $this->input->post('flagFusion');
+        $idProyecto = $this->input->post('idProyecto');
 
-        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta);
+        $lote = $this->Reestructura_model->checarDisponibleRe($idLotePropuesta, $idProyecto);
         if (count($lote) === 0) {
             echo json_encode(['code' => 400, 'message' => 'Lote no disponible. Favor de verificarlo']);
             return;
         }
 
         $dataUpdateLote = array(
-            'idStatusLote' => 16,
+            'idStatusLote' => ($idProyecto==21) ? 20 : 16,
             'usuario' => $this->session->userdata('id_usuario')
         );
         if($flagFusion==1){
@@ -2354,7 +2414,7 @@ class Reestructura extends CI_Controller{
         $idDocumento = $this->input->post('idDocumento');
         $idCliente = $this->input->post('idCliente');
         $idCondominio = $this->input->post('idCondominio');
-        $idUsuario = $this->session->userdata('id_usuario'); //UN SOLO REGISTRO
+        $idUsuario = $this->session->userdata('id_usuario');
         $nombreResidencial = $this->input->post('nombreResidencial');
         $nombreCondominio = $this->input->post('nombreCondominio');
         $nombreDocumento = $this->input->post('nombreDocumento');

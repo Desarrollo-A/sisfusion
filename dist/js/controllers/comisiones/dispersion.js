@@ -198,9 +198,10 @@ $(document).ready(function () {
                         } else{
                             varColor  = 'btn-green';
                         }
+                        
                         disparador = 0;
 
-                        if(d.bandera_dispersion == 1 && d.registro_comision == 9){
+                        if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -211,7 +212,7 @@ $(document).ready(function () {
                             ooamDispersion = 2;//NUEVA VENTAS 1°
                             nombreOtro = d.nombreOtro;
 
-                        }else if(d.bandera_dispersion == 2 && d.registro_comision == 9){
+                        }else if(d.bandera_dispersion == 2 && d.registro_comision == 9){//REUBICADAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 1;
@@ -222,7 +223,7 @@ $(document).ready(function () {
                             ooamDispersion = 2; //REUBICADAS 1°
                             nombreOtro = d.nombreOtro;
 
-                        } else if(d.bandera_dispersion == 3  && d.registro_comision == 9){
+                        } else if(d.bandera_dispersion == 3  && d.registro_comision == 9){//LIQUIDADA 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -233,7 +234,8 @@ $(document).ready(function () {
                             ooamDispersion = 1; //LIQUIDADA 1°
                             nombreOtro = '';
 
-                        }else if(d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0){
+                        
+                        }else if(d.bandera_dispersion == 1  && d.registro_comision != 9 && validarLiquidadas == 0){//NUEVA VENTAS 2°
                             disparador = 2;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -244,7 +246,7 @@ $(document).ready(function () {
                             ooamDispersion = 2; //NUEVA VENTAS 2°
                             nombreOtro = '';
 
-                        }else if(d.bandera_dispersion == 2  && d.registro_comision != 9){
+                        }else if(d.bandera_dispersion == 2  && d.registro_comision != 9){//REUBICADAS 2°
                             disparador = 2;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 1;
@@ -255,7 +257,7 @@ $(document).ready(function () {
                             ooamDispersion = 2; //REUBICADAS 2°
                             nombreOtro = '';
 
-                        }else if(d.bandera_dispersion == 3 && d.registro_comision != 9){
+                        } else if(d.bandera_dispersion == 3 && d.registro_comision != 9){//LIQUIDADA 2°
                             disparador = 2;   
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -266,7 +268,7 @@ $(document).ready(function () {
                             ooamDispersion = 1; //LIQUIDADA 2°
                             nombreOtro = '';
 
-                        }else if(d.bandera_dispersion == 0 && (d.registro_comision == 0 || d.registro_comision == 8)){
+                        } else if(d.bandera_dispersion == 0 && (d.registro_comision == 0 || d.registro_comision == 8)){//VENTA NORMAL 1°
                             disparador = 1;
                             totalLote = d.totalNeto2;
                             reubicadas = 0;
@@ -299,8 +301,9 @@ $(document).ready(function () {
                             descripcion_plan = d.descripcion_planReu;
                             ooamDispersion = 2;  //VENTAS CON REESTRUCTURA OOAM 1,31
                             nombreOtro = '';
+                        } 
                         
-                        } else if(d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM == 0 ){
+                        else if(d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM == 0 ){// OOAM 1°
                             disparador = 3;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -310,8 +313,9 @@ $(document).ready(function () {
                             descripcion_plan = d.plan_descripcion;
                             ooamDispersion = 1;  //OOAM 1°
                             nombreOtro = '';
+                        } 
                         
-                        }else if((d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM > 0 ) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0 ) ){
+                        else if((d.registro_comision == 1 && d.validaLiquidadas == 1 && d.banderaOOAM > 0 ) || (d.registro_comision == 1 && d.validaLiquidadas == 0 && d.banderaOOAM > 0 ) ){// OOAM 1°
                             disparador = 2;
                             totalLote = d.totalNeto2Cl;
                             reubicadas = 0;
@@ -342,6 +346,7 @@ $(document).ready(function () {
                             data-tipov = "${d.tipo_venta}"
                             data-descplan = "${descripcion_plan}" 
                             data-ooam = "${ooamDispersion}"
+                            data-estructura = "${d.estructura}"
                             data-estatusLote = "${d.idStatusContratacion}"
                             data-abonadoAnterior = "${d.abonadoAnterior}"
                             data-procesoReestructura = "${d.proceso}"
@@ -403,17 +408,20 @@ $(document).ready(function () {
         $('#id-lote-detenido').val(idLote);
         $('#statusLote').val(statusLote);
         $('#anterior').val(0);
-        $("#detenciones-modal .modal-header").html("");        
+        
+        $("#detenciones-modal .modal-header").html("");
+        
         $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
-
             if(data.length > 0){
                 $('#saldoNeodata').val(data[0].Aplicado);
                 $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Enviar a controversia: <b>'+nombreLote+'</b></h4>');
+
             } else{
                 $('#saldoNeodata').val(0);
                 $("#detenciones-modal .modal-header").append('<h4 class="modal-title">Sin localizar en NEODATA  <b>'+nombreLote+'</b>, el lote se enviará a controversia sin embargo hay que regresarlo manualmente ya que no detectamos saldo ligado a este lote y es indispensable para regresarlo automáticamente. </h4>');
             }     
         }); 
+
         $("#detenciones-modal").modal();
     });
 
@@ -454,8 +462,7 @@ $(document).ready(function () {
 
         $('#modal_NEODATA').modal({backdrop: 'static', keyboard: false})
         $("#modal_NEODATA .modal-header").html("");
-        $("#modal_NEODATA .modal-body").html("");
-        
+        $("#modal_NEODATA .modal-body").html("");        
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
         var row = $('#tabla_dispersar_comisiones').DataTable().row(tr);
@@ -475,6 +482,7 @@ $(document).ready(function () {
         tipo_venta = $(this).attr("data-tipov");
         descripcion_plan = $(this).attr("data-descplan");
         ooamDispersion = $(this).attr("data-ooam");
+        estructura = $(this).attr("data-estructura");
         nombreOtro = $(this).attr("data-nombreOtro");
         estatusLote = $(this).attr("data-estatusLote");
         abonadoAnterior = $(this).attr("data-abonadoAnterior");
@@ -606,7 +614,8 @@ $(document).ready(function () {
                                 let porcentaje_abono=0;
                                 let total_comision=0;
 
-                                const datosPlan8P =  [{
+                                const datosPlan8P =  [
+                                    {
                                         idRol:7,
                                         porcentaje:0.50
                                     },
@@ -621,7 +630,8 @@ $(document).ready(function () {
                                     {
                                         idRol:1,
                                         porcentaje:0.1
-                                    }];
+                                    }
+                                ];
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
@@ -641,7 +651,6 @@ $(document).ready(function () {
                                         let total_vo = 0;
                                         total_vo = total;
                                         saldo1 = total_vo * (v.porcentaje_neodata / 100);
-
                                         if(saldo1 > total_comision1){
                                             saldo1 = total_comision1;
                                         }else if(saldo1 < total_comision1){
@@ -707,7 +716,8 @@ $(document).ready(function () {
                                         total_comision = parseFloat(total_comision) + parseFloat(v.comision_total);
                                         abonado = parseFloat(abonado) +parseFloat(saldo1C);
                                         porcentaje_abono = parseFloat(porcentaje_abono) + parseFloat(v.porcentaje_decimal);
-                                        $("#modal_NEODATA .modal-body").append(`<div class="row">
+                                        $("#modal_NEODATA .modal-body").append(`
+                                            <div class="row">
                                                 <div class="col-md-3">
                                                     <label id="" class="control-label labelNombre hide">Usuarios</label>
                                                     <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}">
@@ -759,10 +769,18 @@ $(document).ready(function () {
                                 });
                             }
                             else{
-                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
+                                $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+estructura).done( function( datos ){
                                     let total0 = parseFloat((data[0].Aplicado));
                                     let total = 0;
-
+                                    let contador=0;
+                                    let coor = datos.length;
+                                    let totalComision = 0;
+                                    let abonado = 0;
+                                    let totalNeto2Consulta = datos[0].totalNeto2;
+                                    $.each( datos, function( i, v){
+                                        totalComision = parseFloat(totalComision) + parseFloat(v.comision_total);
+                                        abonado = parseFloat(abonado) + parseFloat(v.abono_pagado);
+                                    });
                                     if(total0 > 0){
                                         total = total0;
                                     }
@@ -773,19 +791,16 @@ $(document).ready(function () {
                                     let labelPenalizacion = '';
 
                                     if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney(total0-(data1[0].abonado))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div><div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(data1[0].abonado)}</b></div><div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div></div>`);
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney(total0-(abonado))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4">Total pago: <b style="color:blue">${formatMoney(totalComision)}</b></div><div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonado)}</b></div><div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((totalComision)-(abonado))}</b></div></div>`);
 
-                                    if(parseFloat(data[0].Bonificado) > 0){
-                                        cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
+                                    if(parseFloat(datos[0].Bonificado) > 0){
+                                        cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(datos[0].Bonificado)+'</b></h4>';
                                     }else{
                                         cadena = '<h4>Bonificación: <b >'+formatMoney(0)+'</b></h4>';
                                     }
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
-                                    <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
-                                    </div><br>`);
-
-                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+data1[0].estructura).done( function( data ){
+                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(totalNeto2Consulta)}</b></h4></div>
+                                    <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div></div><br>`);
                                         $("#modal_NEODATA .modal-body").append(`<div class="row">
                                             <div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div>
                                             <div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div>
@@ -793,25 +808,17 @@ $(document).ready(function () {
                                             <div class="col-md-2"><b>PENDIENTE</b></div>
                                             <div class="col-md-2"><b>DISPONIBLE</b></div>
                                         </div>`);
-                                        let contador=0;
-                                        let coor = data.length;
+                                        
 
-                                        for (let index = 0; index < data.length; index++) {
-                                            const element = data[index].id_usuario;
-                                            if(data[index].id_usuario == 5855){
-                                                contador += 1;
-                                            }
-                                        }
-
-                                        $.each( data, function( i, v){
+                                        $.each( datos, function( i, v){
                                             saldo =0;
 
                                             if(tipo_venta == 7 && coor == 2){
-                                                total = total - data1[0].abonado;
+                                                total = total - abonado;
                                                 saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.925*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
                                             else if(tipo_venta == 7 && coor == 3){
-                                                total = total - data1[0].abonado;
+                                                total = total - abonado;
                                                 saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
                                             else{
@@ -865,7 +872,6 @@ $(document).ready(function () {
                                             <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}"></div></div>`);
                                             counts++
                                         });
-                                    });
                                     $("#modal_NEODATA .modal-footer").append('<div class="row"><input type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"><input type="submit" class="btn btn-primary mr-2" name="disper_btn"  id="dispersar" value="Dispersar"></div>');
 
                                     if(total < 1 ){
@@ -900,7 +906,7 @@ $(document).ready(function () {
             }); 
             $("#modal_NEODATA").modal();
         }
-    });
+    }); //FIN VERIFY_NEODATA
 });
 
 sp = {
@@ -1208,20 +1214,26 @@ function showDetailModal(idPlan) {
             $('#detalle-plan-modal').modal();
             $('#detalle-tabla-div').hide();
             const roles = data.comisiones;
-            $('#detalle-tabla-div').append(`<div class="row subBoxDetail" id="modalInformation">
+            $('#detalle-tabla-div').append(`
+            <div class="row subBoxDetail" id="modalInformation">
                 <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
                 <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div>
-                <div class="prueba"></div>`)
+                <div class="prueba"></div>
+            `)
             roles.forEach(rol => {
                 if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                    $('#detalle-tabla-div .prueba').append(`<div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                    $('#detalle-tabla-div .prueba').append(`
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
                     <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
-                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>`);
+                    <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                    `);
                 }
+
             });
-            $('#detalle-tabla-div').append(`</div>`)
+            $('#detalle-tabla-div').append(`
+            </div>`)
             $('#detalle-tabla-div').show();
             $('#spiner-loader').addClass('hide');
         },
@@ -1268,20 +1280,26 @@ $('#planes').change(function () {
                 $('#detalle-plan-modal').modal();
                 $('#detalle-tabla-div').hide();
                 const roles = data.comisiones;
-                $('#detalle-tabla-div').append(`<div class="row subBoxDetail" id="modalInformation">
+                $('#detalle-tabla-div').append(`
+                <div class="row subBoxDetail" id="modalInformation">
                     <div class=" col-sm-12 col-sm-12 col-lg-12 text-center" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px"><label><b>PLANES DE COMISIÓN</b></label></div>
                     <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>PUESTO</b></label></div>
                     <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% COMISIÓN</b></label></div>
                     <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label><b>% NEODATA</b></label></div>
-                    <div class="prueba"></div>`)
+                    <div class="prueba"></div>
+                `)
                 roles.forEach(rol => {
                     if (rol.puesto !== null && (rol.com > 0 && rol.neo > 0)) {
-                        $('#detalle-tabla-div .prueba').append(`<div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
+                        $('#detalle-tabla-div .prueba').append(`
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${(rol.puesto.split(' ')[0]).toUpperCase()}</label></div>
                         <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.com)} %</label></div>
-                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>`);
+                        <div class="col-2 col-sm-12 col-md-4 col-lg-4 text-center"><label>${convertirPorcentajes(rol.neo)} %</label></div>
+                        `);
                     }
+
                 });
-                $('#detalle-tabla-div').append(`</div>`)
+                $('#detalle-tabla-div').append(`
+                </div>`)
                 $('#detalle-tabla-div').show();
             },
         });
@@ -1399,7 +1417,9 @@ function numerosDispersion(){
 }
 
 $('#tabla_dispersar_comisiones').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
 });
 
 const formatMiles = (number) => {

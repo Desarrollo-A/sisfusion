@@ -39,30 +39,6 @@
                                             <div class="encabezadoBox">
                                                 <h3 class="card-title center-align">Documentación</h3>
                                             </div>
-                                            <div class="toolbar">
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                                        <div class="form-group label-floating select-is-empty">
-                                                            <select id="estatusE" name="estatusE" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona un estatus" data-size="7" required></select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                                    </div>
-                                                    <div class="col-12 col-sm-4 col-md-4 col-lg-4">
-                                                        <div class="container-fluid p-0">
-                                                            <div class="row">
-                                                                <div class="col-md-12 p-r">
-                                                                    <div class="form-group d-flex">
-                                                                        <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
-                                                                        <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
                                                     <table class="table-striped table-hover" id="escrituracion-datatable" name="escrituracion-datatable">

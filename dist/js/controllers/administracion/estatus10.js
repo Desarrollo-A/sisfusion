@@ -15,7 +15,7 @@ $(document).ready(function() {
         post: "POST",
         url: `${general_base_url}/registroLote/getDateToday/`
     }).done(function(data) {
-        $('#showDate').append('Reporte al día de hoy: ' + data + ')');
+        $('#showDate').append('Reporte al día de hoy: ' + data + '');
     }).fail(function(){});
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
