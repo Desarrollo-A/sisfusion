@@ -181,7 +181,7 @@ class Comisiones_model extends CI_Model {
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' WHEN l.tipo_venta = 8 THEN 'Reestructura' ELSE ' SIN DEFINIR' END) tipo_venta,
         (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
-        (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,cl.estructura,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
         CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, 
         (CASE WHEN year(pc.fecha_modificacion) < 2019 THEN NULL ELSE convert(nvarchar,  pc.fecha_modificacion , 6) END) fecha_sistema, se.nombre AS sede, l.referencia, cl.id_cliente,
@@ -231,7 +231,7 @@ class Comisiones_model extends CI_Model {
         AND pc.bandera IN (0,100)
         AND cl.proceso IN (0)
         OR (
-        l.idStatusContratacion >= 9 
+        l.idStatusContratacion IN (9,10,13,14,15) 
         AND cl.status = 1 
         AND l.status IN (0,1) 
         AND (l.registro_comision IN (0,8,2,9) OR (l.registro_comision IN (1,8,9) 
@@ -2643,41 +2643,6 @@ class Comisiones_model extends CI_Model {
 
     public function porcentajes($clienteData, $totalNeto, $plan_comision){
 
-        if($plan_comision == 66){
-            $innerMktd = 'pl.mktd';
-            $innerOtro = 'pl.otro';
-            $innerOtro2 = 'pl.otro2';
-            $innerOtro3 = 'pl.id_o3';
-            $innerOtro4 = 'pl.id_o4';
-            $innerCoord = 'pl.coordinador';
-            $innerReg = 'pl.regional';
-
-            $rol1 = 87;//POSTVENTA
-            $rol2 = 88;//TI
-            $rol3 = 89;//ADMINISTRACIÓN
-            $rol4 = 90;//CONTABILIDAD
-            $rol5 = 91;//TITULACIÓN
-            $rol6 = 'pl.otro3';
-            $rol7 = 'pl.otro4';
-
-        } else{
-            $innerMktd = 4394;
-            $innerOtro = 'pl.id_o';
-            $innerOtro2 = 'pl.id_o2';
-            $innerOtro3 = 'pl.id_o3';
-            $innerOtro4 = 'pl.id_o4';
-            $innerCoord = 'cA.id_coordinador';
-            $innerReg = 'cA.id_regional';
-
-            $rol1 = 'pl.coordinador';//POSTVENTA
-            $rol2 = 'pl.regional';//TI
-            $rol3 = 'pl.mktd';//ADMINISTRACIÓN
-            $rol4 = 'pl.otro';
-            $rol5 = 'pl.otro2';
-            $rol6 = 'pl.otro3';
-            $rol7 = 'pl.otro4';
-        }
-
         if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 ){
             $joinLotes = 'INNER JOIN lotes lo ON lo.idLote = cA.idLote';
         }else{
@@ -2691,21 +2656,13 @@ class Comisiones_model extends CI_Model {
         INNER JOIN usuarios u1 ON u1.id_usuario = 2
         INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.director not IN (0)
         WHERE cA.id_cliente = @idCliente)
-        
-        UNION  /* MARKETING-ADMINISTRACION */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comMk porcentaje_decimal, (($totalNeto/100)*(pl.comMk)) comision_total, (pl.neoMk) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol3 AS id_rol, (CASE WHEN pl.id_plan = 66 THEN 'Administración' ELSE 'Marketing' END) detail_rol, 6 AS rolVal
-        FROM clientes cA 
-        $joinLotes  
-        INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.mktd not IN (0)
-        INNER JOIN usuarios u1 ON u1.id_usuario = $innerMktd
-        WHERE cA.id_cliente = @idCliente)
 
-        UNION  /* OTRO PRIMERO - Contabilidad */
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, upc.valorComision porcentaje_decimal, (($totalNeto/100)*(upc.valorComision)) comision_total, (upc.valorNeodata) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol4 AS id_rol, (CASE WHEN upc.idUsuario = 45 THEN 'Empresa' WHEN upc.idUsuario = 2 THEN 'Dr. Regional' WHEN upc.idUsuario = 11053 THEN 'Internomex' WHEN upc.idUsuario = 12841 THEN 'Arcus' WHEN pl.id_plan = 66 THEN 'Contabilidad' WHEN pl.id_plan = 70 THEN upc.comentario ELSE 'Influencer' END) detail_rol, (CASE WHEN upc.idUsuario = 2 THEN 1 ELSE 7 END) AS rolVal
+        UNION  /* USUARIOS FIJOS */
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, upc.valorComision porcentaje_decimal, (($totalNeto/100)*(upc.valorComision)) comision_total, (upc.valorNeodata) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, upc.rolComisionista AS id_rol, (CASE WHEN upc.comentario = '' THEN opc.nombre ELSE upc.comentario END) detail_rol, (CASE WHEN upc.idUsuario = 2 THEN 1 ELSE 7 END) AS rolVal
         FROM clientes cA 
         $joinLotes  
-        INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.otro not IN (0)
-        LEFT JOIN usuariosPlanComision upc ON upc.idPlan = pl.id_plan
+        INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision
+        INNER JOIN usuariosPlanComision upc ON upc.idPlan = pl.id_plan
         LEFT JOIN usuarios u1 ON u1.id_usuario = upc.idUsuario
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = upc.rolComisionista AND opc.id_catalogo = 1
         WHERE cA.id_cliente = @idCliente)
@@ -2729,8 +2686,9 @@ class Comisiones_model extends CI_Model {
             $numeroRegionales = $numAsesores;
         }
 
-
-        $fragmento = $plan_comision == 74 ? " " : " u1.id_usuario = v1.id_asesor OR ";
+        $sqlCompartida = $numAsesores > 1 ? "INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1" : "";
+        $sqlNumAsesores = $numAsesores > 1 ? "/@numAsesores" : "";
+        $fragmento = (in_array( $plan_comision, [74,65,66])) || $numAsesores <= 1 ? " " : " u1.id_usuario = v1.id_asesor OR ";
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
 
         SET @idCliente = $clienteData  
@@ -2740,125 +2698,70 @@ class Comisiones_model extends CI_Model {
         SET @numSubdir = $numSubdir 
         SET @numDir =  1
         
-        IF @numAsesores > 1
-        
-            /* ASESORES */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs/@numAsesores porcentaje_decimal, (($totalNeto/100)*(pl.comAs/@numAsesores)) comision_total, (pl.neoAs/@numAsesores) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor AS id_rol,  CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 AS rolVal
-            FROM clientes cA 
-            $joinLotes  
-            INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON $fragmento u1.id_usuario = cA.id_asesor
-            INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.asesor not IN (0) 
-            WHERE cA.id_cliente = @idCliente)
-        
-            UNION  /* COORDINADORES */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-            (pl.comCo/@numAsesores)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
-            (($totalNeto/100)*(pl.comCo/@numAsesores))*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
-            (pl.neoCo/@numAsesores)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.coordinador AS id_rol,  CASE WHEN cA.estructura = 1 THEN 'Líder comercial' ELSE 'Coordinador' END detail_rol, 4 AS rolVal
-            FROM clientes cA 
-            $joinLotes  
-            INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_coordinador OR u1.id_usuario = cA.id_coordinador
-            INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.coordinador not IN (0) 
-            WHERE cA.id_cliente = @idCliente)
-            
-            UNION  /* GERENTES */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-            (pl.comGe/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
-            (($totalNeto/100)*(pl.comGe/@numAsesores))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
-            (pl.neoGe/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente AS id_rol,  CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 AS rolVal  
-            FROM clientes cA 
-            $joinLotes  
-            INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_gerente OR u1.id_usuario = cA.id_gerente
-            INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.gerente not IN (0) 
-            WHERE cA.id_cliente = @idCliente)
-            
-            UNION  /* SUBDIRECTORES */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-            (pl.comSu/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
-            (($totalNeto/100)*(pl.comSu/@numAsesores))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
-            (pl.neoSu/@numAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = 
-            u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector AS id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 AS rolVal  
-            FROM clientes cA 
-            $joinLotes  
-            INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_subdirector OR u1.id_usuario = cA.id_subdirector
-            INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.subdirector not IN (0)
-            WHERE cA.id_cliente = @idCliente)
-
-            UNION  /* REGIONALES */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
-            (pl.comRe/ $numeroRegionales)*
-            ((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
-            (($totalNeto/100)*(pl.comRe/ $numeroRegionales))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
-            (pl.neoRe/ $numeroRegionales)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_regional = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_regional = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector AS id_rol, 'Director Regional' detail_rol, 2 AS rolVal  
-            FROM clientes cA 
-            $joinLotes  
-            INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1
-            INNER JOIN usuarios u1 ON u1.id_usuario = v1.id_regional OR u1.id_usuario = $multiRegional
-            INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.regional not IN (0)
-            WHERE cA.id_cliente = @idCliente)
-        
-            $addCondition
-        
-            ORDER BY rolVal 
-        
-            ELSE  
-        
+                
             /* ASESOR */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs porcentaje_decimal, (($totalNeto/100)*(pl.comAs)) comision_total,
-            (pl.neoAs) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor AS id_rol, 
+            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAs $sqlNumAsesores porcentaje_decimal,
+            (($totalNeto/100)*(pl.comAs $sqlNumAsesores)) comision_total, (pl.neoAs$sqlNumAsesores) porcentaje_neodata,
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor AS id_rol,  
             CASE WHEN cA.estructura = 1 THEN 'Asesor Financiero' ELSE 'Asesor' END detail_rol, 5 AS rolVal
             FROM clientes cA 
             $joinLotes  
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_asesor
+            $sqlCompartida
+            INNER JOIN usuarios u1 ON $fragmento u1.id_usuario = cA.id_asesor
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.asesor not IN (0)
             WHERE cA.id_cliente = @idCliente)
         
             UNION  /* COORDINADOR */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comCo porcentaje_decimal, (($totalNeto/100)*(pl.comCo)) comision_total,
-            (pl.neoCo) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol1 AS id_rol, CASE WHEN cA.estructura = 1 THEN 'Líder comercial' WHEN pl.id_plan = 66 THEN 'Postventa' ELSE 'Coordinador' END detail_rol, 
-            CASE WHEN pl.id_plan = 66 THEN 9 ELSE 4 END rolVal
+            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+            (pl.comCo $sqlNumAsesores)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+            (($totalNeto/100)*(pl.comCo $sqlNumAsesores))*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+            (pl.neoCo $sqlNumAsesores)*((SELECT COUNT(id_coordinador) FROM clientes cD WHERE cD.status = 1 AND cD.id_coordinador = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_coordinador) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_coordinador = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.coordinador AS id_rol,  CASE WHEN cA.estructura = 1 THEN 'Líder comercial' ELSE 'Coordinador' END detail_rol, 4 AS rolVal
             FROM clientes cA 
-            $joinLotes  
+            $joinLotes
+            $sqlCompartida 
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.coordinador not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = $innerCoord
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador
             WHERE cA.id_cliente = @idCliente)
             
             UNION  /* GERENTE */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comGe porcentaje_decimal, (($totalNeto/100)*(pl.comGe)) comision_total,
-            (pl.neoGe) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente AS id_rol, CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 AS rolVal  
+            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+            (pl.comGe $sqlNumAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+            (($totalNeto/100)*(pl.comGe $sqlNumAsesores))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+            (pl.neoGe $sqlNumAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_gerente = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_gerente = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente AS id_rol,  CASE WHEN cA.estructura = 1 THEN 'Embajador' ELSE 'Gerente' END detail_rol, 3 AS rolVal  
             FROM clientes cA 
-            $joinLotes  
+            $joinLotes
+            $sqlCompartida  
             INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.gerente not IN (0)
             WHERE cA.id_cliente = @idCliente)
             
             UNION  /* SUBDIRECTOR */
-            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comSu porcentaje_decimal, (($totalNeto/100)*(pl.comSu)) comision_total,
-            (pl.neoSu) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector AS id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 AS rolVal  
+            (SELECT DISTINCT(u1.id_usuario) AS id_usuario, 
+            (pl.comSu $sqlNumAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_decimal, 
+            (($totalNeto/100)*(pl.comSu $sqlNumAsesores))*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = u1.id_usuario AND vD.id_cliente = @idCliente)) comision_total, 
+            (pl.neoSu $sqlNumAsesores)*((SELECT COUNT(id_gerente) FROM clientes cD WHERE cD.status = 1 AND cD.id_subdirector = u1.id_usuario AND cD.id_cliente = @idCliente)+(SELECT COUNT(id_gerente) FROM ventas_compartidas vD WHERE vD.estatus = 1 AND vD.id_subdirector = 
+            u1.id_usuario AND vD.id_cliente = @idCliente)) porcentaje_neodata, 
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.subdirector AS id_rol, CASE WHEN cA.estructura = 1 THEN 'Subdirector Comercial' ELSE 'Subdirector' END detail_rol, 2 AS rolVal  
             FROM clientes cA 
-            $joinLotes  
+            $joinLotes 
+            $sqlCompartida 
             INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.subdirector not IN (0)
             WHERE cA.id_cliente = @idCliente)
 
             UNION  /* REGIONAL */
             (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comRe porcentaje_decimal, (($totalNeto/100)*(pl.comRe)) comision_total,
-            (pl.neoRe) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, $rol2 AS id_rol, CASE WHEN pl.id_plan = 66 THEN 'TI Comisión' ELSE 'Director Regional' END detail_rol, 
+            (pl.neoRe) porcentaje_neodata, CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.regional AS id_rol, CASE WHEN pl.id_plan = 66 THEN 'TI Comisión' ELSE 'Director Regional' END detail_rol, 
 
             CASE WHEN pl.id_plan = 66 THEN 9 ELSE 2 END rolVal
 
             FROM clientes cA 
-            $joinLotes  
+            $joinLotes
+            $sqlCompartida  
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.regional not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = $innerReg
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_regional
             WHERE cA.id_cliente = @idCliente)
             $addCondition
             ORDER BY rolVal");
