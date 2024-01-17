@@ -523,8 +523,6 @@ class Reestructura extends CI_Controller{
                 array_push($arrayLotesApartado, $arrayLoteApartado);
             }
 
-
-
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
@@ -564,9 +562,6 @@ class Reestructura extends CI_Controller{
 
                 $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
             }
-
-
-
 
             if (!$lotesOrigenUpdated) {
                 $this->db->trans_rollback();
@@ -970,7 +965,6 @@ class Reestructura extends CI_Controller{
                     $total8P = floatval(number_format($total8P, 2, '.', ''));
                 }
             }
-
 
             $validateLote = $this->caja_model_outside->validate($loteAOcupar);
             if ($validateLote == 0) {
@@ -2269,31 +2263,29 @@ class Reestructura extends CI_Controller{
         $idLote = $this->input->post('idLote');
         $id_pxl = $this->input->post('id_pxl');
         $flagFusion = $this->input->post('flagFusion');
-        //$idProyecto = $this->input->post('idProyecto');
 
         $getProyecto = $this->Reestructura_model->getProyectoIdByLote($idLote);
         $idProyecto = $getProyecto[0]['idProyecto'];
 
         if($tipoEstatusRegreso == 1){
             if($idProyecto != 21){
-                $a = 15;
+                $statusLote = 15;
             }
             else{
-                $a = 21;
+                $statusLote = 21;
             }
         }
         else{
             if($idProyecto != 21){
-                $a = 1;;
+                $statusLote = 1;
             }
             else{
-                $a = 21;
+                $statusLote = 21;
             }
-
         }
 
         $dataUpdateLote = array(
-            'idStatusLote' => $a,
+            'idStatusLote' => $statusLote,
             'usuario' => $id_usuario,
             'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
         );
@@ -2422,7 +2414,7 @@ class Reestructura extends CI_Controller{
         $idDocumento = $this->input->post('idDocumento');
         $idCliente = $this->input->post('idCliente');
         $idCondominio = $this->input->post('idCondominio');
-        $idUsuario = $this->session->userdata('id_usuario'); //UN SOLO REGISTRO
+        $idUsuario = $this->session->userdata('id_usuario');
         $nombreResidencial = $this->input->post('nombreResidencial');
         $nombreCondominio = $this->input->post('nombreCondominio');
         $nombreDocumento = $this->input->post('nombreDocumento');

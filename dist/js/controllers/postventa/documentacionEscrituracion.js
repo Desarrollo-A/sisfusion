@@ -41,6 +41,23 @@ $(document).on("click", ".comentariosModel", function (e) {
   $("#titulo_comentarios").append(
     "<h4>Movimientos de Lote: <b>" + lote + "</b></h4>"
   );
+  $.getJSON("getDetalleNota/" + id_solicitud).done(function (data) {
+    if (data != "") {
+      $.each(data, function (i, v) {
+        let fecha_creacion = moment(v.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+        $("#comments-list-asimilados").append(
+          `<div class="col-lg-12" style="padding-left:40px;">
+          <li>
+            <a style="color:${v.color};">${v.nombre}</a>&nbsp;<a style="color:${v.color}" class="float-right"><b>${fecha_creacion}</b></a><p>${v.descripcion}</p></li>
+          </div>`
+        );
+      });
+    } else {
+      $("#comments-list-asimilados").append(
+        `<div class="col-lg-12"><p><i style="color:39A1C0;">No se han encontrado notas</i></p></div>`
+      );
+    }
+  });
 });
 
 function cleanCommentsAsimilados() {
