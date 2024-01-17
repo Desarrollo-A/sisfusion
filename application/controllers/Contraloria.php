@@ -1685,9 +1685,12 @@ class Contraloria extends CI_Controller {
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                 //if (TRUE) {
                     $arcusData = array(
+                        "id" => $this->input->post('id_prospecto'),
                         "propiedadRelacionada" => $idLote,
+                        "fechaDeCompra" => date('Y-m-d'),
+                        "montoDelNegocio" => $totalNeto2,
                         "uid" => $this->input->post('uid'),
-                        "estatus" => 5
+                        "estatus" => 1
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -2076,19 +2079,6 @@ class Contraloria extends CI_Controller {
                     "estatus_validacion" =>0
                 );
                 $this->General_model->addRecord('historial_documento', $insertToData);
-
-                if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-                //if (TRUE) {
-                    $arcusData = array(
-                        "id" => $this->input->post('id'),
-                        "propiedadRelacionada" => $this->input->post('propiedadRelacionada'),
-                        "fechaDeCompra" => $this->input->post('fechaDeCompra'),
-                        "montoDelNegocio" => $this->input->post('montoDelNegocio'),
-                        "uid" => $this->input->post('uid'),
-                        "estatus" => 1
-                    );
-                    $response = $this->arcus->sendLeadInfoRecord($arcusData);
-                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {

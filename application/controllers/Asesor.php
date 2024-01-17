@@ -1004,9 +1004,9 @@ class Asesor extends CI_Controller {
             if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
             //if (TRUE) {
                 $arcusData = array(
-                    "propiedadRelacionada" => $this->input->post('idLote'),
+                    //"propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
-                    "estatus" => "Propiedad apartada"
+                    "etapa" => "Propiedad apartada"
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
