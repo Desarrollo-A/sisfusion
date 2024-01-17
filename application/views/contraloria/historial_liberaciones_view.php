@@ -40,7 +40,6 @@
                         <input type="hidden" id="idProyecto">
                         <input type="hidden" id="nombreLote">
                         <input type="hidden" id="precio">
-                        <input type="hidden" id="tipo_lote">
                         <input type="hidden" id="clausulas">
                         
                         <div class="modal-footer d-flex justify-end">
