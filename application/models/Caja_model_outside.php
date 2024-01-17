@@ -327,9 +327,9 @@
                 $this->db->trans_commit();
                 if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
-                        "propiedadRelacionada" => $row['idLote'],
+                        //"propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
-                        "estatus" => 6
+                        "etapa" => 'No viable'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
