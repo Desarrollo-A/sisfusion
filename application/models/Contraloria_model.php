@@ -280,7 +280,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'), cl.lugar_prospeccion, pr.id_arcus
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'), cl.lugar_prospeccion, pr.id_arcus, pr.id_prospecto
 		ORDER BY l.nombreLote");
         return $query->result();
     }
