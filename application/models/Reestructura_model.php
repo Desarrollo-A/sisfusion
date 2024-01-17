@@ -862,7 +862,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
         CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NUNGUNA PRPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta,
+        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NINGUNA PROPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta,
 		UPPER(ISNULL(CAST(re2.descripcion AS varchar(75)), 'SIN ESPECIFICAR')) nombreResidencial2, ISNULL(co2.nombre, 'SIN ESPECIFICAR') nombreCondominio2, 
         ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLote2, 
         CASE WHEN oxc1.nombre IS NOT NULL THEN oxc1.nombre ELSE CASE WHEN pxl.idLote = pxl.id_lotep THEN 'REESTRUCTURA' ELSE 'REUBICACIÓN' END END tipo_proceso

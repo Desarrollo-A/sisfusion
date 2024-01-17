@@ -496,6 +496,14 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
                 $where = "pr.id_gerente IN ($id_lider, 1916, 11196) AND pr.id_sede IN (10, 8)";
+            else if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
+                $where = "pr.id_gerente IN ($id_lider, 12688) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
+                $where = "pr.id_gerente IN ($id_lider, 560) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
+                $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+                $where = "pr.id_gerente IN ($id_lider, 495) AND pr.id_sede IN (12)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

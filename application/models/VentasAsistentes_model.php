@@ -148,7 +148,19 @@ class VentasAsistentes_model extends CI_Model {
                 } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
-                } else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
+                } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroSede = "";
+				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 }
@@ -345,7 +357,19 @@ class VentasAsistentes_model extends CI_Model {
                 }  else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
-                } else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
+                } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroSede = "";
+				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 }
