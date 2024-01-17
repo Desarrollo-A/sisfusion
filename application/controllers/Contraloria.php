@@ -1003,25 +1003,29 @@ class Contraloria extends CI_Controller {
         $horaActual = date('H:i:s');
         $horaInicio = date("08:00:00");
         $horaFin = date("16:00:00");
+        
         if ($horaActual > $horaInicio and $horaActual < $horaFin) {
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
             $sig_fecha_feriado2 = date('d-m', $hoy_strtotime2);
+
             if ($sig_fecha_dia2 == "Sat" || $sig_fecha_dia2 == "Sun" ||
                 $sig_fecha_feriado2 == "01-01" || $sig_fecha_feriado2 == "06-02" ||
                 $sig_fecha_feriado2 == "20-03" || $sig_fecha_feriado2 == "01-05" ||
                 $sig_fecha_feriado2 == "16-09" || $sig_fecha_feriado2 == "20-11" || $sig_fecha_feriado2 == "19-11" ||
                 $sig_fecha_feriado2 == "25-12") {
-                $fecha = $fechaAccion;
-                $i = 0;
-                while ($i <= 2) {
-                    $hoy_strtotime = strtotime($fecha);
-                    $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-                    $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
-                    $sig_fecha_dia = date('D', $sig_strtotime);
-                    $sig_fecha_feriado = date('d-m', $sig_strtotime);
-                    if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
+                    $fecha = $fechaAccion;
+                    $i = 0;
+                    
+                    while ($i <= 2) {
+                        $hoy_strtotime = strtotime($fecha);
+                        $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+                        $sig_fecha = date("Y-m-d H:i:s", $sig_strtotime);
+                        $sig_fecha_dia = date('D', $sig_strtotime);
+                        $sig_fecha_feriado = date('d-m', $sig_strtotime);
+
+                        if ($sig_fecha_dia == "Sat" || $sig_fecha_dia == "Sun" ||
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
@@ -1033,6 +1037,7 @@ class Contraloria extends CI_Controller {
                     $fecha = $sig_fecha;
                 }
                 $arreglo["fechaVenc"] = $fecha;
+
             } else {
                 $fecha = $fechaAccion;
                 $i = 0;
@@ -1292,7 +1297,7 @@ class Contraloria extends CI_Controller {
                 echo json_encode($data);
                 return;
             }
-        }
+        } 
     }
 
     if (!$this->General_model->insertBatch('historial_lotes', $historialSaltoMovimientos)) {
@@ -1312,7 +1317,6 @@ class Contraloria extends CI_Controller {
     $data['message'] = 'OK';
     echo json_encode($data);
 }
-
 
     public function editar_registro_loteRechazo_contraloria_proceceso6() {
         $idLote=$this->input->post('idLote');
@@ -1336,7 +1340,6 @@ class Contraloria extends CI_Controller {
             $statusContratacion = 1;
             $idMovimiento = 63;
         }
-
 
         $arreglo=array();
         $arreglo["idStatusContratacion"]= $statusContratacion;
@@ -1377,7 +1380,6 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (6. CORRIDA ELABORADA)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso6', [
                 'encabezados' => $encabezados,
@@ -1458,8 +1460,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else{
+                        $sig_fecha_feriado == "25-12") {
+                    }else{
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1481,8 +1483,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else{
+                        $sig_fecha_feriado == "25-12") {
+                    }else{
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1491,7 +1493,7 @@ class Contraloria extends CI_Controller {
                 $arreglo["fechaVenc"]= $fecha;
             }
 
-        }elseif($horaActual < $horaInicio || $horaActual > $horaFin){
+        }else if($horaActual < $horaInicio || $horaActual > $horaFin){
             $fechaAccion = date("Y-m-d H:i:s");
             $hoy_strtotime2 = strtotime($fechaAccion);
             $sig_fecha_dia2 = date('D', $hoy_strtotime2);
@@ -1540,8 +1542,8 @@ class Contraloria extends CI_Controller {
                         $sig_fecha_feriado == "01-01" || $sig_fecha_feriado == "06-02" ||
                         $sig_fecha_feriado == "20-03" || $sig_fecha_feriado == "01-05" ||
                         $sig_fecha_feriado == "16-09" || $sig_fecha_feriado == "20-11" || $sig_fecha_feriado == "19-11" ||
-                        $sig_fecha_feriado == "25-12") {}
-                    else {
+                        $sig_fecha_feriado == "25-12"){
+                    }else {
                         $fecha= $sig_fecha;
                         $i++;
                     }
@@ -1626,7 +1628,7 @@ class Contraloria extends CI_Controller {
     }
 
     public function editar_registro_loteRechazo_contraloria_proceceso5_2() {
-        //phpmailer_lib
+        
         $idLote=$this->input->post('idLote');
         $idCondominio=$this->input->post('idCondominio');
         $nombreLote=$this->input->post('nombreLote');
@@ -1655,42 +1657,6 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
 
-//        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
-//        $lp = $this->Contraloria_model->get_lp($idLote);
-//        $infoCliente = $this->Clientes_model->buscarPorId($idCliente);
-//        $correosEntregar = [];
-//
-//        if(empty($lp)){
-//            $correos = array_unique(explode(',', $datos[0]["correos"]));
-//        } else {
-//            $correos = array_unique(explode(',', $datos[0]["correos"].','.'ejecutivo.mktd@ciudadmaderas.com,cobranza.mktd@ciudadmaderas.com'));
-//        }
-//
-//        foreach($correos as $email)
-//        {
-//            if (trim($email) == 'gustavo.mancilla@ciudadmaderas.com') {
-//                continue;
-//            }
-//            if (trim($email) == '') {
-//                continue;
-//            }
-//            if (trim($email) == 'diego.perez@ciudadmaderas.com') {
-//                array_push($correosEntregar, 'analista.comercial@ciudadmaderas.com');
-//                continue;
-//            }
-//
-//            array_push($correosEntregar, $email);
-//        }
-//
-//        // Validación especial por el ticket 58603
-//        if (in_array(intval($infoCliente->id_gerente), [1904, 1206, 113])) {
-//            array_push($correosEntregar, 'asistente.cdmx13@ciudadmaderas.com');
-//        }
-//        // Validación especial por el ticket 59123
-//        if (intval($infoCliente->id_gerente) === 113) {
-//            array_push($correosEntregar, 'asistente.cdmx19@ciudadmaderas.com');
-//        }
-
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
         $encabezados = [
@@ -1707,7 +1673,6 @@ class Contraloria extends CI_Controller {
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correosEntregar)
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5-2', [
                 'encabezados' => $encabezados,
@@ -1989,7 +1954,6 @@ class Contraloria extends CI_Controller {
                         }
 
                     }
-
                 } else {
                     $data['message'] = 'VOID';
                     echo json_encode($data);
@@ -2141,9 +2105,7 @@ class Contraloria extends CI_Controller {
                 }
                 $arreglo["fechaVenc"]= $fecha;
             }
-
         }
-
 
         $arreglo2=array();
         $arreglo2["idStatusContratacion"]=13;
@@ -2417,7 +2379,6 @@ class Contraloria extends CI_Controller {
         //si es 0: quiere decir que es por los lotes subidos
         //echo 'lotes a actualizar<br>';
 
-
         $array_update = array();
         $array_diferentes = array();
         $valorRepetidomveces = array();
@@ -2461,15 +2422,14 @@ class Contraloria extends CI_Controller {
                         echo json_encode($data);
                     }
                 }
+            break;
 
-                break;
             case 0: //lotes
                 $array_msi = array();
 
                 foreach ($arrayMsi as $index => $result){
                     $array_msi[$index]=$arrayMsi[$index]->MSNI;
                 }
-
 
                 $countedValues = array_count_values($array_msi);
                 $valorRepetidomveces = array_search(max($countedValues), $countedValues);
@@ -2484,7 +2444,6 @@ class Contraloria extends CI_Controller {
 
                 $array_diferentes = json_encode($array_diferentes, JSON_UNESCAPED_SLASHES);
                 $condominioValue = ($typeTranscation == 1) ? '' : '';
-
 
                 $insert_aut = array(
                     //id_autorizacion: AUTO_INCREMENT
@@ -2522,8 +2481,7 @@ class Contraloria extends CI_Controller {
                     $data['message'] = 'ERROR';
                 }
                 echo json_encode($data);
-
-                break;
+            break;
         }
         exit;
     }
@@ -2887,10 +2845,10 @@ class Contraloria extends CI_Controller {
         $id_autorizacion = $this->input->post('id_autorizacion');
         $modo = $this->input->post("modo");
 
-        if($modo==1){//normal
+        if($modo == 1){//normal
             $data = $this->Contraloria_model->getHistorialAutorizacionMSI($id_autorizacion);
         }
-        else if($modo==2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $data = array();
@@ -2946,7 +2904,7 @@ class Contraloria extends CI_Controller {
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
 
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $data_vista = json_decode($data_vista);
@@ -2993,6 +2951,7 @@ class Contraloria extends CI_Controller {
                 "fecha_modificacion" => $fecha_insercion,
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
+
             $data_historial = array(
                 "idAutorizacion"        => $id_autorizacion,
                 "tipo"                  => 2,
@@ -3016,10 +2975,11 @@ class Contraloria extends CI_Controller {
                 $update_lotes = true;
             }
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
             $arrayAutorizaciones= explode(",", $id_autorizacion);
             $fecha_insercion = date('Y-m-d H:i:s');
+
             foreach($arrayAutorizaciones as $id_aut){
                 $data_actualizar = array(
                     "estatus_autorizacion" => $estatus_autorizacion,
@@ -3042,7 +3002,6 @@ class Contraloria extends CI_Controller {
                 $table_historial = 'historial_autorizacionesPMSI';
                 $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
-
 
                 if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
                     $array_update_lotes = $this->actualizaMSI($id_aut, $modo);
@@ -3095,7 +3054,7 @@ class Contraloria extends CI_Controller {
             $updateData = $arrayVista;
             return $updateData;
         }
-        elseif($modo == 2){
+        else if($modo == 2){
             $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
             $idCondominio    = $data_autorizacion[0]['idCondominio'];
             $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
@@ -3113,7 +3072,6 @@ class Contraloria extends CI_Controller {
     public function inventarioComisionistas() {
         $this->load->view('template/header');
         $this->load->view("contraloria/inventarioComisionistas_view");
-
     }
 
     public function getInvientarioComisionista($estatus, $condominio, $proyecto) {
@@ -3138,8 +3096,9 @@ class Contraloria extends CI_Controller {
             $where = $this->input->post("where");
             $data = $this->Contraloria_model->getReporteEscaneos($typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
-        } else
+        } else{
             json_encode(array());
+        }
     }
 
     public function lineaVentaInventario() {
@@ -3167,6 +3126,7 @@ class Contraloria extends CI_Controller {
        
         echo json_encode($data,JSON_NUMERIC_CHECK);
     }
+
     public function allUserVentas()
     {
         $datos = $this->Contraloria_model->allUserVentas();
@@ -3220,9 +3180,9 @@ class Contraloria extends CI_Controller {
 
         $dataToUpdate = array("rl"=> $rl, "modificado_por" => $this->session->userdata('id_usuario'));
         $responseUpdate = $this->General_model->updateRecord("clientes", $dataToUpdate, "idLote", $idLote);
-
-            $data['message'] = 'OK';
-            echo json_encode($data);
+        
+        $data['message'] = 'OK';
+        echo json_encode($data);
     }
 
     public function updateSede()
