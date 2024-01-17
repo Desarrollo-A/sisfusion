@@ -3425,7 +3425,6 @@ class Asesor extends CI_Controller {
                         $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
                 }
                 $data['message'] = 'OK';
-                echo json_encode($data);
             } else {
                 $data['status'] = false;
                 $data['message'] = 'Error al enviar la solicitud.';
