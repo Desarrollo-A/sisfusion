@@ -17,11 +17,11 @@ class Documentacion extends CI_Controller {
     }
     
     public function documentacion() {
-        $datos = [
+        $datos = array(
             'residencial' => $this->Registrolote_modelo->getResidencialQro(),
             'tieneAcciones' => 1,
             'tipoFiltro' => null
-        ];
+        );
 
         $this->load->view('template/header');
         $this->load->view("documentacion/documentacion_view", $datos);
