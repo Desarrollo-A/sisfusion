@@ -604,7 +604,7 @@ function fillDataTable(idCondominio) {
                         buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}" data-idLote="${d.idLote}"> <i class="fas fa-user-check"></i></button>`;
                     }
                     else {
-                        buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo');
+                        buttons = construirBotonEstatus(d, d.fechaVenc, 'getInfo2');
 
                         if(idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && idStatusContratacion === STATUS_CONTRATACION){
                             if (d.id_prospecto == 0 && (d.id_coordinador !== 10807 || d.id_coordinador !== 10806 || d.id_gerente !== 10807 || d.id_gerente !== 10806)) {
