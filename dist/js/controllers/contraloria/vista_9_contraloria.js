@@ -106,7 +106,7 @@ $("#tabla_ingresar_9").ready(function () {
                 if (d.vl == '1')
                     cntActions = 'EN PROCESO DE LIBERACIÓN';
                 else {
-                    cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                    cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idProspecto="${d.id_prospecto} class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                     if (d.tipo_proceso == 'Normal')
                         cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS"><i class="fas fa-thumbs-down"></i></button>`;
                 }
@@ -189,6 +189,7 @@ $("#tabla_ingresar_9").ready(function () {
         getInfo1[7] = $(this).attr("data-code");
         getInfo1[8] = $(this).attr("data-idArcus"); // ID DE ARCUS
         getInfo1[9] = $(this).attr("data-lugarProspeccion"); // LUGAR DE PROSPECCIÓN
+        getInfo1[10] = $(this).attr("data-idProspecto"); // ID PROSPECTO
         nombreLote = $(this).data("nomlote");
         let residencia = $(this).attr("data-residencia") != 1 ? 0 : 1;
         $(".lote").html(nombreLote);
@@ -238,8 +239,8 @@ $(document).on('click', '#save1', function (e) {
 
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
-    dataExp1.append("lugar_prospeccion", getInfo1[9]); // idProspecto
-    dataExp1.append("estatus", 5); // SE CONSUME SERVICIO CUANDO SE REGISTRA ESTATUS 9 (9. Contrato recibido con firma de cliente (Contraloria)) Y SE ENVÍA ID ARCUS
+    dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
+    dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
 
     if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");

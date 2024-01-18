@@ -3444,7 +3444,20 @@
 				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
+				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+					$id_lider = $id_lider . ', 12688';
+					$sede = "";
+				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+					$id_lider = $id_lider . ', 560';
+					$sede = "";
+				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
+					$id_lider = $id_lider . ', 455';
+					$sede = "";
+				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
+					$id_lider = $id_lider . ', 495';
+					$sede = "";
 				}
+
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
                 INNER JOIN clientes ON clientes.idLote = lotes.idLote $sede
 				WHERE (clientes.id_asesor IN ($id_lider) OR 
