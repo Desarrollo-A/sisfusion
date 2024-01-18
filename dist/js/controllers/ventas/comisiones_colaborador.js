@@ -177,7 +177,7 @@ $(document).ready(function () {
         } else if(tipo_usuario == 1){
 
             if (
-                ((mes == 1 && dia == 7)  ||  (mes == 1 && dia == 8 && hora <= fin)) || // ENE 2024 VENTAS
+                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -327,7 +327,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                         ) 
                         || (tipo_usuario == 1 && 
-                            ((mes == 1 && dia == 7)  ||  (mes == 1 && dia == 8 && hora <= fin)) || // ENE 2024 VENTAS
+                            ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
                             ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                             ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                             ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -644,7 +644,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                             ) 
                             || (tipo_usuario == 1 && 
-                                ((mes == 1 && dia == 7)  ||  (mes == 1 && dia == 8 && hora <= fin)) || // ENE 2024 VENTAS
+                                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
                                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -1623,7 +1623,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
             ) 
             || (tipo_usuario == 1 && 
-                ((mes == 1 && dia == 7)  ||  (mes == 1 && dia == 8 && hora <= fin)) || // ENE 2024 VENTAS
+                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
