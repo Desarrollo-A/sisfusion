@@ -214,10 +214,7 @@ $("#acceptModalButton").click(function() {
   let id_usuario_general = $('#id_usuario_general').val();
   let clausulas = $('#clausulas').val();
   
-  if(comentario == ''){
-    alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
-    return;
-  }
+ 
 
   if(id_rol_general == 12){
     if (accion == 3) {
@@ -229,6 +226,10 @@ $("#acceptModalButton").click(function() {
         alerts.showNotification("top", "right", "Elige el motivo de liberación.", "warning");
         return;
       }
+      if(comentario == ''){
+        alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+        return;
+      }
       $.ajax({
         url: general_base_url + 'Contraloria/avance_estatus_liberacion',
         type: 'POST',
@@ -249,16 +250,15 @@ $("#acceptModalButton").click(function() {
         },
         dataType: 'JSON',
         success: function (data) {
-          console.log(data, "datos");
          
-          if(data == 1){
+          if(data == true){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             $("#selLib").val('');
             $("#motLib").val('');
             closeModal();
           }else{
-            alerts.showNotification("top", "right", "5555 Oops, algo salió mal.", "danger");
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -268,6 +268,10 @@ $("#acceptModalButton").click(function() {
       });
     }
     else if (accion == 2){
+      if(comentario == ''){
+        alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+        return;
+      }
       $.ajax({
         url: general_base_url + 'Contraloria/avance_estatus_liberacion',
         type: 'POST',
@@ -288,8 +292,7 @@ $("#acceptModalButton").click(function() {
         },
         dataType: 'JSON',
         success: function (data) {
-
-          if(data == 1){
+          if(data == true){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             closeModal();
@@ -302,12 +305,6 @@ $("#acceptModalButton").click(function() {
         },
         catch: function () {},
       });
-    }else if (!selLib && accion != 2){
-      alerts.showNotification("top", "right", "Elige el tipo de liberación.", "warning");
-    }else if (!motLib && accion != 2){
-      alerts.showNotification("top", "right", "Elige el motivo de la liberación.", "warning");
-    }else if (!comentario) {
-      alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
     }else{
       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
@@ -319,6 +316,10 @@ $("#acceptModalButton").click(function() {
     parseFloat(costoM2,cost);
     
     if (accion == 1) {
+      if(comentario == ''){
+        alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+        return;
+      }
       if(costoM2 != cost) {
         $.ajax({
           url: general_base_url + 'Contraloria/avance_estatus_liberacion',
@@ -341,7 +342,8 @@ $("#acceptModalButton").click(function() {
           },
           dataType: 'JSON', 
           success: function (data)  {
-            if (data == 1) {
+
+            if (data == true) {
               alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
               $("#historialLib").DataTable().ajax.reload();
               closeModal();
@@ -356,7 +358,12 @@ $("#acceptModalButton").click(function() {
       } else if(costoM2 == cost){
         alerts.showNotification("top", "right", "Actualiza el precio para actualizar la liberación.", "warning");
       }
-    }else if(accion == 2){
+    }
+    else if(accion == 2){
+      if(comentario == ''){
+        alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+        return;
+      }
       $.ajax({
         url: general_base_url + 'Contraloria/avance_estatus_liberacion',
         type: 'POST',
@@ -368,7 +375,7 @@ $("#acceptModalButton").click(function() {
         },
         dataType: 'JSON', 
         success: function (data)  {
-          if (data == 1) {
+          if (data == true) {
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             closeModal();
@@ -381,7 +388,7 @@ $("#acceptModalButton").click(function() {
         }
       });
     }else {
-      alerts.showNotification("top", "right", "Oops, algo salió mal5555.", "danger");
+      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
   }
   else {
@@ -397,7 +404,7 @@ $("#acceptModalButton").click(function() {
         },
         dataType: 'JSON',
         success: function (data) {
-          if(data == 1){
+          if(data == true){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             closeModal();
@@ -410,8 +417,6 @@ $("#acceptModalButton").click(function() {
         },
         catch: function () {},
       });
-    }else if (!comentario) {
-      alerts.showNotification("top", "right", "Añada un comentario para actualizar la liberación.", "warning");
     }else{
       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
