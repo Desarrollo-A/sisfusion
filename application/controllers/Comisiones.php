@@ -41,6 +41,7 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $datos["elementos"] = $this->load->view('complementos/estilos_extra');
         $this->load->view('template/header');
         $this->load->view("comisiones/dispersion-view", $datos);
   }
