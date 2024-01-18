@@ -1690,7 +1690,7 @@ class Contraloria extends CI_Controller {
                         "fechaDeCompra" => date('Y-m-d'),
                         "montoDelNegocio" => $totalNeto2,
                         "uid" => $this->input->post('uid'),
-                        "estatus" => 1
+                        "etapa" => 'Contratado'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -3185,7 +3185,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function get_tipo_venta() {
-       
         echo json_encode($this->Contraloria_model->get_tipo_venta()->result_array());
     }
 
@@ -3213,7 +3212,6 @@ class Contraloria extends CI_Controller {
 
     public function avance_estatus_liberacion(){   
 
-        $resultado = 0;
         $accion = $_POST['accion'];
         $rol = $this->session->userdata('id_rol');
         $fecha = date("Y-m-d H:i:s");
@@ -3225,21 +3223,19 @@ class Contraloria extends CI_Controller {
         if ($rol == 33) {
             $data["id_proceso"] = $_POST['accion'] == '1' ? 2 : 0; 
         }
+
         if ($rol == 2) {
             if($accion == 1){  
                 $data["id_proceso"]= 3;
                 $replace = [",","$"];
                 $precio = str_replace($replace,"",$_POST['costoM2']);
-
                 $resultado = $this->actualizar_precio($_POST['idLote'], $precio);
-                // print_r($resultado);
-                // exit;
+                
             }
             else if ($accion == 2){
                $data["id_proceso"] = 1;
-               $resultado == true;
             }
-            print_r($accion);
+            
         }
 
         if ($rol == 12) {
@@ -3261,7 +3257,6 @@ class Contraloria extends CI_Controller {
             }else {
                 $data["id_proceso"] = 2;    
             }
-            print_r($accion);
         }
         
         $data["proceso_realizado"] = $_POST['accion'] == '2' ? 1 : 0;
@@ -3270,8 +3265,8 @@ class Contraloria extends CI_Controller {
         $data["modificado_por"] = $this->session->userdata('id_usuario');
         $data["fecha_modificacion"] = $fecha;
         $resultado = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-        
-        // echo json_encode($resultado);
+
+        echo json_encode($resultado);
     }
 
     public function actualizar_precio($idLote, $precio){       

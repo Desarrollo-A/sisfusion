@@ -128,93 +128,93 @@ $(document).on("submit", "#cpForm", function (e) {
     });
 });
 
-$(document).ready(function () {
-    $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#proyecto_wp").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#proyecto_wp").selectpicker('refresh');
-    }, 'json');
-    var hoy = new Date(fechaServer);
-    var dia = hoy.getDate();
-    var mes = hoy.getMonth() + 1;
-    var hora = hoy.getHours();
+// $(document).ready(function () {
+//     $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
+//         var len = data.length;
+//         for (var i = 0; i < len; i++) {
+//             var id = data[i]['idResidencial'];
+//             var name = data[i]['descripcion'];
+//             $("#proyecto_wp").append($('<option>').val(id).text(name.toUpperCase()));
+//         }
+//         $("#proyecto_wp").selectpicker('refresh');
+//     }, 'json');
+//     var hoy = new Date(fechaServer);
+//     var dia = hoy.getDate();
+//     var mes = hoy.getMonth() + 1;
+//     var hora = hoy.getHours();
 
-    if(forma_pago == 3){
-        if(tipo_usuario == 2){
-            if (
-                (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-                ) {
-                requestCodigoPostal();
-            }
+//     if(forma_pago == 3){
+//         if(tipo_usuario == 2){
+//             if (
+//                 (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
+//                         ||(mes == 1 && dia == 15) || (mes == 1 && dia == 15) // ENE 2024 OOAM QUINCENAL
+//                         ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
+//                         ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
+//                         ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
+//                         ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
+//                         ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
+//                         ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
+//                         ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
+//                         ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
+//                         ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
+//                         ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
+//                         ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
+//                         ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
+//                         ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
+//                         ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
+//                         ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
+//                         ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
+//                         ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
+//                         ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
+//                         ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
+//                         ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
+//                         ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
+//                 // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
+//                 ) {
+//                 requestCodigoPostal();
+//             }
 
-        } else if(tipo_usuario == 1){
+//         } else if(tipo_usuario == 1){
 
-            if (
-                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
-                ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
-                ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                ) {
-                requestCodigoPostal();
-            }
-        }
+//             if (
+//                 ((mes == 1 && dia == 15)  ||  (mes == 1 && dia == 15 && hora <= fin)) || // ENE 2024 VENTAS
+//                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
+//                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
+//                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
+//                 ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
+//                 ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
+//                 ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
+//                 ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
+//                 ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
+//                 ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
+//                 ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
+//                 ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
+//                 ) {
+//                 requestCodigoPostal();
+//             }
+//         }
 
-    }
+//     }
 
-});
+// });
 
 $('#proyecto_wp').change(function () {
     $('#boxTablaComisionesSinPago').removeClass('hide');
     index_proyecto = $(this).val();
     index_condominio = 0
     $("#condominio_wp").html("");
-    $(document).ready(function () {
-        $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
-            var len = data.length;
-            $("#condominio_wp").append($('<option disabled selected>Selecciona una opción</option>'));
-            for (var i = 0; i < len; i++) {
-                var id = data[i]['idCondominio'];
-                var name = data[i]['nombre'];
-                $("#condominio_wp").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#condominio_wp").selectpicker('refresh');
-        }, 'json');
-    });
+    // $(document).ready(function () {
+    //     $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
+    //         var len = data.length;
+    //         $("#condominio_wp").append($('<option disabled selected>Selecciona una opción</option>'));
+    //         for (var i = 0; i < len; i++) {
+    //             var id = data[i]['idCondominio'];
+    //             var name = data[i]['nombre'];
+    //             $("#condominio_wp").append($('<option>').val(id).text(name.toUpperCase()));
+    //         }
+    //         $("#condominio_wp").selectpicker('refresh');
+    //     }, 'json');
+    // });
     // SE MANDA LLAMAR FUNCTION QUE LLENA LA DATA TABLE DE COMISINONES SIN PAGO EN NEODATA
     if (id_rol_general != 2 && id_rol_general != 3 && id_rol_general != 13 && id_rol_general != 32 && id_rol_general != 17) { // SÓLO MANDA LA PETICIÓN SINO ES SUBDIRECTOR O GERENTE
         fillCommissionTableWithoutPayment(index_proyecto, index_condominio);
@@ -230,12 +230,13 @@ $('#condominio_wp').change(function () {
 
 var totaPen = 0;
 var tr;
-$("#tabla_nuevas_comisiones").ready(function () {
-    asignarValorColumnasDT("tabla_nuevas_comisiones");
-    $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
+ function tabla_nuevas_comisiones1()  {
+  
+    asignarValorColumnasDT("tabla_nuevas_comisiones1");
+    $('#tabla_nuevas_comisiones1 thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
-        columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
-        columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+        columnas_datatable.tabla_nuevas_comisiones1.titulos_encabezados.push(title);
+        columnas_datatable.tabla_nuevas_comisiones1.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones1.titulos_encabezados.length-1);
         let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
         if (title !== '') {
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_nuevas" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
@@ -258,7 +259,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
         }
     });
-    $('#tabla_nuevas_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
+    $('#tabla_nuevas_comisiones1').on('xhr.dt', function (e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function (i, v) {
             total += parseFloat(v.pago_cliente);
@@ -267,7 +268,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         document.getElementById("myText_nuevas").textContent = to;
     });
     let boton_sol_pago = (forma_pago != 2) ? '' : 'hidden';
-    tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
+    tabla_nuevas = $("#tabla_nuevas_comisiones1").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -281,7 +282,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 columns: [1,2,3,4,5,6,7,8,9,10,11],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_nuevas_comisiones1.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -327,7 +328,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                         ) 
                         || (tipo_usuario == 1 && 
-                            ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
+                            ((mes == 1 && dia == 15)  ||  (mes == 1 && dia == 16 && hora <= fin)) || // ENE 2024 VENTAS
                             ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                             ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                             ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -644,7 +645,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
                             ) 
                             || (tipo_usuario == 1 && 
-                                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
+                                ((mes == 1 && dia == 15)  ||  (mes == 1 && dia == 16 && hora <= fin)) || // ENE 2024 VENTAS
                                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -695,19 +696,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     }
                 },
             }],
-        ajax: {
-            "url": general_base_url + "Comisiones/getDatosComisionesAsesor/" + 1,
+            info: false,
+            data: JSON.stringify(Array_Datos_Consulta_COMPLETA),
             "type": "POST",
             cache: false,
-            "data": function (d) { }
-        },
+    
         initComplete: function () {
             $('[data-toggle="tooltip_nuevas"]').tooltip("destroy");
             $('[data-toggle="tooltip_nuevas"]').tooltip({ trigger: "hover" });
         }
     });
 
-    $('#tabla_nuevas_comisiones').on('click', 'input', function () {
+    $('#tabla_nuevas_comisiones1').on('click', 'input', function () {
         tr = $(this).closest('tr');
         var row = tabla_nuevas.row(tr).data();
         if (row.pa == 0) {
@@ -722,7 +722,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         $("#totpagarPen").html(formatMoney(totaPen));
     });
 
-    $("#tabla_nuevas_comisiones tbody").on("click", ".consultar_logs_nuevas", function (e) {
+    $("#tabla_nuevas_comisiones1 tbody").on("click", ".consultar_logs_nuevas", function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
@@ -735,11 +735,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
             });
         });
     });
-});
+}
 //FIN TABLA NUEVA
 
 // INICIO TABLA EN PROCESO
-$("#tabla_revision_comisiones").ready(function () {
+function tabla_revision_comisiones()  {
+//$("#tabla_revision_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_revision_comisiones");
     $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -937,11 +938,12 @@ $("#tabla_revision_comisiones").ready(function () {
             });
         });
     });
-});
+}
 // FIN TABLA PROCESO
 
 // INICIO TABLA INTERNOMEX
-$("#tabla_pagadas_comisiones").ready(function () {
+function tabla_pagadas_comisiones()  {
+//$("#tabla_pagadas_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_pagadas_comisiones");
     $('#tabla_pagadas_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -1137,11 +1139,12 @@ $("#tabla_pagadas_comisiones").ready(function () {
             });
         });
     });
-});
+}
 // FIN TABLA internomex
 
 // INICIO TABLA OTRAS
-$("#tabla_otras_comisiones").ready(function () {
+function tabla_otras_comisiones()  {
+//$("#tabla_otras_comisiones").ready(function () {
     asignarValorColumnasDT("tabla_otras_comisiones");
     $('#tabla_otras_comisiones thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
@@ -1338,7 +1341,7 @@ $("#tabla_otras_comisiones").ready(function () {
             });
         });
     });
-});
+}
 // FIN TABLA PAGADAS
 
 let titulos = [];
@@ -1368,7 +1371,7 @@ function fillCommissionTableWithoutPayment(proyecto, condominio) {
                 columns: [0,1,2,3,4,5,6,7,8],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados[columnIdx] + ' ';
+                        return ' ' + columnas_datatable.tabla_nuevas_comisiones1.titulos_encabezados[columnIdx] + ' ';
                     }
                 }
             },
@@ -1608,33 +1611,22 @@ $(document).on("click", ".subir_factura_multiple", function() {
 
     if(
         (tipo_usuario == 2 && 
-            (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                        // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
+            (mes == 12 && dia == 22)//DES-HABILITAR EN 2024
+            ||(mes == 1 && dia == 9) || (mes == 1 && dia == 23) // ENE 2024 OOAM QUINCENAL
+            ||(mes == 2 && dia == 6) || (mes == 2 && dia == 20) // FEB 2024 OOAM QUINCENAL
+            ||(mes == 3 && dia == 12) || (mes == 3 && dia == 16) // MAR 2024 OOAM QUINCENAL
+            ||(mes == 4 && dia == 9) || (mes == 4 && dia == 23) // ABR 2024 OOAM QUINCENAL
+            ||(mes == 5 && dia == 14) || (mes == 5 && dia == 28) // MAY 2024 OOAM QUINCENAL
+            ||(mes == 6 && dia == 11) || (mes == 6 && dia == 25) // JUN 2024 OOAM QUINCENAL
+            ||(mes == 7 && dia == 9) || (mes == 7 && dia == 23) // JUL 2024 OOAM QUINCENAL
+            ||(mes == 8 && dia == 13) || (mes == 8 && dia == 27) // AGO 2024 OOAM QUINCENAL
+            ||(mes == 9 && dia == 10) || (mes == 9 && dia == 24) // SEP 2024 OOAM QUINCENAL
+            ||(mes == 10 && dia == 8) || (mes == 10 && dia == 22) // OCT 2024 OOAM QUINCENAL
+            ||(mes == 11 && dia == 12) || (mes == 11 && dia == 26) // NOV 2024 OOAM QUINCENAL
+            // (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
             ) 
             || (tipo_usuario == 1 && 
-                ((mes == 1 && dia == 11)  ||  (mes == 1 && dia == 12 && hora <= fin)) || // ENE 2024 VENTAS
+                ((mes == 1 && dia == 15)  ||  (mes == 1 && dia == 16 && hora <= fin)) || // ENE 2024 VENTAS
                 ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
@@ -2152,11 +2144,313 @@ function selectAll(e) {
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     $($.fn.dataTable.tables(true)).DataTable()
-        .columns.adjust();
+        .columns.adjust(); 
 });
 
-function asignarValorColumnasDT(nombre_datatable) {
+function asignarValorColumnasDT(nombre_datatable) { 
     if(!columnas_datatable[`${nombre_datatable}`]) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
 }
+
+
+
+// INICIO Restructura de codigo 
+var Array_Datos_Consulta_COMPLETA= new Array; ///contiene toda la data de la bajada
+var Array_Datos_Consulta_NUEVAS = new Array; /// CONTIENE TODOS LOS ESTATUS 1
+var Array_Datos_Consulta_REVISION = new Array; /// cONTIENE REVISION 4
+var Array_Datos_Consulta_OTRAS = new Array; /// CONTIENE ESTATUS 6
+var Array_Datos_Consulta_8 = new Array; //Contiene el estatus 8
+var nombreTabla = ''
+
+$(document).ready(function () {
+    nombreTabla = 'tabla_nuevas_comisiones';
+    peticionDataTable(nombreTabla)
+
+}); 
+
+    function llenado(nombreTabla){
+
+        Array_Datos_Consulta_COMPLETA.forEach(elemento  => {
+        
+            //  Array_Datos_Consulta_COMPLETA.push(elemento.estatus[index])
+        });
+        Array_Datos_Consulta_OTRAS = Array_Datos_Consulta_COMPLETA.map(function(element){
+            if(element.estatus == 4){
+                return element['Revision'] ;
+            }else if(element.estatus == 1){
+                return element['Nuevas'] ;
+            }
+        });
+        console.log(Array_Datos_Consulta_COMPLETA[0].estatus)
+    ///    self: this.currentUser === user.id
+
+        Array_Datos_Consulta_NUEVAS = Array_Datos_Consulta_COMPLETA.map((data, i) => 
+        ({ 
+            
+            "NUEVAS":   Array_Datos_Consulta_COMPLETA[i].estatus == 4 ? this.Array_Datos_Consulta_NUEVAS[i].self : '' 
+            
+        })
+        //   if(data[i].estatus == 4){}
+        )
+
+                
+        console.log(Array_Datos_Consulta_NUEVAS);
+            //llenadoTablaNuevas(nombreTabla);
+    }
+
+
+    function llenadoTablaNuevas(nombreTabla){
+        $('#spiner-loader').addClass('hide');
+
+        asignarValorColumnasDT("nombreTabla");
+        $('#'+nombreTabla+' thead tr:eq(0) th').each(function (i) {
+            var title = $(this).text();
+            columnas_datatable.nombreTabla.titulos_encabezados.push(title);
+            columnas_datatable.nombreTabla.num_encabezados.push(columnas_datatable.nombreTabla.titulos_encabezados.length-1);
+            let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+            if (title !== '') {
+                $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_nuevas" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
+                $('input', this).on('keyup change', function () {
+                    if (tabla_nuevas.column(i).search() !== this.value) {
+                        tabla_nuevas.column(i).search(this.value).draw();
+                        var total = 0;
+                        var index = tabla_nuevas.rows({
+                            selected: true,
+                            search: 'applied'
+                        }).indexes();
+                        var data = tabla_nuevas.rows(index).data();
+                        $.each(data, function (i, v) {
+                            total += parseFloat(v.pago_cliente);
+                        });
+                        document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
+                    }
+                });
+            } else {
+                $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
+            }
+        });
+        $('#'+nombreTabla).on('xhr.dt', function (e, settings, json, xhr) {
+            var total = 0;
+            $.each(json.data, function (i, v) {
+                total += parseFloat(v.pago_cliente);
+            });
+            var to = formatMoney(total);
+            document.getElementById("myText_nuevas").textContent = to;
+        });
+        tabla_nuevas = $("#"+nombreTabla).DataTable({
+            dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+            width: '100%',
+            scrollX: true,
+            language: {
+                url: `${general_base_url}static/spanishLoader_v2.json`,
+                paginate: {
+                    previous: "<i class='fa fa-angle-left'>",
+                    next: "<i class='fa fa-angle-right'>"
+                }
+            },
+            pagingType: "full_numbers",
+            fixedHeader: true,
+            destroy: true,
+            ordering: false,
+            columns: [{
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">' + d.id_pago_i + '</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">' + d.proyecto + '</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.lote + '</b></p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
+                }
+            },
+            {
+                "data": function (d) {
+                    return '<p class="m-0"><b>' + d.porcentaje_decimal + '%</b> de ' + d.porcentaje_abono + '% GENERAL </p>';
+                }
+            },
+            {
+                "data": function( d ){
+                    var lblPenalizacion = '';
+    
+                    if (d.penalizacion == 1){
+                        lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 DÍAS"><span class="label lbl-vividOrange"> + 90 DÍAS</span></p>';
+                    }
+    
+                    if(d.bonificacion >= 1){
+                        p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-darkPink"">BON. $ '+formatMoney(d.bonificacion)+'</span></p>';
+                    }
+                    else{
+                        p1 = '';
+                    }
+    
+                    if(d.lugar_prospeccion == 0){
+                        p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">RECISIÓN</span></p>';
+                    }
+                    else{
+                        p2 = '';
+                    }
+    
+                    if(d.id_cliente_reubicacion_2 != 0 ) {
+                        p3 = `<p class="${d.colorProcesoCl}">${d.procesoCl}</p>`;
+                    }else{
+                        p3 = '';
+                    }
+    
+                    return p1 + p2 + lblPenalizacion + p3;
+                }
+            },
+            {
+                "data": function (d) {
+                    switch (d.forma_pago) {
+                        case '1': //SIN DEFINIR
+                        case 1: //SIN DEFINIr
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue">
+                                            SIN DEFINIR FORMA DE PAGO
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span class="label lbl-green">
+                                            REVISAR CON RH
+                                        </span>
+                                    </p>`.split("\n").join("").split("  ").join("");
+                        case '2': //FACTURA
+                        case 2: //FACTURA
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue">
+                                            FACTURA
+                                        </span>
+                                    </p>
+                                    <p style="font-size: .5em">
+                                        <span class="label lbl-green">
+                                            SUBIR XML
+                                        </span>
+                                    </p>`.split("\n").join("").split("  ").join("");
+                        case '3': //ASIMILADOS
+                        case 3: //ASIMILADOS
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue" >
+                                            ASIMILADOS 
+                                        </span>
+                                    </p>
+                                    <p style="font-size: .5em">
+                                        <span class="label lbl-green">
+                                            LISTA PARA APROBAR
+                                        </span>
+                                    </p>`.split("\n").join("").split("  ").join("");
+                        case '4': //RD
+                        case 4: //RD
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue">
+                                            REMANENTE DIST.
+                                        </span>
+                                    </p>
+                                    <p style="font-size: .5em">
+                                        <span class="label lbl-green">
+                                            LISTA PARA APROBAR
+                                        </span>
+                                    </p>`.split("\n").join("").split("  ").join("");
+                        case '5':
+                        case 5:
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                                    </p>
+                            `;
+                        default:
+                            return `<p class="mb-1">
+                                        <span class="label lbl-dark-blue">
+                                            DOCUMENTACIÓN FALTANTE
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <span class="label lbl-green">
+                                            REVISAR CON RH
+                                        </span>
+                                    </p>`.split("\n").join("").split("  ").join("");
+                    }
+                }
+            },
+            {
+                "orderable": false,
+                "data": function (data) {
+                    return `<div class="d-flex justify-center">
+                                <button href="#" 
+                                        value="${data.id_pago_i}"
+                                        data-value="${data.lote}"
+                                        data-code="${data.cbbtton}"
+                                        class="btn-data btn-blueMaderas consultar_logs_nuevas" 
+                                        title="DETALLES"
+                                        data-toggle="tooltip_nuevas" 
+                                        data-placement="top">
+                                    <i class="fas fa-info"></i>
+                                </button>
+                            </div>`;
+                }
+            }],
+            columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets: 0,
+                    searchable: false,
+                    className: 'dt-body-center',
+                }],
+                info: false,
+                data:Array_Datos_Consulta_COMPLETA,
+                "type": "POST",
+                cache: false,
+        
+        });
+        // llenadoTablaNuevas(data);
+        // Array_Datos_Consulta_COMPLETA.push(data.Datos)
+        // llenado(Array_Datos_Consulta_COMPLETA)
+    }
+
+
+
+    function peticionDataTable(NombreTabla){
+        $.ajax({
+            url: 'getDatosComisionesAsesor',
+            type: 'post',
+            dataType: 'JSON',
+            success: function (INFORMACION) {
+                Array_Datos_Consulta_COMPLETA = INFORMACION;
+                $('#spiner-loader').removeClass('hide');
+                nombreTabla = 'tabla_nuevas_comisiones';
+                llenado(nombreTabla)
+    
+            }
+        });
+    }
+//Fin de RESTRUCTURA 
