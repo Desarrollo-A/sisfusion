@@ -18,7 +18,7 @@ class Incidencias extends CI_Controller
         $this->load->model('Incidencias_model');
         $this->load->model('PagoInvoice_model');
         $this->load->model('General_model');
-        $this->load->model('reporteContratacion_model');
+        $this->load->model('ReporteContratacion_model');
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','phpmailer_lib','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');

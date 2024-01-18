@@ -17,7 +17,7 @@ class Comisiones extends CI_Controller
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
     $this->load->model('Pagos_model');
-    $this->load->model('reporteContratacion_model');
+    $this->load->model('ReporteContratacion_model');
     
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
@@ -3130,12 +3130,12 @@ class Comisiones extends CI_Controller
   public function comisiones_reporteDatos(){
     $beginDate = $this->input->post('beginDate');
     $endDate = $this->input->post('endDate');
-    $data['data']=$this->reporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
+    $data['data']=$this->ReporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
     echo json_encode($data);
   }
 
   public function usuarios_rol_7(){
-    $result=$this->reporteContratacion_model->usuarios_rol_7();
+    $result=$this->ReporteContratacion_model->usuarios_rol_7();
     echo json_encode($result);
   }
   
