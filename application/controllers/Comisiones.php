@@ -41,6 +41,7 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $datos["elementos"] = $this->load->view('complementos/estilos_extra');
         $this->load->view('template/header');
         $this->load->view("comisiones/dispersion-view", $datos);
   }
@@ -294,12 +295,12 @@ class Comisiones extends CI_Controller
       case '1':
       case '2':
         if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
-          $this->load->view("ventas/comisiones_colaborador", $datos);
+          $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
         else
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
-        $this->load->view("ventas/comisiones_colaborador", $datos);
+        $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
@@ -328,12 +329,17 @@ class Comisiones extends CI_Controller
     echo json_encode( $datos );
   }
 
-  public function getDatosComisionesAsesor($a){
-    $dat =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
-    for ($i = 0; $i < count($dat); $i++) {
-      $dat[$i]['pa'] = 0;
-    }
-    echo json_encode(array("data" => $dat));
+  public function getDatosComisionesAsesor($a = ''){
+    $respuesta =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
+    // echo json_encode($respuesta["Datos"][0]["estatus"]) ;
+
+      
+      
+    
+      for ($i = 0; $i < count($respuesta); $i++) {
+        $respuesta[$i]['pa'] = 0;
+      }   
+    echo json_encode($respuesta);
   }
 
   public function getDatosComisionesAsesorBaja($a){

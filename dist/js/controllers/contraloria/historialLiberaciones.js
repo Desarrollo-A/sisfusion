@@ -134,8 +134,8 @@ $("#historialLib").ready(function () {
           if(id_rol_general == 12)
           {
             if (d.id_proceso == 3) {
-              btns += `<button type="button" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" id="aceptarButton" title="APROBAR" onclick="fillModal(3,  ${d.idLote}, ${d.id_tipo_liberacion}, ${d.idCondominio}, ${d.idResidencial}, '${d.nombreLote}', ${d.precio}, ${d.tipo_lote}, '${d.clausulas}')"><i class="fas fa-check"></i></button>
-              <button type="button" class="btn-data btn-warning" data-toggle="tooltip"  data-placement="left" title="RECHAZAR" onclick="fillModal(2, ${d.idLote}, ${d.id_tipo_liberacion},0,0,0,0,0,0)"> <i class="fas fa-times"></i></button>`
+              btns += `<button type="button" class="btn-data btn-green" data-toggle="tooltip" data-placement="left" id="aceptarButton" title="APROBAR" onclick="fillModal(3,  ${d.idLote}, ${d.id_tipo_liberacion}, ${d.idCondominio}, ${d.idResidencial}, '${d.nombreLote}', ${d.precio}, '${d.clausulas}')"><i class="fas fa-check"></i></button>
+              <button type="button" class="btn-data btn-warning" data-toggle="tooltip"  data-placement="left" title="RECHAZAR" onclick="fillModal(2, ${d.idLote}, ${d.id_tipo_liberacion},0,0,0,0,0)"> <i class="fas fa-times"></i></button>`
             }
             btns += '<button type="button" class="btn-data btn-blueMaderas" data-toggle="tooltip"  data-placement="left" title="HISTORIAL" onclick="openHistorialModal('+d.idLote+')"> <i class="fas fa-history"></i></button>';
             if(d.id_tipo_liberacion == 1 ){
@@ -212,11 +212,23 @@ $("#acceptModalButton").click(function() {
   let selLib = $('#selLib').val(); 
   let motLib = $('#motLib').val();
   let id_usuario_general = $('#id_usuario_general').val();
-  let tipo_lote = $('#tipo_lote').val();
   let clausulas = $('#clausulas').val();
-    
+  
+  if(comentario == ''){
+    alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+    return;
+  }
+
   if(id_rol_general == 12){
-    if (comentario && accion && (selLib || accion ==2) && (motLib || accion ==2)) {
+    if (accion == 3) {
+      if(selLib == ''){
+        alerts.showNotification("top", "right", "Elige el tipo de liberación.", "warning");
+        return;
+      }
+      if(motLib == ''){
+        alerts.showNotification("top", "right", "Elige el motivo de liberación.", "warning");
+        return;
+      }
       $.ajax({
         url: general_base_url + 'Contraloria/avance_estatus_liberacion',
         type: 'POST',
@@ -233,18 +245,53 @@ $("#acceptModalButton").click(function() {
           "tipo": motLib,
           "nombreLote": nombreLote, 
           "precio": precio, 
-          "tipo_lote": tipo_lote,
           "clausulas": clausulas
         },
         dataType: 'JSON',
         success: function (data) {
-          data=JSON.parse(data);  
+          console.log(data, "datos");
          
-          if(data == true){
+          if(data == 1){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             $("#selLib").val('');
             $("#motLib").val('');
+            closeModal();
+          }else{
+            alerts.showNotification("top", "right", "5555 Oops, algo salió mal.", "danger");
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.error('Error:', jqXHR.status, errorThrown);
+        },
+        catch: function () {},
+      });
+    }
+    else if (accion == 2){
+      $.ajax({
+        url: general_base_url + 'Contraloria/avance_estatus_liberacion',
+        type: 'POST',
+        data: {
+          "idLote": idLote, 
+          "accion": accion, 
+          "idLiberacion": idLiberacion, 
+          "comentario": comentario, 
+          "activeLE": selLib == 7 ? true : false,
+          "activeLP": selLib == 1 ? true : false,
+          "id_proy": idProyecto, 
+          "idCondominio": idCondominio, 
+          "id_usuario": id_usuario_general, 
+          "tipo": motLib,
+          "nombreLote": nombreLote, 
+          "precio": precio, 
+          "clausulas": clausulas
+        },
+        dataType: 'JSON',
+        success: function (data) {
+
+          if(data == 1){
+            alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
+            $("#historialLib").DataTable().ajax.reload();
             closeModal();
           }else{
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -264,14 +311,15 @@ $("#acceptModalButton").click(function() {
     }else{
       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
-  }else if (id_rol_general == 2) {
+  }
+  
+  else if (id_rol_general == 2) {
     let costoM2 = $('#costoM2').val().replace('$', '').replace(',', '');
     let cost = $('#cost').val().replace('$', '').replace(',', '');
     parseFloat(costoM2,cost);
     
-    if (comentario && accion && costoM2) {
-      if(costoM2 != cost) 
-      {
+    if (accion == 1) {
+      if(costoM2 != cost) {
         $.ajax({
           url: general_base_url + 'Contraloria/avance_estatus_liberacion',
           type: 'POST',
@@ -289,13 +337,11 @@ $("#acceptModalButton").click(function() {
             "nombreLote": nombreLote,
             "precio": precio,
             "costoM2": costoM2,
-            "tipo_lote": tipo_lote,
             "clausulas": clausulas
           },
           dataType: 'JSON', 
-          success: function (data) {
-            
-            if (data) {
+          success: function (data)  {
+            if (data == 1) {
               alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
               $("#historialLib").DataTable().ajax.reload();
               closeModal();
@@ -310,12 +356,35 @@ $("#acceptModalButton").click(function() {
       } else if(costoM2 == cost){
         alerts.showNotification("top", "right", "Actualiza el precio para actualizar la liberación.", "warning");
       }
-    } else if (!comentario) {
-      alerts.showNotification("top", "right", "Añada un comentario para actualizar la liberación.", "warning");
-    } else {
-      alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }else if(accion == 2){
+      $.ajax({
+        url: general_base_url + 'Contraloria/avance_estatus_liberacion',
+        type: 'POST',
+        data: {
+          "idLote": idLote,
+          "accion": accion,
+          "idLiberacion": idLiberacion,
+          "comentario": comentario
+        },
+        dataType: 'JSON', 
+        success: function (data)  {
+          if (data == 1) {
+            alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
+            $("#historialLib").DataTable().ajax.reload();
+            closeModal();
+          } else {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.error('Error:', jqXHR.status, errorThrown);
+        }
+      });
+    }else {
+      alerts.showNotification("top", "right", "Oops, algo salió mal5555.", "danger");
     }
-  }else {
+  }
+  else {
     if (comentario && accion) {
       $.ajax({
         url: general_base_url + 'Contraloria/avance_estatus_liberacion',
@@ -324,23 +393,11 @@ $("#acceptModalButton").click(function() {
           "idLote": idLote, 
           "accion": accion, 
           "idLiberacion": idLiberacion, 
-          "comentario": comentario, 
-          "activeLE": selLib == 2 ? true : false,
-          "activeLP": selLib == 1 ? true : false,
-          "id_proy": idProyecto, 
-          "idCondominio": idCondominio, 
-          "id_usuario": id_usuario_general, 
-          "tipo": motLib,
-          "nombreLote": nombreLote, 
-          "precio": precio, 
-          "tipo_lote": tipo_lote,
-          "clausulas": clausulas
+          "comentario": comentario 
         },
         dataType: 'JSON',
         success: function (data) {
-          data=JSON.parse(data);
-          
-          if(data == true){
+          if(data == 1){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
             closeModal();
@@ -351,7 +408,7 @@ $("#acceptModalButton").click(function() {
         error: function(jqXHR, textStatus, errorThrown) {
           console.error('Error:', jqXHR.status, errorThrown);
         },
-        catch: function (c) {},
+        catch: function () {},
       });
     }else if (!comentario) {
       alerts.showNotification("top", "right", "Añada un comentario para actualizar la liberación.", "warning");
@@ -399,7 +456,7 @@ function fillChangelog (i, v) {
     '</li>');
 }
 
-function fillModal(accion, idLote, tipoLiberacion, idCondominio, idProyecto, nombreLote, precio, tipo_lote='', clausulas='') {
+function fillModal(accion, idLote, tipoLiberacion, idCondominio, idProyecto, nombreLote, precio,clausulas='') {
   let modalTitle = document.getElementById("modal-title");
   let modalContent = document.getElementById("contenido");  
   $('#idlote').val(idLote);
@@ -409,7 +466,6 @@ function fillModal(accion, idLote, tipoLiberacion, idCondominio, idProyecto, nom
   $('#idProyecto').val(idProyecto);
   $('#nombreLote').val(nombreLote);
   $('#precio').val(precio); 
-  $('#tipo_lote').val(tipo_lote);
   $('#clausulas').val(clausulas);
   let picker = document.getElementById("contenidoTip");
   let pickerb = document.getElementById("contenidoMot");
@@ -432,7 +488,8 @@ function fillModal(accion, idLote, tipoLiberacion, idCondominio, idProyecto, nom
     costoM2.value = `${formatMoney(precio)}`;    
     
     $('#modalGeneral').modal('show');
-  }else{
+  }
+  else{
     modalTitle.innerHTML = "<b>¿Estás seguro de validar la liberación?</b>";
     modalContent.innerHTML= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>"+
     "<label class='control-label'>Comentarios (<span class='isRequired'>*</span>)</label>"+

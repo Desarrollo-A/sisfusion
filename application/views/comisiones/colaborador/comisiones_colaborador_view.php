@@ -5,27 +5,9 @@
 
 <style type="text/css">    
 
-{
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-*:focus {
-  outline: none;
-}
 
 
 
-#app-cover {
-  display: table;
-  width: 600px;
-  margin: 80px auto;
-  counter-reset: button-counter;
-}
-
-.row {
-  display: table-row;
-}
 
 .toggle-button-cover {
   display: table-cell;
@@ -725,5 +707,5 @@
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/comisiones/colaborador/comisiones_colaborador.js"></script>
 </body>
