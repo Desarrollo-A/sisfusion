@@ -1977,6 +1977,9 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
         contentType: false,
         processData: false,
         type: "POST",
+        beforeSend:function(){
+            $('#spiner-loader').removeClass('hide');
+        },
         success: function (response) {
             response = JSON.parse(response);
 
@@ -1988,6 +1991,9 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
             }
             else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+
+
+            $('#spiner-loader').addClass('hide');
         },
         error: function () {
             $("#deshacerReestrucuraOK").prop("disabled", false);

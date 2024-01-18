@@ -400,12 +400,17 @@ class Usuarios extends CI_Controller
                 $simbolicoPropiedad = NULL;
             }
 
-            $dataLiderAAsignar = $this->Services_model->getInfoLider($_POST['leader']);
-            if($dataLiderAAsignar->tipo==2){
-                $tipoUsuario =  $dataLiderAAsignar->tipo;
+            if($_POST['leader'] != 0){
+                $dataLiderAAsignar = $this->Services_model->getInfoLider($_POST['leader']);
+                if($dataLiderAAsignar->tipo==2){
+                    $tipoUsuario =  $dataLiderAAsignar->tipo;
+                }else{
+                    $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
+                }
             }else{
                 $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
             }
+
             $data = array( 
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
                 "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),

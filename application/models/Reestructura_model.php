@@ -614,7 +614,7 @@ class Reestructura_model extends CI_Model
         $columnWhere='idLote';
         if($banderaFusion != 0){
             $tabla='lotesFusion';
-            $columna='idLote';
+            $columna='idLotePvOrigen';
             $columnWhere='idLotePvOrigen';
             $columnExtra = ',pxl.origen,pxl.destino,pxl.idFusion id_pxl';
         }
