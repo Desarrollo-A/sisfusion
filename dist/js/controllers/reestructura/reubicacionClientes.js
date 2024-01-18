@@ -36,8 +36,7 @@ const TIPO_LOTE = Object.freeze({
 
 const TIPO_PROCESO = Object.freeze({
     REUBICACION: 2,
-    REESTRUCTURA: 3,
-    REESTRUCTURA_EXCEDENTE: 4
+    REESTRUCTURA: 3
 });
 
 const PROYECTO = Object.freeze({
@@ -911,8 +910,6 @@ $(document).on("change", "#loteAOcupar", function(e){
         }
     }
 
-
-
     if (statusPreproceso != 1) {
         const nombreLote = $itself.attr("data-nombre");
         const superficie = parseFloat($itself.attr("data-superficie"));
@@ -950,7 +947,6 @@ function borrarElementoDelArray(valorAEliminar){
             idProyectoConteo.splice(indice, 1);
             indice = idProyectoConteo.indexOf(valorAEliminar.toString());
         }
-
     }else{
         let indice = miArray.indexOf(valorBuscado);
 
@@ -959,8 +955,6 @@ function borrarElementoDelArray(valorAEliminar){
             miArray.splice(indice, 1);
         }
     }
-
-
 }
 
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoEstatusRegreso, tipoProceso, flagFusion) {
@@ -1242,9 +1236,9 @@ $(document).on('click', '.btn-avanzar', async function () {
                 }
             });
             pluralidad = ' LOS LOTES ';
-            if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
-                return;
-            }
+            // if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
+            //     return;
+            // }
         }
         else{
             const totalP = await totalPropuestas(idLote, flagFusionRev);
@@ -1436,8 +1430,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
-    if((superficiePropuestas-100) < superficieFusion){
-        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+((superficiePropuestas-100)).toFixed(2)+'</b>) es menor al total de ' +
+    if(superficiePropuestas < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
             'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
         return false;
     }

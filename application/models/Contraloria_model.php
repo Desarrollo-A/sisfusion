@@ -257,7 +257,7 @@ class Contraloria_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.lugar_prospeccion, pr.id_arcus
+		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.lugar_prospeccion, pr.id_arcus, pr.id_prospecto
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -1834,7 +1834,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) AS fechaEstatus9 FROM lotes WHERE idLote IN (SELECT idLote FROM lotes WHERE idStatusLote IN (1,3) AND idStatusContratacion = 9) 
             AND status = 1 AND idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl ON l.idLote = hl.idLote AND l.idCliente = hl.idCliente
             WHERE l.idStatusLote IN (1,3) AND l.idStatusContratacion = 9";
-        }else{
+        }if ($rol == 2){
             $qry ="	SELECT h.*, l.idLote, l.nombreLote, l.idCliente, l.prorroga,
             CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) AS nombreCliente, cond.idResidencial, cond.idCondominio, cond.nombre, res.nombreResidencial, 
             DATEDIFF(DAY, hl.fechaEstatus9, GETDATE()) - (DATEDIFF(WEEK, hl.fechaEstatus9, GETDATE()) * 2) AS dias_transcurridos, l.idStatusLote
