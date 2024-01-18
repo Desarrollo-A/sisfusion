@@ -492,8 +492,6 @@ $(document).ready(function () {
         
         //<button href="#" type="button" class="btn-simple btn-danger" data-dismiss="modal_NEODATA" >
         $("#modal_NEODATA .modal-header").append(`
-           
-               
             <button href="#" class="close-modal-button" type="button" data-dismiss="modal"  data-dismiss="modal_NEODATA"></button> 
 
             `);

@@ -1,5 +1,4 @@
-
-<style type="text/css">        
+        <style type="text/css">        
             #modal_nuevas{
                 z-index: 1041!important;
             }
@@ -30,7 +29,7 @@
             }
 
             $color-black: #000;
-            $color-light-red: #ba3242;
+            $color-light-red: #ba3242; 
 
             body{
             
@@ -53,9 +52,7 @@
                 position: absolute;
                 left: 50%;
                 top: 50%;
-                font-family: fontAwesome;
                 content: "\f00d";
-                color: $color-black;
                 font-size: 1em;
                 transform: translate(-50%, -50%);
             }
