@@ -41,9 +41,9 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
-        $datos["elementos"] = $this->load->view('complementos/estilos_extra');
+        $datos['vistas']["elementos"] = $this->load->view('complementos/estilos_extra');
         $this->load->view('template/header');
-        $this->load->view("comisiones/dispersion-view", $datos);
+        $this->load->view("comisiones/dispersion-view");
   }
 
   public function getDataDispersionPago() {
@@ -290,7 +290,11 @@ class Comisiones extends CI_Controller
   public function comisiones_colaborador(){
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    
     $this->load->view('template/header');
+
+  
+    $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
@@ -331,14 +335,6 @@ class Comisiones extends CI_Controller
 
   public function getDatosComisionesAsesor($a = ''){
     $respuesta =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
-    // echo json_encode($respuesta["Datos"][0]["estatus"]) ;
-
-      
-      
-    
-      for ($i = 0; $i < count($respuesta); $i++) {
-        $respuesta[$i]['pa'] = 0;
-      }   
     echo json_encode($respuesta);
   }
 
@@ -3139,5 +3135,20 @@ class Comisiones extends CI_Controller
     $result=$this->reporteContratacion_model->usuarios_rol_7();
     echo json_encode($result);
   }
-  
+
+
+  public function historialDescuentos()
+  {
+    $this->load->view('template/header');
+    $this->load->view("ventas/historialCapitalFechas");
+  }
+
+  public function getYears(){
+
+    $result = $this->Comisiones_model->getYears();
+    echo json_encode($result);
+  }
+
+
+
 }

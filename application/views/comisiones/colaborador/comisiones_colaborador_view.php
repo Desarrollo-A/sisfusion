@@ -3,138 +3,11 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <body>
 
-<style type="text/css">    
-
-
-
-
-
-.toggle-button-cover {
-  display: table-cell;
-  position: relative;
-  width: 200px;
-  height: 140px;
-  box-sizing: border-box;
-}
-
-.button-cover {
-  height: 100px;
-  margin: 20px;
-  background-color: #fff;
-  box-shadow: 0 10px 20px -8px #c5d6d6;
-  border-radius: 4px;
-}
-
-.button-cover:before {
-  counter-increment: button-counter;
-  content: counter(button-counter);
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #d7e3e3;
-  font-size: 12px;
-  line-height: 1;
-  padding: 5px;
-}
-
-.button-cover,
-.knobs,
-.layer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
-
-.button {
-  position: relative;
-  top: 50%;
-  width: 74px;
-  height: 36px;
-  margin: -20px auto 0 auto;
-  overflow: hidden;
-}
-
-.button.r,
-.button.r .layer {
-  border-radius: 100px;
-}
-
-.button.b2 {
-  border-radius: 2px;
-}
-
-.checkbox {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-  z-index: 3;
-}
-
-.knobs {
-  z-index: 2;
-}
-
-.layer {
-  width: 100%;
-  background-color: #ebf7fc;
-  transition: 0.3s ease all;
-  z-index: 1;
-}
-
-/* Button 4 */
-#button-4 .knobs:before,
-#button-4 .knobs:after {
-  position: absolute;
-  top: 2px;
-  left: 6px;
-  width: 20px;
-  height: 10px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1;
-  padding: 9px 4px;
-  background-color: #03a9f4;
-  border-radius: 50%;
-  transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
-}
-
-#button-4 .knobs:before {
-  content: "";
-}
-
-#button-4 .knobs:after {
-  content: "";
-}
-
-#button-4 .knobs:after {
-  top: -28px;
-  right: 4px;
-  left: auto;
-  background-color: #f44336;
-}
-
-#button-4 .checkbox:checked + .knobs:before {
-  top: -28px;
-}
-
-#button-4 .checkbox:checked + .knobs:after {
-  top: 4px;
-}
-
-#button-4 .checkbox:checked ~ .layer {
-  background-color: #fcebeb;
-}
-</style>
     <div class="wrapper">
-        <?php $this->load->view('template/sidebar'); 
+        <?php 
+        $this->load->view('template/sidebar'); 
+       // $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
+        //echo($complementos[0]);
         $usuarioid =  $this->session->userdata('id_usuario');
         $query = $this->db->query("SELECT forma_pago FROM usuarios WHERE id_usuario=".$usuarioid."");
         $cadena ='';
@@ -446,19 +319,19 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab" data-toggle="tab">Nuevas</a>
+                                <a class="nuevas1" href="#nuevas-1" id='nuevas1' role="tab" data-toggle="tab">Nuevas</a>
                             </li>
                             <li>
-                                <a href="#proceso-1" role="tab"  data-toggle="tab">En revisión</a>
+                                <a class="proceso2" href="#proceso-1" id='proceso2'  role="tab"  data-toggle="tab">En revisión</a>
                             </li>
                             <li>
-                                <a href="#proceso-2" role="tab"  data-toggle="tab">Por pagar</a>
+                                <a class="preceso3" href="#proceso-2" id='preceso3'  data-toggle="tab">Por pagar</a>
                             </li>
                             <li>
-                                <a href="#otras-1" role="tab"  data-toggle="tab">Pausadas</a>
+                                <a class="preceso4" href="#otras-1" id='preceso4' role="tab"  data-toggle="tab">Pausadas</a>
                             </li>
                             <li>
-                                <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en Neodata</a>
+                                <a class="preceso5" href="#sin_pago_neodata" id='preceso5' role="tab" data-toggle="tab">Sin pago en Neodata</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">
@@ -493,6 +366,7 @@
                                                         </a>
                                                     </p>
                                                 <?php } ?>
+
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
