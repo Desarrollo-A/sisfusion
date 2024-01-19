@@ -188,22 +188,22 @@ class Reporte extends CI_Controller {
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
             
-
+ 
             $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             for ( $x = 0; $x < count($data['data']); $x++ ){
                 $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
                 $fechaStatus9 = $data['data'][$x]['fechaStatus9'];
 
-                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
+                // $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
                 
-                if ( $fechaStatus9 != null){
-                    $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
-                }
-                else $diasStatus9 = 'NO APLICA';
+                // if ( $fechaStatus9 != null){
+                //     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
+                // }
+                // else $diasStatus9 = 'NO APLICA';
 
-                $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
-                $data['data'][$x]['diasStatus9'] = $diasStatus9;
+                // $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
+                // $data['data'][$x]['diasStatus9'] = $diasStatus9;
             }
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else

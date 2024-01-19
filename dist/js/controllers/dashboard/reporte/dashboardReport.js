@@ -859,8 +859,6 @@ function getLastSales(filters, rol){
     });
 }
 
-
-
 function loaderCharts(){
     $("#modalChart .boxModalTitle .total").html('');
     $('.appliedFilter').removeAttr('data-toggle');
@@ -1389,6 +1387,9 @@ function fillTableReport(dataObject) {
                                     case 20:
                                         return 'APARTADO';
                                         break;
+                                    case 21:
+                                        return 'MODALIDAD';
+                                        break;
                                 }
                             }
                         }
@@ -1527,6 +1528,11 @@ function fillTableReport(dataObject) {
                         }
                     }
                 }
+                // {
+                //     data: function(d) {
+                //         return d.modalidad;
+                //     }
+                // }
             ],
             columnDefs: [{
                 visible: false,

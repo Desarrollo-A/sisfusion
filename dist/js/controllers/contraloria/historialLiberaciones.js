@@ -1,15 +1,14 @@
 let titulos = [];
 $('#historialLib thead tr:eq(0) th').each( function (i) {
-    let title = $(this).text();
-    titulos.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-    $( 'input', this ).on('keyup change', function () {
-        if ($("#historialLib").DataTable().column(i).search() !== this.value) {
-            $("#historialLib").DataTable().column(i).search(this.value).draw();
-        }
-    });
-    
-    $('[data-toggle="tooltip"]').tooltip();
+  let title = $(this).text();
+  titulos.push(title);
+  $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+  $( 'input', this ).on('keyup change', function (){
+    if ($("#historialLib").DataTable().column(i).search() !== this.value) {
+      $("#historialLib").DataTable().column(i).search(this.value).draw();
+    }
+  });
+  $('[data-toggle="tooltip"]').tooltip();
 })
 
 $("#historialLib").ready(function () {
@@ -164,13 +163,12 @@ $('#historialLib').on('draw.dt', function() {
 });
 
 $(document).ready(function () {
-  
   if(id_rol_general != 17 ){
     $("#nomT").text('Liberaciones');
   }
   
   if(id_rol_general == 12){
-    $.post(general_base_url + "Contraloria/get_tipo_venta", function (data) {
+    $.post(general_base_url + "Contraloria/get_tipo_venta", function (data){
       let len = data.length;
       for (let i = 0; i < len; i++) {
         let id = data[i]['id_tventa'];
@@ -180,7 +178,7 @@ $(document).ready(function () {
       $("#selLib").selectpicker('refresh');
     }, 'json');
 
-    $.post(general_base_url + "Contraloria/get_catalogo", {id_catalogo:48},   function (data) {
+    $.post(general_base_url + "Contraloria/get_catalogo", {id_catalogo:48}, function (data){
       let len = data.length;
       for (let i = 0; i < len; i++) {
         let id = data[i]['id_opcion'];
@@ -214,8 +212,6 @@ $("#acceptModalButton").click(function() {
   let id_usuario_general = $('#id_usuario_general').val();
   let clausulas = $('#clausulas').val();
   
- 
-
   if(id_rol_general == 12){
     if (accion == 3) {
       if(selLib == ''){
@@ -250,7 +246,6 @@ $("#acceptModalButton").click(function() {
         },
         dataType: 'JSON',
         success: function (data) {
-         
           if(data == true){
             alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
             $("#historialLib").DataTable().ajax.reload();
@@ -342,7 +337,6 @@ $("#acceptModalButton").click(function() {
           },
           dataType: 'JSON', 
           success: function (data)  {
-
             if (data == true) {
               alerts.showNotification("top", "right", "El registro se ha actualizado con éxito.", "success");
               $("#historialLib").DataTable().ajax.reload();
@@ -417,6 +411,9 @@ $("#acceptModalButton").click(function() {
         },
         catch: function () {},
       });
+    }else if(comentario == ''){
+      alerts.showNotification("top", "right", "Añade un comentario para actualizar la liberación.", "warning");
+      return;
     }else{
       alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
     }
@@ -494,6 +491,7 @@ function fillModal(accion, idLote, tipoLiberacion, idCondominio, idProyecto, nom
     
     $('#modalGeneral').modal('show');
   }
+
   else{
     modalTitle.innerHTML = "<b>¿Estás seguro de validar la liberación?</b>";
     modalContent.innerHTML= "<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>"+

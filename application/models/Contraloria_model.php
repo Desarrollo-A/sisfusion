@@ -7,16 +7,18 @@ class Contraloria_model extends CI_Model {
         parent::__construct();
     }
 
-
     function get_proyecto_lista(){
         return $this->db->query("SELECT * FROM residenciales WHERE status = 1");
     }
+
     function get_condominio_lista($proyecto){
         return $this->db->query("SELECT * FROM condominios WHERE status = 1 AND idResidencial = ".$proyecto."");
     }
+
     function get_lote_lista($condominio){
         return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio =  ".$condominio." AND idCliente in (SELECT idCliente FROM clientes ) AND (idCliente <> 0 AND idCliente <>'')");
     }
+
     function get_datos_lote_exp($lote){
         return $this->db->query("SELECT cli.id_cliente, cli.nombre, cli.apellido_paterno, cli.apellido_materno, cli.idLote, 
 				lot.nombreLote, con.nombre as condominio, res.nombreResidencial,  lot.contratoArchivo,
@@ -31,6 +33,7 @@ class Contraloria_model extends CI_Model {
 				INNER JOIN usuarios ge ON ge.id_usuario=us.id_lider
 				WHERE cli.status = 1 AND cli.idLote = ".$lote);
     }
+
     function get_datos_lote_pagos($lote){
         return $this->db-> query("SELECT idEnganche, historial_enganche.noRecibo, historial_enganche.engancheCliente,
  		historial_enganche.fechaEnganche, lotes.nombreLote, historial_enganche.usuario,
@@ -45,8 +48,6 @@ class Contraloria_model extends CI_Model {
 
 
     }
-
-
 
     public function registroStatusContratacion5 () {
         $query = $this->db-> query("SELECT l.idLote, l.referencia, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
@@ -112,11 +113,9 @@ class Contraloria_model extends CI_Model {
         }
     }
 
-
     function get_sede(){
         return $this->db->query("SELECT * FROM sedes WHERE id_sede NOT IN (7) AND estatus = 1");
     }
-
 
     function get_tventa(){
         return $this->db->query("SELECT * FROM tipo_venta WHERE status = 1");
@@ -217,7 +216,6 @@ class Contraloria_model extends CI_Model {
 
     }
 
-
     public function getNameLote($idLote){
         $query = $this->db-> query("SELECT l.idLote, l.nombreLote, cond.nombre,
 		res.nombreResidencial
@@ -228,7 +226,6 @@ class Contraloria_model extends CI_Model {
         return $query->row();
     }
  
-
 	public function registroStatusContratacion9 () {
 		$id_sede = $this->session->userdata('id_sede');
 		$id_usuario = $this->session->userdata('id_usuario');
@@ -316,6 +313,7 @@ public function selectRegistroPorContrato_2($numContrato){
 	return $query->row();
 
 }
+
 public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
 	$this->db->trans_begin();
@@ -329,13 +327,12 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 	$this->db->update('variables',$folioUp);
 
 	if ($this->db->trans_status() === FALSE){
-			$this->db->trans_rollback();
-			return false;
-		} else {
-			$this->db->trans_commit();
-			return true;
-	}
-
+        $this->db->trans_rollback();
+        return false;
+    } else {
+        $this->db->trans_commit();
+		return true;
+    }
 }
 
 /**---------------------------------------------------------- */
@@ -347,14 +344,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $this->db->join('clientes cl', 'cl.idLote = l.idLote');
         $this->db->where("l.numContrato",$numContrato);
 
-
         $this->db->where("(cl.status=1 AND l.idStatusContratacion=9 AND l.idMovimiento=39)");
         $this->db->where('l.status', 1);
         $query = $this->db->get('lotes l');
         return $query->row();
-
     }
-
 
     public function updateSt10($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
@@ -375,7 +369,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->db->trans_commit();
             return true;
         }
-
     }
 
     public function registroStatusContratacion10v2 () {
@@ -536,7 +529,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $valida;
     }
 
-
     public function getAllDsByLote($idLote) {
         $query = $this->db->query("	SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
 			cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
@@ -575,7 +567,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 $insert_csv = array();
                 $insert_csv['condominio'] = $csv_line[0];
                 $insert_csv['nombreLote'] = $csv_line[1];
-
             }
             $i++;
 
@@ -591,7 +582,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                     $datos.= $row['idLote'].',';
                 }
 
-
                 $datos = trim($datos, ',');
 
                 $this->db->trans_begin();
@@ -605,30 +595,20 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                     $this->db->trans_commit();
                     return true;
                 }
-
-
-
             } else{
                 return false;
             }
         }
-
-
-
         fclose($fp) or die("can't close file");
         $data['success']="success";
         $countData = $count-1;
-
-
     }
-
 
     public function update_sede($idLote,$ubicacion){
 
         $this->db->trans_begin();
 
         $this->db->query("UPDATE lotes SET ubicacion = ".$ubicacion." WHERE idLote = ".$idLote." ");
-
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -637,7 +617,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->db->trans_commit();
             return true;
         }
-
     }
 
     function getCommissionPlans(){
@@ -655,7 +634,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         }
         return $query->result_array();
     }
-
 
     public function update_msni($idResidencial) {
         $count=0;
@@ -746,8 +724,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $this->db->insert('historial_lotes',$dato);
         return true;
     }
-
-
 
     public function val_ub($idLote){
         $this->db->select('ubicacion');
@@ -912,8 +888,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		    	LEFT JOIN usuarios coordinador ON cli.id_coordinador = coordinador.id_usuario
 		    	LEFT JOIN usuarios gerente ON cli.id_gerente = gerente.id_usuario
 		    	LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado 
-		    				FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl 
-		    				ON hl.idLote = lot.idLote AND hl.idCliente = cli.id_cliente
+		    		FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl 
+		    		ON hl.idLote = lot.idLote AND hl.idCliente = cli.id_cliente
         
 		    WHERE cli.status = 1 AND cli.idLote = ".$lote."");
     }
@@ -1250,8 +1226,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return $query->result_array();
     }
 
-
-
     //modelos autorizacion MSI
     function todasAutorizacionesMSI(){
         $estatus_permitido = '';
@@ -1280,14 +1254,15 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         au.estatus, au.fecha_creacion, au.creado_por, au.fecha_modificacion, au.modificado_por,
         op.id_opcion, op.id_catalogo, op.nombre, op.estatus, op.fecha_creacion, op.creado_por, ISNULL(op.color, '0')");
 
-
         return $query->result_array();
     }
+
     function getAutVis($id_autorizacion){
         $query = $this->db->query("SELECT * FROM autorizaciones_msi au 
                                 INNER JOIN condominios c ON au.idCondominio=c.idCondominio WHERE id_autorizacion=".$id_autorizacion);
         return $query->result_array();
     }
+
     function getHistorialAutorizacionMSI($id_autorizacion){
         $query = $this->db->query("SELECT hamsi.*, CONCAT(u.nombre,' ', u.apellido_paterno,' ', u.apellido_materno) as creadoPor, 
         hamsi.estatus_autorizacion, cond.nombre
@@ -1298,6 +1273,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         WHERE idAutorizacion=".$id_autorizacion);
         return $query->result_array();
     }
+
     function getLotesByResCond($idCondominio){
         $query = $this->db->query("SELECT * FROM lotes WHERE idCondominio=$idCondominio");
         return $query->result_array();
@@ -1446,7 +1422,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
      public function allUserVentas()
      {
-        return $this->db->query("(SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
+        return $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre,
 		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
         (CASE WHEN id_usuario IN(6482, 5, 7092) THEN 3 ELSE id_rol END) id_rol
         FROM usuarios 
@@ -1456,7 +1432,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		(CASE WHEN id_rol = 7 THEN id_sede ELSE 0 END) id_sede,
 		id_rol
         FROM usuarios 
-        WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%')")->result();
+        WHERE id_usuario in(6482, 5, 7092) AND estatus = 1   AND ISNULL(correo, '') NOT LIKE '%SINCO%' AND ISNULL(correo, '') NOT LIKE '%test_%'")->result();
      }
      public function EditarInventario($datos){
         $query = $this->db->query("SELECT * FROM comisiones WHERE idCliente=".$datos['id_cliente'])->result_array();
@@ -1494,7 +1470,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             return true;
         }
     }
-
 
     public function getCambioRL ($idLote) {
 		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
@@ -1620,32 +1595,17 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function get_historial_liberaciones_por_lote($idLote)
     {
-        $qry = "SELECT L.[idLote], L.[nombreLote], L.[idCliente], L.[nombre_lote],
-        COALESCE(H.[id_proceso], 0) AS id_proceso,
-        H.[id_hist_lib_lote], H.[id_cat_tipo_liberacion], H.[id_tipo_liberacion], H.[id_cat_proceso], H.[proceso_realizado],
-        H.[justificacion_liberacion], H.[estatus], H.[modificado_por], H.[fecha_modificacion],
-        ISNULL(
-        (
-            SELECT TOP 1 [nombre]
-            FROM [sisfusion].[dbo].[opcs_x_cats] 
-            WHERE [id_catalogo] = H.[id_cat_proceso] AND [id_opcion] = H.[id_proceso]
-        ), 'Comienzo'
-        ) AS nombre_proceso,
-        U.[nombre] AS nombre_u,
-        U.[apellido_paterno] AS ap_u,
-        U.[apellido_materno] AS am_u
-        FROM [sisfusion].[dbo].[lotes] AS L
-        LEFT JOIN (
-                    SELECT [id_hist_lib_lote], [idLote], [id_cat_tipo_liberacion], [id_tipo_liberacion], [id_cat_proceso], [proceso_realizado],
-                        [justificacion_liberacion], [estatus], [modificado_por], [fecha_modificacion],
-                        MAX([id_proceso]) AS id_proceso
-                    FROM [sisfusion].[dbo].[historial_liberacion_lotes]
-                    GROUP BY [id_hist_lib_lote], [idLote], [id_cat_tipo_liberacion], [id_tipo_liberacion], [id_cat_proceso], [proceso_realizado], [justificacion_liberacion], [estatus], [modificado_por], [fecha_modificacion]
-                ) AS H
-        ON L.[idLote] = H.[idLote]
-        LEFT JOIN [sisfusion].[dbo].[usuarios] AS U
-        ON H.[modificado_por] = U.[id_usuario]
-        WHERE L.[idLote] = $idLote;";
+        $qry = "SELECT L.idLote, L.nombreLote, L.idCliente, L.nombre_lote,
+        COALESCE(H.id_proceso, 0) AS id_proceso, H.id_hist_lib_lote, H.id_cat_tipo_liberacion, H.id_tipo_liberacion, H.id_cat_proceso, H.proceso_realizado, H.justificacion_liberacion, H.estatus, H.modificado_por, H.fecha_modificacion,
+        ISNULL((SELECT TOP 1 nombre FROM opcs_x_cats WHERE id_catalogo = H.id_cat_proceso AND id_opcion = H.id_proceso), 'Comienzo') AS nombre_proceso, U.nombre AS nombre_u, U.apellido_paterno AS ap_u, U.apellido_materno AS am_u
+        FROM lotes AS L
+        LEFT JOIN (SELECT id_hist_lib_lote, idLote, id_cat_tipo_liberacion, id_tipo_liberacion, id_cat_proceso, proceso_realizado, justificacion_liberacion, estatus, modificado_por, fecha_modificacion, MAX(id_proceso) AS id_proceso
+        FROM historial_liberacion_lotes
+		GROUP BY id_hist_lib_lote, idLote, id_cat_tipo_liberacion, id_tipo_liberacion, id_cat_proceso, proceso_realizado, justificacion_liberacion, estatus, modificado_por, fecha_modificacion) AS H
+        ON L.idLote = H.idLote
+        LEFT JOIN usuarios AS U
+        ON H.modificado_por = U.id_usuario
+        WHERE L.idLote = $idLote;";
         
         return $this->db->query($qry);
     }
@@ -1664,7 +1624,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             
             return true;
         }
-
     }
 
     public function aplicaLiberacion($datos){
