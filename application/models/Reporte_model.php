@@ -788,7 +788,7 @@ class Reporte_model extends CI_Model {
             lo.sup, lo.precio
             ORDER BY st.nombreStatus");
         }
-        return $query;       
+        return $query;          
     }
 
     public function getVentasConSinRecision($beginDate, $endDate){
