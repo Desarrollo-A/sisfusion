@@ -1527,12 +1527,12 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                         }
                     }
+                },
+                {
+                    data: function(d) {
+                        return d.modalidad;
+                    }
                 }
-                // {
-                //     data: function(d) {
-                //         return d.modalidad;
-                //     }
-                // }
             ],
             columnDefs: [{
                 visible: false,
