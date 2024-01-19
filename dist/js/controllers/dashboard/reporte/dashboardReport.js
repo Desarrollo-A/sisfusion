@@ -1322,7 +1322,7 @@ function fillTableReport(dataObject) {
                     titleAttr: 'Descargar archivo de Excel',
                     title:'Desglose de lotes',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1388,6 +1388,9 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 20:
                                         return 'APARTADO';
+                                        break;
+                                    case 21:
+                                        return 'MODALIDAD';
                                         break;
                                 }
                             }
@@ -1526,7 +1529,13 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                         }
                     }
+                },
+                {
+                    data: function (d) {
+                        return d.modalidad;
+                    }
                 }
+                
             ],
             columnDefs: [{
                 visible: false,
@@ -1648,6 +1657,7 @@ function fillTableReport(dataObject) {
                                     case 21:
                                         return 'APARTADO';
                                         break;
+                                    
                                 }
                             }
                         }

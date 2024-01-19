@@ -195,7 +195,7 @@ class Reporte extends CI_Controller {
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
                 $fechaStatus9 = $data['data'][$x]['fechaStatus9'];
 
-                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
+                /*$diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
                 
                 if ( $fechaStatus9 != null){
                     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
@@ -204,6 +204,7 @@ class Reporte extends CI_Controller {
 
                 $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
                 $data['data'][$x]['diasStatus9'] = $diasStatus9;
+                */
             }
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
