@@ -8,7 +8,7 @@
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
                                 <a href="#ventas" role="tab" id="ventas_tabla" data-toggle="tab">VENTAS</a>
@@ -20,17 +20,17 @@
                                 <a href="#resguardo" role="tab" id="resguardo_tabla" data-toggle="tab">RESGUARDO</a>
                             </li>
                         </ul>
-                    <div class="card no-shadow m-0 border-conntent__tabs">
+                    <div class="card no-shadow m-0 border-conntent__tabs pl-2">
                         <div class="card-content p-0">
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
                                     <div class="tab-pane active" id="ventas">
                                         <div class="card-content">
                                             <div class="text-center">
-                                                <h3 class="card-title center-align" >Comisiones en revisión <b>asimilados </b></h3>
+                                                <h3 class="card-title center-align"><b>TABLA ASIMILIADOS</b></h3>
                                             </div>
                                             <div class="toolbar">
-                                                <div class="container-fluid p-0">
+                                                <div class="container-fluid justify-center">
                                                     <div class="fechasAjuste" id="fechasAjuste" >
 
                                                     </div>
@@ -40,23 +40,28 @@
                                     </div>
                                     <div class="tab-pane" id="ooam">
                                         <div class="text-center">
-                                            <h3 class="card-title center-align" >Comisiones en revisión <b>asimilados OOAM</b></h3>
+                                            <h3 class="card-title center-align"><b>TABLA OOAM</b></h3>
                                         </div>
                                         <div class="toolbar">
-                                           
-                                            
-                                            
-                                        </div>
+                                                <div class="container-fluid ">
+                                                    <div class="fechasAjusteOOAM" id="fechasAjusteOOAM" >
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        
                                     </div>
                                     <div class="tab-pane" id="resguardo">
                                         <div class="text-center">
-                                            <h3 class="card-title center-align" >Comisiones en revisión <b>asimilados Resguardos</b></h3>
+                                            <h3 class="card-title center-align"><b>TABLA RESGUARDOS</b></h3>
                                         </div>
                                         <div class="toolbar">
-                                           
-                                            
-                                            
-                                        </div>
+                                                <div class="container-fluid">
+                                                    <div class="fechasResguardo" id="fechasResguardo" >
+
+                                                    </div>
+                                                </div>
+                                            </div>
                                     </div>
                                 </div>
                             </div>
