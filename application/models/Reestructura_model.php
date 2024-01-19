@@ -612,7 +612,7 @@ class Reestructura_model extends CI_Model
         $columnWhere='idLote';
         if($banderaFusion != 0){
             $tabla='lotesFusion';
-            $columna='idLotePvOrigen';
+            $columna='idLote';
             $columnWhere='idLotePvOrigen';
             $columnExtra = ',pxl.origen,pxl.destino,pxl.idFusion id_pxl';
         }
@@ -622,7 +622,7 @@ class Reestructura_model extends CI_Model
         dxc.correo, dxc.telefono1, dxc.ocupacion, 5 tipo_proceso $columnExtra
         FROM $tabla pxl 
         INNER JOIN lotes l ON l.idLote=pxl.$columna
-        left JOIN datos_x_cliente dxc ON pxl.idLote=dxc.idLote
+        left JOIN datos_x_cliente dxc ON pxl.$columnWhere=dxc.idLote
         left JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo=18
         WHERE pxl.$columnWhere=".$idLote);
         return $query->result_array();
@@ -644,7 +644,7 @@ class Reestructura_model extends CI_Model
             FROM propuestas_x_lote pl
             INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
 		    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-            WHERE pl.idLote = $idLote;");
+              WHERE pl.idLote = $idLote;");
         }
 
         return $query;
