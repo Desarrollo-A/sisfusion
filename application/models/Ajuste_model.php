@@ -6,31 +6,26 @@ class Ajuste_model extends CI_Model {
         parent::__construct();
     }
 
-    function getDatosFechas(){
-
-        return $this->db->query("SELECT
-        *,
-        CONVERT(VARCHAR, fechaInicio, 23) AS fechaInicioSinHora,
-        CONVERT(VARCHAR, fechaFinGeneral, 23) AS fechaFinGeneralSinHora,
-        CONVERT(VARCHAR, fechaTijuana, 23) AS fechaTijuanaSinHora,
-        CASE
-            WHEN mes = 1 THEN 'Enero'
-            WHEN mes = 2 THEN 'Febrero'
-            WHEN mes = 3 THEN 'Marzo'
-            WHEN mes = 4 THEN 'Abril'
-            WHEN mes = 5 THEN 'Mayo'
-            WHEN mes = 6 THEN 'Junio'
-            WHEN mes = 7 THEN 'Julio'
-            WHEN mes = 8 THEN 'Agosto'
-            WHEN mes = 9 THEN 'Septiembre'
-            WHEN mes = 10 THEN 'Octubre'
-            WHEN mes = 11 THEN 'Noviembre'
-            WHEN mes = 12 THEN 'Diciembre'
-        END AS nombreMes
-    FROM fechasCorte;");
+    function getDatosFechas() {
+        $this->db->query("SET LANGUAGE Español;");
+        $result = $this->db->query("
+            SELECT
+                *,
+                CONVERT(VARCHAR, fechaInicio, 23) AS fechaInicioSinHora,
+                CONVERT(VARCHAR, fechaFinGeneral, 23) AS fechaFinGeneralSinHora,
+                CONVERT(VARCHAR, fechaTijuana, 23) AS fechaTijuanaSinHora,
+                DATENAME(MONTH, DATEADD(MONTH, MONTH(fechaInicio) - 1, '1900-01-01')) AS nombreMes
+            FROM fechasCorte;
+        ");
+        return $result;
     }
 
     public function editarFecha($idFechaCorte, $nuevaFechaInicio, $nuevaFechaFinGeneral, $nuevaFechaTijuana) {
+
+        $nuevaFechaInicio = date('Y-m-d 00:00:00.000', strtotime($nuevaFechaInicio));
+        $nuevaFechaFinGeneral = date('Y-m-d 13:59:59.000', strtotime($nuevaFechaFinGeneral));
+        $nuevaFechaTijuana = date('Y-m-d 15:59:59.000', strtotime($nuevaFechaTijuana));
+
         $data = array(
             'fechaInicio' => $nuevaFechaInicio,
             'fechaFinGeneral' => $nuevaFechaFinGeneral,

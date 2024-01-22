@@ -2,61 +2,52 @@ $(document).ready(function () {
     peticionDataTable();
 });
 
+function mostrarNotificacion(mensaje, tipo) {
+    alerts.showNotification("top", "right", mensaje, tipo);
+}
+
 function editarFila(idFechaCorte) {
-
-    if (idFechaCorte) {
-        const nuevaFechaInicio = document.getElementById(`fechaInicio_${idFechaCorte}`).value;
-        const nuevaFechaFinGeneral = document.getElementById(`fechaFin_${idFechaCorte}`).value;
-        const nuevaFechaTijuana = document.getElementById(`fechaTijuana_${idFechaCorte}`).value;
-        const mesVentas = document.getElementById(`mes_ventas`).value.toUpperCase();
-
-        var fechaActual = new Date();
-        var nombreMes = fechaActual.toLocaleDateString(undefined, { month: 'long' });
-        var prueba = nombreMes.toLocaleUpperCase();
-
-        console.log("mesVentas:", mesVentas);
-        console.log("prueba:", prueba);
-        
-        
-        if (new Date(nuevaFechaFinGeneral) < new Date(nuevaFechaInicio)) {
-            alerts.showNotification("top", "right", "La fecha fin general no puede ser mayor que la fecha de inicio.", "danger");
-            return;
-        }
-        
-        if (new Date(nuevaFechaTijuana) < new Date(nuevaFechaInicio)) {
-            alerts.showNotification("top", "right", "La fecha de Tijuana no puede ser mayor que la fecha de inicio.", "danger");
-            return;
-        }
-        
-        if (mesVentas === nombreMes) {
-            console.log("true");
-        } else {
-            alerts.showNotification("top", "right", "No puedes escoger otro mes que no sea el actual.", "danger");
-            return;
-        }
-        
-
-
-
-
-        $.ajax({
-            url: 'editarFecha',
-            type: 'post',
-            data: { idFechaCorte, nuevaFechaInicio, nuevaFechaFinGeneral,nuevaFechaTijuana },
-            success: function (respuesta) {
-
-                if(respuesta!== true){
-                    peticionDataTable();
-                    alerts.showNotification("top", "right", "Datos actualizados con éxito.", "success");
-                }else{
-                    alerts.showNotification("top", "right", "No se pudo actualizar los datos.", "danger");
-                }
-                                
-            }
-        });
-    } else {
-        console.error("El ID es nulo o indefinido");
+    if (!idFechaCorte) {
+        console.error("El idFechaCorte es nulo o undefined");
+        return;
     }
+
+    const fechaValue = document.getElementById(`mes_${idFechaCorte}`).value;
+    const nuevaFechaFinGeneral = document.getElementById(`fechaFin_${idFechaCorte}`).value;
+    const nuevaFechaTijuana = document.getElementById(`fechaTijuana_${idFechaCorte}`).value;
+    const fechaInicioInput = document.getElementById(`fechaInicio_${idFechaCorte}`);
+    const nuevaFechaInicio = fechaInicioInput.value;
+    const mes = nuevaFechaInicio.split('-')[1];
+
+    console.log(fechaValue, "fechaV");
+    console.log(mes, "mes");
+
+    const fechaReal = fechaValue < 10 ? '0' + fechaValue : '' + fechaValue;
+
+    if (fechaReal == mes) {
+        if (new Date(nuevaFechaFinGeneral) < new Date(nuevaFechaInicio) ||
+            new Date(nuevaFechaTijuana) < new Date(nuevaFechaInicio)) {
+            mostrarNotificacion("La fecha fin general o Tijuana no puede ser mayor que la fecha de inicio.", "danger");
+            return;
+        }
+    } else {
+        mostrarNotificacion("No puedes cambiar, debido a que el mes es diferente.", "danger");
+        return;
+    }
+
+    $.ajax({
+        url: 'editarFecha',
+        type: 'post',
+        data: { idFechaCorte, nuevaFechaInicio, nuevaFechaFinGeneral, nuevaFechaTijuana },
+        success: function (respuesta) {
+            if (respuesta !== true) {
+                peticionDataTable();
+                mostrarNotificacion("Datos actualizados con éxito.", "success");
+            } else {
+                mostrarNotificacion("No se pudo actualizar los datos.", "danger");
+            }
+        }
+    });
 }
 
 let ventasFechas = [];
@@ -69,6 +60,7 @@ function htmlArmado(tipoCorte, containerId) {
     container.innerHTML = '';
 
     for (let i = 0; i < fechas.length; i++) {
+        // Asegúrate de que la propiedad 'mes' exista en tus objetos fechas
         container.innerHTML += `
         <div class="row justify-center col-xs-10 col-sm-10 col-md-10 col-lg-10">
         <div class="material-datatables">
@@ -80,10 +72,12 @@ function htmlArmado(tipoCorte, containerId) {
                     <div class="col-md-2 mb-3">
                         <label for="mes_ventas">MES:</label>
                         <input type="text" id="mes_ventas" name="mes_ventas" class="form-control input-gral" readonly value="${fechas[i].nombreMes}">
+                        <input id="mes_${fechas[i].idFechaCorte}" name="mes_${fechas[i].idFechaCorte}" class="form-control input-gral" type="hidden" value="${fechas[i].mes}">
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="fechaInicio_ventas">FECHA INICIO:</label>
                         <input type="text" id="fechaInicio_${fechas[i].idFechaCorte}" name="fechaInicio_ventas" class="form-control input-gral" value="${fechas[i].fechaInicioSinHora}">
+
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="fechaFin_ventas">FECHA FIN GENERAL:</label>
@@ -97,8 +91,8 @@ function htmlArmado(tipoCorte, containerId) {
                         <label for="editarVentas">EDITAR:</label>
                         <a class="btn btn-primary btn-edit" onclick="editarFila(${fechas[i].idFechaCorte})">Editar</a>
                     </div>
-                    <div class="col-md-12">
-                        <br class="my-4">
+                    <div class="col-md-1">
+                        <br class="my-1">
                     </div>
                 </div>
             </div>
