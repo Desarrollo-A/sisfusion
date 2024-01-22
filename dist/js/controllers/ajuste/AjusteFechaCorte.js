@@ -60,7 +60,6 @@ function htmlArmado(tipoCorte, containerId) {
     container.innerHTML = '';
 
     for (let i = 0; i < fechas.length; i++) {
-        // Asegúrate de que la propiedad 'mes' exista en tus objetos fechas
         container.innerHTML += `
         <div class="row justify-center col-xs-10 col-sm-10 col-md-10 col-lg-10">
         <div class="material-datatables">
@@ -77,7 +76,6 @@ function htmlArmado(tipoCorte, containerId) {
                     <div class="col-md-3 mb-3">
                         <label for="fechaInicio_ventas">FECHA INICIO:</label>
                         <input type="text" id="fechaInicio_${fechas[i].idFechaCorte}" name="fechaInicio_ventas" class="form-control input-gral" value="${fechas[i].fechaInicioSinHora}">
-
                     </div>
                     <div class="col-md-3 mb-3">
                         <label for="fechaFin_ventas">FECHA FIN GENERAL:</label>
