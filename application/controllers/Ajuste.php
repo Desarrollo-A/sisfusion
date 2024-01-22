@@ -54,4 +54,39 @@ class Ajuste extends CI_Controller
     }
         
 
+
+  
+    public function autorizacion_fechas() {
+        $this->load->view('template/header');
+        $this->load->view("ajuste/administracion/autorizacion_modificar_corte_view");
+    }
+    public function getautorizaciones() {
+        $respuesta = $this->Ajuste_model->autorizaciones()->result_array();
+        echo json_encode($respuesta);
+    }
+        
+    public function editarAutorizacion() {
+        $bandera = $this->input->post('bandera');
+        $id_autorizacion = $this->input->post('id_autorizacion');
+
+
+        $data = array(
+            'bandera' => $bandera,
+        );
+        $update = $this->Ajuste_model->editarAutorizacion($id_autorizacion, $data);
+        // var_dump( $update);
+        if($update){
+            $respuesta =  array(
+              "response_code" => 200, 
+              "response_type" => 'success',
+              "message" => "Autorización actualizado");
+          } else{
+            $respuesta =  array(
+              "response_code" => 400, 
+              "response_type" => 'error',
+              "message" => "Autorización no actualizado, inténtalo más tarde ");
+          }
+        echo json_encode($respuesta);
+    }
+        
 }

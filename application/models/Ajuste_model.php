@@ -35,6 +35,41 @@ class Ajuste_model extends CI_Model {
         $this->db->where('idFechaCorte', $idFechaCorte);
         $this->db->update('fechasCorte', $data);
     }
-    
 
+
+
+    function autorizaciones(){
+        $cmd = "SELECT CONCAT(u.nombre,' ' ,u.apellido_paterno,' ',u.apellido_materno) AS colaborador,
+        ac.id_autorizacion, ac.id_usuario, 
+        ac.bandera, ac.fecha_modificacion, ac.bandera
+         FROM  autorizacionesCorte ac, usuarios u
+        where u.id_usuario = ac.id_usuario";
+        return $this->db->query ($cmd );
+    }
+
+    public function addEditarAutorizacion($idFechaCorte, $nuevaFechaInicio, $nuevaFechaFinGeneral, $nuevaFechaTijuana) {
+        $data = array(
+            'fechaInicio' => $nuevaFechaInicio,
+            'fechaFinGeneral' => $nuevaFechaFinGeneral,
+            'fechaTijuana' => $nuevaFechaTijuana
+        );
+    
+        $this->db->where('idFechaCorte', $idFechaCorte);
+        $this->db->update('fechasCorte', $data);
+    }
+    public function editarAutorizacion($bandera , $data) {
+        try {
+    
+            $this->db->where('id_autorizacion', $bandera);
+            if( $this->db->update('autorizacionesCorte', $data))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }       
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }     
+    }
 }

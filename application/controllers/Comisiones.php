@@ -41,8 +41,9 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $datos['vistas']["elementos"] = $this->load->view('complementos/estilos_extra');
         $this->load->view('template/header');
-        $this->load->view("comisiones/dispersion-view", $datos);
+        $this->load->view("comisiones/dispersion-view");
   }
 
   public function getDataDispersionPago() {
@@ -289,7 +290,11 @@ class Comisiones extends CI_Controller
   public function comisiones_colaborador(){
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    
     $this->load->view('template/header');
+
+  
+    $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
@@ -330,14 +335,6 @@ class Comisiones extends CI_Controller
 
   public function getDatosComisionesAsesor($a = ''){
     $respuesta =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
-    // echo json_encode($respuesta["Datos"][0]["estatus"]) ;
-
-      
-      
-    
-      for ($i = 0; $i < count($respuesta); $i++) {
-        $respuesta[$i]['pa'] = 0;
-      }   
     echo json_encode($respuesta);
   }
 
@@ -551,8 +548,8 @@ class Comisiones extends CI_Controller
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = 0 AND estatus = 1 AND mes = $mesActual")->result_array();
+    $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -3138,5 +3135,20 @@ class Comisiones extends CI_Controller
     $result=$this->ReporteContratacion_model->usuarios_rol_7();
     echo json_encode($result);
   }
-  
+
+
+  public function historialDescuentos()
+  {
+    $this->load->view('template/header');
+    $this->load->view("ventas/historialCapitalFechas");
+  }
+
+  public function getYears(){
+
+    $result = $this->Comisiones_model->getYears();
+    echo json_encode($result);
+  }
+
+
+
 }
