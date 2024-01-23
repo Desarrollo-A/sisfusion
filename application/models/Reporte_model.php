@@ -336,10 +336,10 @@ class Reporte_model extends CI_Model {
         
         if($id_rol == 1 || $id_rol == 2){
             $rolesSede = $id_rol == 1 ? 59 : $id_rol;
-            $sedeCargo = "STUFF((select ' ' + nombre + ',' from sedes where id_sede in (select r.idSede from roles_x_usuario r where r.idRol = " . $rolesSede . " and r.idUsuario = u.id_usuario) for xml path('')), 1, 1, '')";
+            $sedeCargo = "ISNULL(STUFF((select ' ' + nombre + ',' from sedes where id_sede in (select r.idSede from roles_x_usuario r where r.idRol = " . $rolesSede . " and r.idUsuario = u.id_usuario) for xml path('')), 1, 1, ''),'Sin especificar,')";
             $innerSede = "LEFT JOIN roles_x_usuario rxu on rxu.idUsuario = u.id_usuario and rxu.idRol = " .$rolesSede;
         }else{
-            $sedeCargo = "STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, '')";
+            $sedeCargo = "ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, ''),'Sin especificar')";
             $innerSede = "";
         }
 
