@@ -3454,7 +3454,10 @@
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-					$id_lider = $id_lider . ', 495';
+					$id_lider = $id_lider . ', 471';
+					$sede = "";
+				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
+					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
 				}
 

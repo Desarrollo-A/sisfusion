@@ -415,9 +415,9 @@ class Api extends CI_Controller
                     }
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
                         $year = date('Y');
-                        $month = date('n');
-                        $year = $month == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month - 1);//CAMBIAR A SUS VARIABLES
+                        $month = date('n') == 1 ? 12 : date('n') - 1;
+                        $year = date('n') == 1 ? $year -1 : $year;
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month);//CAMBIAR A SUS VARIABLES
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -435,12 +435,17 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['tamanio_terreno'] = $dbTransaction[$i]['tamanio_terreno'];
                             $data2[$i]['propiedad']['costo'] = $dbTransaction[$i]['costo'];
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
-                            $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fechaEstatus9'];
-                            $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fechaEstatus7'];
-                            $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago'])));
+                            $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fecha_estatus9'];
+                            $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fecha_estatus7'];
+                            $data2[$i]['pagos']['instrumento_monetario'] = $dbTransaction[$i]['instrumento_monetario'];
+                            $data2[$i]['pagos']['moneda_divisa'] = $dbTransaction[$i]['moneda_divisa'];
+                            $data2[$i]['pagos']['forma_pago_enganche'] = $dbTransaction[$i]['forma_pago_enganche'];
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
-                            $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
+                            $data2[$i]['pagos']['fecha_pago_enganche'] = $dbTransaction[$i]['fecha_pago'];
+                            $data2[$i]['pagos']['total_pagos_enganche'] = $dbTransaction[$i]['total_pagos'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
+                            $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
+                            $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago_comisionista'])));
                         }
                         if ($dbTransaction) // SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);

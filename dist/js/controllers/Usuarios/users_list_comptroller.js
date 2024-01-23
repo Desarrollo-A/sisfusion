@@ -1,4 +1,4 @@
-const usuariosContraloria = [2767, 5957, 4878, 2754];
+const usuariosContraloria = [2767, 5957, 4878, 2754, 14481];
 
 $(document).ready(function() {
     $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
@@ -38,7 +38,7 @@ $('#all_users_datatable').DataTable({
         titleAttr: 'Lista de usuarios',
         title:'Lista de usuarios',
         exportOptions: {
-            columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
+            columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] ,
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulos[columnIdx] + ' ';

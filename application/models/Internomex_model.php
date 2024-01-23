@@ -225,51 +225,169 @@ class Internomex_model extends CI_Model {
     public function getInformacionContratos($rows_number, $year, $month) {
         ini_set('memory_limit', -1);
         $top_statement = $rows_number != '' ? "TOP $rows_number": "";
-        return $this->db->query("SELECT $top_statement idLote, tbl.tipo_persona, tbl.actividad_sector, tbl.nombre_denominacion, tbl.apellido_paterno, tbl.apellido_materno, 
-        tbl.fecha_nacimiento_constitucion, tbl.curp, tbl.rfc, tbl.nacionalidad, tbl.direccion, tbl.tipo_propiedad, tbl.nombrePropiedad, 
-        tbl.tamanio_terreno, tbl.costo, STRING_AGG(tbl.forma_pago, ',') forma_pago, tbl.monto_enganche, MAX(tbl.fecha_pago_comision) fecha_pago_comision, tbl.monto_comision, tbl.empresa, tbl.fechaEstatus9, tbl.fechaEstatus7
-        FROM (
-        SELECT lo.idLote, op1.nombre tipo_persona, 
-        cl.ocupacion actividad_sector,
-        UPPER(cl.nombre) nombre_denominacion, ISNULL(cl.apellido_paterno, '') apellido_paterno, ISNULL(cl.apellido_materno, '') apellido_materno, 
-        ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion, 
-        ISNULL(curp,'') curp, ISNULL(cl.rfc, '') rfc, 
-        op2.nombre nacionalidad, cl.domicilio_particular direccion, 
-        CASE WHEN co.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END tipo_propiedad, 
-        lo.nombreLote nombrePropiedad, lo.sup tamanio_terreno, 
-        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') costo, 
-        STRING_AGG(oxc0.nombre, ',') forma_pago, FORMAT(ISNULL(lo.totalValidado, 0), 'C') monto_enganche, 
-        MAX(hc.fecha_movimiento) fecha_pago_comision, FORMAT(ISNULL(pc.total_comision, 0), 'C') monto_comision,
-        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus9, ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR') fechaEstatus7
-        FROM clientes cl
-        INNER JOIN lotes lo ON lo.idCliente = lo.idCliente AND lo.idLote = cl.idLote AND lo.status = 1 --AND lo.idLote IN (80997)
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idLote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
-        LEFT JOIN comisiones cm ON cm.id_lote = lo.idLote AND cm.idCliente = cl.id_cliente
-        LEFT JOIN pago_comision pc ON pc.id_lote = cm.id_lote
-        INNER JOIN (SELECT * FROM pago_comision_ind WHERE estatus = 11) pci ON pci.id_comision = cm.id_comision
-        INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario IN ('INTERNOMEX APLICO PAGO', 'INTERNOMEX APLICO EL PAGO','INTERNOMEX APLICÓ PAGO', 
-        'INTERNOMEX APLICÓ EL PAGO','INTERNOMEX APLICÓ EL PAGO POR SISTEMA','APLICÓ PAGO INTERNOMEX') AND YEAR(hc.fecha_movimiento) = $year AND MONTH(hc.fecha_movimiento) = $month
-        INNER JOIN opcs_x_cats op1 ON op1.id_opcion = cl.personalidad_juridica AND op1.id_catalogo = 10
-        INNER JOIN opcs_x_cats op2 ON op2.id_opcion = cl.nacionalidad AND op2.id_catalogo = 11
-        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente 
-        LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 7 AND idMovimiento = 37 AND status = 1 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente 
-        LEFT JOIN usuarios u0 ON u0.id_usuario = pci.id_usuario
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.forma_pago AND oxc0.id_catalogo = 16
-        WHERE cl.status = 1
-        GROUP BY lo.idLote, op1.nombre, cl.ocupacion,
-        UPPER(cl.nombre), ISNULL(cl.apellido_paterno, ''), ISNULL(cl.apellido_materno, ''), 
-        ISNULL(convert(varchar, try_parse(fecha_nacimiento as date), 103), ''), 
-        ISNULL(curp,''), ISNULL(cl.rfc, ''), op2.nombre, cl.domicilio_particular, 
-        CASE WHEN co.tipo_lote = 0 THEN 'Habitacional' ELSE 'Comercial' END, 
-        lo.nombreLote, lo.sup, 
-        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C'), 
-        ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR'), FORMAT(ISNULL(lo.totalValidado, 0), 'C'), pc.total_comision,
-        re.empresa, ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR'), ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR'),
-        oxc0.nombre
-        ) tbl GROUP BY idLote, tbl.tipo_persona, tbl.actividad_sector, tbl.nombre_denominacion, tbl.apellido_paterno, tbl.apellido_materno, 
-        tbl.fecha_nacimiento_constitucion, tbl.curp, tbl.rfc, tbl.nacionalidad, tbl.direccion, tbl.tipo_propiedad, tbl.nombrePropiedad, 
-        tbl.tamanio_terreno, tbl.costo, tbl.monto_enganche, tbl.monto_comision, tbl.empresa, tbl.fechaEstatus9, tbl.fechaEstatus7")->result_array(); 
+        return $this->db->query("SELECT $top_statement 
+                                        tbl.idlote,
+                                        tbl.tipo_persona,
+                                        tbl.actividad_sector,
+                                        tbl.nombre_denominacion,
+                                        tbl.apellido_paterno,
+                                        tbl.apellido_materno,
+                                        tbl.fecha_nacimiento_constitucion,
+                                        tbl.curp,
+                                        tbl.rfc,
+                                        tbl.nacionalidad,
+                                        tbl.direccion,
+                                        tbl.tipo_propiedad,
+                                        tbl.nombre_propiedad,
+                                        tbl.tamanio_terreno,
+                                        tbl.costo,
+                                        STRING_AGG(tbl.forma_pago_comisionista, ',') forma_pago_comisionista,
+                                        tbl.monto_enganche,
+                                        MAX(tbl.fecha_pago_comision) fecha_pago_comision,
+                                        tbl.monto_comision,
+                                        tbl.empresa,
+                                        tbl.fecha_estatus9,
+                                        tbl.fecha_estatus7,
+                                        tbl.forma_pago_enganche,
+                                        tbl.total_pagos,
+                                        tbl.instrumento_monetario,
+                                        tbl.moneda_divisa,
+                                        tbl.fecha_pago
+                                FROM (
+                                        SELECT lo.idlote,
+                                            oxc0.nombre tipo_persona,
+                                            cl.ocupacion actividad_sector,
+                                            UPPER(cl.nombre) nombre_denominacion,
+                                            ISNULL(UPPER(cl.apellido_paterno), '') apellido_paterno,
+                                            ISNULL(UPPER(cl.apellido_materno), '') apellido_materno,
+                                            ISNULL(CONVERT(VARCHAR, TRY_PARSE(fecha_nacimiento as date), 103), '') fecha_nacimiento_constitucion,
+                                            ISNULL(curp,'') curp,
+                                            ISNULL(cl.rfc, '') rfc,
+                                            oxc1.nombre nacionalidad,
+                                            cl.domicilio_particular direccion,
+                                            CASE
+                                                    WHEN co.tipo_lote = 0 THEN 'Habitacional'
+                                            ELSE 'Comercial'
+                                            END tipo_propiedad,
+                                            lo.nombrelote nombre_propiedad,
+                                            lo.sup tamanio_terreno,
+                                            FORMAT(ISNULL(lo.totalneto2, 0.00), 'C') costo,
+                                            STRING_AGG(oxc2.nombre, ',') forma_pago_comisionista,
+                                            FORMAT(ISNULL(lo.totalvalidado, 0), 'C') monto_enganche,
+                                            MAX(hc.fecha_movimiento) fecha_pago_comision,
+                                            FORMAT(ISNULL(pc.total_comision, 0), 'C') monto_comision,
+                                            re.empresa,
+                                            ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR') fecha_estatus9,
+                                            ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR') fecha_estatus7,
+                                            ISNULL(oxc3.nombre, 'SIN ESPECIFICAR')forma_pago_enganche,
+                                            ISNULL(de.total_pagos, 0) total_pagos,
+                                            ISNULL(de.instrumento_monetario, 'SIN ESPECIFICAR') instrumento_monetario,
+                                            ISNULL(de.moneda_divisa, 'SIN ESPECIFICAR') moneda_divisa,
+                                            ISNULL(de.fecha_pago, 'SIN ESPECIFICAR') fecha_pago
+                                                    FROM clientes cl
+                                                    INNER JOIN lotes lo ON lo.idcliente = lo.idcliente AND lo.idlote = cl.idlote AND lo.status = 1 --AND lo.idLote IN (855, 1512)
+                                                    INNER JOIN condominios co ON co.idcondominio = lo.idcondominio
+                                                    INNER JOIN residenciales re ON re.idresidencial = co.idresidencial
+                                                    LEFT JOIN corridas_financieras cf ON cf.id_lote = lo.idlote AND cf.id_cliente = cl.id_cliente AND cf.status = 1
+                                                    LEFT JOIN comisiones cm ON cm.id_lote = lo.idlote AND cm.idcliente = cl.id_cliente
+                                                    LEFT JOIN pago_comision pc ON pc.id_lote = cm.id_lote
+                                                    INNER JOIN (SELECT * FROM pago_comision_ind WHERE  estatus = 11) pci ON pci.id_comision = cm.id_comision
+                                                    INNER JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i 
+                                                    AND hc.comentario IN ('INTERNOMEX APLICO PAGO', 'INTERNOMEX APLICO EL PAGO', 'INTERNOMEX APLICÓ PAGO', 'INTERNOMEX APLICÓ EL PAGO', 'INTERNOMEX APLICÓ EL PAGO POR SISTEMA', 'APLICÓ PAGO INTERNOMEX')
+                                                    AND YEAR(hc.fecha_movimiento) = $year
+                                                    AND MONTH(hc.fecha_movimiento) = $month
+                                                    INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.personalidad_juridica AND oxc0.id_catalogo = 10
+                                                    INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cl.nacionalidad AND oxc1.id_catalogo = 11
+                                                    LEFT JOIN (
+                                                                SELECT idlote,
+                                                                    idcliente,
+                                                                    MAX(modificado) modificado
+                                                                FROM historial_lotes
+                                                                WHERE idstatuscontratacion = 9 AND idmovimiento = 39 AND status = 1 GROUP BY idlote, idcliente
+                                                            ) hl ON hl.idlote = lo.idlote AND hl.idcliente = cl.id_cliente
+                                                    LEFT JOIN (
+                                                                SELECT idlote,
+                                                                    idcliente,
+                                                                    MAX(modificado) modificado
+                                                                FROM historial_lotes
+                                                                WHERE idstatuscontratacion = 7 AND idmovimiento = 37 AND status = 1
+                                                                GROUP BY idlote, idcliente
+                                                            ) hl2 ON hl2.idlote = lo.idlote AND hl2.idcliente = cl.id_cliente
+                                                    LEFT JOIN usuarios u0 ON u0.id_usuario = pci.id_usuario
+                                                    LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.forma_pago AND oxc2.id_catalogo = 16
+                                                    LEFT JOIN enganche en ON en.id_lote = lo.idlote AND en.id_cliente = cl.id_cliente
+                                                    LEFT JOIN opcs_x_cats oxc3 ON oxc3.id_opcion = en.forma_pago AND oxc3.id_catalogo = 110
+                                                    LEFT JOIN (
+                                                                SELECT 
+                                                                    idEnganche,
+                                                                    STRING_AGG(oxc0.nombre, ', ') instrumento_monetario,
+                                                                    STRING_AGG(oxc1.nombre, ', ') moneda_divisa,
+                                                                    REPLACE(STRING_AGG(CONVERT(VARCHAR, fecha_pago, 104), ', '), '.', '/') fecha_pago,
+                                                                    COUNT(*) total_pagos
+                                                                FROM det_enganche
+                                                                LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = instrumento_monetario AND oxc0.id_catalogo = 111 
+                                                                LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = moneda_divisa AND oxc1.id_catalogo = 112
+                                                                GROUP BY idEnganche
+                                                            ) de ON de.idEnganche = en.idEnganche
+                                                    WHERE cl.status = 1
+                                                    GROUP BY lo.idlote,
+                                                            oxc0.nombre,
+                                                            cl.ocupacion,
+                                                            cl.nombre,
+                                                            cl.apellido_paterno,
+                                                            cl.apellido_materno,
+                                                            ISNULL(CONVERT(varchar, TRY_PARSE(fecha_nacimiento AS date), 103), ''),
+                                                            ISNULL(curp,''),
+                                                            ISNULL(cl.rfc, ''),
+                                                            oxc1.nombre,
+                                                            cl.domicilio_particular,
+                                                            CASE
+                                                                WHEN co.tipo_lote = 0 THEN 'Habitacional'
+                                                                ELSE 'Comercial'
+                                                            END,
+                                                            lo.nombrelote,
+                                                            lo.sup,
+                                                            FORMAT(isnull(lo.totalneto2, 0.00), 'C'),
+                                                            ISNULL(cf.plan_corrida, 'SIN ESPECIFICAR'),
+                                                            FORMAT(ISNULL(lo.totalvalidado, 0), 'C'),
+                                                            pc.total_comision,
+                                                            re.empresa,
+                                                            ISNULL(CONVERT(varchar, hl.modificado, 103), 'SIN ESPECIFICAR'),
+                                                            ISNULL(CONVERT(varchar, hl2.modificado, 103), 'SIN ESPECIFICAR'),
+                                                            oxc2.nombre,
+                                                            oxc3.nombre,
+                                                            de.total_pagos,
+                                                            de.instrumento_monetario,
+                                                            de.moneda_divisa,
+                                                            de.fecha_pago
+                                        ) tbl
+                                GROUP BY 
+                                        tbl.idlote,
+                                        tbl.tipo_persona,
+                                        tbl.actividad_sector,
+                                        tbl.nombre_denominacion,
+                                        tbl.apellido_paterno,
+                                        tbl.apellido_materno,
+                                        tbl.fecha_nacimiento_constitucion,
+                                        tbl.curp,
+                                        tbl.rfc,
+                                        tbl.nacionalidad,
+                                        tbl.direccion,
+                                        tbl.tipo_propiedad,
+                                        tbl.nombre_propiedad,
+                                        tbl.tamanio_terreno,
+                                        tbl.costo,
+                                        tbl.monto_enganche,
+                                        tbl.monto_comision,
+                                        tbl.empresa,
+                                        tbl.fecha_estatus9,
+                                        tbl.fecha_estatus7,
+                                        tbl.forma_pago_enganche,
+                                        tbl.total_pagos,
+                                        tbl.instrumento_monetario,
+                                        tbl.moneda_divisa,
+                                        tbl.fecha_pago
+                                ORDER BY 
+                                        tbl.nombre_propiedad")->result_array(); 
     }
 }
