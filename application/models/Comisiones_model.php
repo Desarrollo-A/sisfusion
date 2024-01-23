@@ -3779,4 +3779,16 @@ class Comisiones_model extends CI_Model {
         contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
+
+    // codigo para mejorar vista de comisionesColaborador.
+    function  getYears(){
+
+        $cmd = 'SELECT * FROM opcs_x_cats where id_catalogo = 115'; 
+        return $this->db->query($cmd)->result_array();
+
+
+    }
+
+
+
 }
