@@ -241,7 +241,7 @@
                     <div class="col-2 col-sm-2 col-md-1 col-lg-1 checkbox pt-0 m-0">
                         <div class="pb-1">
                             <h4 class="label-on-left m-0">VENTA EXTRANJERO</h4>
-                            <input type="checkbox" name="venta_check" id="venta_check" <?php echo $statsInput; ?><?php if ($cliente[0]->venta_extrangero == 1) {echo "checked";}?>>
+                            <input type="checkbox" name="venta_check" id="venta_check" <?php echo $statsInput; ?><?php if ($cliente[0]->venta_extranjero == 2) {echo "checked";}?>>
                             <label class="switch" for="venta_check"></label>
                         </div>
                     </div>

@@ -40,7 +40,7 @@
                                                     <th>FECHA DE REUBICACIÓN</th>
                                                     <th>CONTRATO FIRMADO</th>
                                                     <th>ESTATUS LOTE</th>
-                                                    <th>TIPO VENTA</th>
+                                                    <th>TIPO DE VENTA</th>
                                                 </tr>
                                             </thead>
                                         </table>

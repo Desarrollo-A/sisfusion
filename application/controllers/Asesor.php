@@ -1932,7 +1932,7 @@ class Asesor extends CI_Controller {
         $rfcCopArray = $this->input->post("rfc_cop[]");
         $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
-        $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 1 : 0;
+        $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 2 : 1;
 
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
@@ -2178,7 +2178,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
-        $arreglo_cliente["venta_extrangero"] = $ventaExtranjero; 
+        $arreglo_cliente["venta_extranjero"] = $ventaExtranjero; 
 
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();
