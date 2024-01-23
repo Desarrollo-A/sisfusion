@@ -339,7 +339,7 @@ class Reporte_model extends CI_Model {
             $sedeCargo = "ISNULL(STUFF((select ' ' + nombre + ',' from sedes where id_sede in (select r.idSede from roles_x_usuario r where r.idRol = " . $rolesSede . " and r.idUsuario = u.id_usuario) for xml path('')), 1, 1, ''),'Sin especificar,')";
             $innerSede = "LEFT JOIN roles_x_usuario rxu on rxu.idUsuario = u.id_usuario and rxu.idRol = " .$rolesSede;
         }else{
-            $sedeCargo = "ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, '')'Sin especificar,')";
+            $sedeCargo = "ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, ''),'Sin especificar')";
             $innerSede = "";
         }
 
