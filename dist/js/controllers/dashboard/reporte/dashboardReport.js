@@ -1401,6 +1401,9 @@ function fillTableReport(dataObject) {
                                     case 20:
                                         return 'APARTADO';
                                         break;
+                                    case 21:
+                                        return 'APARTADO';
+                                        break;
                                 }
                             }
                         }
@@ -1536,6 +1539,16 @@ function fillTableReport(dataObject) {
                         }
                         else{
                             return 'ESTÁNDAR';
+                        }
+                    }
+                },
+                {
+                    data: function (d) {
+                        if (d.venta_extrangero == 1 || d.venta_extrangero == '1'){
+                            return 'VENTA EXTRANJERO';
+                        }
+                        else{
+                            return 'VENTA NACIONAL';
                         }
                     }
                 }
