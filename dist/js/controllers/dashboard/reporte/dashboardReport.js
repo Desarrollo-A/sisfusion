@@ -354,11 +354,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 width:"20vw",
                 data: function (d) {
-                    if(d.sedeNombre != null){
                     return '<p class="m-0" style="white-space: normal">'+d.sedeNombre.toUpperCase().slice(0, -1)+'<p>';
-                    }else{
-                        return "<p>NO APLICA</p>";
-                    }
                 }
             },
             {
