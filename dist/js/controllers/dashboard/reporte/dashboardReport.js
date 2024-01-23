@@ -205,8 +205,9 @@ function createAccordions(option, render, rol){
                     <thead>
                         <tr>
                             <th class="detail">MÁS</th>
-                            <th class="encabezado">`+option.toUpperCase()+`</th>
+                            <th class="encabezado text-center">`+option.toUpperCase()+`</th>
                             <th>GRAN TOTAL</th>
+                            <th class="text-center">SEDES CARGO</th>
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -265,57 +266,58 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
     generalDataTable = $("#table"+option).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte de ventas por '+option ,
-                exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                    format: {
-                        header: function (d, columnIdx) {
-                            switch (columnIdx) {
-                                case 1:
-                                    return option;
-                                    break;
-                                case 2:
-                                    return 'GRAN TOTAL'
-                                    break;
-                                case 3:
-                                    return 'MONTO';
-                                    break;
-                                case 4:
-                                    return 'NÚMERO DE LOTES APARTADOS';
-                                    break;
-                                case 5:
-                                    return 'APARTADO';
-                                    break;
-                                case 6:
-                                    return 'CANCELADOS';
-                                    break;
-                                case 7:
-                                    return 'PORCENTAJE DE CANCELADOS';
-                                    break;
-                                case 8:
-                                    return 'NÚMERO DE LOTES CONTRATADOS';
-                                    break;
-                                case 9:
-                                    return 'CONTRATADOS';
-                                    break;
-                                case 10:
-                                    return 'CANCELADOS';
-                                    break;
-                                case 11:
-                                    return 'PORCENTAJE DE CANCELADOS';
-                                    break;
-                            }
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Descargar archivo de Excel',
+            title: 'Reporte de ventas por '+option ,
+            exportOptions: {
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                format: {
+                    header: function (d, columnIdx) {
+                        switch (columnIdx) {
+                            case 1:
+                                return option;
+                                break;
+                            case 2:
+                                return 'GRAN TOTAL'
+                                break;
+                            case 3:
+                                return 'SEDES CARGO'
+                                break;    
+                            case 4:
+                                return 'MONTO';
+                                break;
+                            case 5:
+                                return 'NÚMERO DE LOTES APARTADOS';
+                                break;
+                            case 6:
+                                return 'APARTADO';
+                                break;
+                            case 7:
+                                return 'CANCELADOS';
+                                break;
+                            case 8:
+                                return 'PORCENTAJE DE CANCELADOS';
+                                break;
+                            case 9:
+                                return 'NÚMERO DE LOTES CONTRATADOS';
+                                break;
+                            case 10:
+                                return 'CONTRATADOS';
+                                break;
+                            case 11:
+                                return 'CANCELADOS';
+                                break;
+                            case 12:
+                                return 'PORCENTAJE DE CANCELADOS';
+                                break;
                         }
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -347,6 +349,16 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                }
+            },
+            {
+                width:"20vw",
+                data: function (d) {
+                    if(d.sedeNombre != null){
+                    return '<p class="m-0" style="white-space: normal">'+d.sedeNombre.toUpperCase().slice(0, -1)+'<p>';
+                    }else{
+                        return "<p>NO APLICA</p>";
+                    }
                 }
             },
             {
@@ -994,8 +1006,8 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-          title = 'Reporte de ventas por dirección regional';
-          break;
+            title = 'Reporte de ventas por dirección regional';
+            break;
         case 'gerente':
             title = 'Reporte de ventas por gerencia';
             break;
