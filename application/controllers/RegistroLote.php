@@ -7032,8 +7032,8 @@ class RegistroLote extends CI_Controller
 		$this->load->view('template/header');
 		$this->load->view("contratacion/datos_lotesContratados_view");
 	}
-	public function getLotesContratados()
-	{
+
+	public function getLotesContratados(){
 		ini_set('max_execution_time', 0);
 		set_time_limit(0);
 		ini_set('memory_limit', '2048M');
@@ -7044,6 +7044,7 @@ class RegistroLote extends CI_Controller
 			echo json_encode(array());
 		exit;
 	}
+	
 	public function reportLotesPost45()
 	{
 		$this->load->view('template/header');

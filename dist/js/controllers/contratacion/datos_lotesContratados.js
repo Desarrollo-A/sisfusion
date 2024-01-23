@@ -86,7 +86,6 @@ $(document).ready(function () {
                 }
             },
             { data: 'comentario' },
-            { data: 'tipo_venta' },
             { data: 'modificado' },
             { data: 'fechaApartado' },
             {
@@ -124,8 +123,15 @@ $(document).ready(function () {
                 data: function (d) {
                     return `<span class='label lbl-azure'>${d.ID_Estatus_Lote}</span>`;
                 }
-            }
-        ]
+            }, 
+            { 
+                data: function(d){
+                    if(d.tipo_venta == null)
+                        return `<span class='label lbl-violetBoots'>SIN ESPECIFICAR</span>`;
+                    else
+                        return `<span class='label lbl-violetBoots'>${d.tipo_venta}</span>`;
+                }
+            }]
     });
 });
 
