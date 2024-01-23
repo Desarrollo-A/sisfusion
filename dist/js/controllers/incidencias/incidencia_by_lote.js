@@ -1,5 +1,112 @@
+
+$(document).ready(function () {
+         
+
+});
+
+$("#modalCompartidos").on('submit', function(e){
+    e.preventDefault();
+
+    var data = new FormData();
+
+    var descripcion =  $("#descripcion").val();
+    var idCliente = $("#cliente_modalidad").val();
+    var estatus =  $("#compartida").val();
+    var idLote = $("#idLote").val();
+
+    data.append("descripcion", descripcion);
+    data.append("cliente_modalidad", idCliente);
+    data.append("compartida", estatus);
+    data.append("idLote", idLote);
+
+    $.ajax({
+        url: general_base_url + 'Incidencias/getModalidadCambio',
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        success: function(data) {
+
+            data=JSON.parse(data);
+            
+            if (data === true) {
+                alerts.showNotification("top", "right", "El cambio de modalidad se ha efectuado con éxito", "success");
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#modalCompartidos').modal('hide');
+            }
+            else {
+                alerts.showNotification("top", "right", "El cambio de modalidad no se hizo con éxito.", "danger");
+                $('#spiner-loader').addClass('hide');
+
+            }
+        },
+        error: function(error){
+            console.error(error);
+        }
+    });
+});
+
+//  $("#tabla_Nombre_Porcentaje").DataTable({
+//     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+//     width: 'auto',
+//     buttons: [],
+//     ajax:{
+//         "url": general_base_url+'Incidencias/getRol_Nombre/'
+//     },
+//     pagingType: "full_numbers",
+//     fixedHeader: true,
+//     language: {
+//         url: general_base_url+"/static/spanishLoader_v2.json",
+//         paginate: {
+//             previous: "<i class='fa fa-angle-left'>",
+//             next: "<i class='fa fa-angle-right'>"
+//         }
+//     },
+//     lengthMenu: [
+//         [10, 25, 50, -1],
+//         [10, 25, 50, "Todos"]
+//     ],
+//     scrollX: true,
+//     destroy: true,
+//     ordering: false,
+//     columns: [ 
+//     {data: 'NombreUsuario'},
+//     {data: 'RolGenerado'},
+//     {data: 'porcentaje_decimal'},
+//     ]
+// });
+
+
+
+// $("#btn_sub").on('submit', function(e){
+//     e.preventDefault();
+
+//     var idCliente = $(this).attr("data-cliente");
+
  
- 
+//     $.ajax({
+//         type: 'POST',
+//         url: general_base_url+'Incidencias/getModalidadCambio',
+//         data: {
+//             descripcion: $("#descripcion").val(),
+//             estatus: 0,
+//             id_cliente: idCliente 
+            
+//         },
+//         contentType: false,
+//         cache: false,
+//         processData:false,
+//         success: function(data) {
+//             console.log(data);
+
+//         },
+//         error: function(error){
+//             console.error(error);
+//         }
+//     });
+// });
+
 $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
@@ -1049,35 +1156,42 @@ $(".find_doc").click( function() {
                     if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
                         BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                     }
-                  
                 }
                 else {
                     if(data.registro_comision == 0 || data.registro_comision == 8) {
                         BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button>';
+
                         if(data.tipo_venta == 'null' || data.tipo_venta == 0 || data.tipo_venta == null){
                             BtnStats += '<button href="#" value="'+data.idLote+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="I" class="btn-data btn-orangeYellow tipo_venta" title="Cambiar tipo de venta"><i class="fas fa-map-marker-alt"></i></button>';
                         }         
-                        // if(data.registro_comision == 0){
-                        //     BtnStats += '<button href="#" value="'+data.idLote+'" data-idLote="'+data.idLote+'"  data-cliente="'+data.id_cliente+'" data-sedesName="'+data.nombre+'"  data-sedes="'+data.id_sede+'" data-nombre="'+data.nombreLote+'" data-tipo="'+data.tipo+'" data-tipo="1" class="btn-data btn-violetDeep cambioSede"  title="Cambio de sede"> <i class="fas fa-map-signs"></i> </button> '
-
-                        // }     
                     }
-                    else if(data.registro_comision == 7 ) {
+                    else if(data.registro_comision == 7) {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
-                        BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                        BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                        
+                        if(data.compartida != null){
+                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                        }
+                        
 
                     }
                     else if(data.registro_comision == 1 ) {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
-                        BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                        BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
 
+                        if(data.compartida != null){
+                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                        }
+                            
                     }
                     else {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
-                        BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
-                    
+                        BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
+                        if(data.compartida !== null){
+                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                        }
                     }
                 }
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
@@ -1149,6 +1263,158 @@ $(".find_doc").click( function() {
             </div>`);
         $("#modal_pagadas").modal();
     });
+    
+    $('.decimals').on('input', function() {
+        const idUsuario = $(this).data('id-usuario');
+        const nuevoPorcentaje = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+    
+        $(this).val(nuevoPorcentaje);
+    
+        cambios[idUsuario] = nuevoPorcentaje;
+    });
+
+    let objInputs = {};
+
+    $(document).on('click', '#btn_aceptar_porcentajes', function() {
+        $.ajax({
+            url: general_base_url + 'Incidencias/NUEVAFUNCION',
+            type: 'post',
+            dataType: 'JSON',
+            data: { cambios: cambios },
+            success: function (respuesta) {
+                console.log(respuesta);
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    });
+
+    /**-------------------CAMBIO MODALIDAD------------------------------- */
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e){
+
+        document.getElementById("nombrePorcentaje").innerHTML = '';
+
+        id_cliente = $(this).attr("data-cliente");
+        $('#cliente_modalidad').val(id_cliente);
+
+        compartida = $(this).attr("data-compartida")
+        $('#compartida').val(compartida);
+
+        idLote = $(this).attr("data-idLote");
+        $('#idLote').val(idLote);
+
+        $.ajax({
+            url: general_base_url + 'Incidencias/getRol_Nombre',
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                'id_cliente':id_cliente,
+                'idLote':idLote,
+                'id_comision': $(this).attr("data-id-comision"),
+                'id_usuario': $(this).attr("data-id_usuario")
+            },
+            success: function (INFORMACION) {
+                //console.log(INFORMACION);
+        
+                const size = INFORMACION.length;
+                let htmlTableBody = `
+                    <table style="border-collapse: collapse; width: 100%; margin-top: 20px; border: 1px solid #ddd;">
+                        <thead style="background-color: #343a40; color: white;">
+                            <tr>
+                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE USUARIO</th>
+                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE ROL</th>
+                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Antiguo </th>
+                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Nuevo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+        
+                for (let i = 0; i < size; i++) {
+                    const {id_comision, id_usuario, nuevo_porcentaje_decimal, porcentaje_antiguo, NombreUsuario, NombreRol } = INFORMACION[i];
+        
+                    const rowColor = i % 2 === 0 ? '#f2f2f2' : '#ffffff';
+        
+                    htmlTableBody += `
+                        <tr style="background-color: ${rowColor};">
+                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreUsuario}</td>
+                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreRol}</td>
+                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${porcentaje_antiguo}%</td>
+                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">
+                              
+                                <input class="form-control input-gral decimals" data-old="" data-id-usuario="${id_usuario}"
+                                value="${nuevo_porcentaje_decimal}" data-original-value="${id_comision}" data-original-value="${id_usuario}" data-original-value="${id_usuario}" data-original-value="${nuevo_porcentaje_decimal}">
+
+
+                            </td>
+                        </tr>
+                    `;
+                    objInputs[id_usuario] = nuevo_porcentaje_decimal;
+
+                }
+                console.log(objInputs);
+
+        
+                htmlTableBody += `
+                        </tbody>
+                    </table>
+                `;
+                // Limpiar el contenido existente
+                $('#nombrePorcentaje').html('');
+
+                // Agregar la tabla al contenedor
+                $('#nombrePorcentaje').html(htmlTableBody);
+
+                // Agregar los botones al contenedor
+                $('#nombrePorcentaje').append('<div class="d-flex justify-center">');
+                $('#nombrePorcentaje').append('<button type="button" id="btn_aceptar_porcentajes" class="btn btn-danger btn-simple mx-auto">RECHAZAR PORCENTAJES</button>');
+                $('#nombrePorcentaje').append('<button type="button" id="btn_cancelar_porcentajes" class="btn btn-success btn-simple mx-auto">ACEPTAR PORCENTAJES</button>');
+                $('#nombrePorcentaje').append('</div>');
+        
+                $("#modalCompartidos").modal();
+                document.getElementById("cliente_modalidad").value = id_cliente;
+                document.getElementById("compartida").value = compartida;
+                document.getElementById("idLote").value = idLote;
+
+                $('#btn_aceptar_porcentajes').hide();
+
+                $('#btn_aceptar_porcentajes').on('click', function () {
+                    $('.decimals').removeAttr('readonly');
+                    $(this).hide();
+                    $('#btn_cancelar_porcentajes').show();
+                    alerts.showNotification("top", "right", "El porcentaje ha sido cancelado.", "danger");
+
+                });
+
+                $('#btn_cancelar_porcentajes').on('click', function () {
+                    $('.decimals').attr('readonly', true);
+                    $(this).hide();
+                    $('#btn_aceptar_porcentajes').show();
+                    alerts.showNotification("top", "right", "El porcentaje ha sido aceptado.", "success");
+                    let arrInputs = document.querySelectorAll(".decimals");
+                    console.log(arrInputs[0].value)
+                    console.log(arrInputs.length)
+                    let dataEnviar = []
+                    
+                    for(let contador = 0; contador <= arrInputs.length ; contador ++ )
+                    {
+                        objInputs[contador] =  arrInputs[contador];
+                       // dataEnviar.push(arrInputs[i].value);
+                       //console.log(dataEnviar);
+                    }
+                    console.log(objInputs);
+
+                });
+
+            }
+        });
+    }); 
+
+    
+
+
+
 
     /**-------------------INVENTARIO------------------------------- */
     $("#tabla_inventario_contraloria tbody").on("click", ".inventario", function(e){
