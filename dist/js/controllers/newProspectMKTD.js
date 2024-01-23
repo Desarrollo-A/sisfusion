@@ -1,7 +1,6 @@
 $(document).ready(function() {
 	$(".select-is-empty").removeClass("is-empty");
-
-    console.log("wer")
+    
     $.getJSON("getCAPListByAdvisor").done(function(data) {
         $("#specify_recommends").append($('<option>').val("0").text("Seleccione una opción"));
         var len = data.length;
