@@ -698,7 +698,7 @@ class Reporte_model extends CI_Model {
             FORMAT(ISNULL(lo.sup * lo.precio, '0.00'), 'C') precioLista, 
 			CASE WHEN(lo.casa = '0') THEN 'SIN CASA' ELSE 'CON CASA' END casa, DATEDIFF(day, cl.fechaApartado, GETDATE()) AS diasApartado, cl.apartadoXReubicacion, FORMAT(SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END), 'C') precioDescuento,
             lo.sup,
-            CASE WHEN (vc.id_vcompartida = 0) THEN 'VENTA COMPARTIDA' ELSE 'VENTA NORMAL' END AS modalidad
+            CASE WHEN (vc.id_vcompartida > 0) THEN 'VENTA COMPARTIDA' ELSE 'VENTA NORMAL' END AS modalidad
             FROM clientes cl
             INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente AND lo.idStatusLote $statusLote
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -709,7 +709,7 @@ class Reporte_model extends CI_Model {
             $joinHist
             $filtroSt
             $comodin2 JOIN usuarios us ON us.id_usuario = cl.$comodin
-            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente
+            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus IN (1,2)
             LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
             LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
             LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
