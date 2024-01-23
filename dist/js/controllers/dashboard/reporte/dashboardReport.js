@@ -1332,9 +1332,8 @@ function fillTableReport(dataObject) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title:'Desglose de lotes',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1349,7 +1348,7 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 3:
                                         return 'SUPERFICIE'
-                                        break;    
+                                        break;
                                     case 4:
                                         return 'PRECIO DE LISTA';
                                         break;
@@ -1379,7 +1378,7 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 13:
                                         return 'FECHA DE APARTADO';
-                                        break;
+                                    break;
                                     case 14:
                                         return 'FECHA DE ÚLTIMO ESTATUS';
                                         break;
@@ -1400,6 +1399,9 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 20:
                                         return 'APARTADO';
+                                        break;
+                                    case 21:
+                                        return 'VENTA';
                                         break;
                                 }
                             }
@@ -1425,120 +1427,42 @@ function fillTableReport(dataObject) {
             destroy: true,
             ordering: false,
             columns: [
+                { data: 'nombreResidencial' },
+                { data: 'nombreCondominio' },
+                { data: 'nombreLote' },
+                { data: 'sup' },
+                { data: 'precioLista' },
+                { data: 'precioDescuento' },
+                { data: 'casa' },
+                { data: 'nombreCliente' },
+                { data: 'nombreAsesor' },
+                { data: 'nombreCoordinador' },
+                { data: 'nombreGerente' },
+                { data: 'nombreSubdirector' },
+                { data: 'nombreRegional' },
+                { data: 'fechaApartado' },
+                { data: 'fechaUltimoStatus' },
+                { data: 'diasUltimoStatus' },
+                { data: 'nombreStatus' },
                 {
                     data: function (d) {
-                        return d.nombreResidencial;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCondominio;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.sup;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.precioLista;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.precioDescuento;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.casa;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCliente;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreAsesor;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCoordinador;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreGerente;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreSubdirector;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreRegional;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.fechaApartado;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.fechaUltimoStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.diasUltimoStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        if(d.fechaStatus9 == null){
+                        if(d.fechaStatus9 == null)
                             return 'NO APLICA';
-                        }
                         else
                             return d.fechaStatus9;
                     }
                 },
+                { data: 'diasStatus9' },
+                { data: 'estatusLote' },
                 {
                     data: function (d) {
-                        return d.diasStatus9;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.estatusLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
+                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1')
                             return 'APARTADO POR REUBICACIÓN';
-                        }
-                        else{
+                        else
                             return 'ESTÁNDAR';
-                        }
                     }
-                }
+                },
+                { data: 'venta_extranjero' }
             ],
             columnDefs: [{
                 visible: false,
