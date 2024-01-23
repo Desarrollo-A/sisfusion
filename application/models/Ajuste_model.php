@@ -72,4 +72,9 @@ class Ajuste_model extends CI_Model {
             return $e->getMessage();
         }     
     }
+
+    public function getanios(){
+        $cmd = "SELECT * FROM opcs_x_cats WHERE id_catalogo = 115";
+        return $this->db->query ($cmd );
+    }
 }

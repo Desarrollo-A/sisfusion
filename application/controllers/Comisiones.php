@@ -1680,9 +1680,9 @@ class Comisiones extends CI_Controller
     }
   }
 
-  public function cobranza_dinamic(){
+  public function reporte_dinamico_cobranza(){
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_dinamic");
+    $this->load->view("comisiones/cobranza/reporte_dinamico_view");
   }
   
   public function getDatosCobranzaDimamic($a,$b,$c,$d){
@@ -3149,6 +3149,5 @@ class Comisiones extends CI_Controller
     echo json_encode($result);
   }
 
-
-
 }
+ 
