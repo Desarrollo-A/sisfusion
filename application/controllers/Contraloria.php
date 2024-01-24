@@ -3185,7 +3185,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function get_tipo_venta() {
-       
         echo json_encode($this->Contraloria_model->get_tipo_venta()->result_array());
     }
 
@@ -3266,7 +3265,8 @@ class Contraloria extends CI_Controller {
         $data["modificado_por"] = $this->session->userdata('id_usuario');
         $data["fecha_modificacion"] = $fecha;
         $resultado = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-        echo($resultado);
+
+        echo json_encode($resultado);
     }
 
     public function actualizar_precio($idLote, $precio){       

@@ -146,16 +146,16 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#nuevas-1" role="tab"  data-toggle="tab">Nuevas</a>
+                                <a href="#nuevas-1" role="tab" onclick="cambiarTaps(1);"  data-toggle="tab">Nuevas</a>
                             </li>
                             <li>
-                                <a href="#resguardo-1" role="tab" data-toggle="tab">RESGUARDO</a>
+                                <a href="#resguardo-1" role="tab" onclick="cambiarTaps(2);" data-toggle="tab">RESGUARDO</a>
                             </li>
                             <li>
-                                <a href="#proceso-1" role="tab"  data-toggle="tab">EN REVISIÓN</a>
+                                <a href="#proceso-1" role="tab" onclick="cambiarTaps(3);"  data-toggle="tab">EN REVISIÓN</a>
                             </li>
                             <li>
-                                <a href="#proceso-2" role="tab"  data-toggle="tab">Por pagar</a>
+                                <a href="#proceso-2" role="tab" onclick="cambiarTaps(4);" data-toggle="tab">Por pagar</a>
                             </li>
                             <li>
                                 <a href="#otras-1" role="tab"  data-toggle="tab">Otras</a>
@@ -558,26 +558,7 @@
                                             <div class="encabezadoBox">
                                             <p class="card-title pl-1">Comisiones sin pago reflejado en NEODATA y que por ello no se han dispersado ciertos lotes con tus comisiones.</p>
                                             </div>
-                                            <div class="toolbar">
-                                                <div class="container-fluid p-0">
-                                                    <?php ?>
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                                <div class="form-group">
-                                                                    <label class="control-label" for="catalogo_pago">Proyecto</label>
-                                                                    <select name="catalogo_pago" id="catalogo_pago" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                                                <div class="form-group">
-                                                                    <label class="control-label" for="condominio_pago">Condominio</label>
-                                                                    <select name="condominio_pago" id="condominio_pago" class="selectpicker select-gral" data-container="body" data-style="btn btn-second" data-show-subtext="true" data-live-search="true"  title="Selecciona una opción" data-size="7" required></select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    <?php  ?> 
-                                                </div>
-                                            </div>
+                                            <?php $this->load->view("ventas/filtrosProCond"); ?>
                                             <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
                                                 <thead>
                                                     <tr>
