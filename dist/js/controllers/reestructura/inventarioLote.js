@@ -2,12 +2,7 @@ $(document).ready(function(){
     $("#tabla_inventario").addClass('hide');
 
     $.post(general_base_url + "Reestructura/getEstatusLote",   function (data) {
-        
         var len = data.length;
-        const ids = data.map((row) => {
-            return row.idStatusContratacion;
-        }).join(',');
-    
         for (var i = 0; i < len; i++) {
             var id = data[i]['idStatusContratacion'];
             var name = data[i]['nombreStatus'];            
@@ -21,10 +16,8 @@ $(document).ready(function(){
 
 $('#estatus_lotes').change(function () {
     let index_estatus = $(this).val();
-
     $("#spiner-loader").removeClass('hide');
     $("#tabla_inventario").removeClass('hide');
-
     fillTable(index_estatus);
 });
 
@@ -168,8 +161,6 @@ function fillTable(index_estatus) {
     });
     
     $('#tabla_inventario').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
+        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 }

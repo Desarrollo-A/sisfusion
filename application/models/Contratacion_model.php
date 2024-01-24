@@ -15,7 +15,7 @@ class Contratacion_model extends CI_Model {
    }
 
    function get_estatus_lote() {
-      $where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "WHERE idStatusLote NOT IN (15, 16)" : "";
+      $where = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "WHERE idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       return $this->db->query("SELECT idStatusLote, UPPER(nombre) nombre FROM [statuslote] $where");
    }
 
@@ -50,7 +50,7 @@ class Contratacion_model extends CI_Model {
    }
 
    function getInventarioData($estatus, $condominio, $proyecto,  $sede_residencial) {
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4)" : "";
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : $this->session->userdata('id_rol') == 40 "AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       $filtroProyecto = "";
       $filtroCondominio = "";
@@ -200,7 +200,7 @@ class Contratacion_model extends CI_Model {
     }
 
     function getInventoryBylote($idLote){
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4)" : "";
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
       lot.total, lot.totalNeto2, lot.referencia, UPPER(CONVERT(VARCHAR,lot.comentario)) AS comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' CASA') ELSE sl.nombre END as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
@@ -244,7 +244,7 @@ class Contratacion_model extends CI_Model {
       ini_set('max_execution_time', 900);
       set_time_limit(900);
       ini_set('memory_limit','2048M');
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4)" : "";
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
       res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup, 
