@@ -3822,4 +3822,24 @@ class Comisiones_model extends CI_Model {
         (SELECT Coalesce(SUM (abono_neodata),0) pausados FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = $idUsuario)
         ");
      }
+
+    // codigo para mejorar vista de comisionesColaborador.
+    function  getYears(){
+
+        $cmd = 'SELECT * FROM opcs_x_cats where id_catalogo = 115'; 
+        return $this->db->query($cmd)->result_array();
+
+
+    }
+
+    function  tipoDePago(){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $cmd = "SELECT forma_pago FROM usuarios WHERE id_usuario = $id_usuario"; 
+        return $this->db->query($cmd)->row();
+
+
+    }
+
+    
+
 }

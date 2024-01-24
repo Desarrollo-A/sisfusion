@@ -43,8 +43,9 @@ class Comisiones extends CI_Controller
     if ($this->session->userdata('id_rol') == FALSE)
         redirect(base_url());
         $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+        $datos['vistas']["elementos"] = $this->load->view('complementos/estilos_extra');
         $this->load->view('template/header');
-        $this->load->view("comisiones/dispersion-view", $datos);
+        $this->load->view("comisiones/dispersion-view");
   }
 
   public function getDataDispersionPago() {
@@ -291,17 +292,26 @@ class Comisiones extends CI_Controller
   public function comisiones_colaborador(){
     $datos = array();
     $datos["opn_cumplimiento"] = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    
     $this->load->view('template/header');
+
+  
+    $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
+        if ($this->session->userdata('id_usuario') == 13546) {// ALEJANDRO GONZÁLEZ DÁVALOS
+          $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
           $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
-        else
+        }
+        else{
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        }
       break;
       default:
-        $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
+     // $this->load->view('ooam/asesor_ooam_view');
+         $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
+         $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
@@ -335,14 +345,6 @@ class Comisiones extends CI_Controller
 
   public function getDatosComisionesAsesor($a = ''){
     $respuesta =  $this->Comisiones_model->getDatosComisionesAsesor($a)->result_array();
-    // echo json_encode($respuesta["Datos"][0]["estatus"]) ;
-
-      
-      
-    
-      for ($i = 0; $i < count($respuesta); $i++) {
-        $respuesta[$i]['pa'] = 0;
-      }   
     echo json_encode($respuesta);
   }
 
@@ -555,9 +557,9 @@ class Comisiones extends CI_Controller
   
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = 0 AND estatus = 1 AND mes = $mesActual")->result_array();
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
+    $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -746,7 +748,8 @@ class Comisiones extends CI_Controller
   }
 
   public function guardar_solicitud2($usuario = ''){
-    $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
+    $usuario = $this->session->userdata('id_usuario');
+    $validar_sede =$this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
     $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
@@ -1688,9 +1691,9 @@ class Comisiones extends CI_Controller
     }
   }
 
-  public function cobranza_dinamic(){
+  public function reporte_dinamico_cobranza(){
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_dinamic");
+    $this->load->view("comisiones/cobranza/reporte_dinamico_view");
   }
   
   public function getDatosCobranzaDimamic($a,$b,$c,$d){
@@ -3135,12 +3138,12 @@ class Comisiones extends CI_Controller
   public function comisiones_reporteDatos(){
     $beginDate = $this->input->post('beginDate');
     $endDate = $this->input->post('endDate');
-    $data['data']=$this->reporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
+    $data['data']=$this->ReporteContratacion_model->comisiones_reporteDatos($beginDate,$endDate)->result_array();
     echo json_encode($data);
   }
 
   public function usuarios_rol_7(){
-    $result=$this->reporteContratacion_model->usuarios_rol_7();
+    $result=$this->ReporteContratacion_model->usuarios_rol_7();
     echo json_encode($result);
   }
 
@@ -3158,5 +3161,21 @@ class Comisiones extends CI_Controller
     echo json_encode($data);
     
   }
+  public function getYears(){
+
+    $result = $this->Comisiones_model->getYears();
+    echo json_encode($result);
+  }
+
+  public function tipoDePago(){
+    $result = $this->Comisiones_model->tipoDePago();
+    echo json_encode($result);
+  } 
+
+  public function opnCumplimiento(){
+    $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    echo json_encode($result); 
+  }
+
   
 }
