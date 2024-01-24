@@ -18,6 +18,8 @@ class Comisiones extends CI_Controller
     $this->load->model('General_model');
     $this->load->model('Pagos_model');
     $this->load->model('reporteContratacion_model');
+    $this->load->model('Contratacion_model');
+
     
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
@@ -304,9 +306,12 @@ class Comisiones extends CI_Controller
     }
   }
 
-  public function getDatosComisionesRigel($proyecto,$condominio,$estado){
+  public function getDatosComisionesRigel(){
+    $proyecto = $this->input->post('idProyecto'); 
+    $condominio = $this->input->post('idCondominio'); 
+    $estado= $this->input->post('estatus'); 
     $dat =  $this->Comisiones_model->getDatosComisionesRigel($proyecto,$condominio,$estado)->result_array();
-    echo json_encode(array("data" => $dat));
+    echo json_encode($dat);
   }
 
   public function asesores_baja(){
@@ -360,9 +365,9 @@ class Comisiones extends CI_Controller
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
     $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i,u.forma_pago FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
-    if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+    if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
       $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
@@ -394,7 +399,7 @@ class Comisiones extends CI_Controller
             $pagoInvoice = array();
 
             foreach ($consulta_comisiones as $row) {
-              $id_pago_i .= implode($sep, $row);
+              $id_pago_i .= implode($sep, $row['id_pago_i']);
               $id_pago_i .= $sep;
 
               $row_arr=array(
@@ -2890,9 +2895,9 @@ class Comisiones extends CI_Controller
 
   public function updateBanderaDetenida() {
     $idLote = $this->input->post('idLote');
-    $bandera = true;  
     $datosRegistro = $this->Comisiones_model->ultimoRegistro($idLote);
     $nuevoRegistroComision = $datosRegistro->anterior;
+    $bandera = $nuevoRegistroComision == 0 ? false : true;  
     $response = $this->Comisiones_model->updateBanderaDetenida($idLote , $bandera, $nuevoRegistroComision);
     echo json_encode($response);
   }
@@ -3137,6 +3142,21 @@ class Comisiones extends CI_Controller
   public function usuarios_rol_7(){
     $result=$this->reporteContratacion_model->usuarios_rol_7();
     echo json_encode($result);
+  }
+
+  public function getDatosFechasProyecCondm(){
+
+    $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
+    //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
+    $mesActual = date('m'); 
+    $data = array(
+      "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
+      "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$mesActual),
+      "condominios" => $this->Comisiones_model->get_condominios_lista()->result_array(),
+      "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array()
+    );
+    echo json_encode($data);
+    
   }
   
 }
