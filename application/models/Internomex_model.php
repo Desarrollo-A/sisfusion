@@ -409,54 +409,20 @@ class Internomex_model extends CI_Model {
         WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result();
     }
 
-    // CONSULTA PARA TRAR EL CATALOGO DE FORMAS DE PAGO
-    function getCatalogoFormaPago(){
-
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=110");
-	
-	}
-
-    // CONSULTA PARA TRAR EL CATALOGO DE INSTRUMENTO MONETARIO
-    function getInstrumentoMonetario(){
-
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=111");
-	
-	}
-
-    // CONSULTA PARA TRAR EL CATALOGO DE MONEDA DIVISA
-    function getMonedaDivisa(){
-
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=112");
-	
+    // CONSULTA PARA TRAER LA OPCIONES DEL CATÁLOGO FORMA DE PAGO, INSTRUMENTO MONETARIO Y MONEDA O DIVISA
+    function getCatalogoFormaPago() {
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112)");
 	}
 
     // CONSULTA PARA TRAER LOS DATOS DE LOS ENGANCHES DE UN LOTE
-    function getEnganches($idLote){
-
+    function getEnganches($idLote) {
         return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa FROM enganche eng
         INNER JOIN det_enganche det_eng ON det_eng.idEnganche=eng.idEnganche
         INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.forma_pago AND opcFormaP.id_catalogo = 110
         INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = det_eng.instrumento_monetario AND opcInsMon.id_catalogo = 111
         INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = det_eng.moneda_divisa AND opcMonedaD.id_catalogo = 112
         WHERE det_eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.id_lote=$idLote)");
-	
 	}
-
-    // CONSULTA PARA ACTUALIZAR LOS DATOS DE DETALLE DE DE ENGANCHE
-    function actualizarDetEnganche($data){
-        return $this->db->update_batch("det_enganche", $data, 'id_det_enganche');
-    }
-
-    // CONSULTA PARA GUARDAR NUEVO DATOS DE ENGANCHE
-    function insertarNuevoEnganche($data){
-        return $this->db->insert_batch("enganche", $data);
-    }
-
-    // CONSULTA PARA GUARDAR NUEVO DATOS DE DETALLE ENGANCHE
-    function insertarNuevoDetEnganche($data){
-        return $this->db->insert_batch("det_enganche", $data);
-    }
-
 // ----------------------------------------------------------------------------------------------------------------------------------------
 
 }

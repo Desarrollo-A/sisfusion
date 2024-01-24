@@ -1,11 +1,9 @@
-// ----------------------------------------------------------------------------------------------------------------------------------------
-
-var cont_eng= 0; 
-var objEnganche= {enganchesGuardados: [], nuevoEnganche: []};
+var cont_eng = 0;
+var objEnganche = { enganchesGuardados: [], nuevoEnganche: [] };
 
 $(document).ready(function () {
     $('#spiner-loader').removeClass('hide');
-    $.post(general_base_url + "Contratacion/lista_proyecto", function (data) {
+    $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['idResidencial'];
@@ -19,12 +17,11 @@ $(document).ready(function () {
 
 $('#proyecto').change(function () {
     let index_proyecto = $(this).val();
-    console.log(index_proyecto);
     $("#condominio").html("");
     $("#table_lotes_enganche").removeClass('hide');
     $('#spiner-loader').removeClass('hide');
     $(document).ready(function () {
-        $.post(general_base_url + "Contratacion/lista_condominio/" + index_proyecto, function (data) {
+        $.post(`${general_base_url}Contratacion/lista_condominio/${index_proyecto}`, function (data) {
             var len = data.length;
             for (var i = 0; i < len; i++) {
                 var id = data[i]['idCondominio'];
@@ -42,7 +39,6 @@ $('#condominio').change(function () {
     // $('#spiner-loader').removeClass('hide');
     let index_proyecto = $("#proyecto").val();
     let index_condominio = $(this).val();
-    console.log(index_condominio);
     fillTable(index_proyecto, index_condominio);
     // $('#spiner-loader').addClass('hide');
 });
@@ -55,15 +51,15 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    if( id_rol_global == 31 )
+    if (id_rol_global == 31)
         $('.generate').trigger('click');
     else
         $('.find-results').trigger('click');
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({ locale: 'es' });
 });
 
-sp = { 
+sp = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -107,13 +103,13 @@ const excluir_column = ['ACCIONES', 'MÁS'];
 $("#table_lotes_enganche").ready(function () {
     $('#table_lotes_enganche thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
-        if (!excluir_column.includes(title) && title !== ''){
+        if (!excluir_column.includes(title) && title !== '') {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length);
         }
-        if(title !== ''){
-            let readOnly = excluir_column.includes(title) ? 'readOnly': '';
-            let width = title=='MÁS' ? 'width: 37px;': (title == 'ACCIONES' ? 'width: 57px;' : '');
+        if (title !== '') {
+            let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
+            let width = title == 'MÁS' ? 'width: 37px;' : (title == 'ACCIONES' ? 'width: 57px;' : '');
             $(this).html(`<input type="text" style="${width}" class="textoshead " data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_valores_cliente.column(i).search() !== this.value) {
@@ -127,7 +123,7 @@ $("#table_lotes_enganche").ready(function () {
 function fillTable(index_proyecto, index_condominio) {
     tabla_valores_cliente = $("#table_lotes_enganche").DataTable({
         width: '100%',
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -138,14 +134,14 @@ function fillTable(index_proyecto, index_condominio) {
                 columns: num_colum_encabezado,
                 format: {
                     header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx-1] +' ';
+                        return ' ' + titulos_encabezado[columnIdx - 1] + ' ';
                     }
                 }
             },
         }],
         pagingType: "full_numbers",
         language: {
-            url: general_base_url + "static/spanishLoader_v2.json",
+            url: `${general_base_url}static/spanishLoader_v2.json`,
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
@@ -162,68 +158,28 @@ function fillTable(index_proyecto, index_condominio) {
         fixedColumns: true,
         destroy: true,
         columns: [
+            { data: 'nombreResidencial' },
+            { data: 'nombreCondominio' },
+            { data: 'nombreLote' },
+            { data: 'idLote' },
+            { data: 'nombreCliente' },
+            { data: 'fechaApartado' },
+            { data: 'nombreAsesor' },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.nombreResidencial==null || d.nombreResidencial==''? 'SIN ESPECIFICAR': d.nombreResidencial) + '</p>';
+                    return `<span class='label lbl-azure'>${d.tipoVenta}</span>`;
                 }
             },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.nombreCondominio==null || d.nombreCondominio==''? 'SIN ESPECIFICAR': d.nombreCondominio) + '</p>';
+                    return `<span class='label blueMaderas'>${d.ubicacion}</span>`;
                 }
             },
+            { data: 'engancheContraloria' },
+            { data: 'engancheAdministracion' },
             {
                 data: function (d) {
-                    return '<p class="m-0">' + (d.nombreLote==null || d.nombreLote==''? 'SIN ESPECIFICAR': d.nombreLote) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.idLote==null || d.idLote==''? 'SIN ESPECIFICAR': d.idLote) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-1">' + (d.nombreCliente==null || d.nombreCliente==''? 'SIN ESPECIFICAR': d.nombreLote) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? 'SIN ESPECIFICAR' : d.fechaApartado) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.nombreAsesor==null || d.nombreAsesor==''? 'SIN ESPECIFICAR': d.nombreAsesor) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.tipoVenta==null || d.tipoVenta==''? 'SIN ESPECIFICAR': d.tipoVenta) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.ubicacion==null || d.ubicacion==''? 'SIN ESPECIFICAR': d.ubicacion) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    // return '<p class="m-0">$ ' + myFunctions.number_format(d.engancheContraloria, 2, '.', ',') + '</p>';
-                    return '<p class="m-0">' + (d.engancheContraloria==null || d.engancheContraloria==''? 'SIN ESPECIFICAR': d.engancheContraloria) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    // return '<p class="m-0">$ ' + myFunctions.number_format(d.engancheAdministracion, 2, '.', ',') + '</p>';
-                    return '<p class="m-0">' + (d.engancheContraloria==null || d.engancheContraloria==''? 'SIN ESPECIFICAR': d.engancheContraloria) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return `<center>
-                                <button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}"><i class="material-icons">attach_money</i></button>
-                            </center>`;
+                    return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}"><i class="material-icons">attach_money</i></button>`;
                 }
             }
         ],
@@ -234,7 +190,7 @@ function fillTable(index_proyecto, index_condominio) {
             orderable: false
         }],
         ajax: {
-            url: general_base_url + "Internomex/getRegistroLotesEng",
+            url: `${general_base_url}Internomex/getRegistroLotesEng`,
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -243,17 +199,17 @@ function fillTable(index_proyecto, index_condominio) {
                 "index_condominio": index_condominio
             }
         },
-        "order": [
+        order: [
             [1, 'asc']
         ],
     });
 
-    $('#table_lotes_enganche').on('draw.dt', function() {
+    $('#table_lotes_enganche').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-    
+
 }
 
 $(window).resize(function () {
@@ -266,257 +222,190 @@ $(document).on('click', '.cop', function (e) {
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
     id_lote_global = id_lote;
-    // tableHistorial.ajax.reload();
-
-
     $.ajax({
         type: "POST",
-        url: general_base_url+"Internomex/catalogosEnganche",
+        url: `${general_base_url}Internomex/catalogosEnganche`,
         dataType: "json",
-        data: { idLote: id_lote},
-      })
+        data: { idLote: id_lote },
+    })
         .done(function (dto) {
-          if (dto != []) {
-    
-              try {
-                if (dto.status==1) {
-                    $('#txtIdLote').val(id_lote);
-                    generarInputCatalogos(dto);
-                    console.log(dto);
-                    $('#verDetalles').modal('show');
-                }
-                else {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los datos.", "danger");
-                }
-    
-              } catch (error) {
-                if (error instanceof SyntaxError) {
-                  console.log(error)
-                } else {
-                  throw error; // si es otro error, que lo siga lanzando
+            if (dto != []) {
+                try {
+                    if (dto.status == 1) {
+                        $('#txtIdLote').val(id_lote);
+                        generarInputCatalogos(dto);
+                        $('#verDetalles').modal('show');
+                    }
+                    else
+                        alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los datos.", "danger");
+                } catch (error) {
+                    if (error instanceof SyntaxError) {
+                    } else {
+                        throw error; // si es otro error, que lo siga lanzando
+                    }
                 }
             }
-          }
-          else {
-            console.log("ERROR AL TRAER LOS CATALOGOS");
-          }
-    
-          return dto;
+            else
+                alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los datos.", "danger");
+            return dto;
         })
         .fail(function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catalogos de enganche.", "danger");
+            alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catálogos de enganche.", "danger");
         });
 });
 
-function cerrarModalDetEnganche(){
-        $("#cmbFormaPago").html("");
-        $("#cmbInsMonetario").html("");
-        $("#cmbMonedaDiv").html("");
-        $("#txtIdLote").attr("data-idDetEnganche","0");
-        $("#cmbFormaPago").selectpicker('refresh');
-        $("#cmbInsMonetario").selectpicker('refresh');
-        $("#cmbMonedaDiv").selectpicker('refresh');
-    
-        $('#verDetalles').modal('hide');
-
-        $("#pila-carrito").html("");
-        objEnganche= {enganchesGuardados: [], nuevoEnganche: []};
-        cont_eng=0;
+function cerrarModalDetEnganche() {
+    $("#cmbFormaPago").html("");
+    $("#cmbInsMonetario").html("");
+    $("#cmbMonedaDiv").html("");
+    $("#txtIdLote").attr("data-idDetEnganche", "0");
+    $("#cmbFormaPago").selectpicker('refresh');
+    $("#cmbInsMonetario").selectpicker('refresh');
+    $("#cmbMonedaDiv").selectpicker('refresh');
+    $('#verDetalles').modal('hide');
+    $("#pila-carrito").html("");
+    objEnganche = { enganchesGuardados: [], nuevoEnganche: [] };
+    cont_eng = 0;
 }
 
-function generarInputCatalogos(dto){
-
-    dto.dtoFormaPago.forEach((formaPago) => {
-        $("#cmbFormaPago").append(
-          '<option value="' + formaPago.id_opcion +'" data-FormaPgo="'+ formaPago.nombre +'">' + formaPago.nombre +"</option>"
-        );
-        console.log(formaPago.id_opcion);
-        console.log(formaPago.nombre);
-      });
-      dto.dtoInstrumentoMonetario.forEach((InsMonetario) => {
-        $("#cmbInsMonetario").append(
-          '<option value="' + InsMonetario.id_opcion +'" data-InsMon="'+ InsMonetario.nombre +'">' + InsMonetario.nombre +"</option>"
-        );
-      });
-      dto.dtoMonedaDivisa.forEach((monedaDivisa) => {
-        $("#cmbMonedaDiv").append(
-          '<option value="' + monedaDivisa.id_opcion +'" data-MonDiv="'+ monedaDivisa.nombre +'">' + monedaDivisa.nombre +"</option>"
-        );
-      });
-
-      if(dto.dtoEnganches.length>0){
-        agregarEngancheT(dto.dtoEnganches);       
-    }else{
-
-    }
-        $("#cmbFormaPago").selectpicker('refresh');
-        $("#cmbInsMonetario").selectpicker('refresh');
-        $("#cmbMonedaDiv").selectpicker('refresh');
+function generarInputCatalogos(dto) {
+    dto.dtoCatalogos.forEach((catalogoOpciones) => {
+        if (catalogoOpciones.id__catalogo == 110) // FROMA DE PAGO
+            $("#cmbFormaPago").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+        if (catalogoOpciones.id__catalogo == 111) // INSTRUMENTO MONETARIO
+            $("#cmbInsMonetario").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+        if (catalogoOpciones.id__catalogo == 112) // MONEDA O DIVISA
+            $("#cmbMonedaDiv").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+    });
+    if (dto.dtoEnganches.length > 0)
+        agregarEngancheT(dto.dtoEnganches);
+    $("#cmbFormaPago").selectpicker('refresh');
+    $("#cmbInsMonetario").selectpicker('refresh');
+    $("#cmbMonedaDiv").selectpicker('refresh');
 }
 
-function agregarEngancheT(enganche){
-
-    var cantEngancheT= (objEnganche.enganchesGuardados.length + objEnganche.nuevoEnganche.length);
-    console.log("TIPO ENGANCHE");
-    console.log(enganche);
-
+function agregarEngancheT(enganche) {
+    var cantEngancheT = (objEnganche.enganchesGuardados.length + objEnganche.nuevoEnganche.length);
     $("#table_detalle_enganche").show();
-
     //Tomamos el valor actual del campo "de la vista" 
-    if(enganche[0].nuevoEnganche?.id_det_enganche_temp==0 && cantEngancheT<3){
+    if (enganche[0].nuevoEnganche?.id_det_enganche_temp == 0 && cantEngancheT < 3) {
         objEnganche.nuevoEnganche.push(enganche[0].nuevoEnganche);
-        enganche=[enganche[0].nuevoEnganche];
-    }else if(cantEngancheT<3){
-        objEnganche['enganchesGuardados']=enganche
-    }else{
+        enganche = [enganche[0].nuevoEnganche];
+    } else if (cantEngancheT < 3)
+        objEnganche['enganchesGuardados'] = enganche;
+    else
         alerts.showNotification("top", "right", "Oops, Ya cuenta con los 3 pagos del enganche", "danger");
-    }
 
-    if(cantEngancheT<3){
-        console.log("MENOR A 3");
+    if (cantEngancheT < 3) {
         if ($.trim(enganche.length) <= 0) {
             $(".error-evento").addClass("has-error");
             $("agregarEnganche").removeClass("btn-primary");
             $("agregarEnganche").addClass("btn-blueMaderas");
-          } else {
+        } else {
             enganche.forEach((eng) => {
                 cont_eng++;
-            var btnEliminar ='<button type="button" class="btn-data btn-blueMaderas ' + cont_eng + '" data-id="' + cont_eng + '" data-btnDetEnganche="' + eng.id_det_enganche +
-              '" \n\ ><i class="material-icons">edit</i></button>';
-            var inputNombreInvitado = '<input type="hidden" id="idDetEnganche" name="idDetEnganche[]" value="' + eng.id_det_enganche +'" />';
-    
-            //Con el metodo append un nuevo tr al tbody de la
-            //tabla #pila-carrito
-            var html_tr = '<tr id="tr-' + cont_eng + '">';
-    
-            //Agregamos un campo hidden con el los datos
-            /* Usamos un arreglo HTML para llamar de la misma manera 
-            a todos los campos "arrgxxx[]", esto genera un
-            arreglo de elementos en el enguaje de servidor
-            */
-            html_tr +=
-              '<input type="hidden" id="arrgIDCarrito" name="arrgIDCarrito[]" value="' +
-              eng.id_det_enganche +
-              '"/>';
-    
-            html_tr += "<td>" + (eng.id_det_enganche==0? 'Nuevo enganche': eng.id_det_enganche) + "</td>";
-            html_tr += "<td>" + eng.id_lote + inputNombreInvitado + "</td>";
-            html_tr += "<td>" + eng.nombreFormaPago + inputNombreInvitado + "</td>";
-            html_tr += "<td>" + eng.fecha_pago + inputNombreInvitado + "</td>";
-            html_tr += "<td>" + eng.nombreInstrumentoMonetario + inputNombreInvitado + "</td>";
-            html_tr += "<td>" + eng.nombreMonedaDivisa + inputNombreInvitado + "</td>";
-            html_tr += "<td>" + btnEliminar + inputNombreInvitado + "</td>";
-            html_tr +=
-              '<button class="btn-blueMaderas eliminar-item" data-id="' + cont_eng + '">Eliminar</button> </td>';
-            html_tr += "</tr>";
-    
-            //Lo agregamos
-            $("#pila-carrito").append(html_tr);
-    
+                var btnEliminar = `<button type="button" class="btn-data btn-blueMaderas ${cont_eng}" data-id="${cont_eng}" data-btnDetEnganche="${eng.id_det_enganche}"><i class="material-icons">edit</i></button>`;
+                var inputNombreInvitado = `<input type="hidden" id="idDetEnganche" name="idDetEnganche[]" value="${eng.id_det_enganche}" />`;
+                //Con el metodo append un nuevo tr al tbody de la
+                //tabla #pila-carrito
+                var html_tr = '<tr id="tr-' + cont_eng + '">';
+                //Agregamos un campo hidden con el los datos
+                /* Usamos un arreglo HTML para llamar de la misma manera 
+                a todos los campos "arrgxxx[]", esto genera un
+                arreglo de elementos en el enguaje de servidor
+                */
+                html_tr += `<input type="hidden" id="arrgIDCarrito" name="arrgIDCarrito[]" value="${eng.id_det_enganche}"/>`;
+                html_tr += `<td>${(eng.id_det_enganche == 0 ? 'Nuevo enganche' : eng.id_det_enganche)}</td>`;
+                html_tr += `<td>${eng.id_lote + inputNombreInvitado}</td>`;
+                html_tr += `<td>${eng.nombreFormaPago + inputNombreInvitado}</td>`;
+                html_tr += `<td>${eng.fecha_pago + inputNombreInvitado}</td>`;
+                html_tr += `<td>${eng.nombreInstrumentoMonetario + inputNombreInvitado}</td>`;
+                html_tr += `<td>${eng.nombreMonedaDivisa + inputNombreInvitado}</td>`;
+                html_tr += `<td>${btnEliminar + inputNombreInvitado}</td>`;
+                html_tr += `<button class="btn-blueMaderas eliminar-item" data-id="${cont_eng}">Eliminar</button> </td>`;
+                html_tr += `</tr>`;
+                //Lo agregamos
+                $("#pila-carrito").append(html_tr);
             });
-    
             //Limpiamos el campo
             $(".error-evento").removeClass("has-error");
-          } // ELSE
+        } // ELSE
     }
-
 }
 
 // ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 $(document).on("click", ".btn-blueMaderas", function (event) {
     var id_tr = $(this).attr("data-id");
     var idEnganche = $(this).attr("data-btnDetEnganche");
-
     //Eliminamos del dom (tr) el elemento seleccionado
     // const removed = objInvitadosReserva.filter(item => item !=idEnganche);
     // $("#tr-" + id_tr).remove();
-    var engEditarGuardados =  objEnganche.enganchesGuardados.filter(function(item) {
+    var engEditarGuardados = objEnganche.enganchesGuardados.filter(function (item) {
         return item.id_det_enganche == idEnganche;
     });
-    var engEditarNuevos =  objEnganche.nuevoEnganche.filter(function(item) {
+    var engEditarNuevos = objEnganche.nuevoEnganche.filter(function (item) {
         return item.id_det_enganche == idEnganche;
     });
-
-    console.log(engEditarGuardados.length>0? engEditarGuardados[0]?.forma_pago: engEditarNuevos[0]?.forma_pago);
-    $("#cmbFormaPago").val(engEditarGuardados.length>0? engEditarGuardados[0]?.forma_pago: engEditarNuevos[0]?.forma_pago);
-    $("#cmbInsMonetario").val(engEditarGuardados.length>0? engEditarGuardados[0]?.instrumento_monetario: engEditarNuevos[0]?.instrumento_monetario);
-    $("#cmbMonedaDiv").val(engEditarGuardados.length>0? engEditarGuardados[0]?.moneda_divisa: engEditarNuevos[0]?.moneda_divisa);
-    $("#txtFechaPago").val(engEditarGuardados.length>0? engEditarGuardados[0]?.fecha_pago: engEditarNuevos[0]?.fecha_pago);
-    $("#txtIdLote").attr("data-idDetEnganche",engEditarGuardados.length>0? engEditarGuardados[0]?.id_det_enganche: engEditarNuevos[0]?.id_det_enganche);
+    $("#cmbFormaPago").val(engEditarGuardados.length > 0 ? engEditarGuardados[0]?.forma_pago : engEditarNuevos[0]?.forma_pago);
+    $("#cmbInsMonetario").val(engEditarGuardados.length > 0 ? engEditarGuardados[0]?.instrumento_monetario : engEditarNuevos[0]?.instrumento_monetario);
+    $("#cmbMonedaDiv").val(engEditarGuardados.length > 0 ? engEditarGuardados[0]?.moneda_divisa : engEditarNuevos[0]?.moneda_divisa);
+    $("#txtFechaPago").val(engEditarGuardados.length > 0 ? engEditarGuardados[0]?.fecha_pago : engEditarNuevos[0]?.fecha_pago);
+    $("#txtIdLote").attr("data-idDetEnganche", engEditarGuardados.length > 0 ? engEditarGuardados[0]?.id_det_enganche : engEditarNuevos[0]?.id_det_enganche);
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
     //SE RESTA LA CELDA BORRADA
     cont_eng--;
+}); // FIN ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 
-  }); // FIN ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
-
-function agregarNuevoEgnacheT(){
-    var idLote= $("#txtIdLote").val();
-    var formaPago= $("#cmbFormaPago").val();
-    var instMonetario= $("#cmbInsMonetario").val();
-    var monedaDiv= $("#cmbMonedaDiv").val();
-    var fechaPago= $("#txtFechaPago").val();
-    var cantEngancheT= (objEnganche.enganchesGuardados.length + objEnganche.nuevoEnganche.length);
-    $("#txtIdLote").attr("data-idDetEnganche", (cantEngancheT + 1) );
-
-        if(idLote !== '' && formaPago !== '' && instMonetario !== '' && 
-        monedaDiv !== '' && fechaPago !== ''){
-        agregarEngancheT([{nuevoEnganche: {id_det_enganche: (cantEngancheT + 1), id_lote: idLote, forma_pago: formaPago, fecha_pago: fechaPago, instrumento_monetario: instMonetario, moneda_divisa: monedaDiv, id_det_enganche_temp: 0}}]);
-    }else{
+function agregarNuevoEgnacheT() {
+    var idLote = $("#txtIdLote").val();
+    var formaPago = $("#cmbFormaPago").val();
+    var instMonetario = $("#cmbInsMonetario").val();
+    var monedaDiv = $("#cmbMonedaDiv").val();
+    var fechaPago = $("#txtFechaPago").val();
+    var cantEngancheT = (objEnganche.enganchesGuardados.length + objEnganche.nuevoEnganche.length);
+    $("#txtIdLote").attr("data-idDetEnganche", (cantEngancheT + 1));
+    if (idLote !== '' && formaPago !== '' && instMonetario !== '' &&
+        monedaDiv !== '' && fechaPago !== '') {
+        agregarEngancheT([{ nuevoEnganche: { id_det_enganche: (cantEngancheT + 1), id_lote: idLote, forma_pago: formaPago, fecha_pago: fechaPago, instrumento_monetario: instMonetario, moneda_divisa: monedaDiv, id_det_enganche_temp: 0 } }]);
+    } else
         alerts.showNotification("top", "right", "Oops, Verifique el llenado de todos los campos", "danger");
-    }
-
 }
 
 // ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 $('#cmbInsMonetario').change(function () {
-
     var idDetEnganche = $("#txtIdLote").attr("data-idDetEnganche");
-    var idDetEngancheNuevo = $("#txtIdLote").attr("data-idDetEngancheNuevo");
-
-    var objRemplazarValor =  objEnganche.enganchesGuardados.filter(function(item) {
+    var objRemplazarValor = objEnganche.enganchesGuardados.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-    var objRemplazarValorN =  objEnganche.nuevoEnganche.filter(function(item) {
+    var objRemplazarValorN = objEnganche.nuevoEnganche.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-
-    var instMonetario= $("#cmbInsMonetario").val();
-
-    if(objRemplazarValor.length>0){
-        objRemplazarValor[0].instrumento_monetario= instMonetario=='' ? 0: instMonetario;
-    }else if(objRemplazarValorN.length>0){
-        objRemplazarValorN[0].instrumento_monetario= instMonetario=='' ? 0: instMonetario;
-    }
-
+    var instMonetario = $("#cmbInsMonetario").val();
+    if (objRemplazarValor.length > 0)
+        objRemplazarValor[0].instrumento_monetario = instMonetario == '' ? 0 : instMonetario;
+    else if (objRemplazarValorN.length > 0)
+        objRemplazarValorN[0].instrumento_monetario = instMonetario == '' ? 0 : instMonetario;
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
-
 });
 
 // ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 $('#cmbFormaPago').change(function () {
-
     var idDetEnganche = $("#txtIdLote").attr("data-idDetEnganche");
-    var idDetEngancheNuevo = $("#txtIdLote").attr("data-idDetEngancheNuevo");
-
-    var objRemplazarValor =  objEnganche.enganchesGuardados.filter(function(item) {
+    var objRemplazarValor = objEnganche.enganchesGuardados.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-    var objRemplazarValorN =  objEnganche.nuevoEnganche.filter(function(item) {
+    var objRemplazarValorN = objEnganche.nuevoEnganche.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-
-    var formaPago= $("#cmbFormaPago").val();
-
-    if(objRemplazarValor.length>0){
-        objRemplazarValor[0].forma_pago= formaPago=='' ? 0: formaPago;
-    }else if(objRemplazarValorN.length>0){
-        objRemplazarValorN[0].forma_pago= formaPago=='' ? 0: formaPago;
-    }
-
+    var formaPago = $("#cmbFormaPago").val();
+    if (objRemplazarValor.length > 0)
+        objRemplazarValor[0].forma_pago = formaPago == '' ? 0 : formaPago;
+    else if (objRemplazarValorN.length > 0)
+        objRemplazarValorN[0].forma_pago = formaPago == '' ? 0 : formaPago;
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
@@ -525,101 +414,77 @@ $('#cmbFormaPago').change(function () {
 
 // ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 $('#cmbMonedaDiv').change(function () {
-
     var idDetEnganche = $("#txtIdLote").attr("data-idDetEnganche");
-    var idDetEngancheNuevo = $("#txtIdLote").attr("data-idDetEngancheNuevo");
-
-    var objRemplazarValor =  objEnganche.enganchesGuardados.filter(function(item) {
+    var objRemplazarValor = objEnganche.enganchesGuardados.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-    var objRemplazarValorN =  objEnganche.nuevoEnganche.filter(function(item) {
+    var objRemplazarValorN = objEnganche.nuevoEnganche.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-
-    var monedaDivisa= $("#cmbMonedaDiv").val();
-
-    if(objRemplazarValor.length>0){
-        objRemplazarValor[0].moneda_divisa= monedaDivisa=='' ? 0: monedaDivisa;
-    }else if(objRemplazarValorN.length>0){
-        objRemplazarValorN[0].moneda_divisa= monedaDivisa=='' ? 0: monedaDivisa;
-    }
-
+    var monedaDivisa = $("#cmbMonedaDiv").val();
+    if (objRemplazarValor.length > 0)
+        objRemplazarValor[0].moneda_divisa = monedaDivisa == '' ? 0 : monedaDivisa;
+    else if (objRemplazarValorN.length > 0)
+        objRemplazarValorN[0].moneda_divisa = monedaDivisa == '' ? 0 : monedaDivisa;
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
-
 });
 
 // ELIMINAR INVITADO DE RESERVA EN FORMA DE CARRITO
 $('#txtFechaPago').change(function () {
-
     var idDetEnganche = $("#txtIdLote").attr("data-idDetEnganche");
-    var idDetEngancheNuevo = $("#txtIdLote").attr("data-idDetEngancheNuevo");
-
-    var objRemplazarValor =  objEnganche.enganchesGuardados.filter(function(item) {
+    var objRemplazarValor = objEnganche.enganchesGuardados.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-    var objRemplazarValorN =  objEnganche.nuevoEnganche.filter(function(item) {
+    var objRemplazarValorN = objEnganche.nuevoEnganche.filter(function (item) {
         return item.id_det_enganche == idDetEnganche;
     });
-
-    var fechaPago= $("#txtFechaPago").val();
-
-    if(objRemplazarValor.length>0){
-        objRemplazarValor[0].fecha_pago= fechaPago=='' ? 0: fechaPago;
-    }else if(objRemplazarValorN.length>0){
-        objRemplazarValorN[0].fecha_pago= fechaPago=='' ? 0: fechaPago;
-    }
-
+    var fechaPago = $("#txtFechaPago").val();
+    if (objRemplazarValor.length > 0)
+        objRemplazarValor[0].fecha_pago = fechaPago == '' ? 0 : fechaPago;
+    else if (objRemplazarValorN.length > 0)
+        objRemplazarValorN[0].fecha_pago = fechaPago == '' ? 0 : fechaPago;
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
-
 });
 
 $(document).on("submit", "#formEnganches", function (e) {
     e.preventDefault();
-    if(objEnganche.enganchesGuardados.length<=0){
-        objEnganche.enganchesGuardados= [];
-    }else if(objEnganche.nuevoEnganche<=0){
-        objEnganche.nuevoEnganche=[];
-    }
-    
+    if (objEnganche.enganchesGuardados.length <= 0)
+        objEnganche.enganchesGuardados = [];
+    else if (objEnganche.nuevoEnganche <= 0)
+        objEnganche.nuevoEnganche = [];
     $.ajax({
         type: "POST",
-        url: general_base_url+"Internomex/guardarEnganches",
+        url: `${general_base_url}Internomex/guardarEnganches`,
         dataType: "json",
         // contentType: 'application/json',
-        data: { dtoEnganche: objEnganche},
-      }) //ajax
+        data: { dtoEnganche: objEnganche },
+    })
         .done(function (dto) {
-          if (dto != []) {
-    
-              try {
-                if (dto.status==1) {
-                    cerrarModalDetEnganche();
-                    alerts.showNotification("top", "right", "Exito, se registraron los datos correctamente.", "success");
+            if (dto != []) {
+                try {
+                    if (dto.status == 1) {
+                        cerrarModalDetEnganche();
+                        alerts.showNotification("top", "right", "Exito, se registraron los datos correctamente.", "success");
+                    }
+                    else
+                        alerts.showNotification("top", "right", "Oops, algo salió mal al guardar los datos", "danger");
+                } catch (error) {
+                    if (error instanceof SyntaxError) {
+                        console.log(error)
+                    } else {
+                        throw error; // si es otro error, que lo siga lanzando
+                    }
                 }
-                else {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal al guardar los datos", "danger");
-                }
-    
-              } catch (error) {
-                if (error instanceof SyntaxError) {
-                    console.log(error)
-                } else {
-                  throw error; // si es otro error, que lo siga lanzando
-                }
-            //   }
             }
-          }
-          else {
-            console.log("ERROR AL GUARDAR LOS DATOS DEL ENGANCHE");
-          }
-    
-          return dto;
+            else 
+                alerts.showNotification("top", "right", "Oops, algo salió mal. inténtalo más tarde.", "danger");
+            return dto;
         })
         .fail(function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catalogos de enganche", "danger");
+            alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catálogos de enganche.", "danger");
         });
 });

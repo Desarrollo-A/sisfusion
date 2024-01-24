@@ -3,7 +3,6 @@
 <body class="">
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
-        
         <div class="modal fade" id="modal_cancelar_11" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -19,7 +18,6 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -58,7 +56,6 @@
                                                 </select>
                                             </div>
                                         </div>
-
                                         <div class="col-md-12 pr-0">
                                             <div class="form-group text-left m-0">
                                                         <script> date = new Date().toLocaleDateString(); 
@@ -67,13 +64,11 @@
                                                         <input type="text" class="form-control datepicker" id="txtFechaPago" placeholder="Seleccione una fecha" value="01/01/2024"/>
                                                     </div>
                                         </div>
-
                                         <div class="col-md-12 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <button class="btn-blueMaderas btn-data" onclick="agregarNuevoEgnacheT()" id="agregarEnganche" name="agregarEnganche" type="button" ><i class="material-icons">add_circle</i></button>
                                             </div>
                                         </div>
-
                                         <div class="col-md-12 pr-0">
                                             <div class="material-datatables">
                                                 <div class="form-group">
@@ -102,7 +97,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="modal-footer">
                                 <button type="button" id="cerrarModalEnganche" name="cerrarModalEnganche" class="btn btn-danger btn-simple" onclick="cerrarModalDetEnganche()" >Cancelar</button>
                                 <button type="submit" id="RequestInformacion" class="btn btn-primary">Aceptar</button>
@@ -112,7 +106,6 @@
                 </div>
             </div>
         </div>
-        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -153,8 +146,8 @@
                                                     <th>NOMBRE ASESOR</th>
                                                     <th>TIPO VENTA</th>
                                                     <th>UBICACIÓN</th>
-                                                    <th>ENG.CONTRALORIA</th>
-                                                    <th>ENG. ADMINISTRACIÓN</th>
+                                                    <th>ENANCHE CONTRALORÍA</th>
+                                                    <th>ENGANCHE ADMINISTRACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
