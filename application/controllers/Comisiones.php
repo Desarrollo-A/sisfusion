@@ -298,13 +298,18 @@ class Comisiones extends CI_Controller
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
+        if ($this->session->userdata('id_usuario') == 13546) {// ALEJANDRO GONZÁLEZ DÁVALOS
+          $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
           $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
-        else
+        }
+        else{
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        }
       break;
       default:
-        $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
+     // $this->load->view('ooam/asesor_ooam_view');
+         $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
+         $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
@@ -547,7 +552,7 @@ class Comisiones extends CI_Controller
   
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
     $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
 
@@ -738,7 +743,8 @@ class Comisiones extends CI_Controller
   }
 
   public function guardar_solicitud2($usuario = ''){
-    $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
+    $usuario = $this->session->userdata('id_usuario');
+    $validar_sede =$this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
     $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
@@ -3149,5 +3155,14 @@ class Comisiones extends CI_Controller
     echo json_encode($result);
   }
 
+  public function tipoDePago(){
+    $result = $this->Comisiones_model->tipoDePago();
+    echo json_encode($result);
+  } 
+
+  public function opnCumplimiento(){
+    $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    echo json_encode($result); 
+  }
+
 }
- 

@@ -3789,6 +3789,14 @@ class Comisiones_model extends CI_Model {
 
     }
 
+    function  tipoDePago(){
+        $id_usuario = $this->session->userdata('id_usuario');
+        $cmd = "SELECT forma_pago FROM usuarios WHERE id_usuario = $id_usuario"; 
+        return $this->db->query($cmd)->row();
 
+
+    }
+
+    
 
 }
