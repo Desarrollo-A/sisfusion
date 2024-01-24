@@ -32,6 +32,7 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid justify-center">
                                                     <div class="fechasAjuste" id="fechasAjuste" >
+                                                      <input type="hidden" id="permisos-edicion" value="<?php echo $permisos_edicion; ?>">
 
                                                     </div>
                                                 </div>

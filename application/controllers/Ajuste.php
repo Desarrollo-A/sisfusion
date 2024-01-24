@@ -34,19 +34,19 @@ class Ajuste extends CI_Controller
     }
   
     public function AjusteCorte() {
-
         $resultados = $this->Ajuste_model->banderaAutorizacionesCorte();
-    
-        $id_usuario = $resultados['id_usuario'];
+        
+        $id_usuario = $resultados['id_usuario'];;
         $bandera = $resultados['bandera'];
-
-        if ($this->session->userdata('id_usuario') == $id_usuario && $bandera == 1){
-            $this->load->view('template/header');
-            $this->load->view("ajuste/Ajuste-view");
-        }else{
-            redirect(base_url());
-        }
+        
+        $permisos_edicion = ($this->session->userdata('id_usuario') == $id_usuario && $bandera == 1) ? 1 : 0;
+        
+        $data['permisos_edicion'] = $permisos_edicion;
+    
+        $this->load->view('template/header');
+        $this->load->view("ajuste/Ajuste-view", $data);
     }
+    
   
     public function getDatosFechas(){
         $respuesta = $this->Ajuste_model->getDatosFechas()->result_array();
