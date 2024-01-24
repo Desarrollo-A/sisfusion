@@ -337,10 +337,8 @@ class Reporte_model extends CI_Model {
         if($id_rol == 1 || $id_rol == 2){
             $rolesSede = $id_rol == 1 ? 59 : $id_rol;
             $sedeCargo = "ISNULL(STUFF((select ' ' + nombre + ',' from sedes where id_sede in (select r.idSede from roles_x_usuario r where r.idRol = " . $rolesSede . " and r.idUsuario = u.id_usuario) for xml path('')), 1, 1, ''),'Sin especificar,')";
-            $innerSede = "LEFT JOIN roles_x_usuario rxu on rxu.idUsuario = u.id_usuario and rxu.idRol = " .$rolesSede;
         }else{
             $sedeCargo = "ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, ''),'Sin especificar')";
-            $innerSede = "";
         }
 
         $query = $this->db->query("SELECT
@@ -390,7 +388,6 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11)  AND (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00)
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
-                    $innerSede
                     LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = u.id_rol and oxc.id_catalogo = 1
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     $filtroSt
@@ -412,7 +409,6 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND (lo.totalNeto2 IS NOT NULL AND lo.totalNeto2 != 0.00)
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
-                    $innerSede
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = u.id_rol and oxc.id_catalogo = 1
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
@@ -437,7 +433,6 @@ class Reporte_model extends CI_Model {
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     LEFT JOIN opcs_x_cats oxc on oxc.id_opcion = u.id_rol and oxc.id_catalogo = 1
-                    $innerSede
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0
                     GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
@@ -461,7 +456,6 @@ class Reporte_model extends CI_Model {
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-                    $innerSede
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                     INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado AND (hlo2.idStatusContratacion < 9 OR hlo2.idStatusContratacion = 11)
@@ -736,7 +730,12 @@ class Reporte_model extends CI_Model {
             LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
             LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaStatus9 FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente
 			LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaUltimoStatus FROM historial_lotes GROUP BY idLote, idCliente) hl3 ON hl3.idLote = lo.idLote AND hl3.idCliente = cl.id_cliente
+<<<<<<< Updated upstream
             WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
+=======
+            LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.venta_extranjero AND oxc0.id_catalogo = 116
+            WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12874) AND cl.id_gerente NOT IN (6739)
+>>>>>>> Stashed changes
             $filtro $filtroExt
             GROUP BY
             CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
