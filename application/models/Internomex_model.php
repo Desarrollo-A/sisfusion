@@ -391,8 +391,6 @@ class Internomex_model extends CI_Model {
                                         tbl.nombre_propiedad")->result_array(); 
     }
 
-// ----------------------------------------------------------------------------------------------------------------------------------------
-
     // CONSULTA PARA TRAER LOS REGISTROS PARA LLENAR LA TABLA DE LOTES PARA VER SUS ENGANCHES
     function getRegistrosLotesEnganche($id_condominio){
         return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
@@ -423,6 +421,5 @@ class Internomex_model extends CI_Model {
         INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = det_eng.moneda_divisa AND opcMonedaD.id_catalogo = 112
         WHERE det_eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.id_lote=$idLote)");
 	}
-// ----------------------------------------------------------------------------------------------------------------------------------------
 
 }

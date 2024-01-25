@@ -208,10 +208,7 @@
       echo json_encode($this->Internomex_model->getBitacora($id_pago)->result_array());
   }
 
-
-// ----------------------------------------------------------------------------------------------------------------------------------------
-
-// FUNCION PARA LANZAR LA VISTA DE DETALLE DE ENGANCHES
+  // FUNCION PARA LANZAR LA VISTA DE DETALLE DE ENGANCHES
   public function detEnganche() {
 		$this->load->view('template/header');
 		$datos["rol"] = $this->session->userdata('id_rol');
@@ -307,7 +304,5 @@
     }
     echo json_encode($response);
 	}
-
-// ----------------------------------------------------------------------------------------------------------------------------------------
 
 }

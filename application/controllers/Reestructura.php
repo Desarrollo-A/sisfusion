@@ -203,14 +203,13 @@ class Reestructura extends CI_Controller{
         }
     }
 
-	public function aplicarLiberacion(){
+	public function aplicarLiberacion() {
 		$dataPost = $_POST;
         $update = $this->Reestructura_model->aplicaLiberacion($dataPost);
-        if ($update == TRUE) {
+        if ($update == TRUE)
             echo json_encode(1);
-        } else {
+        else
             echo json_encode(0);
-        }
 	}
 
     public function setReestructura(){
@@ -1716,19 +1715,18 @@ class Reestructura extends CI_Controller{
         return $resultDs && $resultCop;
     }
 
-	public function cancelarLotes(){
+    // PARA EL MÓDULO DE ALEJANDRO
+    public function cancelarLotes() {
 		$this->load->view('template/header');
         $this->load->view("reestructura/cancelacion_view");
     }
 
-	public function getregistrosLotes(){
-        $index_proyecto = $this->input->post('index_proyecto');
-        $dato = $this->Reestructura_model->getLotes($index_proyecto);
-        if ($dato != null) {
+	public function getregistrosLotes() {
+        $dato = $this->Reestructura_model->getLotes($this->input->post('index_proyecto'));
+        if ($dato != null)
             echo json_encode($dato);
-        }else{
+        else
             echo json_encode(array());
-        }
     }
 
     public function obtenerClientePorId($idCliente)
@@ -2806,7 +2804,7 @@ class Reestructura extends CI_Controller{
 
     public function lista_proyecto(){
         $bandera = $this->input->post('bandera');
-		if($this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2896 || $this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 18)
+		if(in_array($this->session->userdata('id_rol'), [2, 5, 18]) || in_array($this->session->userdata('id_usuario'), [2896, 12271]))
 			echo json_encode($this->Reestructura_model->get_proyecto_listaCancelaciones()->result_array());
 		else if(($this->session->userdata('id_usuario') == 5107 || $this->session->userdata('id_usuario') == 9897) && $bandera == 1) // MJ: SELECT DE LA VISTA LIBERAR
           echo json_encode($this->Reestructura_model->get_proyecto_lista_yola()->result_array());
@@ -3067,4 +3065,19 @@ class Reestructura extends CI_Controller{
         }
         echo json_encode($result);
     }
+
+    // PARA EL MÓDULO DE PATRICIA MAYA
+    public function reporteCancelaciones() {
+        $this->load->view('template/header');
+        $this->load->view("reestructura/reporteCancelaciones"); //cancelacionReestructura
+    }
+
+    public function getReporteCancelaciones() {
+        $dato = $this->Reestructura_model->getReporteCancelaciones($this->input->post('index_proyecto'));
+        if ($dato != null)
+            echo json_encode($dato);
+        else
+            echo json_encode(array());
+    }
+    
 }
