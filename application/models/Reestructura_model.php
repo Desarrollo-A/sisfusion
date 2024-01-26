@@ -526,7 +526,9 @@ class Reestructura_model extends CI_Model
                 lo.sup superficie, 
                 FORMAT(lo.precio, 'C') precio, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
-                lo.observacionLiberacion AS observacion 
+                lo.observacionLiberacion AS observacion,
+                CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
+                lo.liberaBandera
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
