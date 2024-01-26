@@ -51,6 +51,7 @@ $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
     let obsLiberacion = $("#obsLiberacion").val();
     let tipoCancelacion = $("#tipoCancelacion").val();
+    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
     if (obsLiberacion.trim() == '' || tipoCancelacion == '') {
         alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
         return false;
@@ -61,6 +62,7 @@ $(document).on('click', '#saveCancel', function () {
     datos.append("obsLiberacion", obsLiberacion);
     datos.append("tipoLiberacion", 3);
     datos.append("tipoCancelacion", tipoCancelacion);
+    datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
     $.ajax({
         method: 'POST',
         url: `${general_base_url}Reestructura/aplicarLiberacion`,
