@@ -63,7 +63,7 @@ $('#tablaReporteVentas').DataTable({
         { data: "fechaApartado" },
         {
             data: function (d) {
-                return `<span class="label lbl-violetBoots">${d.estatusContratacion}</span>`;
+                return `<span class="label lbl-violetBoots">${d.estatusLote}</span>`;
             }
         },
         {
