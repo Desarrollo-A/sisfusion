@@ -57,7 +57,9 @@ class Reestructura_model extends CI_Model
 		WHERE lf2.destino=1 AND hd.tipo_doc=30 AND hd.expediente!='' AND lf2.idLotePvOrigen=lf.idLotePvOrigen
 		GROUP BY lf2.idLotePvOrigen) as contratoFirmadoFusion, 
         ISNULL(dxc2.flagProcesoContraloria, 0) flagProcesoContraloria, ISNULL(dxc2.flagProcesoJuridico, 0) flagProcesoJuridico, 
-        dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado
+        dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado,
+        CASE WHEN ISNULL(dxc2.banderaProcesoUrgente, 0) = 0 THEN 'NO APLICA' ELSE 'URGENTE' END banderaProcesoUrgenteTexto,
+        ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
@@ -99,18 +101,48 @@ class Reestructura_model extends CI_Model
         WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional")->result_array();
     }
 
-    public function getDatosClienteTemporal($idLote){
-        $query = $this->db->query("SELECT dxc.nombre, dxc.apellido_paterno, dxc.apellido_materno, dxc.telefono1, dxc.correo, dxc.domicilio_particular, dxc.estado_civil AS idEstadoC, oxc.nombre AS estado_civil, ocupacion, dxc.ine from datos_x_cliente dxc
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18
-        WHERE idLote = $idLote");
-        return $query->row();
+    public function getDatosClienteTemporal($idLote) {
+        return $this->db->query(
+            "SELECT 
+                dxc.nombre, 
+                dxc.apellido_paterno, 
+                dxc.apellido_materno, 
+                dxc.telefono1, 
+                dxc.correo, 
+                dxc.domicilio_particular, 
+                dxc.estado_civil AS idEstadoC, 
+                oxc.nombre AS estado_civil, 
+                ocupacion, 
+                dxc.ine,
+                ISNULL(dxc.banderaProcesoUrgente, 0) banderaProcesoUrgente
+            FROM 
+                datos_x_cliente dxc 
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = dxc.estado_civil AND oxc.id_catalogo = 18 
+            WHERE 
+                dxc.idLote = $idLote"
+        )->row();
     }
 
-    public function getCliente($idCliente){
-        $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, ISNULL(cl.telefono1, '') telefono1, ISNULL(cl.correo, '') correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, oxc.nombre as estado_civil, ocupacion, '' ine FROM clientes cl
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
-        WHERE id_cliente = $idCliente");
-        return $query->row();
+    public function getCliente($idCliente) {
+        return $this->db->query(
+            "SELECT 
+                cl.nombre, 
+                cl.apellido_paterno, 
+                cl.apellido_materno, 
+                ISNULL(cl.telefono1, '') telefono1, 
+                ISNULL(cl.correo, '') correo, 
+                cl.domicilio_particular, 
+                cl.estado_civil AS idEstadoC, 
+                oxc.nombre as estado_civil, 
+                ocupacion, 
+                '' ine,
+                0 banderaProcesoUrgente
+            FROM 
+                clientes cl 
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18 
+            WHERE 
+                id_cliente = $idCliente"
+        )->row();
     }
 
     public function getProyectosDisponibles($proyecto, $superficie, $flagFusion){

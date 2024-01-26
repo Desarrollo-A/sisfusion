@@ -156,8 +156,6 @@
             </div>
         </div>
 
-
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -196,6 +194,7 @@
                                                 <th>FECHA ÚLTIMO ESTATUS</th>
                                                 <th>FECHA VENCIMIENTO</th>
                                                 <th>ESTATUS CONTRALORÍA</th>
+                                                <th>PROCESO URGENTE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

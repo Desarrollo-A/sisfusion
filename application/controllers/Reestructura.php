@@ -52,7 +52,7 @@ class Reestructura extends CI_Controller{
 
     }
 
-    public function getCliente($idCliente, $idLote){
+    public function getCliente($idCliente, $idLote) {
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote); // MJ: BUSCA LA INFORMACIÓN EN datos_x_clientes
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
         if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
@@ -166,7 +166,7 @@ class Reestructura extends CI_Controller{
 		} 
 	}
 
-    public function insertarInformacionCli ($idLote){
+    public function insertarInformacionCli ($idLote) {
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
@@ -179,16 +179,14 @@ class Reestructura extends CI_Controller{
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
+        $datos["banderaProcesoUrgente"] = isset($dataPost['cmbProcesoUrgente']) ? 1 : 0;
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
-
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
-
         if (empty($datCliente)) {
             $insert = $this->Reestructura_model->insertarCliente($datos);
             echo ($insert) ? json_encode(1) : json_encode(0);
             return;
         }
-
         $update = $this->General_model->updateRecord('datos_x_cliente', $datos, 'idLote', $idLote);
         echo ($update) ? json_encode(1) : json_encode(0);
     }
