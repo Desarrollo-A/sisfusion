@@ -744,23 +744,35 @@ class Reestructura_model extends CI_Model
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
         $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
-        return $this->db->query("SELECT oxc1.nombre tipo_proceso, UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, lo.idCliente, 
-		UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, sl.nombre estatusContratacion, sl.background_sl, sl.color, cl.fechaApartado,
-        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
-        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
-        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector
-        FROM lotes lo
-        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso IN (2, 3, 4, 5, 6) $validacionExtra
-        INNER JOIN propuestas_x_lote pxl ON pxl.id_lotep = lo.idLote AND pxl.estatus = 1
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
-        LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-        LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cl.proceso AND oxc1.id_catalogo = 97
-		INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.status = 1
-        ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
+        return $this->db->query(
+            "SELECT
+                oxc0.nombre tipoProceso,
+                UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                cl.fechaApartado,
+                sl.nombre estatusLote,
+                sc.nombreStatus estatusContratacion,
+                mo.descripcion detalleUltimoEstatus
+            FROM lotes lo
+                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+                INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+                INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+                INNER JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+                INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+            WHERE lo.status = 1
+            ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote"
+        )->result_array();
     }
 
     public function checarDisponibleRe($idLote, $idProyecto){
