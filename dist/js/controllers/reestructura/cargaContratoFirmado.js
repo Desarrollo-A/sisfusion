@@ -95,7 +95,11 @@ cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
                 return d.fechaApartado == null ? '-' : d.fechaApartado;
             }
         },
-        { data: "estatusPreproceso" },
+        {
+            data: (d) => {
+                return `<label class="label lbl-violetBoots">${d.estatusPreproceso}</label>`;
+            }
+        },
         {
             data: (d) => {
                 return `<label class="label ${d.nombreDocumento == null ? 'lbl-warning' : 'lbl-green'}">${d.estatusContratoFirmado}</label>`;
