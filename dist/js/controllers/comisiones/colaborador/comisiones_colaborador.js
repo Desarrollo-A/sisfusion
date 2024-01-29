@@ -9,11 +9,14 @@ var IdTablas ,
     Array_Datos_Consulta_8 = new Array, //Contiene el estatus 8
     nombreTabla = '',
     justificacion_globla = "",
+    fecha_incio = '',
+    fecha_fin = '',
     recibidosOPN = new Array; //Contiene el estatus 8
 let contadorDentroFacturas = 0,
     columnas_datatable = {},
     fin = userSede == 8 ? 16 : 13,
     boton_sol_pago = (forma_pago != 2) ? '' : 'hidden',
+
     pagos = []; //arreglo de pagos  
 
 
@@ -24,9 +27,24 @@ function asignarValorColumnasDT(nombre_datatable) {
     }
 $(document).ready(function () {
     nombreTabla = 'tabla_nuevas_comisiones';
-    peticionDataTable(nombreTabla)
-
-    opn_cumplimiento();
+ 
+    $.ajax({
+        url: 'getDatosFechasProyecCondm',
+        type: 'post',
+        dataType: 'JSON',
+        success: function (GetDatosFechas) {
+            console.log(GetDatosFechas.fechasCorte[0])
+            fecha_incio = GetDatosFechas.fechasCorte[0].fechaInicio;
+            fecha_fin = GetDatosFechas.fechasCorte[0].fechaFin;
+            console.log('aqui mero  la inofrmacion')
+            console.log(GetDatosFechas.fechasCorte[0])
+            
+            peticionDataTable(nombreTabla)
+            opn_cumplimiento();
+            
+        }
+    }); 
+   
 }); 
 
     function opn_cumplimiento(){
@@ -36,7 +54,7 @@ $(document).ready(function () {
             type: 'post',
             dataType: 'JSON',
             success: function (DatosRecibidos) {
-
+                
                 recibidosOPN.push(DatosRecibidos)
                 
                 llenadoTextoTabla();
@@ -54,18 +72,46 @@ $(document).ready(function () {
             type: 'post',
             dataType: 'JSON',
             success: function (DatosRecibidos) {
-                console.log(recibidosOPN[0][0]['estatus'] )
+                console.log(DatosRecibidos)
+                // console.log(recibidosOPN[0][0]['estatus'] )
+                const fecha = new Date();
+                
+                
+            let date = new Date()
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+            var hora = date.getHours();
+            if(month <10){month = ('0'+month)}
+            console.log(year+'-'+month+'-'+day)
+            console.log(fecha_incio)
+            console.log(fecha_fin)
+            console.log(hora)
+                const hoy = new Date();
+                
+                console.log(fechaServer)
+                //formatoFecha(hoy, 'dd/mm/yy');
 
+
+                if((fecha_fin) > (fechaServer+'.000')){console.log(1)}else{console.log(2)}
                 if( DatosRecibidos.forma_pago  == 2 ){
 
                     if((recibidosOPN[0].length) == 0){
                         cadena = '<a href="Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
                     } else
-                    {
+                    {   
                         if(recibidosOPN[0][0]['estatus'] == 1){
-                            cadena = `<button type="button" class="btn btn-info subir_factura_multiple" >
-                                        SUBIR FACTURAS
-                                        </button>`;
+                            if((fecha_fin) > (fechaServer+'.000'))
+                            {//AQUI VA LA VALIDACION DE LA FECHA SOLO SI ESTA EN CORTE
+                                cadena = ` 
+                                <div class="col-lg-2">
+                                    <botton class="epecial btn-info  subir_factura_multiple">
+                                        SUBIR FACTURA
+                                    </botton>
+                                </div>` ;
+                            }else{//AQUI VA LA VALIDACION DE LA FECHA
+                                cadena = ` ` ;
+                            }
                         }
                         else if(recibidosOPN[0][0]['estatus'] == 0){
                             cadena =`<a href="Usuarios/configureProfile"> 
@@ -75,15 +121,22 @@ $(document).ready(function () {
                                     </a>`;
                         }
                         else if(recibidosOPN[0][0]['estatus'] == 2){
-                            cadena = ` <div class="col-lg-2">
-                                                <epecial class="epecial btn-info  subir_factura_multiple">
-                                                    SUBIR FACTURA
-                                                </epecial>
-                                        </div>` ;
+                            if((fecha_fin) > (fechaServer+'.000'))
+                            {//AQUI VA LA VALIDACION DE LA FECHA SOLO SI ESTA EN CORTE
+                                cadena = ` 
+                                <div class="col-lg-2">
+                                    <botton class="epecial btn-info  subir_factura_multiple">
+                                        SUBIR FACTURA
+                                    </botton>
+                                </div>` ;
+                            }else{//AQUI VA LA VALIDACION DE LA FECHA
+                                cadena = ` ` ;
+                            }
+                            
                             // $cadena = '<div> <button class="button">  Hover Me!</button><span class="backdrop"></span></div>';
                         }
-                    }
-                } //LLAVE CIERRE 
+                    } // LLAVE DE OPINION DE CUMPLIMIENTO
+                } //LLAVE CIERRE FORMA DE PAGO  2
                     else if (DatosRecibidos.forma_pago == 5) {
                         if(recibidosOPN[0].length == 0){
                             cadena = `<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>`;
@@ -98,6 +151,9 @@ $(document).ready(function () {
                         } else if(recibidosOPN[0][0]['estatus'] == 2) {
                             cadena = `<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>`;
                         }
+                    }// FORMA DE PAGO CIERRE DE LA 5
+                    else{
+                        cadena = '';
                     }
 
                 // RESPUESTA PARA LLENAR LA VISTA
@@ -114,17 +170,17 @@ $(document).ready(function () {
             var title = $(this).text();
             
             if(IdTablas == 1){
-            columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
-            columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
             }else if(IdTablas == 2){
-                columnas_datatable.tabla_revision_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_revision_comisiones.num_encabezados.push(columnas_datatable.tabla_revision_comisiones.titulos_encabezados.length-1);
-            }else if(dTablas == 3){
-                columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_pagadas_comisiones.num_encabezados.push(columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.length-1);
-            }else if(dTablas == 4){
-                columnas_datatable.tabla_otras_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_otras_comisiones.num_encabezados.push(columnas_datatable.tabla_otras_comisiones.titulos_encabezados.length-1);
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+            }else if(IdTablas == 3){
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+            }else if(IdTablas == 4){
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
             }
             
             let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
@@ -190,8 +246,9 @@ $(document).ready(function () {
                 var mes = hoy.getMonth() + 1;
                 var hora = hoy.getHours();
 
-                if(2==2)
-                     {
+                if((fecha_fin) > (fechaServer+'.000')){console.log(1)}else{console.log(2)}
+                if((fecha_fin) > (fechaServer+'.000'))
+                {
             
                     if ($('input[name="idT[]"]:checked').length > 0) {
 
@@ -450,7 +507,7 @@ $(document).ready(function () {
                 }
             }],
             columnDefs: [{
-                    visible: false,
+                    visible: true,
                     orderable: false,
                     className: 'select-checkbox',
                     targets: 0,
@@ -462,14 +519,20 @@ $(document).ready(function () {
                             actual=15;
     
                         }
+                        console.log(131313)
                         var hoy = new Date();
                         var dia = hoy.getDate();
                         var mes = hoy.getMonth() + 1;
                         var hora = hoy.getHours();
-    
-                        if(2==2) {
-    
-                            switch (full.forma_pago) {
+                        console.log(fecha_fin)
+                        console.log('fecha_fin')
+                        console.log(fechaServer+'.000')
+                        console.log('fechaServer')
+                        if((fecha_fin) > (fechaServer+'.000')) {console.log(1)}else{console.log(2)}
+                        if((fecha_fin) > (fechaServer+'.000')) {
+                            console.log(131313)
+                       
+                            switch (forma_pago) {
                                 case '1': //SIN DEFINIR
                                 case 1: //SIN DEFINIR
                                 case '2': //FACTURA
@@ -488,9 +551,11 @@ $(document).ready(function () {
                                     return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
                                 case '3': //ASIMILADOS
                                 case 3: //ASIMILADOS
+                              
                                 case '4': //RD
                                 case 4: //RD
                                 default:
+                                  
                                     if (full.id_usuario == 5028 || full.id_usuario == 4773 || full.id_usuario == 5381) {
                                         return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
                                     } else {
@@ -503,16 +568,34 @@ $(document).ready(function () {
                         }
                     },
                 }],
+                
                 info: false,
                 data:datos,
                 "type": "POST",
                 cache: false,
-        
+                initComplete: function () {
+                    $('[data-toggle="tooltip_nuevas"]').tooltip("destroy");
+                    $('[data-toggle="tooltip_nuevas"]').tooltip({ trigger: "hover" });
+                }
         });
         
         // llenadoTablaNuevas(data);
         // Array_Datos_Consulta_COMPLETA.push(data.Datos)
         // llenado(Array_Datos_Consulta_COMPLETA)
+        $('#tabla_nuevas_comisiones').on('click', 'input', function () {
+            tr = $(this).closest('tr');
+            var row = tabla_nuevas.row(tr).data();
+            if (row.pa == 0) {
+                row.pa = row.impuesto;
+                totaPen += parseFloat(row.pa);
+                tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+            }
+            else {
+                totaPen = parseFloat(row.pa);
+                row.pa = 0;
+            }
+            $("#totpagarPen").html(formatMoney(totaPen));
+        });
     }
 
 
@@ -544,26 +627,32 @@ $(document).ready(function () {
 
     $(document).on("click", ".nuevas1", function () {
         nombreTabla = 'tabla_nuevas_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_NUEVAS)
         IdTablas = 1;
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_NUEVAS)
+        
+        
        
     })
     $(document).on("click", ".proceso2", function () {
         nombreTabla = 'tabla_nuevas_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_REVISION)
         IdTablas = 2;
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_REVISION)
+       
         
     })
     $(document).on("click", ".preceso3", function () {
-        nombreTabla = 'tabla_pagadas_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_OTRAS)
+        nombreTabla = 'tabla_nuevas_comisiones';
         IdTablas = 3;
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_OTRAS)
+       
     
     })
     $(document).on("click", ".preceso4", function () {
         nombreTabla = 'tabla_otras_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_8)
+        
         IdTablas = 4;
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_8)
+       
 
     })
     // $(document).on("click", ".preceso5", function () {
@@ -586,8 +675,30 @@ $(document).ready(function () {
         });
     });
 
-   
+    function informacionEncabezadoVista(){
+
+    }
+
+    function encabezadoProyectoCondominio(){
+// getDatosFechasProyecCondm
+    }
     
+    function selectAll(e) {
+        tota2 = 0;
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            if (!$(this).prop("checked")) {
+                $(this).prop("checked", true);
+                tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
+            } else {
+                $(this).prop("checked", false);
+            }
+            $("#totpagarPen").html(formatMoney(tota2));
+        });
+    }
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+    });
 //Fin de RESTRUCTURA 
 
 
