@@ -38,38 +38,40 @@ cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
-    buttons: [{
-        extend: 'excelHtml5',
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: 'btn buttons-excel',
-        titleAttr: 'Lotes para reubicar',
-        title: "Lotes para reubicar",
-        exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            format: {
-                header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
+    buttons: [
+        {
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Reestructuración',
+            title: 'Reestructuración',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
+                }
+            },
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Lotes para reubicar',
+            title: "Lotes para reubicar",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
                 }
             }
         }
-    },
-    {
-        extend: 'pdfHtml5',
-        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-        className: 'btn buttons-pdf',
-        titleAttr: 'Lotes para reubicar',
-        title: "Lotes para reubicar",
-        orientation: 'landscape',
-        pageSize: 'LEGAL',
-        exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            format: {
-                header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
-                }
-            }
-        }
-    }],
+    ],
     columnDefs: [],
     pageLength: 10,
     bAutoWidth: false,
