@@ -5,127 +5,89 @@
 
 
 
-.toggle-button-cover {
-  display: table-cell;
-  position: relative;
-  width: 200px;
-  height: 140px;
-  box-sizing: border-box;
-}
 
-.button-cover {
-  height: 100px;
-  margin: 20px;
-  background-color: #fff;
-  box-shadow: 0 10px 20px -8px #c5d6d6;
-  border-radius: 4px;
-}
 
-.button-cover:before {
-  counter-increment: button-counter;
-  content: counter(button-counter);
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  color: #d7e3e3;
-  font-size: 12px;
-  line-height: 1;
-  padding: 5px;
-}
 
-.button-cover,
-.knobs,
-.layer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
 
-.button {
-  position: relative;
-  top: 50%;
-  width: 74px;
-  height: 36px;
-  margin: -20px auto 0 auto;
-  overflow: hidden;
-}
 
-.button.r,
-.button.r .layer {
-  border-radius: 100px;
-}
 
-.button.b2 {
-  border-radius: 2px;
-}
 
-.checkbox {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  opacity: 0;
+
+
+
+
+.epecial {
+  min-width: 50px;
+  min-height: 60px;
+  text-transform: uppercase;
+  letter-spacing: 1.3px;
+  font-weight: 70;
+  color: #27515e;
+  background: #00bcd4;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 4%, rgba(255, 255, 255, 0.1) 100%);
+  border: none;
+  border-radius: 50px;
+
+  transition: all 0.3s ease-in-out 0s;
   cursor: pointer;
-  z-index: 3;
-}
+  outline: none;
+  position: relative;
+  padding: 10px;
+  }
 
-.knobs {
-  z-index: 2;
-}
-
-.layer {
-  width: 100%;
-  background-color: #ebf7fc;
-  transition: 0.3s ease all;
-  z-index: 1;
-}
-
-/* Button 4 */
-#button-4 .knobs:before,
-#button-4 .knobs:after {
+  /* .epecial::before {
+content: '';
+  border-radius: 90px;
+  min-width: calc(130px + 12px);
+  min-height: calc(40px + 12px);
+  border: 6px solid #00bcd4;
+  box-shadow: 0 0 60px rgb(0,127,101);
   position: absolute;
-  top: 2px;
-  left: 6px;
-  width: 20px;
-  height: 10px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: bold;
-  text-align: center;
-  line-height: 1;
-  padding: 9px 4px;
-  background-color: #03a9f4;
-  border-radius: 50%;
-  transition: 0.3s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all .3s ease-in-out 0s;
+} */
+
+.epecial:hover, .epecial:focus {
+  color: #313133;
+  transform: translateY(-6px);
 }
 
-#button-4 .knobs:before {
-  content: "";
+.epecial:hover::before, button:focus::before {
+  opacity: 1;
 }
 
-#button-4 .knobs:after {
-  content: "";
+.epecial::after {
+  content: '';
+  width: 30px; height: 30px;
+  border-radius: 60%;
+  border: 6px solid #00bcd4;
+  position: absolute;
+ 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: ring 1.5s infinite;
 }
 
-#button-4 .knobs:after {
-  top: -28px;
-  right: 4px;
-  left: auto;
-  background-color: #f44336;
+.epecial:hover::after, button:focus::after {
+  animation: none;
+  display: none;
 }
 
-#button-4 .checkbox:checked + .knobs:before {
-  top: -28px;
+@keyframes ring {
+  0% {
+    width: 30px;
+    height: 30px;
+    opacity: 1;
+  }
+  100% {
+    width: 70px;
+    height: 70px;
+    opacity: 0;
+  }
 }
 
-#button-4 .checkbox:checked + .knobs:after {
-  top: 4px;
-}
-
-#button-4 .checkbox:checked ~ .layer {
-  background-color: #fcebeb;
-}
 </style>

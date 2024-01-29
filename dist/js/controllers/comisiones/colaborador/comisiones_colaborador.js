@@ -1,17 +1,24 @@
 const excluir_column = ['MÁS', ''];
-let columnas_datatable = {};
-let fin = userSede == 8 ? 16 : 13;
-
-
 
 // INICIO Restructura de codigo 
-var IdTablas ;
-var Array_Datos_Consulta_COMPLETA= new Array; ///contiene toda la data de la bajada
-var Array_Datos_Consulta_NUEVAS = new Array; /// CONTIENE TODOS LOS ESTATUS 1
-var Array_Datos_Consulta_REVISION = new Array; /// cONTIENE REVISION 4
-var Array_Datos_Consulta_OTRAS = new Array; /// CONTIENE ESTATUS 6
-var Array_Datos_Consulta_8 = new Array; //Contiene el estatus 8
-var nombreTabla = ''
+var IdTablas ,
+    Array_Datos_Consulta_COMPLETA= new Array, ///contiene toda la data de la bajada
+    Array_Datos_Consulta_NUEVAS = new Array, /// CONTIENE TODOS LOS ESTATUS 1
+    Array_Datos_Consulta_REVISION = new Array, /// cONTIENE REVISION 4
+    Array_Datos_Consulta_OTRAS = new Array, /// CONTIENE ESTATUS 6
+    Array_Datos_Consulta_8 = new Array, //Contiene el estatus 8
+    nombreTabla = '',
+    justificacion_globla = "",
+    fecha_incio = '',
+    fecha_fin = '',
+    recibidosOPN = new Array; //Contiene el estatus 8
+let contadorDentroFacturas = 0,
+    columnas_datatable = {},
+    fin = userSede == 8 ? 16 : 13,
+    boton_sol_pago = (forma_pago != 2) ? '' : 'hidden',
+
+    pagos = []; //arreglo de pagos  
+
 
 function asignarValorColumnasDT(nombre_datatable) { 
     if(!columnas_datatable[`${nombre_datatable}`]) {
@@ -20,34 +27,162 @@ function asignarValorColumnasDT(nombre_datatable) {
     }
 $(document).ready(function () {
     nombreTabla = 'tabla_nuevas_comisiones';
-    peticionDataTable(nombreTabla)
-
-
-
+ 
+    $.ajax({
+        url: 'getDatosFechasProyecCondm',
+        type: 'post',
+        dataType: 'JSON',
+        success: function (GetDatosFechas) {
+            console.log(GetDatosFechas.fechasCorte[0])
+            fecha_incio = GetDatosFechas.fechasCorte[0].fechaInicio;
+            fecha_fin = GetDatosFechas.fechasCorte[0].fechaFin;
+            console.log('aqui mero  la inofrmacion')
+            console.log(GetDatosFechas.fechasCorte[0])
+            
+            peticionDataTable(nombreTabla)
+            opn_cumplimiento();
+            
+        }
+    }); 
    
-
 }); 
+
+    function opn_cumplimiento(){
+
+        $.ajax({
+            url: 'opnCumplimiento',
+            type: 'post',
+            dataType: 'JSON',
+            success: function (DatosRecibidos) {
+                
+                recibidosOPN.push(DatosRecibidos)
+                
+                llenadoTextoTabla();
+            
+            }
+        }); 
+        
+    }
+
+    function llenadoTextoTabla(){
+        let cadena
+    
+        $.ajax({
+            url: 'tipoDePago',
+            type: 'post',
+            dataType: 'JSON',
+            success: function (DatosRecibidos) {
+                console.log(DatosRecibidos)
+                // console.log(recibidosOPN[0][0]['estatus'] )
+                const fecha = new Date();
+                
+                
+            let date = new Date()
+            let day = date.getDate()
+            let month = date.getMonth() + 1
+            let year = date.getFullYear()
+            var hora = date.getHours();
+            if(month <10){month = ('0'+month)}
+            console.log(year+'-'+month+'-'+day)
+            console.log(fecha_incio)
+            console.log(fecha_fin)
+            console.log(hora)
+                const hoy = new Date();
+                
+                console.log(fechaServer)
+                //formatoFecha(hoy, 'dd/mm/yy');
+
+
+                if((fecha_fin) > (fechaServer+'.000')){console.log(1)}else{console.log(2)}
+                if( DatosRecibidos.forma_pago  == 2 ){
+
+                    if((recibidosOPN[0].length) == 0){
+                        cadena = '<a href="Usuarios/configureProfile"> <span class="label label-danger" style="background:red;">  SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA ></span> </a>';
+                    } else
+                    {   
+                        if(recibidosOPN[0][0]['estatus'] == 1){
+                            if((fecha_fin) > (fechaServer+'.000'))
+                            {//AQUI VA LA VALIDACION DE LA FECHA SOLO SI ESTA EN CORTE
+                                cadena = ` 
+                                <div class="col-lg-2">
+                                    <botton class="epecial btn-info  subir_factura_multiple">
+                                        SUBIR FACTURA
+                                    </botton>
+                                </div>` ;
+                            }else{//AQUI VA LA VALIDACION DE LA FECHA
+                                cadena = ` ` ;
+                            }
+                        }
+                        else if(recibidosOPN[0][0]['estatus'] == 0){
+                            cadena =`<a href="Usuarios/configureProfile"> 
+                                        <span class="label label-danger" style="background:orange;">  
+                                    SIN OPINIÓN DE CUMPLIMIENTO, CLIC AQUI PARA SUBIRLA
+                                        </span> 
+                                    </a>`;
+                        }
+                        else if(recibidosOPN[0][0]['estatus'] == 2){
+                            if((fecha_fin) > (fechaServer+'.000'))
+                            {//AQUI VA LA VALIDACION DE LA FECHA SOLO SI ESTA EN CORTE
+                                cadena = ` 
+                                <div class="col-lg-2">
+                                    <botton class="epecial btn-info  subir_factura_multiple">
+                                        SUBIR FACTURA
+                                    </botton>
+                                </div>` ;
+                            }else{//AQUI VA LA VALIDACION DE LA FECHA
+                                cadena = ` ` ;
+                            }
+                            
+                            // $cadena = '<div> <button class="button">  Hover Me!</button><span class="backdrop"></span></div>';
+                        }
+                    } // LLAVE DE OPINION DE CUMPLIMIENTO
+                } //LLAVE CIERRE FORMA DE PAGO  2
+                    else if (DatosRecibidos.forma_pago == 5) {
+                        if(recibidosOPN[0].length == 0){
+                            cadena = `<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>`;
+                        } else if(recibidosOPN[0][0]['estatus'] == 0) {
+                            cadena = `<button type="button" class="btn btn-info subir-archivo">SUBIR DOCUMENTO FISCAL</button>`;
+                        } else if (recibidosOPN[0][0]['estatus'] == 1) {
+                            cadena = `<p>
+                                        <b>Documento fiscal cargado con éxito</b>
+                                        <a href="#" class="verPDFExtranjero" title="Documento fiscal" data-usuario="'.$opn_cumplimiento[0]["archivo_name"].'" style="cursor: pointer;">
+                                        <u>Ver documento</u></a>
+                                        </p>`;
+                        } else if(recibidosOPN[0][0]['estatus'] == 2) {
+                            cadena = `<p style="color: #02B50C;">Documento fiscal bloqueado, hay comisiones asociadas.</p>`;
+                        }
+                    }// FORMA DE PAGO CIERRE DE LA 5
+                    else{
+                        cadena = '';
+                    }
+
+                // RESPUESTA PARA LLENAR LA VISTA
+                document.getElementById("encabezado").innerHTML = cadena;
+            }
+        }); 
+
+    }
 
     function llenadoTablaNuevas(nombreTabla,datos ){
 
         asignarValorColumnasDT(nombreTabla);
         $('#'+nombreTabla +' thead tr:eq(0) th').each(function (i) {
             var title = $(this).text();
-            console.log('primer')
+            
             if(IdTablas == 1){
-            columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
-            columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
-            }else if(dTablas == 2){
-                columnas_datatable.tabla_revision_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_revision_comisiones.num_encabezados.push(columnas_datatable.tabla_revision_comisiones.titulos_encabezados.length-1);
-            }else if(dTablas == 3){
-                columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_pagadas_comisiones.num_encabezados.push(columnas_datatable.tabla_pagadas_comisiones.titulos_encabezados.length-1);
-            }else if(dTablas == 4){
-                columnas_datatable.tabla_otras_comisiones.titulos_encabezados.push(title);
-                columnas_datatable.tabla_otras_comisiones.num_encabezados.push(columnas_datatable.tabla_otras_comisiones.titulos_encabezados.length-1);
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+            }else if(IdTablas == 2){
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+            }else if(IdTablas == 3){
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
+            }else if(IdTablas == 4){
+                columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.push(title);
+                columnas_datatable.tabla_nuevas_comisiones.num_encabezados.push(columnas_datatable.tabla_nuevas_comisiones.titulos_encabezados.length-1);
             }
-            console.log('2')
+            
             let readOnly = excluir_column.includes(title) ? 'readOnly' : '';
             if (title !== '') {
                 $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_nuevas" data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
@@ -63,14 +198,14 @@ $(document).ready(function () {
                         $.each(data, function (i, v) {
                             total += parseFloat(v.pago_cliente);
                         });
-                        document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
+                        document.getElementById("myText_nuevas").textContent = formatMoney(total);
                     }
                 });
             } else {
                 $(this).html(`<input id="all" type="checkbox" onchange="selectAll(this)" data-toggle="tooltip_nuevas"  data-placement="top" title="SELECCIONAR"/>`);
             }
         });
-        console.log('5')
+    
         $('#'+nombreTabla).on('xhr.dt', function (e, settings, json, xhr) {
             var total = 0;
             $.each(json.data, function (i, v) {
@@ -98,7 +233,102 @@ $(document).ready(function () {
                         }
                     }
                 },
-            }],
+            },{
+                text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
+            className: boton_sol_pago,
+            action: function () {
+                let actual=13;
+                if(userSede == 8){
+                    actual=15;
+                }
+                var hoy = new Date(fechaServer);
+                var dia = hoy.getDate();
+                var mes = hoy.getMonth() + 1;
+                var hora = hoy.getHours();
+
+                if((fecha_fin) > (fechaServer+'.000')){console.log(1)}else{console.log(2)}
+                if((fecha_fin) > (fechaServer+'.000'))
+                {
+            
+                    if ($('input[name="idT[]"]:checked').length > 0) {
+
+                        var data = tabla_nuevas.row().data();
+
+                        if(data.forma_pago != forma_pago){
+                            alerts.showNotification("top", "right", "Se detectó un cambio de forma de pago, es necesario cerrar sesión y volver a iniciar.", "warning");
+                            return false;
+                        }
+
+                        $('#spiner-loader').removeClass('hide');
+                        var idcomision = $(tabla_nuevas.$('input[name="idT[]"]:checked')).map(function () {
+                            return this.value;
+                        }).get();
+                        var com2 = new FormData();
+                        com2.append("idcomision", idcomision);
+                        com2.append("cp", $('#cp').val());
+                        $.ajax({
+                            url: general_base_url + 'Comisiones/acepto_comisiones_user/',
+                            data: com2,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            type: 'POST',
+                            success: function (data) {
+                                response = JSON.parse(data);
+                                if (data == 1) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#totpagarPen").html(formatMoney(0));
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a Contraloría.", "success");
+                                    tabla_nuevas.ajax.reload();
+                                    tabla_revision.ajax.reload();
+                                } else if (data == 2) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "ESTÁS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES.", "warning");
+                                } else if (data == 3) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO HAS INGRESADO TU CÓDIGO POSTAL", "warning");
+                                } else if (data == 4) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO HAS ACTUALIZADO CORRECTAMENTE TU CÓDIGO POSTAL", "warning");
+                                } else if (data == 5) {
+                                    $('#spiner-loader').addClass('hide');
+                                    $("#all").prop('checked', false);
+                                    alerts.showNotification("top", "right", "NO CUENTAS CON UNA FORMA DE PAGO VÁLIDA", "warning");
+                                } else {
+                                    $('#spiner-loader').addClass('hide');
+                                    alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                                }
+                            },
+                            error: function (data) {
+                                $('#spiner-loader').addClass('hide');
+                                alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                            }
+                        });
+                    }
+                }
+                else {
+                    $('#spiner-loader').addClass('hide');
+                    alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");
+                }
+            },
+            attr: {
+                class: 'btn btn-azure',
+                style: 'position:relative; float:right'
+            }
+            },
+            {
+                text: '<i class="fas fa-play"></i>',
+                className: `btn btn-dt-youtube buttons-youtube`,
+                titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de comisiones podrás visualizarlo en el siguiente tutorial',
+                action: function (e, dt, button, config) {
+                    window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
+                }
+            }
+        ],
             language: {
                 url: `${general_base_url}static/spanishLoader_v2.json`,
                 paginate: {
@@ -129,27 +359,27 @@ $(document).ready(function () {
             },
             {
                 "data": function (d) {
-                    return '<p class="m-0">$' + formatMoney(d.precio_lote) + '</p>';
+                    return '<p class="m-0">' + formatMoney(d.precio_lote) + '</p>';
                 }
             },
             {
                 "data": function (d) {
-                    return '<p class="m-0">$' + formatMoney(d.comision_total) + ' </p>';
+                    return '<p class="m-0">' + formatMoney(d.comision_total) + ' </p>';
                 }
             },
             {
                 "data": function (d) {
-                    return '<p class="m-0">$' + formatMoney(d.pago_neodata) + '</p>';
+                    return '<p class="m-0">' + formatMoney(d.pago_neodata) + '</p>';
                 }
             },
             {
                 "data": function (d) {
-                    return '<p class="m-0">$' + formatMoney(d.pago_cliente) + '</p>';
+                    return '<p class="m-0">' + formatMoney(d.pago_cliente) + '</p>';
                 }
             },
             {
                 "data": function (d) {
-                    return '<p class="m-0"><b>$' + formatMoney(d.impuesto) + '</b></p>';
+                    return '<p class="m-0"><b>' + formatMoney(d.impuesto) + '</b></p>';
                 }
             },
             {
@@ -277,23 +507,95 @@ $(document).ready(function () {
                 }
             }],
             columnDefs: [{
-                    visible: false,
+                    visible: true,
                     orderable: false,
                     className: 'select-checkbox',
                     targets: 0,
                     searchable: false,
                     className: 'dt-body-center',
+                    render: function (d, type, full, meta) {
+                        let actual = 13;
+                        if(userSede == 8){
+                            actual=15;
+    
+                        }
+                        console.log(131313)
+                        var hoy = new Date();
+                        var dia = hoy.getDate();
+                        var mes = hoy.getMonth() + 1;
+                        var hora = hoy.getHours();
+                        console.log(fecha_fin)
+                        console.log('fecha_fin')
+                        console.log(fechaServer+'.000')
+                        console.log('fechaServer')
+                        if((fecha_fin) > (fechaServer+'.000')) {console.log(1)}else{console.log(2)}
+                        if((fecha_fin) > (fechaServer+'.000')) {
+                            console.log(131313)
+                       
+                            switch (forma_pago) {
+                                case '1': //SIN DEFINIR
+                                case 1: //SIN DEFINIR
+                                case '2': //FACTURA
+                                case 2: //FACTURA
+                                    return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                    break;
+                                case '5':
+                                case 5:
+                                    if (full.fecha_abono && full.estatus == 1) {
+                                        const fechaAbono = new Date(full.fecha_abono);
+                                        const fechaOpinion = new Date(full.fecha_opinion);
+                                        if (fechaAbono.getTime() > fechaOpinion.getTime()) {
+                                            return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                        }
+                                    }
+                                    return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                                case '3': //ASIMILADOS
+                                case 3: //ASIMILADOS
+                              
+                                case '4': //RD
+                                case 4: //RD
+                                default:
+                                  
+                                    if (full.id_usuario == 5028 || full.id_usuario == 4773 || full.id_usuario == 5381) {
+                                        return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                                    } else {
+                                        return '<input type="checkbox" name="idT[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                                    }
+                                    break;
+                            }
+                        } else {
+                            return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+                        }
+                    },
                 }],
+                
                 info: false,
                 data:datos,
                 "type": "POST",
                 cache: false,
-        
+                initComplete: function () {
+                    $('[data-toggle="tooltip_nuevas"]').tooltip("destroy");
+                    $('[data-toggle="tooltip_nuevas"]').tooltip({ trigger: "hover" });
+                }
         });
-        console.log('10')
+        
         // llenadoTablaNuevas(data);
         // Array_Datos_Consulta_COMPLETA.push(data.Datos)
         // llenado(Array_Datos_Consulta_COMPLETA)
+        $('#tabla_nuevas_comisiones').on('click', 'input', function () {
+            tr = $(this).closest('tr');
+            var row = tabla_nuevas.row(tr).data();
+            if (row.pa == 0) {
+                row.pa = row.impuesto;
+                totaPen += parseFloat(row.pa);
+                tr.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
+            }
+            else {
+                totaPen = parseFloat(row.pa);
+                row.pa = 0;
+            }
+            $("#totpagarPen").html(formatMoney(totaPen));
+        });
     }
 
 
@@ -325,53 +627,78 @@ $(document).ready(function () {
 
     $(document).on("click", ".nuevas1", function () {
         nombreTabla = 'tabla_nuevas_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_NUEVAS)
         IdTablas = 1;
-        alert(1);
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_NUEVAS)
+        
+        
+       
     })
     $(document).on("click", ".proceso2", function () {
-        nombreTabla = 'tabla_revision_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_REVISION)
+        nombreTabla = 'tabla_nuevas_comisiones';
         IdTablas = 2;
-        alert(2);
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_REVISION)
+       
+        
     })
     $(document).on("click", ".preceso3", function () {
-        nombreTabla = 'tabla_pagadas_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_OTRAS)
+        nombreTabla = 'tabla_nuevas_comisiones';
         IdTablas = 3;
-        alert(3);
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_OTRAS)
+       
+    
     })
     $(document).on("click", ".preceso4", function () {
         nombreTabla = 'tabla_otras_comisiones';
-        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_8)
+        
         IdTablas = 4;
-        alert(4);
+        llenadoTablaNuevas(nombreTabla,Array_Datos_Consulta_8)
+       
+
     })
     // $(document).on("click", ".preceso5", function () {
     //     nombreTabla = 'tabla_comisiones_sin_pago';
     //     llenadoTablaNuevas(nombreTabla,datos)
     //     alert(5);
     // })
-//Fin de RESTRUCTURA 
 
-let anios = [];
-
-$(document).ready(function () {
-    $.ajax({
-        url: 'getYears',
-        type: 'post',
-        dataType: 'JSON',
-        success: function (anos) 
-        {
-            for(var i in anos) {
-            anios.push(parseInt(anos[i].nombre));
-                }
-
-                console.log(anios)
-                console.log('anios')
-                
-        }
+    $(document).on("click", ".consultar_logs_nuevas", function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
+        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
+        $.getJSON("getComments/" + id_pago).done(function (data) {
+            $.each(data, function (i, v) {
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');
+            });
+        });
     });
-})
+
+    function informacionEncabezadoVista(){
+
+    }
+
+    function encabezadoProyectoCondominio(){
+// getDatosFechasProyecCondm
+    }
+    
+    function selectAll(e) {
+        tota2 = 0;
+        $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
+            if (!$(this).prop("checked")) {
+                $(this).prop("checked", true);
+                tota2 += parseFloat(tabla_nuevas.row($(this).closest('tr')).data().pago_cliente);
+            } else {
+                $(this).prop("checked", false);
+            }
+            $("#totpagarPen").html(formatMoney(tota2));
+        });
+    }
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+    });
+//Fin de RESTRUCTURA 
 
 
