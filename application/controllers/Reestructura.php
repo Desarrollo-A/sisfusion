@@ -3077,5 +3077,15 @@ class Reestructura extends CI_Controller{
         else
             echo json_encode(array());
     }
+
+    public function cargaContratoFirmado() {
+        $this->load->view('template/header');
+        $this->load->view("reestructura/cargaContratoFirmado_view");
+    }
+
+    public function getLotesParaCargarContratoFirmado() {
+        $data = $this->Reestructura_model->getLotesParaCargarContratoFirmado();
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
     
 }

@@ -1183,4 +1183,37 @@ class Reestructura_model extends CI_Model
                 lo.idStatusLote = 18"
             )->result();
     }
+
+    public function getLotesParaCargarContratoFirmado() {
+        return $this->db->query(
+            "SELECT 
+                re.nombreResidencial abreviaturaNombreResidencial,
+                re.descripcion nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
+                cl.fechaApartado,
+                hd.idDocumento,
+                hd.movimiento rama,
+                hd.expediente nombreDocumento,
+                oxc.nombre estatusPreproceso,
+                CASE WHEN hd.expediente IS NULL THEN 'PENDIENTE' ELSE 'CARGADO' END estatusContratoFirmado,
+                hd.tipo_doc tipoDocumento,
+                lo.idCliente
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN (SELECT DISTINCT(idProyecto) idProyecto FROM loteXReubicacion ) lxr ON lxr.idProyecto = re.idResidencial
+            LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.tipo_doc = 30 AND hd.status = 1
+            LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
+            WHERE
+                lo.status = 1
+                AND lo.estatus_preproceso IN (0, 1, 2) 
+                AND lo.id_usuario_asignado != 0
+            ORDER BY lo.nombreLote"
+            )->result_array();
+    }
+    
 }
