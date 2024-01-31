@@ -16,7 +16,7 @@ class Reestructura_model extends CI_Model
         $validacionAdicional = "";
 
         if ($id_rol == 15) { // JURÍDICO
-            if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
+            if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario "; /* AND dxc2.flagProcesoJuridico = 0 */
             else
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) "; /* AND dxc2.flagProcesoJuridico = 0 */
@@ -761,7 +761,7 @@ class Reestructura_model extends CI_Model
     public function getListaUsuariosReasignacionJuridico() {
         return $this->db->query("SELECT id_usuario, UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno)) nombreUsuario 
         FROM usuarios 
-        WHERE estatus = 1 AND id_usuario IN (2762, 2747, 13691)
+        WHERE estatus = 1 AND id_usuario IN (2762, 2747, 13691, 2765, 10463, 2876)
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 

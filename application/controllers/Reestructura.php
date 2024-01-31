@@ -2131,7 +2131,7 @@ class Reestructura extends CI_Controller{
         
         $flagFusion = $this->input->post('flagFusion');
 
-        // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+        // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE 
         if ($idPreproceso + 1 == 2) { 
             $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
             if ($id_asig == 2747) // CARLITOS
@@ -2139,6 +2139,12 @@ class Reestructura extends CI_Controller{
             else if ($id_asig == 2762) // ES DANI
                 $assigned_user = 13691; // SE ASIGNA A CECILIA
             else if ($id_asig == 13691) // ES CECILIA
+                $assigned_user = 2765; // SE LE ASIGNA A  LUIS OCTAVIO
+            else if ($id_asig == 2765) //  LUIS OCTAVIO
+                $assigned_user = 10463; // SE LE ASIGNA A KARINA ANGELICA
+            else if ($id_asig == 10463) // KARINA ANGELICA
+                $assigned_user = 2876; // SE LE ASIGNA A JENNIFER ARELI
+            else if ($id_asig == 2876) // JENNIFER ARELI 
                 $assigned_user = 2747; // SE LE ASIGNA A CARLITOS
         
             $dataUpdateVariable = array('contador' => $assigned_user);

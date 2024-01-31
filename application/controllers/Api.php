@@ -1506,4 +1506,14 @@ class Api extends CI_Controller
         }
     }
 
+    public function aplicarLiberacion(){
+		$dataPost = $_POST;
+        $update = $this->Api_model->aplicaLiberacion($dataPost);
+        if ($update == TRUE) {
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+	}
+
 }

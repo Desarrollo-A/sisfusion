@@ -261,4 +261,13 @@ class General_model extends CI_Model
         INNER JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)");
     }
+    public function getCatOptionsEspecific($idCatalogo,$idOpciones)
+    {
+        return $this->db->query("SELECT id_opcion, id_catalogo, nombre FROM opcs_x_cats WHERE id_catalogo = $idCatalogo AND id_opcion IN($idOpciones) AND estatus = 1");
+    }
+
+    public function getUsers($idRol,$idEstatus){
+        return $this->db->query("SELECT id_usuario,id_rol,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol IN($idRol) AND estatus IN($idEstatus) ");
+    }
+
 }

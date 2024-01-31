@@ -151,14 +151,25 @@ class Comisiones_model extends CI_Model {
                 $filtroExtra = ' AND com.id_usuario = '.$user_data.' AND co.idCondominio = '.$condominio.'';
             }
 
-            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre AS pj_name, u.forma_pago, pac.porcentaje_abono, 0 AS factura, 1 expediente,
+            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre AS pj_name, pac.porcentaje_abono, 0 AS factura, 1 expediente,
         
             (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote, 
             (CASE WHEN com.ooam = 1 THEN  CONCAT(oxcest.nombre,' (EEC)') ELSE oxcest.nombre END) estatus_actual,
     
             (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion, pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, opt.estatus AS estatus_opinion, 
             (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
-            (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0)
+            (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0),
+            (CASE WHEN  (pci1.estatus = 1 AND u.forma_pago = 1) THEN 'lbl-gray / SIN DEFINIR FORMA DE PAGO / lbl-yellow / REVISAR CON RH'
+                WHEN (pci1.estatus = 1 AND u.forma_pago = 2) THEN 'lbl-sky / FACTURA / lbl-melon / SUBIR XML' 
+                WHEN (pci1.estatus = 1 AND u.forma_pago = 3) THEN 'lbl-blueMaderas / ASIMILADOS / lbl-oceanGreen / LISTA PARA APROBAR'
+                WHEN (pci1.estatus = 1 AND u.forma_pago = 4) THEN 'lbl-violetBoots / REMANENTE DIST. / lbl-oceanGreen / LISTA PARA APROBAR'
+                WHEN (pci1.estatus = 1 AND u.forma_pago NOT IN(1,2,3,4)) THEN 'lbl-gray / DOCUMENTACIÓN FALTANTE / lbl-yellow / REVISAR CON RH'
+                WHEN pci1.estatus = 4 THEN 'lbl-sky / REVISIÓN CONTRALORÍA'
+                WHEN pci1.estatus = 3 THEN 'lbl-green / RESGUARDO PERSONAL'
+                WHEN pci1.estatus = 8 THEN 'lbl-violetBoots / REVISIÓN INTERNOMEX'
+                WHEN pci1.estatus = 6 THEN 'lbl-orangeYellow / EN PAUSA'
+                ELSE '/' END) AS forma_pago
+
             FROM pago_comision_ind pci1 
             INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8) 
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (0,1)
@@ -928,6 +939,9 @@ class Comisiones_model extends CI_Model {
     }
 
     function getDatosResguardoContraloria($usuario,$proyecto){
+        ini_set('max_execution_time', 9000);
+        set_time_limit(9000);
+        ini_set('memory_limit','16384M');
         if($proyecto == 0){
             $filtro_00 = ' ';
         } else{
@@ -3043,9 +3057,9 @@ class Comisiones_model extends CI_Model {
         WHERE  c.lugar_prospeccion NOT in(6,29) AND c.descuento_mdb != 1)");
     }
 
-    public function massiveUpdateEstatusComisionInd($idPagos, $estatus)
+    public function massiveUpdateEstatusComisionInd($idPagos, $estatus,$idUsuario)
     {
-        return $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus WHERE id_pago_i IN ($idPagos)");
+        return $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus,modificado_por=$idUsuario WHERE id_pago_i IN ($idPagos)");
     }
 
     public function getUsersName()
@@ -3813,13 +3827,27 @@ class Comisiones_model extends CI_Model {
      }
      public function getSumaPagos($idUsuario){
         return $this->db->query("
-        (SELECT Coalesce(SUM (abono_neodata),0) nuevo_general FROM pago_comision_ind WHERE estatus in (1) AND id_comision IN (select id_comision from comisiones) AND id_usuario = $idUsuario)
-        UNION ALL
-        (SELECT Coalesce(SUM (abono_neodata),0) revision_contra FROM pago_comision_ind WHERE estatus in (4) AND id_comision IN (select id_comision from comisiones) AND id_usuario = $idUsuario)
-        UNION ALL
-        (SELECT Coalesce(SUM (abono_neodata),0) revision_intmex FROM pago_comision_ind WHERE estatus in (8) AND id_comision IN (select id_comision from comisiones) AND id_usuario = $idUsuario)
-        UNION ALL
-        (SELECT Coalesce(SUM (abono_neodata),0) pausados FROM pago_comision_ind WHERE estatus in (6) AND id_comision IN (select id_comision from comisiones) AND id_usuario = $idUsuario)
+        SELECT u.id_usuario,pciN.nuevas,pciR.resguardo,pciRe.revision,pciI.internomex,pciP.pausadas,sed.impuesto FROM 
+        usuarios u 
+        LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
+                WHEN 2 THEN 2 
+                WHEN 3 THEN 2 
+                WHEN 1980 THEN 2 
+                WHEN 1981 THEN 2 
+                WHEN 1982 THEN 2 
+                WHEN 1988 THEN 2 
+                WHEN 4 THEN 5
+                WHEN 5 THEN 3
+                WHEN 607 THEN 1 
+                WHEN 7092 THEN 4
+                WHEN 9629 THEN 2
+                ELSE u.id_sede END) AND sed.estatus = 1
+        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) nuevas FROM pago_comision_ind WHERE estatus=1 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciN ON pciN.id_usuario=u.id_usuario
+        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) resguardo FROM pago_comision_ind WHERE estatus=3 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciR ON pciR.id_usuario=u.id_usuario
+        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) revision FROM pago_comision_ind WHERE estatus=4 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciRe ON pciRe.id_usuario=u.id_usuario
+        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) internomex FROM pago_comision_ind WHERE estatus=8 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciI ON pciI.id_usuario=u.id_usuario
+        INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) pausadas FROM pago_comision_ind WHERE estatus=6 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciP ON pciP.id_usuario=u.id_usuario
+        WHERE u.id_usuario= $idUsuario
         ");
      }
 
