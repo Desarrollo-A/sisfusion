@@ -677,7 +677,16 @@ class Reestructura extends CI_Controller{
 
     public function setReubicacion(){
         $this->db->trans_begin();
-
+        $idLote = $this->input->post('idLote');
+        if(!isset($idLote)){
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Debes seleccionar un lote para este proceso',
+                'color' => 'danger'
+            ));
+            exit;
+        }
         $flagFusion = $this->input->post('flagFusion');
         $idClienteAnterior = $this->input->post('idCliente');
         $idLoteOriginal = $this->input->post('idLoteOriginal'); // O PIVOTE

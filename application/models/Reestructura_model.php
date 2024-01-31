@@ -107,8 +107,8 @@ class Reestructura_model extends CI_Model
     }
 
     public function getCliente($idCliente){
-        $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, ISNULL(cl.telefono1, '') telefono1, ISNULL(cl.correo, '') correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, oxc.nombre as estado_civil, ocupacion, '' ine FROM clientes cl
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
+        $query = $this->db->query("SELECT cl.nombre, cl.apellido_paterno, cl.apellido_materno, ISNULL(cl.telefono1, '') telefono1, ISNULL(cl.correo, '') correo, cl.domicilio_particular, cl.estado_civil AS idEstadoC, ISNULL(oxc.nombre, 'Sin especificar')  as estado_civil, ocupacion, '' ine FROM clientes cl
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18
         WHERE id_cliente = $idCliente");
         return $query->row();
     }

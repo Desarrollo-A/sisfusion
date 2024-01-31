@@ -1097,7 +1097,9 @@ $(document).on("submit", "#formReubicacion", function(e){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#spiner-loader').addClass('hide');
-            $('#reubicacionClientes').DataTable().ajax.reload();
+            if(!data.message == 'ERROR'){
+                $('#reubicacionClientes').DataTable().ajax.reload();
+            }
             hideModal();
         },
         error: function( data ){
