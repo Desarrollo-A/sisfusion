@@ -1212,6 +1212,7 @@ class Reestructura_model extends CI_Model
                 lo.status = 1
                 AND lo.estatus_preproceso IN (0, 1, 2) 
                 AND lo.id_usuario_asignado != 0
+                AND lo.idStatusLote IN (2, 3)
             ORDER BY lo.nombreLote"
             )->result_array();
     }
