@@ -410,13 +410,6 @@ class Reporte_model extends CI_Model {
                 ISNULL(ISNULL(ISNULL (apartadas.nombreUsuario, contratadas.nombreUsuario), canapartadas.nombreUsuario), cancontratadas.nombreUsuario) nombreUsuario, general.userID,
                 FORMAT((ISNULL(apartadas.sumaAT, 0) + ISNULL(contratadas.sumaConT, 0) - (ISNULL(VentasCompartidasApartadas.apartadasCompartidaSuma, 0) + ISNULL(VentasCompartidasContratadas.contratadasCompartidaSuma,0) )), 'C') as sharedCount
                 
-                --FORMAT((ISNULL(apartadas.sumaAT, 0) + ISNULL(contratadas.sumaConT, 0)) - ISNULL(VentasCompartidas.sharedCount, 0), 'C') AS sharedCount
-
-
-
-
-
-
             FROM (
                 -- SUMA TOTALES
                 SELECT SUM(tmpTotal.total) sumaTotal, COUNT(*) totalVentas, '1' opt, $comodin userID, tmpTotal.id_rol
@@ -479,7 +472,7 @@ class Reporte_model extends CI_Model {
                     $filtro $filtroExt
                     GROUP BY CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), cl.id_cliente,u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, 
                     cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno
-                ) tmpConT GROUP BY $comodin, tmpConT.nombreUsuario, tmpConT.id_rol--, tmpConT.shareAmount
+                ) tmpConT GROUP BY $comodin, tmpConT.nombreUsuario, tmpConT.id_rol
             ) contratadas ON contratadas.userID = general.userID
 
             LEFT JOIN(
