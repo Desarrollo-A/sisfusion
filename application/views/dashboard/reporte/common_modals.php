@@ -213,6 +213,7 @@
                       <th>DÍAS EN ESTATUS 9</th>
                       <th>ESTATUS DEL LOTE</th>
                       <th>APARTADO</th>
+                      <th>VENTA</th>
                     </tr>
                 </thead>
             </table>

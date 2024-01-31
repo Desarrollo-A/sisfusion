@@ -100,7 +100,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -117,7 +117,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -208,9 +208,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         { data: "nombreAsesorAsignado"},
         {
             data: (d) => {
-                return (d.comentario == null || d.comentario == '')
-                    ? '<p class="m-0">NO DEFINIDO</p>'
-                    : `<p class="m-0">${d.comentario}</p>`;
+                return (d.comentario == null || d.comentario == '') ? '<p class="m-0">NO DEFINIDO</p>' : `<p class="m-0">${d.comentario}</p>`;
             }
         },
         {
@@ -238,6 +236,11 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
                     return '<label class="label lbl-azure">Registrado</label>';
                 else
                     return '<br><label class="label lbl-warning ">Pendiente</label>';
+            }
+        },
+        {
+            data: (d)=>{
+                return `<span class='label ${d.banderaProcesoUrgente == 0 ? 'lbl-blueMaderas' : 'lbl-warning'}'>${d.banderaProcesoUrgenteTexto}</span>`;
             }
         },
         {
@@ -491,6 +494,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         const domicilio = cliente.domicilio_particular;
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
+        const banderaProcesoUrgente = cliente.banderaProcesoUrgente;
 
         changeSizeModal('modal-md');
         appendBodyModal(`
@@ -500,6 +504,14 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
                     </div>	
                     <div class="modal-body p-0">
                         <div class="container-fluid">
+                            <div class="row pt-1 pb-1">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                    <label class="m-0 check-style">
+                                    <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
+                                    <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
+                                </label>
+                                </div>
+                            </div> 
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                     <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
@@ -1443,6 +1455,7 @@ const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
 }
 
 const botonesAccionReubicacion = (d) => {
+    const ROLES_PERMITIDOS_CONTRALORIA = [17, 70];
     const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
@@ -1468,7 +1481,7 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && id_rol_general==17) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general)) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
@@ -1657,7 +1670,7 @@ const botonesAccionReubicacion = (d) => {
         return BTN_INFOCLIENTE;
     }
 
-    if (idEstatusPreproceso === 2 && id_rol_general == 17 && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
+    if (idEstatusPreproceso === 2 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general) && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
         if(flagFusion==1){
             //en la segunda validacion se ocupa "totalCorridasRef" ya que trae el numero de corridas que debe haber(el mismo número que los contratos
             //firmados que debe de haber

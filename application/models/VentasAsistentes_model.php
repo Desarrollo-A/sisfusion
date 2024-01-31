@@ -158,7 +158,10 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 471)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
@@ -367,7 +370,10 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 471)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
