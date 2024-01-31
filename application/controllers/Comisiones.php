@@ -3202,6 +3202,9 @@ class Comisiones extends CI_Controller
     $empresas = $this->input->post('empresas');
     $puestos = $this->input->post('puestos');
     $usuarios = $this->input->post('usuarios');
+
+    $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+
   }
   
 }

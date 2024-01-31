@@ -33,7 +33,6 @@
                                                     <th>GERENTE</th>
                                                     <th>PROCESO CONTRATACIÓN</th>
                                                     <th>COMENTARIO</th>
-                                                    <th>TIPO VENTA</th>
                                                     <th>FECHA DE CONTRATADO</th>
                                                     <th>FECHA DE APARTADO</th>
                                                     <th>PRECIO DE FIANZA</th>
@@ -41,6 +40,7 @@
                                                     <th>FECHA DE REUBICACIÓN</th>
                                                     <th>CONTRATO FIRMADO</th>
                                                     <th>ESTATUS LOTE</th>
+                                                    <th>TIPO DE VENTA</th>
                                                 </tr>
                                             </thead>
                                         </table>

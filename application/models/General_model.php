@@ -269,5 +269,8 @@ class General_model extends CI_Model
     public function getUsers($idRol,$idEstatus){
         return $this->db->query("SELECT id_usuario,id_rol,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol IN($idRol) AND estatus IN($idEstatus) ");
     }
+    public function getOpcionesPorCatalogo($id_catalogo) {
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE estatus = 1 AND id_catalogo IN ($id_catalogo)")->result_array();
+    }
 
 }

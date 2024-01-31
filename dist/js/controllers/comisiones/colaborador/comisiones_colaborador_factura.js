@@ -11,50 +11,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
     var mes = hoy.getMonth() + 1;
     var hora = hoy.getHours();
 
-    if(
-        (tipo_usuario == 2 && 
-            (mes == 12 && dia == 28) ||(mes == 12 && dia == 29) // DES-HABILITAR EN 2024
-                        ||(mes == 1 && dia == 11) || (mes == 1 && dia == 12) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 1 && dia == 25) || (mes == 1 && dia == 26) // ENE 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 8) || (mes == 2 && dia == 9) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 2 && dia == 22) || (mes == 2 && dia == 23) // FEB 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 7) || (mes == 3 && dia == 8) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 3 && dia == 27) || (mes == 3 && dia == 28) // MAR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 11) || (mes == 4 && dia == 12) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 4 && dia == 25) || (mes == 4 && dia == 26) // ABR 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 16) || (mes == 5 && dia == 17) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 5 && dia == 30) || (mes == 5 && dia == 31) // MAY 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 13) || (mes == 6 && dia == 14) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 6 && dia == 27) || (mes == 6 && dia == 28) // JUN 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 11) || (mes == 7 && dia == 12) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 7 && dia == 25) || (mes == 7 && dia == 26) // JUL 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 15) || (mes == 8 && dia == 16) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 8 && dia == 29) || (mes == 8 && dia == 30) // AGO 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 11) || (mes == 9 && dia == 12) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 9 && dia == 26) || (mes == 9 && dia == 27) // SEP 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 10) || (mes == 10 && dia == 11) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 10 && dia == 24) || (mes == 10 && dia == 25) // OCT 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 13) || (mes == 11 && dia == 14) // NOV 2024 OOAM QUINCENAL
-                        ||(mes == 11 && dia == 28) || (mes == 11 && dia == 29) // NOV 2024 OOAM QUINCENAL
-                        // || (mes == 12 && dia == 10) || (mes == 12 && dia == 24) HABILITAR EN 2024 DIC 2024 OOAM QUINCENAL
-            ) 
-            || (tipo_usuario == 1 && 
-                ((mes == 1 && dia == 24)  ||  (mes == 1 && dia == 25 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
-                ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
-                ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
-                ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
-                ((mes == 6 && dia == 9)  ||  (mes == 6 && dia == 10 && hora <= fin)) || // JUN 2024 VENTAS
-                ((mes == 7 && dia == 7)  ||  (mes == 7 && dia == 8 && hora <= fin)) || // JUL 2024 VENTAS
-                ((mes == 8 && dia == 11)  ||  (mes == 8 && dia == 12 && hora <= fin)) || // AGO 2024 VENTAS
-                ((mes == 9 && dia == 8)  ||  (mes == 9 && dia == 9 && hora <= fin)) || // SEP 2024 VENTAS
-                ((mes == 10 && dia == 6)  ||  (mes == 10 && dia == 7 && hora <= fin)) || // OCT 2024 VENTAS
-                ((mes == 11 && dia == 10)  ||  (mes == 11 && dia == 11 && hora <= fin)) || // NOV 2024 VENTAS
-                ((mes == 12 && dia == 8)  ||  (mes == 12 && dia == 9 && hora <= fin)) // DIC 2024 VENTAS
-                )//VALIDACION VENTAS NORMAL
-
-            || (id_usuario_general == 7689)
-        ) {
+    if((fecha_fin) > (fechaServer+'.000')) {
 
         $("#modal_multiples .modal-body").html("");
         $("#modal_multiples .modal-header").html("");
@@ -97,7 +54,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                 }
             }
         }, 'json');
-    $('#spiner-loader').addClass('hide');
+        $('#spiner-loader').addClass('hide');
         $('#desarrolloSelect').change(function () {
             var valorSeleccionado = $(this).val();
             $("#modal_multiples .modal-body").html("");
@@ -133,7 +90,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
                             </div>`);
                     });
                     $("#modal_multiples .modal-body").append(`
-                    <div class="row">
+                        <div class="row">
                         <div class="col-md-12 text-left">
                             <b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b>
                         </div>
@@ -240,7 +197,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
         });
     }
     else {
-
+        $('#spiner-loader').addClass('hide');
         alerts.showNotification("top", "right", "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE ", "danger");
     }
 });
@@ -289,12 +246,22 @@ function todos() {
 
 // PRIMERA FUNCTION XML2 PARA SUBIR LA FACTURA
 function xml2() {
-    subir_xml2($("#xmlfile2"));
-    $('#archivo-factura').val('');
-    v2 = document.getElementById("xmlfile2").files[0].name;
-    document.getElementById("archivo-factura").innerHTML = v2;
-    const src = URL.createObjectURL(document.getElementById("xmlfile2").files[0]);
-   
+    
+    console.log('document.getElementById("xmlfile2").files[0].name')
+    if(document.getElementById("xmlfile2").files[0] != undefined ){
+
+        subir_xml2($("#xmlfile2"));
+        $('#archivo-factura').val('');
+
+        console.log(document.getElementById("xmlfile2").files[0])
+        v2 = document.getElementById("xmlfile2").files[0].name;
+        document.getElementById("archivo-factura").innerHTML = v2;
+        const src = URL.createObjectURL(document.getElementById("xmlfile2").files[0]);
+    }else{
+        alerts.showNotification("top", "right", "ERROR POR FAVOR SUBE NUEVAMENTE TU FACTURA ", "warning");
+
+    }
+
 }
 
 // SEGUNDA FUCNTION SUBIR_XML2 PARA SUBIR LA FACTURA
@@ -322,12 +289,13 @@ function subir_xml2(input) {
             }
             else {
                 input.val('');
-                alert(data.respuesta[1]);
+                alerts.showNotification("top", "right", data.respuesta[1], "danger");
+                // alert(data.respuesta[1]);
             }
         },
         error: function (data) {
             input.val('');
-            alert("ERROR INTENTE COMUNICARSE CON EL PROVEEDOR");
+            alerts.showNotification("top", "right","ERROR INTENTE COMUNICARSE CON EL PROVEEDOR", "danger");
         }
     });
 }
@@ -391,6 +359,7 @@ function cargar_info_xml2(informacion_factura) {
 
 
 $(document).on('change','xmlfile2', function () {
+    alert(2311313)
     $('#archivo-factura').val('');
     v2 = document.getElementById("xmlfile2").files[0].name;
     document.getElementById("archivo-factura").innerHTML = v2;
@@ -425,30 +394,38 @@ function save2() {
         success: function (data) {
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
-                alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                alerts.showNotification("top", "right", "LA FACTURA SE SUBIO CORRECTAMENTE", "success");
+                // alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                 $("#modal_multiples").modal('toggle');
+                peticionDataTable();
                 tabla_nuevas.ajax.reload();
                 tabla_revision.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {
-                alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
+                alerts.showNotification("top", "right", "ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES", "warning");
+                //alert("ESTAS FUERA DE TIEMPO PARA ENVIAR TUS SOLICITUDES");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
+                peticionDataTable();
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 4) {
-                alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
+                alerts.showNotification("top", "right", "EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS", "warning");
+                // alert("EL TOTAL DE LA FACTURA NO COINCIDE CON EL TOTAL DE COMISIONES SELECCIONADAS");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
+                peticionDataTable();
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else {
-                alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                alerts.showNotification("top", "right", "NO SE HA PODIDO COMPLETAR LA SOLICITUD", "warning");
+                //alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
+                peticionDataTable();
                 tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
@@ -456,7 +433,9 @@ function save2() {
         },
         error: function () {
             document.getElementById('btng').disabled = false;
-            alert("ERROR EN EL SISTEMA");
+            alerts.showNotification("top", "right","ERROR EN EL SISTEMA", "danger");
+            // alerts.showNotification("top", "right", "NO PUEDES SUBIR FACTURAS HASTA EL PRÓXIMO CORTE ", "danger");
+
         }
     });
 }

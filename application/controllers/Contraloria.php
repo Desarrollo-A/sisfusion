@@ -1690,7 +1690,7 @@ class Contraloria extends CI_Controller {
                         "fechaDeCompra" => date('Y-m-d'),
                         "montoDelNegocio" => $totalNeto2,
                         "uid" => $this->input->post('uid'),
-                        "estatus" => 1
+                        "etapa" => 'Contratado'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
