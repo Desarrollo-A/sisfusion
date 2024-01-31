@@ -217,7 +217,7 @@ function createAccordions(option, render, rol){
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>ACCIONES</th>
-                            <th>AMMOUNT SHARED</th>
+                            <th>MONTO FINAL</th>
                             
                         </tr>
                     </thead>
@@ -1539,8 +1539,7 @@ function fillTableReport(dataObject) {
                 },
                 {
                     data: function (d) {
-                        //return d.modalidad;
-                        return d.nombreCliente;
+                        return d.modalidad;
                     }
                 }
                 
