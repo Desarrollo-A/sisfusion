@@ -3833,8 +3833,8 @@
             FROM lotes l
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
             INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-            INNER JOIN clientes cl ON cl.idLote = l.idLote
-		    where l.idLote = $idLote AND cl.status = 1");
+            LEFT JOIN clientes cl ON cl.idLote = l.idLote AND cl.id_cliente = l.idCliente AND cl.status = 1
+		    where l.idLote = $idLote /*AND cl.status = 1*/");
 		return $query->row();
 	}
 

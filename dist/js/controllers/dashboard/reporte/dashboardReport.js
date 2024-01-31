@@ -207,7 +207,7 @@ function createAccordions(option, render, rol){
                             <th class="detail">MÁS</th>
                             <th class="encabezado text-center">`+option.toUpperCase()+`</th>
                             <th>GRAN TOTAL</th>
-                            <th class="text-center">SEDES CARGO</th>
+                            <th class="text-center">SEDE</th>
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -273,7 +273,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             titleAttr: 'Descargar archivo de Excel',
             title: 'Reporte de ventas por '+option ,
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         switch (columnIdx) {
@@ -284,7 +284,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                 return 'GRAN TOTAL'
                                 break;
                             case 3:
-                                return 'SEDES CARGO'
+                                return 'SEDE'
                                 break;    
                             case 4:
                                 return 'MONTO';
@@ -354,11 +354,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 width:"20vw",
                 data: function (d) {
-                    if(d.sedeNombre != null){
-                    return '<p class="m-0" style="white-space: normal">'+d.sedeNombre.toUpperCase().slice(0, -1)+'<p>';
-                    }else{
-                        return "<p>NO APLICA</p>";
-                    }
+                    return `<p class="m-0" style="white-space: normal">${d.sedeNombre}<p>`;
                 }
             },
             {

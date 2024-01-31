@@ -209,7 +209,7 @@ function fillUsersTable() {
             titleAttr: 'Listado de usuarios',
             title: 'Listado de usuarios',
             exportOptions: {
-                columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6, 7],
+                columns:  (id_rol_general==54) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
