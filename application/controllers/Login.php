@@ -207,7 +207,8 @@ class Login extends CI_Controller
 							'nombreGerente'	        =>	    $nombreGerente,
 							'forma_pago'	        =>	    $check_user[0]->forma_pago,
 							'controlador'			=>		$check_user[0]->controlador,
-							'tipo'       			=>		$check_user[0]->tipo
+							'tipo'       			=>		$check_user[0]->tipo,
+							'correo'       			=>		$check_user[0]->correo
 						);
 						session_start();
 						$_SESSION['rutaController'] = '';

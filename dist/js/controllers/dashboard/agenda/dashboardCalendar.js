@@ -287,17 +287,20 @@ $("#dateEnd2").on('change', function(e){
 document.querySelector('#insert_appointment_form').addEventListener('submit',async e =>  {
   e.preventDefault();
 
+  /*
   const isAuth = await isAuthenticated(getGoogleTokenStorage());
   if (!isAuth) {
     $('#confirmSignInGoogleModal').modal();
     $('#agendaInsert').modal('toggle');
     return;
   }
+  */
+  $('#agendaInsert').modal('toggle');
 
   const formValues = Object.fromEntries(new FormData(e.target));
 
   // Pasar esta funcion al servidor
-  const data = buildEventGoogle(formValues);
+  // const data = buildEventGoogle(formValues);
 
   const rangeOfDates = validateDates(formValues);
   const emptyTitle = $("#evtTitle").val().replace(/\s/g, '').length;
@@ -313,10 +316,12 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
   }
 
 
-// Quiotar e4sto
+  // Quiotar e4sto
+  /*
   if (getGoogleTokenStorage() !== null) {
     formValues['idGoogle'] = await insertEventGoogle(data);
   }
+  */
   //Parta agregar esa funciuonalidad en el backend
 
   formValues['estatus_particular'] = $('#estatus_particular').val();
@@ -349,7 +354,7 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     complete: function () {
       $('#spiner-loader').addClass('hide');
     }
-  });}
+  });
   // Hasta aqui
 
 
@@ -507,6 +512,7 @@ $('#feedbackModal').on('hidden.bs.modal', function () {
 });
 
 /* Event's structure sent to Google */
+/*
 function buildEventGoogle(data){
   const { dateEnd, dateStart, description, evtTitle } = data;
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -537,6 +543,7 @@ function buildEventGoogle(data){
     }
   };
 }
+*/
 
 function insertEventGoogle(data){
   return new Promise((resolve, reject) => {
@@ -712,7 +719,8 @@ function disabledEditModal(value, estatus){
 }
 
 async function deleteEvent(idAgenda, idGoogle){
-  const isAuth = await isAuthenticated(getGoogleTokenStorage());
+  //const isAuth = await isAuthenticated(getGoogleTokenStorage());
+  /*
   if (!isAuth) {
     $('#confirmSignInGoogleModal').modal();
     $('#modalDeleteEvt').modal("hide");
@@ -722,6 +730,7 @@ async function deleteEvent(idAgenda, idGoogle){
   if (idGoogle != null || idGoogle !== '') {
     await deleteGoogleEvent(idGoogle);
   }
+  */
 
   $.ajax({
     type: 'POST',

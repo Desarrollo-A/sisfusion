@@ -5,7 +5,7 @@ class Calendar extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Calendar_model', 'General_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Email','permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Email','permisos_sidebar', 'GoogleApi'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -80,6 +80,18 @@ class Calendar extends CI_Controller {
     }
 
     public function deleteAppointment(){
+        $appointment = (object) $this->Calendar_model->getAppointmentData($_POST['idAgenda'])[0];
+
+        if(isset($appointment->idGoogle)){
+            $user = (object) $this->session->userdata;
+
+            if(isset($user)){
+                $this->googleapi->getAccessToken($user->correo);
+
+                $this->googleapi->deleteCalendarEvent('primary', $appointment->idGoogle);
+            }
+        }
+
         $response = $this->Calendar_model->deleteAppointment($_POST['idAgenda']);
         echo json_encode($response);
     }
@@ -88,15 +100,58 @@ class Calendar extends CI_Controller {
         echo json_encode($this->Calendar_model->getStatusRecordatorio()->result_array());
     }
 
+    private function buildEventGoogle($data){
+        $date_start = date('Y-m-d\Th:i:s', strtotime($data->dateStart));
+        $date_end = date('Y-m-d\Th:i:s', strtotime($data->dateEnd));
+
+        $object = json_encode(array(
+            'summary' => $data->evtTitle,
+            'description' => $data->description,
+            'start' => array(
+                'dateTime' => $date_start,
+                'timeZone' => 'America/Mexico_City',
+            ),
+            'end' => array(
+                'dateTime' => $date_end,
+                'timeZone' => 'America/Mexico_City',
+            ),
+            'attendees' => [
+                0 => [
+                    'email' => $data->correo,
+                    'responseStatus' => 'accepted',
+                ],
+            ],
+            'source' => [
+                'title' => 'El google',
+                'url' => 'https://www.google.com'
+            ],
+            'reminders' => array(
+                'useDefault' => FALSE,
+                'overrides' => array(
+                    array('method' => 'email', 'minutes' => 24 * 60),
+                    array('method' => 'popup', 'minutes' => 60),
+                    array('method' => 'popup', 'minutes' => 10),
+                ),
+            ),
+            'visibility' => 'public',
+        ));
+
+        return $object;
+    }
+
     public function insertRecordatorio(){
         $objDatos = json_decode(file_get_contents("php://input"));
 
-        //Construir el data para insertar en el calendario de google
-        // $event = $this->buildEventGoogle()
+        $user = (object) $this->session->userdata;
+        $objDatos->correo = $user->correo;
 
-        //$event = $this->googleapi->createCalendarEvent($event);
+        $this->googleapi->getAccessToken($user->correo);
 
-        //$idGoogle = $event->id:
+        $event = $this->buildEventGoogle($objDatos);
+
+        $result = $this->googleapi->createCalendarEvent('primary', $event);
+
+        $objDatos->id = $result->id;
 
         $data = array(
             "fecha_creacion" => date("Y-m-d H:i:s"),
@@ -110,7 +165,7 @@ class Calendar extends CI_Controller {
             "id_direccion" => isset($objDatos->id_direccion) ? $objDatos->id_direccion :null,
             "direccion" => isset($objDatos->direccion) ? $objDatos->direccion :null,
             "descripcion" => $objDatos->description,
-            "idGoogle" => isset($objDatos->idGoogle) ? $objDatos->idGoogle:null
+            "idGoogle" => $objDatos->id
         );
 
         $response = $this->General_model->addRecord('agenda', $data);
