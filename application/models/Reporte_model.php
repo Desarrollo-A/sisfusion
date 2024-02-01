@@ -331,14 +331,13 @@ class Reporte_model extends CI_Model {
         if( $estatusContratacion != null )
             $filtroSt = 'INNER JOIN (SELECT idLote, idCliente, MAX(idStatusContratacion) statusContratacion FROM historial_lotes GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente AND hlo3.statusContratacion = ' . $estatusContratacion;
         
-
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
         
         if($id_rol == 1 || $id_rol == 2){
             $rolesSede = $id_rol == 1 ? 59 : $id_rol;
-            $sedeCargo = "ISNULL(STUFF((select ' ' + nombre + ',' from sedes where id_sede in (select r.idSede from roles_x_usuario r where r.idRol = " . $rolesSede . " and r.idUsuario = u.id_usuario) for xml path('')), 1, 1, ''),'Sin especificar,')";
-        }else{
-            $sedeCargo = "ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes where sedes.id_sede IN (select value id from STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, ''),'Sin especificar')";
+            $sedeCargo = "TRIM(', ' FROM ISNULL(STUFF((SELECT ' ' + nombre + ',' FROM sedes WHERE id_sede IN (SELECT idSede FROM roles_x_usuario WHERE idRol = $rolesSede AND idUsuario = u.id_usuario) for xml path('')), 1, 1, ''), 'SIN ESPECIFICAR'))";
+        } else {
+            $sedeCargo = "TRIM(', ' FROM ISNULL(STUFF((SELECT ' ' + sedes.nombre + ',' FROM sedes WHERE sedes.id_sede IN (SELECT value id FROM STRING_SPLIT(u.id_sede , ',')) for xml path('')), 1, 1, ''), 'SIN ESPECIFICAR'))"; 
         }
 
         $query = $this->db->query("SELECT

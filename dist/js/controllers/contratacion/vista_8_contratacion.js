@@ -11,13 +11,7 @@ $(document).ready(function () {
     if (i != 0) {
       var title = $(this).text();
       titulos.push(title);
-      $(this).html(
-        '<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' +
-          title +
-          '" placeholder="' +
-          title +
-          '"/>'
-      );
+      $(this).html('<input class="textoshead" type="text" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
       $("input", this).on("keyup change", function () {
         if (tabla_6.column(i).search() !== this.value) {
           tabla_6.column(i).search(this.value).draw();
@@ -32,23 +26,21 @@ $(document).ready(function () {
       "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: "100%",
     scrollX: true,
-    buttons: [
-      {
-        extend: "excelHtml5",
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: "btn buttons-excel",
-        filename: "Registro de Estatus 8",
-        titleAttr: "Descargar archivo de Excel",
-        exportOptions: {
-          columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
-          format: {
-            header: function (d, columnIdx) {
-              return " " + titulos[columnIdx - 1] + " ";
-            },
+    buttons: [{
+      extend: "excelHtml5",
+      text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+      className: "btn buttons-excel",
+      filename: "Registro de Estatus 8",
+      titleAttr: "Descargar archivo de Excel",
+      exportOptions: {
+        columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        format: {
+          header: function (d, columnIdx) {
+            return " " + titulos[columnIdx - 1] + " ";
           },
         },
       },
-    ],
+    }],
     pagingType: "full_numbers",
     fixedHeader: true,
     language: {
@@ -60,8 +52,7 @@ $(document).ready(function () {
     },
     destroy: true,
     ordering: false,
-    columns: [
-      {
+    columns: [{
         className: "details-control",
         orderable: false,
         data: null,
@@ -71,267 +62,66 @@ $(document).ready(function () {
       {
         data: function (d) {
           return `<span class="label lbl-green">${d.tipo_venta}</span>`;
-        },
+        }
       },
       {
         data: function (d) {
           return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
-        },
+        }
       },
+      { data: "nombreResidencial" },
       {
         data: function (d) {
-          return '<p class="m-0">' + d.nombreResidencial + "</p>";
-        },
+          return '<p class="m-0">' + d.nombreCondominio.toUpperCase() + "</p>";
+        }
       },
-      {
-        data: function (d) {
-          return '<p class="m-0">' + d.nombreCondominio.toUpperCase();
-          +"</p>";
-        },
-      },
-      {
-        data: function (d) {
-          return '<p class="m-0">' + d.nombreLote + "</p>";
-        },
-      },
-      {
-        data: function (d) {
-          return '<p class="m-0">' + d.gerente + "</p>";
-        },
-      },
-      {
-        data: function (d) {
-          return '<p class="m-0">' + d.nombreCliente + "</p>";
-        },
-      },
-      {
-        data: function (d) {
-          return '<p class="m-0">' + d.descripcion + "</p>";
-        },
-      },
-
+      { data: "nombreLote" },
+      { data: "gerente" },
+      { data: "nombreCliente" },
+      { data: "descripcion" },
       {
         data: function (d) {
           return `<span class="label lbl-azure">${d.nombreSede}</span>`;
-        },
+        }
       },
       {
         orderable: false,
         data: function (data) {
-          if (
-            id_rol_general != 53 &&
-            id_rol_general != 54 &&
-            id_rol_general != 63
-          ) {
+          if (id_rol_general != 53 && id_rol_general != 54 && id_rol_general != 63){
             // ANALISTA DE COMISIONES Y SUBDIRECTOR CONSULTA (POPEA)
 
             var cntActions;
             if (data.vl == "1") {
               cntActions = "EN PROCESO DE LIBERACIÓN";
             } else {
-              if (
-                data.idStatusContratacion == 7 &&
-                data.idMovimiento == 64 &&
-                (data.perfil == 32 ||
-                  data.perfil == 13 ||
-                  data.perfil == 17 ||
-                  data.perfil == 70)
-              ) {
-                cntActions =
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                  '<i class="far fa-thumbs-up"></i></button>';
+              if (data.idStatusContratacion == 7 && data.idMovimiento == 64 && (data.perfil == 32 || data.perfil == 13 || data.perfil == 17 || data.perfil == 70)) {
+                cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                  'class="btn-data btn-orangeYellow editReg2" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' + '<i class="far fa-thumbs-up"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '"  ' +
-                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
+                cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton +'"  ' +
+                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' + '<i class="far fa-thumbs-down"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
-              } else if (
-                (data.idStatusContratacion == 7 &&
-                  data.idMovimiento == 37 &&
-                  data.perfil == 15) ||
-                (data.idStatusContratacion == 7 &&
-                  data.idMovimiento == 7 &&
-                  data.perfil == 15) ||
-                (data.idStatusContratacion == 7 &&
-                  data.idMovimiento == 77 &&
-                  data.perfil == 15) ||
-                (data.idStatusContratacion == 11 &&
-                  data.idMovimiento == 41)
-              ) {
-                cntActions =
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                  '<i class="far fa-thumbs-up"></i></button>';
+                cntActions +='<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton +'" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' + '<i class="far fa-thumbs-down"></i></button>';
+              } else if ((data.idStatusContratacion == 7 && data.idMovimiento == 37 && data.perfil == 15) ||(data.idStatusContratacion == 7 && data.idMovimiento == 7 && data.perfil == 15) ||
+                (data.idStatusContratacion == 7 && data.idMovimiento == 77 && data.perfil == 15) ||(data.idStatusContratacion == 11 && data.idMovimiento == 41)) {
+                cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                  'class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' + '<i class="far fa-thumbs-up"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '"  ' +
-                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
+                cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' + '<i class="far fa-thumbs-down"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
-              } else if (
-                data.idStatusContratacion == 7 &&
-                data.idMovimiento == 66 &&
-                data.perfil == 11
-              ) {
-                cntActions =
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' +
-                  '<i class="far fa-thumbs-up"></i></button>';
+                cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' + '<i class="far fa-thumbs-down"></i></button>';
+              } else if (data.idStatusContratacion == 7 && data.idMovimiento == 66 && data.perfil == 11) {
+                cntActions = '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                  'class="btn-data btn-violetBoots editLoteTo8" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS">' + '<i class="far fa-thumbs-up"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '"  ' +
-                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
+                cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '"  ' +
+                  'class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (JURÍDICO)">' + '<i class="far fa-thumbs-down"></i></button>';
 
-                cntActions +=
-                  '<button href="#" data-idLote="' +
-                  data.idLote +
-                  '" data-nomLote="' +
-                  data.nombreLote +
-                  '" data-idCond="' +
-                  data.idCondominio +
-                  '"' +
-                  'data-idCliente="' +
-                  data.id_cliente +
-                  '" data-fecVen="' +
-                  data.fechaVenc +
-                  '" data-ubic="' +
-                  data.ubicacion +
-                  '" data-code="' +
-                  data.cbbtton +
-                  '" ' +
-                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' +
-                  '<i class="far fa-thumbs-down"></i></button>';
+                cntActions += '<button href="#" data-idLote="' + data.idLote + '" data-nomLote="' + data.nombreLote + '" data-idCond="' + data.idCondominio + '"' + 'data-idCliente="' + data.id_cliente + '" data-fecVen="' + data.fechaVenc + '" data-ubic="' + data.ubicacion + '" data-code="' + data.cbbtton + '" ' +
+                  'class="btn-data btn-orangeYellow cancelAs" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO ESTATUS (ASESOR)">' + '<i class="far fa-thumbs-down"></i></button>';
               } else {
                 cntActions = "N/A";
               }
@@ -376,109 +166,61 @@ $(document).ready(function () {
     if (row.child.isShown()) {
       row.child.hide();
       tr.removeClass("shown");
-      $(this)
-        .parent()
-        .find(".animacion")
-        .removeClass("fas fa-chevron-up")
-        .addClass("fas fa-chevron-down");
+      $(this).parent().find(".animacion").removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
     } else {
       var status;
       var fechaVenc;
 
-      if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 37
-      ) {
+      if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37){
         status = "ESTATUS 7 LISTO (JURÍDICO)";
-      } else if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 7
-      ) {
+      } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7){
         status = "ESTATUS 7 LISTO CON MODIFICACIONES (JURÍDICO)";
-      } else if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 64
-      ) {
+      } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64){
         status = "ESTATUS 8 RECHAZADO (CONTRALORIA)";
-      } else if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 66
-      ) {
+      } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66){
         status = "ESTATUS 8 RECHAZADO (ADMINISTRACIÓN)";
-      } else if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 77
-      ) {
+      } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77){
         status = "ESTATUS 2 ENVIADO REVISIÓN (VENTAS)";
-      } else if (
-        row.data().idStatusContratacion == 11 &&
-        row.data().idMovimiento == 41
-      ) {
+      } else if (row.data().idStatusContratacion == 11 && row.data().idMovimiento == 41){
         status = "ESTATUS 11 VALIDACIÓN DE ENGANCHE (ADMINISTRACIÓN)";
       }
 
-      if (
-        (row.data().idStatusContratacion == 7 &&
-          row.data().idMovimiento == 37) ||
-        (row.data().idStatusContratacion == 7 &&
-          row.data().idMovimiento == 7) ||
-        (row.data().idStatusContratacion == 7 &&
-          row.data().idMovimiento == 64) ||
-        (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77)
-      ) {
+      if ((row.data().idStatusContratacion == 7 && row.data().idMovimiento == 37) || (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 7) || 
+        (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 64) || (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 77)) {
         fechaVenc = row.data().fechaVenc;
-      } else if (
-        row.data().idStatusContratacion == 7 &&
-        row.data().idMovimiento == 66
-      ) {
+      } else if (row.data().idStatusContratacion == 7 && row.data().idMovimiento == 66){
         fechaVenc = "VENCIDO";
       }
 
       var informacion_adicional =
         '<div class="container subBoxDetail bottom"><div class="row">' +
-        '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">' +
-        "<label><b>INFORMACIÓN ADICIONAL</b></label>" +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Estatus: </b>" +
-        status +
-        "</label>" +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Comentario: </b>" +
-        row.data().comentario +
-        "</label>" +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Fecha de vencimiento: </b>" +
-        fechaVenc +
-        "</label>" +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Fecha de realizado: </b>" +
-        row.data().modificado +
-        "</label> " +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Coordinador: </b>" +
-        row.data().coordinador +
-        "</label> " +
-        "</div>" +
-        '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
-        "<label><b>Asesor: </b>" +
-        row.data().asesor +
-        "</label>" +
-        "</div>" +
-        "</div>" +
+          '<div class="col-12 col-sm-12 col-sm-12 col-lg-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">' +
+              "<label><b>INFORMACIÓN ADICIONAL</b></label>" +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Estatus: </b>" + status + "</label>" +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Comentario: </b>" + row.data().comentario + "</label>" +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Fecha de vencimiento: </b>" + fechaVenc + "</label>" +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Fecha de realizado: </b>" + row.data().modificado + "</label> " +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Coordinador: </b>" + row.data().coordinador + "</label> " +
+            "</div>" +
+            '<div class="col-12 col-sm-12 col-md-12 col-lg-12">' +
+              "<label><b>Asesor: </b>" + row.data().asesor + "</label>" +
+            "</div>" +
+          "</div>" +
         "</div>";
 
       row.child(informacion_adicional).show();
       tr.addClass("shown");
-      $(this)
-        .parent()
-        .find(".animacion")
-        .removeClass("fas fa-chevron-down")
-        .addClass("fas fa-chevron-up");
+      $(this).parent().find(".animacion").removeClass("fas fa-chevron-down").addClass("fas fa-chevron-up");
     }
   });
 
@@ -606,65 +348,34 @@ $(document).on("click", "#save1", function (e) {
           $("#save1").prop("disabled", false);
           $("#editReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Estatus enviado.",
-            "success"
-          );
+          alerts.showNotification("top", "right", "Estatus enviado.", "success");
         } else if (response.message == "MISSING_COMPLEMENTO_DE_ENGANCHE") {
           $("#save1").prop("disabled", false);
           $("#editReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Primero debes cargar el COMPLEMENTO DE ENGANCHE para" +
-              " poder avanzar el lote",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Primero debes cargar el COMPLEMENTO DE ENGANCHE para" + " poder avanzar el lote", "danger");
         } else if (response.message == "MISSING_CARTA_UPLOAD") {
           $("#save1").prop("disabled", false);
           $("#editReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
         } else if (response.message == "FALSE") {
           $("#save1").prop("disabled", false);
           $("#editReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "El status ya fue registrado.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
         } else if (response.message == "ERROR") {
           $("#save1").prop("disabled", false);
           $("#editReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Error al enviar la solicitud.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
       },
       error: function (data) {
         $("#save1").prop("disabled", false);
         $("#editReg").modal("hide");
         $("#Jtabla").DataTable().ajax.reload();
-        alerts.showNotification(
-          "top",
-          "right",
-          "Error al enviar la solicitud.",
-          "danger"
-        );
+        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
       },
     });
   }
@@ -702,43 +413,24 @@ $(document).on("click", "#save3", function (e) {
           $("#save3").prop("disabled", false);
           $("#rechReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Estatus enviado.",
-            "success"
-          );
+          alerts.showNotification("top", "right", "Estatus enviado.", "success");
         } else if (response.message == "FALSE") {
           $("#save3").prop("disabled", false);
           $("#rechReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "El status ya fue registrado.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
         } else if (response.message == "ERROR") {
           $("#save3").prop("disabled", false);
           $("#rechReg").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Error al enviar la solicitud.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
       },
       error: function (data) {
         $("#save3").prop("disabled", false);
         $("#rechReg").modal("hide");
         $("#Jtabla").DataTable().ajax.reload();
-        alerts.showNotification(
-          "top",
-          "right",
-          "Error al enviar la solicitud.",
-          "danger"
+        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger"
         );
       },
     });
@@ -777,44 +469,24 @@ $(document).on("click", "#save4", function (e) {
           $("#save4").prop("disabled", false);
           $("#rechazoAs").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Estatus enviado.",
-            "success"
-          );
+          alerts.showNotification("top", "right", "Estatus enviado.", "success");
         } else if (response.message == "FALSE") {
           $("#save4").prop("disabled", false);
           $("#rechazoAs").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "El status ya fue registrado.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
         } else if (response.message == "ERROR") {
           $("#save4").prop("disabled", false);
           $("#rechazoAs").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Error al enviar la solicitud.",
-            "danger"
-          );
+          alerts.showNotification("top","right", "Error al enviar la solicitud.", "danger");
         }
       },
       error: function (data) {
         $("#save4").prop("disabled", false);
         $("#rechazoAs").modal("hide");
         $("#Jtabla").DataTable().ajax.reload();
-        alerts.showNotification(
-          "top",
-          "right",
-          "Error al enviar la solicitud.",
-          "danger"
-        );
+        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
       },
     });
   }
@@ -852,54 +524,29 @@ $(document).on("click", "#save5", function (e) {
           $("#save5").prop("disabled", false);
           $("#rev8").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Estatus enviado.",
-            "success"
-          );
+          alerts.showNotification("top", "right", "Estatus enviado.", "success");
         } else if (response.message == "FALSE") {
           $("#save5").prop("disabled", false);
           $("#rev8").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "El status ya fue registrado.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
         } else if (response.message == "MISSING_CARTA_UPLOAD") {
           $("#save5").prop("disabled", false);
           $("#rev8").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Primero debes subir la Carta de Domicilio CM antes de avanzar el expediente", "danger");
         } else if (response.message == "ERROR") {
           $("#save5").prop("disabled", false);
           $("#rev8").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Error al enviar la solicitud.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         }
       },
       error: function (data) {
         $("#save5").prop("disabled", false);
         $("#rev8").modal("hide");
         $("#Jtabla").DataTable().ajax.reload();
-        alerts.showNotification(
-          "top",
-          "right",
-          "Error al enviar la solicitud.",
-          "danger"
-        );
+        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
       },
     });
   }
@@ -921,12 +568,7 @@ $(document).on("click", "#save6", function (e) {
   dataExp6.append("numContrato", getInfo6[7]);
 
     if (validaComent == 0)
-      alerts.showNotification(
-        "top",
-        "right",
-        "Ingresa un comentario.",
-        "danger"
-      );
+      alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
     if (validaComent == 1) {
       $("#save6").prop("disabled", true);
@@ -943,56 +585,29 @@ $(document).on("click", "#save6", function (e) {
             $("#save6").prop("disabled", false);
             $("#rev_2").modal("hide");
             $("#Jtabla").DataTable().ajax.reload();
-            alerts.showNotification(
-              "top",
-              "right",
-              "Estatus enviado.",
-              "success"
-            );
-
+            alerts.showNotification("top", "right", "Estatus enviado.", "success");
           } else if (response.message == "MISSING_COMPLEMENTO_DE_ENGANCHE") {
             $("#save6").prop("disabled", false);
             $("#rev_2").modal("hide");
             $("#Jtabla").DataTable().ajax.reload();
-            alerts.showNotification(
-              "top",
-              "right",
-              "Primero debes cargar el COMPLEMENTO DE ENGANCHE para" +
-                " poder avanzar el lote",
-              "danger"
-            );
+            alerts.showNotification("top", "right", "Primero debes cargar el COMPLEMENTO DE ENGANCHE para" + " poder avanzar el lote", "danger");
           } else if (response.message == "FALSE") {
             $("#save6").prop("disabled", false);
             $("#rev_2").modal("hide");
             $("#Jtabla").DataTable().ajax.reload();
-            alerts.showNotification(
-              "top",
-              "right",
-              "El status ya fue registrado.",
-              "danger"
-            );
+            alerts.showNotification("top", "right", "El status ya fue registrado.", "danger");
           } else if (response.message == "ERROR") {
             $("#save6").prop("disabled", false);
             $("#rev_2").modal("hide");
             $("#Jtabla").DataTable().ajax.reload();
-            alerts.showNotification(
-              "top",
-              "right",
-              "Error al enviar la solicitud.",
-              "danger"
-            );
+            alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
           }
         },
         error: function (data) {
           $("#save6").prop("disabled", false);
           $("#rev_2").modal("hide");
           $("#Jtabla").DataTable().ajax.reload();
-          alerts.showNotification(
-            "top",
-            "right",
-            "Error al enviar la solicitud.",
-            "danger"
-          );
+          alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
         },
       });
     }

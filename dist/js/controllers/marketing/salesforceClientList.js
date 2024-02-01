@@ -125,7 +125,7 @@ function fillSalesForceClientsTable() {
             searchable: false
         }],
         ajax: {
-            url: url2 + 'Clientes/getSalesforceClientsList',
+            url: general_base_url + 'Clientes/getSalesforceClientsList',
             type: "POST",
             cache: false
         }
@@ -138,67 +138,7 @@ $('#salesforceClientsTable').on('draw.dt', function() {
     });
 });
 
-$(document).on('click', '.reviewEvidence', function () {
-	let fileName = $(this).attr("data-nombre-archivo");
-	let lote = $(this).attr("data-lote");
-	let extension = fileName.slice(fileName.length - 4);
-	let path = general_base_url + "static/documentos/cliente/expediente/" + fileName;
-	if (extension != '.pdf' && fileName != 0) { // MJ: ES UNA IMAGEN
-		$("#token_name").text(lote);
-		$("#img_actual").empty();
-		let img_cnt = '<img src="' + path + '" class="img-responsive zoom m-auto">';
-		$("#img_actual").append(img_cnt);
-		$("#reviewTokenEvidence").modal();
-	} else if (fileName == 0) // MJ: NO HAY EVIDENCIA CARGADA
-		alerts.showNotification("top", "right", "No hay ningún archivo cargado para el lote " + lote + ".", "warning");
-	else if (extension == '.pdf') { // MJ: ES UN PDF
-		Shadowbox.open({
-			content:    '<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="' + path + '"></iframe></div>',
-			player:     "html",
-			title:      "Visualizando archivo: " + lote,
-			width:      985,
-			height:     660
-		});
-	}
-});
-
-$(document).on('click', '.see-information', function(e) {
-    id_prospecto = $(this).attr("data-id-prospecto");
-    $("#seeInformationModal").modal();
-    $.getJSON("getChangelog/" + id_prospecto).done(function(data) {
-        if (data.length == 0) {
-            $("#changelog").append('SIN DATOS POR MOSTRAR');
-        } else {
-            $.each(data, function(i, v) {
-                fillChangelog(v);
-            });
-        }
-    });
-});
-
 function cleanComments() {
 	var myChangelog = document.getElementById('changelog');
     myChangelog.innerHTML = '';
-}
-
-function fillChangelog(v) {
-	$("#changelog").append('<li>\n' +
-        '    <div class="container-fluid">\n' +
-        '       <div class="row">\n' +
-        '           <div class="col-md-6">\n' +
-        '               <a><small>Campo: </small><b> ' +v.parametro_modificado.toUpperCase()+ '</b></a><br>\n' +
-        '           </div>\n' +
-        '           <div class="float-end text-right">\n' +
-        '               <a>' + v.fecha_creacion + '</a>\n' +
-        '           </div>\n' +
-        '           <div class="col-md-12">\n' +
-    '                <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '                <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior.toUpperCase() + '</b></p>\n' +
-    '                <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo.toUpperCase() + '</b></p>\n' +
-        '           </div>\n' +
-        '        <h6>\n' +
-        '        </h6>\n' +
-        '       </div>\n' +
-        '    </div>\n' +
-        '</li>');
 }

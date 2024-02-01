@@ -2718,7 +2718,7 @@ public function getStatusMktdPreventa(){
         $this->load->view("marketing/dragonsClientsList");
     }
 
-    public function salesforceClientList() {
+    public function salesForceClients(){
         $this->load->view('template/header');
         $this->load->view("marketing/salesforceClientList");
     }

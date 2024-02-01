@@ -72,40 +72,53 @@
                                                                 <input id="telephone" name="telephone" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                    </div>    
+                                                    <div class="row">
+                                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <label class="control-label m-0">TIPO</label>
+                                                            <div class="radio_container w-100">
+                                                                <input class="d-none generate" type="radio" name="modoSubida" id="dragonId" checked value="1">
+                                                                <label for="dragonId" class="w-50">Dragon</label>
+                                                                <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
+                                                                <label for="loteM" class="w-50">SalesForce</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="dragonInput">
                                                             <div class="form-group m-0">
                                                                 <label class="control-label m-0">ID DRAGÓN</label>
                                                                 <input id="idDragon" name="idDragonC" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="salesforceInput">
                                                             <div class="form-group m-0">
                                                                 <label class="control-label m-0">ID SALESFORCE</label>
                                                                 <input id="idSales" name="idSalesF" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group">
+                                                            <div class="form-group m-0">
+                                                                <label class="control-label m-0">SEDE</label>
                                                                 <select class="selectpicker select-gral m-0" id="sede" name="sede[]" data-container="body" data-style="btn btn-primary "data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7"required="" multiple="" tabindex="-98" onchange="changeSede()">
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="fechasFiltro">
-                                                            <div class="container-fluid ">
+                                                    </div>    
+                                                    <div class="row">    
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="container-fluid hide" id="fechasFiltro">
                                                                 <div class="row">
                                                                     <div class="col-md-12 p-0">
                                                                         <div class="form-group d-flex">
                                                                             <input type="text" class="form-control datepicker" id="beginDate"/>
                                                                             <input type="text" class="form-control datepicker" id="endDate" />
-                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
-                                                                                <span class="material-icons update-dataTable">search</span>
-                                                                            </button>
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange"></button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 center-align centered" id="inside">
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="inside">
                                                             <div class="form-group d-flex justify-end">
                                                                 <button type="button" class="btn btn-danger btn-simple" onclick="cleanFilters()" id="cleanButton">LIMPIAR</button>
                                                                 <button type="button" class="btn btn-primary" id="searchButton">BUSCAR</button>
@@ -150,8 +163,8 @@
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                                         <div class="form-group">
-                                                            <label class="control-label">ID DRAGÓN</label>
-                                                            <input id="idDragonC" name="idDragonC" type="text" class="form-control input-gral" required>
+                                                            <label class="control-label">TELÉFONO</label>
+                                                            <input id="telephoneC" name="telephoneC" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -166,38 +179,53 @@
                                                             <input id="mailC" name="mailC" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-2 col-lg-3">
+                                                </div>      
+                                                <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                         <div class="form-group m-0">
-                                                            <label class="control-label m-0">TELÉFONO</label>
-                                                            <input id="telephoneC" name="telephoneC" type="text" class="form-control input-gral" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-                                                        <div class="form-group">
+                                                            <label class="control-label m-0">SEDE</label>
                                                             <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required="" multiple="" tabindex="-98" onchange="changeSedeC()"></select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+                                                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <label class="control-label m-0">TIPO</label>
+                                                            <div class="radio_container w-100">
+                                                                <input class="d-none generate" type="radio" name="modoSubidag" id="dragonIdg" checked value="1">
+                                                                <label for="dragonIdg" class="w-50">Dragon</label>
+                                                                <input class="d-none find-results" type="radio" name="modoSubidag" id="loteMg" value="0">
+                                                                <label for="loteMg" class="w-50">SalesForce</label>
+                                                            </div>
+                                                        </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="dragonInputg">
+                                                        <div class="form-group m-0">
+                                                            <label class="control-label m-0">ID DRAGÓN</label>
+                                                            <input id="idDragonC" name="idDragonC" type="text" class="form-control input-gral" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="salesforceInputg">
                                                         <div class="form-group m-0">
                                                             <label class="control-label m-0">ID SALESFORCE</label>
                                                             <input id="idSalesF" name="idSalesF" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 hide" id="fechasFiltroC">
-                                                        <div class="container-fluid ">
+                                                </div>    
+                                                <div class="row">    
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                        <div class="container-fluid hide" id="fechasFiltroC">
                                                             <div class="row">
                                                                 <div class="col-md-12 p-0">
                                                                     <div class="form-group d-flex">
                                                                         <input type="text" class="form-control datepicker beginDate" id="beginDateC"/>
                                                                         <input type="text" class="form-control datepicker endDate" id="endDateC" />
-                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC"><span class="material-icons update-dataTable">search</span></button>
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRangeC"></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-12 justify-end" id="insideC">
-                                                        <div class="form-group div_last_name d-flex justify-end">
+                                                    </div>  
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="insideC">
+                                                        <div class="form-group d-flex justify-end">
                                                             <button type="button" class="btn btn-danger btn-simple" onclick="cleanFiltersC()" id="cleanButton">LIMPIAR</button>
                                                             <button type="button" class="btn btn-primary" id="searchButtonC">BUSCAR</button>
                                                         </div>

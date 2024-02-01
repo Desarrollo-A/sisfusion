@@ -13,11 +13,48 @@ $(document).ready(function () {
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
 	setIniDatesXMonth();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({locale: 'es', format: 'l'});
     setIniDatesXMonth("#beginDate", "#endDate");
 	setIniDatesXMonth("#beginDateC", "#endDateC");
+	$("#dragonInput").removeClass('hide');
+	$("#dragonInputg").removeClass('hide');
 });
 
+$('#dragonId').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#dragonInput").removeClass('hide');
+		$("#salesforceInput").addClass('hide');
+		$("#idSales").val('');
+	}
+});
+
+$('#loteM').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#salesforceInput").removeClass('hide');
+		$("#dragonInput").addClass('hide');
+		$("#idDragon").val('');
+	}
+});
+
+$('#dragonIdg').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#dragonInputg").removeClass('hide');
+		$("#salesforceInputg").addClass('hide');
+		$("#idSalesF").val('');
+	}
+});
+
+$('#loteMg').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#salesforceInputg").removeClass('hide');
+		$("#dragonInputg").addClass('hide');
+		$("#idDragonC").val('');
+	}
+});
 
 /** BOTÓN BUSCAR TABLA PROSPECTOS  */
 $('#searchButton').click(()=>{
@@ -600,10 +637,8 @@ function changeSede(){
 	let sedes = $('#sede').val();
 	if(sedes.length>0){
 		$('#fechasFiltro').removeClass('hide');
-		$('#inside').addClass('col-md-offset-8 col-lg-offset-8');
 	}else{
 		$('#fechasFiltro').addClass('hide');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 	}
 }
 
@@ -611,10 +646,8 @@ function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
-		$('#insideC').addClass('col-md-offset-7 col-lg-offset-7');
 		}else{
 		$('#fechasFiltroC').addClass('hide');
-		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 	}
 }
 
@@ -630,10 +663,8 @@ function cleanFilters(){
 		$("#sede").val('default');
 		$("#sede").selectpicker("refresh");
 		$('#fechasFiltro').addClass('hide');
-		$('#beginDate').val('');
-		$('#endDate').val('');
+		setIniDatesXMonth("#beginDate", "#endDate");
 		$('#inside').addClass('col-md-4 col-lg-4');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 		tabla_valores_prospectos.clear().draw();
 		tabla_valores_prospectos.destroy();
 	}
@@ -654,10 +685,8 @@ function cleanFiltersC(){
 		$("#sedeC").val('default');
 		$("#sedeC").selectpicker("refresh");
 		$('#fechasFiltroC').addClass('hide');
-		$('#beginDateC').val('');
-		$('#endDateC').val('');
-		$('#insideC').addClass('col-md-5 col-lg-5');
-		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
+		setIniDatesXMonth("#beginDateC", "#endDateC");
+		$('#insideC').addClass('col-md-4 col-lg-4');
 		tabla_valores_cliente.clear().draw();
 		tabla_valores_cliente.destroy();
 	}

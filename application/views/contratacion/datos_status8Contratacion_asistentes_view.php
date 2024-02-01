@@ -123,8 +123,6 @@
                 </div>
             </div>
         </div>
-        <!-- END Modals -->
-
 
         <div class="content boxContent">
             <div class="container-fluid">
