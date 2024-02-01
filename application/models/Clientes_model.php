@@ -4012,7 +4012,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_nombre = $condicion_dinamica." CONCAT($prefix.nombre, ' ', $prefix.apellido_paterno, ' ', $prefix.apellido_materno) LIKE '%".$data_search['nombre']."%' ";
         }else{
@@ -4024,7 +4024,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_idlote = $condicion_dinamica." cl.idLote=".$data_search['idLote'];
         }else{
@@ -4036,7 +4036,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_correo = $condicion_dinamica." $prefix.correo LIKE '%".$data_search['correo']."%'";
         }else{
@@ -4048,7 +4048,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             if($data_search['tipo_busqueda']==1){
                 $condition_telefono = $condicion_dinamica." (cl.telefono1 LIKE '%".$data_search['telefono']."%' OR cl.telefono2 LIKE'%".$data_search['telefono']."%' OR cl.telefono3 LIKE '%".$data_search['telefono']."%')";
@@ -4065,7 +4065,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
 
             if($data_search['tipo_busqueda']==1){
@@ -4082,7 +4082,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_iddragon = $condicion_dinamica." pr.id_dragon=".$data_search['id_dragon'];
         }else{
@@ -4094,7 +4094,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce=".$data_search['id_salesforce'];
         }else{
@@ -4142,8 +4142,8 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_iddragon
-                $condition_idsalesforce
-                $condition_sedes");
+                $condition_sedes
+                $condition_idsalesforce");
                 break;
         }
         return $query->result_array();
