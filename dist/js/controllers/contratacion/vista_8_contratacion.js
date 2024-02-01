@@ -1,6 +1,9 @@
 var getInfo1 = new Array(7);
 var getInfo2 = new Array(7);
 var getInfo3 = new Array(7);
+var getInfo4 = new Array(7);
+var getInfo5 = new Array(7);
+var getInfo6 = new Array(7);
 
 let titulos = [];
 $(document).ready(function () {
@@ -123,21 +126,28 @@ $(document).ready(function () {
                 cntActions = "N/A";
               }
             }
+            return (
+              '<div class="d-flex justify-center">' + cntActions + "</div>"
+            );
+          } else {
+            return `<span class="label lbl-warning">N/A</span>`;
           }
-        }
-        }],
-        columnDefs: [{
-            searchable: false,
-            orderable: false,
-            targets: 0
-        }],
-        ajax: {
-            url: `${general_base_url}Asistente_gerente/getStatus8ContratacionAsistentes`,
-            dataSrc: "",
-            type: "POST",
-            cache: false,
         },
-    });
+      },
+    ],
+    columnDefs: [
+      {
+        searchable: false,
+        orderable: false,
+        targets: 0,
+      },
+    ],
+    ajax: {
+      url: `${general_base_url}Asistente_gerente/getStatus8ContratacionAsistentes`,
+      dataSrc: "",
+      type: "POST",
+      cache: false,
+    },
   });
 
   $("#Jtabla").on("draw.dt", function () {
@@ -214,18 +224,20 @@ $(document).ready(function () {
     }
   });
 
-    $("#Jtabla tbody").on("click", ".editReg", function (e) {
-        e.preventDefault();
-        getInfo1[0] = $(this).attr("data-idCliente");
-        getInfo1[1] = $(this).attr("data-nombreResidencial");
-        getInfo1[2] = $(this).attr("data-nombreCondominio");
-        getInfo1[3] = $(this).attr("data-idcond");
-        getInfo1[4] = $(this).attr("data-nomlote");
-        getInfo1[5] = $(this).attr("data-idLote");
-        getInfo1[6] = $(this).attr("data-fecven");
-        getInfo1[7] = $(this).attr("data-code");
-        getInfo1[8] = $(this).attr("data-idMov");
-        getInfo1[9] = $(this).attr("data-perfil");
+  $("#Jtabla tbody").on("click", ".editReg", function (e) {
+    e.preventDefault();
+    getInfo1[0] = $(this).attr("data-idCliente");
+    getInfo1[1] = $(this).attr("data-nombreResidencial");
+    getInfo1[2] = $(this).attr("data-nombreCondominio");
+    getInfo1[3] = $(this).attr("data-idcond");
+    getInfo1[4] = $(this).attr("data-nomlote");
+    getInfo1[5] = $(this).attr("data-idLote");
+    getInfo1[6] = $(this).attr("data-fecven");
+    getInfo1[7] = $(this).attr("data-code");
+    nombreLote = $(this).data("nomlote");
+    $(".lote").html(nombreLote);
+    $("#editReg").modal("show");
+  });
 
   $("#Jtabla tbody").on("click", ".editLoteRev", function (e) {
     e.preventDefault();
@@ -369,17 +381,72 @@ $(document).on("click", "#save1", function (e) {
   }
 });
 
-    $("#Jtabla tbody").on("click", ".cancelReg", function (e) {
-        e.preventDefault();
-        getInfo2[0] = $(this).attr("data-idCliente");
-        getInfo2[1] = $(this).attr("data-nombreResidencial");
-        getInfo2[2] = $(this).attr("data-nombreCondominio");
-        getInfo2[3] = $(this).attr("data-idcond");
-        getInfo2[4] = $(this).attr("data-nomlote");
-        getInfo2[5] = $(this).attr("data-idLote");
-        getInfo2[6] = $(this).attr("data-fecven");
-        getInfo2[7] = $(this).attr("data-code");
-  
+$(document).on('click', '#save2', function (e) {
+    e.preventDefault();
+    var comentario = $("#comentario2").val();
+    var validaComentario = (document.getElementById("comentario2").value.trim() == '') ? 0 : 1;
+
+    var dataExp2 = new FormData();
+    dataExp2.append("idCliente", getInfo2[0]);
+    dataExp2.append("nombreResidencial", getInfo2[1]);
+    dataExp2.append("nombreCondominio", getInfo2[2]);
+    dataExp2.append("idCondominio", getInfo2[3]);
+    dataExp2.append("nombreLote", getInfo2[4]);
+    dataExp2.append("idLote", getInfo2[5]);
+    dataExp2.append("comentario", comentario);
+    dataExp2.append("fechaVenc", getInfo2[6]);
+    dataExp2.append("numContrato", getInfo2[7]);
+
+    if (validaComentario == 0)
+        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+    else{
+        $('#save2').prop('disabled', true);
+        $.ajax({
+            url: `${general_base_url}Asistente_gerente/editar_registro_loteRechazo_asistentes_proceceso8`,
+            data: dataExp2,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (data) {
+                response = JSON.parse(data);
+                if (response.status)
+                    alerts.showNotification("top", "right", response.message, "success");
+                else
+                    alerts.showNotification("top", "right", response.message, "danger");
+
+                $('#save2').prop('disabled', false);
+                $('#rechReg').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+            },
+            error: function () {
+                $('#save2').prop('disabled', false);
+                $('#rechReg').modal('hide');
+                $('#Jtabla').DataTable().ajax.reload();
+                alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
+            }
+        });
+    }
+});
+
+
+$(document).on("click", "#save3", function (e) {
+  e.preventDefault();
+  var comentario = $("#comentario3").val();
+  var validaComent = $("#comentario3").val().length == 0 ? 0 : 1;
+  var dataExp3 = new FormData();
+  dataExp3.append("idCliente", getInfo3[0]);
+  dataExp3.append("nombreResidencial", getInfo3[1]);
+  dataExp3.append("nombreCondominio", getInfo3[2]);
+  dataExp3.append("idCondominio", getInfo3[3]);
+  dataExp3.append("nombreLote", getInfo3[4]);
+  dataExp3.append("idLote", getInfo3[5]);
+  dataExp3.append("comentario", comentario);
+  dataExp3.append("fechaVenc", getInfo3[6]);
+  dataExp3.append("numContrato", getInfo3[7]);
+  if (validaComent == 0)
+    alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
+
   if (validaComent == 1) {
     $("#save3").prop("disabled", true);
     $.ajax({
@@ -472,15 +539,24 @@ $(document).on("click", "#save4", function (e) {
       },
     });
   }
-  });
+});
 
-
-
-
-$(document).on('click', '#save1', function (e) {
-    e.preventDefault();
-    var comentario = $("#comentario1").val();
-    var validaComentario = (document.getElementById("comentario1").value.trim() == '') ? 0 : 1;
+$(document).on("click", "#save5", function (e) {
+  e.preventDefault();
+  var comentario = $("#comentario5").val();
+  var validaComent = $("#comentario5").val().length == 0 ? 0 : 1;
+  var dataExp5 = new FormData();
+  dataExp5.append("idCliente", getInfo5[0]);
+  dataExp5.append("nombreResidencial", getInfo5[1]);
+  dataExp5.append("nombreCondominio", getInfo5[2]);
+  dataExp5.append("idCondominio", getInfo5[3]);
+  dataExp5.append("nombreLote", getInfo5[4]);
+  dataExp5.append("idLote", getInfo5[5]);
+  dataExp5.append("comentario", comentario);
+  dataExp5.append("fechaVenc", getInfo5[6]);
+  dataExp5.append("numContrato", getInfo5[7]);
+  if (validaComent == 0)
+    alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
 
   if (validaComent == 1) {
     $("#save5").prop("disabled", true);
@@ -525,10 +601,20 @@ $(document).on('click', '#save1', function (e) {
   }
 });
 
-$(document).on('click', '#save2', function (e) {
-    e.preventDefault();
-    var comentario = $("#comentario2").val();
-    var validaComentario = (document.getElementById("comentario2").value.trim() == '') ? 0 : 1;
+$(document).on("click", "#save6", function (e) {
+  e.preventDefault();
+  var comentario = $("#comentario6").val();
+  var validaComent = $("#comentario6").val().length == 0 ? 0 : 1;
+  var dataExp6 = new FormData();
+  dataExp6.append("idCliente", getInfo6[0]);
+  dataExp6.append("nombreResidencial", getInfo6[1]);
+  dataExp6.append("nombreCondominio", getInfo6[2]);
+  dataExp6.append("idCondominio", getInfo6[3]);
+  dataExp6.append("nombreLote", getInfo6[4]);
+  dataExp6.append("idLote", getInfo6[5]);
+  dataExp6.append("comentario", comentario);
+  dataExp6.append("fechaVenc", getInfo6[6]);
+  dataExp6.append("numContrato", getInfo6[7]);
 
     if (validaComent == 0)
       alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
@@ -577,18 +663,33 @@ $(document).on('click', '#save2', function (e) {
 });
 
 jQuery(document).ready(function () {
-    jQuery('#rev').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario1').val('');
-    })
+  jQuery("#editReg").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario").val("");
+  });
 
-    jQuery('#rechReg').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario2').val('');
-    })
+  jQuery("#editLoteRev").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario2").val("");
+  });
 
-    jQuery('#rechazoAs').on('hidden.bs.modal', function (e) {
-        jQuery(this).removeData('bs.modal');
-        jQuery(this).find('#comentario3').val('');
-    })
-  }); 
+  jQuery("#rechReg").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario3").val("");
+  });
+
+  jQuery("#rechazoAs").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario4").val("");
+  });
+
+  jQuery("#rev8").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario5").val("");
+  });
+
+  jQuery("#rev_2").on("hidden.bs.modal", function (e) {
+    jQuery(this).removeData("bs.modal");
+    jQuery(this).find("#comentario6").val("");
+  });
+});
