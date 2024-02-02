@@ -210,10 +210,12 @@ function createAccordions(option, render, rol){
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
+                            <th>SEDE APARTADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>NÚMERO DE LOTES CONTRATADOS</th>
                             <th>CONTRATADOS</th>
+                            <th>SEDE CONTRATADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>ACCIONES</th>
@@ -368,6 +370,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 }
             },
             {
+                data: function(d) {
+                    return d.apartadasSede;
+                }
+            },
+            {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
@@ -387,6 +394,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     return "<b>" + d.sumaConT +"</b>"; //SUMA CONTRATADOS
+                }
+            },
+            {
+                data: function (d) {
+                    return d.contratadasSede;
                 }
             },
             {
