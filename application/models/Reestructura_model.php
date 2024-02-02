@@ -156,7 +156,7 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
             INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
             INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-            INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 21 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+            INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 21 AND lo.status = 1
             WHERE lr.idProyecto = '.$proyecto.'
             GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, \' - \', re.descripcion)) AS NVARCHAR(100)))';
         }
@@ -165,7 +165,7 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 15 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 15 AND lo.status = 1
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             UNION ALL
@@ -173,7 +173,7 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             $unionQuery
@@ -189,7 +189,7 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
         INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
-        WHERE lo.idStatusLote IN (1, 15 $validacionSL) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)
+        WHERE lo.idStatusLote IN (1, 15 $validacionSL) AND lo.status = 1
         AND co.idResidencial = $proyecto
         GROUP BY lo.idCondominio, co.nombre");
         return $query->result();
@@ -208,7 +208,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats op1 ON op1.id_catalogo = 105 AND op1.id_opcion = 1
 		INNER JOIN opcs_x_cats op2 ON op2.id_catalogo = 105 AND op2.id_opcion = 2
 		INNER JOIN opcs_x_cats op3 ON op3.id_catalogo = 105 AND op3.id_opcion = 3
-		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15 $validacionSL) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) NOT IN (1)");
+		WHERE lo.idCondominio = $condominio AND lo.idStatusLote IN (1, 15 $validacionSL) AND lo.status = 1");
         return $query->result();
     }
 
@@ -569,8 +569,7 @@ class Reestructura_model extends CI_Model
                 INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN ($id_proyecto)
                 LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status IN (1) AND cl.proceso IN (0, 1) 
             WHERE 
-                ISNULL(lo.tipo_venta, 0) != 1 
-                AND lo.status = 1 
+                lo.status = 1 
                 AND idStatusLote IN (2, 3)"
         )->result();
     }
@@ -624,7 +623,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 AND lo.estatus_preproceso IN(1, 0) $filtroSede")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN(1, 0) $filtroSede")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
@@ -761,7 +760,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
+        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1
         UNION ALL
         SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
         lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
@@ -772,7 +771,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (1) AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
+        WHERE lo.idStatusLote IN (1) AND lo.status = 1
         ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
     }
 
