@@ -943,26 +943,19 @@ class Reestructura extends CI_Controller{
 
             $proyectosValidacion = $this->Reestructura_model->getProyectosByIdLote($idLoteOriginal);
             $proyectosValidacion = $proyectosValidacion[0];
-            if($proyectosValidacion['idProyectoOriginal'] == 21){
-                if($proyectosValidacion['idProyectoOriginal'] == $proyectosValidacion['idProyectoPropuesta']){
-                    $proceso = 7;
-                }
-            }else{
-                if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
-                    $proceso = 2;
-                }
-                else{
-                    $metrosGratuitos = $anteriorSup * 0.05;
-                    $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
-                }
-
-                if ($proceso == 4){
-                    $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup);
-                    $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
-                    $total8P = floatval(number_format($total8P, 2, '.', ''));
-                }
+            if( $anteriorSup == $nuevaSup || $nuevaSup <= $anteriorSup){
+                $proceso = 2;
+            }
+            else{
+                $metrosGratuitos = $anteriorSup * 0.05;
+                $proceso = $nuevaSup - $anteriorSup <= $metrosGratuitos ? 2 : 4;
             }
 
+            if ($proceso == 4){
+                $precioM2Original = floatval($clienteAnterior->totalNeto2) / floatval($clienteAnterior->sup);
+                $total8P = floatval(($nuevaSup - $anteriorSup) - $metrosGratuitos) * floatval($precioM2Original);
+                $total8P = floatval(number_format($total8P, 2, '.', ''));
+            }
             $validateLote = $this->caja_model_outside->validate($loteAOcupar);
             if ($validateLote == 0) {
                 echo json_encode(array(
@@ -1214,7 +1207,7 @@ class Reestructura extends CI_Controller{
                 $dataCliente = array_merge([$clave =>  $lineaVenta->id_regional], $dataCliente);
                 continue;
             } else if ($clave == 'plan_comision') {
-                $dataCliente = array_merge([$clave => ($proceso == 3 || $proceso == 7) ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
+                $dataCliente = array_merge([$clave => $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66) ], $dataCliente);
                 continue;
             } else if ($clave == 'status') {
                 $dataCliente = array_merge([$clave =>  1], $dataCliente);
