@@ -42,7 +42,10 @@ class Descuentos extends CI_Controller
     $this->load->view("descuentos/historial_prestamo_view");
     }
 
-
+    public function descuentos_contraloria(){
+        $this->load->view('template/header');
+        $this->load->view("descuentos/descuentos_contraloria_view");
+        }
     public function panel_descuentos(){
         $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
         $this->load->view('template/header');

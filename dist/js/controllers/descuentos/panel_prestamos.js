@@ -1020,3 +1020,10 @@ function mostrar(id){
             p.style.color = event.target.value;
         });
     }
+
+    function changeName(e){
+        const fileName = e.files[0].name;
+        let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+        relatedTarget[0].value = fileName;
+    }
+    
