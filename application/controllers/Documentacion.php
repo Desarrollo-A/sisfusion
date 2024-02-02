@@ -17,11 +17,11 @@ class Documentacion extends CI_Controller {
     }
     
     public function documentacion() {
-        $datos = [
+        $datos = array(
             'residencial' => $this->Registrolote_modelo->getResidencialQro(),
             'tieneAcciones' => 1,
             'tipoFiltro' => null
-        ];
+        );
 
         $this->load->view('template/header');
         $this->load->view("documentacion/documentacion_view", $datos);
@@ -61,6 +61,9 @@ class Documentacion extends CI_Controller {
     }
 
     function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
+        if ( !is_dir( $folder ) ) {
+           mkdir( $folder );
+        }
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
 
         if ($movement) {

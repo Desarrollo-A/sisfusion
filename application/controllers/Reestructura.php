@@ -180,6 +180,7 @@ class Reestructura extends CI_Controller{
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
         $datos["tipo_proceso"] = $this->input->post('idStatusLote') == 17 ? 3 : 2;
         $datos["banderaProcesoUrgente"] = isset($dataPost['cmbProcesoUrgente']) ? 1 : 0;
+        $datos["impresionEn"] = (int) $dataPost['impresoEn'];
         $datCliente = $this->Reestructura_model->getDatosClienteTemporal($idLote);
         $this->movimientosCopropietarios($dataPost['idLote'], $dataPost);
         if (empty($datCliente)) {
@@ -674,7 +675,16 @@ class Reestructura extends CI_Controller{
 
     public function setReubicacion(){
         $this->db->trans_begin();
-
+        $idLote = $this->input->post('idLote');
+        if(!isset($idLote)){
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Debes seleccionar un lote para este proceso',
+                'color' => 'danger'
+            ));
+            exit;
+        }
         $flagFusion = $this->input->post('flagFusion');
         $idClienteAnterior = $this->input->post('idCliente');
         $idLoteOriginal = $this->input->post('idLoteOriginal'); // O PIVOTE
@@ -972,7 +982,7 @@ class Reestructura extends CI_Controller{
                     'color' => 'danger'
                 ));
                 return;
-            } 
+            }
             
             $clienteNuevo = $this->copiarClienteANuevo($clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
             $idClienteInsert = $clienteNuevo[0]['lastId'];
@@ -2538,7 +2548,10 @@ class Reestructura extends CI_Controller{
                                 $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento[$i]);
                                 if($update){
                                     $flagInternoConteo = $flagInternoConteo + 1;
-                                    unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento[$i]);
+                                    $validacionDocumentoVacio = $nombreDocumento === 'null' ? 0 : 1;
+                                    if ($validacionDocumentoVacio == 1) { // SI EXISTE UN NOMBRE DE ARCHIVO
+                                        unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento[$i]);
+                                    }
                                 }
                             }
                         }
@@ -2568,7 +2581,10 @@ class Reestructura extends CI_Controller{
                     $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento);
                     if($update){
                         print_r( json_encode(array('code' => 200)));
-                        unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
+                        $validacionDocumentoVacio = $nombreDocumento === 'null' ? 0 : 1;
+                        if ($validacionDocumentoVacio == 1) { // SI EXISTE UN NOMBRE DE ARCHIVO
+                            unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
+                        }
                     }
                 }
             }
@@ -3087,5 +3103,19 @@ class Reestructura extends CI_Controller{
         $data = $this->Reestructura_model->getLotesParaCargarContratoFirmado();
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
-    
+
+    public function getSedes(){
+        $data = $this->Reestructura_model->getSedes();
+        echo json_encode($data);
+    }
+
+    public function cargaContratoReubicacionFirmado() {
+        $this->load->view('template/header');
+        $this->load->view("reestructura/cargaContratoReubFirmado_view");
+    }
+    public function getLotesParaCargarContratoReubFirmado() {
+        $data = $this->Reestructura_model->getLotesParaCargarContratoReubFirmado();
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
 }
