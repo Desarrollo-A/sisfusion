@@ -23,18 +23,18 @@ const AccionDoc = {
 };
 
 let titulosTabla = [];
-$('#cargaContratoFirmadoTabla thead tr:eq(0) th').each(function (i) {
+$('#cargaContratorReubFirmadoTabla thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
-        if ($('#cargaContratoFirmadoTabla').DataTable().column(i).search() !== this.value)
-            $('#cargaContratoFirmadoTabla').DataTable().column(i).search(this.value).draw();
+        if ($('#cargaContratorReubFirmadoTabla').DataTable().column(i).search() !== this.value)
+            $('#cargaContratorReubFirmadoTabla').DataTable().column(i).search(this.value).draw();
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
 
-cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
+cargaContratoFirmadoTabla = $('#cargaContratorReubFirmadoTabla').DataTable({
     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: '100%',
     scrollX: true,
@@ -104,7 +104,7 @@ cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
         },
         {
             data: (d) => {
-                return `<label class="label ${d.nombreDocumento == null ? 'lbl-warning' : 'lbl-green'}">${d.estatusContratoFirmado}</label>`;
+                return `<label class="label ${d.nombreDocumento == null ? 'lbl-warning' : 'lbl-green'}">${d.estatusContratoReubicacionFirmado}</label>`;
             }
         },
         {
@@ -120,7 +120,7 @@ cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
         }
     ],
     ajax: {
-        url: `${general_base_url}Reestructura/getLotesParaCargarContratoFirmado`,
+        url: `${general_base_url}Reestructura/getLotesParaCargarContratoReubFirmado`,
         dataSrc: "",
         type: "POST",
         cache: false,
@@ -135,7 +135,8 @@ cargaContratoFirmadoTabla = $('#cargaContratoFirmadoTabla').DataTable({
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = `${general_base_url}static/documentos/cliente/contratoFirmado/${$itself.attr("data-nombreDocumento")}`;
+    let carpetaLote = $itself.attr("data-nombreLote");
+    let pathUrl = `${general_base_url}static/documentos/contratacion-reubicacion/${carpetaLote}/${$itself.attr("data-nombreDocumento")}`;
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
         player: "html",
