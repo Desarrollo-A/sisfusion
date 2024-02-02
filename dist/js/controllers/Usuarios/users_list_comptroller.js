@@ -1,4 +1,4 @@
-const usuariosContraloria = [2767, 5957, 4878, 2754];
+const usuariosContraloria = [2767, 5957, 4878, 2754, 14481];
 
 $(document).ready(function() {
     $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
@@ -38,7 +38,7 @@ $('#all_users_datatable').DataTable({
         titleAttr: 'Lista de usuarios',
         title:'Lista de usuarios',
         exportOptions: {
-            columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7 ,8 ,9 ,10 ,11,] ,
+            columns: id_rol_general == 49 ? [0, 1, 2, 3, 4, 5, 6, 7, 8,10,11,] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] ,
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulos[columnIdx] + ' ';
@@ -129,6 +129,17 @@ $('#all_users_datatable').DataTable({
                 return d.puesto;
             }
         },
+        {
+            data: function (d) {
+                tipo = '';
+                if (d.tipo == 2 || d.tipo == "2") {
+                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
+                } else {
+                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
+                }
+                return tipo;
+            }
+        },
         { data: function (d) {
                 return d.sede;
             }
@@ -149,7 +160,7 @@ $('#all_users_datatable').DataTable({
         },
         { data: function (d) {
             
-            return '<span class="label lbl-green">'+ d.nacionalidad+ '</span>';
+            return '<span class="label lbl-azure">'+ d.nacionalidad+ '</span>';
             }
         },
         { data: function (d) {

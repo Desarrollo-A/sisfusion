@@ -35,6 +35,7 @@
                                                     <th>CLIENTE</th>
                                                     <th>ID LOTE</th>
                                                     <th>COMENTARIO</th>
+                                                    <th>TIPO DE CANCELACIÓN</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -50,4 +51,4 @@
     </div>
 </body>
 <?php $this->load->view('template/footer'); ?>
-<script src="<?= base_url() ?>dist/js/controllers/postventa/cancelacionReestructura.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/reestructura/reporteCancelaciones.js"></script>

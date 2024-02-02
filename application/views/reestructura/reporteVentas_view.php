@@ -27,7 +27,8 @@
                                                 <th>GERENTE</th>
                                                 <th>SUBDIRECTOR</th>
                                                 <th>FECHA DE APARTADO</th>
-                                                <th>ESTATUS</th>
+                                                <th>ESTATUS LOTE</th>
+                                                <th>ESTATUS CONTRATACIÓN</th>
                                             </tr>
                                         </thead>
                                     </table>
