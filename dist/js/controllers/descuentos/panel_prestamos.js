@@ -921,8 +921,7 @@ function mostrar(id){
         }
         
     })
-
-
+ 
     $(document).on("click", ".addMotivos", function () {
         
         console.log(valorCheck); 
@@ -943,13 +942,17 @@ function mostrar(id){
         console.log(nombreSwitch);
         descripcionAlta = document.getElementById("descripcionAlta").value;
         console.log(descripcionAlta);
+
+        textoPruebas = document.getElementById("body").value;
+        console.log(descripcionAlta);
         var com2 = new FormData();
         let uploadedDocument = $("#evidenciaSwitch")[0].files[0];
-        
+        alert
         com2.append("evidencia", uploadedDocument);
         com2.append("MotivoAlta", MotivoAlta); 
         com2.append("valorCheck", valorCheck); 
         com2.append("descripcionAlta", descripcionAlta); 
+        com2.append("textoPruebas", textoPruebas); 
         // evidenciaSwitch
         if(MotivoAlta != '' && nombreSwitch != '' && descripcionAlta != '' ){
             $.ajax({
@@ -973,6 +976,7 @@ function mostrar(id){
 
                     $('#noTextoDescripcion').removeClass('hide');
                     $('#siTextoDescripcion').addClass('hide');
+                    document.getElementById("textoPruebas").style.color = "#f6b73c";
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal Intentar más tarde.", "danger");
@@ -984,6 +988,7 @@ function mostrar(id){
 
                     $('#noTextoDescripcion').removeClass('hide');
                     $('#siTextoDescripcion').addClass('hide');
+                    document.getElementById("textoPruebas").style.color = "#f6b73c";
                 }
             });
             
@@ -996,3 +1001,22 @@ function mostrar(id){
 
     }
     )
+
+
+
+    // colorPicker.addEventListener("input", updateFirst, false);
+    // colorPicker.addEventListener("change", watchColorPicker, false);
+
+    
+    $("#body").change(function () {
+
+        inputColor = document.getElementById("body").value;
+        console.log(inputColor);
+
+        document.getElementById("textoPruebas").style.color = inputColor;
+    });
+    function watchColorPicker(event) {
+        document.querySelectorAll("p").forEach((p) => {
+            p.style.color = event.target.value;
+        });
+    }

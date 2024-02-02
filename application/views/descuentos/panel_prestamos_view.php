@@ -157,6 +157,16 @@
 									</span>
 								</div>
 							</div>
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<label class="control-label">Elije el color nuevo (<b class="text-danger">*</b>)</label>
+									<input type="color" id="body" name="body" value="#f6b73c" />
+								</div>
+								<div class="col-md-6">
+									<p><span class="label"  style="color: #f6b73c; border: none; background-color:rgba(14, 98, 81, 0.0941176471); " id="textoPruebas" name="textoPruebas"  > 
+										TEXTO DE PRUEBA</span></p>
+								</div>
+							</div>
 							<br>
 							<br>
 							<div class="col-md-6" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >

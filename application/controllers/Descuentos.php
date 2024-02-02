@@ -329,6 +329,7 @@ class Descuentos extends CI_Controller
             $respuesta  =  $this->Descuentos_model->traerElUltimo();
             $ID_OPCION  = ($respuesta->id_opcion+1);
             $archivo    = $this->input->post('archivo');
+            $color = $this->input->post('textoPruebas');
             $bandera = 0;
             $expediente = '';
             if($valorCheck == 'true' ){
@@ -355,7 +356,6 @@ class Descuentos extends CI_Controller
                 
                 }
             }
-
             if($bandera == 1 || $bandera == 2 ){
                 $insert = array(
                     "id_opcion" => ($ID_OPCION),
@@ -364,15 +364,15 @@ class Descuentos extends CI_Controller
                     "estatus"     => 1,
                     "fecha_creacion" => date("Y-m-d H:i:s"),
                     "creado_por"  => 1,
-                    "color" => 'null'
+                    "color" => $color
                 );
     
                 $idigreso =  $this->Descuentos_model->insertarMotivo($insert);
 
                 if($valorCheck == 'true'){
-              
+                    
                 }else if($valorCheck == 'false' ||  $valorCheck == 0  ){
-              
+                    
                     $valorCheck = $expediente;
                     
                 }
