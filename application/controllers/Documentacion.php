@@ -61,6 +61,9 @@ class Documentacion extends CI_Controller {
     }
 
     function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
+        if ( !is_dir( $folder ) ) {
+           mkdir( $folder );
+        }
         $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
 
         if ($movement) {

@@ -29,6 +29,11 @@ let estadoCivilList = [];
 let copropietariosEliminar = [];
 let sumatoriaLS = 0; //
 
+
+let sedesList = [];
+
+
+
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
     COMERCIAL: 1
@@ -42,7 +47,8 @@ const TIPO_PROCESO = Object.freeze({
 const PROYECTO = Object.freeze({
     NORTE: 21,
     PRIVADAPENINSULA: 25,
-    CANADA: 22
+    CANADA: 22,
+    MONTANASLP:14
 });
 
 const STATUSLOTE = Object.freeze({
@@ -484,6 +490,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
 
     copropietariosEliminar = [];
     estadoCivilList = await obtenerEstadoCivilLista();
+    sedesList = await obtenerSedesLista();
 
     $.getJSON(`${general_base_url}Reestructura/getCliente/${idCliente}/${idLote}`, function(cliente) {
         const nombreLote = cliente.nombre;
@@ -495,6 +502,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
         const banderaProcesoUrgente = cliente.banderaProcesoUrgente;
+        const impresionen = cliente.impresionEn;
 
         changeSizeModal('modal-md');
         appendBodyModal(`
@@ -507,9 +515,16 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
                             <div class="row pt-1 pb-1">
                                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
                                     <label class="m-0 check-style">
-                                    <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
-                                    <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
-                                </label>
+                                    <br>
+                                        <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
+                                        <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
+                                    </label>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                         <label class="control-label">Impreso en: (<small style="color: red;">*</small>)</label>
+                                         <select name="impresoEn" title="SELECCIONA UNA OPCIÓN" id="impresoEn" 
+                                         class="selectpicker m-0 select-gral" data-container="body" 
+                                         data-width="100%" required></select>
                                 </div>
                             </div> 
                             <div class="row">
@@ -594,6 +609,22 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         });
         $("#estadoCli").selectpicker('refresh');
 
+        sedesList.forEach((sedes)=>{
+            const id = sedes.id_sede;
+            const name = sedes.nombre;
+            console.log('id', id);
+            console.log('cliente.impresionen', cliente.impresionEn);
+            if (id === cliente.impresionEn){
+
+                $("#impresoEn").append($('<option selected>').val(id).text(name.toUpperCase()));
+            } else {
+                $("#impresoEn").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+        });
+        $("#impresoEn").selectpicker('refresh');
+
+
+
         showModal();
 
         $('[data-toggle="tooltip"]').tooltip();
@@ -631,8 +662,9 @@ $(document).on('click', '#guardarCliente', function (){
     const domicilioCli = $('#domicilioCli').val();
     const ineCLi = $('#ineCLi').val();
     const ocupacionCli = $('#ocupacionCli').val();
+    const impresoEn = $('#impresoEn').val();
 
-    if(ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
+    if(impresoEn=='' || ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
         alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*).", "warning");
         return;
     }
@@ -1469,7 +1501,7 @@ const botonesAccionReubicacion = (d) => {
 
     const totalResicion = parseInt( banderaFusion == 1 ? d.totalRescisionFusion : d.totalRescision);
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
-    const contratoFirmadoFile =  d.contratoFirmado;
+    const contratoFirmadoFile =  d.contratoFirmado;    //funciona para fusion y no funcion
 
 
     let editar = 0;
@@ -1492,7 +1524,7 @@ const botonesAccionReubicacion = (d) => {
         btnContratoFirmado = 'fa-eye';
         tooltipCF = 'VER CONTRATO FIRMADO';
     }
-    if(d.idContratoFirmado != null){
+    if(contratoFirmadoFile != null){
         btnContratoFirmado = 'fa-eye';
         editarContratoFirmado = 1;
         tooltipCF = 'VER CONTRATO FIRMADO';
@@ -1615,8 +1647,8 @@ const botonesAccionReubicacion = (d) => {
             data-idCliente="${d.idCliente}"
             data-idLote="${d.idLote}"
             data-nombreLote="${d.nombreLote}"
-            data-estatusLoteArchivo="${d.status}"
-            data-editar="${editarContratoFirmado}"   
+            data-estatusLoteArchivo="${d.status}"   
+            data-editar="${d.contratoFirmado == null ? 0 : 1}"   
             data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
             data-idCondominio="${d.idCondominio}"   
@@ -1654,7 +1686,7 @@ const botonesAccionReubicacion = (d) => {
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASLP) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
@@ -1958,6 +1990,16 @@ const obtenerEstadoCivilLista = () =>{
         });
     });
 }
+
+const obtenerSedesLista = () =>{
+    return new Promise((resolve) => {
+        $.getJSON(`${general_base_url}Reestructura/getSedes`,function (sedes) {
+            resolve(sedes);
+        });
+    });
+}
+
+
 
 $(document).on('click', '.deshacer-reestructura', function(){
     arrayDeshacerRees = [];
