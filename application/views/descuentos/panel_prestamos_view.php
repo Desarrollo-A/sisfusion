@@ -134,8 +134,6 @@
 					<form nombre="claveNuevoMotivo" id="claveNuevoMotivo" >
 					<div class="modal-body">
 						<div class="form-group row">
-
-							
 							<div class="col-md-6">
 								<label class="control-label">Nuevo motivo (<b class="text-danger">*</b>)</label>
 								<input class="form-control input-gral" type="text" step="any" required  id="MotivoAlta" name="MotivoAlta">
@@ -269,7 +267,7 @@
 								</div>
 								<input class="form-control input-gral hide" id="banderaEvidencia" type="text" name="banderaEvidencia" readonly required>
 							</div>
-							
+ 
 							<div class="form-group input-group evidenciaDIVarchivo hide" id="evidenciaDIVarchivo" name="evidenciaDIVarchivo">
 								<label class="input-group-btn">
                                     <span class="btn btn-blueMaderas btn-file">Seleccionar archivo&hellip;
@@ -376,7 +374,7 @@
 													<th>ACCIONES</th>
 												</tr>
 											</thead>
-										</table>
+											</table>
 									</div>
 								</div>
                             </div>
