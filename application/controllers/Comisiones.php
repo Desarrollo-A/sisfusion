@@ -1205,6 +1205,8 @@ class Comisiones extends CI_Controller
   }
   
   public function savePrestamo(){
+
+    $file = $_FILES["evidencia"];
     $this->input->post("pago");
     $monto = $this->input->post("monto");
     $NumeroPagos = $this->input->post("numeroP");
@@ -1213,33 +1215,52 @@ class Comisiones extends CI_Controller
     $tipo = $this->input->post("tipo");
     $idUsu = intval($this->session->userdata('id_usuario')); 
     $pesos = str_replace(",", "", $monto);
+    var_dump($IdUsuario);
+    var_dump($tipo);
     $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
+
     
-    if(empty($dato)){
-      $pesos=str_replace("$", "", $monto);
-      $comas =str_replace(",", "", $pesos);
-      $pago = $comas;
-      $pagoCorresp = $pago / $NumeroPagos;
-      $pagoCorresReal = $pagoCorresp;
-      $insertArray = array(
-        'id_usuario'      => $IdUsuario,
-        'monto'           => $pago,
-        'num_pagos'       => $NumeroPagos, 
-        'pago_individual' => $pagoCorresReal,
-        'comentario'      => $comentario,
-        'estatus'         => 1,
-        'pendiente'       => 0,
-        'creado_por'      => $idUsu ,
-        'fecha_creacion'  => date("Y-m-d H:i:s"),
-        'modificado_por'  => $idUsu ,
-        'fecha_modificacion'   => date("Y-m-d H:i:s"),
-        'tipo'            => $tipo
-      );
-      
-      $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
-      echo json_encode($respuesta);
+    
+    if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+      $aleatorio = rand(100,1000);
+      $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+      $date = date('dmYHis');
+      $expediente = $date."_".$aleatorio."_".$namedoc;
+      $ruta = "static/documentos/evidencia_prestamo_auto/";
+    }
+
+    if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
+        if(empty($dato)){
+          $pesos=str_replace("$", "", $monto);
+          $comas =str_replace(",", "", $pesos);
+          $pago = $comas;
+          $pagoCorresp = $pago / $NumeroPagos;
+          $pagoCorresReal = $pagoCorresp;
+          $insertArray = array(
+            'id_usuario'      => $IdUsuario,
+            'monto'           => $pago,
+            'num_pagos'       => $NumeroPagos, 
+            'pago_individual' => $pagoCorresReal,
+            'comentario'      => $comentario,
+            'estatus'         => 1,
+            'pendiente'       => 0,
+            'creado_por'      => $idUsu ,
+            'fecha_creacion'  => date("Y-m-d H:i:s"),
+            'modificado_por'  => $idUsu ,
+            'fecha_modificacion'   => date("Y-m-d H:i:s"),
+            'tipo'            => $tipo
+          );
+          
+          $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
+          echo json_encode($respuesta);
+        } else{
+          $respuesta = 3;
+          echo json_encode($respuesta);
+        }
     } else{
-      $respuesta = 3;
+      $data = 3;
+      echo json_encode($data);
+      $respuesta = 4;
       echo json_encode($respuesta);
     }
   }
@@ -1289,7 +1310,7 @@ class Comisiones extends CI_Controller
 
   public function bonos_contraloria(){
     $this->load->view('template/header');
-    $this->load->view("ventas/bonos");
+    $this->load->view("bonos/bonos_view");
   }
 
   public function bonos_historial(){

@@ -152,7 +152,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 5604)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
@@ -364,7 +364,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 5604)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";

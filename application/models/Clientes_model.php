@@ -499,7 +499,7 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
                 $where = "pr.id_gerente IN ($id_lider, 12688) AND pr.id_sede IN (12)";
             else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
-                $where = "pr.id_gerente IN ($id_lider, 560) AND pr.id_sede IN (12)";
+                $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
             else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
                 $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
             else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN

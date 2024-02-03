@@ -440,3 +440,95 @@ function save2() {
     });
 }
 
+$("#frmnewsol2").submit(function (e) {
+    e.preventDefault();
+}).validate({
+    submitHandler: function (form) {
+        var data = new FormData($(form)[0]);
+        data.append("xmlfile", documento_xml);
+        alert(data);
+        $.ajax({
+            url: general_base_url + link_post,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function (data) {
+                if (data.resultado) {
+                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    $("#modal_formulario_solicitud").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                }
+                else {
+                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                }
+            },
+            error: function () {
+                alert("ERROR EN EL SISTEMA");
+            }
+        });
+    }
+});
+
+function close_modal_xml() {
+    $("#modal_nuevas").modal('toggle');
+}
+
+function cleanCommentsAsimilados() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    var myCommentsLote = document.getElementById('nameLote');
+    myCommentsList.innerHTML = '';
+    myCommentsLote.innerHTML = '';
+}
+function cleanComments() {
+    var myCommentsList = document.getElementById('comments-list-factura');
+    myCommentsList.innerHTML = '';
+    var myFactura = document.getElementById('facturaInfo');
+    myFactura.innerHTML = '';
+}
+
+function calcularMontoParcialidad() {
+    $precioFinal = parseFloat($('#value_pago_cliente').val());
+    $precioNuevo = parseFloat($('#new_value_parcial').val());
+    if ($precioNuevo >= $precioFinal) {
+        $('#label_estado').append('<label>MONTO NO VALIDO</label>');
+    } else if ($precioNuevo < $precioFinal) {
+        $('#label_estado').append('<label>MONTO VALIDO</label>');
+    }
+}
+
+$("#frmnewsol").submit(function (e) {
+    e.preventDefault();
+}).validate({
+    submitHandler: function (form) {
+        var data = new FormData($(form)[0]);
+        data.append("xmlfile", documento_xml);
+        $.ajax({
+            url: general_base_url + link_post,
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST', // For jQuery < 1.9
+            success: function (data) {
+                if (data.resultado) {
+                    alert("LA FACTURA SE SUBIO CORRECTAMENTE");
+                    $("#modal_formulario_solicitud").modal('toggle');
+                    tabla_nuevas.ajax.reload();
+                } else {
+                    alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
+                }
+            },
+            error: function () {
+                alert("ERROR EN EL SISTEMA");
+            }
+        });
+    }
+});
+
+
