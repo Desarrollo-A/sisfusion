@@ -4101,6 +4101,8 @@ function getStatusMktdPreventa(){
             $condition_idsalesforce = "";
         }
 
+        $tipoPro = $data_search['lotesDragon'] == 1 ? 'AND id_opcion = 42' : 'AND id_opcion = 52';
+        $tipoCli = $data_search['lotesDragon'] == 1 ? 'AND cl.lugar_prospeccion = 42' : 'AND cl.lugar_prospeccion = 52';
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
@@ -4122,6 +4124,7 @@ function getStatusMktdPreventa(){
                 $condition_sedes
                 $condition_iddragon
                 $condition_idsalesforce
+                $tipoCli
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
@@ -4135,7 +4138,7 @@ function getStatusMktdPreventa(){
                 INNER JOIN usuarios asesor ON pr.id_asesor = asesor.id_usuario
                 LEFT JOIN usuarios coord ON pr.id_coordinador = coord.id_usuario
                 LEFT JOIN usuarios ger ON pr.id_gerente = ger.id_usuario
-                INNER JOIN opcs_x_cats opc ON opc.id_opcion = pr.lugar_prospeccion AND opc.id_catalogo = 9
+                INNER JOIN opcs_x_cats opc ON opc.id_opcion = pr.lugar_prospeccion AND opc.id_catalogo = 9 $tipoPro
                 INNER JOIN sedes ON pr.id_sede = sedes.id_sede 
                 $condition_nombre
                 $condition_idlote

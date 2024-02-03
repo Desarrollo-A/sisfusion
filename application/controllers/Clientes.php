@@ -2678,12 +2678,13 @@ public function getStatusMktdPreventa(){
         $id_dragon = $this->input->post("id_dragon");
         $id_salesforce = $this->input->post("id_salesforce");
         $tipo_busqueda = $this->input->post("TB");
+        $lotesDragon = $this->input->post("lotesDragon");
 
         $fechaInicio = explode('/', $this->input->post("fecha_init"));
         $fechaFin = explode('/', $this->input->post("fecha_end"));
         $fecha_init = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
         $fecha_end = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-
+        
         $data_search = array(
             'idLote' => $idLote,
             'nombre' => $name,
@@ -2694,7 +2695,8 @@ public function getStatusMktdPreventa(){
             'id_salesforce' => $id_salesforce,
             'tipo_busqueda' => $tipo_busqueda,
             'fecha_init' => $fecha_init,
-            'fecha_end' => $fecha_end
+            'fecha_end' => $fecha_end,
+            'lotesDragon' => $lotesDragon,
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);

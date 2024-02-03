@@ -1,4 +1,6 @@
 let array_data = [];
+var lotesDragon;
+var lotesDragonCli;
 
 $(document).ready(function () {
 	$.post(general_base_url + "Contraloria/get_sede", function (data) {
@@ -18,6 +20,8 @@ $(document).ready(function () {
 	setIniDatesXMonth("#beginDateC", "#endDateC");
 	$("#dragonInput").removeClass('hide');
 	$("#dragonInputg").removeClass('hide');
+	lotesDragon = $("#dragonId").val();
+	lotesDragonCli = $("#dragonIdg").val();
 });
 
 $('#dragonId').change(function(){
@@ -26,6 +30,7 @@ $('#dragonId').change(function(){
 		$("#dragonInput").removeClass('hide');
 		$("#salesforceInput").addClass('hide');
 		$("#idSales").val('');
+		lotesDragon = $("#dragonId").val();
 	}
 });
 
@@ -35,6 +40,7 @@ $('#loteM').change(function(){
 		$("#salesforceInput").removeClass('hide');
 		$("#dragonInput").addClass('hide');
 		$("#idDragon").val('');
+		lotesDragon = $("#loteM").val();
 	}
 });
 
@@ -44,6 +50,7 @@ $('#dragonIdg').change(function(){
 		$("#dragonInputg").removeClass('hide');
 		$("#salesforceInputg").addClass('hide');
 		$("#idSalesF").val('');
+		lotesDragonCli = $("#dragonIdg").val();
 	}
 });
 
@@ -53,6 +60,7 @@ $('#loteMg').change(function(){
 		$("#salesforceInputg").removeClass('hide');
 		$("#dragonInputg").addClass('hide');
 		$("#idDragonC").val('');
+		lotesDragonCli = $("#loteMg").val();
 	}
 });
 
@@ -75,6 +83,7 @@ $('#searchButton').click(()=>{
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
+
 	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!='' || id_salesforce!=''){
 		$('#tabla_prospectos').removeClass('hide');
 		array_data['idLote'] = '';
@@ -86,6 +95,8 @@ $('#searchButton').click(()=>{
 		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
+		array_data['lotesDragon'] =lotesDragon;
+
 		fillTable(array_data);
 	}else{
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
@@ -125,6 +136,7 @@ $('#searchButtonC').click(()=>{
 		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
+		array_data['lotesDragon'] =lotesDragonCli;
 		fillTableClientes(array_data);
 	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
@@ -322,7 +334,8 @@ function fillTable(data_search) {
 				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
-				"TB": 2
+				"TB": 2,
+				"lotesDragon" : data_search['lotesDragon']
 			},
 			cache: false
 		},
@@ -518,7 +531,8 @@ function fillTableClientes(data_search) {
 				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
-				"TB": 1
+				"TB": 1,
+				"lotesDragon": data_search['lotesDragon']
 			},
 			cache: false
 		},
