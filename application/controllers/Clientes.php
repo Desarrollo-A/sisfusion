@@ -2678,12 +2678,13 @@ public function getStatusMktdPreventa(){
         $id_dragon = $this->input->post("id_dragon");
         $id_salesforce = $this->input->post("id_salesforce");
         $tipo_busqueda = $this->input->post("TB");
+        $lotesDragon = $this->input->post("lotesDragon");
 
         $fechaInicio = explode('/', $this->input->post("fecha_init"));
         $fechaFin = explode('/', $this->input->post("fecha_end"));
         $fecha_init = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
         $fecha_end = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-
+        
         $data_search = array(
             'idLote' => $idLote,
             'nombre' => $name,
@@ -2694,7 +2695,8 @@ public function getStatusMktdPreventa(){
             'id_salesforce' => $id_salesforce,
             'tipo_busqueda' => $tipo_busqueda,
             'fecha_init' => $fecha_init,
-            'fecha_end' => $fecha_end
+            'fecha_end' => $fecha_end,
+            'lotesDragon' => $lotesDragon,
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
@@ -2718,18 +2720,8 @@ public function getStatusMktdPreventa(){
         $this->load->view("marketing/dragonsClientsList");
     }
 
-    public function salesForceClients(){
-        $this->load->view('template/header');
-        $this->load->view("marketing/salesforceClientList");
-    }
-
     public function getDragonsClientsList() {
         $result['data'] = $this->Clientes_model->getDragonsClientsList();
-        echo json_encode($result, JSON_NUMERIC_CHECK);    
-    }
-
-    public function getSalesforceClientsList() {
-        $result['data'] = $this->Clientes_model->getSalesforceClientsList();
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
@@ -2801,6 +2793,16 @@ public function getStatusMktdPreventa(){
 
     public function getListaClientesArcus() {
         $result['data'] = $this->Clientes_model->getListaClientesArcus();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
+    }
+
+    public function listaClientesSalesforce(){
+        $this->load->view('template/header');
+        $this->load->view("marketing/listaClientesSalesforce");
+    }
+
+    public function getListaClientesSalesforce() {
+        $result['data'] = $this->Clientes_model->getListaClientesSalesforce();
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
     

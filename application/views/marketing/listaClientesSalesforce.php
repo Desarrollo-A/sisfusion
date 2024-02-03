@@ -17,10 +17,10 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Listado general de clientes (SalesForce)</h3>
+                                    <h3 class="card-title center-align">Listado general de clientes Salesforce</h3>
                                 </div>
                                 <input class="hide" id="generatedToken"/>
-                                <table id="salesforceClientsTable" name="salesforceClientsTable" class="table-striped table-hover">
+                                <table id="tablaListaClientesSalesforce" name="tablaListaClientesSalesforce" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>ID LOTE</th> 
@@ -52,5 +52,5 @@
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/marketing/salesforceClientList.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/marketing/listaClientesSalesforce.js"></script>
 </body>

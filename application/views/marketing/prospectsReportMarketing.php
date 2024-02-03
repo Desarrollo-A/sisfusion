@@ -54,6 +54,15 @@
                                             <div class="toolbar">
                                                 <div class="container-fluid">
                                                     <div class="row">
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 mt-2">
+                                                            <label class="control-label">TIPO</label>
+                                                            <div class="radio_container w-100">
+                                                                <input class="d-none generate" type="radio" name="modoSubida" id="dragonId" checked value="1">
+                                                                <label for="dragonId" class="w-50">Dragon</label>
+                                                                <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
+                                                                <label for="loteM" class="w-50">Salesforce</label>
+                                                            </div>
+                                                        </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                             <div class="form-group">
                                                                 <label class="control-label">NOMBRE</label>
@@ -66,21 +75,12 @@
                                                                 <input id="mail" name="mail" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label">TELÉFONO</label>
-                                                                <input id="telephone" name="telephone" type="text" class="form-control input-gral" required>
-                                                            </div>
-                                                        </div>
                                                     </div>    
                                                     <div class="row">
-                                                        <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <label class="control-label m-0">TIPO</label>
-                                                            <div class="radio_container w-100">
-                                                                <input class="d-none generate" type="radio" name="modoSubida" id="dragonId" checked value="1">
-                                                                <label for="dragonId" class="w-50">Dragon</label>
-                                                                <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
-                                                                <label for="loteM" class="w-50">SalesForce</label>
+                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                                            <div class="form-group m-0">
+                                                                <label class="control-label m-0">TELÉFONO</label>
+                                                                <input id="telephone" name="telephone" type="text" class="form-control input-gral" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="dragonInput">
@@ -155,6 +155,15 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
+                                                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 mt-3">
+                                                        <label class="control-label m-0">TIPO</label>
+                                                        <div class="radio_container w-100">
+                                                            <input class="d-none generate" type="radio" name="modoSubidag" id="dragonIdg" checked value="1">
+                                                            <label for="dragonIdg" class="w-50">Dragon</label>
+                                                            <input class="d-none find-results" type="radio" name="modoSubidag" id="loteMg" value="0">
+                                                            <label for="loteMg" class="w-50">Salesforce</label>
+                                                        </div>
+                                                    </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                                         <div class="form-group">
                                                             <label class="control-label">ID LOTE</label>
@@ -173,29 +182,20 @@
                                                             <input id="nameC" name="nameC" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
+                                                </div>      
+                                                <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                        <div class="form-group">
-                                                            <label class="control-label">CORREO</label>
+                                                        <div class="form-group m-0">
+                                                            <label class="control-label m-0">CORREO</label>
                                                             <input id="mailC" name="mailC" type="text" class="form-control input-gral" required>
                                                         </div>
                                                     </div>
-                                                </div>      
-                                                <div class="row">
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                                                         <div class="form-group m-0">
                                                             <label class="control-label m-0">SEDE</label>
                                                             <select class="selectpicker select-gral m-0" id="sedeC" name="sedeC[]" data-style="btn btn-primary " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required="" multiple="" tabindex="-98" onchange="changeSedeC()"></select>
                                                         </div>
                                                     </div>
-                                                    <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <label class="control-label m-0">TIPO</label>
-                                                            <div class="radio_container w-100">
-                                                                <input class="d-none generate" type="radio" name="modoSubidag" id="dragonIdg" checked value="1">
-                                                                <label for="dragonIdg" class="w-50">Dragon</label>
-                                                                <input class="d-none find-results" type="radio" name="modoSubidag" id="loteMg" value="0">
-                                                                <label for="loteMg" class="w-50">SalesForce</label>
-                                                            </div>
-                                                        </div>
                                                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 hide" id="dragonInputg">
                                                         <div class="form-group m-0">
                                                             <label class="control-label m-0">ID DRAGÓN</label>

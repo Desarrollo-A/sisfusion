@@ -4002,105 +4002,90 @@ function getStatusMktdPreventa(){
         }
     }
 
-    public function searchData($data_search){
-        $flag_where=0;
+    public function searchData($data_search) {
+        $flag_where = 0;
         $condicion_dinamica = '';
-        $prefix = ($data_search['tipo_busqueda']==1) ? 'cl' : 'pr';
+        $prefix = ($data_search['tipo_busqueda'] == 1) ? 'cl' : 'pr';
 
-        if(!empty($data_search['nombre'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['nombre'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where==1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
             $condition_nombre = $condicion_dinamica." CONCAT($prefix.nombre, ' ', $prefix.apellido_paterno, ' ', $prefix.apellido_materno) LIKE '%".$data_search['nombre']."%' ";
-        }else{
+        } else
             $condition_nombre = "";
-        }
 
         if(!empty($data_search['idLote'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
             $condition_idlote = $condicion_dinamica." cl.idLote=".$data_search['idLote'];
-        }else{
+        } else
             $condition_idlote = "";
-        }
 
-        if(!empty($data_search['correo'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['correo'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
             $condition_correo = $condicion_dinamica." $prefix.correo LIKE '%".$data_search['correo']."%'";
-        }else{
+        } else
             $condition_correo = "";
-        }
 
-        if(!empty($data_search['telefono'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['telefono'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
-            if($data_search['tipo_busqueda']==1){
+            if($data_search['tipo_busqueda'] == 1)
                 $condition_telefono = $condicion_dinamica." (cl.telefono1 LIKE '%".$data_search['telefono']."%' OR cl.telefono2 LIKE'%".$data_search['telefono']."%' OR cl.telefono3 LIKE '%".$data_search['telefono']."%')";
-            }elseif($data_search['tipo_busqueda']==2){
+            elseif($data_search['tipo_busqueda'] == 2)
                 $condition_telefono = $condicion_dinamica." $prefix.telefono LIKE '%".$data_search['telefono']."%' OR $prefix.telefono_2 LIKE '%".$data_search['telefono']."%'";
-            }
-        }else {
+        } else
             $condition_telefono = "";
-        }
 
-
-        if(!empty($data_search['sede'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['sede'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
-
-            if($data_search['tipo_busqueda']==1){
+            if($data_search['tipo_busqueda'] == 1)
                 $condition_sedes = $condicion_dinamica." $prefix.fechaApartado BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
-            }elseif($data_search['tipo_busqueda']==2){
+            elseif($data_search['tipo_busqueda'] == 2)
                 $condition_sedes = $condicion_dinamica." $prefix.fecha_creacion BETWEEN '".$data_search['fecha_init']."' AND '".$data_search['fecha_end']."' AND $prefix.id_sede IN(".$data_search['sede'].")";
-            }
-        }else {
+            
+        } else
             $condition_sedes = "";
-        }
 
-        if(!empty($data_search['id_dragon'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['id_dragon'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
             $condition_iddragon = $condicion_dinamica." pr.id_dragon=".$data_search['id_dragon'];
-        }else{
+        } else
             $condition_iddragon = "";
-        }
 
-        if(!empty($data_search['id_salesforce'])){
-            $flag_where = $flag_where+1;
-            if($flag_where==1){
+        if(!empty($data_search['id_salesforce'])) {
+            $flag_where = $flag_where + 1;
+            if($flag_where == 1)
                 $condicion_dinamica = ' WHERE ';
-            }elseif($flag_where>1){
+            elseif($flag_where > 1)
                 $condicion_dinamica = ' AND ';
-            }
             $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce=".$data_search['id_salesforce'];
-        }else{
+        } else
             $condition_idsalesforce = "";
-        }
 
+        $tipoPro = $data_search['lotesDragon'] == 1 ? 'AND pr.lugar_prospeccion = 42' : 'AND pr.lugar_prospeccion = 52';
+        $tipoCli = $data_search['lotesDragon'] == 1 ? 'AND cl.lugar_prospeccion = 42' : 'AND cl.lugar_prospeccion = 52';
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
@@ -4122,6 +4107,7 @@ function getStatusMktdPreventa(){
                 $condition_sedes
                 $condition_iddragon
                 $condition_idsalesforce
+                $tipoCli
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
@@ -4143,7 +4129,8 @@ function getStatusMktdPreventa(){
                 $condition_telefono
                 $condition_iddragon
                 $condition_sedes
-                $condition_idsalesforce");
+                $condition_idsalesforce
+                $tipoPro");
                 break;
         }
         return $query->result_array();
@@ -4159,21 +4146,6 @@ function getStatusMktdPreventa(){
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 42
-        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
-        LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
-        WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
-    }
-
-    public function getSalesforceClientsList(){
-        return $this->db->query("SELECT cl.idLote,  l.idStatusContratacion,r.descripcion AS nombreProyecto,
-        c.nombre nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
-        cl.noRecibo, l.referencia, CONVERT(VARCHAR,cl.fechaApartado,20) AS fechaApartado, l.totalValidado engancheCliente, CONVERT(VARCHAR,cl.fechaEnganche,20) AS fechaEnganche, CONVERT(VARCHAR,pr.fecha_creacion,20) AS fechaCreacionProspecto,
-        sc.nombreStatus nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_salesforce, pr.id_prospecto, ISNULL(hd.expediente, 0) nombre_archivo
-        FROM clientes cl 
-        INNER JOIN lotes l ON cl.idLote = l.idLote 
-        INNER JOIN condominios c ON c.idCondominio = l.idCondominio
-        INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
-        INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 52
         INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = l.idStatusContratacion 
         LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15
         WHERE cl.status = 1 ORDER BY l.nombreLote")->result_array();
@@ -4450,6 +4422,38 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
         WHERE lo.status = 1")->result_array();
+    }
+
+    public function getListaClientesSalesforce() {
+        return $this->db->query(
+            "SELECT 
+                cl.idLote, 
+                re.descripcion nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+                ISNULL(cl.noRecibo, 'SIN ESPECIFICAR') noRecibo, 
+                lo.referencia, 
+                CONVERT(VARCHAR, cl.fechaApartado, 20) fechaApartado, 
+                FORMAT(lo.totalValidado, 'C') engancheCliente, 
+                CONVERT(VARCHAR, cl.fechaEnganche, 20) fechaEnganche, 
+                CONVERT(VARCHAR, pr.fecha_creacion, 20) fechaCreacionProspecto, 
+                cl.id_cliente, 
+                ISNULL(pr.id_salesforce, 'SIN ESPECIFICAR') id_salesforce, 
+                pr.id_prospecto, 
+                ISNULL(hd.expediente, 0) nombre_archivo 
+            FROM 
+                clientes cl 
+                INNER JOIN lotes lo ON cl.idLote = lo.idLote 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.lugar_prospeccion = 52 
+                LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.idCliente = cl.id_cliente AND hd.status = 1 AND hd.tipo_doc = 15 
+            WHERE 
+                cl.status = 1 
+            ORDER BY 
+                lo.nombreLote
+            ")->result_array();
     }
 
 }
