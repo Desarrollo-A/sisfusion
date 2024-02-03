@@ -479,8 +479,7 @@ $(document).on("click", "#save3", function (e) {
         $("#save3").prop("disabled", false);
         $("#rechReg").modal("hide");
         $("#Jtabla").DataTable().ajax.reload();
-        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger"
-        );
+        alerts.showNotification("top", "right", "Error al enviar la solicitud.", "danger");
       },
     });
   }

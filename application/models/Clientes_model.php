@@ -4121,7 +4121,7 @@ function getStatusMktdPreventa(){
                 INNER JOIN usuarios asesor ON pr.id_asesor = asesor.id_usuario
                 LEFT JOIN usuarios coord ON pr.id_coordinador = coord.id_usuario
                 LEFT JOIN usuarios ger ON pr.id_gerente = ger.id_usuario
-                INNER JOIN opcs_x_cats opc ON opc.id_opcion = pr.lugar_prospeccion AND opc.id_catalogo = 9
+                INNER JOIN opcs_x_cats opc ON opc.id_opcion = pr.lugar_prospeccion AND opc.id_catalogo = 9 $tipoPro
                 INNER JOIN sedes ON pr.id_sede = sedes.id_sede 
                 $condition_nombre
                 $condition_idlote
