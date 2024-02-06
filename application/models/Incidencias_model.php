@@ -752,6 +752,16 @@ class Incidencias_model extends CI_Model {
             return $query->result();
         }
 
+        public function getModalidadCambio($estatus, $id_cliente)
+        {
+            $query = $this->db->query("UPDATE ventas_compartidas SET estatus = $estatus WHERE id_cliente = $id_cliente");
+            return $query;
+        }
+
+        public function agregarComentario($id_cliente,$descripcion,$idLote){
+            $this->db->query("INSERT INTO historial_venta_compartida(id_cliente, comentario, idLote) VALUES ($id_cliente, '$descripcion', $idLote)");
+        }
+
         public function updateSedesEdit($idCliente, $idLote, $data){
         try {
             $this->db->WHERE('id_cliente', $idCliente);
@@ -764,6 +774,30 @@ class Incidencias_model extends CI_Model {
         } catch(Exception $e) {
             return $e->getMessage();
             }    
+        }
+
+        public function getRol_Nombre($id_cliente, $idLote){
+            $query = $this->db->query("SELECT c.id_usuario, o.nombre AS NombreRol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS NombreUsuario, c.porcentaje_decimal AS porcentaje_antiguo, 
+            c.porcentaje_decimal + COALESCE(SUM(c2.porcentaje_decimal), 0) AS nuevo_porcentaje_decimal, c.id_comision
+            FROM comisiones c
+            LEFT JOIN comisiones c2 ON c.rol_generado = c2.rol_generado AND c.id_lote = c2.id_lote AND c2.rol_generado = 7 AND c2.estatus = 1 AND c2.id_usuario != c.id_usuario
+            JOIN usuarios u ON c.id_usuario = u.id_usuario
+            INNER JOIN opcs_x_cats o ON c.rol_generado = o.id_opcion AND o.id_catalogo = 1 
+            WHERE c.id_lote = $idLote AND c.estatus = 1
+                AND NOT EXISTS (
+                    SELECT 1
+                    FROM ventas_compartidas vc
+                    JOIN clientes cl ON vc.id_cliente = cl.id_cliente
+                    WHERE vc.id_cliente = $id_cliente AND cl.id_cliente IN (SELECT idCliente FROM lotes WHERE idLote = 165) AND vc.id_asesor = c.id_usuario
+                ) 
+            GROUP BY c.id_usuario, c.id_comision, o.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), c.porcentaje_decimal;");
+            return $query->result_array();
+        }
+
+        public function UpdateRol_Nombre($porcentaje_decimal, $id_usuario, $id_comision)
+        {
+            $query = $this->db->query("UPDATE comisiones SET porcentaje_decimal=$porcentaje_decimal WHERE $id_usuario = $id_usuario AND id_comision = $id_comision");
+            return $query;
         }
 
     }

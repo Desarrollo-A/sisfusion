@@ -11,10 +11,8 @@
   
 
   <?php
-    if($this->session->userdata('id_rol') == FALSE || $this->session->userdata('id_rol') != '7' && $this->session->userdata('id_rol') != '3' && $this->session->userdata('id_rol') != '9' && $this->session->userdata('id_rol') != '16' && $this->session->userdata('id_rol') != '6' && $this->session->userdata('id_rol') != '2' && $this->session->userdata('id_rol') != '5' && $this->session->userdata('id_rol') != '33' && $this->session->userdata('id_rol') != '17' && $this->session->userdata('id_rol') != '19' && $this->session->userdata('id_rol') != '20' && $this->session->userdata('id_rol') != '61')
-    {
+    if(!in_array($this->session->userdata('id_rol'), [7, 3, 9, 16, 6, 2, 5, 33, 17, 19, 20, 63]))
        redirect(base_url().'login');
-    }
    ?>
 
 

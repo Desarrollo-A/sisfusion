@@ -3,37 +3,8 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('complementos/estilos_extra'); ?>
 
-        <style type="text/css">        
-            #modal_nuevas{
-                z-index: 1041!important;
-            }
-            #modal_vc{
-                z-index: 1041!important;
-            }
-            .beginDate, #beginDate{
-                background-color: #eaeaea !important;
-                border-radius: 27px 0 0 27px!important;
-                background-image: initial!important;
-                text-align: center!important;
-            }
-                
-            .endDate, #endDate{
-                background-color: #eaeaea !important;
-                border-radius: 0!important;
-                background-image: initial!important;
-                text-align: center!important;
-            }
-            .btn-fab-mini {
-                border-radius: 0 27px 27px 0 !important;
-                background-color: #eaeaea !important;
-                box-shadow: none !important;
-                height: 45px !important;
-            }
-            .btn-fab-mini span {
-                color: #929292;
-            }
-        </style>
 
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
@@ -246,6 +217,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA">
+                        <div class="modal-header"></div>
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>

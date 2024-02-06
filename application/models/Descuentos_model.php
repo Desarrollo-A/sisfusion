@@ -9,7 +9,7 @@ class Descuentos_model extends CI_Model {
     }
 
     function lista_estatus_descuentos(){
-        return $this->db->query(" SELECT * FROM opcs_x_cats WHERE id_catalogo=23 AND id_opcion in(18,19,20,21,22,23,24,25,26,29,30)");
+        return $this->db->query(" SELECT * FROM opcs_x_cats WHERE id_catalogo=23 AND id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88)");
     }
 
 
@@ -248,14 +248,31 @@ class Descuentos_model extends CI_Model {
     }
 
     function getPrestamos(){ 
-        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
+        return $this->db->query("SELECT 
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
+        p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,
+        p.fecha_creacion,p.pago_individual,pendiente,
+        SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,
+        opc.id_opcion, mrp.evidencia as relacion_evidencia,
+        p.evidenciaDocs as evidencia ,
+        (SELECT TOP 1 rpp2.fecha_creacion 
+        FROM relacion_pagos_prestamo rpp2 
+        WHERE rpp2.id_prestamo = rpp.id_prestamo 
+        ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, 
+        rpp.id_prestamo AS id_prestamo2
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
+        LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
         WHERE p.estatus in(1,2,0)
-        GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+        GROUP BY rpp.id_prestamo, 
+        mrp.evidencia,
+        u.nombre,u.apellido_paterno,
+        u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,
+        p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,
+        pendiente,opc.nombre,opc.id_opcion,p.evidenciaDocs");
     }
     public function updatePrestamosEdit($clave, $data){
         try {
@@ -282,6 +299,36 @@ class Descuentos_model extends CI_Model {
                 return 1;
             }
         }       
-    
+        public function traerElUltimo(){
+            $cmd = "SELECT TOP 1 id_opcion FROM opcs_x_cats 
+                    WHERE id_catalogo = 23 ORDER BY id_opcion DESC ";
+            $resultado = $this->db->query($cmd);  
+            return $resultado->row();
+        }
 
+        public function  insertarMotivo($insert){
+            try {
+            $resultado = $this->db->insert( "opcs_x_cats",$insert);
+            
+            return $resultado;
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }    
+        }
+        public function  insertarMotivoRelacion($insert){
+            $respuesta = $this->db->insert('motivosRelacionPrestamos ',$insert);
+            return  $this->db->insert_id();
+        }
+
+        
+        public function getRelacionPrestamos($id_opcion){
+            $cmd = "SELECT evidencia  
+            FROM motivosRelacionPrestamos 
+            WHERE id_opcion = $id_opcion ";
+            
+            $resultado = $this->db->query($cmd);  
+
+            return $resultado->row();
+        }
 }

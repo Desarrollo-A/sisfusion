@@ -3447,13 +3447,16 @@
 					$id_lider = $id_lider . ', 12688';
 					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-					$id_lider = $id_lider . ', 560';
+					$id_lider = $id_lider . ', 5604';
 					$sede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
 				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-					$id_lider = $id_lider . ', 495';
+					$id_lider = $id_lider . ', 471';
+					$sede = "";
+				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
+					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
 				}
 
@@ -3830,8 +3833,8 @@
             FROM lotes l
             INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
             INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-            INNER JOIN clientes cl ON cl.idLote = l.idLote
-		    where l.idLote = $idLote AND cl.status = 1");
+            LEFT JOIN clientes cl ON cl.idLote = l.idLote AND cl.id_cliente = l.idCliente AND cl.status = 1
+		    where l.idLote = $idLote /*AND cl.status = 1*/");
 		return $query->row();
 	}
 

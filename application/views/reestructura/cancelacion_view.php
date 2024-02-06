@@ -9,12 +9,16 @@
 			<div class="modal-dialog">
 				<div class="modal-content" > 
 					<div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                            <h4>¿Estás seguro de cancelar el contrato del lote?</h4>
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                                <h4>¿Estás seguro de solicitar la cancelación del contrato de lote?</h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <input type="hidden" name="idLote" id="idLote">
+                                <label class="control-label overflow-hidden" for="proyecto">Observaciones</label>
+                                <textarea name="obsSolicitudCancel" id="obsSolicitudCancel" placeholder="Ingresa aquí tus comentarios" class="text-modal" required row="4"></textarea>
+                            </div>
                         </div>
-                        <br>
-                        <input type="hidden" name="idLote" id="idLote">
-                        <textarea name="obsLiberacion" id="obsLiberacion" placeholder="Observaciones" class="text-modal" required row="4"></textarea>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -33,7 +37,7 @@
                                 <i class="fas fa-box fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Cancelación de contrato</h3>
+                                <h3 class="card-title center-align">Solicitud de cancelación de contrato</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
