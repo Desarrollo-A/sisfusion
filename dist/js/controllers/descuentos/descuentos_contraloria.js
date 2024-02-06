@@ -219,36 +219,45 @@ $("#tabla_descuentos").ready( function(){
             }
         },
         { 
-        data: function( d ){         
-                const letras = d.motivo.split(" ");
-                if(letras.length <= 4)
+        data: function( d ){          
+                if(d.motivo != '' || d.motivo != null ){
+
+                    const letras = d.motivo.split(" ");
+                    
+                    if(letras.length <= 4)
                 {
 
                     return '<p class="m-0">'+d.motivo+'</p>';
                 }else{
                     
-                    letras[2] = undefined ? letras[2] = '' : letras[2];
-                    letras[3] = undefined ? letras[3] = '' : letras[3];
-                    return `    
-                        <div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
-                            <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
-                            <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
-                                onclick="esconder(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
-                                <span class="lbl-blueMaderas">Ver más</span> 
-                                
-                            </a>
-                        </div>
-                        <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                            <div class="card-body">
-                                ${d.motivo}</p> 
-                                <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_prestamo}" 
-                                    onclick="mostrar(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
-                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                        letras[2] = undefined ? letras[2] = '' : letras[2];
+                        letras[3] = undefined ? letras[3] = '' : letras[3];
+                        return `    
+                            <div class="muestratexto${d.id_pago_i}" id="muestratexto${d.id_pago_i}">
+                                <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                                <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                    onclick="esconder(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                    <span class="lbl-blueMaderas">Ver más</span> 
+                                    
                                 </a>
                             </div>
-                        </div>
-                    `;
+                            <div id="collapseOne${d.id_pago_i}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    ${d.motivo}</p> 
+                                    <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_pago_i}" 
+                                        onclick="mostrar(${d.id_pago_i})" aria-expanded="true" aria-controls="collapseOne${d.id_pago_i}">
+                                        <span class="lbl-blueMaderas">Ver menos</span> 
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }else{
+                    return '<p class="m-0">No definido</p>';
                 }
+                
+                
+                
                 return '<p class="m-0">'+d.motivo+'</p>';
             }
         },
@@ -289,8 +298,12 @@ $("#tabla_descuentos").ready( function(){
             searchable:true,
             className: 'dt-body-center'
         }],
+        columnDefs: [{
+            targets: [4], visible: false,
+            searchable:true,
+            }],
         ajax: {
-            url: url2 + "Comisiones/getdescuentos",
+            url: url2 + "Descuentos/getdescuentos",
             type: "POST",
             cache: false,
             data: function( d ){}
@@ -797,4 +810,18 @@ function verificar2(){
             $("#idloteorigen2").prop("disabled", false);
         }            
     }    
+}
+
+function esconder(id){
+    // alert(1331)
+    $('#muestratexto'+id).addClass('hide');
+    // $('#muestratexto'+id).removeClass('hide');
+    
+}
+
+
+function mostrar(id){
+    // $('#muestratexto'+id).addClass('hide');
+    $('#muestratexto'+id).removeClass('hide');
+    
 }

@@ -424,4 +424,10 @@ class Descuentos extends CI_Controller
         echo json_encode($respuesta);
     }
 
+
+    public function getDescuentos(){
+        $res["data"] = $this->Descuentos_model->getDescuentos()->result_array();
+        echo json_encode($res);
+    }
+
 }
