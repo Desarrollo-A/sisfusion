@@ -277,7 +277,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte de ventas por '+option ,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -297,21 +297,27 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'APARTADO';
                                     break;
                                 case 6:
-                                    return 'CANCELADOS';
+                                    return 'SEDE APARTADOS'
                                     break;
                                 case 7:
-                                    return 'PORCENTAJE DE CANCELADOS';
-                                    break;
-                                case 8:
-                                    return 'NÚMERO DE LOTES CONTRATADOS';
-                                    break;
-                                case 9:
-                                    return 'CONTRATADOS';
-                                    break;
-                                case 10:
                                     return 'CANCELADOS';
                                     break;
+                                case 8:
+                                    return 'PORCENTAJE DE CANCELADOS';
+                                    break;
+                                case 9:
+                                    return 'NÚMERO DE LOTES CONTRATADOS';
+                                    break;
+                                case 10:
+                                    return 'CONTRATADOS';
+                                    break;
                                 case 11:
+                                    return 'SEDE CONTRATADOS';
+                                    break;
+                                case 12:
+                                    return 'CANCELADOS';
+                                    break;
+                                case 13:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
