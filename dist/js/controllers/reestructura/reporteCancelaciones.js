@@ -8,6 +8,14 @@ $(document).ready(function () {
         $("#catalogoLiberar").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
+
+    //OBTIENE LOS TIPOS DE CANCELACIONES
+    $.post(`${general_base_url}General/getOpcionesPorCatalogo/117`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#tipoCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $("#tipoCancelacion").selectpicker('refresh');
+    }, 'json');
 });
 
 $('#catalogoLiberar').change(function () {
@@ -76,7 +84,16 @@ function cancelacionTable(index_proyecto) {
                 data: function (d) {
                     return `<span class='label lbl-violetBoots'>${d.tipoCancelacion}</span>`;
                 }
+            },
+            {
+                data: function (d) {
+                    html = (d.idStatusLote == 103 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;
+
+                    return html;
+                    
+                }
             }
+
         ],
         columnDefs: [{
             defaultContent: "",
@@ -105,3 +122,92 @@ function cancelacionTable(index_proyecto) {
         });
     });
 }
+
+$(document).on('click', '.cancel', function () {
+    $('#idLote').val($(this).attr('data-idLote'));
+    $('#obsLiberacion').val('');
+    $('#tipoCancelacion').val('').selectpicker('refresh');
+    $('#cancelarLote').modal();
+});
+
+$(document).on('click', '.returnBtn', function () {
+    $('#idLote').val($(this).attr('data-idLote'));
+    $('#obsLiberacion').val('');
+    $('#return').modal();
+});
+
+$(document).on('click', '#saveCancel', function () {
+    let idLote = $("#idLote").val();
+    let obsLiberacion = $("#obsLiberacion").val();
+    let tipoCancelacion = $("#tipoCancelacion").val();
+    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
+    if (obsLiberacion.trim() == '' || tipoCancelacion == '') {
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
+        return false;
+    }
+    var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
+    datos.append("idLote", idLote);
+    datos.append("obsLiberacion", obsLiberacion);
+    datos.append("tipoLiberacion", 3);
+    datos.append("tipoCancelacion", tipoCancelacion);
+    datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
+    $.ajax({
+        method: 'POST',
+        url: `${general_base_url}Reestructura/aplicarLiberacion`,
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data == 1) {
+                $('#tabla_lotes').DataTable().ajax.reload(null, false);
+                $("#spiner-loader").addClass('hide');
+                $('#cancelarLote').modal('hide');
+                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+                $('#idLote').val('');
+                $('#obsLiberacion').val('');
+            }
+        },
+        error: function () {
+            $('#cancelarLote').modal('hide');
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
+
+$(document).on('click', '#saveCancel', function () {
+    let idLote = $("#idLoteR").val();
+    let observaciones = $("#observaciones").val();
+    if (observaciones.trim() == '') {
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación", "warning");
+        return false;
+    }
+    var datos = new FormData();
+    $("#spiner-loader").removeClass('hide');
+    datos.append("idLote", idLote);
+    datos.append("observaciones", observaciones);
+    $.ajax({
+        method: 'POST',
+        url: `${general_base_url}Reestructura/returnToRestructure`,
+        data: datos,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data == 1) {
+                $('#tabla_lotes').DataTable().ajax.reload(null, false);
+                $("#spiner-loader").addClass('hide');
+                $('#cancelarLote').modal('hide');
+                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+                $('#idLote').val('');
+                $('#obsLiberacion').val('');
+            }
+        },
+        error: function () {
+            $('#cancelarLote').modal('hide');
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});

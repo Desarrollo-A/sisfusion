@@ -215,7 +215,7 @@ class Comisiones extends CI_Controller
 
       default:
       $this->load->view('template/header');
-      $this->load->view("ventas/historial_contraloria");
+      $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");
       break;
     }
   }
@@ -582,12 +582,12 @@ class Comisiones extends CI_Controller
     }else{
       echo json_encode($this->Comisiones_model->getDatosProyecto($idlote,$id_usuario)->result_array());
     }
-  }
+  } 
 
   public function historial_colaborador()
   {
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_contraloria");    
+    $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");    
   }
 
   public function historial_baja(){

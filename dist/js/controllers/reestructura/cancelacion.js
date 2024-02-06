@@ -12,14 +12,6 @@ $(document).ready(function () {
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
-
-    //OBTIENE LOS TIPOS DE CANCELACIONES
-    $.post(`${general_base_url}General/getOpcionesPorCatalogo/117`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#tipoCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-        }
-        $("#tipoCancelacion").selectpicker('refresh');
-    }, 'json');
 });
 
 $('#proyecto').change(function () {
@@ -42,30 +34,25 @@ $('#tabla_lotes thead tr:eq(0) th').each(function (i) {
 
 $(document).on('click', '.cancel', function () {
     $('#idLote').val($(this).attr('data-idLote'));
-    $('#obsLiberacion').val('');
+    $('#obsSolicitudCancel').val('');
     $('#tipoCancelacion').val('').selectpicker('refresh');
     $('#cancelarLote').modal();
 });
 
 $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
-    let obsLiberacion = $("#obsLiberacion").val();
-    let tipoCancelacion = $("#tipoCancelacion").val();
-    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
-    if (obsLiberacion.trim() == '' || tipoCancelacion == '') {
-        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
+    let obsSolicitudCancel = $("#obsSolicitudCancel").val();
+    if (obsSolicitudCancel.trim() == '' ) {
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación", "warning");
         return false;
     }
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
     datos.append("idLote", idLote);
-    datos.append("obsLiberacion", obsLiberacion);
-    datos.append("tipoLiberacion", 3);
-    datos.append("tipoCancelacion", tipoCancelacion);
-    datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
+    datos.append("obsSolicitudCancel", obsSolicitudCancel);
     $.ajax({
         method: 'POST',
-        url: `${general_base_url}Reestructura/aplicarLiberacion`,
+        url: `${general_base_url}Reestructura/setSolicitudCancelacion`,
         data: datos,
         processData: false,
         contentType: false,
@@ -76,7 +63,7 @@ $(document).on('click', '#saveCancel', function () {
                 $('#cancelarLote').modal('hide');
                 alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
                 $('#idLote').val('');
-                $('#obsLiberacion').val('');
+                $('#obsSolicitudCancel').val('');
             }
         },
         error: function () {
@@ -135,7 +122,7 @@ function fillTable(index_proyecto) {
             { data: 'nombreCliente' },
             {
                 data: function (d) {
-                    return `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button>`;
+                    return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
                 }
             }
         ],
