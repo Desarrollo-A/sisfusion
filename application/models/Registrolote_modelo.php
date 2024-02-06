@@ -3445,7 +3445,7 @@
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
 				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-					$id_lider = $id_lider . ', 12688';
+					$id_lider = $id_lider . ', 12688, 495';
 					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
 					$id_lider = $id_lider . ', 560';

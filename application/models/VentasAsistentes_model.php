@@ -149,7 +149,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
                 } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688, 495)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";
@@ -358,7 +358,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
                 } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688, 495)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 560)";

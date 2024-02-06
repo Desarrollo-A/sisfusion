@@ -138,7 +138,7 @@ class Usuarios_modelo extends CI_Model
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                 }
                 else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $id_lider = $this->session->userdata('id_lider') . ', 12688';
+                    $id_lider = $this->session->userdata('id_lider') . ', 12688, 495';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
 				}
 				else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
