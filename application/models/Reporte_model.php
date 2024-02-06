@@ -351,6 +351,18 @@ class Reporte_model extends CI_Model {
                     --GROUP BY cl.$comodin, vc.$comodin, cl.id_cliente
                     GROUP BY cl.$comodin,  cl.id_cliente
                 ),
+                SedesApartadas AS (
+                    SELECT cl.$comodin AS userID, cl.id_cliente, sede.nombre AS sedeName
+                    FROM clientes cl
+                    INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11) AND (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) 
+                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                    LEFT JOIN usuarios u ON u.id_usuario = cl.id_coordinador
+                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+                    WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
+                    $filtro $filtroExt
+                    GROUP BY cl.$comodin, cl.id_cliente, sede.id_sede, sede.nombre
+                ),
                 VentasCompartidasContratadas AS (
                     SELECT cl.$comodin AS userID,cl.id_cliente, --SUM(CASE WHEN(lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) / CAST(COUNT(lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2)) AS contratadasCompartidaSuma
                     SUM(SUM(CASE WHEN(lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))) OVER (PARTITION BY cl.$comodin) AS contratadasCompartidaSuma
@@ -360,16 +372,27 @@ class Reporte_model extends CI_Model {
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.id_cliente = lo.idCliente AND (vc.estatus IN (1,2))
-                    
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
                     GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
                     $filtroSt
-                    
                     WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
                     AND vc.id_cliente IS NOT NULL
                     $filtro $filtroExt
-                    --GROUP BY cl.$comodin, vc.$comodin,cl.id_cliente
                     GROUP BY cl.$comodin,  cl.id_cliente
+                ),
+                SedesContratadas AS (
+                    SELECT cl.$comodin as userID, cl.id_cliente, sede.nombre as sedeName
+                    FROM clientes cl
+                    INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2,3) AND (lo.totalNeto2 IS NOT NULL AND lo.totalNeto2 != 0.00)
+                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                    LEFT JOIN usuarios u ON u.id_usuario = cl.id_coordinador
+                    INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
+                    GROUP BY idLote, idCliente) hl ON hl.idLote = lo.idLote AND hl.idCliente = cl.id_cliente
+                    WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
+                    $filtro $filtroExt
+                    GROUP BY cl.$comodin, cl.id_cliente, sede.id_sede, sede.nombre
                 ),
                 VentasCompartidasCanContratadas AS (
                     SELECT cl.$comodin AS userID, SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / CAST (COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2)) AS cancontratadasCompartidaSuma
@@ -427,9 +450,13 @@ class Reporte_model extends CI_Model {
                 ISNULL( CAST( (canapartadas.totalCanA * 100) /  NULLIF(ISNULL(contratadas.totalConT, 0) + ISNULL(apartadas.totalAT, 0), 0) AS decimal(16,2)), 0) porcentajeTotalCanA,
                 ISNULL(ISNULL(ISNULL (apartadas.nombreUsuario, contratadas.nombreUsuario), canapartadas.nombreUsuario), cancontratadas.nombreUsuario) nombreUsuario, general.userID,
                 FORMAT((ISNULL(apartadas.sumaAT, 0) + ISNULL(contratadas.sumaConT, 0) - (ISNULL(VentasCompartidasApartadas.apartadasCompartidaSuma, 0) + ISNULL(VentasCompartidasContratadas.contratadasCompartidaSuma,0) )), 'C') as sharedCount
+                --,contratadas.nombreUsuario as contratadasSede, apartadas.nombreUsuario as apartadasSede
+                ,UPPER(ISNULL(SedesContratadas.sedeName, 'SIN ESPECIFICAR')) as contratadasSede
+                ,UPPER(ISNULL(SedesApartadas.sedeName, 'SIN ESPECIFICAR')) as apartadasSede
+
                 /*TESTING SNIPPET*/
-                ,UPPER(ISNULL(contratadas.sedeName, 'SIN ESPECIFICAR')) AS contratadasSede
-                ,UPPER(ISNULL(apartadas.sedeName, 'SIN ESPECIFICAR')) as apartadasSede
+                --,UPPER(ISNULL(contratadas.sedeName, 'SIN ESPECIFICAR')) AS contratadasSede
+                --,UPPER(ISNULL(apartadas.sedeName, 'SIN ESPECIFICAR')) as apartadasSede
                 
             FROM (
                 -- SUMA TOTALES
@@ -455,14 +482,14 @@ class Reporte_model extends CI_Model {
                 --VENTAS APARTADAS
                 SELECT SUM(tmpApT.total) sumaAT, COUNT(*) totalAT, '1' opt, $comodin userID, tmpApT.nombreUsuario, tmpApT.id_rol
                 /*TESTING SNIPPET*/
-                ,tmpApt.sedeName
+                --,tmpApt.sedeName
                 FROM(
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                     SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total,
                     CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado 
                     /*TESTING SNIPPET*/
-                    ,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
+                    --,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
 
                     FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11)  AND (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00)
@@ -470,7 +497,7 @@ class Reporte_model extends CI_Model {
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
 
                     /*TESTING SNIPPET*/
-                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    --LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
 
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     $filtroSt
@@ -480,16 +507,16 @@ class Reporte_model extends CI_Model {
                     cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                     CONVERT(VARCHAR, cl.fechaApartado, 103)
                     /*TESTING SNIPPET*/
-                    ,sede.nombre
+                    --,sede.nombre
                 ) tmpApT GROUP BY $comodin, tmpApT.nombreUsuario, tmpApT.id_rol 
                 /*TESTING SNIPPET*/
-                ,tmpApt.sedeName
+                --,tmpApt.sedeName
             ) apartadas ON apartadas.userID = general.userID
                
             LEFT JOIN(
               SELECT SUM(tmpConT.total) sumaConT ,COUNT(*) totalConT, '1' opt, $comodin userID, tmpConT.nombreUsuario, tmpConT.id_rol
               /*TESTING SNIPPET*/
-              ,tmpConT.sedeName
+              --,tmpConT.sedeName
             
                 FROM (
                     -- VENTAS CONTRATADAS
@@ -498,7 +525,7 @@ class Reporte_model extends CI_Model {
                     SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total
                     
                     /*TESTING SNIPPET*/
-                    ,coalesce(sede.nombre, 'ACUMULADO SIN SEDE') as sedeName
+                    --,coalesce(sede.nombre, 'ACUMULADO SIN SEDE') as sedeName
                     
 
                     FROM clientes cl
@@ -508,7 +535,7 @@ class Reporte_model extends CI_Model {
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 
                     /*TESTING SNIPPET*/
-                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    --LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     
 
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39
@@ -519,18 +546,18 @@ class Reporte_model extends CI_Model {
                     GROUP BY CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), cl.id_cliente,u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, 
                     cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno
                     /*TESTING SNIPPET*/
-                    ,sede.nombre
+                    --,sede.nombre
                  
                 ) tmpConT GROUP BY $comodin, tmpConT.nombreUsuario, tmpConT.id_rol
                 /*TESTING SNIPPET*/
-                ,tmpConT.sedeName
+                --,tmpConT.sedeName
                 
             ) contratadas ON contratadas.userID = general.userID
 
             LEFT JOIN(
                 SELECT SUM(tmpCC.total) sumaCanC, COUNT(*) totalCanC, '1' opt, $comodin userID, tmpCC.nombreUsuario, tmpCC.id_rol
                 /*TESTING SNIPPET*/
-                ,tmpCC.sedeName
+                --,tmpCC.sedeName
                 FROM (
                     --CANCELADAS CONTRATADAS
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
@@ -538,7 +565,7 @@ class Reporte_model extends CI_Model {
                     cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup)) total
 
                     /*TESTING SNIPPET*/
-                    ,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
+                    --,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
 
 
                     FROM clientes cl
@@ -548,7 +575,7 @@ class Reporte_model extends CI_Model {
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 
                     /*TESTING SNIPPET*/
-                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    --LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
 
 
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
@@ -560,15 +587,15 @@ class Reporte_model extends CI_Model {
                     GROUP BY u. id_rol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), lo.idLote, lo.nombreLote, cl.id_asesor, 
                     cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno
                     /*TESTING SNIPPET*/
-                    ,sede.nombre
+                    --,sede.nombre
                 )tmpCC GROUP BY $comodin, tmpCC.nombreUsuario, tmpCC.id_rol
                 /*TESTING SNIPPET*/
-                ,tmpCC.sedeName
+                --,tmpCC.sedeName
             ) cancontratadas ON cancontratadas.userID = general.userID
             LEFT JOIN(
                 SELECT SUM(tmpCA.total) sumaCanA, COUNT(*) totalCanA, '1' opt, $comodin userID, tmpCA.nombreUsuario, tmpCA.id_rol
                 /*TESTING SNIPPET*/
-                ,tmpCA.sedeName
+                --,tmpCA.sedeName
                 FROM (
                     --CANCELADAS APARTADAS
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
@@ -577,7 +604,7 @@ class Reporte_model extends CI_Model {
                     SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup)) total, CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado 
 
                     /*TESTING SNIPPET*/
-                    ,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
+                    --,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeName
 
                     
                     FROM clientes cl
@@ -587,7 +614,7 @@ class Reporte_model extends CI_Model {
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
 
                     /*TESTING SNIPPET*/
-                    LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                    --LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
                     INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
@@ -600,10 +627,10 @@ class Reporte_model extends CI_Model {
                     cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                     CONVERT(VARCHAR, cl.fechaApartado, 103)
                     /*TESTING SNIPPET*/
-                    ,sede.nombre
+                    --,sede.nombre
                 ) tmpCA GROUP BY $comodin, tmpCA.nombreUsuario, tmpCA.id_rol
                  /*TESTING SNIPPET*/
-                 ,tmpCA.sedeName
+                 --,tmpCA.sedeName
             ) canapartadas ON canapartadas.userID = general.userID
 
             /*EXPRESSIONS TABLES*/
@@ -611,6 +638,10 @@ class Reporte_model extends CI_Model {
             LEFT JOIN VentasCompartidasContratadas ON VentasCompartidasContratadas.userID = contratadas.userID
             LEFT JOIN VentasCompartidasCanContratadas ON VentasCompartidasCanContratadas.userID = cancontratadas.userID
             LEFT JOIN VentasCompartidasCanApartadas  ON VentasCompartidasCanApartadas.userID = canapartadas.userID
+
+            /*SEDES*/
+            LEFT JOIN SedesContratadas ON SedesContratadas.userID = contratadas.userID
+            LEFT JOIN SedesApartadas ON SedesApartadas.userID = apartadas.userID
 
             
             
@@ -620,8 +651,8 @@ class Reporte_model extends CI_Model {
             VentasCompartidasCanApartadas.canapartadasCompartidaSuma
 
             /*TESTING SNIPPET*/
-            ,contratadas.sedeName ,apartadas.sedeName, cancontratadas.sedeName, canapartadas.sedeName
-            ,contratadas.sumaConT, contratadas.nombreUsuario
+            --,contratadas.sedeName ,apartadas.sedeName, cancontratadas.sedeName, canapartadas.sedeName
+            ,contratadas.sumaConT, contratadas.nombreUsuario, SedesContratadas.sedeName, SedesApartadas.sedeName
 
 
             ,apartadas.sumaAT, cancontratadas.sumaCanC, canapartadas.sumaCanA, contratadas.totalConT, apartadas.totalAT, cancontratadas.totalCanC, canapartadas.totalCanA,
