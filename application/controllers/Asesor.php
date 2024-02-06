@@ -3494,19 +3494,15 @@ class Asesor extends CI_Controller {
 
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
-                        : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
-                        : "";
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 34, 35" : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA $leyendaMsgValidacion" : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
 
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
-                    $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 47" : ", 35";
+                    $documentsNumber += 1;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE" : $leyendaMsgValidacion;
                 }
             }
             $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
