@@ -276,9 +276,9 @@ function fillUsersTable() {
             data: function (d) {
                 tipo = '';
                 if (d.tipo == 2 || d.tipo == "2") {
-                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
+                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
                 } else {
-                     tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
+                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
                 }
                 return tipo;
             }
