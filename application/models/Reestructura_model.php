@@ -324,7 +324,7 @@ class Reestructura_model extends CI_Model
         $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
 
         $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
-        //$arrayRegistroComision = [0,8,9];
+        
         if(!in_array($row[0]['registro_comision'],array(7))){
             $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
@@ -430,7 +430,7 @@ class Reestructura_model extends CI_Model
                         $this->email
                             ->initialize()
                             ->from('Ciudad Maderas')
-                            ->to('programador.analista24@ciudadmaderas.com')
+                            ->to('programador.analista12@ciudadmaderas.com')
                             ->subject('Notificación de liberación')
                             ->view($this->load->view('mail/reestructura/mailLiberacion', [
                                 'lote' => $row[0]['nombreLote'],
@@ -1172,7 +1172,8 @@ class Reestructura_model extends CI_Model
                 lo.idLote, 
                 cl.id_cliente, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', apellido_materno)) END nombreCliente,
-                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion
+                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion,
+                lo.idStatusLote
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
@@ -1181,7 +1182,7 @@ class Reestructura_model extends CI_Model
                 LEFT JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote 
                 LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
             WHERE 
-                lo.idStatusLote = 18"
+                lo.idStatusLote IN (18,103)"
             )->result();
     }
 
@@ -1249,5 +1250,27 @@ class Reestructura_model extends CI_Model
 		    WHERE lo.status = 1 AND lo.idStatusContratacion <= 8
             ORDER BY lo.nombreLote"
         )->result_array();
+    }
+
+    public function setSolicitudCancelacion($dataPost){
+        $usuario = $this->session->userdata('id_usuario');
+        $obsSolicitudCancel = $dataPost['obsSolicitudCancel'];
+        $idLote = $dataPost['idLote'];
+        $query = $this->db->query("UPDATE lotes SET idStatusLote = '103',  comentarioReubicacion = '" . $obsSolicitudCancel . "', usuario = ".$usuario." where idLote = ".$idLote." ");
+
+        $this->email
+            ->initialize()
+            ->from('Ciudad Maderas')
+            ->to('programador.analista12@ciudadmaderas.com')
+            ->subject('Notificación de solicitud de cancelación reestructura')
+            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                'lote' => $datos['idLote'],
+                'fechaSolicitud' => date('Y-m-d H:i:s'),
+                'Observaciones' => $datos['obsSolicitudCancel']
+            ], true));
+
+        $this->email->send();
+
+        return $query;
     }
 }
