@@ -3113,9 +3113,32 @@ class Reestructura extends CI_Controller{
         $this->load->view('template/header');
         $this->load->view("reestructura/cargaContratoReubFirmado_view");
     }
+
     public function getLotesParaCargarContratoReubFirmado() {
         $data = $this->Reestructura_model->getLotesParaCargarContratoReubFirmado();
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
+    public function setSolicitudCancelacion(){
+		$dataPost = $_POST;
+        $data = $this->Reestructura_model->setSolicitudCancelacion($dataPost);
+        if ($update == TRUE) {
+			$response['message'] = 'SUCCESS';
+			echo json_encode(1);
+		} else {
+			$response['message'] = 'ERROR';
+			echo json_encode(0);
+		} 
+    }
+
+    public function returnToRestructure(){
+		$dataPost = $_POST;
+        $datos["observaciones"] = $dataPost['observaciones'];
+		$datos["idLote"] = $dataPost['idLote'];
+		$datos["usuario"] = $this->session->userdata('id_usuario');
+		$datos["idStatusLote"] = 2;
+
+        $update = $this->General_model->updateRecord('lotes', $datos, 'idLote', $dataPost['idLote']);
+        echo ($update) ? json_encode(1) : json_encode(0);
+    }
 }
