@@ -52,14 +52,14 @@
 
 
 	.switch {
-	--button-width: 5.5em;
-	--button-height: 3em;
-	--toggle-diameter: 2.5em;
+	--button-width:	2.5em;
+	--button-height: 1.5em;
+	--toggle-diameter: 1.5em;
 	--button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
-	--toggle-shadow-offset: 17px;
-	--toggle-wider: 6em;
-	--color-grey: #fc7474;
-	--top: 5;
+	--toggle-shadow-offset: 3px;
+	--toggle-wider: 1em;
+	--color-grey: #b8babf;
+	--top: 1;
 	--color-green: #003d82;
 	}
 
@@ -107,6 +107,53 @@
 	.switch input[type="checkbox"]:checked:active + .slider::after {
 	transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
 	}
+	/* .boxOnOff{
+		width: 100%;
+		display: flex;
+		background-color: $white;
+		padding: 5px 7px;
+		border-radius: 27px;
+		justify-content: space-between;
+		.switch-label{
+		cursor: pointer;
+		}
+	} */
+
+	/* .switch-label:before, .switch-label:after {
+        content: "";
+        position: absolute;
+        margin: 0;
+        outline: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        transition: all 0.3s ease;
+      }
+      .switch-label:before {
+        width: 25%;
+        height: 14px;
+        background-color: $platinumScroll;
+        border-radius: 8px;
+      }
+      .switch-label:after {
+        width: 15px;
+        height: 15px;
+        background-color: $white;
+        border-radius: 50%;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
+      }
+      .switch-label .toggle--on {
+        display: none;
+      }
+      .switch-label .toggle--off {
+        display: inline-block;
+      }
+      .switch-input:checked + .switch-label:before {
+        background-color: #A5D6A7;
+      }
+      .switch-input:checked + .switch-label:after {
+        background-color: $green;
+        transform: translate(80%, -50%);
+      } */
 
 </style>
 
@@ -134,45 +181,61 @@
 					<form nombre="claveNuevoMotivo" id="claveNuevoMotivo" >
 					<div class="modal-body">
 						<div class="form-group row">
-
-							
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<label class="control-label">Nuevo motivo (<b class="text-danger">*</b>)</label>
 								<input class="form-control input-gral" type="text" step="any" required  id="MotivoAlta" name="MotivoAlta">
 							</div>
-							<div class="col-md-6" style="padding-top:30px;">
+							<div class="col-md-2" style="padding-top:18px;">
+							<!-- <div class="boxOnOff">
+								<input type="checkbox" id="nombreSwitch" class="switch-input d-none" onclick="turnOnOff(this)">
+								<label for="nombreSwitch" class="switch-label"></label>
+		
+							</div> -->
 								<div class="col-md-4">
 									<label class="switch">
 									<input class="nombreSwitch" id="nombreSwitch" name="nombreSwitch" type="checkbox">
 									<span class="slider"></span>
 									</label>
 								</div>
-								<div id="textoSwitch" name="textoSwitch" class="col-md-8">
-									<label  id="siTexto" name="siTexto" class="lbl-aqua hide">Evidencia Especifica </label>
-									<label  id="noTexto" name="noTexto" class="lbl-warning">Evidencia Generica </label>
-									<br>
-									<span class="small text-gray textDescripcion hide" id="siTextoDescripcion" name="siTextoDescripcion">
-										Al generar un nuevo prestamo sera solicitada la evidencia.
+							</div>
+							<div id="textoSwitch" name="textoSwitch" class="col-md-10 " style="padding-top:15px;">
+									<span class="small text-gray textDescripcion hide" style="font-style: italic;" id="siTextoDescripcion" name="siTextoDescripcion">
+											Al generar un nuevo prestamo sera solicitada la evidencia.
+										</span>
+									<span class="small text-gray textDescripcion" style="font-style: italic;" id="noTextoDescripcion" name="noTextoDescripcion">
+											Es necesario subir la evidencia para el nuevo motivo.
 									</span>
-									<span class="small text-gray textDescripcion" id="noTextoDescripcion" name="noTextoDescripcion">
-										Es necesario subir la evidencia para el nuevo motivo.
-									</span>
+							</div>
+							<div class="col-md-12">
+								<div class="col-md-6">
+									<label class="control-label">Elije el color nuevo (<b class="text-danger">*</b>)</label>
+									<input type="color" id="body" name="body" value="#f6b73c" style=" height: 20px; width: 50px; border: none;" />
+								</div>
+								<div class="col-md-6">
+									<p style="padding-top:12px;"><span class="label"  style="color: #f6b73c; border: none; background-color:rgba(14, 98, 81, 0.0941176471); " id="textoPruebas" name="textoPruebas"  > 
+										TEXTO DE PRUEBA</span></p>
 								</div>
 							</div>
 							<br>
 							<br>
-							<div class="col-md-6" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >
-								<label class="input-group-btn">
+							<div class="col-md-12" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >
+								<div class="file-gph">
+									<input class="d-none" type="file" id="evidenciaSwitch" onchange="changeName(this)" name="evidenciaSwitch"  >
+									<input class="file-name overflow-text" id="evidenciaSwitch" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidenciaSwitch"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+								</div>
+								
+								<!-- <label class="input-group-btn">
                                     <span class="btn btn-blueMaderas btn-file">Seleccionar archivo&hellip;
                                         <input type="file" name="evidenciaSwitch" id="evidenciaSwitch" style="visibility: hidden" >
                                     </span>
 								</label>
-									<input type="text" class="form-control" readonly>
+									<input type="text" class="form-control" readonly> -->
 							</div>
 
-							<div class="col-md-6">
+							<div class="col-md-12">
 								<label class="control-label">Descripción(<b class="text-danger">*</b>)</label>
-								<textarea id="descripcionAlta" name="descripcionAlta" class="form-control input-gral" rows="3"></textarea>
+								<textarea id="descripcionAlta" name="descripcionAlta" class="text-modal" rows="3"></textarea>
 							</div>	
 						</div>
 					</div>
@@ -269,7 +332,7 @@
 								</div>
 								<input class="form-control input-gral hide" id="banderaEvidencia" type="text" name="banderaEvidencia" readonly required>
 							</div>
-							
+ 
 							<div class="form-group input-group evidenciaDIVarchivo hide" id="evidenciaDIVarchivo" name="evidenciaDIVarchivo">
 								<label class="input-group-btn">
                                     <span class="btn btn-blueMaderas btn-file">Seleccionar archivo&hellip;
@@ -376,7 +439,7 @@
 													<th>ACCIONES</th>
 												</tr>
 											</thead>
-										</table>
+											</table>
 									</div>
 								</div>
                             </div>
