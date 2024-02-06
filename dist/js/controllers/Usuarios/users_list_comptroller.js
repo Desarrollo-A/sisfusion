@@ -133,7 +133,7 @@ $('#all_users_datatable').DataTable({
             data: function (d) {
                 tipo = '';
                 if (d.tipo == 2 || d.tipo == "2") {
-                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
+                    tipo = '<span class="label lbl-sky">ECC</span>';
                 } else {
                     tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
                 }
