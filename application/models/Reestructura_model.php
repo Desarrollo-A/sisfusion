@@ -1270,9 +1270,8 @@ class Reestructura_model extends CI_Model
             ->from('Ciudad Maderas')
             ->to('programador.analista12@ciudadmaderas.com')
             ->subject('Notificación de solicitud de cancelación reestructura')
-            ->view($this->load->view('mail/reestructura/mailLiberacion', [
-                'lote' => $datos['idLote'],
-                'fechaSolicitud' => date('Y-m-d H:i:s'),
+            ->view($this->load->view('mail/reestructura/mailSolicitudCancelacion', [
+                'lote' => $datos['nombreLote'],
                 'Observaciones' => $datos['obsSolicitudCancel'],
                 'tipoCancelacion' => $tipoCancelacionNombre
 
