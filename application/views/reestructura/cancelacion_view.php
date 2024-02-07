@@ -18,6 +18,10 @@
                                 <label class="control-label overflow-hidden" for="proyecto">Observaciones</label>
                                 <textarea name="obsSolicitudCancel" id="obsSolicitudCancel" placeholder="Ingresa aquí tus comentarios" class="text-modal" required row="4"></textarea>
                             </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-2">
+                                <label class="control-label overflow-hidden" for="proyecto">Tipo de cancelación</label>
+                                <select name="tipoCancelacion" id="tipoCancelacion" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                            </div>
                         </div>
 					</div>
 					<div class="modal-footer">

@@ -12,6 +12,14 @@ $(document).ready(function () {
         $("#proyecto").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
+
+     //OBTIENE LOS TIPOS DE CANCELACIONES
+     $.post(`${general_base_url}General/getOpcionesPorCatalogo/117`, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            $("#tipoCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $("#tipoCancelacion").selectpicker('refresh');
+    }, 'json');
 });
 
 $('#proyecto').change(function () {
@@ -42,7 +50,9 @@ $(document).on('click', '.cancel', function () {
 $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
     let obsSolicitudCancel = $("#obsSolicitudCancel").val();
-    if (obsSolicitudCancel.trim() == '' ) {
+    let tipoCancelacion = $("#tipoCancelacion").val();
+    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
+    if (obsSolicitudCancel.trim() == '' || tipoCancelacion == '') {
         alerts.showNotification("top", "right", "Asegúrate de ingresar una observación", "warning");
         return false;
     }
@@ -50,6 +60,8 @@ $(document).on('click', '#saveCancel', function () {
     $("#spiner-loader").removeClass('hide');
     datos.append("idLote", idLote);
     datos.append("obsSolicitudCancel", obsSolicitudCancel);
+    datos.append("tipoCancelacion", tipoCancelacion);
+    datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
     $.ajax({
         method: 'POST',
         url: `${general_base_url}Reestructura/setSolicitudCancelacion`,
