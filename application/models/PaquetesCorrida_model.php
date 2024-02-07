@@ -16,7 +16,7 @@ class PaquetesCorrida_model extends CI_Model
         return $this->db->query("SELECT * FROM condiciones WHERE estatus = 1")->result_array();
     }
     public  function get_lista_sedes(){
-    return $this->db->query("SELECT * FROM sedes where id_sede in(1,2,3,4,5,6,9) ORDER BY nombre");
+    return $this->db->query("SELECT * FROM sedes where id_sede in(1, 2, 3, 4, 5, 6, 9, 16) ORDER BY nombre");
     }
     
     public function getResidencialesList($id_sede)

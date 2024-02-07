@@ -163,6 +163,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
+				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599)";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
@@ -374,6 +377,9 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

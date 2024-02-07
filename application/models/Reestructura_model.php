@@ -1161,8 +1161,8 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
-    public function getReporteCancelaciones($id_proyecto) {
-        $filtroProyecto = $id_proyecto != 0 ? "AND re.idResidencial = $id_proyecto" : "";
+    public function getReporteCancelaciones() {
+        $validacionCancelacionEnProceso = $this->session->userdata('id_rol') == 33 ? "OR (lo.solicitudCancelacion = 2 AND lo.idStatusLote IN (103))" : "";
         return $this->db->query(
             "SELECT 
                 re.nombreResidencial, 
@@ -1173,16 +1173,19 @@ class Reestructura_model extends CI_Model
                 cl.id_cliente, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', apellido_materno)) END nombreCliente,
                 ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion,
-                lo.idStatusLote, lo.solicitudCancelacion
+                lo.idStatusLote, 
+                lo.solicitudCancelacion,
+                CASE WHEN lo.solicitudCancelacion = 2 THEN 'PENDIENTE VALIDACIÓN' ELSE 'CANCELADA' END estatusCancelacion
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial $filtroProyecto
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
                 LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.observacionLiberacion = 'CANCELACIÓN DE CONTRATO'
                 LEFT JOIN clientes cl ON cl.id_cliente = hl.id_cliente AND cl.idLote = hl.idLote 
                 LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
             WHERE 
-                lo.idStatusLote IN (18) OR lo.solicitudCancelacion = 2"
+                lo.idStatusLote IN (18) $validacionCancelacionEnProceso
+            ORDER BY CASE WHEN lo.solicitudCancelacion = 2 THEN 0 ELSE lo.solicitudCancelacion END, lo.nombreLote"
             )->result();
     }
 
