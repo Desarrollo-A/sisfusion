@@ -243,26 +243,10 @@ function fillUsersTable() {
                 }
             }
         },
-        {
-            data: function (d) {
-                return d.id_usuario;
-            }
-        },
-        {
-            data: function (d) {
-                return d.nombre;
-            }
-        },
-        {
-            data: function (d) {
-                return d.correo;
-            }
-        },
-        {
-            data: function (d) {
-                return d.telefono;
-            }
-        },
+        { data: "id_usuario" },
+        { data: "nombre" },
+        { data: "correo" },
+        { data: "telefono" },
         {
             data: function (d) {
                 var propiedadExtra = '';
@@ -283,11 +267,7 @@ function fillUsersTable() {
                 return tipo;
             }
         },
-        {
-            data: function (d) {
-                return d.sede;
-            }
-        },
+        { data: "sede" },
         {
             data: function (d) {
                 return d.jefe_directo == '  ' ? 'NO APLICA' : d.jefe_directo;

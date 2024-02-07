@@ -109,41 +109,23 @@ $('#all_users_datatable').DataTable({
                 }
             }
         },
-        { data: function (d) {
-                return d.id_usuario;
-            }
-        },
-        { data: function (d) {
-                return d.nombre;
-            }
-        },
-        { data: function (d) {
-                return d.correo;
-            }
-        },
-        { data: function (d) {
-                return d.telefono;
-            }
-        },
-        { data: function (d) {
-                return d.puesto;
-            }
-        },
+        { data: "id_usuario" },
+        { data: "nombre" },
+        { data: "correo" },
+        { data: "telefono" },
+        { data: "puesto" },
         {
             data: function (d) {
                 tipo = '';
                 if (d.tipo == 2 || d.tipo == "2") {
-                    tipo = '<span class="label lbl-sky">ECC</span>';
+                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
                 } else {
                     tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
                 }
                 return tipo;
             }
         },
-        { data: function (d) {
-                return d.sede;
-            }
-        },
+        { data: "sede" },
         { 
             data: function (d) {
                 if (id_rol_general == 49) {
@@ -159,8 +141,7 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-            
-            return '<span class="label lbl-azure">'+ d.nacionalidad+ '</span>';
+                return '<span class="label lbl-azure">'+ d.nacionalidad+ '</span>';
             }
         },
         { data: function (d) {
