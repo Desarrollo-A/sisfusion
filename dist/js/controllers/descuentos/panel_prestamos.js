@@ -217,6 +217,12 @@ $("#tabla_prestamos").ready(function () {
                 var to1 = formatMoney(total);
                 var to2 = formatMoney(totalAbonado);
                 var to3 = formatMoney(totalPendiente);
+                // alert(13)
+                texto1 = "totalPendiente";
+                texto2 = "totalp";
+                texto3 = "totalAbonado";
+                
+                // count(totalPendiente,texto3)
                 document.getElementById("totalPendiente").textContent = to3;
                 document.getElementById("totalp").textContent = to1;
                 document.getElementById("totalAbonado").textContent = to2;
@@ -243,6 +249,11 @@ $("#tabla_prestamos").ready(function () {
         var to = formatMoney(total);
         var to2 = formatMoney(total2);
         var to3 = formatMoney(total3);
+        texto1 = "totalPendiente";
+        texto2 = "totalp";
+        texto3 = "totalAbonado";
+        // alert(12)
+        // count(total,total2,total3 )
         document.getElementById("totalPendiente").textContent = to3;
         document.getElementById("totalp").textContent = to;
         document.getElementById("totalAbonado").textContent = to2;
@@ -491,9 +502,17 @@ $("#tabla_prestamos").ready(function () {
         const Modalfooter = $('#myModalDelete .modal-footer');
         Modalbody.html('');
         Modalfooter.html('');
-        Modalbody.append(`<input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>`);
-        Modalfooter.append(`<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
+        Modalbody.append(`
+            <input type="hidden" value="${idPrestamo}" name="idPrestamo" id="idPrestamo"> 
+                <h4 class="lbl-orangeYellow center-align">¿Está seguro que desea borrar el préstamo de <br>  ${nombreUsuario} ?
+                </h4>`);
+        Modalfooter.append(`
+            <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >
+                Cerrar
+            </button>
+			<button  type="submit" name=/"disper_btn"  id="dispersar" class="btn btn-primary">
+                Aceptar
+            </button>`);
         $("#myModalDelete").modal();
     });
 

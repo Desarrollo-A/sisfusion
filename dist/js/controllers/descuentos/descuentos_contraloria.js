@@ -174,7 +174,7 @@ $("#tabla_descuentos").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'DESCUENTOS SIN APLICAR',
             exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8],
+                columns: [0,1,2,3,4,6,7,8],
                 format: {
                     header:  function (d, columnIdx) {
                             return titulos[columnIdx];

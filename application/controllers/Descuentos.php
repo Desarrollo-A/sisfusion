@@ -344,7 +344,7 @@ class Descuentos extends CI_Controller
                     $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
                     $date = date('dmYHis');
                     $expediente = $date."_".$aleatorio."_".$namedoc;
-                    $ruta = "UPLOADS\EvidenciaGenericas/";
+                    $ruta = "UPLOADS/EvidenciaGenericas/";
                 }
 
                 if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
@@ -396,7 +396,7 @@ class Descuentos extends CI_Controller
                         $respuesta =  array(
                         "response_code" => 200, 
                         "response_type" => 'success',
-                        "message" => "Se agrego el nuevo motivo");
+                        "message" => "Se agregó el nuevo motivo");
                     } else{
                         $respuesta =  array(
                         "response_code" => 411, 

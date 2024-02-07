@@ -1,4 +1,5 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/reportDasboard.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 
@@ -19,6 +20,8 @@
 				</div>
 			</div>
 		</div>
+
+		
 		<div class="modal fade" id="ModalAddMotivo" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -48,7 +51,7 @@
 							</div>
 							<div id="textoSwitch" name="textoSwitch" class="col-md-10 " style="padding-top:15px;">
 									<span class="small text-gray textDescripcion hide" style="font-style: italic;" id="siTextoDescripcion" name="siTextoDescripcion">
-											Al generar un nuevo prestamo sera solicitada la evidencia.
+											Al generar un nuevo préstamo será solicitada la evidencia.
 										</span>
 									<span class="small text-gray textDescripcion" style="font-style: italic;" id="noTextoDescripcion" name="noTextoDescripcion">
 											Es necesario subir la evidencia para el nuevo motivo.
@@ -56,7 +59,7 @@
 							</div>
 							<div class="col-md-12">
 								<div class="col-md-6">
-									<label class="control-label">Elije el color nuevo (<b class="text-danger">*</b>)</label>
+									<label class="control-label">Elige el color nuevo (<b class="text-danger">*</b>)</label>
 									<input type="color" id="body" name="body" value="#f6b73c" style=" height: 20px; width: 50px; border: none;" />
 								</div>
 								<div class="col-md-6">
@@ -216,37 +219,42 @@
             </div>
         </div>
 		
+	
 		<div class="content boxContent">
+			
 			<div class="container-fluid">
-				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="row "  style="margin-bottom: 2px">
+				
+					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0"><
 						<div class="card">
-							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="material-icons">dashboard</i>
-                            </div>
+							<br>
+						<h3 class="h3 card-title center-align">Préstamos y penalizaciones</h3>		
+						<div class="row">
+				<?php $this->load->view('descuentos/complementos/dash_panel_prestamos_comple'); ?>
+							
+				</div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
-								
+													
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
-                                                    <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Préstamos activos:</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p> -->
                                                 </div>
 												
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Abonado :</h4>
-                                                    <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Abonado :</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p> -->
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Pendiente :</h4>
-                                                    <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Pendiente :</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -275,7 +283,7 @@
 													<th>ID USUARIO</th>
 													<th>USUARIO</th>
 													<th>MONTO</th>
-													<th>NUMERO</th>
+													<th>NÚMERO</th>
 													<th>PAGO CORRESPONDIENTE</th>
 													<th>ABONADO</th>
 													<th>PENDIENTE</th>
@@ -321,6 +329,9 @@
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
+	
+	<script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/dash_panel_prestamos_comple.js"></script>
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>
