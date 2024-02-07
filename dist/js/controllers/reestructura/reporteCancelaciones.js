@@ -1,13 +1,5 @@
 $(document).ready(function () {
-    $("#tabla_cancelacion").addClass('hide');
-    $.post(general_base_url + "Reestructura/lista_proyecto", function (data) {
-        $("#catalogoLiberar").append($('<option>').val(0).text('SELECCIONAR TODOS'));
-        for (var i = 0; i < data.length; i++) {
-            $("#catalogoLiberar").append($('<option>').val(data[i]['idResidencial']).text(data[i]['descripcion'].toUpperCase()));
-        }
-        $("#catalogoLiberar").selectpicker('refresh');
-        $('#spiner-loader').addClass('hide');
-    }, 'json');
+    cancelacionTable();
 });
 
 $('#catalogoLiberar').change(function () {
@@ -28,7 +20,7 @@ $('#tabla_cancelacion thead tr:eq(0) th').each(function (i) {
     });
 });
 
-function cancelacionTable(index_proyecto) {
+function cancelacionTable() {
     tabla_cancelacion = $("#tabla_cancelacion").DataTable({
         width: '100%',
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -39,7 +31,7 @@ function cancelacionTable(index_proyecto) {
             titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6],
+                columns: id_rol_general == 33 ? [0, 1, 2, 3, 4, 5, 6, 7] : [0, 1, 2, 3, 4, 5, 6],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -78,11 +70,15 @@ function cancelacionTable(index_proyecto) {
                 }
             },
             {
+                visible: (id_rol_general == 33) ? true : false,
                 data: function (d) {
-                    html = (d.idStatusLote == 103 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;
-
-                    return html;
-                    
+                    return `<span class='label ${d.solicitudCancelacion == 2 ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
+                }
+            },
+            {
+                visible: (id_rol_general == 33) ? true : false,
+                data: function (d) {
+                    return (d.idStatusLote == 103 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;                   
                 }
             }
 
@@ -98,7 +94,7 @@ function cancelacionTable(index_proyecto) {
             dataSrc: "",
             type: "POST",
             cache: false,
-            data: { index_proyecto: index_proyecto}
+            data: {}
         },
         initComplete: function () {
             $("#spiner-loader").addClass('hide');
@@ -121,7 +117,7 @@ $(document).on('click', '.cancel', function () {
     $('#cancelarLote').modal();
 });
 
-$(document).on('click', '.returnBtn', function () {
+    $(document).on('click', '.returnBtn', function () {
     $('#idLote').val($(this).attr('data-idLote'));
     $('#obsLiberacion').val('');
     $('#return').modal();
@@ -164,7 +160,7 @@ $(document).on('click', '#saveCancel', function () {
 });
 
 
-$(document).on('click', '#saveCancel', function () {
+$(document).on('click', '#returnReestructura', function () {
     let idLote = $("#idLoteR").val();
     let observaciones = $("#observaciones").val();
     if (observaciones.trim() == '') {

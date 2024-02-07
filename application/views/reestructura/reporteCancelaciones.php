@@ -62,15 +62,6 @@
                             <div class="card-content">
                                 <h3 class="card-title center-align">Cancelaciones por reestructuración</h3>
                                 <div class="toolbar">
-                                    <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                            <div class="form-group">
-                                                <label class="control-label overflow-hidden" for="proyecto">Proyecto</label>
-                                                <select name="catalogoLiberar" id="catalogoLiberar" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6"></div>
-                                    </div>
                                     <div class="form-group">
                                         <table class="table-striped table-hover" id="tabla_cancelacion" name="tabla_cancelacion">
                                             <thead>
@@ -82,6 +73,7 @@
                                                     <th>ID LOTE</th>
                                                     <th>COMENTARIO</th>
                                                     <th>TIPO DE CANCELACIÓN</th>
+                                                    <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

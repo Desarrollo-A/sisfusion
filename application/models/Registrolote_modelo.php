@@ -3458,6 +3458,9 @@
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
 					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
+				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+					$id_lider = $id_lider . ', 12027, 13059, 2599';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

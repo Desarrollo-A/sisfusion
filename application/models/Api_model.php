@@ -189,8 +189,12 @@ class Api_model extends CI_Model
         return $query->result_array();
     }
 
-    public function getListaResidenciales()
-    {
-        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)")->result_array();
+    public function getListaResidenciales() {
+        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25)")->result_array();
     }
+
+    public function validacionIdSalesforce($id_salesforce) {
+        return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
+    }
+
 }
