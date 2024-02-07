@@ -63,6 +63,7 @@ function cancelacionTable() {
             { data: 'nombreLote' },
             { data: 'nombreCliente' },
             { data: 'idLote' },
+            { data: 'comentarioReubicacion' },
             { data: 'comentarioLiberacion' },
             {
                 data: function (d) {
@@ -78,7 +79,7 @@ function cancelacionTable() {
             {
                 visible: (id_rol_general == 33) ? true : false,
                 data: function (d) {
-                    return (d.idStatusLote == 103 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;                   
+                    return (d.solicitudCancelacion == 2 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;                   
                 }
             }
 
@@ -117,8 +118,8 @@ $(document).on('click', '.cancel', function () {
     $('#cancelarLote').modal();
 });
 
-    $(document).on('click', '.returnBtn', function () {
-    $('#idLote').val($(this).attr('data-idLote'));
+$(document).on('click', '.returnBtn', function () {
+    $('#idLoteR').val($(this).attr('data-idLote'));
     $('#obsLiberacion').val('');
     $('#return').modal();
 });
@@ -143,8 +144,7 @@ $(document).on('click', '#saveCancel', function () {
         contentType: false,
         success: function (data) {
             if (data == 1) {
-                $('#tabla_lotes').DataTable().ajax.reload(null, false);
-                $("#spiner-loader").addClass('hide');
+                $('#tabla_cancelacion').DataTable().ajax.reload(null, false);                $("#spiner-loader").addClass('hide');
                 $('#cancelarLote').modal('hide');
                 alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
                 $('#idLote').val('');
@@ -179,10 +179,10 @@ $(document).on('click', '#returnReestructura', function () {
         contentType: false,
         success: function (data) {
             if (data == 1) {
-                $('#tabla_lotes').DataTable().ajax.reload(null, false);
+                $('#tabla_cancelacion').DataTable().ajax.reload(null, false);
                 $("#spiner-loader").addClass('hide');
-                $('#cancelarLote').modal('hide');
-                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+                $('#return').modal('hide');
+                alerts.showNotification("top", "right", "Opción editada correctamente.", "success");
                 $('#idLote').val('');
                 $('#obsLiberacion').val('');
             }

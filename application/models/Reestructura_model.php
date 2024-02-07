@@ -314,8 +314,9 @@ class Reestructura_model extends CI_Model
         }
         
         $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
-        $id_cliente = $this->db->query("SELECT id_cliente,plan_comision, oxc.nombre as nombreSolicitud FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ")  INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.tipoCancelacion AND id_catalogo = 117")->result_array();
-        
+        $id_cliente = $this->db->query("SELECT id_cliente,plan_comision, oxc.nombre as tipoCancelacion FROM clientes 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = tipoCancelacion AND id_catalogo = 117
+        WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
         $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
         $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
         $this->db->query("UPDATE clientes SET status = 0, fecha_modificacion = GETDATE(), modificado_por = '$modificado_por', tipoLiberacion = ".$datos['tipo'].", totalNeto2Cl = ".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
@@ -422,7 +423,7 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
                     if(!in_array($datos["tipo"],array(7, 8, 9))) {
@@ -435,7 +436,7 @@ class Reestructura_model extends CI_Model
                                 'lote' => $row[0]['nombreLote'],
                                 'fechaApartado' => $datos['fechaLiberacion'],
                                 'Observaciones' => $datos['obsLiberacion'],
-                                'tipoCancelacion' => $id_cliente[0]['nombreSolicitud']
+                                'tipoCancelacion' => $id_cliente[0]['tipoCancelacion']
                             ], true));
                 
                         $this->email->send();
@@ -1162,7 +1163,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getReporteCancelaciones() {
-        $validacionCancelacionEnProceso = $this->session->userdata('id_rol') == 33 ? "OR (lo.solicitudCancelacion = 2 AND lo.idStatusLote IN (103))" : "";
+        $validacionCancelacionEnProceso = $this->session->userdata('id_rol') == 33 ? "OR (lo.solicitudCancelacion = 2)" : "";
         return $this->db->query(
             "SELECT 
                 re.nombreResidencial, 
@@ -1175,6 +1176,7 @@ class Reestructura_model extends CI_Model
                 ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion,
                 lo.idStatusLote, 
                 lo.solicitudCancelacion,
+                lo.comentarioReubicacion,
                 CASE WHEN lo.solicitudCancelacion = 2 THEN 'PENDIENTE VALIDACIÓN' ELSE 'CANCELADA' END estatusCancelacion
             FROM 
                 lotes lo 
@@ -1261,12 +1263,13 @@ class Reestructura_model extends CI_Model
         $obsSolicitudCancel = $dataPost['obsSolicitudCancel'];
         $nombreLote = $dataPost['nombreLote'];
 
-        $tipoCancelacion = isset($datos['tipoCancelacion']) ? $datos['tipoCancelacion'] : 0;
-        $tipoCancelacionNombre = $tipoCancelacion == 0 ? '' : $datos['tipoCancelacionNombre'];
-        $this->db->trans_begin();
+        $tipoCancelacion = isset($dataPost['tipoCancelacion']) ? $dataPost['tipoCancelacion'] : 0;
+        $tipoCancelacionNombre = $tipoCancelacion == 0 ? '' : $dataPost['tipoCancelacionNombre'];
         
+        $this->db->trans_begin();
         $this->db->query("UPDATE lotes SET solicitudCancelacion = '2', comentarioReubicacion = '" . $obsSolicitudCancel . "', usuario = ".$usuario." where idLote = ".$idLote." ");
-        $this->db->query("UPDATE clientes SET tipoCancelacion = $tipoCancelacion where idLote = ".$idLote." and status = 1");
+        $data = $this->db->query("UPDATE clientes SET tipoCancelacion = $tipoCancelacion where idLote = ".$idLote." and status = 1");
+        
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
