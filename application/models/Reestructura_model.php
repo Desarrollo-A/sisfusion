@@ -1259,6 +1259,8 @@ class Reestructura_model extends CI_Model
         $usuario = $this->session->userdata('id_usuario');
         $idLote = $dataPost['idLote'];
         $obsSolicitudCancel = $dataPost['obsSolicitudCancel'];
+        $nombreLote = $dataPost['nombreLote'];
+
         $tipoCancelacion = isset($datos['tipoCancelacion']) ? $datos['tipoCancelacion'] : 0;
         $tipoCancelacionNombre = $tipoCancelacion == 0 ? '' : $datos['tipoCancelacionNombre'];
         $this->db->trans_begin();
@@ -1271,10 +1273,9 @@ class Reestructura_model extends CI_Model
             ->to('programador.analista12@ciudadmaderas.com')
             ->subject('Notificación de solicitud de cancelación reestructura')
             ->view($this->load->view('mail/reestructura/mailSolicitudCancelacion', [
-                'lote' => $datos['nombreLote'],
-                'Observaciones' => $datos['obsSolicitudCancel'],
+                'lote' => $nombreLote,
+                'Observaciones' => $obsSolicitudCancel,
                 'tipoCancelacion' => $tipoCancelacionNombre
-
             ], true));
         $this->email->send();
 
