@@ -42,6 +42,7 @@ $('#tabla_lotes thead tr:eq(0) th').each(function (i) {
 
 $(document).on('click', '.cancel', function () {
     $('#idLote').val($(this).attr('data-idLote'));
+    $('#nombreLote').val($(this).attr('data-nombreLote'));
     $('#obsSolicitudCancel').val('');
     $('#tipoCancelacion').val('').selectpicker('refresh');
     $('#cancelarLote').modal();
@@ -49,16 +50,18 @@ $(document).on('click', '.cancel', function () {
 
 $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
+    let nombreLote = $("#nombreLote").val();
     let obsSolicitudCancel = $("#obsSolicitudCancel").val();
     let tipoCancelacion = $("#tipoCancelacion").val();
     let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
     if (obsSolicitudCancel.trim() == '' || tipoCancelacion == '') {
-        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación", "warning");
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
         return false;
     }
     var datos = new FormData();
     $("#spiner-loader").removeClass('hide');
     datos.append("idLote", idLote);
+    datos.append("nombreLote", nombreLote);
     datos.append("obsSolicitudCancel", obsSolicitudCancel);
     datos.append("tipoCancelacion", tipoCancelacion);
     datos.append("tipoCancelacionNombre", tipoCancelacionNombre);

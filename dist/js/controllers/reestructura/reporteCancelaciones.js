@@ -127,7 +127,7 @@ $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
     let obsLiberacion = $("#obsLiberacion").val();
     if (obsLiberacion.trim() == '') {
-        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
+        alerts.showNotification("top", "right", "Asegúrate de ingresar una observación.", "warning");
         return false;
     }
     var datos = new FormData();
