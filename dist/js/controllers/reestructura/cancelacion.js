@@ -76,7 +76,7 @@ $(document).on('click', '#saveCancel', function () {
                 $('#tabla_lotes').DataTable().ajax.reload(null, false);
                 $("#spiner-loader").addClass('hide');
                 $('#cancelarLote').modal('hide');
-                alerts.showNotification("top", "right", "Opcion editada correctamente.", "success");
+                alerts.showNotification("top", "right", "Opción editada correctamente.", "success");
                 $('#idLote').val('');
                 $('#obsSolicitudCancel').val('');
             }
