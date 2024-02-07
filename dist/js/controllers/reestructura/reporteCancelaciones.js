@@ -121,7 +121,7 @@ $(document).on('click', '.cancel', function () {
     $('#cancelarLote').modal();
 });
 
-$(document).on('click', '.returnBtn', function () {
+    $(document).on('click', '.returnBtn', function () {
     $('#idLote').val($(this).attr('data-idLote'));
     $('#obsLiberacion').val('');
     $('#return').modal();
@@ -164,7 +164,7 @@ $(document).on('click', '#saveCancel', function () {
 });
 
 
-$(document).on('click', '#saveCancel', function () {
+$(document).on('click', '#returnReestructura', function () {
     let idLote = $("#idLoteR").val();
     let observaciones = $("#observaciones").val();
     if (observaciones.trim() == '') {

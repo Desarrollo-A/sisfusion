@@ -1284,4 +1284,22 @@ class Reestructura_model extends CI_Model
             return true;
         }
     }
+
+    public function returnToRestructure($data){
+        $comentarioReubicacion = $data['observaciones'];
+		$idLote = $data['idLote'];
+		$idUsuario = $this->session->userdata('id_usuario');
+
+        $this->db->trans_begin();
+        $this->db->query("UPDATE lotes SET solicitudCancelacion = '1', comentarioReubicacion = '" . $comentarioReubicacion . "', usuario = ".$idUsuario." where idLote = ".$idLote." ");
+        $this->db->query("UPDATE clientes SET tipoCancelacion = 0 where idLote = ".$idLote." and status = 1");
+        
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+    }
 }
