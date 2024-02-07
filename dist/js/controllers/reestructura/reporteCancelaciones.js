@@ -8,14 +8,6 @@ $(document).ready(function () {
         $("#catalogoLiberar").selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
     }, 'json');
-
-    //OBTIENE LOS TIPOS DE CANCELACIONES
-    $.post(`${general_base_url}General/getOpcionesPorCatalogo/117`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#tipoCancelacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-        }
-        $("#tipoCancelacion").selectpicker('refresh');
-    }, 'json');
 });
 
 $('#catalogoLiberar').change(function () {
@@ -126,7 +118,6 @@ function cancelacionTable(index_proyecto) {
 $(document).on('click', '.cancel', function () {
     $('#idLote').val($(this).attr('data-idLote'));
     $('#obsLiberacion').val('');
-    $('#tipoCancelacion').val('').selectpicker('refresh');
     $('#cancelarLote').modal();
 });
 
@@ -139,9 +130,7 @@ $(document).on('click', '.returnBtn', function () {
 $(document).on('click', '#saveCancel', function () {
     let idLote = $("#idLote").val();
     let obsLiberacion = $("#obsLiberacion").val();
-    let tipoCancelacion = $("#tipoCancelacion").val();
-    let tipoCancelacionNombre = $('select[name="tipoCancelacion"] option:selected').text();
-    if (obsLiberacion.trim() == '' || tipoCancelacion == '') {
+    if (obsLiberacion.trim() == '') {
         alerts.showNotification("top", "right", "Asegúrate de ingresar una observación y seleccionar el tipo de liberación..", "warning");
         return false;
     }
@@ -150,8 +139,6 @@ $(document).on('click', '#saveCancel', function () {
     datos.append("idLote", idLote);
     datos.append("obsLiberacion", obsLiberacion);
     datos.append("tipoLiberacion", 3);
-    datos.append("tipoCancelacion", tipoCancelacion);
-    datos.append("tipoCancelacionNombre", tipoCancelacionNombre);
     $.ajax({
         method: 'POST',
         url: `${general_base_url}Reestructura/aplicarLiberacion`,
