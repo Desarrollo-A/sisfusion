@@ -761,7 +761,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
         LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
         INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (15, 16) AND lo.status = 1
+        WHERE lo.idStatusLote IN (15, 16, 21, 20) AND lo.status = 1
         UNION ALL
         SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
         lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
@@ -823,7 +823,7 @@ class Reestructura_model extends CI_Model
     public function getListaUsuariosReasignacionJuridico() {
         return $this->db->query("SELECT id_usuario, UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno)) nombreUsuario 
         FROM usuarios 
-        WHERE estatus = 1 AND id_usuario IN (2762, 2747, 13691)
+        WHERE estatus = 1 AND id_usuario IN (2762, 2747, 13691, 2765, 10463, 2876)
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 
