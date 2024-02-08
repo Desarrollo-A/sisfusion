@@ -110,7 +110,7 @@
 						<div class="form-group row">
 							<div class="col-md-12">
 								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker select-gral " name="tipoD" id="tipoD" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%"  data-live-search="true" required>
+								<select class="selectpicker select-gral " name="tipoD" id="tipoD" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%"  data-live-search="true" readonly required>
 									<?php foreach($descuentos as $descuento){ ?>
 									<option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
 									<?php } ?>
@@ -329,7 +329,6 @@
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/TweenMax.min.js"></script>
 	
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/dash_panel_prestamos_comple.js"></script>
 	<script type="text/javascript">
