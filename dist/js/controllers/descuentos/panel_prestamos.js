@@ -25,7 +25,6 @@ function llenado(){
 function MostrarArchivo(tipo){
     var com2 = new FormData(); 
         com2.append("id_opcion", tipo);
-        
     $.ajax({
         url: 'idOpcionMotivosRelacionPrestamos',
         data: com2,
@@ -40,45 +39,40 @@ function MostrarArchivo(tipo){
             if(data.evidencia === true || data.evidencia === 'true'){
                 $('#evidenciaDIVarchivo').removeClass('hide');      
                 valorGlobal  = 1 ;
-                
             }else if(data.evidencia === ''){
-        
                 $('#evidenciaDIVarchivo').addClass('hide');
                 valorGlobal  = 0 ;
-                
-
+            }else{
+                let cordinador = data.evidencia.split(".",2);
+                console.log(cordinador);
+                for(let i = 0;cordinador.length > i; i++)
+                {
+                    if(cordinador[i] == 'pdf' || cordinador[i] == 'PDF'  ){
+                        $('#evidenciaDIVarchivo').addClass('hide');
+                        valorGlobal  = 0 ;
+                    }
+                }
             }
-            
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+        },  
+        error: function () { alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");  }
     });
 }
 
 $('#tipo').change(function (ruta) {
     $('#spiner-loader').removeClass('hide');
-    // document.getElementById("users").innerHTML = '';
-    
+    // document.getElementById("users").innerHTML = '';    
     tipo = $('#tipo').val();
     let m = $('#monto').val();
     let texto = '';
-
     MostrarArchivo(tipo);
     if (tipo == 18) {
         texto = 'Esté es un pago recurrente, el cual se hará cada mes hasta cubrir el monto prestado.'
         document.getElementById("numeroP").value = 1;
-
-        if (m != '') {
-            verificar();
-        }
+        if (m != '') {verificar();}
     } else {
         texto = 'Esté es un pago único que se hará en una sola exhibición.'
         document.getElementById("numeroP").value = 1;
-
-        if (m != '') {
-            verificar();
-        }
+        if (m != '') {verificar();}
     }
     
     document.getElementById("texto").innerHTML = texto;
@@ -554,9 +548,14 @@ $("#tabla_prestamos").ready(function () {
         tipoD      = document.getElementById("tipoD").value;
         bandera_request = comentario == '' ? false : true;
         pagoEdit = pagoEdit.replace(/,/g, "");
+        pagoEdit = pagoEdit.replace(/[$]/g,'');
         montoPagos = montoPagos.replace(/,/g, "");
+        montoPagos = montoPagos.replace(/[$]/g,'');
         numeroPagos = numeroPagos.replace(/,/g, "");
-
+        numeroPagos = numeroPagos.replace(/[$]/g,'');
+        console.log(montoPagos,"montoPagos")
+        console.log(numeroPagos,"numeroPagos")
+        console.log(pagoEdit,"pagoEdit")
         if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
             if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
                 $.ajax({
@@ -581,7 +580,7 @@ $("#tabla_prestamos").ready(function () {
                     }
                 });
             } else {
-                alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "error");
+                alerts.showNotification("top", "right", "Asegúrese que no existan valores negativos.", "warning");
             }
         } else {
             alerts.showNotification("top", "right", "Es necesario revisar que no se tenga valores vacios.", "error");
