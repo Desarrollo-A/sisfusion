@@ -3904,7 +3904,7 @@ class Comisiones_model extends CI_Model {
         $queryUsuario = $usuario != 0 ? "AND u.id_usuario=".$usuario : "";
         $queryFecha = $beginDate != 0 ? "WHERE pa.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": "";
 
-        return $this->db->query("SELECT pa.id_prestamo,pci.id_pago_i,pci.id_pago_i,lo.idLote,lo.nombreLote,u.id_usuario,CONCAT(u.nombre,' ',u.apellido_paterno,' ',u.apellido_materno) nombre, pa.monto,pa.num_pagos,pa.n_p,pa.fecha_creacion,pa.fecha_modificacion,
+        return $this->db->query("SELECT pa.evidenciaDocs as evidencia,mrp.evidencia as relacion_evidencia,pa.id_prestamo,pci.id_pago_i,pci.id_pago_i,lo.idLote,lo.nombreLote,u.id_usuario,CONCAT(u.nombre,' ',u.apellido_paterno,' ',u.apellido_materno) nombre, pa.monto,pa.num_pagos,pa.n_p,pa.fecha_creacion,pa.fecha_modificacion,
         se.nombre as sede,re.empresa,opc.nombre as tipoDesc,opc.color,pa.estatus
         FROM  prestamos_aut pa
         INNER JOIN usuarios u ON u.id_usuario=pa.id_usuario AND u.estatus IN(1,3,0)
@@ -3916,6 +3916,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN residenciales re ON re.idResidencial = cond.idResidencial
         LEFT JOIN opcs_x_cats puesto ON puesto.id_opcion=u.id_rol AND puesto.id_catalogo=1 
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=pa.tipo AND opc.id_catalogo=23 
+        LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
         LEFT JOIN opcs_x_cats emp ON emp.nombre=re.empresa AND emp.id_catalogo=61 
         INNER JOIN sedes se ON se.id_sede = 
 		(CASE WHEN u.id_usuario IN(2,3,1980,1981,1982,1988,4,5,9629,13546,13547,13548,1981,1982,26,27) THEN 2 WHEN u.id_usuario = 4 THEN 5 WHEN u.id_usuario = 5 THEN 3 WHEN u.id_usuario = 607 THEN 1 WHEN u.id_usuario = 7092 THEN 4 ELSE u.id_sede END) AND se.estatus = 1

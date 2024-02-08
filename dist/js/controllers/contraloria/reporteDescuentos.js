@@ -221,8 +221,7 @@ function setTablaReporte(sede = 0, empresa = 0, puesto = 0, usuario = 0, beginDa
         },
         { 
             data: function (d) {
-                let fecha_modificacion = moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
-                return fecha_modificacion;
+                return (d.relacion_evidencia != null )  
             } 
         },
     ],
@@ -264,8 +263,14 @@ $(window).resize(function () {
 
 $(document).on("click", "#preview", function () {
     var itself = $(this);
+    console.log(itself.attr('data-doc'))
     Shadowbox.open({
-        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;z-index:999999!important;" src="${general_base_url}static/documentos/evidencia_prestamo_auto/${itself.attr('data-doc')}"></iframe></div>`,
+        content: `<div>
+                    <iframe style="overflow:hidden;width: 100%;height: 100%; 
+                                    position:absolute;z-index:999999!important;" 
+                                    src="${general_base_url}${itself.attr('data-ruta')}/${itself.attr('data-doc')}">
+                    </iframe>
+                </div>`,
         player: "html",
         title: `Visualizando archivo: evidencia `,
         width: 985,
