@@ -67,7 +67,7 @@
                                                 <div class="form-group d-flex">
                                                     <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
                                                     <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="btnTabke"><span class="material-icons update-dataTable">search</span></button>
+                                                    <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="btnTable"><span class="material-icons update-dataTable">search</span></button>
                                                 </div>
                                             </div>
                                         </div>
@@ -75,11 +75,11 @@
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
+                                                    <h4 class="title-tot center-align m-0">Total préstamos:</h4>
                                                     <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
                                                 </div>
                                             </div>
-											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
+											<!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
                                                     <h4 class="title-tot center-align m-0">Abonado :</h4>
                                                     <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p>
@@ -90,7 +90,7 @@
                                                     <h4 class="title-tot center-align m-0">Pendiente :</h4>
                                                     <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                 </div>
@@ -99,6 +99,8 @@
 										<table class="table-striped table-hover" id="tabla_prestamos" name="tabla_prestamos">
 											<thead>
 												<tr>
+                                                    <th>ID PRÉSTAMO</th>
+                                                    <th>ID PAGO</th>
 													<th>ID LOTE</th>
 													<th>ID EMPLEADO</th>
 													<th>NOMBRE</th>

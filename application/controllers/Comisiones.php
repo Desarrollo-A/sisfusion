@@ -3195,16 +3195,16 @@ class Comisiones extends CI_Controller
     echo json_encode($data);
   }
 
-  public function getDataReporteDescuentos(){
-    $beginDate = $this->input->post('beginDate');
-    $endDate = $this->input->post('endDate');
-    $sedes = $this->input->post('sedes');
-    $empresas = $this->input->post('empresas');
-    $puestos = $this->input->post('puestos');
-    $usuarios = $this->input->post('usuarios');
 
-    $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+  public function getReporteDesc(){
 
+    $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+    $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+    $sede = $this->input->post('sede');
+    $empresa = $this->input->post('empresa');
+    $puesto = $this->input->post('puesto');
+    $usuario = $this->input->post('usuario');
+    echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
   }
   
 }

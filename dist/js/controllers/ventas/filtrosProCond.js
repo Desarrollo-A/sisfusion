@@ -11,7 +11,8 @@ $('.selectpicker.proyecto').change( function(){
             }
             $(".selectpicker.condominio").selectpicker('refresh');
             $(`#${idTablaGlobal[0].id}`).removeClass('hide');
-¿            if(estatusPagos != 0)
+            //$(`${idTablaGlobal[0].id}`).removeClass('hide');
+            if(estatusPagos != 0)
             getPagosEstatus(idTablaGlobal[0].id,index_proyecto, 0,estatusPagos);
         
 });
