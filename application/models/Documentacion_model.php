@@ -109,7 +109,7 @@ class Documentacion_model extends CI_Model {
      */
     public function getCarpetaArchivo($tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false): string
     {
-        if (!in_array($tipoDocumento, [41, 35, 7, 8]) || (in_array($tipoDocumento, [7, 8]) && in_array($tipoContratacion, [0, 1])))
+        if (!in_array($tipoDocumento, [41, 35, 7, 8, 46, 47]) || (in_array($tipoDocumento, [7, 8, 46, 47]) && in_array($tipoContratacion, [0, 1])))
             return $this->obtenerPathViejoContratacion($tipoDocumento);
         else
             return $this->obtenerPathNuevoContratacion($nombreLote);

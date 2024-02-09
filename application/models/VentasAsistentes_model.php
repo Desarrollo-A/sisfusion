@@ -101,6 +101,7 @@ class VentasAsistentes_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
         $tipo = $this->session->userdata('tipo');
+        $filtroProceso = "";
         if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -170,6 +171,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 }
+                $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
             }
             else { // SON EEC
                 $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
@@ -189,7 +191,7 @@ class VentasAsistentes_model extends CI_Model {
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion,
         ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1 $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -316,6 +318,7 @@ class VentasAsistentes_model extends CI_Model {
         $id_sede = $this->session->userdata('id_sede');
         $id_lider = $this->session->userdata('id_lider');
         $tipo = $this->session->userdata('tipo');
+        $filtroProceso = "";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -385,6 +388,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 }
+                $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
             }
             else { // SON EEC
                 $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
@@ -404,7 +408,7 @@ class VentasAsistentes_model extends CI_Model {
         cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede,
         ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
