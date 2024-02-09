@@ -71,6 +71,7 @@
                                                     <th>LOTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>ID LOTE</th>
+                                                    <th>COMENTARIO REUBICACIÓN</th>
                                                     <th>COMENTARIO</th>
                                                     <th>TIPO DE CANCELACIÓN</th>
                                                     <th>ESTATUS</th>
