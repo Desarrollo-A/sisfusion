@@ -1,165 +1,14 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+<link href="<?= base_url() ?>dist/css/reportDasboard.css" rel="stylesheet"/>
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 
-<style>
-    .modal-backdrop{
-        z-index:9;
-    }
 
-
-		buttons {
-		padding: 10px 25px;
-		border: unset;
-		border-radius: 27px;
-		width: 98%;
-		color: #212121;
-		z-index: 1;
-		background: #e8e8e8;
-		position: relative;
-		-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-		box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-		transition: all 250ms;
-		overflow: hidden;
-		}
-
-		buttons::before {
-		content: "";
-		position: absolute;
-		top: 0;
-		left: 0;
-		height: 100%;
-		width: 0;
-		border-radius: 27px;
-		background-color: #103f75;
-		z-index: -1;
-		-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-		box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
-		transition: all 250ms
-		}
-		/* COLO DE LETRA 
-		#103f75
-		#e8e8e8
-		*/
-		buttons:hover {
-		color: #e8e8e8;
-		}
-
-		buttons:hover::before {
-		width: 100%;
-	}
-
-
-
-	.switch {
-	--button-width:	2.5em;
-	--button-height: 1.5em;
-	--toggle-diameter: 1.5em;
-	--button-toggle-offset: calc((var(--button-height) - var(--toggle-diameter)) / 2);
-	--toggle-shadow-offset: 3px;
-	--toggle-wider: 1em;
-	--color-grey: #b8babf;
-	--top: 1;
-	--color-green: #003d82;
-	}
-
-	.slider {
-	display: inline-block;
-	width: var(--button-width);
-	height: var(--button-height);
-	background-color: var(--color-grey);
-	border-radius: calc(var(--button-height) / 2);
-	position: relative;
-	transition: 0.3s all ease-in-out;
-	}
-
-	.slider::after {
-	content: "";
-	display: inline-block;
-	width: var(--toggle-diameter);
-	height: var(--toggle-diameter);
-	background-color: #fff;
-	border-radius: calc(var(--toggle-diameter) / 2);
-	position: absolute;
-	top: var(--button-toggle-offset);
-	transform: translateX(var(--button-toggle-offset));
-	box-shadow: var(--toggle-shadow-offset) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
-	transition: 0.3s all ease-in-out;
-	}
-
-	.switch input[type="checkbox"]:checked + .slider {
-	background-color: var(--color-green);
-	}
-
-	.switch input[type="checkbox"]:checked + .slider::after {
-	transform: translateX(calc(var(--button-width) - var(--toggle-diameter) - var(--button-toggle-offset)));
-	box-shadow: calc(var(--toggle-shadow-offset) * -1) 0 calc(var(--toggle-shadow-offset) * 4) rgba(0, 0, 0, 0.1);
-	}
-
-	.switch input[type="checkbox"] {
-	display: none;
-	}
-
-	.switch input[type="checkbox"]:active + .slider::after {
-	width: var(--toggle-wider);
-	}
-
-	.switch input[type="checkbox"]:checked:active + .slider::after {
-	transform: translateX(calc(var(--button-width) - var(--toggle-wider) - var(--button-toggle-offset)));
-	}
-	/* .boxOnOff{
-		width: 100%;
-		display: flex;
-		background-color: $white;
-		padding: 5px 7px;
-		border-radius: 27px;
-		justify-content: space-between;
-		.switch-label{
-		cursor: pointer;
-		}
-	} */
-
-	/* .switch-label:before, .switch-label:after {
-        content: "";
-        position: absolute;
-        margin: 0;
-        outline: 0;
-        top: 50%;
-        transform: translate(0, -50%);
-        transition: all 0.3s ease;
-      }
-      .switch-label:before {
-        width: 25%;
-        height: 14px;
-        background-color: $platinumScroll;
-        border-radius: 8px;
-      }
-      .switch-label:after {
-        width: 15px;
-        height: 15px;
-        background-color: $white;
-        border-radius: 50%;
-        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.14), 0 2px 2px 0 rgba(0, 0, 0, 0.098), 0 1px 5px 0 rgba(0, 0, 0, 0.084);
-      }
-      .switch-label .toggle--on {
-        display: none;
-      }
-      .switch-label .toggle--off {
-        display: inline-block;
-      }
-      .switch-input:checked + .switch-label:before {
-        background-color: #A5D6A7;
-      }
-      .switch-input:checked + .switch-label:after {
-        background-color: $green;
-        transform: translate(80%, -50%);
-      } */
-
-</style>
 
 <body>
 <div class="wrapper">
 <?php $this->load->view('template/sidebar'); ?>
+<?php $this->load->view('descuentos/complementos/estilosPrestamos_comple'); ?>
 
 		<div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
 			<div class="modal-dialog modal-md">
@@ -171,6 +20,8 @@
 				</div>
 			</div>
 		</div>
+
+		
 		<div class="modal fade" id="ModalAddMotivo" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -200,7 +51,7 @@
 							</div>
 							<div id="textoSwitch" name="textoSwitch" class="col-md-10 " style="padding-top:15px;">
 									<span class="small text-gray textDescripcion hide" style="font-style: italic;" id="siTextoDescripcion" name="siTextoDescripcion">
-											Al generar un nuevo prestamo sera solicitada la evidencia.
+											Al generar un nuevo préstamo será solicitada la evidencia.
 										</span>
 									<span class="small text-gray textDescripcion" style="font-style: italic;" id="noTextoDescripcion" name="noTextoDescripcion">
 											Es necesario subir la evidencia para el nuevo motivo.
@@ -208,7 +59,7 @@
 							</div>
 							<div class="col-md-12">
 								<div class="col-md-6">
-									<label class="control-label">Elije el color nuevo (<b class="text-danger">*</b>)</label>
+									<label class="control-label">Elige el color nuevo (<b class="text-danger">*</b>)</label>
 									<input type="color" id="body" name="body" value="#f6b73c" style=" height: 20px; width: 50px; border: none;" />
 								</div>
 								<div class="col-md-6">
@@ -259,7 +110,7 @@
 						<div class="form-group row">
 							<div class="col-md-12">
 								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
-								<select class="selectpicker select-gral " name="tipoD" id="tipoD" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%"  data-live-search="true" required>
+								<select class="selectpicker select-gral " name="tipoD" id="tipoD" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%"  data-live-search="true" readonly required>
 									<?php foreach($descuentos as $descuento){ ?>
 									<option value="<?= $descuento['id_opcion']; ?>"><?= $descuento['nombre'] ?> </option>
 									<?php } ?>
@@ -368,37 +219,42 @@
             </div>
         </div>
 		
+	
 		<div class="content boxContent">
+			
 			<div class="container-fluid">
-				<div class="row">
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="row "  style="margin-bottom: 2px">
+				
+					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0"><
 						<div class="card">
-							<div class="card-header card-header-icon" data-background-color="goldMaderas">
-								<i class="material-icons">dashboard</i>
-                            </div>
+							<br>
+						<h3 class="h3 card-title center-align">Préstamos y penalizaciones</h3>		
+						<div class="row">
+				<?php $this->load->view('descuentos/complementos/dash_panel_prestamos_comple'); ?>
+							
+				</div>
 							<div class="card-content">
-								<h3 class="card-title center-align">Préstamos y penalizaciones</h3>
-								
+													
 								<div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Préstamos activos:</h4>
-                                                    <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Préstamos activos:</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p> -->
                                                 </div>
 												
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Abonado :</h4>
-                                                    <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Abonado :</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p> -->
                                                 </div>
                                             </div>
 											<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Pendiente :</h4>
-                                                    <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p>
+                                                    <!-- <h4 class="title-tot center-align m-0">Pendiente :</h4> -->
+                                                    <!-- <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -427,7 +283,7 @@
 													<th>ID USUARIO</th>
 													<th>USUARIO</th>
 													<th>MONTO</th>
-													<th>NUMERO</th>
+													<th>NÚMERO</th>
 													<th>PAGO CORRESPONDIENTE</th>
 													<th>ABONADO</th>
 													<th>PENDIENTE</th>
@@ -473,6 +329,8 @@
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
+	
+	<script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/dash_panel_prestamos_comple.js"></script>
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>
