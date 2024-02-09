@@ -331,4 +331,20 @@ class Descuentos_model extends CI_Model {
 
             return $resultado->row();
         }
+
+        function getDescuentos(){
+            return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario,
+            pci.abono_neodata AS monto, lo.nombreLote, pci.estatus, 
+            CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por, 
+            (CASE WHEN hc.comentario IS NULL THEN 'Sin comentario' ELSE hc.comentario END) as motivo,
+            CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono
+            FROM pago_comision_ind pci
+            INNER JOIN usuarios us ON us.id_usuario = pci.id_usuario
+            INNER JOIN comisiones co ON co.id_comision = pci.id_comision
+            INNER JOIN lotes lo ON lo.idLote = co.id_lote
+            LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like 'MOTIVO DESCUENTO%'
+            INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+            WHERE (pci.estatus = 0 ) AND pci.descuento_aplicado = 1");
+        }
+    
 }

@@ -1079,7 +1079,7 @@ class Contraloria extends CI_Controller {
                 $assigned_user = 5468;
 
             $arreglo["asig_jur"] = $assigned_user;
-        } else if ($assigned_location == 5 || $assigned_location == 16) { // EXPEDIENTES LEÓN  Y AGUASCALIENTES
+        } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
             $id_sede_jur = 5;
             $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
             $id_asig = $data_asig->contador;
@@ -1105,6 +1105,8 @@ class Contraloria extends CI_Controller {
 
             $arreglo["asig_jur"] = $assigned_user;
         }
+        else if ($assigned_location == 16) // EXPEDIENTES AGUASCALIENTES
+            $arreglo["asig_jur"] = 14183;
     }
     
     $validate = $this->Contraloria_model->validateSt6($idLote);

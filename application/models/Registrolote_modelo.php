@@ -1550,42 +1550,92 @@
 	}
 
     public function lotesContratados() {
-        $query = $this->db->query("SELECT lotes.idLote, ISNULL(UPPER(s.nombre), 'SIN ESPECIFICAR') AS nombreSede, 
-		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ',cl.apellido_materno) AS nombreCliente,
-		cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-        lotes.idStatusContratacion, lotes.idMovimiento, CONVERT(VARCHAR, hd.modificado, 120) modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-        lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
-        lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado,
-        concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
-        concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.totalNeto2, lotes.referencia,
-        UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
-        CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
-		ISNULL(hd2.expediente, 0) documentoCargado, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta
-        FROM lotes as lotes
-        INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
-        LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
-        INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
-        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
-        LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
-        LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
-        LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
-        INNER JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, usuario FROM historial_lotes
-        WHERE idStatusContratacion = 15 AND idMovimiento = 45 
-        GROUP BY idStatusContratacion, idMovimiento, idLote, status, usuario) hd ON hd.idLote = lotes.idLote AND hd.idStatusContratacion = 15 AND hd.idMovimiento = 45 AND hd.status = 1
-        LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
-        LEFT JOIN historial_documento hd2 ON hd2.idLote = lotes.idLote AND hd2.idCliente = lotes.idCliente AND hd2.status = 1 AND hd2.tipo_doc = 30
-		LEFT JOIN tipo_venta as tv ON tv.id_tventa = lotes.tipo_venta
-		WHERE lotes.status = 1 AND lotes.idStatusContratacion = 15 AND lotes.idMovimiento = 45
-        GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
-        lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
-        CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
-        residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
-        cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
-        lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia, CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente, tv.tipo_venta");
-        return $query->result();
+        return $this->db->query(
+			"SELECT 
+				lo.idLote, 
+				ISNULL(UPPER(se.nombre), 'SIN ESPECIFICAR') AS nombreSede, 
+				CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
+				cl.id_cliente, 
+				cl.nombre, 
+				cl.apellido_paterno, 
+				cl.apellido_materno, 
+				lo.nombreLote, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento, 
+				CONVERT(VARCHAR, hl1.modificado, 120) modificado, 
+				CAST(lo.comentario AS varchar(MAX)) comentario, 
+				lo.fechaVenc, 
+				lo.perfil, 
+				re.nombreResidencial, 
+				co.nombre nombreCondominio, 
+				lo.ubicacion, 
+				lo.tipo_venta, 
+				lo.fechaSolicitudValidacion, 
+				lo.firmaRL, 
+				lo.validacionEnganche, 
+				CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado, 
+				CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) asesor, 
+				idAsesor, 
+				CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) gerente, 
+				lo.totalNeto2, 
+				lo.referencia, 
+				UPPER(CASE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) WHEN '' THEN hl2.usuario ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) nombreUsuario, 
+				cl.id_cliente_reubicacion, 
+				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
+				ISNULL(hd.expediente, 0) documentoCargado, 
+				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta 
+			FROM lotes lo 
+				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
+				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+				INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+				LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+				LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_gerente 
+				INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 AND status = 1 GROUP BY idLote, idCliente) hl1 
+				ON hl1.idLote = lo.idLote AND hl1.idCliente = lo.idCliente
+				INNER JOIN historial_lotes hl2 ON hl2.idLote = hl1.idLote AND hl2.idCliente = hl1.idCliente AND hl2.modificado = hl1.modificado AND hl2.status = 1
+				LEFT JOIN usuarios u3 ON CAST(u3.id_usuario AS VARCHAR(45)) = CAST(hl2.usuario AS VARCHAR(45)) 
+				LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.idCliente = lo.idCliente AND hd.status = 1 AND hd.tipo_doc = 30 
+				LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+			WHERE 
+				lo.status = 1 
+				AND lo.idStatusContratacion = 15 
+				AND lo.idMovimiento = 45
+			GROUP BY 
+				lo.idLote, 
+				se.nombre, 
+				cl.id_cliente, 
+				cl.nombre, 
+				cl.apellido_materno, 
+				cl.apellido_paterno, 
+				lo.nombreLote, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento, 
+				hl1.modificado, 
+				CAST(lo.comentario AS varchar(MAX)), 
+				lo.fechaVenc, 
+				lo.perfil, 
+				re.nombreResidencial, 
+				co.nombre, 
+				lo.ubicacion, 
+				lo.tipo_venta, 
+				cl.id_gerente, 
+				CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno), 
+				CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno), 
+				idAsesor, 
+				lo.fechaSolicitudValidacion, 
+				lo.firmaRL, 
+				lo.validacionEnganche, 
+				cl.fechaApartado, 
+				lo.totalNeto2, 
+				lo.referencia, 
+				CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno), 
+				hl2.usuario, 
+				cl.id_cliente_reubicacion, 
+				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
+				hd.expediente, 
+				tv.tipo_venta"
+		)->result();
     }
 
 	public function reportLotesPost45(){
