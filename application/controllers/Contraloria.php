@@ -2037,6 +2037,7 @@ class Contraloria extends CI_Controller {
         $comentario  =$this->input->post('comentario');
         $modificado = date('Y-m-d H:i:s');
         $fechaVenc = $this->input->post('fechaVenc');
+        $idResidencial = $this->input->post('idResidencial');
 
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 15;
@@ -2066,21 +2067,23 @@ class Contraloria extends CI_Controller {
         $validate = $this->Contraloria_model->validateSt15($idLote);
         if ($validate == 1) {
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
-                $insertToData = array(
-                    "movimiento" => 'CONTRATO FIRMADO',
-                    "expediente" => '',
-                    "modificado" => date('Y-m-d H:i:s'),
-                    "status" => 1,
-                    "idCliente" => $idCliente,
-                    "idCondominio" => $idCondominio,
-                    "idLote" => $idLote,
-                    "idUser" => $this->session->userdata('id_usuario'),
-                    "tipo_documento" => 0,
-                    "id_autorizacion" => 0,
-                    "tipo_doc" => 30,
-                    "estatus_validacion" =>0
-                );
-                $this->General_model->addRecord('historial_documento', $insertToData);
+                if (!in_array($idResidencial, [14, 21, 22, 25])) {
+                    $insertToData = array(
+                        "movimiento" => 'CONTRATO FIRMADO',
+                        "expediente" => '',
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "status" => 1,
+                        "idCliente" => $idCliente,
+                        "idCondominio" => $idCondominio,
+                        "idLote" => $idLote,
+                        "idUser" => $this->session->userdata('id_usuario'),
+                        "tipo_documento" => 0,
+                        "id_autorizacion" => 0,
+                        "tipo_doc" => 30,
+                        "estatus_validacion" =>0
+                    );
+                    $this->General_model->addRecord('historial_documento', $insertToData);
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {

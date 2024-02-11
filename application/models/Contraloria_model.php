@@ -555,7 +555,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion, res.idResidencial
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -576,7 +576,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal'),
-        pro.lugar_prospeccion
+        pro.lugar_prospeccion, res.idResidencial
 		ORDER BY l.nombreLote");
         return $query->result();
     }
