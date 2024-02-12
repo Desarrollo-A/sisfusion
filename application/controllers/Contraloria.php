@@ -1685,7 +1685,6 @@ class Contraloria extends CI_Controller {
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-                //if (TRUE) {
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
                         "propiedadRelacionada" => $idLote,

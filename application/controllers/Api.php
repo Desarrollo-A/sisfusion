@@ -842,42 +842,6 @@ class Api extends CI_Controller
         }
     }
 
-    //funcion de prueba para el servicio de Arcus, borrar despues de pruebas y Vo.Bo.
-    function exitoArcus() {
-        if (!isset(apache_request_headers()["authorization"]))
-            echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
-        else {
-            if (apache_request_headers()["authorization"] == "")
-                echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
-            else{
-                $token = apache_request_headers()["authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
-                $valida_token = json_decode($this->validateToken($token, 5918));
-                if ($valida_token->status !== 200)
-                    echo json_encode($valida_token);
-                else {
-                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
-                    $valida_token = NULL;
-                    foreach ($result->data as $key => $value) {
-                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
-                            $valida_token = false;
-                    }
-                    if(is_null($valida_token))
-                        $valida_token = true;
-                    if(!empty($result->data) && $valida_token)
-                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    else {
-                        $checkSingup = null;
-                        echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
-                    } if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
-                        $data = file_get_contents("php://input");
-                        echo json_encode(array("status" => 200, "message" => "Consulta realizada con éxito.", "datos"   =>  $data), JSON_UNESCAPED_UNICODE);
-                    }
-                }
-            }
-        }
-    }
-
     function getAsesoresArcus($fecha = '') {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
