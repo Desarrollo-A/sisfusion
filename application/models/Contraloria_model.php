@@ -229,6 +229,8 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -437,6 +439,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -478,6 +482,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -544,6 +550,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', ISNULL(cl.apellido_paterno, ''), ' ', ISNULL(cl.apellido_materno, ''))) nombreCliente,
