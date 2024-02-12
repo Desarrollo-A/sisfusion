@@ -1868,7 +1868,10 @@ class Comisiones_model extends CI_Model {
     
     /**-----------NUEVO PROCESO DE PRESTAMOS AUTOMATICOS---------------------- */
     function getPrestamoxUser($id,$tipo){
-        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario=$id AND estatus=1 AND tipo=$tipo");
+
+        
+
+        return $this->db->query("SELECT id_usuario FROM prestamos_aut WHERE id_usuario= $id AND estatus=1 AND tipo = $tipo");
     }
 
     function TienePago($id){
@@ -1889,22 +1892,28 @@ class Comisiones_model extends CI_Model {
     function insertar_prestamos($insertArray){
         $this->db->insert('prestamos_aut', $insertArray);
         $afftectedRows = $this->db->affected_rows();
-        if ($afftectedRows == 0) {
-            return 0;
-        } else {
-            return 1;
-        }
+        return $afftectedRows > 0 ? 1 : FALSE ;
     }
     
     function getPrestamos(){ 
-        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
+        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
+        p.evidenciaDocs as evidencia ,
+        p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,
+        pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, 
+        (SELECT TOP 1 rpp2.fecha_creacion 
+        FROM relacion_pagos_prestamo rpp2 
+        WHERE rpp2.id_prestamo = rpp.id_prestamo 
+        ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, 
+        rpp.id_prestamo AS id_prestamo2
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
         WHERE p.estatus in(1,2,0,3)
-        GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+        GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,
+        p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,
+        p.fecha_creacion,p.pago_individual,pendiente,p.evidenciaDocs,opc.nombre,opc.id_opcion");
     }
     
     function getPrestamosXporUsuario(){
@@ -3754,13 +3763,33 @@ class Comisiones_model extends CI_Model {
 
     function getHistorialDescuentosPorUsuario() {
         $id_usuario = $this->session->userdata('id_usuario');
-        return $this->db->query("SELECT pci.id_pago_i, re.nombreResidencial, cn.nombre nombreCondominio, lo.nombreLote, lo.referencia, FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') precioLote, FORMAT(co.comision_total, 'C') comisionTotal, FORMAT(pci.abono_neodata, 'C') montoDescuento, ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoDescuento
+        return $this->db->query("SELECT pci.id_pago_i, re.nombreResidencial, cn.nombre nombreCondominio,
+        lo.nombreLote, lo.referencia, 
+        FORMAT(ISNULL(lo.totalNeto2, 0.00), 'C') precioLote, 
+		FORMAT(co.comision_total, 'C') comisionTotal, 
+		FORMAT(pci.abono_neodata, 'C') montoDescuento, 
+		ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoDescuento,
+        (CASE 
+		WHEN mrp.evidencia = ('true') THEN 'NA'   
+		WHEN mrp.evidencia IS NULL THEN 'Sin préstamo relacionado' 
+		
+		ELSE mrp.evidencia 
+		END) as RelacionMotivo,
+
+		p.evidenciaDocs,
+		rpp.id_prestamo,rpp.id_relacion_pp, 
+		mrp.evidencia as relacionPrestamoEvidencia,
+		mrp.id_opcion as relacionPrestamo,
+		oxc0.id_opcion as opcion
         FROM pago_comision_ind pci  
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
         INNER JOIN lotes lo ON lo.idLote = co.id_lote AND lo.status IN (0,1)
         INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = cn.idResidencial
+        LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_pago_i = pci.id_pago_i
+		LEFT JOIN prestamos_aut p ON p.id_prestamo = rpp.id_prestamo
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
+		LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
         WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
     }
 
@@ -3836,7 +3865,7 @@ class Comisiones_model extends CI_Model {
         $id_usuario = $this->session->userdata('id_usuario');
         $cmd = "SELECT forma_pago FROM usuarios WHERE id_usuario = $id_usuario"; 
         return $this->db->query($cmd)->row();
-
+    
 
     }
 
