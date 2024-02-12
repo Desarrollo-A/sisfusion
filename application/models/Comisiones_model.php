@@ -3209,18 +3209,37 @@ class Comisiones_model extends CI_Model {
     }
 
     public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
-        if ($id_usuario == 12449) // MARCELA CUELLAR MORON
+        if ($id_usuario == 12449) {// MARCELA CUELLAR MORON
             $id_lider .= ", 654";
-        else if ($id_usuario == 10270) // ANDRES BARRERA VENEGAS
+        }
+        else if ($id_usuario == 10270){ // ANDRES BARRERA VENEGAS
             $id_lider .= ", 113";
-        $puestoWhereClause = '';
-        if ($puesto === '3') // CONSULTA GERENTES
+            $puestoWhereClause = '';
+        }
+
+        var_dump($id_lider);
+        var_dump($id_usuario);
+        if ($puesto == '3') // CONSULTA GERENTES
+        { 
             $puestoWhereClause = "id_usuario IN ($id_lider)";
-        else if ($puesto === '9') // CONSULTA COORDINADORES
+        }
+        else if ($puesto == '9') // CONSULTA COORDINADORES
+        {
             $puestoWhereClause = "id_lider IN ($id_lider) AND id_rol = 9";
-        else if ($puesto === '7') // CONSULTA ASESORES Y COORDINADORES
-            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9))";
+        }    
+        else if( $puesto == '7' && $id_usuario == 13511 )
+        {
+            
+            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9) ) OR id_usuario IN (13634)";
+        }
+        else if ($puesto == '7') // CONSULTA ASESORES Y COORDINADORES
+        {   
+            
+            $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9)  )  ";
+        }
+            
         return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre_completo FROM usuarios WHERE $puestoWhereClause ORDER BY nombre_completo")->result_array();
+        
     }
 
     public function findAllResidenciales()
