@@ -3344,4 +3344,9 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
+    
+    public function reporteDescuentos() {
+		$this->load->view('template/header');
+		$this->load->view("contraloria/reporteDescuentos_view");
+	}
 }
