@@ -218,9 +218,7 @@ function createAccordions(option, render, rol){
                             <th>SEDE CONTRATADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
-                            <th>ACCIONES</th>
-                            <th>MONTO FINAL</th>
-                            
+                            <th>ACCIONES</th>                            
                         </tr>
                     </thead>
                 </table>
@@ -425,11 +423,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                     return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
                 },
             },
-            {
-                data: function (d) {
-                    return d.sharedCount
-                }
-            }
         ],
         columnDefs: [{
             className: "delimetter", "targets": [ 3, 7 ],
