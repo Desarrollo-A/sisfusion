@@ -1313,6 +1313,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
         switch($rol_actual){
             case 5:
+            case 4:
                 $estatus_permitido='1, 3, 4';
                 break;
             case 17:
