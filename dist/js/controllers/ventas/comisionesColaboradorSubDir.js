@@ -39,8 +39,8 @@ const  datosTablas = [
     {
         id:"tabla_comisiones_sin_pago",
         estatus: 0,
-        idSelect:'catalogo_pago',
-        idSelectCond:'condominio_pago',
+        idSelect:'proyecto_sp',
+        idSelectCond:'condominio_sp',
         idTitle : ''
     }
 ];
@@ -112,6 +112,7 @@ function getPagosEstatus(idTabla,idProyecto,idCondominio,estatus){
     $('#spiner-loader').addClass('hide');
 }
 for (let m = 0; m < datosTablas.length; m++) {
+    if(datosTablas[m].estatus != 0)
     $(`#${datosTablas[m].id} thead tr:eq(0) th`).each( function (i) {
         if(i != 0){
             var title = $(this).text();
