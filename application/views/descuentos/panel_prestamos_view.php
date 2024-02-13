@@ -184,14 +184,22 @@
 								<input class="form-control input-gral hide" id="banderaEvidencia" type="text" name="banderaEvidencia" readonly required>
 							</div>
  
-							<div class="form-group input-group evidenciaDIVarchivo hide" id="evidenciaDIVarchivo" name="evidenciaDIVarchivo">
-								<label class="input-group-btn">
+							<div class=" col-md-12 form-group input-group evidenciaDIVarchivo hide" id="evidenciaDIVarchivo" name="evidenciaDIVarchivo">
+								<!-- <label class="input-group-btn">
                                     <span class="btn btn-blueMaderas btn-file">Seleccionar archivo&hellip;
                                         <input type="file" name="evidencia" id="evidencia" style="visibility: hidden" >
                                     </span>
 								</label>
-									<input type="text" class="form-control" readonly>
+									<input type="text" class="form-control" readonly> -->
+
+									<div class="file-gph col-md-12">
+									<input class="d-none" type="file" id="evidencia" onchange="changeName(this)" name="evidencia"  >
+									<input class="file-name overflow-text" id="evidencia" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidencia"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+									</div>
 							</div>
+
+						
 							<div class="form-group">
 								<p></label><b id="texto" style="font-size:12px;"></b></p>
 								<label class="control-label">Comentario(<b class="text-danger">*</b>)</label>
@@ -225,7 +233,7 @@
 			<div class="container-fluid">
 				<div class="row "  style="margin-bottom: 2px">
 				
-					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0"><
+					<div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
 						<div class="card">
 							<br>
 						<h3 class="h3 card-title center-align">Préstamos y penalizaciones</h3>		

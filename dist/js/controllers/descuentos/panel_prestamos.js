@@ -126,6 +126,12 @@ $("#form_prestamos").on('submit', function (e) {
             $('#miModal').modal('hide')
             document.getElementById("form_prestamos").reset();
             $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+            $('#form_prestamos').trigger('reset');
+
+            $("#usuarioid").selectpicker('refresh');
+
+            $("#tipo").selectpicker('refresh');
+            $("#roles").selectpicker('refresh');
             // if (data == 1) {
             //    
             //     closeModalEng();
@@ -149,7 +155,13 @@ $("#form_prestamos").on('submit', function (e) {
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            document.getElementById("form_prestamos").reset();
             $('#miModal').modal('hide')
+            $('#form_prestamos').trigger('reset');
+            $("#usuarioid").selectpicker('refresh');
+
+            $("#tipo").selectpicker('refresh');
+            $("#roles").selectpicker('refresh');
         }
     });
 });
