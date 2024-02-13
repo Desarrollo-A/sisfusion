@@ -3216,6 +3216,11 @@ class Asesor extends CI_Controller {
         $idCondominio = $this->input->post('idCondominio');
         $idCliente = $this->input->post('idCliente');
 
+
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
+            return;
+        }
+
         if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
@@ -3447,6 +3452,9 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $labelCorridaFinanciera = '';
+        $corrida_financiera = ""; // CORRIDA FINANCIERA
+
         $leyendaResiciones = '';
         $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
@@ -3509,21 +3517,34 @@ class Asesor extends CI_Controller {
                     $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
                 }
             }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-
-
-
+            #prueba
+            $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
+            $validacionAceptados = array(3, 13, 22, 31);
+            #prueba cf
+            if(in_array($validacionRes->idResidencial, $validacionAceptados)){
+                //si está en algun proyecto de león
+                $documentsNumber += 1; //añadir otro documento a la validación
+                $labelCorridaFinanciera = ', CORRIDA FINANCIERA';
+                $corrida_financiera = ', 7';
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $labelCorridaFinanciera $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra $corrida_financiera" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra $corrida_financiera";
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
+
+//        print_r($documentsValidation);
+//        echo '<br>';
+//        print_r($documentsNumber);
+//        exit;
+
+
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
             $data['status'] = false;
-            $data['message'] = $error_message;
+            $data['message'] = 'MISSING_DOCUMENTS';
             $data['error_message'] = $error_message;
             echo json_encode($data);
             return false;
@@ -3531,19 +3552,20 @@ class Asesor extends CI_Controller {
 
         if($validacion) {
             $data['status'] = false;
-            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
+            $data['message'] = FALSE;
+            $data['error_message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
-        if(count($validacionIM) > 0) {
-            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['status'] = false;
-                $data['message'] = 'Autorización de mensualidad pendiente.';
-                echo json_encode($data);
-                return false;
-            }
-        }
+//        if(count($validacionIM) > 0) {
+//            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+//                $data['status'] = false;
+//                $data['message'] = 'Autorización de mensualidad pendiente.';
+//                echo json_encode($data);
+//                return false;
+//            }
+//        }
 
 
         return true;
