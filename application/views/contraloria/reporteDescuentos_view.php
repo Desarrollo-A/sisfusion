@@ -11,17 +11,6 @@
 <body>
     <div class="wrapper">
             <?php $this->load->view('template/sidebar'); ?>
-            <div class="modal fade modal-alertas" id="detalle-prestamo-modal" role="dialog">
-                <div class="modal-dialog modal-lg" >
-                    <div class="modal-content">
-                        <div class="modal-header bg-red">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>4
-                        </div>
-                        <div class="modal-body"></div>
-                        <div class="modal-footer"></div>
-                    </div>
-                </div>
-            </div>
             <div class="content boxContent">
                 <div class="container-fluid">
                     <div class="row">
@@ -68,8 +57,6 @@
                                                         <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="btnTable"><span class="material-icons update-dataTable">search</span></button>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                                     <div class="form-group d-flex justify-center align-center">
                                                         <h4 class="title-tot center-align m-0">Total préstamos:</h4>
