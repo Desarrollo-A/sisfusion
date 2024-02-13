@@ -830,13 +830,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return true;
     }
 
-    public function get_lp($idLote){
+    /*public function get_lp($idLote){
         $query = $this->db-> query("SELECT cl.lugar_prospeccion
         FROM clientes cl 
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         WHERE cl.lugar_prospeccion = 6 AND cl.idLote = $idLote AND cl.status = 1");
         return $query->row();
-    }
+    }*/
 
     public function getLotesAllAssistant($idCondominio) {
         $id_lider = $this->session->userdata('id_lider');
