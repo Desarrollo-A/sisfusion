@@ -913,7 +913,7 @@ class Reestructura_model extends CI_Model
 
     public function insertarCliente($datos)
     {
-        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por], [tipo_proceso]) VALUES (".$datos['idLote'].", '".$datos['nombre']."', '".$datos['apellido_paterno']."', '".$datos['apellido_materno']."', ".$datos['estado_civil'].", '".$datos['ine']."', '".$datos['domicilio_particular']."', '".$datos['correo']."', '".$datos['telefono1']."', '".$datos['ocupacion']."', null, GETDATE(), 1, GETDATE(), 1, ".$datos['tipo_proceso'].") ");
+        return $this->db->query("INSERT INTO datos_x_cliente ([idLote],[nombre],[apellido_paterno],[apellido_materno],[estado_civil],[ine],[domicilio_particular],[correo],[telefono1],[ocupacion],[rescision],[fecha_creacion],[creado_por],[fecha_modificacion],[modificado_por], [tipo_proceso], [impresionEn]) VALUES (".$datos['idLote'].", '".$datos['nombre']."', '".$datos['apellido_paterno']."', '".$datos['apellido_materno']."', ".$datos['estado_civil'].", '".$datos['ine']."', '".$datos['domicilio_particular']."', '".$datos['correo']."', '".$datos['telefono1']."', '".$datos['ocupacion']."', null, GETDATE(), 1, GETDATE(), 1, ".$datos['tipo_proceso'].", ".$datos['impresionEn'].") ");
     }
 
     public function borrarOpcionModel($id_catalogo,$idOpcion){
