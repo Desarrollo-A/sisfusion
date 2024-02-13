@@ -2131,7 +2131,7 @@ class Reestructura extends CI_Controller{
         
         $flagFusion = $this->input->post('flagFusion');
 
-        // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE
+        // AVANCE A Elaboración de corridas, contrato y rescisión: SE CORRE PROCESO PARA ASIGNAR EXPEDIENTE 
         if ($idPreproceso + 1 == 2) { 
             $id_asig = $this->Contraloria_model->get_id_asig('reestructura')->contador;
             if ($id_asig == 2747) // CARLITOS

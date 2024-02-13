@@ -209,13 +209,11 @@
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
         $userLiberacion = $datos['userLiberacion'];
-        
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus, lo.tipo_venta
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         WHERE lo.idCondominio = $idCondominio AND lo.nombreLote = '$nombreLote' AND lo.status = 1");
-        
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
