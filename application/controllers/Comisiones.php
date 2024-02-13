@@ -1000,13 +1000,21 @@ class Comisiones extends CI_Controller
     echo json_encode( array( "data" => $dat));
   }
 
-  public function getDatosHistorialPago($proyecto = null,$condominio = null ) {      
-    $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+  public function getDatosHistorialPago() {
+    $fechaInicio = explode('/', $this->input->post("beginDate"));
+    $fechaFin = explode('/', $this->input->post("endDate"));
+    $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+    $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
+    $dat =  $this->Comisiones_model->getDatosHistorialPago($beginDate,$endDate)->result_array();
     echo json_encode( array( "data" => $dat));
   }
 
-  public function getDatosHistorialCancelacion($proyecto,$condominio){
-    $dat =  $this->Comisiones_model->getDatosHistorialCancelacion($proyecto,$condominio)->result_array();
+  public function getDatosHistorialCancelacion(){
+    $fechaInicio = explode('/', $this->input->post("beginDate"));
+    $fechaFin = explode('/', $this->input->post("endDate"));
+    $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+    $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
+    $dat =  $this->Comisiones_model->getDatosHistorialCancelacion($beginDate,$endDate)->result_array();
     echo json_encode( array( "data" => $dat));
   }
 

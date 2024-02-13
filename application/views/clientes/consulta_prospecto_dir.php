@@ -67,6 +67,7 @@
                                                 <th>ETAPA</th>
                                                 <th>TIPO</th>
                                                 <th>PROSPECTO</th>
+                                                <th>TELEFONO</th>
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>

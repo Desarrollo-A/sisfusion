@@ -245,10 +245,10 @@ class Comisiones_model extends CI_Model {
     }
 
     
-    function getDatosHistorialPago($anio,$proyecto) {
+    function getDatosHistorialPago($finalBeginDate,$finalEndDate) {
         ini_set('memory_limit', -1);
         $filtro_02 = '';
-        $filtro_00 = ' re.idResidencial = '.$proyecto.' AND YEAR(pci1.fecha_abono) = '.$anio.' ';
+        $filtro_00 = "pci1.fecha_abono BETWEEN '$finalBeginDate 00:00:00' AND '$finalEndDate 23:59:59'";
 
         switch ($this->session->userdata('id_rol')) {
             case 1:
@@ -291,9 +291,9 @@ class Comisiones_model extends CI_Model {
         GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus,pe.id_penalizacion, oxcest.color, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2 ORDER BY lo.nombreLote");
     }
 
-    function getDatosHistorialCancelacion($anio,$proyecto) {
+    function getDatosHistorialCancelacion($finalBeginDate,$finalEndDate) {
         $filtro_02 = '';
-        $filtro_00 = ' re.idResidencial = '.$proyecto.' AND YEAR(pci1.fecha_abono) = '.$anio.' ';
+        $filtro_00 = "pci1.fecha_abono BETWEEN '$finalBeginDate 00:00:00' AND '$finalEndDate 23:59:59'";
 
         switch ($this->session->userdata('id_rol')) {
             case 1:

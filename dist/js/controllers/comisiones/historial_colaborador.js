@@ -1,71 +1,73 @@
 const excluir_column = ['MÁS', ''];
 let columnas_datatable = {};
-$('#ano_historial').change(function(){
-    residencial = $('#ano_historial').val();
-    param = $('#param').val();
-    condominio = '';
-    $("#catalogo_historial").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Contratacion/lista_proyecto/',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['idResidencial'];
-                var name = response[i]['descripcion'];
-                $("#catalogo_historial").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#catalogo_historial").selectpicker('refresh');
-        }
-    });
+
+$(document).on("click", "#fechaHistorialActivos", function () {
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    getAssimilatedCommissions(finalBeginDate, finalEndDate);
 });
 
-$('#catalogo_historial').change(function(){
-    proyecto = $('#ano_historial').val();
-    condominio = $('#catalogo_historial').val();
+$(document).on("click", "#fechaCancelados", function () {
+    let finalBeginDate = $("#inicioCancelados").val();
+    let finalEndDate = $("#finalCancelados").val();
+    getAssimilatedCancelacion(finalBeginDate, finalEndDate);
+});
+
+$(document).on("click", "#fechaSuma", function () {
+    let finalBeginDate = $("#inicioSuma").val();
+    let finalEndDate = $("#finalSuma").val();
+    tableComisionesSuma(finalBeginDate, finalEndDate);
+}); 
+
+$(document).ready(function () {
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    getAssimilatedCommissions(finalBeginDate, finalEndDate);
     $('#tabla_historialGral').removeClass('hide');
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
-    }
-    if(tabla_historialGral2){
-        tabla_historialGral2.destroy();
-    }
-    getAssimilatedCommissions(proyecto, condominio);
 });
 
-$('#ano_canceladas').change(function(){
-    residencial = $('#ano_canceladas').val();
-    param = $('#param').val();
-    $("#catalogo_canceladas").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url+'Contratacion/lista_proyecto/',
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['idResidencial'];
-                var name = response[i]['descripcion'];
-                $("#catalogo_canceladas").append($('<option>').val(id).text(name.toUpperCase()));
+$("#historialCanceladas").on("click", function(){
+    if ($('#tabla_comisiones_canceladas').DataTable().data().length === 0){ 
+        setIniDatesXMonth("#inicioCancelados", "#finalCancelados");
+        let inicioCanceladas = $("#inicioCancelados").val();
+        let finalCanceladas = $("#finalCancelados").val();
+        getAssimilatedCancelacion(inicioCanceladas, finalCanceladas);
+        $('#tabla_comisiones_canceladas').removeClass('hide');
+    }
+});
+
+$("#historialSuma").on("click", function(){
+    if ($('#tabla_comisiones_suma').DataTable().data().length === 0){ 
+        setIniDatesXMonth("#inicioSuma", "#finalSuma");
+        let inicioSuma = $("#inicioSuma").val();
+        let finalSuma = $("#finalSuma").val();
+        tableComisionesSuma(inicioSuma, finalSuma);
+        $('#tabla_comisiones_suma').removeClass('hide');
+    }
+});
+
+sp = { //  SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
             }
-            $("#catalogo_canceladas").selectpicker('refresh');
-        }
-    });
-});
-
-$('#catalogo_canceladas').change(function(){
-    proyecto = $('#ano_canceladas').val();
-    condominio = $('#catalogo_canceladas').val();
-    $('#tabla_comisiones_canceladas').removeClass('hide');
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
+        });
     }
-    if(tabla_historialGral3){
-        tabla_historialGral3.destroy();
-    }
-    getAssimilatedCancelacion(proyecto, condominio);
-});
+}
 
 var totalLeon = 0;
 var totalQro = 0;
@@ -97,7 +99,7 @@ function modalHistorial(){
     showModal();
 }
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getAssimilatedCommissions(beginDate, endDate){
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -154,26 +156,10 @@ function getAssimilatedCommissions(proyecto, condominio){
                 return lblStats;
             }
         },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.proyecto+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.condominio+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreLote+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.referencia+'</p>';
-            }
-        },
+        { data: "proyecto" },
+        { data: "condominio" },
+        { data: "nombreLote" },
+        { data: "referencia" },
         {
             "data": function( d ){
                 return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>';
@@ -219,11 +205,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 }
             }
         },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.puesto+'</p>';
-            }
-        },
+        { data: "puesto" },
         {
             "data": function( d ){
                 var lblPenalizacion = '';
@@ -264,7 +246,6 @@ function getAssimilatedCommissions(proyecto, condominio){
                     }else{
                         etiqueta = '<p class="m-0"><span class="label" style="background:'+d.color+'18; color: '+d.color+'; ">'+d.estatus_actual+'</span></p>';
                     }
-
                 return etiqueta;
             }
         },
@@ -288,10 +269,13 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio,
+            "url": general_base_url + "Comisiones/getDatosHistorialPago",
             "type": "POST",
             cache: false,
-            "data": function( d ){}
+            data: {
+                "beginDate": beginDate,
+                "endDate": endDate,
+            }
         },
         order: [[ 1, 'asc' ]],
     });
@@ -301,7 +285,7 @@ function getAssimilatedCommissions(proyecto, condominio){
     });
 }
 
-function getAssimilatedCancelacion(proyecto, condominio){
+function getAssimilatedCancelacion(finalBeginDate, finalEndDate){
     asignarValorColumnasDT("tabla_comisiones_canceladas");
     $('#tabla_comisiones_canceladas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -358,26 +342,10 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 return lblStats;
             }
         },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.proyecto+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.condominio+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.nombreLote+'</p>';
-            }
-        },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.referencia+'</p>';
-            }
-        },
+        { data: "proyecto" },
+        { data: "condominio" },
+        { data: "nombreLote" },
+        { data: "referencia" },
         {
             "data": function( d ){
                 return '<p class="m-0">'+formatMoney(d.precio_lote)+'</p>';
@@ -423,11 +391,7 @@ function getAssimilatedCancelacion(proyecto, condominio){
                 }
             }
         },
-        {
-            "data": function( d ){
-                return '<p class="m-0">'+d.puesto+'</p>';
-            }
-        },
+        { data: "puesto" },
         {
             "data": function( d ){
                 var lblPenalizacion = '';
@@ -498,10 +462,13 @@ function getAssimilatedCancelacion(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Comisiones/getDatosHistorialCancelacion/" + proyecto + "/" + condominio,
+            "url": general_base_url + "Comisiones/getDatosHistorialCancelacion",
             "type": "POST",
             cache: false,
-            "data": function( d ){}
+            data: {
+                "beginDate": finalBeginDate,
+                "endDate": finalEndDate,
+            }
         },
         order: [[ 1, 'asc' ]],
     });
@@ -636,7 +603,7 @@ $(document).on('click', '.ver-info-asesor', function(){
     });
 });
 
-function tableComisionesSuma(anio){
+function tableComisionesSuma(inicioSuma, finalSuma){
     asignarValorColumnasDT("tabla_comisiones_suma");
     $('#tabla_comisiones_suma thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -746,7 +713,10 @@ function tableComisionesSuma(anio){
         ajax: {
             url: general_base_url + "Suma/getAllComisionesByUser",
             type: "POST",
-            data: {anio : anio},
+            data: {
+                "beginDate": inicioSuma,
+                "endDate": finalSuma,
+            },
             dataType: 'json',
             dataSrc: ""
         },

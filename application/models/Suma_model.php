@@ -63,7 +63,8 @@ class Suma_model extends CI_Model
         WHERE ps.estatus = $estatus AND ps.id_usuario = $user");
         return $query->result_array();
     }
-    function getAllComisionesByUser($user, $year){
+
+    function getAllComisionesByUser($user, $beginDate, $endDate){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, UPPER(se.nombre) AS sede, UPPER(oxc.nombre) AS forma_pago, 
         us.forma_pago id_forma_pago, ps.total_comision, ROUND(ps.porcentaje_comision,2) AS porcentaje_comision , cs.total_venta,
@@ -86,9 +87,10 @@ class Suma_model extends CI_Model
         ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74 
-        WHERE ps.id_usuario = $user AND year(ps.fecha_creacion) = $year");
+        WHERE ps.id_usuario = $user AND ps.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'");
         return $query->result_array();
     }
+    
     function getAllComisiones($year){
         $query = $this->db->query("SELECT cs.id_cliente, cs.nombre_cliente, cs.id_pago,  cs.estatus, cs.referencia, ps.id_pago_suma, ps.id_usuario,
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombre_comisionista, oxc.nombre forma_pago, 

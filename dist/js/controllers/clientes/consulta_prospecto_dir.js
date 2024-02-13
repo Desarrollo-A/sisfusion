@@ -238,6 +238,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                     return d.nombre;
                 }
             },
+            { data : "telefono" },
             { data: function (d) {
                     return d.asesor;
                 }

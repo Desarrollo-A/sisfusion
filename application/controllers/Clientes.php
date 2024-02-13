@@ -691,8 +691,10 @@ public function getStatusMktdPreventa(){
 	     */
         if (isset($_POST) || !empty($_POST) || $typeTransaction!='') {
             $transaction = ($this->input->post("transaction") == '') ? $typeTransaction : 0;
-            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
-            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
 
             if ($typeTransaction == 1) {

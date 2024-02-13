@@ -273,7 +273,6 @@ function getStatusMktdPreventa(){
                                         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = c.lugar_prospeccion AND oxc.id_catalogo = 9
                                         WHERE c.estatus_vigencia = 1 $filter AND c.tipo = 0 ORDER BY c.fecha_creacion DESC");
         }
-
     }
 
     function getProspectsReport($typeTransaction, $beginDate, $endDate, $where){
@@ -3910,7 +3909,7 @@ function getStatusMktdPreventa(){
 
             default:
                 $query = $this->db->query(
-                    "SELECT p.id_prospecto, UPPER(p.nombre) AS nombre, p.apellido_paterno, p.apellido_materno, p.vigencia, 
+                    "SELECT p.id_prospecto, UPPER(CONCAT(p.nombre, p.apellido_paterno, p.apellido_materno)) AS nombre, p.telefono, p.vigencia, 
                             p.estatus, p.estatus_particular,
                             p.lugar_prospeccion, UPPER(oxc.nombre) AS nombre_lp , p.id_sede,
                             CONVERT(VARCHAR, p.fecha_creacion,20) AS fecha_creacion,

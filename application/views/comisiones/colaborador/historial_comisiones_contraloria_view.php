@@ -59,12 +59,12 @@
                                 <a href="#solicitudesCRM" role="tab" data-toggle="tab">Historial CRM</a>
                             </li>
                             <li>
-                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab">Historial canceladas</a>
+                                <a href="#solicitudesCanceladas" role="tab" data-toggle="tab" id="historialCanceladas">Historial canceladas</a>
                             </li>
                             <?php }?>
                             <?php if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 7, 9, 66))) { ?>
                                 <li>
-                                    <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
+                                    <a href="#solicitudesSUMA" role="tab" data-toggle="tab" id="historialSuma">Historial SUMA</a>
                                 </li>
                                 <li>
                                     <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
@@ -89,25 +89,20 @@
                                             </div>
                                             <div class="toolbar"> 
                                                 <div class="row">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0"></div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
-                                                        <div class="form-group select-is-empty overflow-hidden">
-                                                            <label class="control-label">Año</label>
-                                                            <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                                <?php
-                                                                setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2024; $i++) {
-                                                                    $yearName  = $i;
-                                                                    echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                                }
-
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
-                                                        <div class="form-group select-is-empty">
-                                                            <label for="proyecto" class="control-label">Proyecto</label>
-                                                            <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-md-12 p-r">
+                                                                    <div class="form-group d-flex">
+                                                                        <input type="text" class="form-control datepicker" id="beginDate" />
+                                                                        <input type="text" class="form-control datepicker" id="endDate" />
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="fechaHistorialActivos">
+                                                                            <span class="material-icons update-dataTable">search</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -139,7 +134,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="tab-pane" id="solicitudesCanceladas">
                                             <div class="encabezadoBox">
                                                 <div class="row">
@@ -153,24 +147,20 @@
                                             </div>
                                             <div class="toolbar">
                                                 <div class="row">
+                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0"></div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
-                                                        <div class="form-group overflow-hidden">
-                                                            <label class="control-label" for="proyecto">Año</label>
-                                                            <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
-                                                                <?php
-                                                                setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2025; $i++) {
-                                                                    $yearName  = $i;
-                                                                    echo '<option value="' . $i . '">' . $yearName . '</option>';
-                                                                }
-                                                                ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
-                                                        <div class="form-group">
-                                                            <label class="control-label" for="proyecto">Proyecto</label>
-                                                            <select name="catalogo_canceladas" id="catalogo_canceladas" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required><option value="0">Seleccione todo</option></select>
+                                                        <div class="container-fluid p-0">
+                                                            <div class="row">
+                                                                <div class="col-md-12 p-r">
+                                                                    <div class="form-group d-flex">
+                                                                        <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="inicioCancelados"/>
+                                                                        <input type="text" class="form-control datepicker text-center endDate" id="finalCancelados"/>
+                                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="fechaCancelados">
+                                                                            <span class="material-icons update-dataTable">search</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -214,10 +204,20 @@
                                                 </div>
                                                 <div class="toolbar">
                                                     <div class="row">
-                                                        <div class="col-12 col-sm-12 col-md-12 col-lg-6 overflow-hidden">
-                                                            <div class="form-group select-is-empty">
-                                                                <label for="anio_suma" class="control-label">AÑO</label>
-                                                                <select name="anio_suma" id="anio_suma" class="selectpicker select-gral" data-style="btn" data-container="body" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6"></div>
+                                                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div class="container-fluid p-0">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 p-r">
+                                                                        <div class="form-group d-flex">
+                                                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate" id="inicioSuma"/>
+                                                                            <input type="text" class="form-control datepicker text-center endDate" id="finalSuma"/>
+                                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="fechaSuma">
+                                                                                <span class="material-icons update-dataTable">search</span>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -287,12 +287,9 @@
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
-
-
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
-	<script type="text/javascript">
-		Shadowbox.init();
-	</script>
+	<script type="text/javascript"> 
+        Shadowbox.init(); 
+    </script>
 </body>

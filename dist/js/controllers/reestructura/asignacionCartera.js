@@ -133,60 +133,27 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                 if( d.costom2f == 'SIN ESPECIFICAR')
                     return d.costom2f;
                 else
-                    return `$${formatMoney(d.costom2f)}`;
+                    return `${formatMoney(d.costom2f)}`;
             }
         },
         {
             data: function (d) {
-                return `$${formatMoney(d.total)}`;
+                return `${formatMoney(d.total)}`;
             }
         },
         { data: "nombreAsesorAsignado"},
         {
             data: function (d) {
                 if(d.idFusion==null && d.idLotePvOrigen==null){
-                    btns = `<button class="btn-data btn-sky btn-asignar-venta"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            id="btn_${d.idLote}"
-                            title="ASIGNAR VENTA"
-                            data-idCliente="${d.idCliente}"
-                            data-idAsesorAsignado="${d.idAsesorAsignado}"
-                            data-LoteFusionado="0">
-                            <i class="fas fa-exchange-alt"></i>
-                    </button>`;
+                    btns = `<button class="btn-data btn-sky btn-asignar-venta" data-toggle="tooltip" data-placement="left" id="btn_${d.idLote}" title="ASIGNAR VENTA" data-idCliente="${d.idCliente}" data-idAsesorAsignado="${d.idAsesorAsignado}" data-LoteFusionado="0"><i class="fas fa-exchange-alt"></i></button>`;
                 }
                 if(d.idFusion!=null && d.idLotePvOrigen!=null){
                     if(d.idLotePvOrigen==d.idLote){
-                        btns = `<button class="btn-data btn-sky btn-asignar-venta"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            id="btn_${d.idLote}"
-                            title="LOTE PIVOTE ASIGNAR VENTA"
-                            data-idCliente="${d.idCliente}"
-                            data-LoteFusionado="1"
-                            data-idLote="${d.idLote}"
-                            data-idAsesorAsignado="${d.idAsesorAsignado}">
-                            <i class="fas fa-exchange-alt"></i>
-                    </button>
-                    <button class="btn-data btn-warning btn-desFusionar"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="REMOVER LOTES DE LA FUSIÓN"
-                            data-idCliente="${d.idCliente}"
-                            data-LoteFusionado="1"
-                            data-idLote="${d.idLote}"
-                            data-idAsesorAsignado="${d.idAsesorAsignado}">
-                            <i class="fas fa-user-slash"></i>
-                    </button>`;
+                        btns = `<button class="btn-data btn-sky btn-asignar-venta" data-toggle="tooltip" data-placement="left" id="btn_${d.idLote}" title="LOTE PIVOTE ASIGNAR VENTA" data-idCliente="${d.idCliente}" data-LoteFusionado="1" data-idLote="${d.idLote}" data-idAsesorAsignado="${d.idAsesorAsignado}"><i class="fas fa-exchange-alt"></i></button>
+                        <button class="btn-data btn-warning btn-desFusionar" data-toggle="tooltip" data-placement="left" title="REMOVER LOTES DE LA FUSIÓN" data-idCliente="${d.idCliente}" data-LoteFusionado="1" data-idLote="${d.idLote}" data-idAsesorAsignado="${d.idAsesorAsignado}"><i class="fas fa-user-slash"></i></button>`;
                     }else{
-                        btns = `<button class="btn-data btn-sky btn-asignar-venta"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="LOTE FUSIONADO" disabled>
-                            <i class="fas fa-exchange-alt"></i></button>`;
+                        btns = `<button class="btn-data btn-sky btn-asignar-venta" data-toggle="tooltip" data-placement="left" title="LOTE FUSIONADO" disabled><i class="fas fa-exchange-alt"></i></button>`;
                     }
-
                 }
                 return `<div class="d-flex justify-center">${btns}</div>`;
             }

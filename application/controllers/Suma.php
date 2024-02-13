@@ -69,8 +69,11 @@ class Suma extends CI_Controller
 
     public function getAllComisionesByUser(){
         $user = $this->session->userdata('id_usuario');
-        $year = $_POST['anio'];
-        $data = $this->Suma_model->getAllComisionesByUser($user, $year);
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
+        $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
+        $data = $this->Suma_model->getAllComisionesByUser($user, $beginDate, $endDate);
         echo json_encode($data);
     }
 

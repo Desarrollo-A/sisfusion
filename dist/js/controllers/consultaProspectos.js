@@ -2,7 +2,10 @@ typeTransaction = 1;
 $(document).ready(function() {
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
-    setInitialValues();
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillTable(3, finalBeginDate, finalEndDate, 0);
     getStatusRecordatorio();
 });
 
@@ -200,15 +203,9 @@ function fillTable(transaction, beginDate, endDate, where) {
                                         '<button class="btn-data btn-blueMaderas edit-information" data-id-prospecto="' + d.id_prospecto + '" data-owner="' + d.id_asesor + '" data-source="' + d.source + '" data-editProspecto="' + d.editProspecto + '" data-toggle="tooltip" data-placement="top" title="Editar"><i class="fas fa-pencil-alt"></i></button>' +
                                         '<button class="btn-data btn-sky see-information" data-id-prospecto="' + d.id_prospecto + '"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="VER INFORMACIÓN">remove_red_eye</i></button>';
                                     actions += '<button class="desplegable btn-blueMaderas" '+'id="btn_' + d.id_prospecto + '" '+'onclick="javascript: $(this).addClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').removeClass(\'hide\');">'+'<i class="fas fa-chevron-up"></i>'+'</button>';
-                                    actions += '<div class="hide boxSBtns" '+'id="cnt_' + d.id_prospecto + '">' + group_buttons + ''+'<br>'+
-                                                    '<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+'class="btn-data btn-blueMaderas">'+
-                                                        '<i class="fas fa-chevron-down"></i>'+
-                                                    '</button>'+
-                                                '</div>';
+                                    actions += '<div class="hide boxSBtns" '+'id="cnt_' + d.id_prospecto + '">' + group_buttons + ''+'<br>'+'<button onclick="javascript: $(\'#btn_' + d.id_prospecto + '\').removeClass(\'hide\');'+'$(\'#cnt_' + d.id_prospecto + '\').addClass(\'hide\');" '+'class="btn-data btn-blueMaderas">'+'<i class="fas fa-chevron-down"></i>'+'</button>'+'</div>';
                                     if (d.vigencia >= 0) {
-                                        actions += '<button class="btn-data btn-acidGreen update-validity" '+'data-id-prospecto="' + d.id_prospecto + '" '+'rel="tooltip" '+'data-placement="left"'+'data-toggle="tooltip"'+'data-placement="top" '+'title="Renovar vigencia">'+
-                                                        '<i class="fas fa-history"></i>'+
-                                                    '</button>';
+                                        actions += '<button class="btn-data btn-acidGreen update-validity" '+'data-id-prospecto="' + d.id_prospecto + '" '+'rel="tooltip" '+'data-placement="left"'+'data-toggle="tooltip"'+'data-placement="top" '+'title="Renovar vigencia">'+'<i class="fas fa-history"></i>'+'</button>';
                                     }
                                 }
                                 return '<center>'+actions+'</center>';
@@ -270,7 +267,7 @@ $('#myCoOwnerModal').modalSteps();
 sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
-            format: 'MM/DD/YYYY',
+            format: 'DD/MM/YYYY',
             icons: {
                 time: "fa fa-clock-o",
                 date: "fa fa-calendar",
@@ -292,18 +289,6 @@ $(document).on("click", "#searchByDateRange", function () {
     let finalEndDate = $("#endDate").val();
     fillTable(3, finalBeginDate, finalEndDate, 0);
 });
-
-function setInitialValues() {
-    const fechaInicio = new Date();
-    const beginDate = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), 1);
-    const fechaFin = new Date();
-    const endDate = new Date(fechaFin.getFullYear(), fechaFin.getMonth() + 1, 0);
-    $("#beginDate").val(convertDate(beginDate));
-    $("#endDate").val(convertDate(endDate));
-    finalBeginDate = [beginDate.getFullYear(), ('0' + (beginDate.getMonth() + 1)).slice(-2), ('0' + beginDate.getDate()).slice(-2)].join('-');
-    finalEndDate = [endDate.getFullYear(), ('0' + (endDate.getMonth() + 1)).slice(-2), ('0' + endDate.getDate()).slice(-2)].join('-');
-    fillTable(1, finalBeginDate, finalEndDate, 0);
-}    
 
 $("#my-coowner-form").on('submit', function(e) {
     e.preventDefault();

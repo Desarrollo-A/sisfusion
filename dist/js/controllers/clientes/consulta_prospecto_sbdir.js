@@ -215,7 +215,6 @@ $(document).on('change','#gerente', function () {
 
     $("#coordinador").empty().selectpicker('refresh');
     $("#asesores").empty().selectpicker('refresh');
-   
     $("#asesores").selectpicker('refresh');
 
     $.post(general_base_url + 'index.php/Clientes/getCoordsByGrs/' + gerente, function(data) {
@@ -384,6 +383,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                     return d.nombre;
                 }
             },
+            { data: "telefono" },
             { data: function (d) {
                     return d.asesor;
                 }

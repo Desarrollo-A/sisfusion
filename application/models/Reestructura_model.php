@@ -693,7 +693,7 @@ class Reestructura_model extends CI_Model
             FROM propuestas_x_lote pl
             INNER JOIN lotes lo ON pl.id_lotep = lo.idLote
 		    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-              WHERE pl.idLote = $idLote;");
+            WHERE pl.idLote = $idLote;");
         }
 
         return $query;
