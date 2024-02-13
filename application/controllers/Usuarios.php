@@ -360,7 +360,7 @@ class Usuarios extends CI_Controller
 
             $sedeCH = 0;
             $sucursal = 0;
-            if (($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) && $this->session->userdata('tipo') == 1) {
+            if (($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) && $this->session->userdata('tipo') == 1) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
                 /*
