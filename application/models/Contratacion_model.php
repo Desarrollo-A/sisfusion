@@ -50,8 +50,7 @@ class Contratacion_model extends CI_Model {
    }
 
    function getInventarioData($estatus, $condominio, $proyecto) {
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : $this->session->userdata('id_rol') == 40 ? "AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
-      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : ( $this->session->userdata('id_rol') == 40 ? "AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "");      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       $filtroProyecto = "";
       $filtroCondominio = "";
       $filtroEstatus = "";

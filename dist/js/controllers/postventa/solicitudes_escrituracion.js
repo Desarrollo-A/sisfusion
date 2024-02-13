@@ -1479,10 +1479,10 @@ function crearTablas(datosTablas,numTabla = ''){
                   group_buttons += `<button id="pausarSolicitud" data-idSolicitud=${d.id_solicitud} class="btn-data btn-orangeYellow" data-permisos="1" data-id-prospecto="" data-toggle="tooltip" data-placement="left" title="Pausar solicitud"><i class="fas fa-pause"></i></button>`;
                   bandera_request = (d.id_notaria == 0 && d.documentosCargados == 1 && d.presupuestoAprobado == 1 && d.formasPago == 1) 
                   ? 1 
-                  : (d.id_notaria != 0 && d.documentosCargados == 1 && d.formasPago == 1  && (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) 
+                  : (d.id_notaria != 0 && d.documentosCargados == 1 && d.formasPago == 1&& (d.presupuestoAprobado == 1 || d.presupuestoAprobado == 0 || d.presupuestoAprobado == null) 
                   ? 1 
                   : 0) ;                                        
-                  bandera_reject = 1;
+                  bandera_reject = d.id_estatus == 19 || d.id_estatus == 22 ? 1 : 0;
                 }
               break;
               case 20:
@@ -2478,7 +2478,7 @@ $(document).on("submit", "#formRechazar", function (e) { // BOTÓN RECHAZO DE DO
   e.preventDefault();
   let data = new FormData($(this)[0]);
   data.append("rejectionReasons", $("#mot_rec").val());
-  let mot_rec = ("#mot_rec").val();
+  let mot_rec = $("#mot_rec").val();
 
   if ($('.chk:checked').length >= 1) { // SE REALIZA LA SIGUIENTE CONDICIÓN PARA VALIDAR QUE SE SELECCIONE POR LO MENOS UNA CASILLA
     $.ajax({

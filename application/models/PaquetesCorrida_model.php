@@ -332,7 +332,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
             WHERE a.estatus=$estatus AND a.tipo=$tipo AND pv.id_autorizacion=$id_autorizacion")->result_array();
             $siguienteEstatus = $datosAvance[0]['estatus_siguiente'];
 
-            $comentario = $comentario == 0 ? $datosAvance[0]['comentario'] : $comentario;
+            $comentario = $comentario === 0 ? $datosAvance[0]['comentario'] : $comentario;
             $estatusRegistro = $tipo == 1 ? 1 : 2;
                 if($siguienteEstatus == 3){
                     $query_tipo_lote = $datosAvance[0]['tipo_lote'] == 2 ? '' : 'AND c.tipo_lote='.$datosAvance[0]['tipo_lote'];
@@ -355,7 +355,7 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
         return $this->db->query("SELECT ha.*,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) creadoPor 
         FROM historial_autorizacionesPMSI ha
         INNER JOIN usuarios u ON u.id_usuario=ha.id_usuario
-        WHERE idAutorizacion=$id_autorizacion AND tipo=1 
+        WHERE idAutorizacion=$id_autorizacion AND ha.tipo=1 
         ORDER BY fecha_movimiento DESC")->result_array();
     }
     public function getCatalogo($id_catalogo){ 

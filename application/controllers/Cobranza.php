@@ -211,12 +211,12 @@ class Cobranza extends CI_Controller
         echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
     }
     
-    public function reporteLotesPorComisionista() {
+    public function LotesPorComisionista() {
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
         $this->load->view('template/header');
-        $this->load->view("comisiones/reporteLotesPorComisionista_view");
+        $this->load->view("cobranza/comisionista/reporte_lotes_x_comisionista_view");
     }
 
     public function getReporteLotesPorComisionista() {

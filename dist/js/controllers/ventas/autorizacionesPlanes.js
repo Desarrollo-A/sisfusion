@@ -1,5 +1,5 @@
 let descuentosYCondiciones;
-$('#li-plan').addClass(id_rol_global == 17 ? 'hidden' : '')
+$('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
 
 sp = {
@@ -190,6 +190,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 let botones = '';
                 switch(id_rol_general){
                     case 5:
+                    case 4:
                         if(d.estatus_autorizacion == 1){
                             botones += botonesPermiso(1,1,1,0,d.id_autorizacion,d.estatus_autorizacion);
                         }
@@ -201,6 +202,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                         }
                     break;
                     case 17:
+                    case 70:
                         if(d.estatus_autorizacion == 2){
                             botones += botonesPermiso(1,0,1,1,d.id_autorizacion,d.estatus_autorizacion);
                         }
