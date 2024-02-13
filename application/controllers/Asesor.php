@@ -9,7 +9,7 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', 'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -959,8 +959,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function prospecto_a_cliente()
-    {
+    public function prospecto_a_cliente() {
         $id_prospecto = $this->input->post('id_prospecto');
         $id_cliente = $this->input->post('id_cliente');
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
@@ -1000,9 +999,7 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
-
             if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-            //if (TRUE) {
                 $arcusData = array(
                     "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
@@ -1010,15 +1007,12 @@ class Asesor extends CI_Controller {
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
-
-            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
+            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0)
                 $data_response['prospecto_update'] = 'OK';
-            } else {
+            else
                 $data_response['prospecto_update'] = 'FAIL';
-            }
-        } else {
+        } else
             $data_response['cliente_update'] = 'FAIL';
-        }
         echo json_encode($data_response);
     }
     /*********************************/
@@ -3500,9 +3494,9 @@ class Asesor extends CI_Controller {
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
 
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 47" : ", 35";
-                    $documentsNumber += 1;
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE" : $leyendaMsgValidacion;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? "" : ", 35";
+                    $documentsNumber += $dataClient[0]['proceso'] == 3 = 0 : 1;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "" : $leyendaMsgValidacion;
                 }
             }
             $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";

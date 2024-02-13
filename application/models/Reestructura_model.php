@@ -16,7 +16,7 @@ class Reestructura_model extends CI_Model
         $validacionAdicional = "";
 
         if ($id_rol == 15) { // JURÍDICO
-            if (in_array($id_usuario, array(2762, 2747, 13691))) // ES DANI, CARLITOS O CECI
+            if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario "; /* AND dxc2.flagProcesoJuridico = 0 */
             else
                 $validacionAdicional = "AND lo.estatus_preproceso IN (2) "; /* AND dxc2.flagProcesoJuridico = 0 */

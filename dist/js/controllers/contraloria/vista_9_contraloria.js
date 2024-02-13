@@ -239,12 +239,10 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
     dataExp1.append("residencia", residencia);
-
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-
     if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
     if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {

@@ -229,6 +229,8 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
@@ -437,6 +439,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -478,6 +482,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -544,6 +550,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
         else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', ISNULL(cl.apellido_paterno, ''), ' ', ISNULL(cl.apellido_materno, ''))) nombreCliente,
@@ -555,7 +563,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion, res.idResidencial
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -576,7 +584,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal'),
-        pro.lugar_prospeccion
+        pro.lugar_prospeccion, res.idResidencial
 		ORDER BY l.nombreLote");
         return $query->result();
     }
