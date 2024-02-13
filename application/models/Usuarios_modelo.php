@@ -150,7 +150,11 @@ class Usuarios_modelo extends CI_Model
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
 				}
 				else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $id_lider = $this->session->userdata('id_lider') . ', 495';
+                    $id_lider = $this->session->userdata('id_lider') . ', 471';
+                    $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+				}
+                else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
+                    $id_lider = $this->session->userdata('id_lider') . ', 21, 1545';
                     $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
 				}
                 else

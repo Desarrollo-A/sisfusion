@@ -367,7 +367,7 @@ function comisionesTablaNueva(proyecto,condominio){
                 attr: {
                     class: 'btn btn-azure',
                 }
-            }, 
+            },  
             {
             text: '<i class="fa fa-share" aria-hidden="true"></i> ENVIAR A RESGUARDO',
             action: function() {
@@ -981,21 +981,18 @@ function comisionTableRevision(proyecto,condominio){
                 if (d.penalizacion == 1){
                     lblPenalizacion ='<p class="m-0" title="PENALIZACIÓN + 90 días"><span class="label lbl-orangeYellow">PENALIZACIÓN + 90 días</span></p>';
                 }
-
                 if(d.bonificacion >= 1){
                     p1 = '<p class="m-0" title="LOTE CON BONIFICACIÓN EN NEODATA"><span class="label lbl-pink">Bon. '+formatMoney(d.bonificacion)+'</span></p>';
                 }
                 else{
                     p1 = '';
                 }
-
                 if(d.lugar_prospeccion == 0){
                     p2 = '<p class="m-0" title="LOTE CON CANCELACIÓN DE CONTRATO"><span class="label lbl-warning">Recisión</span></p>';
                 }
                 else{
                     p2 = '';
                 }
-                
                 return p1 + p2 + lblPenalizacion;
             }
         },

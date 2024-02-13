@@ -362,12 +362,16 @@ class Comisiones extends CI_Controller
   }
 
   public function acepto_comisiones_user(){
+    $resultado = FALSE;
+    $this->db->trans_begin();
     $formaPagoInvalida = [2,3,4,5];
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i,u.forma_pago FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
+    $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
+    $this->db->query("SET DATEFIRST 1");
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 1 THEN (CASE WHEN (SELECT DATEPART(DW,GETDATE())) = 3 THEN 3 ELSE 1 END ) ELSE 2 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
     if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
@@ -401,9 +405,8 @@ class Comisiones extends CI_Controller
             $pagoInvoice = array();
 
             foreach ($consulta_comisiones as $row) {
-              $id_pago_i .= implode($sep, $row['id_pago_i']);
+              $id_pago_i .= implode($sep, $row);
               $id_pago_i .= $sep;
-
               $row_arr=array(
                 'id_pago_i' => $row['id_pago_i'],
                 'id_usuario' =>  $id_user_Vl,
@@ -432,13 +435,14 @@ class Comisiones extends CI_Controller
               $this->PagoInvoice_model->insertMany($pagoInvoice);
             }
               
-            if($up_b == true && $ins_b == true){
-              $data_response = 1;
-              echo json_encode($data_response);
-            } else {
-              $data_response = 0;
-              echo json_encode($data_response);
-            } 
+              if ($up_b === FALSE || $this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                echo json_encode(array("respuesta" => 0));
+              }else{
+                $this->db->trans_commit();
+                echo json_encode(array("respuesta" => 1, "data" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array()));
+              }
+          
           }
         } else {
           $data_response = 2;
@@ -558,7 +562,7 @@ class Comisiones extends CI_Controller
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
-    $tipo = $this->session->userdata('tipo') == 1 ? 1 : 2;
+    $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
@@ -752,14 +756,12 @@ class Comisiones extends CI_Controller
     $validar_sede =$this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 2 ELSE 1 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
-   
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND TipoCorte = ".$consultaTipoUsuario[0]['tipo'] ." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
-    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio'] );
-   
+    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
     $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
     
     if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
@@ -1171,10 +1173,13 @@ class Comisiones extends CI_Controller
   }
 
   public function getDatosResguardoContraloria($user,$residencial){
+    ini_set('max_execution_time', 9000);
+    set_time_limit(9000);
+    ini_set('memory_limit','16384M');
     $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
+    /*for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
-    }
+    }*/
     echo json_encode( array( "data" => $dat));
   }
 
@@ -2749,7 +2754,7 @@ class Comisiones extends CI_Controller
         'comentario' => $comentario
       );
     }
-    $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+    $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus,$userId);
     $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
     echo ($resultUpdate && $resultMassiveInsert);
   }
@@ -3062,7 +3067,7 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/add_descuento");
   }
 
-  public function getDisponbleResguardoP($user,$opc = ''){
+  public function getDisponbleResguardo($user,$opc = ''){
     if($opc == ''){
     $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
     $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
@@ -3179,7 +3184,8 @@ class Comisiones extends CI_Controller
       "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
       "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$mesActual),
       "condominios" => $this->Comisiones_model->get_condominios_lista()->result_array(),
-      "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array()
+      "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
+      "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
     );
     echo json_encode($data);
     
@@ -3199,8 +3205,27 @@ class Comisiones extends CI_Controller
     $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
     echo json_encode($result); 
   }
-
   
+  public function getDatosReporteDesc(){
+    $data = array(
+      "sedes" => $this->General_model->listSedes()->result_array(),
+      "empresas" => $this->General_model->getCatalogOptions(61)->result_array(),
+      "puestos" => $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9')->result_array(),
+      "usuarios" => $this->General_model->getUsers('1,2,3,7,9','1,3')->result_array(),
+    );
+    echo json_encode($data);
+  }
 
+
+  public function getReporteDesc(){
+
+    $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+    $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+    $sede = $this->input->post('sede');
+    $empresa = $this->input->post('empresa');
+    $puesto = $this->input->post('puesto');
+    $usuario = $this->input->post('usuario');
+    echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
+  }
   
 }

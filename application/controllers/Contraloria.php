@@ -1690,7 +1690,7 @@ class Contraloria extends CI_Controller {
                         "fechaDeCompra" => date('Y-m-d'),
                         "montoDelNegocio" => $totalNeto2,
                         "uid" => $this->input->post('uid'),
-                        "estatus" => 1
+                        "etapa" => 'Contratado'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -3340,4 +3340,9 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
+    
+    public function reporteDescuentos() {
+		$this->load->view('template/header');
+		$this->load->view("contraloria/reporteDescuentos_view");
+	}
 }

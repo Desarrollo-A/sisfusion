@@ -327,7 +327,7 @@
                 $this->db->trans_commit();
                 if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
-                        //"propiedadRelacionada" => $row['idLote'],
+                        "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
                         "etapa" => 'No viable'
                     );

@@ -110,4 +110,8 @@ class General extends CI_Controller
     public function listSedes(){
         echo json_encode($this->General_model->listSedes()->result_array());
     }
+
+    public function getOpcionesPorCatalogo($id_catalogo) {
+        echo json_encode($this->General_model->getOpcionesPorCatalogo($id_catalogo));
+    }
 }

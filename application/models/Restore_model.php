@@ -51,7 +51,7 @@ class Restore_model extends CI_Model {
         $totalNeto2Post = !isset($datos['totalNeto2']) ? "N/A" : $datos['totalNeto2'] ;
         $totalNetoPost = !isset($datos['totalNeto']) ? "N/A" : $datos['totalNeto'] ;
 
-        $query4 = $this->db->query("SELECT idStatusContratacion, idMovimiento, perfil, comentario, usuario,
+        $query4 = $this->db->query("SELECT idStatusContratacion, idMovimiento, perfil, comentario, usuario,tipo_venta,
 		                            modificado, fechaVenc,
 									idLote FROM historial_lotes WHERE idHistorialLote = (SELECT max(idHistorialLote) FROM historial_lotes WHERE idCliente = '$idCliente');");
         $row = $query4->result();
@@ -67,6 +67,7 @@ class Restore_model extends CI_Model {
         $usuario = $row[0]->usuario;
         $modificado = $row[0]->modificado;
         $fechaVenc = $row[0]->fechaVenc;
+        $tipoVentaLote = $row[0]->tipo_venta;
         $query9 = $this->db->query("UPDATE historial_enganche SET status=0 WHERE idLote='$idlote';");
         $query = $this->db->query("UPDATE historial_enganche SET status=1 WHERE idCliente='$idCliente' AND idLote='$idlote';");
         $query2 = $this->db->query("UPDATE historial_documento SET status=0 WHERE idLote='$idlote';");
@@ -97,6 +98,7 @@ class Restore_model extends CI_Model {
                 if($row['col_afect'] == 'tipo_venta'){
                     $param = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
                     $tipoVenta = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
+                    $param = $tipoVentaLote == 1 ? 1 : $param;
                     $AND .= ", tipo_venta =  $param";
                 }elseif($row['col_afect'] == 'registro_comision'){
                     $param = $row['anterior'];
@@ -129,7 +131,7 @@ class Restore_model extends CI_Model {
         }
 
         if($idstatus < 5){
-            $cadenaTipoVenta = $tipoVenta == 1 ? 1 : 0;
+            $cadenaTipoVenta = $tipoVentaLote == 1 ? 1 : 0;
             $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,ubicacion=0,status8Flag=0,validacionEnganche=NULL,tipo_venta=".$cadenaTipoVenta;
         }/*else if(in_array($idstatus, array(5,6,7))){
             $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,status8Flag=0,validacionEnganche=NULL ";
@@ -139,7 +141,7 @@ class Restore_model extends CI_Model {
 
         $this->RecarcalcularComisiones($idlote,$idCliente,$totalNeto2,$modificado_por,$registroComision);
         $idStatusLote = $idstatus == 15 ? 2 : 3;
-        $this->db->query("UPDATE lotes SET idStatusContratacion = '$idstatus', idMovimiento = '$idmovimiento', perfil = '$perfil', usuario = 1,
+        $this->db->query("UPDATE lotes SET idStatusContratacion = '$idstatus', idMovimiento = '$idmovimiento', perfil = '$perfil', usuario = $modificado_por,
 									modificado = '$modificado', fechaVenc = '$fechaVenc',
 									status=1, idCliente='$idCliente', comentario = '$comentario', idStatusLote = $idStatusLote $AND 
                                     WHERE idLote = '$idlote';");
