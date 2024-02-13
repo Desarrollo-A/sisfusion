@@ -358,7 +358,6 @@ class Reporte_model extends CI_Model {
                     SELECT u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, 
                     cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                     SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total
-                    
                     FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -380,8 +379,7 @@ class Reporte_model extends CI_Model {
                 FROM(
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-                    --SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END ) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))as total,
-                    SUM(CASE WHEN (lo.idLote IS NULL OR lo.idLote = 0) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) / CAST(COUNT(DISTINCT COALESCE(lo.idLote, 0)) + COUNT(ISNULL(vc.id_vcompartida, 0)) AS DECIMAL(16,2)) AS total,
+                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END ) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))as total,
                     CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado 
                     ,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeNombre
                     
@@ -414,8 +412,7 @@ class Reporte_model extends CI_Model {
                     -- VENTAS CONTRATADAS
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                    --SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END ) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))as total
-                    SUM(CASE WHEN (lo.idLote IS NULL OR lo.idLote = 0) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) / CAST(COUNT(DISTINCT COALESCE(lo.idLote, 0)) + COUNT(ISNULL(vc.id_vcompartida, 0)) AS DECIMAL(16,2)) AS total
+                    SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END ) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))as total
                     ,coalesce(sede.nombre, 'SIN ESPECIFICAR') as sedeNombre
                 
                     FROM clientes cl
@@ -448,8 +445,7 @@ class Reporte_model extends CI_Model {
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, 
                     cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                     sede.nombre as sedeNombre,
-                    --SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))total 
-                    SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT COALESCE(lo.idLote, 0)) + COUNT(ISNULL(vc.id_vcompartida, 0)) AS DECIMAL(16,2)) AS total
+                    SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))total 
 
                     FROM clientes cl
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
@@ -482,9 +478,7 @@ class Reporte_model extends CI_Model {
                     SELECT CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END nombreUsuario,
                     ISNULL(u.id_rol, 0) id_rol, lo.idLote, lo.nombreLote, 
                     cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-                    --SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))total,
-                    SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT COALESCE(lo.idLote, 0)) + COUNT(ISNULL(vc.id_vcompartida, 0)) AS DECIMAL(16,2)) AS total,
-                    
+                    SUM(ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)) / CAST(COUNT(DISTINCT lo.idLote) + COUNT(vc.id_vcompartida) AS DECIMAL(16,2))total,
                     CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado,
                     COALESCE(sede.nombre, 'SIN ESPECIFICAR') as sedeNombre
 
