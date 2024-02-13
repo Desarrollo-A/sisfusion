@@ -3494,9 +3494,9 @@ class Asesor extends CI_Controller {
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
 
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 47" : ", 35";
-                    $documentsNumber += 1;
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE" : $leyendaMsgValidacion;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? "" : ", 35";
+                    $documentsNumber += $dataClient[0]['proceso'] == 3 = 0 : 1;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "" : $leyendaMsgValidacion;
                 }
             }
             $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
