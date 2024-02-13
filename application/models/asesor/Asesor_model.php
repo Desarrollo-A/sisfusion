@@ -1767,4 +1767,15 @@ class Asesor_model extends CI_Model {
             GROUP BY sede_residencial);');
         return $query->result_array();
     }
+
+    function residencialParaValidacion($idLote){
+        //saca la información del residencial, condominio y lote para ver si este lote
+        //pertenece a algun desarrollo de león y pedirle la corrida financiera
+        $query = $this->db->query("SELECT res.idResidencial, cond.idCondominio, lot.idLote FROM lotes lot 
+        INNER JOIN condominios cond ON lot.idCondominio = cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        WHERE lot.idLote = $idLote;");
+        return $query->row();
+
+    }
 }
