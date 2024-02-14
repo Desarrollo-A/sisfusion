@@ -875,7 +875,7 @@ function consultarHistorialDescuentos() {
             data: function(d){
                 TextoMostrar = '';
                 if(d.RelacionMotivo == 'NA'){
-                    if(d.evidenciaDocs == null ){
+                    if(d.evidencia == null ){
                         TextoMostrar += `
                         <p class="m-0">
                         <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
@@ -907,38 +907,62 @@ function consultarHistorialDescuentos() {
             data: function(d) {
                 
                 var botonesMostrar = ``;
-                botonesMostrar += `
-                    <div class="d-flex justify-center">
-                        <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
-                            <i class="fas fa-info">
-                            </i>
-                        </button></div>`;
-            if(d.RelacionMotivo == 'Sin préstamo relacionado'){
 
-            }else if(d.RelacionMotivo == 'NA'){
-                if(d.evidenciaDocs != null ){
+            if(d.relacion_evidencia != '' ){
+                if(d.relacion_evidencia != 'true' ){
                     botonesMostrar += `
-                            <button href="#" value="${d.id_pago_i}"  
-                                id="preview" data-doc="${d.evidenciaDocs}"  
-                                data-ruta="static/documentos/evidencia_prestamo_auto" 
-                                class="btn-data btn-violetDeep " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`;
+                    <button href="#" value="${d.id_pago_i}"  id="preview" 
+                    data-ruta="UPLOADS/EvidenciaGenericas"
+                    data-doc="${d.relacion_evidencia}"   
+                    class="btn-data btn-orangeLight " title="Ver Evidencia">
+                        <i class="fas fa-folder-open">
+                        </i>
+                    </button>`; 
+                } else if(d.evidencia != null){
+                    botonesMostrar += `
+                    <button href="#" value="${d.id_pago_i}"  id="preview" data-doc="${d.evidencia}"  
+                    data-ruta="static/documentos/evidencia_prestamo_auto" 
+                    class="btn-data btn-violetDeep " title="Ver Evidencia">
+                        <i class="fas fa-folder-open">
+                        </i>
+                    </button>`; 
                     }else{
-                       botonesMostrar += ``; 
+                        botonesMostrar += ``; 
                     }
-            }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
-                botonesMostrar += `
-                            <button href="#" value="${d.id_pago_i}"  
-                                id="preview" data-doc="${d.RelacionMotivo}"  
-                                data-ruta="UPLOADS/EvidenciaGenericas" 
-                                class="btn-data lbl-melon " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`;
-                    
+            
             }
+            //     botonesMostrar += `
+            //         <div class="d-flex justify-center">
+            //             <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
+            //                 <i class="fas fa-info">
+            //                 </i>
+            //             </button></div>`;
+            // if(d.RelacionMotivo == 'Sin préstamo relacionado'){
+
+            // }else if(d.RelacionMotivo == 'NA'){
+            //     if(d.evidenciaDocs != null ){
+            //         botonesMostrar += `
+            //                 <button href="#" value="${d.id_pago_i}"  
+            //                     id="preview" data-doc="${d.evidenciaDocs}"  
+            //                     data-ruta="static/documentos/evidencia_prestamo_auto" 
+            //                     class="btn-data btn-violetDeep " title="Ver Evidencia">
+            //                     <i class="fas fa-folder-open">
+            //                     </i>
+            //                 </button>`;
+            //         }else{
+            //            botonesMostrar += ``; 
+            //         }
+            // }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
+            //     botonesMostrar += `
+            //                 <button href="#" value="${d.id_pago_i}"  
+            //                     id="preview" data-doc="${d.RelacionMotivo}"  
+            //                     data-ruta="UPLOADS/EvidenciaGenericas" 
+            //                     class="btn-data lbl-melon " title="Ver Evidencia">
+            //                     <i class="fas fa-folder-open">
+            //                     </i>
+            //                 </button>`;
+                    
+            // }
                 // botonesMostrar += `
                 //     <button href="#" value="${d.id_prestamo}"  
                 //         id="preview" data-doc="${d.evidencia}"  
