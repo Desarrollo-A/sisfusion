@@ -278,19 +278,23 @@ class Contraloria_model extends CI_Model {
                 LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
                 LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.tipo_doc IN (41, 46) AND hd.status = 1
             WHERE 
-                l.status = 1 
-                AND l.idStatusContratacion IN (8, 11) 
-                AND l.idMovimiento IN (38, 65, 41) 
-                AND l.status8Flag = 1 
-                AND l.validacionEnganche != 'NULL' 
-                AND l.validacionEnganche IS NOT NULL 
-                AND (
-                l.totalNeto2 = 0.00 
-                OR l.totalNeto2 = '0.00' 
-                OR l.totalNeto2 <= 0.00 
-                OR l.totalNeto2 IS NULL
+                (
+                    l.status = 1 
+                    AND l.idStatusContratacion IN (8, 11) 
+                    AND l.idMovimiento IN (38, 65, 41) 
+                    AND l.status8Flag = 1 
+                    AND l.validacionEnganche != 'NULL' 
+                    AND l.validacionEnganche IS NOT NULL 
+                    AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
                 ) 
-                AND cl.status = 1 $filtroSede 
+                OR
+                (
+                    l.status = 1 
+                    AND l.idMovimiento IN (36, 41) 
+                    AND ISNULL(l.totalNeto, 0.00) > 0.00
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                )
             GROUP BY 
                 l.idLote, 
                 cl.id_cliente, 
