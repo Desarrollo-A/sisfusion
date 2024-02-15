@@ -995,7 +995,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND cl.proceso IN (2, 3, 4, 5, 6)
+        INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         WHERE pxl.estatus = 1
         ORDER BY lo.nombreLote")->result_array();
