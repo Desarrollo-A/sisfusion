@@ -331,7 +331,7 @@ $(document).ready(function () {
 
                         if(disparador != 0){
                             // BtnStats += `${disparador}`; 
-                            d.abonadoAnterior = [2,4].includes(d.proceso) ? d.sumComisionesReu : d.abonadoAnterior;
+                            d.abonadoAnterior = [2,3,4,7].includes(d.proceso) ? d.sumComisionesReu : d.abonadoAnterior;
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 
                             data-totalNeto2 = "${totalLote}"

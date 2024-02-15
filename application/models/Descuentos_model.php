@@ -259,20 +259,22 @@ class Descuentos_model extends CI_Model {
         FROM relacion_pagos_prestamo rpp2 
         WHERE rpp2.id_prestamo = rpp.id_prestamo 
         ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, 
-        rpp.id_prestamo AS id_prestamo2
+        rpp.id_prestamo AS id_prestamo2,
+        opcol.color AS colorP, opcol.nombre AS estatusPrestamo
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
+        LEFT JOIN opcs_x_cats opcol ON opcol.id_opcion = p.estatus AND opcol.id_catalogo = 118
         LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
-        WHERE p.estatus in(1,2,0)
         GROUP BY rpp.id_prestamo, 
         mrp.evidencia,
         u.nombre,u.apellido_paterno,
         u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,
         p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,
-        pendiente,opc.nombre,opc.id_opcion,p.evidenciaDocs");
+        pendiente,opc.nombre,opc.id_opcion,p.evidenciaDocs,opcol.color,opcol.nombre
+        ORDER BY p.id_prestamo DESC");
     }
     public function updatePrestamosEdit($clave, $data){
         try {
@@ -346,5 +348,23 @@ class Descuentos_model extends CI_Model {
             INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
             WHERE (pci.estatus = 0 ) AND pci.descuento_aplicado = 1");
         }
+        public function toparPrestamo($id_prestamo,$total_pagado,$usuario){
+            $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=4,pendiente=0,monto=$total_pagado,modificado_por=$usuario WHERE id_prestamo=$id_prestamo");
+            if(!$respuesta) {
+                $respuesta =  array(
+                    "response_code" => 500, 
+                    "response_type" => 'error',
+                    "message" => "Ocurrio un error");
+            } else {
+                $respuesta =  array(
+                    "response_code" => 200, 
+                    "response_type" => 'success',
+                    "message" => "Préstamo topado correctamente.");
+                }
+                return $respuesta;
+
+            }
+
+        
     
 }
