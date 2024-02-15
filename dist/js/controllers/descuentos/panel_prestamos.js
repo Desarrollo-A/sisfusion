@@ -1057,3 +1057,48 @@ function mostrar(id){
         relatedTarget[0].value = fileName;
     }
     
+
+    function configMotivo(){
+
+        $("#modal_config_motivo .modal-header").html("");
+        $("#modal_config_motivo .modal-body").html("");
+        $("#modal_config_motivo .modal-footer").html("");
+
+
+        $("#modal_config_motivo").modal();
+        $("#modal_config_motivo").modal("show");
+            
+            const Modalheader = $('#modal_config_motivo .modal-body');
+            const Modalbody = $('#modal_config_motivo .modal-body');
+            const Modalfooter = $('#modal_config_motivo .modal-footer');
+
+            Modalheader.append(`
+                <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
+                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    </h4>
+            `);
+
+            Modalheader.append(`
+						
+			<div class="form-group row">
+				<div class="col-md-3">
+					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
+					<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
+				</div>
+				<div class="col-md-3">
+					<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
+					<input class="form-control input-gral" id="numeroP" onblur="verificar();" type="number"  min="1" name="numeroP" required>
+				</div>
+				<div class="col-md-3">
+					<label class="control-label">Pago</label>
+					<input class="form-control input-gral" id="pago" type="text"  min="1" name="pago" readonly required>
+				</div>
+                <div class="col-md-3">
+                    <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
+                        <i class="fas fa-trash">
+                        </i>
+                    </button>
+				</div>
+			</div>
+            `)
+    }
