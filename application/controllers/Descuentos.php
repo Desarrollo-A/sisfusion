@@ -433,4 +433,8 @@ class Descuentos extends CI_Controller
     public function motivosOpc(){
         echo json_encode($this->Descuentos_model->motivosOpc());
     }
+    public function toparPrestamo(){
+        echo json_encode($this->Descuentos_model->toparPrestamo($this->input->post("id_prestamo"),$this->input->post("pagado"),$this->session->userdata('id_usuario')));
+    }
+
 }

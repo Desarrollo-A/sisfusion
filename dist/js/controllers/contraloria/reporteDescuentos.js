@@ -44,6 +44,7 @@ $(document).ready(function () {
             var id = puestos[i]['id_opcion'];
             var name = puestos[i]['nombre'];
             $(`#puesto`).append($('<option>').val(id).text(name.toUpperCase()));
+            i == puestos.length -1 ? $(`#puesto`).append($('<option>').val(59).text('DIRECTOR REGIONAL')) : '';
         }
         $(`.selectpicker`).selectpicker('refresh');
         $('#spiner-loader').addClass('hide');
@@ -221,7 +222,7 @@ function setTablaReporte(sede = 0, empresa = 0, puesto = 0, usuario = 0, beginDa
         },
         { 
             data: function (d) {
-        let botonesModal = '';
+            let botonesModal = '';
             let ruta =  d.relacion_evidencia == null ? `` :(d.relacion_evidencia == "true" ? `static/documentos/evidencia_prestamo_auto` : `UPLOADS/EvidenciaGenericas`); 
             let archivo =  d.relacion_evidencia == null ? `` :(d.relacion_evidencia == "true" ? `${d.evidencia}` : `${d.relacion_evidencia}`);
                 return botonesModal = ruta == '' ? '' :  `

@@ -2,7 +2,7 @@ var totaPen = 0;
 var tr;
 var valorGlobal = 3; 
 var banderaNewEvidencia = 2; 
-
+var datosDataTable = [];
 
 $(document).ready(function () {
  
@@ -15,7 +15,6 @@ function llenado(){
 
     $.post(general_base_url + "/Descuentos/lista_estatus_descuentos", function (data) {
         var len = data.length;
-        console.log(data);
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
@@ -37,8 +36,6 @@ function MostrarArchivo(tipo){
         dataType: 'JSON',
         processData: false,
         success: function (data) {
-            console.log(data)
-            console.log(data.evidencia)
             if(data.evidencia === true || data.evidencia === 'true'){
                 $('#evidenciaDIVarchivo').removeClass('hide');      
                 valorGlobal  = 1 ;
@@ -47,7 +44,6 @@ function MostrarArchivo(tipo){
                 valorGlobal  = 0 ;
             }else{
                 let cordinador = data.evidencia.split(".",2);
-                console.log(cordinador);
                 for(let i = 0;cordinador.length > i; i++)
                 {
                     if(cordinador[i] == 'pdf' || cordinador[i] == 'PDF'  ){
@@ -103,10 +99,7 @@ $("#form_prestamos").on('submit', function (e) {
     let formData = new FormData(document.getElementById("form_prestamos"));
     banderaEvidencia = document.getElementById("banderaEvidencia").value;
     formData.append("banderaEvidencia", valorGlobal);
-    console.log(valorGlobal);
     let uploadedDocument = $("#evidencia")[0].files[0];
-    console.log(uploadedDocument);
-    console.log(banderaEvidencia);
     let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
     if (validateUploadedDocument == 0  && banderaEvidencia != 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
@@ -114,8 +107,6 @@ $("#form_prestamos").on('submit', function (e) {
     if(uploadedDocument == undefined && banderaEvidencia == 0 ){
 
     }
-
-    console.log(formData)
     $.ajax({
         url: 'savePrestamo',
         data: formData,
@@ -205,13 +196,13 @@ $("#tabla_prestamos").ready(function () {
         $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
 
-            if (tabla_nuevas.column(i).search() !== this.value) {
-                tabla_nuevas.column(i).search(this.value).draw();
+            if (tablaPrestamos.column(i).search() !== this.value) {
+                tablaPrestamos.column(i).search(this.value).draw();
                 var total = 0;
                 var totalAbonado = 0;
                 var totalPendiente = 0;
-                var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_nuevas.rows(index).data();
+                var index = tablaPrestamos.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tablaPrestamos.rows(index).data();
 
                 $.each(data, function (i, v) {
                     total += parseFloat(v.monto);
@@ -268,7 +259,7 @@ $("#tabla_prestamos").ready(function () {
         document.getElementById("totalAbonado").textContent = to2;
     });
 
-    tabla_nuevas = $("#tabla_prestamos").DataTable({
+    tablaPrestamos = $("#tabla_prestamos").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [{
@@ -381,14 +372,8 @@ $("#tabla_prestamos").ready(function () {
         },
         {
             data: function (d) {
-                if (d.estatus == 1) {
-                    formato = '<span class="label lbl-blueMaderas " >ACTIVO</span>';
-                } else if (d.estatus == 3 || d.estatus == 2) {
-                    formato = '<span class="label lbl-green" >LIQUIDADO</span>';
-                } else if (d.estatus == 0) {
-                    formato = '<span class="label lbl-warning" >CANCELADO</span>';
-                }
-                return formato;
+                    return `<span class="label ${d.colorP}" >${d.estatusPrestamo}</span>`;
+                
             }
         },
         {
@@ -486,6 +471,12 @@ $("#tabla_prestamos").ready(function () {
                             <i class="fas fa-info">
                             </i>
                         </button>`;
+                        botonesModal += d.estatus == 1 ? `
+                        <button href="#" value="${d.id_prestamo}" 
+                            class="btn-data btn-warning toparPrestamo" title="Topar préstamo">
+                            <i class="fas fa-ban">
+                            </i>
+                        </button>` : '';
                 }
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -524,6 +515,28 @@ $("#tabla_prestamos").ready(function () {
             </button>`);
         $("#myModalDelete").modal();
     });
+$('#tabla_prestamos tbody').on('click', '.toparPrestamo', function () {
+    datosDataTable = [];
+    datosDataTable = tablaPrestamos.row($(this).parents('tr')).data();
+    $('#modalAlert').modal('show');
+});
+$('#formTopar').on('submit', function (e) {
+    $('#spiner-loader').removeClass('hide');
+    document.getElementById('btnTopar').disabled = true;
+    e.preventDefault();
+    if(datosDataTable.length == 0)
+        return false;
+    else
+    $.post('toparPrestamo',{id_prestamo:datosDataTable.id_prestamo,pagado:datosDataTable.total_pagado}, function (data) {
+        datosDataTable = [];
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+        $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+        $('#modalAlert').modal('toggle');
+        $('#spiner-loader').addClass('hide');
+    });
+    document.getElementById('btnTopar').disabled = false;
+});
 
 
     $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
@@ -568,9 +581,6 @@ $("#tabla_prestamos").ready(function () {
         montoPagos = montoPagos.replace(/[$]/g,'');
         numeroPagos = numeroPagos.replace(/,/g, "");
         numeroPagos = numeroPagos.replace(/[$]/g,'');
-        console.log(montoPagos,"montoPagos")
-        console.log(numeroPagos,"numeroPagos")
-        console.log(pagoEdit,"pagoEdit")
         if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
             if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
                 $.ajax({
@@ -816,7 +826,7 @@ $('#table_detalles').on('draw.dt', function() {
 });
 
 $(window).resize(function () {
-    tabla_nuevas.columns.adjust();
+    tablaPrestamos.columns.adjust();
 });
 
 $("#roles").change(function () {
@@ -876,7 +886,6 @@ $(document).on('input', '.monto', function () {
 
 $(document).on("click", "#preview", function () {
     var itself = $(this);
-    console.log(itself.attr('data-doc'))
     Shadowbox.open({
         content: `<div>
                     <iframe style="overflow:hidden;width: 100%;height: 100%; 
@@ -957,27 +966,20 @@ function mostrar(id){
  
     $(document).on("click", ".addMotivos", function () {
         
-        console.log(valorCheck); 
         if(valorCheck == undefined || valorCheck == ''  )
         {
-            console.log(123123)
             valorCheck = 'false'
         }
         if(valorCheck == true  )
         {
-            console.log(7887)
             valorCheck = 'true'
         }
         
         MotivoAlta = document.getElementById("MotivoAlta").value;
-        console.log(MotivoAlta);
         nombreSwitch = document.getElementById("nombreSwitch").value;
-        console.log(nombreSwitch);
         descripcionAlta = document.getElementById("descripcionAlta").value;
-        console.log(descripcionAlta);
 
         textoPruebas = document.getElementById("body").value;
-        console.log(descripcionAlta);
         var com2 = new FormData();
         let uploadedDocument = $("#evidenciaSwitch")[0].files[0];
         alert
@@ -997,7 +999,6 @@ function mostrar(id){
                 processData: false,
                 dataType: 'JSON',
                 success: function (data) {
-                    console.log(data)
                     llenado();
                     $("#ModalAddMotivo").modal('toggle');
                     alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
@@ -1042,10 +1043,7 @@ function mostrar(id){
 
     
     $("#body").change(function () {
-
         inputColor = document.getElementById("body").value;
-        console.log(inputColor);
-
         document.getElementById("textoPruebas").style.color = inputColor;
     });
     function watchColorPicker(event) {

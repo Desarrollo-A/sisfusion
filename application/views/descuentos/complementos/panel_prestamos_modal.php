@@ -1,13 +1,28 @@
 <div class="modal fade modal-alertas" id="myModalDelete" role="dialog">
-			<div class="modal-dialog modal-md">
-				<div class="modal-content">
-					<form method="post" id="form_delete">
-						<div class="modal-body"></div>
-						<div class="modal-footer"></div>
-					</form>
-				</div>
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<form method="post" id="form_delete">
+				<div class="modal-body"></div>
+				<div class="modal-footer"></div>
+			</form>
+		</div>
+	</div>
+</div>
+<div class="modal fade modal-alertas" id="modalAlert" role="dialog">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h3>¿Estas seguro que deseas topar este descuento?</h3>
+			</div>
+			<div class="modal-footer">
+				<form id="formTopar">     
+					<button type="button"  class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>	
+					<button  type="submit" id="btnTopar" class="btn btn-primary">Aceptar</button>
+				</from>
 			</div>
 		</div>
+	</div>
+</div>
 
 		
 		<div class="modal fade" id="ModalAddMotivo" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
