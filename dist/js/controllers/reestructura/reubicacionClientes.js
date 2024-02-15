@@ -1118,7 +1118,7 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    const flagFusion = $('#flagFusion').val()
+    // const flagFusion = $('#flagFusion').val()
     // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLotes');
     //
     // console.log('existeSeleccion', existeSeleccion);
