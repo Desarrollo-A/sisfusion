@@ -57,6 +57,7 @@ class Reestructura extends CI_Controller{
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
         if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
             $datCliente = $this->Reestructura_model->getCliente($idCliente);
+
         $datCliente->copropietarios = (count($copropietarios)>0) ? $copropietarios : array(); // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
         echo json_encode($datCliente);
     }
@@ -2494,6 +2495,8 @@ class Reestructura extends CI_Controller{
                     if($contratoSubido){
                         $archivoSubido = $this->upload->data();
                         $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
+                        print_r($nombreExpediente);
+                        exit;
                         rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
                         $dataInsert = array(
