@@ -1,9 +1,6 @@
-//$("#tabla_comisiones_sin_pago").addClass('hide');
-
 $(`#tabla_comisiones_sin_pago thead tr:eq(0) th`).each( function (i) {
-    if(i != 0){
         var title = $(this).text();
-        titulos.push(title);
+        //titulos.push(title);
         $(this).html(`<input data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function() {
             if ($(`#tabla_comisiones_sin_pago`).DataTable().column(i).search() !== this.value) {
@@ -18,10 +15,7 @@ $(`#tabla_comisiones_sin_pago thead tr:eq(0) th`).each( function (i) {
                 document.getElementById("total_disponible").textContent = to1;
             }
         });
-    }
-    else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
-    }
+        $('[data-toggle="tooltip"]').tooltip();
 }); 
 function comisionesTableSinPago (proyecto, condominio) {
     tabla_comisiones_sin_pago = $("#tabla_comisiones_sin_pago").DataTable({
@@ -108,7 +102,6 @@ function comisionesTableSinPago (proyecto, condominio) {
         }],
         columnDefs: [{
             orderable: false,
-            targets: 0,
             searchable: false,
             className: 'dt-body-center'
         }],
@@ -118,8 +111,5 @@ function comisionesTableSinPago (proyecto, condominio) {
             cache: false,
             data: function(d) {}
         },
-        initComplete: function() {
-            $('[data-toggle="tooltip"]').tooltip();
-        }
     });
 };

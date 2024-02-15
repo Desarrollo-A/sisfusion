@@ -7,19 +7,19 @@
             <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
                     <label class="m-0" for="proyecto">Proyecto</label>
-                    <select name="proyecto_wp" id="proyecto_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
+                    <select name="proyecto_sp" id="proyecto_sp" class="selectpicker select-gral proyecto" data-estatus="0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required></select>
                 </div>
             </div>
             <div class="col-6 col-sm-6 col-md-6 col-lg-6">
                 <div class="form-group">
                     <label class="m-0" for="proyecto">Condominio</label>
-                    <select name="condominio_wp" id="condominio_wp" class="selectpicker select-gral" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required><option disabled selected>Selecciona una opción</option></select>
+                    <select name="condominio_sp" id="condominio_sp" class="selectpicker select-gral condominio" data-estatus="0" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" required><option disabled selected>Selecciona una opción</option></select>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="material-datatables hide" id="boxTablaComisionesSinPago">
+<div class="material-datatables" id="boxTablaComisionesSinPago">
     <table class="table-striped table-hover" id="tabla_comisiones_sin_pago" name="tabla_comisiones_sin_pago">
         <thead>
             <tr>
