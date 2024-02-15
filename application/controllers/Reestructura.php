@@ -57,6 +57,7 @@ class Reestructura extends CI_Controller{
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosReubicacion($idLote); // MJ: BUSCA COPROPIETARIOS
         if ($datCliente == '') // MJ: SINO ENCUENTRA NADA EN datos_x_clientes SE VA A TRAER LA INFORMACIÓN DE clientes
             $datCliente = $this->Reestructura_model->getCliente($idCliente);
+
         $datCliente->copropietarios = (count($copropietarios)>0) ? $copropietarios : array(); // MJ: SE AGREGA LA INFORMACIÓN DE copropietarios
         echo json_encode($datCliente);
     }
@@ -427,6 +428,7 @@ class Reestructura extends CI_Controller{
         $totalLotes = count($idLotes);
         $flagConteo = 0;
         $arrayNoDisponible = '';
+        $statusLote=0;
         $flagFusion = $this->input->post('flagFusion');
         $idProyecto = $this->input->post('idProyecto');
 
@@ -510,12 +512,25 @@ class Reestructura extends CI_Controller{
 
             $lotesString = implode(",", $idLotes);
             $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
+            
+            if ( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] == 21 ){
+                //Reubicación en el mismo norte
+                $statusLote = 20;
+            }
+            else if( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] != 21 ){
+                //Reubicación normal
+                $statusLote = 16;
+            }
+            else{
+                //Reestructura
+                $statusLote =  17;
+            }
 
             foreach ($dataLoteDis as $index => $dataLote) {
                 $arrayLoteApartado = array(
                     'idLote' => $dataLote['idLote'],
                     //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
-                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[$index]['idResidencial'] == 21) ? 20 : (($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) : (($dataLoteDis[$index]['idResidencial'] == 21) ? 17 :(($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) ),
+                    'idStatusLote' => $statusLote,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
@@ -2494,6 +2509,8 @@ class Reestructura extends CI_Controller{
                     if($contratoSubido){
                         $archivoSubido = $this->upload->data();
                         $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
+                        print_r($nombreExpediente);
+                        exit;
                         rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
                         $dataInsert = array(
