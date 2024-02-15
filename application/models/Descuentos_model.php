@@ -346,5 +346,25 @@ class Descuentos_model extends CI_Model {
             INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
             WHERE (pci.estatus = 0 ) AND pci.descuento_aplicado = 1");
         }
+
+        function motivosOpc(){
+            $crm = "SELECT 
+            oxc0.id_opcion, oxc0.id_catalogo, mrp.id_motivo,
+            oxc0.nombre, oxc0.estatus, oxc0.color,
+            mrp.evidencia, mrp.descripcion,
+            (CASE 
+            WHEN mrp.evidencia != ('') THEN 'UPLOADS/EvidenciaGenericas'  
+            ELSE 'NA'  
+            END) as ruta,
+            mrp.modificado_por
+            FROM opcs_x_cats oxc0  
+            LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
+            WHERE id_catalogo=23 
+            AND mrp.evidencia != 'true'
+            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88)
+            ";
+
+            return $this->db->query($crm)->result_array();
+        }
     
 }

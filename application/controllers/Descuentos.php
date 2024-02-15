@@ -430,4 +430,7 @@ class Descuentos extends CI_Controller
         echo json_encode($res);
     }
 
+    public function motivosOpc(){
+        echo json_encode($this->Descuentos_model->motivosOpc());
+    }
 }

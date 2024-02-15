@@ -1,6 +1,9 @@
 var totaPen = 0;
 var tr;
-var valorGlobal = 3
+var valorGlobal = 3; 
+var banderaNewEvidencia = 2; 
+
+
 $(document).ready(function () {
  
     llenado();
@@ -1058,6 +1061,8 @@ function mostrar(id){
     }
     
 
+
+
     function configMotivo(){
 
         $("#modal_config_motivo .modal-header").html("");
@@ -1066,39 +1071,125 @@ function mostrar(id){
 
 
         $("#modal_config_motivo").modal();
-        $("#modal_config_motivo").modal("show");
+       
             
             const Modalheader = $('#modal_config_motivo .modal-body');
             const Modalbody = $('#modal_config_motivo .modal-body');
             const Modalfooter = $('#modal_config_motivo .modal-footer');
+            var dataModal = ``;
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
                     <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
                     </h4>
             `);
+            dataModal += ``; 
 
-            Modalheader.append(`
-						
-			<div class="form-group row">
-				<div class="col-md-3">
-					<label class="control-label">Monto prestado (<b class="text-danger">*</b>)</label>
-					<input class="form-control input-gral" type="number" step="any" required onblur="verificar();" id="monto"  min="1" name="monto">
-				</div>
-				<div class="col-md-3">
-					<label class="control-label">Número de pagos (<b class="text-danger">*</b>)</label>
-					<input class="form-control input-gral" id="numeroP" onblur="verificar();" type="number"  min="1" name="numeroP" required>
-				</div>
-				<div class="col-md-3">
-					<label class="control-label">Pago</label>
-					<input class="form-control input-gral" id="pago" type="text"  min="1" name="pago" readonly required>
-				</div>
-                <div class="col-md-3">
-                    <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
-                        <i class="fas fa-trash">
-                        </i>
-                    </button>
-				</div>
-			</div>
-            `)
+            $.ajax({
+                url: 'motivosOpc',
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    console.log(data)
+                    data.forEach(idx =>{
+                        console.log(idx)
+                        dataModal += `
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label class="control-label">Tipo de descuento</label>
+                                <input class="form-control input-gral" value="${idx.nombre}" type="text" step="any"id="tipo" readonly name="tipo">
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-center " style="padding-top: 25px;">
+                                    <button href="#"  class="btn-data btn-violetDeep documentoMOTIVO"
+                                    id="documentoMOTIVO" name="documentoMOTIVO" 
+                                    title="Docuementos"
+                                    data-ruta="${idx.ruta}" data-evidencia="${idx.evidencia}" data-motivo="${idx.id_motivo}">
+                                    <i class="fas fa-clipboard fa-2x"></i>
+                                    </button>
+
+                                    <button href="#"  id="evidenciaNew" name="evidenciaNew"
+                                        class="btn-data btn-sky baja-motivo" 
+                                        data-motivo="${idx.id_motivo}"
+                                        title="Subir nuevo archivo">
+                                        <i class="fas fa-plus-square fa-2x"></i>
+                                    </button>
+
+                                    <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
+                                        <i class="fas fa-trash fa-2x"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-8 hide" id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+								<div class="file-gph">
+									<input class="d-none" type="file" id="evidenciaNueva_${idx.id_motivo}" onchange="changeName(this)" name="evidenciaNueva_${idx.id_motivo}"  >
+									<input class="file-name overflow-text" id="evidenciaNueva_${idx.id_motivo}" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidenciaNueva_${idx.id_motivo}"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+								</div>
+							</div>
+                            <div class="col-md-4 hide" style="padding-top:30px; " id="evidenciaNuevaDOC_${idx.id_motivo}" name="evidenciaNuevaDOC_${idx.id_motivo}" >
+                            <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
+
+                                    <i class="fas fa-sync-alt fa-1x"></i>
+                                </button>
+                            </div>
+                            
+
+                        </div>
+                        <hr>
+                        `; 
+                    }
+                    );
+
+
+                    Modalheader.append(dataModal);
+                },
+                error: function () {
+                
+                }
+                });
     }
+
+    $(document).on("click", "#documentoMOTIVO", function () {
+        var itself = $(this);
+        Shadowbox.open({
+            content: `<div>
+                        <iframe style="overflow:hidden;width: 100%;height: 100%; 
+                                        position:absolute;z-index:999999999999999999999r!important;" 
+                                        src="${general_base_url}${itself.attr('data-ruta')}/${itself.attr('data-evidencia')}">
+                        </iframe>
+                    </div>`,
+            player: "html",
+            title: `Visualizando archivo: evidencia `,
+            width: 985,
+            height: 660
+        });
+    });
+
+
+    $(document).on("click", "#evidenciaNew", function () {
+        var motivo = $(this).attr('data-motivo');
+
+        // bandera en 2 es para cuando se bloquea y 1 para desbloquear
+        if(banderaNewEvidencia == 2){
+            $('#evidenciaNuevadiv_'+motivo).removeClass('hide');
+            $('#evidenciaNuevaDOC_'+motivo).removeClass('hide');
+
+            banderaNewEvidencia = 1;
+        }else{
+            banderaNewEvidencia = 2;
+            $('#evidenciaNuevadiv_'+motivo).addClass('hide');
+            $('#evidenciaNuevaDOC_'+motivo).removeClass('hide');
+        }
+        // $('#evidenciaNuevadiv').addClass('hide');
+        
+
+    });
+
+
+    //$(document).on('input', '.monto', function () {
+    //     verificar();
+    // });
