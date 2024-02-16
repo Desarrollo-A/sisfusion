@@ -1079,7 +1079,7 @@ class Contraloria extends CI_Controller {
                 $assigned_user = 5468;
 
             $arreglo["asig_jur"] = $assigned_user;
-        } else if ($assigned_location == 5 || $assigned_location == 16) { // EXPEDIENTES LEÓN  Y AGUASCALIENTES
+        } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
             $id_sede_jur = 5;
             $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
             $id_asig = $data_asig->contador;
@@ -1105,6 +1105,8 @@ class Contraloria extends CI_Controller {
 
             $arreglo["asig_jur"] = $assigned_user;
         }
+        else if ($assigned_location == 16) // EXPEDIENTES AGUASCALIENTES
+            $arreglo["asig_jur"] = 14183;
     }
     
     $validate = $this->Contraloria_model->validateSt6($idLote);
@@ -1683,7 +1685,6 @@ class Contraloria extends CI_Controller {
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-                //if (TRUE) {
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
                         "propiedadRelacionada" => $idLote,
@@ -2035,6 +2036,7 @@ class Contraloria extends CI_Controller {
         $comentario  =$this->input->post('comentario');
         $modificado = date('Y-m-d H:i:s');
         $fechaVenc = $this->input->post('fechaVenc');
+        $idResidencial = $this->input->post('idResidencial');
 
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 15;
@@ -2064,21 +2066,23 @@ class Contraloria extends CI_Controller {
         $validate = $this->Contraloria_model->validateSt15($idLote);
         if ($validate == 1) {
             if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
-                $insertToData = array(
-                    "movimiento" => 'CONTRATO FIRMADO',
-                    "expediente" => '',
-                    "modificado" => date('Y-m-d H:i:s'),
-                    "status" => 1,
-                    "idCliente" => $idCliente,
-                    "idCondominio" => $idCondominio,
-                    "idLote" => $idLote,
-                    "idUser" => $this->session->userdata('id_usuario'),
-                    "tipo_documento" => 0,
-                    "id_autorizacion" => 0,
-                    "tipo_doc" => 30,
-                    "estatus_validacion" =>0
-                );
-                $this->General_model->addRecord('historial_documento', $insertToData);
+                if (!in_array($idResidencial, [14, 21, 22, 25])) {
+                    $insertToData = array(
+                        "movimiento" => 'CONTRATO FIRMADO',
+                        "expediente" => '',
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "status" => 1,
+                        "idCliente" => $idCliente,
+                        "idCondominio" => $idCondominio,
+                        "idLote" => $idLote,
+                        "idUser" => $this->session->userdata('id_usuario'),
+                        "tipo_documento" => 0,
+                        "id_autorizacion" => 0,
+                        "tipo_doc" => 30,
+                        "estatus_validacion" =>0
+                    );
+                    $this->General_model->addRecord('historial_documento', $insertToData);
+                }
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
@@ -3340,4 +3344,9 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
+    
+    public function reporteDescuentos() {
+		$this->load->view('template/header');
+		$this->load->view("contraloria/reporteDescuentos_view");
+	}
 }

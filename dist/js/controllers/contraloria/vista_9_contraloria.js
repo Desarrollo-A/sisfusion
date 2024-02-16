@@ -106,11 +106,14 @@ $("#tabla_ingresar_9").ready(function () {
                 if (d.vl == '1')
                     cntActions = 'EN PROCESO DE LIBERACIÓN';
                 else {
-                    cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idProspecto="${d.id_prospecto} class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                    /*if (d.tipo_proceso != 'Normal' && d.validacionContratoFirmado == 0)
+                        cntActions = `<span class="label lbl-blueMaderas">Pendiente carga de contrato firmado</span>`;
+                    else if ((d.tipo_proceso != 'Normal' && d.validacionContratoFirmado == 1) || d.tipo_proceso == 'Normal')*/
+                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idProspecto="${d.id_prospecto} class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                     if (d.tipo_proceso == 'Normal')
                         cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS"><i class="fas fa-thumbs-down"></i></button>`;
                 }
-                return "<div class='d-flex justify-center'>" + cntActions + "</div>";
+                return `<div class='d-flex justify-center'>${cntActions}</div>`;
             }
         }],
         columnDefs: [{
@@ -236,12 +239,10 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
     dataExp1.append("residencia", residencia);
-
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-
     if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
     if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {

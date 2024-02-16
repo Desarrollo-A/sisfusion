@@ -200,7 +200,8 @@ $(document).ready(function () {
                         }
                         
                         disparador = 0;
-
+                        d.totalNeto2Cl = (parseInt(d.plan_comision) == 65  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? d.totalNeto2Cl : d.totalNeto2;
+                        d.totalNeto2Cl = (parseInt(d.proceso) === 6 || parseInt(d.proceso) === 5) ? d.totalNeto2 : d.totalNeto2Cl; 
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;

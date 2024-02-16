@@ -90,6 +90,14 @@ class Calendar extends CI_Controller {
 
     public function insertRecordatorio(){
         $objDatos = json_decode(file_get_contents("php://input"));
+
+        //Construir el data para insertar en el calendario de google
+        // $event = $this->buildEventGoogle()
+
+        //$event = $this->googleapi->createCalendarEvent($event);
+
+        //$idGoogle = $event->id:
+
         $data = array(
             "fecha_creacion" => date("Y-m-d H:i:s"),
             "medio" => $objDatos->estatus_recordatorio,

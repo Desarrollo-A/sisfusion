@@ -42,7 +42,10 @@ class Descuentos extends CI_Controller
     $this->load->view("descuentos/historial_prestamo_view");
     }
 
-
+    public function descuentos_contraloria(){
+        $this->load->view('template/header');
+        $this->load->view("descuentos/descuentos_contraloria_view");
+        }
     public function panel_descuentos(){
         $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
         $this->load->view('template/header');
@@ -59,6 +62,11 @@ class Descuentos extends CI_Controller
         $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
         $this->load->view('template/header');
         $this->load->view("descuentos/anticipo_pago_view", $datos);
+    }
+    public function panel_prestamos(){
+        $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
+        $this->load->view('template/header');
+        $this->load->view("descuentos/panel_prestamos_view", $datos);
     }
 
     // vistas fin de las vistas de este controlador
@@ -77,44 +85,106 @@ class Descuentos extends CI_Controller
     }
 
     public function savePrestamo(){
-        $this->input->post("pagoDescuento");
-        $monto = $this->input->post("montoDescuentos");
+        $bandera = 0;
+
+        $tipo = $this->input->post("tipo");
+        
+        $banderaEvidencia = $this->input->post("banderaEvidencia");
+        $file = $_FILES["evidencia"];
+        $this->input->post("pago");
+        $monto = $this->input->post("monto");
         $NumeroPagos = $this->input->post("numeroP");
-        $IdUsuario = $this->input->post("usuarioidDescuento");
-        $comentario = $this->input->post("comentarioDescuento");
+        $IdUsuario = $this->input->post("usuarioid");
+        $comentario = $this->input->post("comentario");
         $tipo = $this->input->post("tipo");
         $idUsu = intval($this->session->userdata('id_usuario')); 
         $pesos = str_replace(",", "", $monto);
-        $dato = $this->Descuentos_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
+
+        $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
         
-        if(empty($dato)){
-            $pesos=str_replace("$", "", $monto);
-            $comas =str_replace(",", "", $pesos);
-            $pago = $comas;
-            $pagoCorresp = $pago / $NumeroPagos;
-            $pagoCorresReal = $pagoCorresp;
-            $insertArray = array(
-            'id_usuario'      => $IdUsuario,
-            'monto'           => $pago,
-            'num_pagos'       => $NumeroPagos, 
-            'pago_individual' => $pagoCorresReal,
-            'comentario'      => $comentario,
-            'estatus'         => 1,
-            'pendiente'       => 0,
-            'creado_por'      => $idUsu ,
-            'fecha_creacion'  => date("Y-m-d H:i:s"),
-            'modificado_por'  => $idUsu ,
-            'fecha_modificacion'   => date("Y-m-d H:i:s"),
-            'tipo'            => $tipo
-            );
+        if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+            $aleatorio = rand(100,1000);
+            $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+            $date = date('dmYHis');
+            $expediente = $date."_".$aleatorio."_".$namedoc;
+            $ruta = "static/documentos/evidencia_prestamo_auto/";
+            if(move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)){
+                $bandera = 1;
+                
+            }else{
+                $bandera = 0;
+                $respuesta =  array(
+                    "response_code" => 800, 
+                    "response_type" => 'error',
+                    "message" => "Error Al subir el documento, inténtalo más tarde ");
+                    var_dump('entro en 2');
+                }
+        }else if($banderaEvidencia == 0){
+            $bandera = 2;
+            $expediente = '';
             
-            $respuesta =  $this->Descuentos_model->insertar_prestamos($insertArray);
-            echo json_encode($respuesta);
+        }else{
+            
+            $respuesta =  array(
+                "response_code" => 810, 
+                "response_type" => 'error',
+                "message" => "Error con el documento, inténtalo más tarde ");
+            }
+        
+
+        if ($bandera == 1 || $bandera == 2 ) {
+            if(empty($dato)){
+                $pesos=str_replace("$", "", $monto);
+                $comas =str_replace(",", "", $pesos);
+                $pago = $comas;
+                $pagoCorresp = $pago / $NumeroPagos;
+                $pagoCorresReal = $pagoCorresp;
+                $insertArray = array(
+                'id_usuario'      => $IdUsuario,
+                'monto'           => $pago,
+                'num_pagos'       => $NumeroPagos, 
+                'pago_individual' => $pagoCorresReal,
+                'comentario'      => $comentario,
+                'estatus'         => 1,
+                'pendiente'       => 0,
+                'creado_por'      => $idUsu ,
+                'fecha_creacion'  => date("Y-m-d H:i:s"),
+                'modificado_por'  => $idUsu ,
+                'fecha_modificacion'   => date("Y-m-d H:i:s"),
+                'tipo'            => $tipo,
+                'evidenciaDocs'    => "$expediente"
+            );
+            $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
+                if($respuesta){
+                    $respuesta =  array(
+                    "response_code" => 200, 
+                    "response_type" => 'success',
+                    "message" => "Préstamo se ha dado de alta correctamente");
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 811, 
+                        "response_type" => 'error',
+                        "message" => "El préstamo no se ha podido insertar, inténtalo más tarde");
+                }
+                
+        
+            } else{
+                $respuesta =  array(
+                    "response_code" => 803, 
+                    "response_type" => 'warning',
+                    "message" => "El usuario seleccionado ya tiene un préstamo activo, inténtalo más tarde ");
+            }
         } else{
-            $respuesta = 3;
-            echo json_encode($respuesta);
+            
+            $respuesta =  array(
+                "response_code" => 803, 
+                "response_type" => 'warning',
+                "message" => "No entra en ninguna bandera, inténtalo más tarde ");
+            
         }
-        }
+        echo json_encode($respuesta);
+    }
+    
     
         public function getLotesOrigen($user,$valor){
             echo json_encode($this->Descuentos_model->getLotesOrigen($user,$valor)->result_array());
@@ -255,7 +325,109 @@ class Descuentos extends CI_Controller
         }
 
         
-        
-        
+        public function altaMotivo (){
+            $MotivoAlta = $this->input->post('MotivoAlta');
+            $valorCheck = $this->input->post('valorCheck'); 
+            $descripcionAlta = $this->input->post('descripcionAlta');
+            $respuesta  =  $this->Descuentos_model->traerElUltimo();
+            $ID_OPCION  = ($respuesta->id_opcion+1);
+            $archivo    = $this->input->post('archivo');
+            $color = $this->input->post('textoPruebas');
+            $bandera = 0;
+            $expediente = '';
+            if($valorCheck == 'true' ){
+                $valorCheck = 'true'; 
+                $bandera = 2;
+            }else{
+                if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+                    $aleatorio = rand(100,1000);
+                    $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+                    $date = date('dmYHis');
+                    $expediente = $date."_".$aleatorio."_".$namedoc;
+                    $ruta = "UPLOADS/EvidenciaGenericas/";
+                }
+
+                if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
+                    $bandera = 1;
+                } // llave para subir el documento
+                else{
+                    $bandera = 0;
+                    $respuesta =  array(
+                        "response_code" => 600, 
+                        "response_type" => 'error',
+                        "message" => "Error en Al subir el documento, inténtalo más tarde ");
+                
+                }
+            }
+            if($bandera == 1 || $bandera == 2 ){
+                $insert = array(
+                    "id_opcion" => ($ID_OPCION),
+                    "id_catalogo" => 23,
+                    "nombre" => $MotivoAlta,
+                    "estatus"     => 1,
+                    "fecha_creacion" => date("Y-m-d H:i:s"),
+                    "creado_por"  => 1,
+                    "color" => $color
+                );
+    
+                $idigreso =  $this->Descuentos_model->insertarMotivo($insert);
+
+                if($valorCheck == 'true'){
+                    
+                }else if($valorCheck == 'false' ||  $valorCheck == 0  ){
+                    
+                    $valorCheck = $expediente;
+                    
+                }
+                
+                if($idigreso != 0){
+                $insertRelacion = array(                
+                    "id_opcion" => ($ID_OPCION),
+                    "evidencia" => $valorCheck,
+                    "descripcion" => $descripcionAlta,
+                    "fecha_creacion" => date("Y-m-d H:i:s"),
+                    "fecha_modificacion" => date("Y-m-d H:i:s"),
+                    "modificado_por"  => 1,
+                    "creado_por" => 1
+                );
+                $respuestaMotivoRelacion =  $this->Descuentos_model->insertarMotivoRelacion($insertRelacion);
+                
+                    if($respuestaMotivoRelacion){
+                        $respuesta =  array(
+                        "response_code" => 200, 
+                        "response_type" => 'success',
+                        "message" => "Se agregó el nuevo motivo");
+                    } else{
+                        $respuesta =  array(
+                        "response_code" => 411, 
+                        "response_type" => 'error',
+                        "message" => "Error en insertar en motivo-relación, inténtalo más tarde ");
+                    }
+    
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 410, 
+                        "response_type" => 'error',
+                        "message" => "Error en ingresar el Motivo, inténtalo más tarde ");
+                }
+            }
+
+            echo json_encode ($respuesta);
+            }
+
+
+
+    
+    public function idOpcionMotivosRelacionPrestamos(){
+        $respuesta =  $this->Descuentos_model->getRelacionPrestamos($this->input->post("id_opcion"));
+
+        echo json_encode($respuesta);
+    }
+
+
+    public function getDescuentos(){
+        $res["data"] = $this->Descuentos_model->getDescuentos()->result_array();
+        echo json_encode($res);
+    }
 
 }
