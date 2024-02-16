@@ -3445,7 +3445,7 @@
 						'1' venta_compartida 
 					FROM 
 						lotes lo
-						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) AND cl.id_sede = $id_sede
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
 					WHERE 
 						lo.status = 1 
 						AND lo.idCondominio = $condominio 
@@ -3459,7 +3459,7 @@
 					FROM 
 						lotes lo
 						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) AND cl.id_sede = $id_sede
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
 					WHERE 
 						vc.estatus = 1 
 						AND lo.status = 1 
