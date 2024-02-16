@@ -289,7 +289,9 @@
                                         LADA
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel1" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                    <select id="ladaTel1" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                            data-size="7"
+                                            data-live-search="true" data-container="body" data-width="100%" required>
 
                                     </select>
                                 </div>
@@ -315,7 +317,9 @@
                                         LADA
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                            data-size="7"
+                                            data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
                                 </div>
                             </div>
@@ -545,7 +549,10 @@
                                                                         <label class="label-on-left m-0">
                                                                             LADA TÉLEFONO CASA
                                                                         </label>
-                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%">
+                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body"
+                                                                        data-size="7" 
+                                                                         data-width="100%">
                                                                         </select>
                                                                     </div>
                                                                 </div>                                                            
@@ -565,7 +572,10 @@
                                                                             LADA CELULAR
                                                                             (<small style="color: red;">*</small>)
                                                                         </label>
-                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" 
+                                                                        data-size="7"
+                                                                        data-container="body" data-width="100%" required>
                                                                         </select>
                                                                     </div>
                                                                 </div>
