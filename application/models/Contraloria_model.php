@@ -1921,4 +1921,9 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function getFilename($idDocumento) {
         return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
     }
+
+    public function getContratoFirmado($idLote) {
+		return $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND tipo_doc = 30 AND status = 1")->result_array();
+	}
+    
 }
