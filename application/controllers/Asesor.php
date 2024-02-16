@@ -3225,7 +3225,7 @@ class Asesor extends CI_Controller {
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ) {
+        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
                 $statusContratacion = 1;
                 $idMovimiento = 89;
@@ -3494,7 +3494,7 @@ class Asesor extends CI_Controller {
             $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
 
 
-            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
+            /*if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
                     $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 34, 35" : "";
                     $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 0; // 5
@@ -3506,7 +3506,7 @@ class Asesor extends CI_Controller {
                     $documentsNumber += $dataClient[0]['proceso'] == 3 = 0 : 1;
                     $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "" : $leyendaMsgValidacion;
                 }
-            }
+            }*/
             #prueba
             $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
             $validacionAceptados = array(3, 13, 22, 31);
