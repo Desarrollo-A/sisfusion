@@ -837,7 +837,7 @@ class Contraloria extends CI_Controller {
         // SEGUIMIENTO EN TICKET #71973
         /*if (intval($infoCliente->id_gerente) === 455) // ASISTENTE ARIADNA RECIBE NOTIFICACIÓN TAMBIÉN DE EDSON PADILLA
         array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL3@CIUDADMADERAS.COM');
-        if (intval($infoCliente->id_gerente) === 5664) // ASISTENTE MARIA FERNANDA RECIBE NOTIFICACIÓN TAMBIÉN DE EDGAR GONZÁLEZ
+        if (intval($infoCliente->id_gerente) === 5604) // ASISTENTE MARIA FERNANDA RECIBE NOTIFICACIÓN TAMBIÉN DE EDGAR GONZÁLEZ
         array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL2@CIUDADMADERAS.COM');
         if (intval($infoCliente->id_gerente) === 12688) // ASISTENTE ALMA GALICIA RECIBE NOTIFICACIÓN TAMBIÉN DE NOEMI MARTIN
         array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL1@CIUDADMADERAS.COM');
