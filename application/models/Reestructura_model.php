@@ -173,7 +173,7 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             $unionQuery
@@ -814,6 +814,7 @@ class Reestructura_model extends CI_Model
             WHERE 
                 lo.idStatusLote IN (1) 
                 AND lo.status = 1 
+                AND ISNULL(lo.tipo_venta, 0) != 1
             ORDER BY 
                 UPPER(CAST(re.descripcion AS varchar(100))), 
                 co.nombre, 
