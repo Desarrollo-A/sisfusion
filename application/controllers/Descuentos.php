@@ -117,7 +117,6 @@ class Descuentos extends CI_Controller
                     "response_code" => 800, 
                     "response_type" => 'error',
                     "message" => "Error Al subir el documento, inténtalo más tarde ");
-                    var_dump('entro en 2');
                 }
         }else if($banderaEvidencia == 0){
             $bandera = 2;
@@ -197,6 +196,8 @@ class Descuentos extends CI_Controller
 
         
     public function saveDescuento($valor) {
+
+        exit;
         $saldo_comisiones = $this->input->post('saldoComisiones');
         $LotesInvolucrados = "";
 
@@ -282,8 +283,10 @@ class Descuentos extends CI_Controller
     }
 
     public function getPrestamos(){
-            $res["data"] = $this->Descuentos_model->getPrestamos()->result_array();
-            echo json_encode($res);
+        $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+        $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+        $res["data"] = $this->Descuentos_model->getPrestamos($beginDate,$endDate)->result_array();
+        echo json_encode($res);
     }
 
     public function updatePrestamos (){
@@ -435,6 +438,14 @@ class Descuentos extends CI_Controller
     }
     public function toparPrestamo(){
         echo json_encode($this->Descuentos_model->toparPrestamo($this->input->post("id_prestamo"),$this->input->post("pagado"),$this->session->userdata('id_usuario')));
+    }
+    public function getDatosView(){
+        $data = array(
+            "puestos" => $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9,38,59')->result_array(),
+            "usuarios" => $this->General_model->getUsers('1,2,3,7,9','1,3')->result_array(),
+            "tipoDescuento" => $this->Descuentos_model->lista_estatus_descuentos()->result_array(),
+        );
+        echo json_encode($data);
     }
 
 }

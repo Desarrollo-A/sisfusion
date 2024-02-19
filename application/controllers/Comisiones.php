@@ -1220,8 +1220,6 @@ class Comisiones extends CI_Controller
     $tipo = $this->input->post("tipo");
     $idUsu = intval($this->session->userdata('id_usuario')); 
     $pesos = str_replace(",", "", $monto);
-    var_dump($IdUsuario);
-    var_dump($tipo);
     $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
 
     
@@ -1509,11 +1507,12 @@ class Comisiones extends CI_Controller
   public function saveDescuento($valor) {
     $saldo_comisiones = $this->input->post('saldoComisiones');
     $LotesInvolucrados = "";
-
+    $idDescuentosGlobal = [];
     if(floatval($valor) == 1){
       $datos =  $this->input->post("idloteorigen[]");
       $descuento = $this->input->post("monto");
       $usuario = $this->input->post("usuarioid");
+      $tipoDesc = $this->input->post("tipo");
       $comentario = $this->input->post("comentario");
       $descuent0 = str_replace(",",'',$descuento);
       $descuento = str_replace("$",'',$descuent0);
@@ -1568,8 +1567,9 @@ class Comisiones extends CI_Controller
             } else{
               $comentario = $this->input->post("comentario");
             }
-            $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
-            $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+           // $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+           // $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+            array_push($idDescuentosGlobal,$id);
           }
         }else{
           $formatear = explode(",",$datos[$i]);
@@ -1583,8 +1583,9 @@ class Comisiones extends CI_Controller
           }else{
             $comentario = $this->input->post("comentario");
           }
-          $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+         // $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
           $sumaMontos = $sumaMontos + $monto;
+          array_push($idDescuentosGlobal,$id);
         }
       }
     }else{
@@ -1600,9 +1601,29 @@ class Comisiones extends CI_Controller
         $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
         $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
       }else{
-        $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
-        $dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+        //$dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+        //$dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+        array_push($idDescuentosGlobal,$id);
       }
+    }
+
+      if($valor == 1){
+        $insertArray = array(
+          'id_usuario'      => $usuario,
+          'monto'           => $descuento,
+          'num_pagos'       => 1, 
+          'pago_individual' => $descuento,
+          'comentario'      => $comentario,
+          'estatus'         => 3,
+          'pendiente'       => 0,
+          'creado_por'      => $this->session->userdata('id_usuario') ,
+          'fecha_creacion'  => date("Y-m-d H:i:s"),
+          'modificado_por'  => $this->session->userdata('id_usuario') ,
+          'fecha_modificacion'   => date("Y-m-d H:i:s"),
+          'tipo'            => $tipo,
+          'evidenciaDocs'    => ""
+      );
+      $respuesta =  $this->Comisiones_model->insertar_prestamosDescuento($insertArray,$idDescuentosGlobal);
     }
     echo json_encode($dat);    
   }

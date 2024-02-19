@@ -29,27 +29,20 @@
 						
 						</div>
 						<div class="card-content">
-												
 							<div class="toolbar">
                                 <div class="container-fluid p-0">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                             <div class="form-group d-flex justify-center align-center">
-                                                <!-- <h4 class="title-tot center-align m-0">Préstamos activos:</h4> -->
-                                                <!-- <p class="input-tot pl-1" name="totalp" id="totalp">$0.00</p> -->
                                             </div>
 											
                                         </div>
 										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                             <div class="form-group d-flex justify-center align-center">
-                                                <!-- <h4 class="title-tot center-align m-0">Abonado :</h4> -->
-                                                <!-- <p class="input-tot pl-1" name="totalAbonado" id="totalAbonado">$0.00</p> -->
                                             </div>
                                         </div>
 										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 mt-1">
                                             <div class="form-group d-flex justify-center align-center">
-                                                <!-- <h4 class="title-tot center-align m-0">Pendiente :</h4> -->
-                                                <!-- <p class="input-tot pl-1" name="totalPendiente" id="totalPendiente">$0.00</p> -->
                                             </div>
                                         </div>
                                     </div>
@@ -64,7 +57,10 @@
 												<buttons Type="button"  class="data" data-toggle="modal" data-target="#ModalAddMotivo"><i class="fas fa-plus"></i> Nuevo motivo de préstamo</buttons>
 											</div>
 										</div>
-									</div>							
+									</div>	
+									<div class="row">
+										<?php $this->load->view('descuentos/complementos/rangoFechas'); ?>
+									</div>	
                                 </div>
                             </div>
 							<div class="material-datatables">
@@ -120,9 +116,8 @@
 	<?php $this->load->view('template/footer');?>
 	
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/funcionesGeneralesComisiones.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
-	
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/dash_panel_prestamos_comple.js"></script>
 	<script type="text/javascript">
 		Shadowbox.init();
