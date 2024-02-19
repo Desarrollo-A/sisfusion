@@ -99,4 +99,16 @@ class Ajuste extends CI_Controller
         echo json_encode($respuesta);
     }
         
+
+
+    public function nuevo_anio(){
+        $this->load->view('template/header');
+        $this->load->view("ajuste/administracion/nuevo_anio_view");
+    }
+
+
+    public function getanios() {
+        $respuesta = $this->Ajuste_model->getanios()->result_array();
+        echo json_encode($respuesta);
+    }
 }

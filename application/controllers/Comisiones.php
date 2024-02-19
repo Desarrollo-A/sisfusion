@@ -17,7 +17,9 @@ class Comisiones extends CI_Controller
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
     $this->load->model('Pagos_model');
-    $this->load->model('ReporteContratacion_model');
+    $this->load->model('reporteContratacion_model');
+    $this->load->model('Contratacion_model');
+
     
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
@@ -213,7 +215,7 @@ class Comisiones extends CI_Controller
 
       default:
       $this->load->view('template/header');
-      $this->load->view("ventas/historial_contraloria");
+      $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");
       break;
     }
   }
@@ -298,20 +300,28 @@ class Comisiones extends CI_Controller
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
+        if ($this->session->userdata('id_usuario') == 13546) {// ALEJANDRO GONZÁLEZ DÁVALOS
+          $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
           $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
-        else
+        }
+        else{
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
+        }
       break;
       default:
-        $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
+     // $this->load->view('ooam/asesor_ooam_view');
+         $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
+         $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
 
-  public function getDatosComisionesRigel($proyecto,$condominio,$estado){
+  public function getDatosComisionesRigel(){
+    $proyecto = $this->input->post('idProyecto'); 
+    $condominio = $this->input->post('idCondominio'); 
+    $estado= $this->input->post('estatus'); 
     $dat =  $this->Comisiones_model->getDatosComisionesRigel($proyecto,$condominio,$estado)->result_array();
-    echo json_encode(array("data" => $dat));
+    echo json_encode($dat);
   }
 
   public function asesores_baja(){
@@ -352,17 +362,21 @@ class Comisiones extends CI_Controller
   }
 
   public function acepto_comisiones_user(){
+    $resultado = FALSE;
+    $this->db->trans_begin();
     $formaPagoInvalida = [2,3,4,5];
     $id_user_Vl = $this->session->userdata('id_usuario');
     $formaPagoUsuario = $this->session->userdata('forma_pago');
     $sol=$this->input->post('idcomision');  
-    $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i,u.forma_pago FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+    $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_comision_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
+    $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
+    $this->db->query("SET DATEFIRST 1");
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 1 THEN (CASE WHEN (SELECT DATEPART(DW,GETDATE())) = 3 THEN 3 ELSE 1 END ) ELSE 2 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
 
-    if(in_array($consulta_comisiones->result_array()[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
+    if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
 
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
       
@@ -393,7 +407,6 @@ class Comisiones extends CI_Controller
             foreach ($consulta_comisiones as $row) {
               $id_pago_i .= implode($sep, $row);
               $id_pago_i .= $sep;
-
               $row_arr=array(
                 'id_pago_i' => $row['id_pago_i'],
                 'id_usuario' =>  $id_user_Vl,
@@ -422,13 +435,14 @@ class Comisiones extends CI_Controller
               $this->PagoInvoice_model->insertMany($pagoInvoice);
             }
               
-            if($up_b == true && $ins_b == true){
-              $data_response = 1;
-              echo json_encode($data_response);
-            } else {
-              $data_response = 0;
-              echo json_encode($data_response);
-            } 
+              if ($up_b === FALSE || $this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                echo json_encode(array("respuesta" => 0));
+              }else{
+                $this->db->trans_commit();
+                echo json_encode(array("respuesta" => 1, "data" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array()));
+              }
+          
           }
         } else {
           $data_response = 2;
@@ -547,9 +561,9 @@ class Comisiones extends CI_Controller
   
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
     $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE corteOoam = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -572,12 +586,12 @@ class Comisiones extends CI_Controller
     }else{
       echo json_encode($this->Comisiones_model->getDatosProyecto($idlote,$id_usuario)->result_array());
     }
-  }
+  } 
 
   public function historial_colaborador()
   {
     $this->load->view('template/header');
-    $this->load->view("ventas/historial_contraloria");    
+    $this->load->view("comisiones/colaborador/historial_comisiones_contraloria_view");    
   }
 
   public function historial_baja(){
@@ -738,11 +752,12 @@ class Comisiones extends CI_Controller
   }
 
   public function guardar_solicitud2($usuario = ''){
-    $validar_sede =   $usuarioid =$this->session->userdata('id_sede');
+    $usuario = $this->session->userdata('id_usuario');
+    $validar_sede =$this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
     $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
     $fecha_actual = strtotime($obtenerFechaSql);
@@ -1158,10 +1173,13 @@ class Comisiones extends CI_Controller
   }
 
   public function getDatosResguardoContraloria($user,$residencial){
+    ini_set('max_execution_time', 9000);
+    set_time_limit(9000);
+    ini_set('memory_limit','16384M');
     $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
-    for( $i = 0; $i < count($dat); $i++ ){
+    /*for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
-    }
+    }*/
     echo json_encode( array( "data" => $dat));
   }
 
@@ -1192,6 +1210,8 @@ class Comisiones extends CI_Controller
   }
   
   public function savePrestamo(){
+
+    $file = $_FILES["evidencia"];
     $this->input->post("pago");
     $monto = $this->input->post("monto");
     $NumeroPagos = $this->input->post("numeroP");
@@ -1201,32 +1221,49 @@ class Comisiones extends CI_Controller
     $idUsu = intval($this->session->userdata('id_usuario')); 
     $pesos = str_replace(",", "", $monto);
     $dato = $this->Comisiones_model->getPrestamoxUser($IdUsuario ,$tipo)->result_array();
+
     
-    if(empty($dato)){
-      $pesos=str_replace("$", "", $monto);
-      $comas =str_replace(",", "", $pesos);
-      $pago = $comas;
-      $pagoCorresp = $pago / $NumeroPagos;
-      $pagoCorresReal = $pagoCorresp;
-      $insertArray = array(
-        'id_usuario'      => $IdUsuario,
-        'monto'           => $pago,
-        'num_pagos'       => $NumeroPagos, 
-        'pago_individual' => $pagoCorresReal,
-        'comentario'      => $comentario,
-        'estatus'         => 1,
-        'pendiente'       => 0,
-        'creado_por'      => $idUsu ,
-        'fecha_creacion'  => date("Y-m-d H:i:s"),
-        'modificado_por'  => $idUsu ,
-        'fecha_modificacion'   => date("Y-m-d H:i:s"),
-        'tipo'            => $tipo
-      );
-      
-      $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
-      echo json_encode($respuesta);
+    
+    if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+      $aleatorio = rand(100,1000);
+      $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+      $date = date('dmYHis');
+      $expediente = $date."_".$aleatorio."_".$namedoc;
+      $ruta = "static/documentos/evidencia_prestamo_auto/";
+    }
+
+    if (move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)) {
+        if(empty($dato)){
+          $pesos=str_replace("$", "", $monto);
+          $comas =str_replace(",", "", $pesos);
+          $pago = $comas;
+          $pagoCorresp = $pago / $NumeroPagos;
+          $pagoCorresReal = $pagoCorresp;
+          $insertArray = array(
+            'id_usuario'      => $IdUsuario,
+            'monto'           => $pago,
+            'num_pagos'       => $NumeroPagos, 
+            'pago_individual' => $pagoCorresReal,
+            'comentario'      => $comentario,
+            'estatus'         => 1,
+            'pendiente'       => 0,
+            'creado_por'      => $idUsu ,
+            'fecha_creacion'  => date("Y-m-d H:i:s"),
+            'modificado_por'  => $idUsu ,
+            'fecha_modificacion'   => date("Y-m-d H:i:s"),
+            'tipo'            => $tipo
+          );
+          
+          $respuesta =  $this->Comisiones_model->insertar_prestamos($insertArray);
+          echo json_encode($respuesta);
+        } else{
+          $respuesta = 3;
+          echo json_encode($respuesta);
+        }
     } else{
-      $respuesta = 3;
+      $data = 3;
+      echo json_encode($data);
+      $respuesta = 4;
       echo json_encode($respuesta);
     }
   }
@@ -1276,7 +1313,7 @@ class Comisiones extends CI_Controller
 
   public function bonos_contraloria(){
     $this->load->view('template/header');
-    $this->load->view("ventas/bonos");
+    $this->load->view("bonos/bonos_view");
   }
 
   public function bonos_historial(){
@@ -1470,11 +1507,12 @@ class Comisiones extends CI_Controller
   public function saveDescuento($valor) {
     $saldo_comisiones = $this->input->post('saldoComisiones');
     $LotesInvolucrados = "";
-
+    $idDescuentosGlobal = [];
     if(floatval($valor) == 1){
       $datos =  $this->input->post("idloteorigen[]");
       $descuento = $this->input->post("monto");
       $usuario = $this->input->post("usuarioid");
+      $tipoDesc = $this->input->post("tipo");
       $comentario = $this->input->post("comentario");
       $descuent0 = str_replace(",",'',$descuento);
       $descuento = str_replace("$",'',$descuent0);
@@ -1529,8 +1567,9 @@ class Comisiones extends CI_Controller
             } else{
               $comentario = $this->input->post("comentario");
             }
-            $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
-            $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+           // $dat =  $this->Comisiones_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+           // $dat =  $this->Comisiones_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+            array_push($idDescuentosGlobal,$id);
           }
         }else{
           $formatear = explode(",",$datos[$i]);
@@ -1544,8 +1583,9 @@ class Comisiones extends CI_Controller
           }else{
             $comentario = $this->input->post("comentario");
           }
-          $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+         // $dat = $this->Comisiones_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
           $sumaMontos = $sumaMontos + $monto;
+          array_push($idDescuentosGlobal,$id);
         }
       }
     }else{
@@ -1561,9 +1601,29 @@ class Comisiones extends CI_Controller
         $dat =  $this->Comisiones_model->update_descuentoEsp($id,$montoAinsertar,$comentario, $this->session->userdata('id_usuario'),$valor,$usuario);
         $dat =  $this->Comisiones_model->insertar_descuentoEsp($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
       }else{
-        $dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
-        $dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+        //$dat =  $this->Comisiones_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario);
+        //$dat =  $this->Comisiones_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
+        array_push($idDescuentosGlobal,$id);
       }
+    }
+
+      if($valor == 1){
+        $insertArray = array(
+          'id_usuario'      => $usuario,
+          'monto'           => $descuento,
+          'num_pagos'       => 1, 
+          'pago_individual' => $descuento,
+          'comentario'      => $comentario,
+          'estatus'         => 3,
+          'pendiente'       => 0,
+          'creado_por'      => $this->session->userdata('id_usuario') ,
+          'fecha_creacion'  => date("Y-m-d H:i:s"),
+          'modificado_por'  => $this->session->userdata('id_usuario') ,
+          'fecha_modificacion'   => date("Y-m-d H:i:s"),
+          'tipo'            => $tipo,
+          'evidenciaDocs'    => ""
+      );
+      $respuesta =  $this->Comisiones_model->insertar_prestamosDescuento($insertArray,$idDescuentosGlobal);
     }
     echo json_encode($dat);    
   }
@@ -1680,9 +1740,9 @@ class Comisiones extends CI_Controller
     }
   }
 
-  public function cobranza_dinamic(){
+  public function reporte_dinamico_cobranza(){
     $this->load->view('template/header');
-    $this->load->view("ventas/cobranza_dinamic");
+    $this->load->view("comisiones/cobranza/reporte_dinamico_view");
   }
   
   public function getDatosCobranzaDimamic($a,$b,$c,$d){
@@ -2715,7 +2775,7 @@ class Comisiones extends CI_Controller
         'comentario' => $comentario
       );
     }
-    $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus);
+    $resultUpdate = $this->Comisiones_model->massiveUpdateEstatusComisionInd(implode(',', $idPagos), $estatus,$userId);
     $resultMassiveInsert = $this->Comisiones_model->insert_phc($historiales);
     echo ($resultUpdate && $resultMassiveInsert);
   }
@@ -2887,9 +2947,9 @@ class Comisiones extends CI_Controller
 
   public function updateBanderaDetenida() {
     $idLote = $this->input->post('idLote');
-    $bandera = true;  
     $datosRegistro = $this->Comisiones_model->ultimoRegistro($idLote);
     $nuevoRegistroComision = $datosRegistro->anterior;
+    $bandera = $nuevoRegistroComision == 0 ? false : true;  
     $response = $this->Comisiones_model->updateBanderaDetenida($idLote , $bandera, $nuevoRegistroComision);
     echo json_encode($response);
   }
@@ -3028,7 +3088,7 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/add_descuento");
   }
 
-  public function getDisponbleResguardoP($user,$opc = ''){
+  public function getDisponbleResguardo($user,$opc = ''){
     if($opc == ''){
     $datos = $this->Comisiones_model->getDisponbleResguardo($user)->result_array();
     $extras = $this->Comisiones_model->getDisponbleExtras($user)->result_array();
@@ -3136,19 +3196,57 @@ class Comisiones extends CI_Controller
     echo json_encode($result);
   }
 
+  public function getDatosFechasProyecCondm(){
 
-  public function historialDescuentos()
-  {
-    $this->load->view('template/header');
-    $this->load->view("ventas/historialCapitalFechas");
+    $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
+    //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
+    $mesActual = date('m'); 
+    $data = array(
+      "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
+      "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$mesActual),
+      "condominios" => $this->Comisiones_model->get_condominios_lista()->result_array(),
+      "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
+      "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
+    );
+    echo json_encode($data);
+    
   }
-
   public function getYears(){
 
     $result = $this->Comisiones_model->getYears();
     echo json_encode($result);
   }
 
+  public function tipoDePago(){
+    $result = $this->Comisiones_model->tipoDePago();
+    echo json_encode($result);
+  } 
+
+  public function opnCumplimiento(){
+    $result = $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array();
+    echo json_encode($result); 
+  }
+  
+  public function getDatosReporteDesc(){
+    $data = array(
+      "sedes" => $this->General_model->listSedes()->result_array(),
+      "empresas" => $this->General_model->getCatalogOptions(61)->result_array(),
+      "puestos" => $this->General_model->getCatOptionsEspecific(1,'1,2,3,7,9')->result_array(),
+      "usuarios" => $this->General_model->getUsers('1,2,3,7,9','1,3')->result_array(),
+    );
+    echo json_encode($data);
+  }
 
 
+  public function getReporteDesc(){
+
+    $beginDate = $this->input->post("beginDate") != 0 ?  date("Y-m-d", strtotime($this->input->post("beginDate"))) : 0;
+    $endDate = $this->input->post("endDate") != 0 ? date("Y-m-d", strtotime($this->input->post("endDate"))) : 0;
+    $sede = $this->input->post('sede');
+    $empresa = $this->input->post('empresa');
+    $puesto = $this->input->post('puesto');
+    $usuario = $this->input->post('usuario');
+    echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
+  }
+  
 }

@@ -533,17 +533,19 @@ class Cobranza_model extends CI_Model {
         $arrayRol = array(1, 2, 3, 7, 9);
         $filtroQuery = 'AND id_lider IN (SELECT id_usuario FROM usuarios where id_lider = '. $idLider .')';
 
-        ($idRol === 5) ? $arrayRol = array(3, 7, 9) :
-        ($idRol === 6 ? $arrayRol = array(7, 9) :
+        ($idRol === 5) ? $arrayRol = array(1, 2, 3, 7, 9) :
+        ($idRol === 6 ? $arrayRol = array(1, 2, 3, 7, 9) :
         $filtroQuery = '');
         
         $roles = implode(', ', array_values($arrayRol)); //hace que el array se pueda usar en la consulta
 
-        return $this->db->query("SELECT us.id_usuario id_opcion, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+        return $this->db->query("SELECT us.id_usuario id_opcion, 
+        UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
         us.estatus atributo_extra, 1 id_catalogo, oxc.nombre atributo_extra2
 		FROM usuarios us
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
-		WHERE us.id_rol IN ($roles) AND us.estatus != 0 $filtroQuery AND (us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '' ) NOT LIKE '%test_%' AND ISNULL(us.correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%') $condicionXUsuario
+		WHERE us.id_rol IN ($roles) AND us.estatus != 0 $filtroQuery AND (us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '' ) NOT LIKE '%test_%' 
+        AND ISNULL(us.correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%') $condicionXUsuario
 		UNION ALL
 		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo,'0' atributo_extra2
         FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN (1, 2, 3, 9, 7, 59)

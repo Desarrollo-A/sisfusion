@@ -19,7 +19,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-sm">
@@ -38,7 +38,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -50,14 +50,20 @@
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
                             <div class="form-group">
+                                <label class="label control-label">Tipo descuentos</label>
+                                <select class="selectpicker select-gral m-0 tipo" name="tipo" id="tipo" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                </select>
+                            </div>
+                            <!--<div class="form-group" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >
+								<div class="file-gph">
+									<input class="d-none" type="file" id="evidenciaSwitch" onchange="changeName(this)" name="evidenciaSwitch"  >
+									<input class="file-name overflow-text" id="evidenciaSwitch" type="text" placeholder="No has seleccionado nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidenciaSwitch"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+								</div>
+							</div>-->
+                            <div class="form-group">
                                 <label class="label control-label">Puesto del usuario</label>
-                                <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
-                                    <option value="7">Asesor</option>
-                                    <option value="38">MKTD</option>
-                                    <option value="9">Coordinador</option>
-                                    <option value="3">Gerente</option>
-                                    <option value="2">Sub director</option>  
-                                    <option value="1">Director</option> 
+                                <select class="selectpicker select-gral m-0 rolesGlobal" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                 </select>
                             </div>
                             <div class="form-group hide" id="users">
@@ -110,13 +116,7 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="label control-label">Puesto del usuario</label>
-                                <select class="selectpicker m-0 select-gral roles2" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%" data-live-search="true" name="roles2" id="roles2" required>
-                                    <option value="7">Asesor</option>
-                                    <option value="38">MKTD</option>
-                                    <option value="9">Coordinador</option>
-                                    <option value="3">Gerente</option>
-                                    <option value="2">Sub director</option>  
-                                    <option value="1">Director</option> 
+                                <select class="selectpicker m-0 select-gral rolesGlobal" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%" data-live-search="true" name="roles2" id="roles2" required>
                                 </select>
                             </div>
                             <div class="form-group hide usuario_seleccionar" id="users">

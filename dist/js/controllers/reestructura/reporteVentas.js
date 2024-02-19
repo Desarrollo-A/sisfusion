@@ -4,9 +4,8 @@ $('#tablaReporteVentas thead tr:eq(0) th').each(function (i) {
     titulosTabla.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $('input', this).on('keyup change', function () {
-        if ($('#tablaReporteVentas').DataTable().column(i).search() !== this.value) {
+        if ($('#tablaReporteVentas').DataTable().column(i).search() !== this.value)
             $('#tablaReporteVentas').DataTable().column(i).search(this.value).draw();
-        }
     });
     $('[data-toggle="tooltip"]').tooltip();
 });
@@ -22,7 +21,7 @@ $('#tablaReporteVentas').DataTable({
         titleAttr: 'Reporte de ventas',
         title:"Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -39,7 +38,7 @@ $('#tablaReporteVentas').DataTable({
     fixedColumns: true,
     ordering: false,
     language: {
-        url: general_base_url+"static/spanishLoader_v2.json",
+        url: `${general_base_url}static/spanishLoader_v2.json`,
         paginate: {
             previous: "<i class='fa fa-angle-left'>",
             next: "<i class='fa fa-angle-right'>"
@@ -50,7 +49,7 @@ $('#tablaReporteVentas').DataTable({
     columns: [
         {
             data: function (d) {
-                return `<span class="label lbl-green">${d.tipo_proceso}</span>`;
+                return `<span class="label lbl-green">${d.tipoProceso}</span>`;
             }
         },
         { data: "nombreResidencial" },
@@ -64,7 +63,12 @@ $('#tablaReporteVentas').DataTable({
         { data: "fechaApartado" },
         {
             data: function (d) {
-                return `<span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.estatusContratacion}</span>`;
+                return `<span class="label lbl-violetBoots">${d.estatusLote}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `<span class="label lbl-blueMaderas">${d.estatusContratacion}</span>` + `<span class="label lbl-warning">${d.detalleUltimoEstatus}</span>`;
             }
         }
     ],

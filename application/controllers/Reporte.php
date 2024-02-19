@@ -195,8 +195,8 @@ class Reporte extends CI_Controller {
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
                 $fechaStatus9 = $data['data'][$x]['fechaStatus9'];
 
-                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
-                
+                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);    
+
                 if ( $fechaStatus9 != null){
                     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
                 }

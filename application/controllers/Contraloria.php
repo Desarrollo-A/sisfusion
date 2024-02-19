@@ -1690,7 +1690,7 @@ class Contraloria extends CI_Controller {
                         "fechaDeCompra" => date('Y-m-d'),
                         "montoDelNegocio" => $totalNeto2,
                         "uid" => $this->input->post('uid'),
-                        "estatus" => 1
+                        "etapa" => 'Contratado'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -3185,7 +3185,6 @@ class Contraloria extends CI_Controller {
     }
 
     public function get_tipo_venta() {
-       
         echo json_encode($this->Contraloria_model->get_tipo_venta()->result_array());
     }
 
@@ -3266,7 +3265,8 @@ class Contraloria extends CI_Controller {
         $data["modificado_por"] = $this->session->userdata('id_usuario');
         $data["fecha_modificacion"] = $fecha;
         $resultado = $this->General_model->addRecord('historial_liberacion_lotes', $data);
-        echo($resultado);
+
+        echo json_encode($resultado);
     }
 
     public function actualizar_precio($idLote, $precio){       
@@ -3340,4 +3340,9 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
+    
+    public function reporteDescuentos() {
+		$this->load->view('template/header');
+		$this->load->view("contraloria/reporteDescuentos_view");
+	}
 }

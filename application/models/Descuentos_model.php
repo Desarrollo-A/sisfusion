@@ -9,7 +9,7 @@ class Descuentos_model extends CI_Model {
     }
 
     function lista_estatus_descuentos(){
-        return $this->db->query(" SELECT * FROM opcs_x_cats WHERE id_catalogo=23 AND id_opcion in(18,19,20,21,22,23,24,25,26,29,30)");
+        return $this->db->query(" SELECT * FROM opcs_x_cats WHERE id_catalogo=23 AND id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) and estatus = 1");
     }
 
 
@@ -247,15 +247,35 @@ class Descuentos_model extends CI_Model {
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
     }
 
-    function getPrestamos(){ 
-        return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,opc.id_opcion, (SELECT TOP 1 rpp2.fecha_creacion FROM relacion_pagos_prestamo rpp2 WHERE rpp2.id_prestamo = rpp.id_prestamo ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, rpp.id_prestamo AS id_prestamo2
+    function getPrestamos($beginDate,$endDate){
+        $queryFecha = $beginDate != 0 ? "WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": ""; 
+        return $this->db->query("SELECT 
+        CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
+        p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,
+        p.fecha_creacion,p.pago_individual,pendiente,
+        SUM(pci.abono_neodata) AS total_pagado, opc.nombre AS tipo,
+        opc.id_opcion, mrp.evidencia as relacion_evidencia,
+        p.evidenciaDocs as evidencia ,mrp.estatus ,
+        (SELECT TOP 1 rpp2.fecha_creacion 
+        FROM relacion_pagos_prestamo rpp2 
+        WHERE rpp2.id_prestamo = rpp.id_prestamo 
+        ORDER BY rpp2.id_relacion_pp DESC) AS fecha_creacion_referencia, 
+        rpp.id_prestamo AS id_prestamo2,
+        opcol.color AS colorP, opcol.nombre AS estatusPrestamo
         FROM prestamos_aut p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
-        WHERE p.estatus in(1,2,0)
-        GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
+        LEFT JOIN opcs_x_cats opcol ON opcol.id_opcion = p.estatus AND opcol.id_catalogo = 118
+        LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion  AND mrp.estatus = 1
+        GROUP BY rpp.id_prestamo, 
+        mrp.evidencia,mrp.estatus ,
+        u.nombre,u.apellido_paterno,
+        u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,
+        p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,
+        pendiente,opc.nombre,opc.id_opcion,p.evidenciaDocs,opcol.color,opcol.nombre
+        ORDER BY p.id_prestamo DESC");
     }
     public function updatePrestamosEdit($clave, $data){
         try {
@@ -282,6 +302,145 @@ class Descuentos_model extends CI_Model {
                 return 1;
             }
         }       
-    
+        public function traerElUltimo(){
+            $cmd = "SELECT TOP 1 id_opcion FROM opcs_x_cats 
+                    WHERE id_catalogo = 23 ORDER BY id_opcion DESC ";
+            $resultado = $this->db->query($cmd);  
+            return $resultado->row();
+        }
 
+        public function  insertarMotivo($insert){
+            try {
+            $resultado = $this->db->insert( "opcs_x_cats",$insert);
+            
+            return $resultado;
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }    
+        }
+        public function  insertarMotivoRelacion($insert){
+            $respuesta = $this->db->insert('motivosRelacionPrestamos ',$insert);
+            return  $this->db->insert_id();
+        }
+
+        
+        public function getRelacionPrestamos($id_opcion){
+            $cmd = "SELECT evidencia  
+            FROM motivosRelacionPrestamos 
+            WHERE id_opcion = $id_opcion ";
+            
+            $resultado = $this->db->query($cmd);  
+
+            return $resultado->row();
+        }
+
+        function getDescuentos(){
+            return $this->db->query("SELECT pci.id_pago_i, CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno) AS usuario,
+            pci.abono_neodata AS monto, lo.nombreLote, pci.estatus, 
+            CONCAT(us2.nombre,' ',us2.apellido_paterno,' ',us2.apellido_materno) AS modificado_por, 
+            (CASE WHEN hc.comentario IS NULL THEN 'Sin comentario' ELSE hc.comentario END) as motivo,
+            CONVERT(VARCHAR,pci.fecha_abono,20) AS fecha_abono
+            FROM pago_comision_ind pci
+            INNER JOIN usuarios us ON us.id_usuario = pci.id_usuario
+            INNER JOIN comisiones co ON co.id_comision = pci.id_comision
+            INNER JOIN lotes lo ON lo.idLote = co.id_lote
+            LEFT JOIN historial_comisiones hc ON hc.id_pago_i = pci.id_pago_i AND hc.comentario like 'MOTIVO DESCUENTO%'
+            INNER JOIN usuarios us2 ON us2.id_usuario = pci.modificado_por
+            WHERE (pci.estatus = 0 ) AND pci.descuento_aplicado = 1");
+        }
+
+        function motivosOpc(){
+            $crm = "SELECT 
+            oxc0.id_opcion, oxc0.id_catalogo, mrp.id_motivo,
+            oxc0.nombre, oxc0.estatus, oxc0.color,
+            mrp.evidencia, mrp.descripcion,mrp.estatus,
+            (CASE 
+            WHEN mrp.evidencia != ('') THEN 'UPLOADS/EvidenciaGenericas'  
+            ELSE 'NA'  
+            END) as ruta,
+            mrp.modificado_por
+            FROM opcs_x_cats oxc0  
+            LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
+            WHERE id_catalogo=23 
+            AND mrp.evidencia != 'true'
+            AND mrp.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88)
+            AND oxc0.estatus = 1
+            AND mrp.estatus = 1
+            ";
+
+            return $this->db->query($crm)->result_array();
+        }
+        public function toparPrestamo($id_prestamo,$total_pagado,$usuario){
+            $respuesta = $this->db->query("UPDATE prestamos_aut SET estatus=4,pendiente=0,monto=$total_pagado,modificado_por=$usuario WHERE id_prestamo=$id_prestamo");
+            if(!$respuesta) {
+                $respuesta =  array(
+                    "response_code" => 500, 
+                    "response_type" => 'error',
+                    "message" => "Ocurrio un error");
+            } else {
+                $respuesta =  array(
+                    "response_code" => 200, 
+                    "response_type" => 'success',
+                    "message" => "Préstamo topado correctamente.");
+                }
+                return $respuesta;
+
+            }
+
+
+
+        public function updateMotivo($clave, $data){
+            try {
+                $this->db->WHERE('id_opcion', $clave);
+                if($this->db->update('motivosRelacionPrestamos', $data))
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }               
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }     
+            }
+    
+        public function validar($id_opcion){
+            $cmd = "SELECT * FROM prestamos_aut pa
+			LEFT JOIN  opcs_x_cats opc ON opc.id_opcion = pa.tipo AND id_catalogo = 23
+			LEFT JOIN motivosRelacionPrestamos  mrp ON opc.id_opcion = mrp.id_opcion
+			WHERE pa.estatus = 1 AND opc.id_opcion  =  $id_opcion";
+
+            $respuesta = $this->db->query($cmd)->num_rows();
+            
+            if (!$respuesta > 0) {
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }
+                
+        public function dadoDeBajaMotivo($id_opcion , $catalgo , $data){
+            try {
+                $this->db->WHERE('id_opcion', $id_opcion);
+                $this->db->where('id_catalogo', $catalgo);
+                if($this->db->update('opcs_x_cats', $data))
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }               
+            }
+            catch(Exception $e) {
+                return $e->getMessage();
+            }     
+            }
+
+            function historial_evidencia_general($id_opcion){
+                $crm = "SELECT * FROM 
+                    motivosRelacionPrestamos WHERE id_opcion = $id_opcion
+                ";
+    
+                return $this->db->query($crm)->result_array();
+            }
 }
