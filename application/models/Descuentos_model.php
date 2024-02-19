@@ -247,7 +247,8 @@ class Descuentos_model extends CI_Model {
         GROUP BY rpp.id_prestamo, u.nombre,u.apellido_paterno,u.apellido_materno,p.id_prestamo,p.id_usuario,p.monto,p.num_pagos,p.estatus,p.comentario,p.fecha_creacion,p.pago_individual,pendiente,opc.nombre,opc.id_opcion");
     }
 
-    function getPrestamos(){ 
+    function getPrestamos($beginDate,$endDate){
+        $queryFecha = $beginDate != 0 ? "WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": ""; 
         return $this->db->query("SELECT 
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
         p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,

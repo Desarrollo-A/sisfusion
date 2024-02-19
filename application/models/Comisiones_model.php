@@ -1919,6 +1919,14 @@ class Comisiones_model extends CI_Model {
         $afftectedRows = $this->db->affected_rows();
         return $afftectedRows > 0 ? 1 : FALSE ;
     }
+    function insertar_prestamosDescuento($insertArray,$arrayDescuentos){
+        $this->db->insert('prestamos_aut', $insertArray);
+        echo $id = $this->db->insert_id();
+        for ($m=0; $m < count($arrayDescuentos) ; $m++) { 
+        }
+        $afftectedRows = $this->db->affected_rows();
+        return $afftectedRows > 0 ? 1 : FALSE ;
+    }
     
     function getPrestamos(){ 
         return $this->db->query("SELECT CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
