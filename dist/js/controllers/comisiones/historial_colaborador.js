@@ -875,7 +875,7 @@ function consultarHistorialDescuentos() {
             data: function(d){
                 TextoMostrar = '';
                 if(d.RelacionMotivo == 'NA'){
-                    if(d.evidenciaDocs == null ){
+                    if(d.evidencia == null ){
                         TextoMostrar += `
                         <p class="m-0">
                         <span  id="textoInformacion" name="textoInformacion" class="label lbl-gray">
@@ -907,38 +907,71 @@ function consultarHistorialDescuentos() {
             data: function(d) {
                 
                 var botonesMostrar = ``;
-                botonesMostrar += `
-                    <div class="d-flex justify-center">
-                        <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
-                            <i class="fas fa-info">
-                            </i>
-                        </button></div>`;
-            if(d.RelacionMotivo == 'Sin préstamo relacionado'){
 
-            }else if(d.RelacionMotivo == 'NA'){
-                if(d.evidenciaDocs != null ){
+            if(d.relacion_evidencia != '' ){
+                if(d.relacion_evidencia != 'true' ){
                     botonesMostrar += `
-                            <button href="#" value="${d.id_pago_i}"  
-                                id="preview" data-doc="${d.evidenciaDocs}"  
-                                data-ruta="static/documentos/evidencia_prestamo_auto" 
-                                class="btn-data btn-violetDeep " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`;
+                    <button href="#" value="${d.id_pago_i}"  id="preview" 
+                    data-ruta="UPLOADS/EvidenciaGenericas"
+                    data-doc="${d.relacion_evidencia}"   
+                    class="btn-data btn-orangeYellow " title="Ver Evidencia">
+                        <i class="fas fa-folder-open">
+                        </i>
+                    </button>`; 
+                    botonesMostrar += 
+                    ` <button href="#" value="${d.id_pago_i}"  
+                        id="historial_previa"  name="historial_previa"
+                        data-ruta="UPLOADS/EvidenciaGenericas"
+                        data-opcion="${d.opcion}"   
+                        class="btn-data btn-gray " title="Ver Historial de Evidencia">
+                        <i class="fas fa-th-list"></i>
+                        </i>
+                    </button>`; 
+                } else if(d.evidencia != null){
+                    botonesMostrar += `
+                    <button href="#" value="${d.id_pago_i}"  id="preview" data-doc="${d.evidencia}"  
+                    data-ruta="static/documentos/evidencia_prestamo_auto" 
+                    class="btn-data btn-violetDeep " title="Ver Evidencia">
+                        <i class="fas fa-folder-open">
+                        </i>
+                    </button>`; 
                     }else{
-                       botonesMostrar += ``; 
+                        botonesMostrar += ``; 
                     }
-            }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
-                botonesMostrar += `
-                            <button href="#" value="${d.id_pago_i}"  
-                                id="preview" data-doc="${d.RelacionMotivo}"  
-                                data-ruta="UPLOADS/EvidenciaGenericas" 
-                                class="btn-data lbl-melon " title="Ver Evidencia">
-                                <i class="fas fa-folder-open">
-                                </i>
-                            </button>`;
-                    
+            
             }
+            //     botonesMostrar += `
+            //         <div class="d-flex justify-center">
+            //             <button href="#" value="${d.id_pago_i}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas consultarDetalleDelPago" title="VeER MÁS DETALLES" data-toggle="tooltip" data-placement="top">
+            //                 <i class="fas fa-info">
+            //                 </i>
+            //             </button></div>`;
+            // if(d.RelacionMotivo == 'Sin préstamo relacionado'){
+
+            // }else if(d.RelacionMotivo == 'NA'){
+            //     if(d.evidenciaDocs != null ){
+            //         botonesMostrar += `
+            //                 <button href="#" value="${d.id_pago_i}"  
+            //                     id="preview" data-doc="${d.evidenciaDocs}"  
+            //                     data-ruta="static/documentos/evidencia_prestamo_auto" 
+            //                     class="btn-data btn-violetDeep " title="Ver Evidencia">
+            //                     <i class="fas fa-folder-open">
+            //                     </i>
+            //                 </button>`;
+            //         }else{
+            //            botonesMostrar += ``; 
+            //         }
+            // }else if(d.RelacionMotivo != null && d.evidenciaDocs == null ) {
+            //     botonesMostrar += `
+            //                 <button href="#" value="${d.id_pago_i}"  
+            //                     id="preview" data-doc="${d.RelacionMotivo}"  
+            //                     data-ruta="UPLOADS/EvidenciaGenericas" 
+            //                     class="btn-data lbl-melon " title="Ver Evidencia">
+            //                     <i class="fas fa-folder-open">
+            //                     </i>
+            //                 </button>`;
+                    
+            // }
                 // botonesMostrar += `
                 //     <button href="#" value="${d.id_prestamo}"  
                 //         id="preview" data-doc="${d.evidencia}"  
@@ -1096,9 +1129,10 @@ function consultarHistorialOOAM() {
 $(document).on("click", "#preview", function () {
     var itself = $(this);
     var ruta = $(this).attr('data-ruta');
+    $('#modal_vista_evidencias').modal('hide')
     Shadowbox.open({
         content: `<div>
-                    <iframe style="overflow:hidden;width: 100%;height: 100%; position:absolute;z-index:999999!important;" 
+                    <iframe style="overflow:hidden;width: 100%;height: 100%; position:absolute;z-index:9999!important;" 
                         src="${general_base_url}${itself.attr('data-ruta')}/${itself.attr('data-doc')}">
                     </iframe>
                 </div>`,
@@ -1108,5 +1142,67 @@ $(document).on("click", "#preview", function () {
         height: 660
     });
 });
+$(document).on("click", "#historial_previa", function () {
+    
+    
+    $("#modal_vista_evidencias").modal();
+    $("#modal_vista_evidencias .modal-header").html("");
+    $("#modal_vista_evidencias .modal-body").html("");
+    $("#modal_vista_evidencias .modal-footer").html("");
+
+        const Modalheader = $('#modal_vista_evidencias .modal-body');
+        const Modalbody = $('#modal_vista_evidencias .modal-body');
+        const Modalfooter = $('#modal_vista_evidencias .modal-footer');
+        var dataModal = ``;
+
+        Modalheader.append(`
+            
+                <h4>EVIDENCIAS DEL DESCUENTO.
+                </h4>
+        `);
+        dataModal += `<div class="col-md-12"><div class="d-flex justify-center "  style="padding-top: 25px;">`; 
+
+    var opcion = $(this).attr('data-opcion');
+
+    var com2 = new FormData();
+    var conta = 0;
+//  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
+
+    com2.append("id_opcion", opcion);
+    if(opcion != ''){
+        $.ajax({
+            url: general_base_url+'Descuentos/historial_evidencia_general',
+            data: com2,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function (data) {
+                conta = 1;
+                data.forEach(idx =>{
+                    
+                    dataModal += ` <button href="#" value="${idx.id_motivo}"  id="preview" 
+                    data-ruta="UPLOADS/EvidenciaGenericas"
+                    data-doc="${idx.evidencia}"   
+                    class="btn-data btn-orangeYellow " title="Ver Evidencia ${conta}">
+                        <i class="fas fa-folder-open">
+                        </i>
+                    </button>`;
+                    conta++;
+                });
+                dataModal += `</div"></div>`; 
+                Modalbody.append(dataModal);
+            }, 
+            error: function () {
+                alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+            }
+        });
+    }else{
+        alerts.showNotification("top", "right", "Faltan datos al enviarse, inténtalo más tarde o comunicar a sistemas","warning");
+    }
+    
+});
+
 
 

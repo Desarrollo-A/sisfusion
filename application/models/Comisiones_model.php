@@ -213,7 +213,7 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         lor.sup AS supAnt, l.sup AS supAct, 
-        ISNULL(pc.abonado,0) abonadoAnterior
+        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -238,6 +238,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
+        LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,id_lote,idCliente FROM comisiones GROUP BY id_lote,idCliente) sumComisionReu ON sumComisionReu.id_lote = lor.idLote AND sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
         AND (pc.bandera IN (0,100) OR pc.bandera IS NULL)
@@ -596,10 +597,15 @@ class Comisiones_model extends CI_Model {
 
             LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
-            WHERE pci1.estatus IN (1,4,6,8) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) AND com.id_usuario = $user_data
-            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus)
+            WHERE pci1.estatus IN (1,4,6,8) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) 
+            AND com.id_usuario = $user_data
+            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, 
+            oxcest.nombre, sed.impuesto, pac.bonificacion, opt.fecha_creacion, opt.estatus)
             UNION
-            (SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente,
+            (SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) lote,
+             re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, 
+             pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente,
 
              /*(CASE WHEN com.ooam = 1 THEN ' (EEC)' ELSE '' END) estatus_actual, */
             (CASE WHEN com.ooam = 1 THEN  CONCAT(oxcest.nombre,' (EEC)') ELSE oxcest.nombre END) estatus_actual,
@@ -625,7 +631,11 @@ class Comisiones_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
             WHERE pci1.estatus IN (1,4,6,8) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
-            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2)");
+            GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, 
+            lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, 
+            pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i,
+            pac.porcentaje_abono, oxcest.nombre, sed.impuesto, pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, 
+            oxc0.nombre, cl.id_cliente_reubicacion_2)");
     }
     
     function factura_comision( $uuid, $id_res){
@@ -3109,7 +3119,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
         INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
         INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29,30) AND pci.descuento_aplicado = 1
+        INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus=pa.tipo AND pci.descuento_aplicado = 1
         INNER JOIN comisiones c ON c.id_comision = pci.id_comision
         INNER JOIN lotes l ON l.idLote = c.id_lote
         INNER JOIN condominios con ON con.idCondominio=l.idCondominio
@@ -3810,11 +3820,12 @@ class Comisiones_model extends CI_Model {
 		ELSE mrp.evidencia 
 		END) as RelacionMotivo,
 
-		p.evidenciaDocs,
+		p.evidenciaDocs as evidencia,
 		rpp.id_prestamo,rpp.id_relacion_pp, 
-		mrp.evidencia as relacionPrestamoEvidencia,
+		mrp.evidencia as relacion_evidencia,
 		mrp.id_opcion as relacionPrestamo,
-		oxc0.id_opcion as opcion
+		oxc0.id_opcion as opcion,
+        mrp.estatus
         FROM pago_comision_ind pci  
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
         INNER JOIN lotes lo ON lo.idLote = co.id_lote AND lo.status IN (0,1)
@@ -3823,7 +3834,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_pago_i = pci.id_pago_i
 		LEFT JOIN prestamos_aut p ON p.id_prestamo = rpp.id_prestamo
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
-		LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
+		LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion  AND mrp.estatus = 1
         WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
     }
 

@@ -1,6 +1,9 @@
 var totaPen = 0;
 var tr;
-var valorGlobal = 3
+var valorGlobal = 3; 
+var banderaNewEvidencia = 2; 
+var datosDataTable = [];
+
 $(document).ready(function () {
  
     llenado();
@@ -12,7 +15,6 @@ function llenado(){
 
     $.post(general_base_url + "/Descuentos/lista_estatus_descuentos", function (data) {
         var len = data.length;
-        console.log(data);
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
@@ -34,8 +36,6 @@ function MostrarArchivo(tipo){
         dataType: 'JSON',
         processData: false,
         success: function (data) {
-            console.log(data)
-            console.log(data.evidencia)
             if(data.evidencia === true || data.evidencia === 'true'){
                 $('#evidenciaDIVarchivo').removeClass('hide');      
                 valorGlobal  = 1 ;
@@ -44,7 +44,6 @@ function MostrarArchivo(tipo){
                 valorGlobal  = 0 ;
             }else{
                 let cordinador = data.evidencia.split(".",2);
-                console.log(cordinador);
                 for(let i = 0;cordinador.length > i; i++)
                 {
                     if(cordinador[i] == 'pdf' || cordinador[i] == 'PDF'  ){
@@ -100,10 +99,7 @@ $("#form_prestamos").on('submit', function (e) {
     let formData = new FormData(document.getElementById("form_prestamos"));
     banderaEvidencia = document.getElementById("banderaEvidencia").value;
     formData.append("banderaEvidencia", valorGlobal);
-    console.log(valorGlobal);
     let uploadedDocument = $("#evidencia")[0].files[0];
-    console.log(uploadedDocument);
-    console.log(banderaEvidencia);
     let validateUploadedDocument = (uploadedDocument == undefined) ? 0 : 1;
     // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
     if (validateUploadedDocument == 0  && banderaEvidencia != 0) alerts.showNotification("top", "right", "Asegúrese de haber seleccionado un archivo antes de guardar.", "warning");
@@ -111,8 +107,6 @@ $("#form_prestamos").on('submit', function (e) {
     if(uploadedDocument == undefined && banderaEvidencia == 0 ){
 
     }
-
-    console.log(formData)
     $.ajax({
         url: 'savePrestamo',
         data: formData,
@@ -202,13 +196,13 @@ $("#tabla_prestamos").ready(function () {
         $(this).html('<input type="text" class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
 
-            if (tabla_nuevas.column(i).search() !== this.value) {
-                tabla_nuevas.column(i).search(this.value).draw();
+            if (tablaPrestamos.column(i).search() !== this.value) {
+                tablaPrestamos.column(i).search(this.value).draw();
                 var total = 0;
                 var totalAbonado = 0;
                 var totalPendiente = 0;
-                var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_nuevas.rows(index).data();
+                var index = tablaPrestamos.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tablaPrestamos.rows(index).data();
 
                 $.each(data, function (i, v) {
                     total += parseFloat(v.monto);
@@ -265,7 +259,7 @@ $("#tabla_prestamos").ready(function () {
         document.getElementById("totalAbonado").textContent = to2;
     });
 
-    tabla_nuevas = $("#tabla_prestamos").DataTable({
+    tablaPrestamos = $("#tabla_prestamos").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [{
@@ -378,14 +372,8 @@ $("#tabla_prestamos").ready(function () {
         },
         {
             data: function (d) {
-                if (d.estatus == 1) {
-                    formato = '<span class="label lbl-blueMaderas " >ACTIVO</span>';
-                } else if (d.estatus == 3 || d.estatus == 2) {
-                    formato = '<span class="label lbl-green" >LIQUIDADO</span>';
-                } else if (d.estatus == 0) {
-                    formato = '<span class="label lbl-warning" >CANCELADO</span>';
-                }
-                return formato;
+                    return `<span class="label ${d.colorP}" >${d.estatusPrestamo}</span>`;
+                
             }
         },
         {
@@ -483,6 +471,12 @@ $("#tabla_prestamos").ready(function () {
                             <i class="fas fa-info">
                             </i>
                         </button>`;
+                        botonesModal += d.estatus == 1 ? `
+                        <button href="#" value="${d.id_prestamo}" 
+                            class="btn-data btn-warning toparPrestamo" title="Topar préstamo">
+                            <i class="fas fa-ban">
+                            </i>
+                        </button>` : '';
                 }
 
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
@@ -521,6 +515,28 @@ $("#tabla_prestamos").ready(function () {
             </button>`);
         $("#myModalDelete").modal();
     });
+$('#tabla_prestamos tbody').on('click', '.toparPrestamo', function () {
+    datosDataTable = [];
+    datosDataTable = tablaPrestamos.row($(this).parents('tr')).data();
+    $('#modalAlert').modal('show');
+});
+$('#formTopar').on('submit', function (e) {
+    $('#spiner-loader').removeClass('hide');
+    document.getElementById('btnTopar').disabled = true;
+    e.preventDefault();
+    if(datosDataTable.length == 0)
+        return false;
+    else
+    $.post('toparPrestamo',{id_prestamo:datosDataTable.id_prestamo,pagado:datosDataTable.total_pagado}, function (data) {
+        datosDataTable = [];
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+        $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+        $('#modalAlert').modal('toggle');
+        $('#spiner-loader').addClass('hide');
+    });
+    document.getElementById('btnTopar').disabled = false;
+});
 
 
     $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
@@ -565,9 +581,6 @@ $("#tabla_prestamos").ready(function () {
         montoPagos = montoPagos.replace(/[$]/g,'');
         numeroPagos = numeroPagos.replace(/,/g, "");
         numeroPagos = numeroPagos.replace(/[$]/g,'');
-        console.log(montoPagos,"montoPagos")
-        console.log(numeroPagos,"numeroPagos")
-        console.log(pagoEdit,"pagoEdit")
         if (pagoEdit != '' && numeroPagos != '' && montoPagos != '' && comentario != '' && prestamoId != '' && bandera_request) {
             if (pagoEdit > 0 && montoPagos > 0 && numeroPagos > 0) {
                 $.ajax({
@@ -813,7 +826,7 @@ $('#table_detalles').on('draw.dt', function() {
 });
 
 $(window).resize(function () {
-    tabla_nuevas.columns.adjust();
+    tablaPrestamos.columns.adjust();
 });
 
 $("#roles").change(function () {
@@ -873,7 +886,6 @@ $(document).on('input', '.monto', function () {
 
 $(document).on("click", "#preview", function () {
     var itself = $(this);
-    console.log(itself.attr('data-doc'))
     Shadowbox.open({
         content: `<div>
                     <iframe style="overflow:hidden;width: 100%;height: 100%; 
@@ -954,30 +966,22 @@ function mostrar(id){
  
     $(document).on("click", ".addMotivos", function () {
         
-        console.log(valorCheck); 
         if(valorCheck == undefined || valorCheck == ''  )
         {
-            console.log(123123)
             valorCheck = 'false'
         }
         if(valorCheck == true  )
         {
-            console.log(7887)
             valorCheck = 'true'
         }
         
         MotivoAlta = document.getElementById("MotivoAlta").value;
-        console.log(MotivoAlta);
         nombreSwitch = document.getElementById("nombreSwitch").value;
-        console.log(nombreSwitch);
         descripcionAlta = document.getElementById("descripcionAlta").value;
-        console.log(descripcionAlta);
 
         textoPruebas = document.getElementById("body").value;
-        console.log(descripcionAlta);
         var com2 = new FormData();
         let uploadedDocument = $("#evidenciaSwitch")[0].files[0];
-        alert
         com2.append("evidencia", uploadedDocument);
         com2.append("MotivoAlta", MotivoAlta); 
         com2.append("valorCheck", valorCheck); 
@@ -994,7 +998,6 @@ function mostrar(id){
                 processData: false,
                 dataType: 'JSON',
                 success: function (data) {
-                    console.log(data)
                     llenado();
                     $("#ModalAddMotivo").modal('toggle');
                     alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
@@ -1039,10 +1042,7 @@ function mostrar(id){
 
     
     $("#body").change(function () {
-
         inputColor = document.getElementById("body").value;
-        console.log(inputColor);
-
         document.getElementById("textoPruebas").style.color = inputColor;
     });
     function watchColorPicker(event) {
@@ -1057,3 +1057,303 @@ function mostrar(id){
         relatedTarget[0].value = fileName;
     }
     
+
+
+
+    function configMotivo(){
+        $("#modal_config_motivo").modal();
+        $("#modal_config_motivo .modal-header").html("");
+        $("#modal_config_motivo .modal-body").html("");
+        $("#modal_config_motivo .modal-footer").html("");
+
+            const Modalheader = $('#modal_config_motivo .modal-body');
+            const Modalbody = $('#modal_config_motivo .modal-body');
+            const Modalfooter = $('#modal_config_motivo .modal-footer');
+            var dataModal = ``;
+
+            Modalheader.append(`
+                <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
+                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    </h4>
+            `);
+            dataModal += ``; 
+
+            $.ajax({
+                url: 'motivosOpc',
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    console.log(data)
+                    data.forEach(idx =>{
+                        
+                        dataModal += `
+                        <div class="form-group row">
+                            <div class="col-md-8">
+                                <label class="control-label">Tipo de descuento</label>
+                                <input class="form-control input-gral" value="${idx.nombre}" type="text" step="any"id="tipo" readonly name="tipo">
+                            </div>
+                            <div class="col-md-4">
+
+
+                                <div class="d-flex justify-center " 
+
+                                    style="padding-top: 25px;">
+                                    <button href="#" onclick="verDOCUMENTO('${idx.ruta}','${idx.evidencia}')"
+                                    class="btn-data btn-violetDeep documentoMOTIVO"
+                                    id="documentoMOTIVO_${idx.id_motivo}" name="documentoMOTIVO_${idx.id_motivo}" 
+                                    title="Docuementos"
+                                    data-ruta="${idx.ruta}" data-evidencia="${idx.evidencia}" data-motivo="${idx.id_motivo}">
+                                    <i class="fas fa-clipboard "></i>
+                                    </button>
+
+                                    <button href="#"  id="evidenciaNew" name="evidenciaNew"
+                                        class="btn-data btn-sky baja-motivo" 
+                                        data-motivo="${idx.id_motivo}" 
+                                        title="Subir nuevo archivo">
+                                        <i class="fas fa-plus-square "></i>
+                                    </button>
+
+                                    <button href="#"  id="ActualizarMotivo" name="ActualizarMotivo"
+                                        class="btn-data btn-warning 
+                                        data-opcX="${idx.id_opcion}"
+                                        data-opc="${idx.id_opcion}"  
+                                        data-motivo="${idx.id_motivo}"  
+                                        baja-motivo" title="Eliminar">
+                                        <i class="fas fa-trash "></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 hide" id="mensajeNuevadiv_${idx.id_motivo}" name="mensajeNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+                            <span class="small text-gray textDescripcion" style="font-style: italic;" id="mensajeNuevadiv_" name="mensajeNuevadiv_">
+                                    Para ver el cambio, es necesario que se cierre el modal y se vuelva abrir.
+                            </span>
+							</div>
+                            <div class="col-md-8 hide" id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+								<div class="file-gph">
+									<input class="d-none" type="file" id="evidenciaNueva_${idx.id_motivo}" onchange="changeName(this)" name="evidenciaNueva_${idx.id_motivo}"  >
+									<input class="file-name overflow-text" id="evidenciaNueva_${idx.id_motivo}" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidenciaNueva_${idx.id_motivo}"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+								</div>
+							</div>
+                            <div class="col-md-4 hide" style="padding-top:30px; " id="evidenciaNuevaDOC_${idx.id_motivo}" name="evidenciaNuevaDOC_${idx.id_motivo}" >
+                                <button href="#"  
+                                    data-motivo="${idx.id_motivo}" 
+                                    data-evidencia="${idx.evidencia}"
+                                    data-opc="${idx.id_opcion}"
+                                    data-boton="evidenciaNueva_${idx.id_motivo}"
+                                    data-descripcion="${idx.descripcion}"
+                                    
+                                    class="btn-data btn-green baja-motivo" 
+                                    id="actualizarEvidencia" name="actualizarEvidencia"
+                                    title="Actualizar Evidencia">
+
+                                    <i class="fas fa-sync-alt fa-1x"></i>
+                                </button>
+                            </div>
+                            
+
+                        </div>
+                        <hr>
+                        `; 
+                    }
+                    );
+
+
+                    Modalheader.append(dataModal);
+                },
+                error: function () {
+                
+                }
+                });
+    }
+
+    function verDOCUMENTO(RUTA,EVIDENCIA) {
+      
+
+        var itself = $(this);
+        Shadowbox.open({
+            content: `<div>
+                        <iframe style="overflow:hidden;width: 100%;height: 100%; 
+                                        position:absolute;z-index:9999999999!important;" 
+                                        src="${general_base_url}${RUTA}/${EVIDENCIA}">
+                        </iframe>
+                    </div>`,
+            player: "html",
+            title: `Visualizando archivo: evidencia `,
+            width: 985,
+            height: 660
+        });
+    }
+
+
+    $(document).on("click", "#evidenciaNew", function () {
+        var motivo = $(this).attr('data-motivo');
+
+        // bandera en 2 es para cuando se bloquea y 1 para desbloquear
+        if(banderaNewEvidencia == 2){
+            $('#evidenciaNuevadiv_'+motivo).removeClass('hide');
+            $('#evidenciaNuevaDOC_'+motivo).removeClass('hide');
+
+            banderaNewEvidencia = 1;
+        }else{
+            banderaNewEvidencia = 2;
+            $('#evidenciaNuevadiv_'+motivo).addClass('hide');
+            $('#evidenciaNuevaDOC_'+motivo).addClass('hide');
+        }
+        // $('#evidenciaNuevadiv').addClass('hide');
+        
+
+    });
+    $(document).on("click", "#actualizarEvidencia", function () {
+        var motivo = $(this).attr('data-motivo');
+        var boton = $(this).attr('data-boton');
+        var opc  =  $(this).attr('data-opc');
+        var descripcion = $(this).attr('data-descripcion');
+        console.log(boton);
+        var com2 = new FormData();
+        let uploadedDocument = $("#"+boton)[0].files[0];
+        console.log(motivo);
+        com2.append("evidencia", uploadedDocument);
+        com2.append("id_motivo", motivo);
+        com2.append("descripcion", descripcion);
+        com2.append("id_opcion", opc);
+        $(this).attr('data-motivo');
+
+        $.ajax({
+            url: 'updateMotivo',
+            data: com2,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function (data) {
+                alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                $('#spiner-loader').removeClass('hide');     
+                setTimeout(function(){
+                            
+                // $('#modal_config_motivo').modal('toggle');
+
+                $('#evidenciaNuevadiv_'+motivo).addClass('hide');
+                $('#evidenciaNuevaDOC_'+motivo).addClass('hide');
+                $('#spiner-loader').addClass('hide');
+                
+                $('#mensajeNuevadiv_'+motivo).removeClass('hide');
+
+                
+                }, 3000);
+                
+            
+                
+            }, 
+            error: function () {
+                alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+            }
+        });
+    });
+    
+// 
+// 
+    // eliminar motivo 
+
+    $(document).on("click", "#ActualizarMotivo", function () {
+        var motivo = $(this).attr('data-motivo');
+        var opcX = $(this).attr('data-opc');
+        var com2 = new FormData();
+
+        com2.append("id_motivo", motivo);
+        com2.append("id_opcion", opcX);
+        console.log(opcX);
+        if(opcX != ''){
+            $.ajax({
+                url: 'dadoDeBajaMotivo',
+                data: com2,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                    $('#mensajeNuevadiv_'+motivo).removeClass('hide');
+
+                }, 
+                error: function () {
+                    alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                }
+            });
+        }else{
+            alerts.showNotification("top", "right", "Faltan datos al enviarse, inténtalo más tarde o comunicar a sistemas","warning");
+        }
+        
+    });
+    
+
+    $(document).on("click", "#historial_previa", function () {
+        
+        
+        $("#modal_vista_evidencias").modal();
+        $("#modal_vista_evidencias .modal-header").html("");
+        $("#modal_vista_evidencias .modal-body").html("");
+        $("#modal_vista_evidencias .modal-footer").html("");
+
+            const Modalheader = $('#modal_vista_evidencias .modal-body');
+            const Modalbody = $('#modal_vista_evidencias .modal-body');
+            const Modalfooter = $('#modal_vista_evidencias .modal-footer');
+            var dataModal = ``;
+
+            Modalheader.append(`
+                
+                    <h4>EVIDENCIAS DEL DESCUENTO.
+                    </h4>
+            `);
+            dataModal += `<div class="col-md-12"><div class="d-flex justify-center "  style="padding-top: 25px;">`; 
+
+        var opcion = $(this).attr('data-opcion');
+
+        var com2 = new FormData();
+        
+//  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
+
+        com2.append("id_opcion", opcion);
+        if(opcion != ''){
+            $.ajax({
+                url: general_base_url+'Descuentos/historial_evidencia_general',
+                data: com2,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    
+                    data.forEach(idx =>{
+                        
+                        dataModal += ` <button href="#" value="${idx.id_motivo}"  id="preview" 
+                        data-ruta="UPLOADS/EvidenciaGenericas"
+                        data-doc="${idx.evidencia}"   
+                        class="btn-data btn-orangeYellow " title="Ver Evidencia">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`;
+                    });
+                    dataModal += `</div"></div>`; 
+                    Modalbody.append(dataModal);
+                }, 
+                error: function () {
+                    alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                }
+            });
+        }else{
+            alerts.showNotification("top", "right", "Faltan datos al enviarse, inténtalo más tarde o comunicar a sistemas","warning");
+        }
+        
+    });
+    
+
+    //$(document).on('input', '.monto', function () {
+    //     verificar();
+    // });
