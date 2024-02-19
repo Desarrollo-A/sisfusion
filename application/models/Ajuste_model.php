@@ -36,6 +36,22 @@ class Ajuste_model extends CI_Model {
         $this->db->update('fechasCorte', $data);
     }
 
+    public function banderaAutorizacionesCorte() {
+        $result = $this->db->query("SELECT id_usuario, bandera FROM autorizacionesCorte WHERE bandera = 1");
+    
+        if ($result->num_rows() > 0) {
+            $row = $result->row();
+    
+            $id_usuario = $row->id_usuario;
+            $bandera = $row->bandera;
+    
+            return array('id_usuario' => $id_usuario, 'bandera' => $bandera);
+        }
+    
+        return null;
+    }
+    
+
 
 
     function autorizaciones(){
