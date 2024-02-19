@@ -4,10 +4,28 @@
 <meta http-equiv='cache-control' content='no-cache'>
 <meta http-equiv='expires' content='0'>
 <meta http-equiv='pragma' content='no-cache'>
+<style>
+      #modal_vista_evidencias{
+                position:absolute;
+                z-index: 9991!important;
+            }
+            
+</style>
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-
+        <div class="modal fade modal-alertas" id="modal_vista_evidencias" name="modal_vista_evidencias" 
+                    role="dialog">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade modal-alertas" id="modal_nuevas" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -291,7 +309,7 @@
 
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 
-	<script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script>
+	<!-- <script src="<?= base_url() ?>dist/js/controllers/descuentos/panel_prestamos.js"></script> -->
 	<script type="text/javascript">
 		Shadowbox.init();
 	</script>

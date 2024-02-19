@@ -655,11 +655,12 @@ $(document).ready(function () {
        
 
     })
-    // $(document).on("click", ".preceso5", function () {
-    //     nombreTabla = 'tabla_comisiones_sin_pago';
-    //     llenadoTablaNuevas(nombreTabla,datos)
-    //     alert(5);
-    // })
+    $(document).on("click", ".preceso5", function () {
+        nombreTabla = 'tabla_comisiones_sin_pago';
+        // comisionesTableSinPago()
+        
+        
+    })
 
     $(document).on("click", ".consultar_logs_nuevas", function (e) {
         e.preventDefault();

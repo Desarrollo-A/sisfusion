@@ -141,5 +141,6 @@
     </script>
     <script src="<?=base_url()?>dist/js/controllers/comisiones/colaborador/comisiones_colaborador.js"></script>
     <script src="<?=base_url()?>dist/js/controllers/comisiones/colaborador/comisiones_colaborador_factura.js"></script>
-
+    <script src="<?=base_url()?>dist/js/controllers/ventas/sinPagoNeodata.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/ventas/filtroProCond.js"></script>
 </body>
