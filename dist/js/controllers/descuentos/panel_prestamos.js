@@ -982,7 +982,6 @@ function mostrar(id){
         textoPruebas = document.getElementById("body").value;
         var com2 = new FormData();
         let uploadedDocument = $("#evidenciaSwitch")[0].files[0];
-        alert
         com2.append("evidencia", uploadedDocument);
         com2.append("MotivoAlta", MotivoAlta); 
         com2.append("valorCheck", valorCheck); 
@@ -1062,15 +1061,11 @@ function mostrar(id){
 
 
     function configMotivo(){
-
+        $("#modal_config_motivo").modal();
         $("#modal_config_motivo .modal-header").html("");
         $("#modal_config_motivo .modal-body").html("");
         $("#modal_config_motivo .modal-footer").html("");
 
-
-        $("#modal_config_motivo").modal();
-       
-            
             const Modalheader = $('#modal_config_motivo .modal-body');
             const Modalbody = $('#modal_config_motivo .modal-body');
             const Modalfooter = $('#modal_config_motivo .modal-footer');
@@ -1093,7 +1088,7 @@ function mostrar(id){
                 success: function (data) {
                     console.log(data)
                     data.forEach(idx =>{
-                        console.log(idx)
+                        
                         dataModal += `
                         <div class="form-group row">
                             <div class="col-md-8">
@@ -1101,26 +1096,41 @@ function mostrar(id){
                                 <input class="form-control input-gral" value="${idx.nombre}" type="text" step="any"id="tipo" readonly name="tipo">
                             </div>
                             <div class="col-md-4">
-                                <div class="d-flex justify-center " style="padding-top: 25px;">
-                                    <button href="#"  class="btn-data btn-violetDeep documentoMOTIVO"
-                                    id="documentoMOTIVO" name="documentoMOTIVO" 
+
+
+                                <div class="d-flex justify-center " 
+
+                                    style="padding-top: 25px;">
+                                    <button href="#" onclick="verDOCUMENTO('${idx.ruta}','${idx.evidencia}')"
+                                    class="btn-data btn-violetDeep documentoMOTIVO"
+                                    id="documentoMOTIVO_${idx.id_motivo}" name="documentoMOTIVO_${idx.id_motivo}" 
                                     title="Docuementos"
                                     data-ruta="${idx.ruta}" data-evidencia="${idx.evidencia}" data-motivo="${idx.id_motivo}">
-                                    <i class="fas fa-clipboard fa-2x"></i>
+                                    <i class="fas fa-clipboard "></i>
                                     </button>
 
                                     <button href="#"  id="evidenciaNew" name="evidenciaNew"
                                         class="btn-data btn-sky baja-motivo" 
-                                        data-motivo="${idx.id_motivo}"
+                                        data-motivo="${idx.id_motivo}" 
                                         title="Subir nuevo archivo">
-                                        <i class="fas fa-plus-square fa-2x"></i>
+                                        <i class="fas fa-plus-square "></i>
                                     </button>
 
-                                    <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
-                                        <i class="fas fa-trash fa-2x"></i>
+                                    <button href="#"  id="ActualizarMotivo" name="ActualizarMotivo"
+                                        class="btn-data btn-warning 
+                                        data-opcX="${idx.id_opcion}"
+                                        data-opc="${idx.id_opcion}"  
+                                        data-motivo="${idx.id_motivo}"  
+                                        baja-motivo" title="Eliminar">
+                                        <i class="fas fa-trash "></i>
                                     </button>
                                 </div>
                             </div>
+                            <div class="col-md-12 hide" id="mensajeNuevadiv_${idx.id_motivo}" name="mensajeNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+                            <span class="small text-gray textDescripcion" style="font-style: italic;" id="mensajeNuevadiv_" name="mensajeNuevadiv_">
+                                    Para ver el cambio, es necesario que se cierre el modal y se vuelva abrir.
+                            </span>
+							</div>
                             <div class="col-md-8 hide" id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
 								<div class="file-gph">
 									<input class="d-none" type="file" id="evidenciaNueva_${idx.id_motivo}" onchange="changeName(this)" name="evidenciaNueva_${idx.id_motivo}"  >
@@ -1129,7 +1139,16 @@ function mostrar(id){
 								</div>
 							</div>
                             <div class="col-md-4 hide" style="padding-top:30px; " id="evidenciaNuevaDOC_${idx.id_motivo}" name="evidenciaNuevaDOC_${idx.id_motivo}" >
-                            <button href="#"  class="btn-data btn-warning baja-motivo" title="Eliminar">
+                                <button href="#"  
+                                    data-motivo="${idx.id_motivo}" 
+                                    data-evidencia="${idx.evidencia}"
+                                    data-opc="${idx.id_opcion}"
+                                    data-boton="evidenciaNueva_${idx.id_motivo}"
+                                    data-descripcion="${idx.descripcion}"
+                                    
+                                    class="btn-data btn-green baja-motivo" 
+                                    id="actualizarEvidencia" name="actualizarEvidencia"
+                                    title="Actualizar Evidencia">
 
                                     <i class="fas fa-sync-alt fa-1x"></i>
                                 </button>
@@ -1151,13 +1170,15 @@ function mostrar(id){
                 });
     }
 
-    $(document).on("click", "#documentoMOTIVO", function () {
+    function verDOCUMENTO(RUTA,EVIDENCIA) {
+      
+
         var itself = $(this);
         Shadowbox.open({
             content: `<div>
                         <iframe style="overflow:hidden;width: 100%;height: 100%; 
-                                        position:absolute;z-index:999999999999999999999r!important;" 
-                                        src="${general_base_url}${itself.attr('data-ruta')}/${itself.attr('data-evidencia')}">
+                                        position:absolute;z-index:9999999999!important;" 
+                                        src="${general_base_url}${RUTA}/${EVIDENCIA}">
                         </iframe>
                     </div>`,
             player: "html",
@@ -1165,7 +1186,7 @@ function mostrar(id){
             width: 985,
             height: 660
         });
-    });
+    }
 
 
     $(document).on("click", "#evidenciaNew", function () {
@@ -1180,13 +1201,158 @@ function mostrar(id){
         }else{
             banderaNewEvidencia = 2;
             $('#evidenciaNuevadiv_'+motivo).addClass('hide');
-            $('#evidenciaNuevaDOC_'+motivo).removeClass('hide');
+            $('#evidenciaNuevaDOC_'+motivo).addClass('hide');
         }
         // $('#evidenciaNuevadiv').addClass('hide');
         
 
     });
+    $(document).on("click", "#actualizarEvidencia", function () {
+        var motivo = $(this).attr('data-motivo');
+        var boton = $(this).attr('data-boton');
+        var opc  =  $(this).attr('data-opc');
+        var descripcion = $(this).attr('data-descripcion');
+        console.log(boton);
+        var com2 = new FormData();
+        let uploadedDocument = $("#"+boton)[0].files[0];
+        console.log(motivo);
+        com2.append("evidencia", uploadedDocument);
+        com2.append("id_motivo", motivo);
+        com2.append("descripcion", descripcion);
+        com2.append("id_opcion", opc);
+        $(this).attr('data-motivo');
 
+        $.ajax({
+            url: 'updateMotivo',
+            data: com2,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function (data) {
+                alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                $('#spiner-loader').removeClass('hide');     
+                setTimeout(function(){
+                            
+                // $('#modal_config_motivo').modal('toggle');
+
+                $('#evidenciaNuevadiv_'+motivo).addClass('hide');
+                $('#evidenciaNuevaDOC_'+motivo).addClass('hide');
+                $('#spiner-loader').addClass('hide');
+                
+                $('#mensajeNuevadiv_'+motivo).removeClass('hide');
+
+                
+                }, 3000);
+                
+            
+                
+            }, 
+            error: function () {
+                alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+            }
+        });
+    });
+    
+// 
+// 
+    // eliminar motivo 
+
+    $(document).on("click", "#ActualizarMotivo", function () {
+        var motivo = $(this).attr('data-motivo');
+        var opcX = $(this).attr('data-opc');
+        var com2 = new FormData();
+
+        com2.append("id_motivo", motivo);
+        com2.append("id_opcion", opcX);
+        console.log(opcX);
+        if(opcX != ''){
+            $.ajax({
+                url: 'dadoDeBajaMotivo',
+                data: com2,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                    $('#mensajeNuevadiv_'+motivo).removeClass('hide');
+
+                }, 
+                error: function () {
+                    alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                }
+            });
+        }else{
+            alerts.showNotification("top", "right", "Faltan datos al enviarse, inténtalo más tarde o comunicar a sistemas","warning");
+        }
+        
+    });
+    
+
+    $(document).on("click", "#historial_previa", function () {
+        
+        
+        $("#modal_vista_evidencias").modal();
+        $("#modal_vista_evidencias .modal-header").html("");
+        $("#modal_vista_evidencias .modal-body").html("");
+        $("#modal_vista_evidencias .modal-footer").html("");
+
+            const Modalheader = $('#modal_vista_evidencias .modal-body');
+            const Modalbody = $('#modal_vista_evidencias .modal-body');
+            const Modalfooter = $('#modal_vista_evidencias .modal-footer');
+            var dataModal = ``;
+
+            Modalheader.append(`
+                
+                    <h4>EVIDENCIAS DEL DESCUENTO.
+                    </h4>
+            `);
+            dataModal += `<div class="col-md-12"><div class="d-flex justify-center "  style="padding-top: 25px;">`; 
+
+        var opcion = $(this).attr('data-opcion');
+
+        var com2 = new FormData();
+        
+//  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
+
+        com2.append("id_opcion", opcion);
+        if(opcion != ''){
+            $.ajax({
+                url: general_base_url+'Descuentos/historial_evidencia_general',
+                data: com2,
+                method: 'POST',
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'JSON',
+                success: function (data) {
+                    
+                    data.forEach(idx =>{
+                        
+                        dataModal += ` <button href="#" value="${idx.id_motivo}"  id="preview" 
+                        data-ruta="UPLOADS/EvidenciaGenericas"
+                        data-doc="${idx.evidencia}"   
+                        class="btn-data btn-orangeYellow " title="Ver Evidencia">
+                            <i class="fas fa-folder-open">
+                            </i>
+                        </button>`;
+                    });
+                    dataModal += `</div"></div>`; 
+                    Modalbody.append(dataModal);
+                }, 
+                error: function () {
+                    alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                }
+            });
+        }else{
+            alerts.showNotification("top", "right", "Faltan datos al enviarse, inténtalo más tarde o comunicar a sistemas","warning");
+        }
+        
+    });
+    
 
     //$(document).on('input', '.monto', function () {
     //     verificar();

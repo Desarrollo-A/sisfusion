@@ -3824,7 +3824,8 @@ class Comisiones_model extends CI_Model {
 		rpp.id_prestamo,rpp.id_relacion_pp, 
 		mrp.evidencia as relacion_evidencia,
 		mrp.id_opcion as relacionPrestamo,
-		oxc0.id_opcion as opcion
+		oxc0.id_opcion as opcion,
+        mrp.estatus
         FROM pago_comision_ind pci  
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.id_usuario = pci.id_usuario
         INNER JOIN lotes lo ON lo.idLote = co.id_lote AND lo.status IN (0,1)
@@ -3833,7 +3834,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_pago_i = pci.id_pago_i
 		LEFT JOIN prestamos_aut p ON p.id_prestamo = rpp.id_prestamo
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = pci.estatus AND oxc0.id_catalogo = 23
-		LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion 
+		LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion = oxc0.id_opcion  AND mrp.estatus = 1
         WHERE pci.id_usuario = $id_usuario AND pci.descuento_aplicado = 1")->result_array();
     }
 
