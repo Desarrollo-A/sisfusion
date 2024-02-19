@@ -463,35 +463,24 @@ hr {
 
 <!--MIO -->
         <div class="modal fade modal-alertas" id="modalCompartidos" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header pb-4">
-                        <h4 class="card-title text-center"><b>Cambiar modalidad a individual</b></h4>
+                        <h3 class="card-title text-center"><b>Cambiar modalidad a individual</b></h3>
                     </div>
-                    <form method="post" id="form_ceder">
-                        <div class="modal-body">
-                            <div class="col-lg-12"></div>
-                            <div class="col-lg-12">
+                <form id="compartidasForm">
+                    <div class="card-content text-center" id="nombrePorcentaje" style="display: flex; flex-direction: column; flex-wrap: nowrap; align-items: center;">
+                    </div>
+                
+                    <div class="card-content text-center" id="compartidasAll">
 
-                            <div class="nombrePorcentaje" id="nombrePorcentaje" >
-                            </div>
+                        <input type="hidden" name="compartida" readonly="true" id="compartida">
+                        <input type="hidden" name="idLote" readonly="true" id="idLote">
+                        <input type="text" name="id_lote" readonly="true" id="id_lote">
+                        <input type="text" name="id_usuario" readonly="true" id="id_usuario">
 
-                                <div class="form-group mt-0">
-                                     <input type="hidden" name="cliente_modalidad" readonly="true" id="cliente_modalidad">
-                                     <input type="hidden" name="compartida" readonly="true" id="compartida">
-                                     <input type="hidden" name="idLote" readonly="true" id="idLote">
-
-                                     <h4 class="card-title text-center pt-4"><b>¿Estás seguro de realizar el cambio de modalidad?</b></h4>
-
-                                    <textarea class="text-modal" id="descripcion" name="descripcion" rows="3" placeholder="Escriba detalles del cambio." required></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">     
-                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
-                            <button type="submit" id="btn_sub" class="btn btn-gral-data">GUARDAR</button>
-                        </div>
-                    </form>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>

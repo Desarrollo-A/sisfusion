@@ -216,13 +216,6 @@ class Incidencias extends CI_Controller
     echo json_encode($respuesta);
     }
 
-    public function ToparComision($id_comision,$idLote = '')
-    {
-      $comentario = $this->input->post("comentario");
-      $respuesta = $this->Incidencias_model->ToparComision($id_comision,$comentario);
-      echo json_encode($respuesta); 
-    }
-
     public function tieneRegional(){
       $bandera = false;
       $usuario = $this->input->post("usuario");
@@ -253,7 +246,6 @@ class Incidencias extends CI_Controller
       echo json_encode($respuesta); 
     }
 
-    //mio
     public function getModalidadCambio() {
       $descripcion = $this->input->post('descripcion');
       $estatus = $this->input->post('compartida');
@@ -266,25 +258,172 @@ class Incidencias extends CI_Controller
 
       $result = $this->Incidencias_model->getModalidadCambio($estatus, $id_cliente);
       $result_2 = $this->Incidencias_model->agregarComentario($id_cliente, $descripcion, $idLote);
-      //$result_3 = $this->Incidencias_model->getRol_Nombre($id_cliente,$idLote);
-
   
       echo json_encode($result,$result_2);
     }
 
+    // public function ToparComision_2($id_comision, $idLote = ''){
+    //   $comentario = $this->input->post("descripcion");
+    //   $respuesta = $this->Comisiones_model->ToparComision_2($id_comision,$comentario);
+    //   echo json_encode($respuesta); 
+    // }
+
+    public function ToparComision($id_comision,$idLote = '')
+    {
+      $comentario = $this->input->post("comentario");
+      $respuesta = $this->Incidencias_model->ToparComision($id_comision,$comentario);
+      echo json_encode($respuesta); 
+    }
+
+    public function updateEstatusCompartidas()
+    {
+      $idLote = $this->input->post('loteSeleccionado');
+      $idCliente = $this->input->post('idClienteSeleccionado');
+
+      $columnas = array(
+          'id_asesor' => $this->input->post('asesorSeleccionado'),
+          'id_coordinador' => $this->input->post('coordinadorSeleccionado'),
+          'id_gerente' => $this->input->post('gerenteSeleccionado'),
+          'id_subdirector' => $this->input->post('subdirectorSeleccionado'),
+          'id_regional' => $this->input->post('regionalSeleccionado')
+      );
+
+      $result_2 = array();
+
+      $result = $this->Incidencias_model->getRol_Nombre($idCliente, $idLote);
+
+      $compartidas = $this->Incidencias_model->getAllCompartidas($idCliente);
+
+      
+
+      // Combina $result y $compartidas en un solo arreglo
+      $datos_combinados = array_merge($result, $compartidas);
+
+      // Bucle para $result y $compartidas combinados
+      foreach ($datos_combinados as $data) {
+          foreach ($columnas as $rol => $id_usuario) {
+              $id_usuario = implode(" ", $id_usuario);
+
+              var_dump($id_usuario);
+              var_dump($data[$rol]);
+              exit;
+              if ($id_usuario != $data[$rol]) {
+                  $result_2[] = $this->Incidencias_model->getNuevoIdComision($idLote, $idCliente, $id_usuario);
+              }
+          }
+      }
+
+
+      $checkboxesSeleccionados = $this->input->post('checkboxesSeleccionados');
+      $nuevo_estatus = 0;
+
+      foreach ($checkboxesSeleccionados as $id_vcompartida) {
+          $respuesta = $this->Incidencias_model->updateEstatusVentasC($nuevo_estatus, $id_vcompartida);
+      }
+
+      $result_2_json = json_encode($result_2);
+
+      $response = array(
+          'respuesta' => $respuesta,
+          'result_2' => $result_2_json
+      );
+
+      echo json_encode($response);
+    }
+
+    
+
     public function getRol_Nombre(){
       $id_cliente = $this->input->post('id_cliente');
       $idLote = $this->input->post('idLote');
-      // $id_comision = $this->input->post('id_comision');
-      // $id_usuario = $this->input->post('id_usuario');
 
       $result = $this->Incidencias_model->getRol_Nombre($id_cliente, $idLote);
-      //$result2 = $this->Incidencias_model->UpdateRol_Nombre($id_comision, $id_usuario);
-      
 
       echo json_encode($result);
     }
+
+    public function getAllCompartidas(){
+      $id_cliente = $this->input->post('id_cliente');
+
+      $result = $this->Incidencias_model->getAllCompartidas($id_cliente);
+
+      echo json_encode($result);
+    }
+
+    public function comentarioComisiones() {
+      $idCliente = $this->input->post('idCliente');
+      $id_lote = $this->input->post('id_lote');  
+      $descripcionCambio = $this->input->post('descripcionCambio');
+      $result_2 = $this->Incidencias_model->agregarComentario($idCliente, $id_lote, $descripcionCambio);
+      
+      echo json_encode($result_2);
+    }
+
+    public function updateEstatusVentas() {
+      $this->db->trans_begin();
+
+      $informacion = $this->input->post('informacion');
+
+      //PARA $result
+      $estatus = $this->input->post('estatusCompartidas');
+      $id_vcompartida = $this->input->post('id_vcompartida');
+      $estatus = ($estatus == 1) ? 0 : $estatus;
+      $result = $this->Incidencias_model->updateEstatusVentasC($estatus, $id_vcompartida);
+
+      //PARA $results
+      $infoUsuarios = $this->input->post('infoUsuarios');
+      $estatusComisiones = $this->input->post('estatusComisiones');
+      $infoLotes = $this->input->post('infoLotes');
+      $infoClientes = $this->input->post('infoClientes');
+      $estatusNuevo = ($estatusComisiones == 1) ? 1 : 1;
+      $descripcionCambio = $this->input->post('descripcionCambio');
+
   
+      $result_2 = false;
+
+      for ($i = 0; $i < count($informacion); $i++) {        
+          $result_2 = $this->Incidencias_model->updateEstatus8($infoLotes[$i], $infoClientes[$i], $estatusNuevo, $infoUsuarios[$i],$descripcionCambio); 
+      }
+  
+      if ($this->db->trans_status() === FALSE){
+        $this->db->trans_rollback();
+        $resultado = array("resultado" => FALSE);
+      }else{
+        $this->db->trans_commit();
+        $resultado = array("resultado" => TRUE);
+      }
+      echo json_encode($resultado);
+    }
+  
+
+  public function updateComisiones() {
+
+    $informacion = $this->input->post('informacion');
+    $infoPorcentajeNuevo = $this->input->post('infoPorcentajeNuevo');
+    $infoUsuarios = $this->input->post('infoUsuarios');
+    $infoIdComision = $this->input->post('infoIdComision');
+    $totales = $this->input->post('totales');
+
+    $results = array();
+
+    for ($i = 0; $i < count($informacion); $i++) {
+        $data = array(
+            "porcentaje_decimal" => $infoPorcentajeNuevo[$i],
+            "modificado_por" => $infoUsuarios[$i],
+            "comision_total" => $totales[$i]
+        );
+
+        $result = $this->Incidencias_model->updateComisiones($data, $infoIdComision[$i]);
+
+        $results[] = $result;
+    }
+
+    if (is_array($results)) {
+        echo json_encode($results);
+    } else {
+        echo json_encode(array("error" => "Error en la respuesta del servidor"));
+    }
+  }
 
     public function cambioSede(){
       $sede     = $this->input->post("sedesCambio");

@@ -1,51 +1,83 @@
-
 $(document).ready(function () {
-         
-
 });
 
-$("#modalCompartidos").on('submit', function(e){
-    e.preventDefault();
+$("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e) {
 
-    var data = new FormData();
+        id_cliente = $(this).attr("data-cliente");
+        $('#cliente_modalidad').val(id_cliente);
+    
+        compartida = $(this).attr("data-compartida");
+        $('#compartida').val(compartida);
+    
+        idLote = $(this).attr("data-idLote");
+        $('#idLote').val(idLote);
+    
+        $.ajax({
+            url: general_base_url + 'Incidencias/getRol_Nombre',
+            type: 'post',
+            dataType: 'JSON',
+            data: {
+                'id_cliente': id_cliente,
+                'idLote': idLote,
+                'id_comision': $(this).attr("data-id-comision"),
+                'id_usuario': $(this).attr("data-id_usuario")
+            },
+            success: function (INFORMACION) {
+                //console.log(INFORMACION);
+    
+                //htmlArmado(INFORMACION);
 
-    var descripcion =  $("#descripcion").val();
-    var idCliente = $("#cliente_modalidad").val();
-    var estatus =  $("#compartida").val();
-    var idLote = $("#idLote").val();
+                $("#modalCompartidos").modal();
+                document.getElementById("cliente_modalidad").value = id_cliente;
+                document.getElementById("compartida").value = compartida;
+                document.getElementById("idLote").value = idLote;
+            }
+        });
+}); 
 
-    data.append("descripcion", descripcion);
-    data.append("cliente_modalidad", idCliente);
-    data.append("compartida", estatus);
-    data.append("idLote", idLote);
 
-    $.ajax({
-        url: general_base_url + 'Incidencias/getModalidadCambio',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function(data) {
+// $("#modalCompartidos").on('submit', function(e){
+//     e.preventDefault();
 
-            data=JSON.parse(data);
+//     var data = new FormData();
+
+//     var descripcion =  $("#descripcion").val();
+//     var idCliente = $("#cliente_modalidad").val();
+//     var estatus =  $("#compartida").val();
+//     var idLote = $("#idLote").val();
+
+//     data.append("descripcion", descripcion);
+//     data.append("cliente_modalidad", idCliente);
+//     data.append("compartida", estatus);
+//     data.append("idLote", idLote);
+
+//     $.ajax({
+//         url: general_base_url + 'Incidencias/getModalidadCambio',
+//         data: data,
+//         cache: false,
+//         contentType: false,
+//         processData: false,
+//         type: 'POST',
+//         success: function(data) {
+
+//             data=JSON.parse(data);
             
-            if (data === true) {
-                alerts.showNotification("top", "right", "El cambio de modalidad se ha efectuado con éxito", "success");
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
-                $('#modalCompartidos').modal('hide');
-            }
-            else {
-                alerts.showNotification("top", "right", "El cambio de modalidad no se hizo con éxito.", "danger");
-                $('#spiner-loader').addClass('hide');
+//             if (data === true) {
+//                 alerts.showNotification("top", "right", "El cambio de modalidad se ha efectuado con éxito", "success");
+//                 $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+//                 $('#modalCompartidos').modal('hide');
+//             }
+//             else {
+//                 alerts.showNotification("top", "right", "El cambio de modalidad no se hizo con éxito.", "danger");
+//                 $('#spiner-loader').addClass('hide');
 
-            }
-        },
-        error: function(error){
-            console.error(error);
-        }
-    });
-});
+//             }
+//         },
+//         error: function(error){
+//             console.error(error);
+//         }
+//     });
+// });
 
 //  $("#tabla_Nombre_Porcentaje").DataTable({
 //     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -1169,8 +1201,14 @@ $(".find_doc").click( function() {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
                         
-                        if(data.compartida != null){
-                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+
+
+                        if (data.compartida !== null) {
+                            if (data.compartida) {
+                                BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                            } else {
+                                return;
+                            }
                         }
                         
 
@@ -1180,8 +1218,13 @@ $(".find_doc").click( function() {
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
 
-                        if(data.compartida != null){
-                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+
+                        if (data.compartida !== null) {
+                            if (data.compartida) {
+                                BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                            } else {
+                                return;
+                            }
                         }
                             
                     }
@@ -1189,6 +1232,9 @@ $(".find_doc").click( function() {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
+                        
+
+
                         if(data.compartida !== null){
                             BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
                         }
@@ -1273,27 +1319,222 @@ $(".find_doc").click( function() {
         cambios[idUsuario] = nuevoPorcentaje;
     });
 
-    let objInputs = {};
+    var generalArreglo = [];
 
-    $(document).on('click', '#btn_aceptar_porcentajes', function() {
+    function htmlArmado(INFORMACION) {
+        const contenedor = document.getElementById('nombrePorcentaje');
+        
+        generalArreglo.push(INFORMACION);
+
+        var size = INFORMACION.length;
+        let content = '';
+    
+        for (let i = 0; i < size; i++) {
+
+            content += `
+            <div class="container-fluid">
+                <div class="row pr-3" style="display: flex; justify-content: center;" >
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label" value="${INFORMACION[i].id_asesor}">Asesor:<strong>${INFORMACION[i].id_asesor}</strong></label>
+                        <input type="text" id="nombreUsuario_${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_asesor}">
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${INFORMACION[i].id_coordinador}</strong></label>
+                        <input type="text" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_coordinador}">
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_gerente" class="control-label">Gerente:<strong>${INFORMACION[i].id_gerente}</strong></label>
+                        <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_gerente}">
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${INFORMACION[i].id_subdirector}</strong></label>
+                        <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_subdirector}">
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_regional" class="control-label">Regional:<strong>${INFORMACION[i].id_regional}</strong></label>
+                        <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_regional}">
+                    </div>
+                </div>
+            </div>
+            `;       
+        }
+    
+        contenedor.innerHTML = content;
+    }
+
+    var compartidasArreglo = [];
+
+    function compartidasArmado(INFORMACION) {
+        const contenedor = document.getElementById('compartidasAll');
+        compartidasArreglo.push(INFORMACION);
+        var sizeC = INFORMACION.length;
+        let content = '';
+    
+        for (let i = 0; i < sizeC; i++) {
+            if (INFORMACION[i].estatusCompartida === 1) {
+                content += `
+                    <div class="container-fluid">
+                        <div class="row pr-3" style="display: flex; justify-content: center;">
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id asesor:<strong>${INFORMACION[i].id_asesor}</strong></label>
+                                <input type="text" id="nombre_asesor${i}" class="form-control input-gral" readonly value="${INFORMACION[i].asesor}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id coordinador:<strong>${INFORMACION[i].id_coordinador}</strong></label>
+                                <input type="text" id="nombre_coordinador${i}" class="form-control input-gral" readonly value="${INFORMACION[i].coordinador}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id gerente:<strong>${INFORMACION[i].id_gerente}</strong></label>
+                                <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${INFORMACION[i].gerente}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id subdirector:<strong>${INFORMACION[i].id_subdirector}</strong></label>
+                                <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${INFORMACION[i].subdirector}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id regional:<strong>${INFORMACION[i].id_regional}</strong></label>
+                                <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${INFORMACION[i].regional}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id regional 2:<strong>${INFORMACION[i].id_regional_2}</strong></label>
+                                <input type="text" id="nombre_regional_2${i}" class="form-control input-gral" readonly value="${INFORMACION[i].id_regional_2}">
+                            </div>
+                            <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
+                                <label for="checkBoxID_${i}" class="control-label">
+                                    <input class="form-check-input checkboxClase" 
+                                        type="checkbox" 
+                                        id="checkBoxID_${i}" 
+                                        name="checkBoxID_${i}" 
+                                        value="${INFORMACION[i].id_vcompartida}" 
+                                        data-asesor="${INFORMACION[i].id_asesor}" 
+                                        data-coordinador="${INFORMACION[i].id_coordinador}" 
+                                        data-gerente="${INFORMACION[i].id_gerente}" 
+                                        data-subdirector="${INFORMACION[i].id_subdirector}" 
+                                        data-regional="${INFORMACION[i].id_regional}" 
+                                        data-cliente="${INFORMACION[i].id_cliente}" 
+                                        data-lote="${INFORMACION[i].idLote}">
+                                        Marcar
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+    
+
+            }
+            
+        }
+    
+        content += `
+            <div class="row" style="display: flex; align-content: center; flex-wrap: wrap; flex-direction: column-reverse;">
+                <div class="col-md-3 mb-3">
+                    <textarea class="text-modal" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" id="marcarTodosBtn" class="btn btn-primary">CAMBIAR MODALIDADES</button>
+            </div>   
+        `;
+        contenedor.innerHTML = content;
+    }
+    
+
+    $("#compartidasForm").on('submit', function(e) {
+        e.preventDefault();
+    
+        var checkboxesSeleccionados = [];
+        var asesorSeleccionado = [];
+        var idClienteSeleccionado = null;
+        var loteSeleccionado = null;
+    
+        $(".checkboxClase:checked").each(function() {
+            checkboxesSeleccionados.push($(this).val());
+    
+            if ($(this).prop('checked')) {
+                asesorSeleccionado = $(this).data('asesor');
+                coordinadorSeleccionado = $(this).data('coordinador');
+                gerenteSeleccionado = $(this).data('gerente');
+                subdirectorSeleccionado = $(this).data('subdirector');
+                regionalSeleccionado = $(this).data('regional');
+                idClienteSeleccionado = $(this).data('cliente');
+                loteSeleccionado = $(this).data('lote');
+            }
+        });
+    
+        var formData = new FormData(this);
+    
+        checkboxesSeleccionados.forEach(function(id_vcompartida) {
+            formData.append('checkboxesSeleccionados[]', id_vcompartida);
+        });
+    
+        if (asesorSeleccionado !== null ) {
+            formData.append('asesorSeleccionado[]', asesorSeleccionado);
+        }
+
+        if (coordinadorSeleccionado !== null ) {
+            formData.append('coordinadorSeleccionado[]', coordinadorSeleccionado);
+        }
+
+        if (gerenteSeleccionado !== null ) {
+            formData.append('gerenteSeleccionado[]', gerenteSeleccionado);
+        }
+
+        if (subdirectorSeleccionado !== null ) {
+            formData.append('subdirectorSeleccionado[]', subdirectorSeleccionado);
+        }
+        
+        if (regionalSeleccionado !== null ) {
+            formData.append('regionalSeleccionado[]', regionalSeleccionado);
+        }
+
+        if(idClienteSeleccionado != null){
+            formData.append('idClienteSeleccionado', idClienteSeleccionado);
+        }
+
+        if(loteSeleccionado != null){
+            formData.append('loteSeleccionado', loteSeleccionado);
+        }
+    
         $.ajax({
-            url: general_base_url + 'Incidencias/NUEVAFUNCION',
+            url: general_base_url + 'Incidencias/updateEstatusCompartidas',
             type: 'post',
-            dataType: 'JSON',
-            data: { cambios: cambios },
-            success: function (respuesta) {
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(respuesta) {
                 console.log(respuesta);
+                if (respuesta === true || respuesta === 'true'){
+                    alerts.showNotification("top", "right", "Cambio de modalidad exitoso. RECUERDA VERIFICAR CORRECTAMENTE LOS PORCENTAJES EN AJUSTES", "success");
+                    $('#modalCompartidos').modal('toggle');
+    
+                    $('#modalCompartidos').on('hidden.bs.modal', function () {
+                        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    });
+                }
             },
-            error: function (error) {
-                console.error(error);
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error en la actualización:', textStatus, errorThrown);
+                console.log(jqXHR.responseText); 
             }
         });
     });
+    
+
+
+    
+    
+    
+    
 
     /**-------------------CAMBIO MODALIDAD------------------------------- */
-    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e){
 
-        document.getElementById("nombrePorcentaje").innerHTML = '';
+    
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e){
 
         id_cliente = $(this).attr("data-cliente");
         $('#cliente_modalidad').val(id_cliente);
@@ -1303,6 +1544,7 @@ $(".find_doc").click( function() {
 
         idLote = $(this).attr("data-idLote");
         $('#idLote').val(idLote);
+
 
         $.ajax({
             url: general_base_url + 'Incidencias/getRol_Nombre',
@@ -1317,96 +1559,29 @@ $(".find_doc").click( function() {
             success: function (INFORMACION) {
                 //console.log(INFORMACION);
         
-                const size = INFORMACION.length;
-                let htmlTableBody = `
-                    <table style="border-collapse: collapse; width: 100%; margin-top: 20px; border: 1px solid #ddd;">
-                        <thead style="background-color: #343a40; color: white;">
-                            <tr>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE USUARIO</th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE ROL</th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Antiguo </th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Nuevo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-        
-                for (let i = 0; i < size; i++) {
-                    const {id_comision, id_usuario, nuevo_porcentaje_decimal, porcentaje_antiguo, NombreUsuario, NombreRol } = INFORMACION[i];
-        
-                    const rowColor = i % 2 === 0 ? '#f2f2f2' : '#ffffff';
-        
-                    htmlTableBody += `
-                        <tr style="background-color: ${rowColor};">
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreUsuario}</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreRol}</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${porcentaje_antiguo}%</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">
-                              
-                                <input class="form-control input-gral decimals" data-old="" data-id-usuario="${id_usuario}"
-                                value="${nuevo_porcentaje_decimal}" data-original-value="${id_comision}" data-original-value="${id_usuario}" data-original-value="${id_usuario}" data-original-value="${nuevo_porcentaje_decimal}">
+                htmlArmado(INFORMACION);
 
-
-                            </td>
-                        </tr>
-                    `;
-                    objInputs[id_usuario] = nuevo_porcentaje_decimal;
-
-                }
-                console.log(objInputs);
-
-        
-                htmlTableBody += `
-                        </tbody>
-                    </table>
-                `;
-                // Limpiar el contenido existente
-                $('#nombrePorcentaje').html('');
-
-                // Agregar la tabla al contenedor
-                $('#nombrePorcentaje').html(htmlTableBody);
-
-                // Agregar los botones al contenedor
-                $('#nombrePorcentaje').append('<div class="d-flex justify-center">');
-                $('#nombrePorcentaje').append('<button type="button" id="btn_aceptar_porcentajes" class="btn btn-danger btn-simple mx-auto">RECHAZAR PORCENTAJES</button>');
-                $('#nombrePorcentaje').append('<button type="button" id="btn_cancelar_porcentajes" class="btn btn-success btn-simple mx-auto">ACEPTAR PORCENTAJES</button>');
-                $('#nombrePorcentaje').append('</div>');
-        
                 $("#modalCompartidos").modal();
-                document.getElementById("cliente_modalidad").value = id_cliente;
-                document.getElementById("compartida").value = compartida;
-                document.getElementById("idLote").value = idLote;
+                //document.getElementById("cliente_modalidad").value = id_cliente;
+                //document.getElementById("compartida").value = compartida;
+                //document.getElementById("idLote").value = idLote;
+            }
+        });
 
-                $('#btn_aceptar_porcentajes').hide();
+        $.ajax({
+            url: general_base_url + 'Incidencias/getAllCompartidas',
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                'id_cliente':id_cliente
+            },
+            success: function (INFORMACION) {
+                //console.log(INFORMACION);
+        
+                compartidasArmado(INFORMACION);
 
-                $('#btn_aceptar_porcentajes').on('click', function () {
-                    $('.decimals').removeAttr('readonly');
-                    $(this).hide();
-                    $('#btn_cancelar_porcentajes').show();
-                    alerts.showNotification("top", "right", "El porcentaje ha sido cancelado.", "danger");
-
-                });
-
-                $('#btn_cancelar_porcentajes').on('click', function () {
-                    $('.decimals').attr('readonly', true);
-                    $(this).hide();
-                    $('#btn_aceptar_porcentajes').show();
-                    alerts.showNotification("top", "right", "El porcentaje ha sido aceptado.", "success");
-                    let arrInputs = document.querySelectorAll(".decimals");
-                    console.log(arrInputs[0].value)
-                    console.log(arrInputs.length)
-                    let dataEnviar = []
-                    
-                    for(let contador = 0; contador <= arrInputs.length ; contador ++ )
-                    {
-                        objInputs[contador] =  arrInputs[contador];
-                       // dataEnviar.push(arrInputs[i].value);
-                       //console.log(dataEnviar);
-                    }
-                    console.log(objInputs);
-
-                });
-
+                //$("#modalCompartidos").modal();
+          
             }
         });
     }); 
@@ -2368,7 +2543,7 @@ function SaveAjuste(i){
         }
     });
 }
-
+    
 $("#form_ceder").on('submit', function(e){ 
     e.preventDefault();
     document.getElementById('btn_ceder').disabled=true;
@@ -2383,7 +2558,7 @@ $("#form_ceder").on('submit', function(e){
         cache: false,
         processData:false,
         success: function(data) {
-            console.log(data);
+            //console.log(data);
             if (data == 1) {
                  $("#asesorold").selectpicker('refresh');
                 // $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);

@@ -758,9 +758,15 @@ class Incidencias_model extends CI_Model {
             return $query;
         }
 
-        public function agregarComentario($id_cliente,$descripcion,$idLote){
-            $this->db->query("INSERT INTO historial_venta_compartida(id_cliente, comentario, idLote) VALUES ($id_cliente, '$descripcion', $idLote)");
-        }
+        public function agregarComentario($id_cliente,$idLote,$descripcionCambio) {
+            $data = array(
+                'id_cliente' => $id_cliente,
+                'comentario' => $descripcionCambio,
+                'idLote' => $idLote
+            );
+        
+            $this->db->insert('historial_venta_compartida', $data);
+        }        
 
         public function updateSedesEdit($idCliente, $idLote, $data){
         try {
@@ -776,28 +782,150 @@ class Incidencias_model extends CI_Model {
             }    
         }
 
-        public function getRol_Nombre($id_cliente, $idLote){
-            $query = $this->db->query("SELECT c.id_usuario, o.nombre AS NombreRol, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS NombreUsuario, c.porcentaje_decimal AS porcentaje_antiguo, 
-            c.porcentaje_decimal + COALESCE(SUM(c2.porcentaje_decimal), 0) AS nuevo_porcentaje_decimal, c.id_comision
-            FROM comisiones c
-            LEFT JOIN comisiones c2 ON c.rol_generado = c2.rol_generado AND c.id_lote = c2.id_lote AND c2.rol_generado = 7 AND c2.estatus = 1 AND c2.id_usuario != c.id_usuario
-            JOIN usuarios u ON c.id_usuario = u.id_usuario
-            INNER JOIN opcs_x_cats o ON c.rol_generado = o.id_opcion AND o.id_catalogo = 1 
-            WHERE c.id_lote = $idLote AND c.estatus = 1
-                AND NOT EXISTS (
-                    SELECT 1
-                    FROM ventas_compartidas vc
-                    JOIN clientes cl ON vc.id_cliente = cl.id_cliente
-                    WHERE vc.id_cliente = $id_cliente AND cl.id_cliente IN (SELECT idCliente FROM lotes WHERE idLote = 165) AND vc.id_asesor = c.id_usuario
-                ) 
-            GROUP BY c.id_usuario, c.id_comision, o.nombre, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), c.porcentaje_decimal;");
+        public function getNuevoIdComision($idLote, $idCliente, $id_usuario_Asesor){
+
+            $query = $this->db->query("SELECT * from comisiones where id_lote = $idLote and idCliente = $idCliente and id_usuario= $id_usuario_Asesor");
+            $result = $query->row_array();
+            return $result['id_comision'];
+        }
+
+        // public function getTopadas(){
+        //     $query= $this->query("SELECT
+        //     vc.id_vcompartida,
+        //     CASE WHEN COUNT(DISTINCT c.id_asesor) = COUNT(c.id_asesor) THEN MAX(CASE WHEN c.id_asesor = vc.id_asesor THEN NULL ELSE vc.id_asesor END) ELSE NULL END AS Topar_Asesor,
+        //     CASE WHEN COUNT(DISTINCT c.id_coordinador) = COUNT(c.id_coordinador) THEN MAX(CASE WHEN c.id_coordinador = vc.id_coordinador THEN NULL ELSE vc.id_coordinador END) ELSE NULL END AS Topar_Coordinador,
+        //     CASE WHEN COUNT(DISTINCT c.id_subdirector) = COUNT(c.id_subdirector) THEN MAX(CASE WHEN c.id_subdirector = vc.id_subdirector THEN NULL ELSE vc.id_subdirector END) ELSE NULL END AS Topar_Subdirector,
+        //     CASE WHEN COUNT(DISTINCT c.id_regional) = COUNT(c.id_regional) THEN MAX(CASE WHEN c.id_regional = vc.id_regional THEN NULL ELSE vc.id_regional END) ELSE NULL END AS Topar_Regional,
+        //     CASE WHEN COUNT(DISTINCT c.id_regional_2) = COUNT(c.id_regional_2) THEN MAX(CASE WHEN c.id_regional_2 = vc.id_regional_2 THEN NULL ELSE vc.id_regional_2 END) ELSE NULL END AS Topar_id_regional2
+        //     FROM clientes c
+        //     LEFT JOIN ventas_compartidas vc ON c.id_cliente = vc.id_cliente
+        //     WHERE c.id_cliente = 77798
+        //     GROUP BY vc.id_vcompartida, vc.id_cliente, vc.id_asesor, vc.id_coordinador;")
+        //     return $query->result_array();
+
+        // }
+
+        public function updateEstatusCompartidas($id_vcompartida,$estatus){
+            return $this->db->query("UPDATE ventas_compartidas SET estatus = $estatus WHERE id_vcompartida = $id_vcompartida;");
+        }
+
+        public function getRol_Nombre($id_cliente){
+
+            $query = $this->db->query("SELECT c.id_cliente, c.id_asesor,
+                CONCAT(u_asesor.nombre, ' ', u_asesor.apellido_paterno, ' ', u_asesor.apellido_materno) AS nombre_asesor,
+                c.id_coordinador,
+                CONCAT(u_coordinador.nombre, ' ', u_coordinador.apellido_paterno, ' ', u_coordinador.apellido_materno) AS nombre_coordinador,
+                c.id_gerente,
+                CONCAT(u_gerente.nombre, ' ', u_gerente.apellido_paterno, ' ', u_gerente.apellido_materno) AS nombre_gerente,
+                c.id_subdirector,
+                CONCAT(u_subdirector.nombre, ' ', u_subdirector.apellido_paterno, ' ', u_subdirector.apellido_materno) AS nombre_subdirector,
+                c.id_regional,
+                CONCAT(u_regional.nombre, ' ', u_regional.apellido_paterno, ' ', u_regional.apellido_materno) AS nombre_regional,
+                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS NombreUsuario
+                FROM clientes c
+                INNER JOIN comisiones co ON c.id_cliente = co.idCliente
+                INNER JOIN opcs_x_cats o ON co.rol_generado = o.id_opcion AND o.id_catalogo = 1 
+                JOIN usuarios u ON co.id_usuario = u.id_usuario
+                LEFT JOIN usuarios u_asesor ON c.id_asesor = u_asesor.id_usuario
+                LEFT JOIN usuarios u_coordinador ON c.id_coordinador = u_coordinador.id_usuario
+                LEFT JOIN usuarios u_gerente ON c.id_gerente = u_gerente.id_usuario
+                LEFT JOIN usuarios u_subdirector ON c.id_subdirector = u_subdirector.id_usuario
+                LEFT JOIN usuarios u_regional ON c.id_regional = u_regional.id_usuario
+                WHERE c.id_cliente = $id_cliente AND co.rol_generado = 1;");
             return $query->result_array();
         }
 
-        public function UpdateRol_Nombre($porcentaje_decimal, $id_usuario, $id_comision)
+        public function getAllCompartidas($id_cliente){
+
+            $query = $this->db->query("SELECT
+            vc.id_vcompartida, vc.estatus as estatusCompartida,vc.id_cliente, id_asesor, lo.idLote,
+            CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+            id_coordinador,
+            CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
+            id_gerente,
+            CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+            id_subdirector,
+            CONCAT(subdirector.nombre, ' ', subdirector.apellido_paterno, ' ', subdirector.apellido_materno) AS subdirector,
+            id_regional,
+            CONCAT(CASE WHEN regional.nombre IS NULL THEN 'no disponible' ELSE regional.nombre END, ' ', regional.apellido_paterno, ' ', regional.apellido_materno) AS regional,
+            CASE WHEN id_regional_2 IS NULL THEN 'no disponible' ELSE CAST(id_regional_2 AS CHAR) END as id_regional_2,
+            CONCAT(CASE WHEN regional_2.nombre IS NULL THEN 'no disponible' ELSE regional_2.nombre END, ' ', regional_2.apellido_paterno, ' ', regional_2.apellido_materno) AS regional_2
+            FROM ventas_compartidas vc
+            INNER JOIN usuarios asesor ON vc.id_asesor = asesor.id_usuario
+            INNER JOIN usuarios coordinador ON vc.id_coordinador = coordinador.id_usuario
+            INNER JOIN usuarios gerente ON vc.id_gerente = gerente.id_usuario
+            INNER JOIN usuarios subdirector ON vc.id_subdirector = subdirector.id_usuario
+            LEFT JOIN usuarios regional ON vc.id_regional = regional.id_usuario
+            LEFT JOIN usuarios regional_2 ON vc.id_regional_2 = regional_2.id_usuario
+            INNER JOIN lotes lo ON vc.id_cliente = lo.idCliente
+            WHERE id_cliente = $id_cliente;");
+            return $query->result_array();
+        }
+
+        // public function ToparComision($id_comision,$comentario=''){  
+        //     date_default_timezone_set('America/Mexico_City');
+        //     $hoy = date('Y-m-d H:i:s');     
+        //     $complemento = '';
+        //     if($comentario != ''){
+        //         $complemento = ",observaciones='".$comentario."'";
+        //     }
+        //     $sumaxcomision=0;
+        //     $pagos = $this->db->query("SELECT pci.id_usuario,pci.id_pago_i,pci.abono_neodata,CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,cat.nombre,pci.comentario
+        //     FROM pago_comision_ind pci INNER JOIN usuarios u ON u.id_usuario=pci.id_usuario 
+        //     INNER JOIN opcs_x_cats cat ON cat.id_opcion=pci.estatus
+        //     WHERE pci.id_comision=$id_comision AND pci.estatus in(1,6) AND cat.id_catalogo=23")->result_array();
+        //     $pagos_ind = $this->db->query("SELECT SUM(abono_neodata) AS suma FROM pago_comision_ind WHERE id_comision=".$id_comision." AND estatus not in(1,6,5)")->result_array();
+        //     $sumaxcomision = $pagos_ind[0]['suma'];
+            
+        //     for ($j=0; $j <count($pagos) ; $j++) { 
+        //         $comentario= 'Se eliminó el pago';
+        //         $pagos =  $this->db->query("UPDATE pago_comision_ind SET estatus=0,abono_neodata=0,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i=".$pagos[$j]['id_pago_i']." AND id_usuario=".$pagos[$j]['id_usuario'].";");
+        //         $pagos = $this->db->query("INSERT INTO  historial_comisiones VALUES (".$pagos[$j]['id_pago_i'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
+        //     }
+        //         $pagos = $this->db->query("INSERT INTO  historial_log VALUES ($id_comision,".$this->session->userdata('id_usuario').",'".$hoy."',1,'SE TOPO COMISIÓN','comisiones',NULL)");
+    
+        //         if($sumaxcomision == 0  || $sumaxcomision == null || $sumaxcomision == 'null' ){
+        //             $this->db->query("UPDATE comisiones set comision_total=0,descuento=1,modificado_por='".$this->session->userdata('id_usuario')."' $complemento WHERE id_comision=".$id_comision." ");
+        //         }else{
+        //             $this->db->query("UPDATE comisiones set comision_total=$sumaxcomision,descuento=1,modificado_por='".$this->session->userdata('id_usuario')."' $complemento WHERE id_comision=".$id_comision." ");
+    
+        //         }
+        //         return $pagos;
+        // }
+
+        public function updateEstatusVentasC($estatus, $id_vcompartida)
         {
-            $query = $this->db->query("UPDATE comisiones SET porcentaje_decimal=$porcentaje_decimal WHERE $id_usuario = $id_usuario AND id_comision = $id_comision");
+            $query = $this->db->query("UPDATE ventas_compartidas set estatus=$estatus where id_vcompartida = $id_vcompartida");
             return $query;
         }
+
+        public function updateEstatus8($infoLotes, $infoClientes, $estatusComisiones, $data, $descripcionCambio) {
+        
+            return $this->db->query("UPDATE comisiones
+                SET estatus = $estatusComisiones, modificado_por = $data, observaciones='$descripcionCambio', descuento = 1
+                WHERE id_lote = $infoLotes
+                    AND EXISTS (
+                        SELECT *
+                        FROM ventas_compartidas vc
+                        JOIN clientes cl ON vc.id_cliente = cl.id_cliente
+                        WHERE vc.id_cliente = $infoClientes AND cl.id_cliente IN (SELECT idCliente FROM lotes WHERE idLote = $infoLotes) AND vc.id_asesor = comisiones.id_usuario);");
+        }
+        
+
+        public function updateComisiones($data, $idComision) {
+            $this->db->where('id_comision', $idComision);
+            $response = $this->db->update('comisiones', $data);
+        
+            if ($response) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function FunctionName() {
+            
+        }
+        
 
     }
