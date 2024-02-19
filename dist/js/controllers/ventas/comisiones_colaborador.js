@@ -518,50 +518,34 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     case '1': //SIN DEFINIR
                     case 1: //SIN DEFINIr
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
-                                        SIN DEFINIR FORMA DE PAGO
-                                    </span>
+                                    <span class="label lbl-dark-blue"> SIN DEFINIR FORMA DE PAGO </span>
                                 </p>
                                 <p>
-                                    <span class="label lbl-green">
-                                        REVISAR CON RH
-                                    </span>
+                                    <span class="label lbl-green"> REVISAR CON RH</span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '2': //FACTURA
                     case 2: //FACTURA
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
-                                        FACTURA
-                                    </span>
+                                    <span class="label lbl-dark-blue"> FACTURA </span>
                                 </p>
                                 <p style="font-size: .5em">
-                                    <span class="label lbl-green">
-                                        SUBIR XML
-                                    </span>
+                                    <span class="label lbl-green"> SUBIR XML </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '3': //ASIMILADOS
                     case 3: //ASIMILADOS
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue" >
-                                        ASIMILADOS 
-                                    </span>
+                                    <span class="label lbl-dark-blue" > ASIMILADOS </span>
                                 </p>
                                 <p style="font-size: .5em">
-                                    <span class="label lbl-green">
-                                        LISTA PARA APROBAR
-                                    </span>
+                                    <span class="label lbl-green"> LISTA PARA APROBAR </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '4': //RD
                     case 4: //RD
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
-                                        REMANENTE DIST.
-                                    </span>
+                                    <span class="label lbl-dark-blue"> REMANENTE DIST. </span>
                                 </p>
                                 <p style="font-size: .5em">
-                                    <span class="label lbl-green">
-                                        LISTA PARA APROBAR
-                                    </span>
+                                    <span class="label lbl-green"> LISTA PARA APROBAR </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                     case '5':
                     case 5:
@@ -571,14 +555,10 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         `;
                     default:
                         return `<p class="mb-1">
-                                    <span class="label lbl-dark-blue">
-                                        DOCUMENTACIÓN FALTANTE
-                                    </span>
+                                    <span class="label lbl-dark-blue"> DOCUMENTACIÓN FALTANTE </span>
                                 </p>
                                 <p>
-                                    <span class="label lbl-green">
-                                        REVISAR CON RH
-                                    </span>
+                                    <span class="label lbl-green"> REVISAR CON RH </span>
                                 </p>`.split("\n").join("").split("  ").join("");
                 }
             }
@@ -587,16 +567,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             "orderable": false,
             "data": function (data) {
                 return `<div class="d-flex justify-center">
-                            <button href="#" 
-                                    value="${data.id_pago_i}"
-                                    data-value="${data.lote}"
-                                    data-code="${data.cbbtton}"
-                                    class="btn-data btn-blueMaderas consultar_logs_nuevas" 
-                                    title="DETALLES"
-                                    data-toggle="tooltip_nuevas" 
-                                    data-placement="top">
-                                <i class="fas fa-info"></i>
-                            </button>
+                            <button href="#" value="${data.id_pago_i}" data-value="${data.lote}" data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_nuevas" title="DETALLES" data-toggle="tooltip_nuevas"data-placement="top"><i class="fas fa-info"></i></button>
                         </div>`;
             }
         }],
@@ -729,7 +700,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
         $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DEL LOTE <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + lote + '</b></h5></p>');
+        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DEL LOTE <b>' + lote + '</b></h5></p>');
         $.getJSON("getComments/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
                 $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.nombre_usuario + '</b></p></div>');

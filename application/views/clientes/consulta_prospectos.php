@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <h3 class="card-title center-align">Listado general de prospectos</h3>
-                                <div class="toolbar" style="display:none">
+                                <div class="toolbar">
                                     <div class="row">
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
                                         <div class="col-12 col-sm-6 col-md-6 col-lg-6">

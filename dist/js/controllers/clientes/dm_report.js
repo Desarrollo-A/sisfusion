@@ -131,6 +131,9 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                 return d.gerente;
             }
         },
+        { data : "subdirector"},
+        { data : "directorReg,"},
+        { data : "directorReg2"},
         {
             data: function(d) {
                 return d.fecha_creacion;

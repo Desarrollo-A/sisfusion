@@ -83,9 +83,7 @@
                                             <div class="row">
                                                 <div class="col-lg-12 text-left mt-1 encabezado" id="encabezado">
                                                     <!-- <?= $cadena ?> -->
-                                                    
                                                 </div>
-                             
                                             </div>
                                             <div class="material-datatables">
                                                 <div class="form-group">
@@ -96,7 +94,7 @@
                                                                 <th>ID PAGO</th>
                                                                 <th>PROYECTO</th>
                                                                 <th>LOTE</th>
-                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>PRECIO DE LOTE</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGADO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
@@ -115,7 +113,6 @@
                                         <div class="tab-pane" id="sin_pago_neodata">
                                             <!-- aqui mero va la tabla -->
                                             <?php  $this->load->view('comisiones/complementos/sin_pago_neodata_tabla_comple'); ?>
-
                                             <!-- aqui se finaliza la tabla -->
                                         </div>
                                     </div>

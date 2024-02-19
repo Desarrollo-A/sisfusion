@@ -231,9 +231,6 @@ $(document).on('change','#gerente', function () {
         }
         $("#coordinador").selectpicker('refresh');
     }, 'json');
-
-
-
     /**///carga tabla
     var url = general_base_url + 'index.php/Clientes/getProspectsListByGerente/' + gerente;
     let finalBeginDate = $("#beginDate").val();

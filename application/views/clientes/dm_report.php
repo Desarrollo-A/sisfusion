@@ -68,6 +68,9 @@
                                                     <th>MEDIO</th>
                                                     <th>ASESOR</th>
                                                     <th>GERENTE</th>
+                                                    <th>SUBDIRECTOR</th>
+                                                    <th>DIRECTOR REGIONAL</th>
+                                                    <th>DIRECTOR REGIONAL 2</th>
                                                     <th>CREACIÓN</th>
                                                     <th>VENCIMIENTO</th>
                                                     <th>ÚLTIMA MODIFICACIÓN</th>

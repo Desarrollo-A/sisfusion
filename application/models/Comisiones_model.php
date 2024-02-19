@@ -3866,9 +3866,13 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getFechaCorteActual($tipoUsuario,$mesActual){
-    $filtro = $tipoUsuario == 2 ?  ( $mesActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
-    $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
-      return $consultaFechasCorte = $this->db->query("SELECT mes,fechaInicio,tipoCorte $filtro2 FROM fechasCorte WHERE estatus = 1 AND tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY tipoCorte ASC")->result_array();
+        $filtro = $tipoUsuario == 2 ?  ( $mesActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : ""; 
+        $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
+        return $consultaFechasCorte = $this->db->query("
+            SELECT mes,fechaInicio,tipoCorte $filtro2 
+            FROM fechasCorte 
+            WHERE estatus = 1 AND tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro 
+            ORDER BY tipoCorte ASC")->result_array();
     }
     public function get_condominios_lista($proyecto = '') {
         $filtro = $proyecto == '' ? '' : "AND idResidencial IN($proyecto)";

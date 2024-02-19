@@ -16,7 +16,6 @@ let contadorDentroFacturas = 0,
     columnas_datatable = {},
     fin = userSede == 8 ? 16 : 13,
     boton_sol_pago = (forma_pago != 2) ? '' : 'hidden',
-
     pagos = []; //arreglo de pagos  
 
 
@@ -24,7 +23,8 @@ function asignarValorColumnasDT(nombre_datatable) {
     if(!columnas_datatable[`${nombre_datatable}`]) {
         columnas_datatable[`${nombre_datatable}`] = {titulos_encabezados: [], num_encabezados: []};
     }
-    }
+}
+
 $(document).ready(function () {
     nombreTabla = 'tabla_nuevas_comisiones';
  
@@ -33,18 +33,12 @@ $(document).ready(function () {
         type: 'post',
         dataType: 'JSON',
         success: function (GetDatosFechas) {
-            console.log(GetDatosFechas.fechasCorte[0])
             fecha_incio = GetDatosFechas.fechasCorte[0].fechaInicio;
             fecha_fin = GetDatosFechas.fechasCorte[0].fechaFin;
-            console.log('aqui mero  la inofrmacion')
-            console.log(GetDatosFechas.fechasCorte[0])
-            
             peticionDataTable(nombreTabla)
             opn_cumplimiento();
-            
         }
     }); 
-   
 }); 
 
     function opn_cumplimiento(){
