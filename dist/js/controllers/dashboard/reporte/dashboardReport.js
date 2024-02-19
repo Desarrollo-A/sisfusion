@@ -343,7 +343,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-sede="${[d.apt_id_sede, d.cont_id_sede, d.cancont_id_sede, d.canapt_id_sede]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                   
                 }
             },
             {
@@ -354,8 +355,9 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
-                    /*return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalSedeApartadas + d.totalSedeContratadas).toLocaleString('es-MX')}</button>`;*/
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede="${[d.apt_id_sede, d.cont_id_sede]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                    
                 }
             },
             {
@@ -366,7 +368,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = ${d.apt_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -382,7 +385,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = ${d.canapt_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                 }
             },
             {
@@ -393,7 +397,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = ${d.cont_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                 }
             },
             {
@@ -409,7 +414,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = ${d.cancont_id_sede} data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
             },
             {
@@ -446,11 +452,11 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
                 "filters" : filters
-            }
+            },
         },
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip()
-        }
+        }, 
     });
 }
 
@@ -704,8 +710,10 @@ $(document).on('click', '.btnSub', function () {
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
+        ,sede:  $(this).data("sede")
     }
-    initDetailRow(data);
+    //initDetailRow(data);
+    initDetailRow($(this).closest('tr'), data);
 });
 
 $(document).on('click', '#filterAction', async function (e) {
@@ -1108,9 +1116,9 @@ function accordionToRemove(rol){
     }
 }
 
-function initDetailRow(dataObj){
+function initDetailRow(tr,dataObj){
     var detailRows = [];
-    var tr = $(`#details-${dataObj.user}`).closest('tr');
+  //  var tr = $(`#details-${dataObj.user}`).closest('tr');
     // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
@@ -1129,10 +1137,13 @@ function initDetailRow(dataObj){
             detailRows.push(tr.attr('id'));
         }
     }
+    console.log("initDetailRow: ", dataObj);
+
 }
 
 function createDetailRow(row, tr, dataObj){
     filters = validateFilters();
+    console.log("dataObj: ", dataObj);
     $.post(`${base_url}Reporte/getDetails`, {
         id_usuario: dataObj.user,
         rol: dataObj.rol,
@@ -1145,8 +1156,10 @@ function createDetailRow(row, tr, dataObj){
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
         filters: filters
+        ,sede:dataObj.sede
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
+        
         
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
         row = $(`#table${dataObj.option}`).DataTable().row(tr);
@@ -1154,6 +1167,7 @@ function createDetailRow(row, tr, dataObj){
         tr.addClass('shown');
         dataObj.thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
+       // console.log("response: ", JSON.parse(response));
     }, 'json');
 }
 
@@ -1178,18 +1192,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.apt_id_sede, v.cont_id_sede]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.apt_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.canapt_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.cont_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.cancont_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -1315,6 +1329,7 @@ $(document).on('click', '.btnModalDetails', function () {
 
 function fillTableReport(dataObject) {
     filters = validateFilters();
+    console.log("dataObjectBtn: ", dataObject);
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4) {
         $('#lotesInformationTable thead tr:eq(0) th').each(function (i) {
             const title = $(this).text();
@@ -1606,7 +1621,7 @@ function fillTableReport(dataObject) {
                     titleAttr: 'Descargar archivo de Excel',
                     title:'Desglose de lotes cancelados',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1676,6 +1691,9 @@ function fillTableReport(dataObject) {
                                     case 21:
                                         return 'APARTADO';
                                         break;
+                                    case 22:
+                                        return 'MODALIDAD';
+                                        break;
                                     
                                 }
                             }
@@ -1714,6 +1732,7 @@ function fillTableReport(dataObject) {
                         return d.nombreLote;
                     }
                 },
+                
                 {
                     data: function (d) {
                         return d.sup;
@@ -1822,6 +1841,11 @@ function fillTableReport(dataObject) {
                         else{
                             return 'ESTÁNDAR';
                         }
+                    }
+                },
+                {
+                    data: function(d) {
+                        return d.modalidad;
                     }
                 }
             ],

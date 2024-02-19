@@ -265,6 +265,7 @@
                         <th>FECHA DE LIBERACIÓN</th>
                         <th>MOTIVO</th>
                         <th>APARTADO</th>
+                        <th>MODALIDAD</th>
                     </tr>
                 </thead>
             </table>

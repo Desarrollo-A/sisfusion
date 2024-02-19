@@ -46,6 +46,7 @@ class Reporte extends CI_Controller {
             $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
             $estatus = $this->input->post("filters")[0]["estatus"]; 
             /* Filtros grales*/
+            
 
             $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
@@ -157,8 +158,9 @@ class Reporte extends CI_Controller {
         $gerente = $this->input->post("gerente");
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
+        $sede = $this->input->post("sede");
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $sede, $leader)->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
