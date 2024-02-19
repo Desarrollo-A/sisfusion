@@ -117,7 +117,7 @@ class Descuentos extends CI_Controller
                     "response_code" => 800, 
                     "response_type" => 'error',
                     "message" => "Error Al subir el documento, inténtalo más tarde ");
-                    var_dump('entro en 2');
+                    
                 }
         }else if($banderaEvidencia == 0){
             $bandera = 2;
@@ -388,7 +388,8 @@ class Descuentos extends CI_Controller
                     "fecha_creacion" => date("Y-m-d H:i:s"),
                     "fecha_modificacion" => date("Y-m-d H:i:s"),
                     "modificado_por"  => 1,
-                    "creado_por" => 1
+                    "creado_por" => 1,
+                    "estatus"   => 1
                 );
                 $respuestaMotivoRelacion =  $this->Descuentos_model->insertarMotivoRelacion($insertRelacion);
                 
@@ -430,4 +431,116 @@ class Descuentos extends CI_Controller
         echo json_encode($res);
     }
 
+    public function motivosOpc(){
+        echo json_encode($this->Descuentos_model->motivosOpc());
+    }
+    public function toparPrestamo(){
+        echo json_encode($this->Descuentos_model->toparPrestamo($this->input->post("id_prestamo"),$this->input->post("pagado"),$this->session->userdata('id_usuario')));
+    }
+
+
+    public function updateMotivo (){
+
+        $file = $_FILES["evidencia"];
+        $id_motivo = $this->input->post("id_motivo");
+        $descripcion = $this->input->post("descripcion");
+        $id_opcion = $this->input->post("id_opcion");
+        
+        if($_FILES["evidencia"]["name"] != '' && $_FILES["evidencia"]["name"] != null){
+            $aleatorio = rand(100,1000);
+            $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidencia"]["name"]); 
+            $date = date('dmYHis');
+            $expediente = $date."_".$aleatorio."_".$namedoc;
+            $ruta = "UPLOADS/EvidenciaGenericas/";
+            if(move_uploaded_file($_FILES["evidencia"]["tmp_name"], $ruta.$expediente)){
+                $bandera = 1;
+                $UpdateArrayMotivo = array(
+                    'estatus' => 0,
+                    'modificado_por' => $this->session->userdata('id_usuario'),
+                    'fecha_modificacion' => date("Y-m-d H:i:s")   
+                );
+
+            $motivosARRAY =  $this->Descuentos_model->updateMotivo($id_opcion,$UpdateArrayMotivo);
+
+            }else{
+                $bandera = 0;
+                $respuesta =  array(
+                    "response_code" => 800, 
+                    "response_type" => 'error',
+                    "message" => "Error Al subir el documento, inténtalo más tarde ");
+                    
+                }
+
+
+
+            if ($bandera == 1 && $motivosARRAY  ) {
+                $insertArray = array(
+                    
+                'id_opcion' => $id_opcion,
+                'evidencia'    => "$expediente",
+                'descripcion' => $descripcion ,
+                'fecha_modificacion' => date("Y-m-d H:i:s"),
+                'fecha_creacion' => date("Y-m-d H:i:s"),
+                'modificado_por' => $this->session->userdata('id_usuario'),
+                'creado_por'    => $this->session->userdata('id_usuario'),
+                'estatus'       => 1,
+                );
+                $respuestas =  $this->Descuentos_model->insertarMotivoRelacion($insertArray);
+                if($respuestas){
+                    $respuesta =  array(
+                        "response_code" => 200, 
+                        "response_type" => 'success',
+                        "message" => "Préstamo actualizado");
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 400, 
+                        "response_type" => 'error',
+                        "message" => "Préstamo no actualizado, inténtalo más tarde ");
+                }
+            }
+        }
+        echo json_encode ($respuesta);
+        }
+
+        public function dadoDeBajaMotivo (){
+        $id_opcion = $this->input->post("id_opcion");
+        if ( $id_opcion != '' ) {
+            $insertArray = array(
+            'estatus'    => 0
+            );
+            $existeDescuento = $this->Descuentos_model->validar($id_opcion);
+
+            if($existeDescuento){
+                $respuestas =  $this->Descuentos_model->dadoDeBajaMotivo($id_opcion,23,$insertArray);
+                if($respuestas){
+                    $respuesta =  array(
+                        "response_code" => 200, 
+                        "response_type" => 'success',
+                        "message" => "Motivo dado de baja actualizado");
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 400, 
+                        "response_type" => 'danger',
+                        "message" => "Motivo no actualizado, inténtalo más tarde ");
+                }
+            }else {
+                $respuesta =  array(
+                    "response_code" => 450, 
+                    "response_type" => 'warning',
+                    "message" => "Imposible dar de baja el tipo, ya que se tienen descuentos activos");
+            }
+            
+        }else {
+            $respuesta =  array(
+                "response_code" => 420, 
+                "response_type" => 'warning',
+                "message" => "Faltan datos al enviarse, inténtalo más tarde o comunicarse a sistemas");
+        }
+            
+        echo json_encode ($respuesta);
+        }
+
+        public function historial_evidencia_general(){
+            echo json_encode($this->Descuentos_model->historial_evidencia_general($this->input->post("id_opcion")));
+        }
 }
