@@ -150,7 +150,8 @@ class ServicesCRM extends CI_Controller {
                 "tiene_hijos" => "NO",
                 "hijos_12" => "0",
                 "fecha_reingreso" => NULL,
-                "fecha_baja" => NULL
+                "fecha_baja" => NULL,
+                "tipo" => $objDatos['tipo']
             );
             if (isset($objDatos) && !empty($objDatos)) {
                 $response = $this->Services_model->saveUserCH($data);

@@ -68,7 +68,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             var index = tabla_asimilados2.rows({ selected: true, search: 'applied' }).indexes();
             var data = tabla_asimilados2.rows(index).data();
             $.each(data, function(i, v) {
-                total += parseFloat(v.pago_neodata);
+                total += parseFloat(v.pago_cliente);
             });
             document.getElementById("pagar_asimilados").textContent = formatMoney(total);
         }
@@ -80,7 +80,7 @@ function fillTable(id_rol, id_usuario){
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.pago_neodata);
+            total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
         document.getElementById("pagar_asimilados").textContent = to;

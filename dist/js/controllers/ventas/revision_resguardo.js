@@ -245,6 +245,14 @@ function getAssimilatedCommissions(proyecto, condominio){
                 return etiqueta;
             }
         },
+        {
+                    "width": "5%",
+                    "data": function( d ){
+                        var BtnStats1;
+                        BtnStats1 =  '<p class="m-0">'+d.fecha_creacion+'</p>';
+                        return BtnStats1;
+                    }
+        },
         { 
             "orderable": false,
             "data": function( data ){

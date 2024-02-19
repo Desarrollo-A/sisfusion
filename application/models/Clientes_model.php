@@ -495,7 +495,19 @@ function getStatusMktdPreventa(){
             else if ($id_usuario == 13770) // ITAYETZI PAULINA CAMPOS GONZALEZ
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
-                $where = "pr.id_gerente IN ($id_lider, 1916) AND pr.id_sede IN (10)";
+                $where = "pr.id_gerente IN ($id_lider, 1916, 11196) AND pr.id_sede IN (10, 8)";
+            else if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
+                $where = "pr.id_gerente IN ($id_lider, 12688) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
+                $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
+                $where = "pr.id_gerente IN ($id_lider, 455) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 13511) // DANYA YOALY LEYVA FLORIAN
+                $where = "pr.id_gerente IN ($id_lider, 471) AND pr.id_sede IN (12)";
+            else if ($id_usuario == 14449) // ANALI MONSERRAT REYES ORTIZ
+                $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
+            else if ($id_usuario == 14649) // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+                $where = "pr.id_gerente IN ($id_lider, 12027, 13059, 2599) AND pr.id_sede IN (10)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -4303,7 +4315,7 @@ function getStatusMktdPreventa(){
 
     function clienteAutorizacion(int $id)
     {
-        $query = $this->db->query("SELECT c.id_cliente, c.nombre, c.apellido_paterno, c.apellido_materno, c.correo, c.telefono1, c.lada_tel,
+        $query = $this->db->query("SELECT c.id_cliente, c.nombre, c.apellido_paterno, c.apellido_materno, c.correo, c.telefono2, c.lada_tel,
                 acc.id_aut_clientes AS id_aut_correo, c.autorizacion_correo, acc.codigo AS codigo_correo, 
                 acs.id_aut_clientes AS id_aut_sms, c.autorizacion_sms, acs.codigo AS codigo_sms,
                 ISNULL(tipo_correo_aut.total, 0) AS total_sol_correo_aut, ISNULL(tipo_correo_pend.total, 0) AS total_sol_correo_pend, 

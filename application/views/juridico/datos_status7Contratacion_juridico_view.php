@@ -4,11 +4,11 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
-    <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas)- <b><span id="titulo_lote" class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>
@@ -22,15 +22,16 @@
         </div>
     </div>
 
-    <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Contraloría)- <b><span id="titulo_lote_rechazo"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>
-                    <textarea class="text-modal" id="comentario2" rows="3"></textarea><br>              
+                    <textarea class="text-modal" id="comentario2" rows="3"></textarea>
+                    <br>              
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
@@ -40,11 +41,11 @@
         </div>
     </div>
 
-    <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade" id="return2" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4>
+                    <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Asesor)- <b><span id="titulo_lote_rechazo2" class="lote"></span></b></label></h4>
                 </div>
                 <div class="modal-body">
                     <label>Comentario</label>
@@ -54,43 +55,6 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="save3" class="btn btn-primary">Registrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="rechazoAs" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                        <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario</label>
-                    <textarea class="text-modal" id="comentario4" rows="3"></textarea><br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="save4" class="btn btn-primary">Registrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="rev8" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Registro estatus 7 (Ventas) - <b><span class="lote"></span></b></label></h4>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario</label>
-                    <textarea class="text-modal" id="comentario5" rows="3"></textarea>
-                    <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="save5" class="btn btn-primary">Registrar</button>
                 </div>
             </div>
         </div>
@@ -154,43 +118,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="return1" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <h4 class="modal-title"><label>Rechazo estatus 7 (Contraloría)- <b><span class="lote"></span></b></label></h4>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario</label>
-                    <textarea class="text-modal" id="comentario6" rows="3"></textarea><br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="save6" class="btn btn-primary">Registrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="return2" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <h4 class="modal-title text-center"><label>Rechazo estatus 7 (Asesor)- <b><span class="lote"></span></b></label></h4>
-                </div>
-                <div class="modal-body">
-                    <label>Comentario</label>
-                    <textarea class="text-modal" id="comentario7" rows="3"></textarea>
-                    <br>              
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                    <button type="button" id="save7" class="btn btn-primary">Registrar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -205,7 +132,26 @@
                                 <p class="card-title pl-1">(7. Contrato elaborado)</p>
                             </div>
                             <div class="toolbar">
-                                <div class="row"></div>
+                                <div class="row">
+                                    <?php if ($this->session->userdata('id_usuario') == 2762 || $this->session->userdata('id_usuario') == 6096):?>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="Cproyecto" class="Cproyecto">
+                                            <div class="pl-0">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Desarrollo</label>
+                                                    <select id="proyecto" name="proyecto" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 hide" id="Ccondominio" class="Ccondominio">
+                                            <div class="pl-0">
+                                                <div class="form-group select-is-empty overflow-hidden">
+                                                    <label class="control-label">Condominio</label>
+                                                    <select id="condominio" name="condominio" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>                                   
+                                </div>
                             </div>
                             <div class="material-datatables">
                                 <div class="form-group">

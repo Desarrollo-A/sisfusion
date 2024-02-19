@@ -247,7 +247,15 @@ $(document).ready (function() {
                             let button_action;
 
                             if (data.status == 1) {
-                                button_action = '<button class="btn-data-gral btn-warning  desactivar_corrida" data-idCorrida="' + data.id_corrida + '" data-idLote="' + data.idLote + '">Desactivar</button>';
+                                if (data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82
+                                    || data.idMovimiento == 92 || data.idMovimiento == 96 || data.idMovimiento == 99 || data.idMovimiento == 102 || data.idMovimiento == 104 || data.idMovimiento == 104
+                                    || data.idMovimiento == 107 || data.idMovimiento == 108 || data.idMovimiento == 109 || data.idMovimiento == 111) {
+
+                                    button_action = '<button class="btn-data-gral btn-warning  desactivar_corrida" data-idCorrida="' + data.id_corrida + '" data-idLote="' + data.idLote + '">Desactivar</button>';
+                                }else{
+                                    button_action = '<button style="width: 100%;border-radius: 27px;border: none;padding: 10px 0;box-shadow: 0px 8px 15px rgb(0, 0, 0, 0.3);background-color: #a3a3a3; cursor:not-allowed;opacity: 0.6;" class="" disabled>Desactivar</button>';
+
+                                }
                             } else {
 
                                 if (data.idMovimiento == 31 || data.idMovimiento == 85 || data.idMovimiento == 20 || data.idMovimiento == 63 || data.idMovimiento == 73 || data.idMovimiento == 82

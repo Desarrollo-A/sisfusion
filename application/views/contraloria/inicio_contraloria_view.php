@@ -399,6 +399,5 @@
 		</ul>
 	</div>
 </div>
-
-</div><!--main-panel close-->
+</div>
 </body>

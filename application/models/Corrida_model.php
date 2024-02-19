@@ -198,12 +198,17 @@
 
 
 
-    public function getResidencialDis() {
+    public function getResidencialDis($modalidad) {
+        if($modalidad == null ||  $modalidad == 0){
+            $condicion = '';
+        }elseif($modalidad==1){
+            $condicion = 'WHERE res.idResidencial IN (3, 13, 22, 31)';
+        }
         $query = $this->db->query("SELECT res.idResidencial, res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) as descripcion 
         FROM [residenciales] res 
         INNER JOIN [condominios] con ON con.idResidencial = res.idResidencial 
         INNER JOIN [lotes] lot ON lot.idCondominio = con.idCondominio 
-        --WHERE lot.idStatusLote = 1 
+        $condicion
         GROUP BY res.idResidencial,res.nombreResidencial,  CAST(res.descripcion AS NVARCHAR(100)) ORDER BY res.idResidencial");
         return $query->result_array();
     }
@@ -221,7 +226,7 @@
                                     WHERE con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
         }else
          {
-            $statusLote = '1';
+            $statusLote = '1,2,3';
                 if($this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 32){
                     $statusLote = '2,3';
                 } 

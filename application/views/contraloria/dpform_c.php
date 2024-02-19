@@ -1199,17 +1199,10 @@
 <script src="<?=base_url()?>dist/js/material-dashboard2.js"></script>
 <!-- Material Dashboard DEMO methods, don't include it in your project! -->
 <script src="<?=base_url()?>dist/js/demo.js"></script>
-
 <script type="text/javascript">
 	$(document).ready(function() {
-
-		// Javascript method's body can be found in assets/js/demos.js
 		demo.initDashboardPageCharts();
-
 		demo.initVectorMap();
 	});
 </script>
-
-
-
 </html>

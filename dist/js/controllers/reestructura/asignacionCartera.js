@@ -34,10 +34,10 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
             format: {
                 header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
+                    return ' ' + titulosTabla[columnIdx - 1] + ' ';
                 }
             }
         }
@@ -51,10 +51,10 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
             format: {
                 header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
+                    return ' ' + titulosTabla[columnIdx - 1] + ' ';
                 }
             }
         }
@@ -84,6 +84,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
     destroy: true,
     columns: [
         {
+            "visible": (id_rol_general == 4) ? false : true,
             "width": "30%",
             "data": function (d) {
                 let lblInput = '';

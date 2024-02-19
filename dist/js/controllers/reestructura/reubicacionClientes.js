@@ -1,4 +1,8 @@
 var arrayDeshacerRees = [];
+var arrayProyIdProp = [];
+var idProyectoRE = 0; //id de proyecto reestrucura excedente, sólo para ese caso
+var idProyectoConteo=[];
+var idProyectoCO=0;
 $(document).ready(function () {
     if (id_usuario_general === 13733) { // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         $.post(`${general_base_url}Reestructura/getListaUsuariosReasignacionJuridico`, function (data) {
@@ -25,6 +29,11 @@ let estadoCivilList = [];
 let copropietariosEliminar = [];
 let sumatoriaLS = 0; //
 
+
+let sedesList = [];
+
+
+
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
     COMERCIAL: 1
@@ -37,7 +46,9 @@ const TIPO_PROCESO = Object.freeze({
 
 const PROYECTO = Object.freeze({
     NORTE: 21,
-    PRIVADAPENINSULA: 25
+    PRIVADAPENINSULA: 25,
+    CANADA: 22,
+    MONTANASLP:14
 });
 
 const STATUSLOTE = Object.freeze({
@@ -95,7 +106,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -112,7 +123,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22],
+            columns: id_rol_general === 15 ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24] : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -203,9 +214,7 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
         { data: "nombreAsesorAsignado"},
         {
             data: (d) => {
-                return (d.comentario == null || d.comentario == '')
-                    ? '<p class="m-0">NO DEFINIDO</p>'
-                    : `<p class="m-0">${d.comentario}</p>`;
+                return (d.comentario == null || d.comentario == '') ? '<p class="m-0">NO DEFINIDO</p>' : `<p class="m-0">${d.comentario}</p>`;
             }
         },
         {
@@ -236,6 +245,12 @@ reubicacionClientes = $('#reubicacionClientes').DataTable({
             }
         },
         {
+            data: (d)=>{
+                return `<span class='label ${d.banderaProcesoUrgente == 0 ? 'lbl-blueMaderas' : 'lbl-warning'}'>${d.banderaProcesoUrgenteTexto}</span>`;
+            }
+        },
+        {
+            "visible": (id_rol_general == 4) ? false : true,
             data: function (d) {
                 let boton = (d.plan_comision != 0 && d.plan_comision != undefined) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : (d.registro_comision == 7) ? `<div class="d-flex justify-center">${botonesAccionReubicacion(d)}</div>` : `<p class="m-0">SIN PLAN COMISIÓN</p>`;
                 return (d.idLotePvOrigen != null && d.idLotePvOrigen == d.idLote) ?                
@@ -337,7 +352,7 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
 
 $(document).on('click', '.btn-asignar-propuestas', async function (){
     $("#spiner-loader").removeClass('hide');
-
+    idProyectoConteo = [];
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -475,6 +490,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
 
     copropietariosEliminar = [];
     estadoCivilList = await obtenerEstadoCivilLista();
+    sedesList = await obtenerSedesLista();
 
     $.getJSON(`${general_base_url}Reestructura/getCliente/${idCliente}/${idLote}`, function(cliente) {
         const nombreLote = cliente.nombre;
@@ -485,6 +501,8 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         const domicilio = cliente.domicilio_particular;
         const ocupacion= cliente.ocupacion;
         const ine = cliente.ine;
+        const banderaProcesoUrgente = cliente.banderaProcesoUrgente;
+        const impresionen = cliente.impresionEn;
 
         changeSizeModal('modal-md');
         appendBodyModal(`
@@ -494,6 +512,21 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
                     </div>	
                     <div class="modal-body p-0">
                         <div class="container-fluid">
+                            <div class="row pt-1 pb-1">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                    <label class="m-0 check-style">
+                                    <br>
+                                        <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
+                                        <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
+                                    </label>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
+                                         <label class="control-label">Impreso en: (<small style="color: red;">*</small>)</label>
+                                         <select name="impresoEn" title="SELECCIONA UNA OPCIÓN" id="impresoEn" 
+                                         class="selectpicker m-0 select-gral" data-container="body" 
+                                         data-width="100%" required></select>
+                                </div>
+                            </div> 
                             <div class="row">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
                                     <label class="control-label">Nombre (<small style="color: red;">*</small>)</label>
@@ -576,6 +609,22 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         });
         $("#estadoCli").selectpicker('refresh');
 
+        sedesList.forEach((sedes)=>{
+            const id = sedes.id_sede;
+            const name = sedes.nombre;
+            console.log('id', id);
+            console.log('cliente.impresionen', cliente.impresionEn);
+            if (id === cliente.impresionEn){
+
+                $("#impresoEn").append($('<option selected>').val(id).text(name.toUpperCase()));
+            } else {
+                $("#impresoEn").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+        });
+        $("#impresoEn").selectpicker('refresh');
+
+
+
         showModal();
 
         $('[data-toggle="tooltip"]').tooltip();
@@ -613,8 +662,9 @@ $(document).on('click', '#guardarCliente', function (){
     const domicilioCli = $('#domicilioCli').val();
     const ineCLi = $('#ineCLi').val();
     const ocupacionCli = $('#ocupacionCli').val();
+    const impresoEn = $('#impresoEn').val();
 
-    if(ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
+    if(impresoEn=='' || ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
         alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*).", "warning");
         return;
     }
@@ -798,6 +848,11 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $("#loteAOcupar").html("").selectpicker('refresh');
 
     const idProyecto = $(this).val();
+    if(idProyecto==21){
+        idProyectoRE = idProyecto;
+    }
+    idProyectoConteo.push($(this).val());
+    idProyectoCO = $(this).val();
     const superficie = $("#superficie").val();
     const flagFusion = $("#flagFusion").val();
 
@@ -820,8 +875,9 @@ $(document).on("change", "#condominioAOcupar", function(e){
     const idCondominio = $(this).val();
     const superficie = $("#superficie").val();
     const flagFusion = $("#flagFusion").val();
+    const idProyecto = $('#proyectoAOcupar').val();
 
-    $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie, "flagFusion":flagFusion}, function(data) {
+    $.post("getLotesDisponibles", {"idCondominio": idCondominio, "superficie": superficie, "flagFusion":flagFusion, "idProyecto":idProyecto}, function(data) {
         const len = data.length;
         for (let i = 0; i < len; i++) {
             const id = data[i]['idLote'];
@@ -851,6 +907,22 @@ $(document).on("change", "#loteAOcupar", function(e){
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     let flagFusion = $('#flagFusion').val();
     let numeroMaximoLotes = (flagFusion==1) ? 1000 : 2;
+    const idLoteSeleccionado = $itself.val();
+    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
+    const idProyecto = $(this).attr("data-idProyecto");
+    const superficieLoteOriginal = $(this).attr('data-superficie');
+    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
+    let mensajeMaxLotes = '';
+    // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
+
+    if(idProyecto == 21 ){//si es norte limitamos a una sola propuesta
+        arrayProyIdProp.push(idProyectoRE);
+
+        numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
+        mensajeMaxLotes = '';
+    }else{
+        mensajeMaxLotes = ' más de tres lotes';
+    }
 
     if ($itself.val() === '') {
         alerts.showNotification("top", "right", "Debe seleccionar un lote", "danger");
@@ -872,27 +944,26 @@ $(document).on("change", "#loteAOcupar", function(e){
     }
 
     if (numberLotes > numeroMaximoLotes) {
-        alerts.showNotification("top", "right", "No puedes seleccionar más de tres lotes", "danger");
-        return;
+            alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
+            return;
+    }else{
+        let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
+        if(conteoRepeticiones>=2 && idProyectoCO==21){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
+            return;
+        }
     }
-
-    const idLoteSeleccionado = $itself.val();
-    const idLoteOriginal = $(this).attr('data-idLoteOriginal');
-    const idProyecto = $(this).attr("data-idProyecto");
-    const superficieLoteOriginal = $(this).attr('data-superficie');
-    const tipoEstatusRegreso = $(this).attr("data-tipo_estatus_regreso");
-    // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
 
     if (statusPreproceso != 1) {
         const nombreLote = $itself.attr("data-nombre");
         const superficie = parseFloat($itself.attr("data-superficie"));
         sumatoriaLS = sumatoriaLS + superficie;
-        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso);
+        const html = divLotesSeleccionados(statusPreproceso, nombreLote, superficie, idLoteSeleccionado, tipoEstatusRegreso, idProyectoCO);
         $("#infoLotesSeleccionados").append(html);
         getProyectosAOcupar(idProyecto, superficieLoteOriginal, flagFusion);
         return;
     }
-    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado, flagFusion}, (data) => {
+    $.post(`${general_base_url}Reestructura/agregarLotePropuesta`, {idLoteOriginal, idLotePropuesta: idLoteSeleccionado, flagFusion, idProyecto:idProyectoCO}, (data) => {
         const response = JSON.parse(data);
         if (response.code === 200) {
             getPropuestas(idLoteOriginal, statusPreproceso, idProyecto, superficieLoteOriginal, flagFusion);
@@ -909,14 +980,38 @@ $(document).on("change", "#loteAOcupar", function(e){
     });
 })
 
+function borrarElementoDelArray(valorAEliminar){
+    let miArray = idProyectoConteo;
+    let valorBuscado = valorAEliminar;
+    if(valorAEliminar == 21){
+        let indice = idProyectoConteo.indexOf(valorAEliminar.toString());
+
+        while (indice !== -1) {
+            // Mientras se encuentre el número en el array, eliminarlo
+            idProyectoConteo.splice(indice, 1);
+            indice = idProyectoConteo.indexOf(valorAEliminar.toString());
+        }
+    }else{
+        let indice = miArray.indexOf(valorBuscado);
+
+        if (indice !== -1) {
+            // El valor existe en el array, eliminarlo
+            miArray.splice(indice, 1);
+        }
+    }
+}
+
 function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie, tipoEstatusRegreso, tipoProceso, flagFusion) {
     if (statusPreproceso != 1 && tipoProceso != 3) { // SON LOTES QUE ELIMINA CUANDO ES LA PRIMERA VEZ QUE ASIGNA PROPUESTAS
         let divLote = e.closest( '.lotePropuesto' );
         divLote.remove();
+        borrarElementoDelArray(idProyecto.toString());
         return;
     }
 
+
     // REVISIÓN DE PROPUESTAS (YA ESTÁN EN LA BASE DE DATOS)
+    borrarElementoDelArray(idProyecto.toString());
     $('#spiner-loader').removeClass('hide');
     let data = new FormData();
     data.append("idLote", idLote);
@@ -924,6 +1019,7 @@ function removeLote(e, idLote, statusPreproceso, id_pxl, idProyecto, superficie,
     data.append("tipoEstatusRegreso", tipoEstatusRegreso);
     data.append("tipoProceso", tipoProceso);
     data.append("flagFusion", flagFusion);
+    data.append("idProyecto", idProyectoCO);
     $.ajax({
         url : 'setLoteDisponible',
         data: data,
@@ -1005,7 +1101,7 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
-                        <input type="checkbox" name="idLotes[]" id="idLote" value="${idLote}" checked disabled>
+                        <input type="checkbox" name="idLotes"  value="${idLote}">
                         
                         <span class="w-100 d-flex justify-between">
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
@@ -1022,13 +1118,14 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    const flagFusion = $('#flagFusion').val()
-    const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
-
-    if (!existeSeleccion) {
-        alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
-        return;
-    }
+    // const flagFusion = $('#flagFusion').val()
+    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLotes');
+    //
+    // console.log('existeSeleccion', existeSeleccion);
+    // if (!existeSeleccion) {
+    //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
+    //     return;
+    // }
 
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
@@ -1044,7 +1141,9 @@ $(document).on("submit", "#formReubicacion", function(e){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#spiner-loader').addClass('hide');
-            $('#reubicacionClientes').DataTable().ajax.reload();
+            if(!data.message == 'ERROR'){
+                $('#reubicacionClientes').DataTable().ajax.reload();
+            }
             hideModal();
         },
         error: function( data ){
@@ -1099,8 +1198,13 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
 
     $('#spiner-loader').removeClass('hide');
     let data = new FormData($(this)[0]);
-    data.append("proceso", TIPO_PROCESO.REUBICACION);
+
     data.append("flagFusion", flagFusion);
+    if(idProyectoRE==21){
+        data.append('idProyecto', idProyectoRE);
+    }
+    data.append("proceso", TIPO_PROCESO.REUBICACION);
+
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
@@ -1178,9 +1282,9 @@ $(document).on('click', '.btn-avanzar', async function () {
                 }
             });
             pluralidad = ' LOS LOTES ';
-            if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
-                return;
-            }
+            // if (!validarSuperficiesFusion(sumSuperficieD,sumSuperficieO)) {
+            //     return;
+            // }
         }
         else{
             const totalP = await totalPropuestas(idLote, flagFusionRev);
@@ -1372,8 +1476,8 @@ const validarLotesRequeridos = (numberLotes) => {
 }
 
 const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
-    if((superficiePropuestas-100) < superficieFusion){
-        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+((superficiePropuestas-100)).toFixed(2)+'</b>) es menor al total de ' +
+    if(superficiePropuestas < superficieFusion){
+        alerts.showNotification('top', 'right', 'La sumatoria de superficie de los lotes propuesta (<b>'+(superficiePropuestas).toFixed(2)+'</b>) es menor al total de ' +
             'superficie de los lotes fusionados (<b>'+superficieFusion+'</b>)', 'danger');
         return false;
     }
@@ -1383,6 +1487,7 @@ const validarSuperficiesFusion = (superficiePropuestas,superficieFusion ) => {
 }
 
 const botonesAccionReubicacion = (d) => {
+    const ROLES_PERMITIDOS_CONTRALORIA = [17, 70];
     const FLAGPROCESOCONTRALORIA = parseInt(d.flagProcesoContraloria);
     const FLAGPROCESOJURIDICO = parseInt(d.flagProcesoJuridico);
     const banderaFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
@@ -1396,7 +1501,7 @@ const botonesAccionReubicacion = (d) => {
 
     const totalResicion = parseInt( banderaFusion == 1 ? d.totalRescisionFusion : d.totalRescision);
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
-    const contratoFirmadoFile =  d.contratoFirmado;
+    const contratoFirmadoFile =  d.contratoFirmado;    //funciona para fusion y no funcion
 
 
     let editar = 0;
@@ -1408,7 +1513,7 @@ const botonesAccionReubicacion = (d) => {
     let botonFusionadoEstatus = banderaFusion == 0 ? '' : (d.idLotePvOrigen!=d.idLote ? 'style="display:none"' : '');
     let flagFusion = (d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? 1 : 0;
 
-    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && id_rol_general==17) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
+    if (idEstatusPreproceso === 2 && totalCorridas === totalCorridasRef && FLAGPROCESOCONTRALORIA === 0 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general)) { //subiendo corridas //&& FLAGPROCESOCONTRALORIA === 0 //aun no es el cambio final se comenta para seguir con el proceso
         editar = 1;
         btnShow = 'fa-edit';
     }
@@ -1419,7 +1524,7 @@ const botonesAccionReubicacion = (d) => {
         btnContratoFirmado = 'fa-eye';
         tooltipCF = 'VER CONTRATO FIRMADO';
     }
-    if(d.idContratoFirmado != null){
+    if(contratoFirmadoFile != null){
         btnContratoFirmado = 'fa-eye';
         editarContratoFirmado = 1;
         tooltipCF = 'VER CONTRATO FIRMADO';
@@ -1542,8 +1647,8 @@ const botonesAccionReubicacion = (d) => {
             data-idCliente="${d.idCliente}"
             data-idLote="${d.idLote}"
             data-nombreLote="${d.nombreLote}"
-            data-estatusLoteArchivo="${d.status}"
-            data-editar="${editarContratoFirmado}"   
+            data-estatusLoteArchivo="${d.status}"   
+            data-editar="${d.contratoFirmado == null ? 0 : 1}"   
             data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
             data-idCondominio="${d.idCondominio}"   
@@ -1581,7 +1686,7 @@ const botonesAccionReubicacion = (d) => {
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA) ? (flagFusion==1)? BTN_PROPUESTAS :BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASLP) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE;
@@ -1597,7 +1702,7 @@ const botonesAccionReubicacion = (d) => {
         return BTN_INFOCLIENTE;
     }
 
-    if (idEstatusPreproceso === 2 && id_rol_general == 17 && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
+    if (idEstatusPreproceso === 2 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general) && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
         if(flagFusion==1){
             //en la segunda validacion se ocupa "totalCorridasRef" ya que trae el numero de corridas que debe haber(el mismo número que los contratos
             //firmados que debe de haber
@@ -1612,7 +1717,12 @@ const botonesAccionReubicacion = (d) => {
 
     }
     if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
-        botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+
+        if(contratoFirmadoFile===null)
+            botonJuridico = '';
+        else
+            botonJuridico = BTN_SUBIR_CONTRATO_FIRMADO;
+
         return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
@@ -1881,6 +1991,16 @@ const obtenerEstadoCivilLista = () =>{
     });
 }
 
+const obtenerSedesLista = () =>{
+    return new Promise((resolve) => {
+        $.getJSON(`${general_base_url}Reestructura/getSedes`,function (sedes) {
+            resolve(sedes);
+        });
+    });
+}
+
+
+
 $(document).on('click', '.deshacer-reestructura', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
@@ -1908,6 +2028,9 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
         contentType: false,
         processData: false,
         type: "POST",
+        beforeSend:function(){
+            $('#spiner-loader').removeClass('hide');
+        },
         success: function (response) {
             response = JSON.parse(response);
 
@@ -1919,6 +2042,9 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
             }
             else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
+
+
+            $('#spiner-loader').addClass('hide');
         },
         error: function () {
             $("#deshacerReestrucuraOK").prop("disabled", false);
@@ -1927,3 +2053,13 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
     });
 
 });
+
+function contarRepeticiones(numero, array) {
+    // Usamos el método filter para crear un nuevo array con solo las ocurrencias del número
+    var ocurrencias = array.filter(function(elemento) {
+        return elemento === numero;
+    });
+
+    // Devolvemos la longitud del nuevo array, que representa la cantidad de repeticiones
+    return ocurrencias.length;
+}

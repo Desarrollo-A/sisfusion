@@ -108,7 +108,7 @@ $("#tabla_ingresar_15").ready(function () {
                     if (d.vl == '1')
                         cntActions = 'EN PROCESO DE LIBERACIÓN';
                     else
-                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-fechaArcus="${d.fecha_arcus}" data-idProspecto="${d.id_prospecto}" data-idArcus="${d.id_arcus}" data-totalNeto2="${d.totalNeto2}" data-lugarProspeccion="${d.lugar_prospeccion}" class="btn-data btn-green editReg"  data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-fechaArcus="${d.fecha_arcus}" data-idProspecto="${d.id_prospecto}" data-idArcus="${d.id_arcus}" data-totalNeto2="${d.totalNeto2}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idResidencial="${d.idResidencial}" class="btn-data btn-green editReg"  data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
             }
@@ -195,6 +195,7 @@ $("#tabla_ingresar_15").ready(function () {
         getInfo1[10] = $(this).attr("data-idArcus");
         getInfo1[11] = $(this).attr("data-totalNeto2");
         getInfo1[12] = $(this).attr("data-lugarProspeccion");
+        getInfo1[13] = $(this).attr("data-idResidencial");
         nombreLote = $(this).data("nomlote");
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
@@ -216,6 +217,7 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("idLote", getInfo1[5]);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
+    dataExp1.append("idResidencial", getInfo1[13]);
 
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("id", getInfo1[9]); // idProspecto

@@ -111,7 +111,7 @@ class Api_model extends CI_Model
         $validacionFecha")->result_array(); 
     }
 
-    public function getInformacionProspectos($year, $month){
+    public function getInformacionProspectos(int $year, int $month){
         $month1 = $month;
         $month2 = $month;
         
@@ -120,36 +120,28 @@ class Api_model extends CI_Model
             $month2 = 12;
         }
         
-        $query = $this->db->query("select 
+        $query = $this->db->query("SELECT 
                             pr.id_prospecto, 
                             pr.nombre,
                             pr.apellido_paterno,
                             pr.apellido_materno,
                             opx.nombre personalidad_juridica,
-                            COALESCE(pr.rfc, '') as rfc,
-                            COALESCE(pr.correo, '') as correo,
+                            COALESCE(pr.rfc, '') AS rfc,
+                            COALESCE(pr.correo, '') AS correo,
                             pr.telefono,
-                            COALESCE(pr.telefono_2, '') as telefono_2,
+                            COALESCE(pr.telefono_2, '') AS telefono_2,
                             opx2.nombre tipo,
                             opx1.nombre lugar_prospeccion,
                             pr.fecha_creacion,
                             pr.id_asesor,
-                            Upper(concat(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) as nombre_asesor
-                                FROM
-                                    prospectos pr
-                                INNER JOIN 
-                                    opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
-                                INNER JOIN 
-                                    opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
-                                INNER JOIN
-                                    opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
-                                INNER JOIN
-                                    usuarios us ON us.id_usuario = pr.id_asesor
-                                WHERE 
-                                    YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
-                            array( $year, $month1, $month2 )
-                        );
-
+                            UPPER(CONCAT(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) AS nombre_asesor
+                            FROM prospectos pr
+                            INNER JOIN opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
+                            INNER JOIN opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
+                            INNER JOIN opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
+                            INNER JOIN usuarios us ON us.id_usuario = pr.id_asesor
+                            WHERE YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
+                            array( $year, $month1, $month2 ));
         return $query->result_array();
     }
 
@@ -174,4 +166,213 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
+    public function getInventarioVirtual($idResidencial)
+    {
+        $query = $this->db->query("SELECT (cond.nombre) condominio, (l.nombreLote) lote, l.idLote, (res.descripcion) proyecto, (l.sup) superficie, (l.total) precioLista, (l.precio) m2, l.msi,
+        CASE WHEN u0.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u0.nombre,' ', u0.apellido_paterno,' ', u0.apellido_materno) END asesor,
+        CASE WHEN u1.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) END coordinador,
+        CASE WHEN u2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) END gerente,
+        CASE WHEN u3.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) END subDirector,
+        CONCAT (u4.nombre,' ', u4.apellido_paterno,' ', u4.apellido_materno) director, (st.nombre) estatus, cl.fechaApartado, cl.fechaEnganche
+        FROM lotes l
+        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial AND res.idResidencial = $idResidencial
+        LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
+        LEFT JOIN usuarios AS u0 ON u0.id_usuario = cl.id_asesor
+        LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_coordinador
+        LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_gerente
+        LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_subdirector
+        LEFT JOIN usuarios AS u4 ON u4.id_usuario = 2
+        LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
+        WHERE l.status = 1");
+        
+        return $query->result_array();
+    }
+
+    public function getListaResidenciales() {
+        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25)")->result_array();
+    }
+
+    public function validacionIdSalesforce($id_salesforce) {
+        return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
+    }
+
+    public function aplicaLiberacion($datos){
+        $modificado_por = 1;
+        $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
+        $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
+        $datos["comentarioLiberacion"] = $comentarioLiberacion;
+        $datos["observacionLiberacion"] = $observacionLiberacion;
+        $datos["fechaLiberacion"] = date('Y-m-d H:i:s');
+        $datos["modificado"] = date('Y-m-d H:i:s');
+        $datos["status"] = 1;
+        $datos["userLiberacion"] = ($datos['tipoLiberacion'] == 7 &&  $this->session->userdata('id_rol') == 17 ) ? 1 : 1;
+        $datos["tipo"] = $datos['tipoLiberacion'];
+        $tipo_estatus_regreso = $datos['tipoLiberacion'] == 9 ? 1 : 0; // SI ES LIBERACIÓN DE YOLA (ES EL INVENTARIO ESPECIAL PARA EL PROYECTO DE REESTRUCURA) SE MANDA BANDERA EN 1 SINO 0
+
+        $row = $this->db->query("SELECT idLote, nombreLote, status, sup,precio,ubicacion,idStatusLote,
+        (CASE WHEN totalNeto2 IS NULL THEN 0.00 ELSE totalNeto2 END) totalNeto2,
+        (CASE WHEN idCliente = 0  OR idCliente IS NULL THEN 0 ELSE idCliente END) idCliente,registro_comision,
+        (CASE WHEN tipo_venta IS NULL THEN 0 ELSE tipo_venta END) tipo_venta FROM lotes WHERE idLote=".$datos['idLote']." AND status = 1")->result_array();
+        $registro_comision = ($datos['tipo'] == 8 || $datos['tipo'] == 9) ? 9 : 8;
+        $idStatusLote = $datos['tipo'] == 9 ? 15 :($datos['tipo'] == 8  ? 3 :( $datos['tipo'] == 7 ? 19 : 18));
+        $sqlIdCliente = $datos['tipo'] == 8 ? ' AND id_cliente='.$row[0]['idCliente'] : '';
+        $sqlIdClienteAnt = isset($datos["idClienteAnterior"]) ? 'AND idCliente = '.$datos["idClienteAnterior"] : '';
+        $this->db->trans_begin();
+        if($row[0]['idStatusLote'] == 8 || $row[0]['idCliente'] == NULL){
+                $arregloLote = array();
+                $arregloLote = array(
+                    "idStatusLote" => 15,
+                    "fecha_modst" => date("Y-m-d H:i:s"),
+                    "userstatus" => $datos["userLiberacion"],
+                    "usuario" => $datos["userLiberacion"],
+                    "liberaBandera" => 1,
+                    "tipo_estatus_regreso" => 1
+                );
+                $this->General_model->updateRecord('lotes',$arregloLote , 'idLote',$datos['idLote']);
+                if ($this->db->trans_status() === FALSE){
+                    $this->db->trans_rollback();
+                    return false;
+                } else {
+                    $this->db->trans_commit();
+                    return true;
+                }
+                exit;
+        }
+        
+        $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
+        $id_cliente = $this->db->query("SELECT id_cliente,plan_comision FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
+        $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
+        $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
+        $this->db->query("UPDATE clientes SET status = 0,modificado_por='".$modificado_por."', tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
+        $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdClienteAnt");
+        $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
+
+        $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
+        //$arrayRegistroComision = [0,8,9];
+        if(!in_array($row[0]['registro_comision'],array(7))){
+            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
+            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+
+            if(in_array($row[0]['registro_comision'],array(8,0))){
+                for ($i=0; $i < count($comisionesNuevas) ; $i++) { 
+                    $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisionesNuevas[$i]['id_usuario'].",".$comisionesNuevas[$i]['comision_total'].",".$comisionesNuevas[$i]['porcentaje_decimal'].",".$comisionesNuevas[$i]['id_rol'].",".$id_cliente[0]['id_cliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')"); 
+                }
+            }else{
+                if(count($comisiones) == 0){
+                    for ($i=0; $i < count($comisionesNuevas) ; $i++) { 
+                        $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisionesNuevas[$i]['id_usuario'].",".$comisionesNuevas[$i]['comision_total'].",".$comisionesNuevas[$i]['porcentaje_decimal'].",".$comisionesNuevas[$i]['id_rol'].",".$id_cliente[0]['id_cliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')"); 
+                    }
+                }else{
+                    for ($i=0; $i <count($comisiones) ; $i++) {
+                        $sumaxcomision=0;
+                        $pagos_ind = $this->db->query("SELECT * FROM pago_comision_ind WHERE id_comision=".$comisiones[$i]['id_comision']."")->result_array();
+                        for ($j=0; $j <count($pagos_ind) ; $j++) {
+                            $sumaxcomision = $sumaxcomision + $pagos_ind[$j]['abono_neodata'];
+                        }
+                        if(($datos['tipo'] == 7 || $datos['tipo'] == 8) && $row[0]['registro_comision'] == 1){
+                            $nuevaComision = $comisiones[$i]['comision_total'] - $sumaxcomision;
+                            $this->db->query("INSERT INTO comisionesReubicadas VALUES(".$comisiones[$i]['id_usuario'].",".$nuevaComision.",".$comisiones[$i]['porcentaje_decimal'].",".$comisiones[$i]['rol_generado'].",".$row[0]['idCliente'].",".$row[0]['idLote'].",'".$datos['userLiberacion']."','".date("Y-m-d H:i:s")."','".$row[0]['nombreLote']."')");
+                        }
+                        $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
+                    }
+                    $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0,modificado_por='".$modificado_por."'  WHERE id_lote=".$row[0]['idLote']." ");
+                }
+            }
+        }else{
+            $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
+            for ($i=0; $i <count($comisiones) ; $i++) {
+                $this->db->query("UPDATE comisiones SET modificado_por='" . $datos['userLiberacion'] . "',estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
+            }
+            $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0,modificado_por='".$modificado_por."'  WHERE id_lote=".$row[0]['idLote']." ");
+        }
+        
+        if($row[0]['tipo_venta'] == 1){
+            if($datos['tipo'] == 7 || $datos['tipo'] == 8){
+                if( $datos['tipo'] == 7 && $datos['banderaFusion'] == 0){
+                    $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
+                    $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
+                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+                }
+            }
+        }
+
+        //LOTES FUSIÓN
+        if($datos["tipo"] == 7 && $datos['banderaFusion'] == 1){
+            $datosFusion = $this->db->query("SELECT idLotePvOrigen FROM lotesFusion WHERE idLote=".$datos['idLote'])->result_array();
+            $idLotePv = $datosFusion[0]['idLotePvOrigen'];
+            $this->db->query("UPDATE lotesFusion SET banderaComision=".$row[0]['registro_comision'].",totalNeto2=".$row[0]['totalNeto2'].",modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLote=".$datos['idLote']." AND idCliente=".$row[0]['idCliente']." ");
+            $this->db->query("UPDATE lotesFusion SET nombreLotes=CONCAT(nombreLotes,',','".$row[0]['nombreLote']."'),modificadoPor=".$datos['userLiberacion'].",fechaModificacion='".$datos['modificado']."' WHERE idLotePvOrigen=".$idLotePv." AND destino=1");
+        }
+
+
+
+        $data_l = array(
+            'nombreLote'=> $row[0]['nombreLote'],
+            'comentarioLiberacion'=> $datos['comentarioLiberacion'],
+            'observacionLiberacion'=> $datos['observacionLiberacion'],
+            'precio'=> $row[0]['precio'],
+            'fechaLiberacion'=> $datos['fechaLiberacion'],
+            'modificado'=> $datos['modificado'],
+            'status'=> $datos['status'],
+            'idLote'=> $row[0]['idLote'],
+            'tipo'=> $datos['tipo'],
+            'userLiberacion'=> $datos['userLiberacion'],
+            'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
+        );
+
+        $this->db->insert('historial_liberacion',$data_l);
+
+        $idStatusContratacion = $datos["tipo"] == 8 ? 1 : 0;
+        $idClienteNuevo = $datos["tipo"] == 8 ? $datos['idClienteNuevo'] : 0 ;
+        $idMovimiento = $datos["tipo"] == 8 ? 31 : 0;
+        $tipo_venta = $datos["tipo"] == 8 ? $row[0]['tipo_venta'] : 0;
+        $ubicacion = $datos["tipo"] == 8 ? $row[0]['ubicacion'] : 0;
+        $motivo_change_status =  $datos["tipoLiberacion"] == 3 ? $datos['obsLiberacion'] : 'LOTE LIBERADO';
+        $this->db->query("UPDATE lotes SET idStatusContratacion = $idStatusContratacion,
+                    idMovimiento = $idMovimiento, comentario = 'NULL', idCliente = $idClienteNuevo, usuario = '".$modificado_por."', perfil = 'NULL ', 
+                    fechaVenc = null, modificado = null, status8Flag = 0, 
+                    ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
+                    casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
+                    totalValidado = 0, validacionEnganche = 'NULL', 
+                    fechaSolicitudValidacion = null, 
+                    fechaRL = null, 
+                    motivo_change_status='$motivo_change_status',
+                    registro_comision = $registro_comision,
+                    tipo_venta = $tipo_venta, 
+                    observacionContratoUrgente = null,
+                    firmaRL = 'NULL', comentarioLiberacion = '".$datos['comentarioLiberacion']."', 
+                    observacionLiberacion = '".$datos['observacionLiberacion']."', liberadoReubicacion = '".$datos['observacionLiberacion']."' , idStatusLote = $idStatusLote, 
+                    fechaLiberacion = GETDATE(), 
+                    userLiberacion = '".$datos['userLiberacion']."',
+                    precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
+                    enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
+                    saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso
+                    WHERE idLote IN (".$datos['idLote'].") and status = 1");
+                    
+                    /*if(!in_array($datos["tipo"],array(7,8,9))) {
+                        $this->email
+                            ->initialize()
+                            ->from('Ciudad Maderas')
+                            ->to('programador.analista24@ciudadmaderas.com')
+                            ->subject('Notificación de liberación')
+                            ->view($this->load->view('mail/reestructura/mailLiberacion', [
+                                'lote' => $row[0]['nombreLote'],
+                                'fechaApartado' => $datos['fechaLiberacion'],
+                                'Observaciones' => $datos['obsLiberacion']
+                            ], true));
+                
+                        $this->email->send();
+                    }*/
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
+        }
+
+    }
 }

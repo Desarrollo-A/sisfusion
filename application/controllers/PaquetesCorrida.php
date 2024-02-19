@@ -209,7 +209,7 @@ class PaquetesCorrida extends CI_Controller
           "idResidencial" => $desarrollos,
           "fecha_inicio" => $Fechainicio,
           "fecha_fin" => $Fechafin,
-          "id_sede" => $datos_sede[0],
+          "id_sede" => $datos_sede,
           "tipo_lote" => $TipoLote,
           "superficie" => $superficie,
           "paquetes" => $cadena_lotes,

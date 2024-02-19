@@ -107,28 +107,12 @@ class Documentacion_model extends CI_Model {
      * @param $nombreDocumento
      * @return string
      */
-    public function getCarpetaArchivo(
-        $tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false
-    ): string
+    public function getCarpetaArchivo($tipoDocumento, $tipoContratacion = 1, $nombreLote = '', $nombreDocumento = '', $eliminarArchivo = false): string
     {
-        if ($tipoContratacion == 0 || $tipoContratacion == 1) {
+        if (!in_array($tipoDocumento, [41, 35, 7, 8, 46, 47]) || (in_array($tipoDocumento, [7, 8, 46, 47]) && in_array($tipoContratacion, [0, 1])))
             return $this->obtenerPathViejoContratacion($tipoDocumento);
-        }
-
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {
-            if ($eliminarArchivo) {
-                return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
-            }
-
-            if (empty($nombreDocumento)) {
-                return $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
-            }
-
-            $pathViejo = $this->obtenerPathViejoContratacion($tipoDocumento);
-            $pathNuevo = $this->obtenerPathNuevoContratacion($nombreLote, $tipoContratacion);
-            return (file_exists($pathViejo.$nombreDocumento)) ? $pathViejo : $pathNuevo;
-        }
-
+        else
+            return $this->obtenerPathNuevoContratacion($nombreLote);
         return '';
     }
 
@@ -150,11 +134,6 @@ class Documentacion_model extends CI_Model {
     private function obtenerPathNuevoContratacion($nombreLote, $tipoContratacion): string
     {
         $pathBase = 'static/documentos/';
-        if ($tipoContratacion == 2 || $tipoContratacion == 3 || $tipoContratacion == 4 || $tipoContratacion == 5 || $tipoContratacion == 6) {// Reubicación
-
-                return "{$pathBase}contratacion-reubicacion/$nombreLote/";
-        }
-
-        return $pathBase;
+        return "{$pathBase}contratacion-reubicacion/$nombreLote/";
     }
 }

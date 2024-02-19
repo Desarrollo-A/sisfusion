@@ -9,7 +9,7 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', 'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -959,8 +959,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function prospecto_a_cliente()
-    {
+    public function prospecto_a_cliente() {
         $id_prospecto = $this->input->post('id_prospecto');
         $id_cliente = $this->input->post('id_cliente');
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
@@ -1000,25 +999,20 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
-
             if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-            //if (TRUE) {
                 $arcusData = array(
                     "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
-                    "estatus" => "Propiedad apartada"
+                    "etapa" => "Propiedad apartada"
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
-
-            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
+            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0)
                 $data_response['prospecto_update'] = 'OK';
-            } else {
+            else
                 $data_response['prospecto_update'] = 'FAIL';
-            }
-        } else {
+        } else
             $data_response['cliente_update'] = 'FAIL';
-        }
         echo json_encode($data_response);
     }
     /*********************************/
@@ -1056,6 +1050,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -1095,8 +1090,10 @@ class Asesor extends CI_Controller {
             : [];
 
         //prueba
-        $tipo_venta_result = $this->Asesor_model->getTipo_Venta();
-        $datos['tipo_venta'] = $tipo_venta_result->row()->tipo_venta ?? null;
+        //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
+        $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
+//        print_r($datos["cliente"][0]);
+//        exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -1908,10 +1905,14 @@ class Asesor extends CI_Controller {
 
     public function editar_ds()
     {
+
         setlocale(LC_MONETARY, 'en_US');
         $emailCopArray = $this->input->post("email_cop[]");
         $telefono1CopArray = $this->input->post("telefono1_cop[]");
         $telefono2CopArray = $this->input->post("telefono2_cop[]");
+        $ladaTelCop1 = $this->input->post("ladaTelCop[]");
+        $ladaCelCop2 = $this->input->post("ladaCelCop[]");
+
         $fNacimientoCopArray = $this->input->post("fnacimiento_cop[]");
         $nacionalidadCopArray = $this->input->post("nacionalidad_cop[]");
         $originarioCopArray = $this->input->post("originario_cop[]");
@@ -1929,7 +1930,7 @@ class Asesor extends CI_Controller {
         $rfcCopArray = $this->input->post("rfc_cop[]");
         $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
-        $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 1 : 0;
+        $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 2 : 1;
 
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
@@ -2018,8 +2019,13 @@ class Asesor extends CI_Controller {
         $nombre = $this->input->post('nombre');
         $apellido_paterno = $this->input->post('apellido_paterno');
         $apellido_materno = $this->input->post('apellido_materno');
+
+        $lada1 = $this->input->post('ladaTel1');//lada pais casa
+        $lada2 = $this->input->post('ladaTel2');//lada pais cel
         $telefono1 = $this->input->post('telefono1');//telefono casa
         $telefono2 = $this->input->post('telefono2');//telefono celular
+
+
         $correo = $this->input->post('correo');
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
@@ -2150,8 +2156,12 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["nombre"] = $nombre;
         $arreglo_cliente["apellido_paterno"] = $apellido_paterno;
         $arreglo_cliente["apellido_materno"] = $apellido_materno;
+
+        $arreglo_cliente["ladaTel1"] = $lada1;
         $arreglo_cliente["telefono1"] = $telefono1;
+        $arreglo_cliente["ladaTel2"] = $lada2;
         $arreglo_cliente["telefono2"] = $telefono2;
+
         $arreglo_cliente["correo"] = $correo;
         $arreglo_cliente["rfc"] = $rfc;
         $arreglo_cliente["fecha_nacimiento"] = $fecha_nacimiento;
@@ -2175,7 +2185,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
-        $arreglo_cliente["venta_extrangero"] = $ventaExtranjero; 
+        $arreglo_cliente["venta_extranjero"] = $ventaExtranjero; 
 
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();
@@ -2928,6 +2938,7 @@ class Asesor extends CI_Controller {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
                         $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
+                                                            ladaTel = '" . $ladatelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
                                                             telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
                                                             nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
                                                             domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',
@@ -2977,7 +2988,7 @@ class Asesor extends CI_Controller {
             } else {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
-                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', ladaTel='".$ladaTelCop1[$i]."' ladaCel='".$ladaCelCop2[$i]."' telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
                                 rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
                             WHERE id_copropietario = " . $idCopArray[$i]);
                     }
@@ -3060,7 +3071,7 @@ class Asesor extends CI_Controller {
                     }
                     if (count($idCopArray) > 0) {
                         for ($i = 0; $i < sizeof($idCopArray); $i++) {
-                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', ladaTel='".$ladaTelCop1[$i]."', telefono_2 = '" . $telefono2CopArray[$i] . "', ladaCel='".$ladaCelCop2[$i]."', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
                                 rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
                             WHERE id_copropietario = " . $idCopArray[$i]);
                         }
@@ -3209,15 +3220,23 @@ class Asesor extends CI_Controller {
         $id_cliente = $this->input->post('idCliente');
         $tipo_comprobante = $this->input->post('tipo_comprobante');
         $comentario=$this->input->post('comentario');
+        $fechaVenc = $this->input->post('fechaVenc');
+        $idCondominio = $this->input->post('idCondominio');
+        $idCliente = $this->input->post('idCliente');
 
-        /*if ($this->session->userdata('id_rol') != 17) {
+
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
+            return;
+        }
+
+        if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
                 $data['message'] = 'VERIFICACION CORREO/SMS';
                 echo json_encode($data);
                 return;
             }
-        }*/
+        }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
         if($valida_tventa[0]['tipo_venta'] == 1 ) {
@@ -3248,24 +3267,15 @@ class Asesor extends CI_Controller {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
+        
+
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $statusContratacion;
         $arreglo["idMovimiento"] = $idMovimiento;
+        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["comentario"] = $this->input->post('comentario');
-        $data = $this->Asesor_model->revisaOU($idLote);
-
-        if(count($data) >= 1) {
-            $data['message'] = 'OBSERVACION_CONTRATO';
-            echo json_encode($data);
-            return;
-        }
-
-        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
-            return;
-        }
 
 
         date_default_timezone_set('America/Mexico_City');
@@ -3383,14 +3393,15 @@ class Asesor extends CI_Controller {
         $arreglo2["idStatusContratacion"] = $statusContratacion;
         $arreglo2["idMovimiento"] = $idMovimiento;
         $arreglo2["nombreLote"] = $nombreLote;
+        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
+        $arreglo2["fechaVenc"] = $fechaVenc;
         $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
-        $arreglo2["idCliente"] = $this->input->post('idCliente');
-        $arreglo2["comentario"] = $this->input->post('comentario');
+        $arreglo2["idCondominio"] = $idCondominio;
+        $arreglo2["idCliente"] = $idCliente;
+
         $validate = $this->Asesor_model->validateSt2($idLote);
 
         if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
@@ -3429,15 +3440,16 @@ class Asesor extends CI_Controller {
                         $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
                 }
                 $data['message'] = 'OK';
-                echo json_encode($data);
             } else {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
+                $data['status'] = false;
+                $data['message'] = 'Error al enviar la solicitud.';
             }
         } else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
+            $data['status'] = false;
+            $data['message'] = 'El estatus ya fue registrado.';
         }
+
+        echo json_encode($data);
     }
 
     public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
@@ -3448,6 +3460,9 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $labelCorridaFinanciera = '';
+        $corrida_financiera = ""; // CORRIDA FINANCIERA
+
         $leyendaResiciones = '';
         $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
@@ -3495,34 +3510,43 @@ class Asesor extends CI_Controller {
 
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
-                        : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
-                        : "";
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 34, 35" : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA $leyendaMsgValidacion" : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
-
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
-                    $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 47" : ", 35";
+                    $documentsNumber += 1;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE" : $leyendaMsgValidacion;
                 }
             }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-
-
-
+            #prueba
+            $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
+            $validacionAceptados = array(3, 13, 22, 31);
+            #prueba cf
+            if(in_array($validacionRes->idResidencial, $validacionAceptados)){
+                //si está en algun proyecto de león
+                $documentsNumber += 1; //añadir otro documento a la validación
+                $labelCorridaFinanciera = ', CORRIDA FINANCIERA';
+                $corrida_financiera = ', 7';
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $labelCorridaFinanciera $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra $corrida_financiera" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra $corrida_financiera";
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
+
+//        print_r($documentsValidation);
+//        echo '<br>';
+//        print_r($documentsNumber);
+//        exit;
+
+
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
+            $data['status'] = false;
             $data['message'] = 'MISSING_DOCUMENTS';
             $data['error_message'] = $error_message;
             echo json_encode($data);
@@ -3530,18 +3554,21 @@ class Asesor extends CI_Controller {
         }
 
         if($validacion) {
-            $data['message'] = 'MISSING_AUTORIZATION';
+            $data['status'] = false;
+            $data['message'] = FALSE;
+            $data['error_message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
-        if(count($validacionIM) > 0) {
-            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['message'] = 'MISSING_AUTFI';
-                echo json_encode($data);
-                return false;
-            }
-        }
+//        if(count($validacionIM) > 0) {
+//            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+//                $data['status'] = false;
+//                $data['message'] = 'Autorización de mensualidad pendiente.';
+//                echo json_encode($data);
+//                return false;
+//            }
+//        }
 
 
         return true;
@@ -5260,19 +5287,14 @@ class Asesor extends CI_Controller {
     public function smsAut(string $url, string $telefono): bool
     {
         $camposSms = [
-            'Content' => "Verifique su numero telefonico en el siguiente enlace: [URL]\nAtentamente,\nCiudad Maderas",
+            'Content' => "Verifique su numero telefonico en el siguiente enlace: ".$url."\nAtentamente,\nCiudad Maderas",
             'ListGuid' => 'c4bcd75f-1ec5-4af1-9449-6e077892e424',
             'ListSecret' => 'fd0ca54e-4155-46c9-b0c9-c2a8b33e200e',
             'Sender' => 'aut_clientes',
             'Recipient' => $telefono,
             'CampaignCode' => 'null',
-            'DynamicFields' => [
-                [
-                    "N" => "URL",
-                    "V" => $url
-                ]
-            ],
-            'isUnicode' => 0
+            'DynamicFields' => [],
+            'isUnicode' => 1
         ];
 
         $sms = $this->apiExternoSms('https://sendsms.mailup.com/api/v2.0/sms/163369/1','POST', $camposSms);
@@ -5293,6 +5315,7 @@ class Asesor extends CI_Controller {
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => $tipo,
             CURLOPT_POSTFIELDS =>json_encode( $body ),

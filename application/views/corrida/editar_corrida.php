@@ -1214,13 +1214,24 @@
                         </div>
                         <div style="float: right;bottom: 2%;right: 3%;position: fixed;display: inline-flex;align-content: center;
                             flex-wrap: wrap;flex-direction: column;">
+                            <?php if( in_array((int) $data_corrida->idMovimiento, array(31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111)))
+                            {?>
+                                <button class="btn-circle blue" ng-click="printCover()"
+                                        data-toggle="tooltip" title="Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
+                                <button class="btn-circle dark-blue" ng-click="printCoverCF()"
+                                        data-toggle="tooltip" title="Imprimir Carátula + Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
+                                <button class="btn-circle" ng-click="updateCorrida()"
+                                        data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
+                            <?php }else{?>
+                                <button class="btn-circle grey " style="background-color: grey; cursor: not-allowed"
+                                        data-toggle="tooltip" disabled title="Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
+                                <button class="btn-circle " style="background-color: grey; cursor: not-allowed"
+                                        data-toggle="tooltip" title="Imprimir Carátula + Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
+                                <button class="btn-circle" style="background-color: grey; cursor: not-allowed"
+                                        data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
+                            <?php } ?>
 
-                            <button class="btn-circle blue" ng-click="printCover()"
-                                    data-toggle="tooltip" title="Imprimir Carátula"><i class="fas fa-print fa-lg"></i></button>
-                            <button class="btn-circle dark-blue" ng-click="printCoverCF()"
-                                    data-toggle="tooltip" title="Imprimir Carátula + Corrida Financiera"><i class="fas fa-money-check-alt fa-lg"></i></button>
-                            <button class="btn-circle" ng-click="updateCorrida()"
-                                    data-toggle="tooltip" title="Guardar"><i class="fa fa-save fa-lg fa-lg"></i></button>
+
                         </div>
 
 
@@ -2567,7 +2578,7 @@
                                         $scope.preciom2 = <?php echo $data_corrida->precio_m2_final;?>;
                                         $scope.total = <?php echo $data_corrida->total;?>;
                                         $scope.porcentajeInv = <?php echo $data_corrida->porcentaje;?>;
-                                        $scope.observaciones = <?php echo $data_corrida->observaciones; ?>
+                                        $scope.observaciones = '<?php echo $data_corrida->observaciones; ?>'
 
                                         const dateCurrent = '<?php echo $data_corrida->fecha_creacion;?>';
                                         var nueva=dateCurrent.split(" ")[0].split("-").reverse().join("-");

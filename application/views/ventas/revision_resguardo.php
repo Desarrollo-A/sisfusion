@@ -70,6 +70,8 @@
                                                     <th>DETALLE</th>
                                                     <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
+                                                    <th>FECHA DE ENVÍO</th>
+                                               
                                                 </tr>
                                             </thead>
                                         </table>

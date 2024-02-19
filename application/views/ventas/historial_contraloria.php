@@ -86,7 +86,7 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <div class="toolbar">
+                                            <div class="toolbar"> 
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
@@ -94,10 +94,11 @@
                                                             <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2023; $i++) {
+                                                                for ($i = 2019; $i <= 2024; $i++) {
                                                                     $yearName  = $i;
                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                 }
+
                                                                 ?>
                                                             </select>
                                                         </div>
@@ -157,7 +158,7 @@
                                                             <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
-                                                                for ($i = 2019; $i <= 2023; $i++) {
+                                                                for ($i = 2019; $i <= 2025; $i++) {
                                                                     $yearName  = $i;
                                                                     echo '<option value="' . $i . '">' . $yearName . '</option>';
                                                                 }
@@ -182,7 +183,7 @@
                                                                 <th>PROYECTO</th>
                                                                 <th>CONDOMINIO</th>
                                                                 <th>LOTE</th>
-                                                                <th>REFERENCIA</th>
+                                                                <th>REFERENCIA1</th>
                                                                 <th>PRECIO DEL LOTE</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGO DEL CLIENTE</th>
@@ -285,11 +286,4 @@
     <?php $this->load->view('template/footer'); ?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>   
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/historial_colaborador.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 </body>

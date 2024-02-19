@@ -34,7 +34,6 @@ $(document).ready(function () {
     $('.collapse').collapse();
     $('[data-toggle="tooltip"]').tooltip();
 
-
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
@@ -44,8 +43,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
     var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
     flagProcesoJuridicoGlobal = flagProcesoJuridico;
     flagProcesoContraloriaGlobal = flagProcesoContraloria;
-    console.log(flagProcesoJuridico)
-    banderaFusion = banderaFusion == null ? 0 : banderaFusion
+    banderaFusion = banderaFusion == null ? 0 : banderaFusion;
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
     flagFusion = $(this).attr("data-fusion");
@@ -130,6 +128,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     let hideButton = '';
     switch (id_rol_general) {
         case 17:
+        case 70:
             label = '<b>Subir corrida del lote</b>';
             flagProceso = 2;
             acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
@@ -412,7 +411,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
         }else if(flagValidacion > 0 && banderaFusionGlobal != 0){
             flagEnviar = true;
         }
-        else if(banderaFusionGlobal != 0 && (((arrayResicion.includes(1) || flagValidacion > 0) && id_rol_general == 15 ) || id_rol_general == 17)){
+        else if(banderaFusionGlobal != 0 && (((arrayResicion.includes(1) || flagValidacion > 0) && id_rol_general == 15 ) || id_rol_general == 17 || id_rol_general == 70)){
             flagEnviar = true;
         }else{
             //detecta que no hay ni un archivo subido
@@ -421,7 +420,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                     flagEnviar = false;
                 }
-            } else if (flagProceso == 2  && flagProcesoContraloriaGlobal == 0 && id_rol_general == 17  ) {
+            } else if (flagProceso == 2  && flagProcesoContraloriaGlobal == 0 && (id_rol_general == 17 || id_rol_general == 70)) {
                 alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
                 flagEnviar = false;
             }
@@ -740,7 +739,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
                 '  src="'+ruta+'">\n' +
                 '</iframe>';
 
-            if(estatusProceso==2){
+            if(estatusProceso==2 && (id_rol_general==17 || id_rol_general == 70)){
                 contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
                     '                            <div class="" id="selectFileSectionResicioncf">\n' +
                     '                                <div class="file-gph">\n' +
@@ -779,6 +778,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
     let flagFusion = arrayCF['flagFusion'];
     let data = new FormData();
     let mensajeGuardar = 'guardar';
+    $('#sendRequestButtoncf').attr('disabled', true);
 
 
 
@@ -869,7 +869,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
                 * */
 
             });
-            data.append("editarFile", editarContrafoFirmado);
+            data.append("editarFile", 1);
             data.append('totalContratos', arrayContratosFirmados.length);
             data.append('flagFusion', flagFusion);
 
@@ -881,7 +881,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             data.append("nombreLoteOriginal", nombreLote);
             data.append("idDocumento", arrayCF['idDocumento']);
             data.append("idCliente", arrayCF['idClienteCF']);
-            data.append("editarFile", editarContrafoFirmado);
+            data.append("editarFile", 1);
             data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
             data.append('idCondominio', arrayCF['idCondominio'] );
             data.append('nombreResidencial', arrayCF['nombreResidencial'] );
@@ -926,12 +926,15 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
                         "warning"
                     );
                 }
+                $('#sendRequestButtoncf').attr('disabled', false);
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                $('#sendRequestButtoncf').attr('disabled', false);
             }
         });
     }else{
+        $('#sendRequestButtoncf').attr('disabled', false);
         $("#spiner-loader").addClass('hide');
         alerts.showNotification('top', 'right', 'Selecciona el o los contrato(s) firmado(s) para '+mensajeGuardar, 'warning');
     }

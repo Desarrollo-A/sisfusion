@@ -6,8 +6,10 @@ function validarMensaje(tipoMensaje) {
         return;
     } else if (tipoMensaje === 'danger_2') {
         alerts.showNotification('top', 'right', 'El COSTO POR M2 FINAL no debe ser superior al COSTO POR M2 LISTA y tampoco puede ser menor que cero.', 'danger');
+        return;
     } else if (tipoMensaje === 'success') {
         alerts.showNotification('top', 'right', 'El costo FINAL ingresado es válido', 'success');
+        return;
     }
 }
 
@@ -20,25 +22,29 @@ $(document).ready(function() {
 
     $('#costoM2, #costom2f').on('change', function() {
         const tipoMensaje = validarCostos();
+        console.log('tipoMensaje', tipoMensaje);
         validarMensaje(tipoMensaje);
     });
 
 });
 
-
 function validarCostos() {
-    let costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));  
+    let costoListaM2 = parseFloat($('#costoM2').val().replace('$', '').replace(',', ''));
     let costoFinalM2 = parseFloat($('#costom2f').val().replace('$', '').replace(',', ''));
     let tipoVenta = document.getElementById('tipo_venta').value;
-    
+
+
     if (isNaN(costoFinalM2) || isNaN(costoListaM2)) {
         alerts.showNotification('top', 'right', 'Asegurate que el campo Precio por M2 Final tenga un valor', 'info');
         return;
     }
     const clienteInfo = obtenerCliente(cliente);
 
-    if (tipoVenta === '1') {
+    if (tipoVenta == '1') {
         if (costoFinalM2 > costoListaM2 || costoFinalM2 < 0) {
+            setTimeout(()=>{
+                $('#costom2f').val('');
+            }, 1000);
             return 'danger_2';
         } else {
             return 'success';
@@ -46,8 +52,12 @@ function validarCostos() {
     } else {
         const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
+
         if (![2, 3, 4].includes(clienteInfo.proceso)) {
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
+                setTimeout(()=>{
+                    $('#costom2f').val('');
+                }, 1000);
                 return 'danger_1';
             } else {
                 return 'success';
@@ -56,6 +66,9 @@ function validarCostos() {
             if (costoListaM2 > 0 && costoFinalM2 <= costoListaM2 && costoFinalM2 >= 0) {
                 return 'success';
             } else {
+                setTimeout(()=>{
+                    $('#costom2f').val('');
+                }, 1000);
                 return 'danger_1';
             }
         }

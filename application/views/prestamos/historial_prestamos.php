@@ -115,9 +115,7 @@
 
         <?php $this->load->view('template/footer_legend');?>
     </div>
-
     <?php $this->load->view('template/footer'); ?>
-
     <script>
         const baseUrl = '<?=base_url()?>';
         let prestamosTabla;

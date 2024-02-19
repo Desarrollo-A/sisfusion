@@ -208,13 +208,12 @@
     public function aplicaLiberacion($datos) {
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
-        
-        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus
+        $userLiberacion = $datos['userLiberacion'];
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.status, lo.sup, cl.lugar_prospeccion, pr.id_arcus, lo.tipo_venta
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.lugar_prospeccion = 47
         LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
         WHERE lo.idCondominio = $idCondominio AND lo.nombreLote = '$nombreLote' AND lo.status = 1");
-        
         foreach ($query->result_array() as $row) {
             $this->db->trans_begin();
             $id_cliente = $this->db->query("SELECT id_cliente FROM clientes WHERE status = 1 and idLote IN (" . $row['idLote'] . ") ")->result_array();
@@ -248,9 +247,12 @@
                 'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
             $this->db->insert('historial_liberacion',$data_l);
+            
+            $tventa = ($row['tipo_venta'] == 1) ? 1 : 0;
             if ($datos['activeLE'] == 0) {
                 $st = ($datos['activeLP'] == 1) ? 1 : 1;
                 $tv = ($datos['activeLP'] == 1) ? 1 : 0;
+                
                 if ($tv == 1) { // LIBERACIÓN VENTA DE PARTICULAES
                     $data_lp = array(
                         'id_lote'=> $row['idLote'],
@@ -275,7 +277,7 @@
                     }
                 }
                 $this->db->query("UPDATE lotes SET idStatusContratacion = 0, nombreLote = REPLACE(REPLACE(nombreLote, ' AURA', ''), ' STELLA', ''),
-                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = 'NULL', perfil = 'NULL ', 
+                idMovimiento = 0, comentario = 'NULL', idCliente = 0, usuario = '".$userLiberacion."', perfil = 'NULL ', 
                 fechaVenc = null, modificado = null, status8Flag = 0, 
                 ubicacion = 0, totalNeto = 0, totalNeto2 = 0,
                 casa = (CASE WHEN idCondominio IN (759, 639) THEN 1 ELSE 0 END),
@@ -283,7 +285,7 @@
                 fechaSolicitudValidacion = null, 
                 fechaRL = null, 
                 registro_comision = 8,
-                tipo_venta = ".$tv.", 
+                tipo_venta = ".$tventa.", 
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
@@ -304,7 +306,7 @@
                 fechaSolicitudValidacion = null,
                 fechaRL = null, 
                 registro_comision = 8,
-                tipo_venta = null, 
+                tipo_venta = ".$tventa.", 
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
@@ -322,11 +324,10 @@
             } else {
                 $this->db->trans_commit();
                 if (intval($row['lugar_prospeccion']) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-                //if (TRUE) {
                     $arcusData = array(
                         "propiedadRelacionada" => $row['idLote'],
                         "uid" => $row['id_arcus'],
-                        "estatus" => "No viable"
+                        "etapa" => 'No viable'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
@@ -443,7 +444,7 @@
         return true;
     }
 
-    public function getDocsByType($typeOfPersona, $tipo_venta) {
+    public function getDocsByType($typeOfPersona, $tipo_venta = NULL) {
         $extraWhere = "";
         if ($tipo_venta == 1) // VENTA DE PARTICULAES
             $extraWhere = "OR (id_catalogo = $typeOfPersona AND id_opcion IN (50))";
@@ -561,7 +562,7 @@
     public function validate($idLote)
     {
         $this->db->where("idLote", $idLote);
-        $this->db->where_in('idStatusLote', array('1', '101', '102', '16'));
+        $this->db->where_in('idStatusLote', array('1', '101', '102', '16', '20'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? 0 : 1;
@@ -569,8 +570,7 @@
     }
 
     //VERIFICAMOS PARA EL APARTADO EN LINEA QUE SE ENCUENTRE EN ESTATUS 99
-    public function validar_aOnline($idLote)
-    {
+    public function validar_aOnline( $idLote ){
         $this->db->where("idLote", $idLote);
         $this->db->where_in('idStatusLote', array('99'));
         $this->db->where("(idStatusContratacion = 0 OR idStatusContratacion IS NULL)");
@@ -755,7 +755,7 @@
         return $query->result_array();
     }
 
-
+ 
     public function editaEstatus($id, $dato)
     {
         $this->db->where("idLote", $id);

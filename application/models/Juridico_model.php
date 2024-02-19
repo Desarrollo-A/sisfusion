@@ -61,13 +61,17 @@ class Juridico_model extends CI_Model {
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097", "2825")))
+			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097", "2825", "14183")))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
 			
-			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
+			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
+			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+			else if($id_sede == 5) // JURÍDICO LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 

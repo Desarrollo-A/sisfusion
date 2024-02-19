@@ -220,7 +220,6 @@
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
     </div>
-
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/reporteLotesPorComisionista.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>

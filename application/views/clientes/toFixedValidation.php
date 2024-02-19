@@ -61,9 +61,6 @@
 
 <script src="<?=base_url()?>dist/js/controllers/files/plugins/piexif.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/plugins/sortable.js" type="text/javascript"></script>
-<!--<script src="<?=base_url()?>dist/js/controllers/files/fileinput.js" type="text/javascript"></script>-->
-
-<!--        <script src="--><?//=base_url()?><!--dist/js/controllers/files/locales/fr.js" type="text/javascript"></script>-->
 <script src="<?=base_url()?>dist/js/controllers/files/locales/es.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/themes/fas/theme.js" type="text/javascript"></script>
 <script src="<?=base_url()?>dist/js/controllers/files/themes/explorer-fas/theme.js" type="text/javascript"></script>
