@@ -248,7 +248,7 @@ class Descuentos_model extends CI_Model {
     }
 
     function getPrestamos($beginDate,$endDate){
-        $queryFecha = $beginDate != 0 ? "WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": ""; 
+        $queryFecha = $beginDate != '0' ? "WHERE p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": ""; 
         return $this->db->query("SELECT 
         CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) AS nombre, 
         p.id_prestamo,p.id_usuario, p.monto,p.num_pagos,p.estatus,p.comentario,
@@ -263,12 +263,13 @@ class Descuentos_model extends CI_Model {
         rpp.id_prestamo AS id_prestamo2,
         opcol.color AS colorP, opcol.nombre AS estatusPrestamo
         FROM prestamos_aut p 
-        INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
+        INNER JOIN usuarios u ON u.id_usuario = p.id_usuario AND u.estatus IN(1,3,0)
         LEFT JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = p.id_prestamo
         LEFT JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion = p.tipo AND opc.id_catalogo = 23
         LEFT JOIN opcs_x_cats opcol ON opcol.id_opcion = p.estatus AND opcol.id_catalogo = 118
         LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion  AND mrp.estatus = 1
+        $queryFecha
         GROUP BY rpp.id_prestamo, 
         mrp.evidencia,mrp.estatus ,
         u.nombre,u.apellido_paterno,
