@@ -5,9 +5,135 @@ $(document).ready(function() {
     setIniDatesXMonth("#beginDate", "#endDate");
     let finalBeginDate = $("#beginDate").val();
     let finalEndDate = $("#endDate").val();
-    fillTable(3, finalBeginDate, finalEndDate, 0);
     getStatusRecordatorio();
+
+    if(id_rol_general == 3){
+        crearFiltros();
+        coordinadorGeneral();
+    } else if (id_rol_general == 9){
+        crearFiltros();
+        $("#divCoordinador").addClass('hide');
+        $("#divFecha").removeClass('col-xs-12 col-sm-12 col-md-4 col-lg-4');
+        $("#divFecha").addClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+        $("#filterContainer").addClass('col-xs-12 col-sm-12 col-md-6 col-lg-6');
+        $("#divAsesor").addClass('col-12 col-sm-6 col-md-12 col-lg-12');
+        gerenteGeneral();
+    } else {
+        fillTable(3, finalBeginDate, finalEndDate, 0, 0 , 0);
+        $("#prospects-datatable").removeClass('hide');
+    }
 });
+
+//Comienza filtros
+
+function crearFiltros(){
+    let div = `<div class="col-md-6 form-group mt-0" id="divCoordinador">
+                <div id="div3" class="form-group mt-0">
+                    <label class="control-label mt-0">COORDINADOR</label>
+                </div>
+            </div>`;
+    div += `<div class="col-md-6 form-group mt-0" id="divAsesor">
+                <div id="div4" class="form-group mt-0">
+                    <label class="control-label mt-0">ASESOR</label>
+                </div>
+            </div>`;
+
+    var $selectCoord =
+        $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'coordinador',
+            'name': 'coordinador',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true",
+            'title':"Selecciona una opción"
+        });
+    var $selectAse =
+        $('<select/>', {
+            'class':"selectpicker select-gral m-0",
+            'id': 'asesores',
+            'name': 'asesores',
+            'data-style':"btn",
+            'data-show-subtext':"true",
+            'data-live-search':"true",
+            'title':"Selecciona una opción"
+        });
+    $('#filterContainer').append(div);
+    $selectCoord.appendTo('#div3').selectpicker('refresh');
+    $selectAse.appendTo('#div4').selectpicker('refresh');
+}
+
+function coordinadorGeneral(){
+    $(`#${'coordinador'}`).empty().selectpicker('refresh');
+    $.post(general_base_url + 'Clientes/coordinadorGeneral', function(data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_usuario'];
+            var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
+            $("#coordinador").append($('<option>').val(id).text(name));
+        }
+        if (len <= 0) {
+            $("#coordinador").append('<option selected="selected" disabled>NINGÚN COORDINADOR</option>');
+        }
+        $("#coordinador").selectpicker('refresh');
+    }, 'json');
+}
+
+function gerenteGeneral(){
+    $.post(general_base_url + 'Clientes/getAsesorGeneral', function(data) {
+        var len = data.length;
+        for( var i = 0; i<len; i++)
+        {
+            var id = data[i]['id_usuario'];
+            var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
+            $("#asesores").append($('<option>').val(id).text(name));
+        }
+        if(len<=0)
+        {
+            $("#asesores").append('<option selected="selected" disabled>NINGÚN ASESOR</option>');
+        }
+        $("#asesores").selectpicker('refresh');
+    }, 'json');
+}
+
+$(document).on('change', '#coordinador', function(){
+$("#prospects-datatable").removeClass('hide');
+let finalBeginDate = $("#beginDate").val();
+let finalEndDate = $("#endDate").val();
+let coordinadorGen = $("#coordinador").val();
+$("#fechaGeneral").removeClass("hide");
+$("#tableGeneral").removeClass('hide');
+fillTable(3, finalBeginDate, finalEndDate, 0, coordinadorGen, 0);
+
+$("#asesores").empty().selectpicker('refresh');
+$.post(general_base_url + 'Clientes/getAsesorByCoords/'+coordinadorGen, function(data) {
+    var len = data.length;
+    for( var i = 0; i<len; i++)
+    {
+        var id = data[i]['id_usuario'];
+        var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
+        $("#asesores").append($('<option>').val(id).text(name));
+    }
+    if(len<=0)
+    {
+        $("#asesores").append('<option selected="selected" disabled>NINGÚN ASESOR</option>');
+    }
+    $("#asesores").selectpicker('refresh');
+}, 'json');
+});
+
+$(document).on('change', '#asesores', function(){
+let finalBeginDate = $("#beginDate").val();
+let finalEndDate = $("#endDate").val();
+let coordinadorGen = $("#coordinador").val();
+let asesores = $('#asesores').val();
+$("#fechaGeneral").removeClass("hide");
+$("#tableGeneral").removeClass('hide');
+$("#prospects-datatable").removeClass('hide');
+fillTable(3, finalBeginDate, finalEndDate, 0, coordinadorGen, asesores);
+});
+
+//Termina filtros
 
 let titulosListadoProspectos = [];
 
@@ -21,7 +147,7 @@ $('#prospects-datatable thead tr:eq(0) th').each(function (i) {
     });
 });
 
-function fillTable(transaction, beginDate, endDate, where) {
+function fillTable(transaction, beginDate, endDate, where, coordinador, gerente) {
     prospectsTable = $('#prospects-datatable').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
@@ -243,7 +369,9 @@ function fillTable(transaction, beginDate, endDate, where) {
                 "transaction": transaction,
                 "beginDate": beginDate,
                 "endDate": endDate,
-                "where": where
+                "where": where,
+                "coordinador": coordinador,
+                "gerente" : gerente
             }
         },
         initComplete: function () {

@@ -545,11 +545,13 @@ function getStatusMktdPreventa(){
 
     }
 
-    function getProspectsList($typeTransaction, $beginDate, $endDate, $where){
+    function getProspectsList($typeTransaction, $beginDate, $endDate, $where, $coordinador, $gerente){
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $this->session->userdata('id_usuario');
         $id_lider = $this->session->userdata('id_lider');
         $and = "AND ((pr.lugar_prospeccion != 6) OR (pr.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' AND pr.lugar_prospeccion = 6))";
+        $filtroCoor = $coordinador == 0 ? ' ' : "AND pr.id_coordinador = $coordinador";
+        $filtroGer = $gerente == 0 ? ' ' : "AND pr.id_asesor = $gerente"; 
         if ($id_rol == 3) // MJ: GERENTE
             $where = "pr.id_gerente = $id_usuario";
         else if ($id_rol == 6) { // MJ: ASISTENTE DE GERENTE
@@ -607,7 +609,7 @@ function getStatusMktdPreventa(){
         LEFT JOIN usuarios u4 ON u4.id_usuario = pr.id_regional
         LEFT JOIN usuarios u5 ON u5.id_usuario = pr.id_regional_2
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pr.lugar_prospeccion AND oxc.id_catalogo = 9
-        WHERE $where AND pr.tipo = 0 $and ORDER BY pr.fecha_creacion DESC");
+        WHERE $where AND pr.tipo = 0 $filtroCoor $filtroGer $and ORDER BY pr.fecha_creacion DESC");
     }
 
     function getClientsList(){
@@ -1472,6 +1474,11 @@ function getStatusMktdPreventa(){
     function coordinadorGeneral() {
         $id_gerente = $this->session->userdata('id_usuario');
         return $this->db->query("SELECT * FROM usuarios WHERE (id_rol = 9 AND id_lider = $id_gerente) ORDER BY nombre, apellido_paterno, apellido_materno")->result();
+    }
+
+    function getAsesorGeneral() {
+        $id_Asesor = $this->session->userdata('id_usuario');
+        return $this->db->query("SELECT * FROM usuarios WHERE id_rol = 7 AND id_lider = $id_Asesor ORDER BY nombre, apellido_paterno, apellido_materno")->result();
     }
 
     function getAsesorByCoords($id_coords) {

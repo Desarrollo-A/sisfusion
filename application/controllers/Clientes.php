@@ -696,9 +696,11 @@ public function getStatusMktdPreventa(){
             $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
             $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
             $where = $this->input->post("where");
+            $coordinador = $this->input->post("coordinador");
+            $gerente = $this->input->post("gerente");
 
             if ($typeTransaction == 1) {
-                $data['data'] = $this->Clientes_model->getProspectsList($transaction, $beginDate, $endDate, $where)->result_array();
+                $data['data'] = $this->Clientes_model->getProspectsList($transaction, $beginDate, $endDate, $where, $coordinador, $gerente)->result_array();
             } elseif ($typeTransaction == 0) {
                 $data['data'] = $this->Clientes_model->getProspectsListMktd($transaction, $beginDate, $endDate, $where)->result_array();
             }
@@ -2807,5 +2809,24 @@ public function getStatusMktdPreventa(){
         $result['data'] = $this->Clientes_model->getListaClientesSalesforce();
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
-    
+
+    public function coordinadorGeneral(){
+        $data = $this->Clientes_model->coordinadorGeneral();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
+
+    public function getAsesorGeneral(){
+        $data = $this->Clientes_model->getAsesorGeneral();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+        exit;
+    }
 }

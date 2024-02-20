@@ -18,8 +18,8 @@
                                 <h3 class="card-title center-align">Listado general de prospectos</h3>
                                 <div class="toolbar">
                                     <div class="row">
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6"></div>
-                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6">
+                                    <div id="filterContainer" class="col-xs-12 col-sm-12 col-md-8 col-lg-8"></div>
+                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" id="divFecha">
                                             <div class="container-fluid p-0">
                                                 <div class="row">
                                                     <div class="col-md-12 p-r">
@@ -37,7 +37,7 @@
                                     </div>
                                 </div>
                                 <div class="material-datatables">
-                                    <table id="prospects-datatable" class="table-striped table-hover">
+                                    <table id="prospects-datatable" class="table-striped table-hover hide">
                                         <thead>
                                             <tr>
                                                 <th>ETAPA</th>
