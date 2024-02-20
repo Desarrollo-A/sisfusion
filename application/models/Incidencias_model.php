@@ -3,7 +3,7 @@
 class Incidencias_model extends CI_Model {
 
     public function __construct()
-    {
+    { 
         parent::__construct();
     }
     
@@ -809,29 +809,50 @@ class Incidencias_model extends CI_Model {
             return $this->db->query("UPDATE ventas_compartidas SET estatus = $estatus WHERE id_vcompartida = $id_vcompartida;");
         }
 
-        public function getRol_Nombre($id_cliente){
+        public function getComisionistas($idLote){
 
-            $query = $this->db->query("SELECT c.id_cliente, c.id_asesor,
-                CONCAT(u_asesor.nombre, ' ', u_asesor.apellido_paterno, ' ', u_asesor.apellido_materno) AS nombre_asesor,
-                c.id_coordinador,
-                CONCAT(u_coordinador.nombre, ' ', u_coordinador.apellido_paterno, ' ', u_coordinador.apellido_materno) AS nombre_coordinador,
-                c.id_gerente,
-                CONCAT(u_gerente.nombre, ' ', u_gerente.apellido_paterno, ' ', u_gerente.apellido_materno) AS nombre_gerente,
-                c.id_subdirector,
-                CONCAT(u_subdirector.nombre, ' ', u_subdirector.apellido_paterno, ' ', u_subdirector.apellido_materno) AS nombre_subdirector,
-                c.id_regional,
-                CONCAT(u_regional.nombre, ' ', u_regional.apellido_paterno, ' ', u_regional.apellido_materno) AS nombre_regional,
-                CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) AS NombreUsuario
-                FROM clientes c
-                INNER JOIN comisiones co ON c.id_cliente = co.idCliente
-                INNER JOIN opcs_x_cats o ON co.rol_generado = o.id_opcion AND o.id_catalogo = 1 
-                JOIN usuarios u ON co.id_usuario = u.id_usuario
-                LEFT JOIN usuarios u_asesor ON c.id_asesor = u_asesor.id_usuario
-                LEFT JOIN usuarios u_coordinador ON c.id_coordinador = u_coordinador.id_usuario
-                LEFT JOIN usuarios u_gerente ON c.id_gerente = u_gerente.id_usuario
-                LEFT JOIN usuarios u_subdirector ON c.id_subdirector = u_subdirector.id_usuario
-                LEFT JOIN usuarios u_regional ON c.id_regional = u_regional.id_usuario
-                WHERE c.id_cliente = $id_cliente AND co.rol_generado = 1;");
+            $query = $this->db->query("(SELECT lo.idLote,cl.id_cliente,NULL id_vcompartida,
+            cl.id_asesor,cl.id_coordinador,cl.id_gerente,cl.id_subdirector,cl.id_sede,
+            (CASE WHEN (cl.id_regional   IS NULL OR cl.id_regional   = 0) THEN 0 ELSE cl.id_regional_2 END) id_regional,
+            (CASE WHEN (cl.id_regional_2 IS NULL OR cl.id_regional_2 = 0) THEN 0 ELSE cl.id_regional_2 END) id_regional_2,
+            CONCAT(ase.nombre, ' ', ase.apellido_paterno, ' ', ase.apellido_materno) AS asesor,
+            CONCAT(coor.nombre, ' ', coor.apellido_paterno, ' ', coor.apellido_materno) AS coordinador,
+            CONCAT(ger.nombre, ' ', ger.apellido_paterno, ' ', ger.apellido_materno) AS gerente,
+            CONCAT(sub.nombre, ' ', sub.apellido_paterno, ' ', sub.apellido_materno) AS subdirector,
+            (CASE WHEN (cl.id_regional IS NULL OR cl.id_regional = 0) THEN 'NO APLICA' ELSE CONCAT(reg.nombre, ' ', reg.apellido_paterno, ' ', reg.apellido_materno) END)  regional,
+            (CASE WHEN (cl.id_regional_2 IS NULL OR cl.id_regional_2 = 0) THEN 'NO APLICA' ELSE (CONCAT(reg2.nombre, ' ', reg2.apellido_paterno, ' ', reg2.apellido_materno)) END) regional2
+
+            FROM lotes lo
+            INNER JOIN clientes cl on cl.id_cliente=lo.idCliente
+            LEFT JOIN usuarios ase ON ase.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios coor ON coor.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios ger ON ger.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios sub ON sub.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios reg ON reg.id_usuario = cl.id_regional
+            LEFT JOIN usuarios reg2 ON reg2.id_usuario = cl.id_regional_2
+            WHERE lo.idLote=$idLote)
+            UNION 
+            (SELECT lo.idLote,vc.id_cliente,vc.id_vcompartida,
+            vc.id_asesor,vc.id_coordinador,vc.id_gerente,vc.id_subdirector,vc.id_sede,
+            (CASE WHEN (vc.id_regional   IS NULL OR vc.id_regional   = 0) THEN 0 ELSE vc.id_regional_2 END) id_regional,
+            (CASE WHEN (vc.id_regional_2 IS NULL OR vc.id_regional_2 = 0) THEN 0 ELSE vc.id_regional_2 END) id_regional_2,
+
+            CONCAT(vcAse.nombre, ' ', vcAse.apellido_paterno, ' ', vcAse.apellido_materno) AS asesor,
+            CONCAT(vcCoor.nombre, ' ', vcCoor.apellido_paterno, ' ', vcCoor.apellido_materno) AS coordinador,
+            CONCAT(vcGer.nombre, ' ', vcGer.apellido_paterno, ' ', vcGer.apellido_materno) AS gerente,
+            CONCAT(vcSub.nombre, ' ', vcSub.apellido_paterno, ' ', vcSub.apellido_materno) AS subdirector,
+            (CASE WHEN (cl.id_regional IS NULL OR cl.id_regional = 0) THEN 'NO APLICA' ELSE CONCAT(vcReg.nombre, ' ', vcReg.apellido_paterno, ' ', vcReg.apellido_materno) END)  regional,
+            (CASE WHEN (cl.id_regional_2 IS NULL OR cl.id_regional_2 = 0) THEN 'NO APLICA' ELSE (CONCAT(vcReg2.nombre, ' ', vcReg2.apellido_paterno, ' ', vcReg2.apellido_materno)) END) regional2
+            FROM lotes lo
+            INNER JOIN clientes cl on cl.id_cliente=lo.idCliente
+            INNER JOIN ventas_compartidas vc ON vc.id_cliente=cl.id_cliente AND vc.estatus=1
+            LEFT JOIN usuarios vcAse ON vcAse.id_usuario = vc.id_asesor
+            LEFT JOIN usuarios vcCoor ON vcCoor.id_usuario = vc.id_coordinador
+            LEFT JOIN usuarios vcGer ON vcGer.id_usuario = vc.id_gerente
+            LEFT JOIN usuarios vcSub ON vcSub.id_usuario = vc.id_subdirector
+            LEFT JOIN usuarios vcReg ON vcReg.id_usuario = vc.id_regional
+            LEFT JOIN usuarios vcReg2 ON vcReg2.id_usuario = vc.id_regional_2
+            WHERE lo.idLote=$idLote)");
             return $query->result_array();
         }
 

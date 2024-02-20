@@ -2,7 +2,7 @@
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
-
+ 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Incidencias extends CI_Controller
@@ -333,12 +333,8 @@ class Incidencias extends CI_Controller
 
     
 
-    public function getRol_Nombre(){
-      $id_cliente = $this->input->post('id_cliente');
-      $idLote = $this->input->post('idLote');
-
-      $result = $this->Incidencias_model->getRol_Nombre($id_cliente, $idLote);
-
+    public function getComisionistas(){
+      $result = $this->Incidencias_model->getComisionistas($this->input->post('idLote'));
       echo json_encode($result);
     }
 

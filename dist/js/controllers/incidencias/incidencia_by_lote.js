@@ -1,144 +1,6 @@
 $(document).ready(function () {
 });
 
-$("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e) {
-
-        id_cliente = $(this).attr("data-cliente");
-        $('#cliente_modalidad').val(id_cliente);
-    
-        compartida = $(this).attr("data-compartida");
-        $('#compartida').val(compartida);
-    
-        idLote = $(this).attr("data-idLote");
-        $('#idLote').val(idLote);
-    
-        $.ajax({
-            url: general_base_url + 'Incidencias/getRol_Nombre',
-            type: 'post',
-            dataType: 'JSON',
-            data: {
-                'id_cliente': id_cliente,
-                'idLote': idLote,
-                'id_comision': $(this).attr("data-id-comision"),
-                'id_usuario': $(this).attr("data-id_usuario")
-            },
-            success: function (INFORMACION) {
-                //console.log(INFORMACION);
-    
-                //htmlArmado(INFORMACION);
-
-                $("#modalCompartidos").modal();
-                document.getElementById("cliente_modalidad").value = id_cliente;
-                document.getElementById("compartida").value = compartida;
-                document.getElementById("idLote").value = idLote;
-            }
-        });
-}); 
-
-
-// $("#modalCompartidos").on('submit', function(e){
-//     e.preventDefault();
-
-//     var data = new FormData();
-
-//     var descripcion =  $("#descripcion").val();
-//     var idCliente = $("#cliente_modalidad").val();
-//     var estatus =  $("#compartida").val();
-//     var idLote = $("#idLote").val();
-
-//     data.append("descripcion", descripcion);
-//     data.append("cliente_modalidad", idCliente);
-//     data.append("compartida", estatus);
-//     data.append("idLote", idLote);
-
-//     $.ajax({
-//         url: general_base_url + 'Incidencias/getModalidadCambio',
-//         data: data,
-//         cache: false,
-//         contentType: false,
-//         processData: false,
-//         type: 'POST',
-//         success: function(data) {
-
-//             data=JSON.parse(data);
-            
-//             if (data === true) {
-//                 alerts.showNotification("top", "right", "El cambio de modalidad se ha efectuado con éxito", "success");
-//                 $('#tabla_inventario_contraloria').DataTable().ajax.reload();
-//                 $('#modalCompartidos').modal('hide');
-//             }
-//             else {
-//                 alerts.showNotification("top", "right", "El cambio de modalidad no se hizo con éxito.", "danger");
-//                 $('#spiner-loader').addClass('hide');
-
-//             }
-//         },
-//         error: function(error){
-//             console.error(error);
-//         }
-//     });
-// });
-
-//  $("#tabla_Nombre_Porcentaje").DataTable({
-//     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-//     width: 'auto',
-//     buttons: [],
-//     ajax:{
-//         "url": general_base_url+'Incidencias/getRol_Nombre/'
-//     },
-//     pagingType: "full_numbers",
-//     fixedHeader: true,
-//     language: {
-//         url: general_base_url+"/static/spanishLoader_v2.json",
-//         paginate: {
-//             previous: "<i class='fa fa-angle-left'>",
-//             next: "<i class='fa fa-angle-right'>"
-//         }
-//     },
-//     lengthMenu: [
-//         [10, 25, 50, -1],
-//         [10, 25, 50, "Todos"]
-//     ],
-//     scrollX: true,
-//     destroy: true,
-//     ordering: false,
-//     columns: [ 
-//     {data: 'NombreUsuario'},
-//     {data: 'RolGenerado'},
-//     {data: 'porcentaje_decimal'},
-//     ]
-// });
-
-
-
-// $("#btn_sub").on('submit', function(e){
-//     e.preventDefault();
-
-//     var idCliente = $(this).attr("data-cliente");
-
- 
-//     $.ajax({
-//         type: 'POST',
-//         url: general_base_url+'Incidencias/getModalidadCambio',
-//         data: {
-//             descripcion: $("#descripcion").val(),
-//             estatus: 0,
-//             id_cliente: idCliente 
-            
-//         },
-//         contentType: false,
-//         cache: false,
-//         processData:false,
-//         success: function(data) {
-//             console.log(data);
-
-//         },
-//         error: function(error){
-//             console.error(error);
-//         }
-//     });
-// });
-
 $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     var len = data.length;
     for (var i = 0; i < len; i++) {
@@ -146,7 +8,6 @@ $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
         var name = data[i]['nombre'];
         $("#asesorold").append($('<option>').val(id).text(name.toUpperCase()));
     }
- 
     $("#asesorold").selectpicker('refresh');
 }, 'json'); 
 
@@ -154,13 +15,8 @@ $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
 
-
-
-
 var rol  = id_rol_general;
 var id_user  = id_usuario_general;
-
-
 var idLote = 0;
 
 function selectOpcion(){
@@ -1183,6 +1039,8 @@ $(".find_doc").click( function() {
             "orderable": false,
             "data": function( data ){
                 var BtnStats ='';
+
+                let btnCompartida = `<button class="btn-data btn-warning cambioM" title="Borrar venta compartida" data-idLote="${data.idLote}" data-registro="${data.registro_comision}" data-cliente="${data.id_cliente}" data-precioAnt="${data.totalNeto2}" data-compartida="${data.compartida}"><i class="fas fa-ban"></i></button>`;
                 if(data.totalNeto2==null && data.idStatusContratacion > 8 ) {
                     BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                     if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
@@ -1203,13 +1061,13 @@ $(".find_doc").click( function() {
                         
 
 
-                        if (data.compartida !== null) {
+                        /*if (data.compartida !== null) {
                             if (data.compartida) {
                                 BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
                             } else {
                                 return;
                             }
-                        }
+                        }*/
                         
 
                     }
@@ -1219,13 +1077,13 @@ $(".find_doc").click( function() {
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
 
 
-                        if (data.compartida !== null) {
+                        /*if (data.compartida !== null) {
                             if (data.compartida) {
                                 BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
                             } else {
                                 return;
                             }
-                        }
+                        }*/
                             
                     }
                     else {
@@ -1235,11 +1093,13 @@ $(".find_doc").click( function() {
                         
 
 
-                        if(data.compartida !== null){
+                        /*if(data.compartida !== null){
                             BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
-                        }
+                        }*/
                     }
                 }
+
+                BtnStats +=  data.compartida > 0 ? btnCompartida : '';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }]
@@ -1321,87 +1181,145 @@ $(".find_doc").click( function() {
 
     var generalArreglo = [];
 
-    function htmlArmado(INFORMACION) {
+    function construirModal(data) {
         const contenedor = document.getElementById('nombrePorcentaje');
         
-        generalArreglo.push(INFORMACION);
+        generalArreglo.push(data);
 
-        var size = INFORMACION.length;
+        var size = data.length;
         let content = '';
     
         for (let i = 0; i < size; i++) {
 
-            content += `
+            content += i == 0 ? `
             <div class="container-fluid">
-                <div class="row pr-3" style="display: flex; justify-content: center;" >
+                <div class="row" style="display: flex; justify-content: center;" >
                     <div class="col-md-2 mb-3">
-                        <label class="control-label" value="${INFORMACION[i].id_asesor}">Asesor:<strong>${INFORMACION[i].id_asesor}</strong></label>
-                        <input type="text" id="nombreUsuario_${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_asesor}">
+                    <input type="hidden" name="index" id="index" value="${size}">
+                        <label class="control-label" value="${data[i].id_asesor}">Asesor:<strong>${data[i].id_asesor}</strong></label>
+                        <p><span>${data[i].asesor}</span></p>
                     </div>
 
                     <div class="col-md-2 mb-3">
-                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${INFORMACION[i].id_coordinador}</strong></label>
-                        <input type="text" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_coordinador}">
+                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                        <p><span>${data[i].coordinador}</span></p>
                     </div>
 
                     <div class="col-md-2 mb-2">
-                        <label for="id_gerente" class="control-label">Gerente:<strong>${INFORMACION[i].id_gerente}</strong></label>
-                        <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_gerente}">
+                        <label for="id_gerente" class="control-label">Gerente:<strong>${data[i].id_gerente}</strong></label>
+                        <p><span>${data[i].gerente}</span></p>
                     </div>
 
                     <div class="col-md-2 mb-2">
-                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${INFORMACION[i].id_subdirector}</strong></label>
-                        <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_subdirector}">
+                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                        <p><span>${data[i].subdirector}</span></p>
                     </div>
 
                     <div class="col-md-2 mb-2">
-                        <label for="id_regional" class="control-label">Regional:<strong>${INFORMACION[i].id_regional}</strong></label>
-                        <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${INFORMACION[i].nombre_regional}">
+                        <label for="id_regional" class="control-label">Regional:<strong>${data[i].id_regional}</strong></label>
+                        <p><span>${data[i].regional}</span></p>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="id_regional" class="control-label">Regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                        <p><span>${data[i].regional2}</span></p>
                     </div>
                 </div>
             </div>
-            `;       
+            `:
+            `<div class="container-fluid" id="div_${data[i].id_vcompartida}">
+                <div class="row pr-3" style="display: flex; justify-content: center;">
+                    <div class="col-md-2 mb-3">
+                            <label class="control-label" value="${data[i].id_asesor}">Asesor:<strong>${data[i].id_asesor}</strong></label>
+                            <p><span>${data[i].asesor}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                        <p><span>${data[i].coordinador}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_gerente" class="control-label">Gerente:<strong>${data[i].id_gerente}</strong></label>
+                        <p><span>${data[i].gerente}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                        <p><span>${data[i].subdirector}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_regional" class="control-label">Regional:<strong>${data[i].id_regional}</strong></label>
+                        <p><span>${data[i].regional}</span></p>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="id_regional" class="control-label">Regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                        <p><span>${data[i].regional2}</span></p>
+                    </div>
+                    <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
+                        <label for="checkBoxID_${i}" class="control-label">
+                            <input class="form-check-input checkboxClase" 
+                                type="checkbox" 
+                                id="checkBoxID_${i}" 
+                                name="checkBoxID_${i}" 
+                                value="${data[i].id_vcompartida}" >
+                                Marcar
+                        </label>
+                    </div>
+                </div>
+            </div>`;       
         }
+        let content2 = `
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <textarea class="form-control" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" id="btnAcept" class="btn btn-primary">ACEPTAR</button>
+                    </div>   
+                `;
     
         contenedor.innerHTML = content;
+        document.getElementById('footer').innerHTML = content2;
     }
 
     var compartidasArreglo = [];
 
-    function compartidasArmado(INFORMACION) {
+    function compartidasArmado(data) {
         const contenedor = document.getElementById('compartidasAll');
-        compartidasArreglo.push(INFORMACION);
-        var sizeC = INFORMACION.length;
+        compartidasArreglo.push(data);
+        var sizeC = data.length;
         let content = '';
     
         for (let i = 0; i < sizeC; i++) {
-            if (INFORMACION[i].estatusCompartida === 1) {
+            if (data[i].estatusCompartida === 1) {
                 content += `
                     <div class="container-fluid">
                         <div class="row pr-3" style="display: flex; justify-content: center;">
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id asesor:<strong>${INFORMACION[i].id_asesor}</strong></label>
-                                <input type="text" id="nombre_asesor${i}" class="form-control input-gral" readonly value="${INFORMACION[i].asesor}">
+                                <label class="control-label">id asesor:<strong>${data[i].id_asesor}</strong></label>
+                                <input type="text" id="nombre_asesor${i}" class="form-control input-gral" readonly value="${data[i].asesor}">
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id coordinador:<strong>${INFORMACION[i].id_coordinador}</strong></label>
-                                <input type="text" id="nombre_coordinador${i}" class="form-control input-gral" readonly value="${INFORMACION[i].coordinador}">
+                                <label class="control-label">id coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                                <input type="text" id="nombre_coordinador${i}" class="form-control input-gral" readonly value="${data[i].coordinador}">
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id gerente:<strong>${INFORMACION[i].id_gerente}</strong></label>
-                                <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${INFORMACION[i].gerente}">
+                                <label class="control-label">id gerente:<strong>${data[i].id_gerente}</strong></label>
+                                <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${data[i].gerente}">
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id subdirector:<strong>${INFORMACION[i].id_subdirector}</strong></label>
-                                <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${INFORMACION[i].subdirector}">
+                                <label class="control-label">id subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                                <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${data[i].subdirector}">
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id regional:<strong>${INFORMACION[i].id_regional}</strong></label>
-                                <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${INFORMACION[i].regional}">
+                                <label class="control-label">id regional:<strong>${data[i].id_regional}</strong></label>
+                                <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${data[i].regional}">
                             </div>
                             <div class="col-md-2 mb-3">
-                                <label class="control-label">id regional 2:<strong>${INFORMACION[i].id_regional_2}</strong></label>
-                                <input type="text" id="nombre_regional_2${i}" class="form-control input-gral" readonly value="${INFORMACION[i].id_regional_2}">
+                                <label class="control-label">id regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                                <input type="text" id="nombre_regional_2${i}" class="form-control input-gral" readonly value="${data[i].id_regional_2}">
                             </div>
                             <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
                                 <label for="checkBoxID_${i}" class="control-label">
@@ -1409,19 +1327,29 @@ $(".find_doc").click( function() {
                                         type="checkbox" 
                                         id="checkBoxID_${i}" 
                                         name="checkBoxID_${i}" 
-                                        value="${INFORMACION[i].id_vcompartida}" 
-                                        data-asesor="${INFORMACION[i].id_asesor}" 
-                                        data-coordinador="${INFORMACION[i].id_coordinador}" 
-                                        data-gerente="${INFORMACION[i].id_gerente}" 
-                                        data-subdirector="${INFORMACION[i].id_subdirector}" 
-                                        data-regional="${INFORMACION[i].id_regional}" 
-                                        data-cliente="${INFORMACION[i].id_cliente}" 
-                                        data-lote="${INFORMACION[i].idLote}">
+                                        value="${data[i].id_vcompartida}" 
+                                        data-asesor="${data[i].id_asesor}" 
+                                        data-coordinador="${data[i].id_coordinador}" 
+                                        data-gerente="${data[i].id_gerente}" 
+                                        data-subdirector="${data[i].id_subdirector}" 
+                                        data-regional="${data[i].id_regional}" 
+                                        data-cliente="${data[i].id_cliente}" 
+                                        data-lote="${data[i].idLote}">
                                         Marcar
                                 </label>
                             </div>
                         </div>
                     </div>
+                `;
+                content += `
+                    <div class="row" style="display: flex; align-content: center; flex-wrap: wrap; flex-direction: column-reverse;">
+                        <div class="col-md-3 mb-3">
+                            <textarea class="text-modal" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" id="btnAcept" class="btn btn-primary">ACEPTAR</button>
+                    </div>   
                 `;
     
 
@@ -1444,27 +1372,16 @@ $(".find_doc").click( function() {
     
 
     $("#compartidasForm").on('submit', function(e) {
-        e.preventDefault();
-    
-        var checkboxesSeleccionados = [];
-        var asesorSeleccionado = [];
-        var idClienteSeleccionado = null;
-        var loteSeleccionado = null;
-    
+        e.preventDefault();   
+        let contador=0; 
         $(".checkboxClase:checked").each(function() {
-            checkboxesSeleccionados.push($(this).val());
-    
-            if ($(this).prop('checked')) {
-                asesorSeleccionado = $(this).data('asesor');
-                coordinadorSeleccionado = $(this).data('coordinador');
-                gerenteSeleccionado = $(this).data('gerente');
-                subdirectorSeleccionado = $(this).data('subdirector');
-                regionalSeleccionado = $(this).data('regional');
-                idClienteSeleccionado = $(this).data('cliente');
-                loteSeleccionado = $(this).data('lote');
-            }
+            contador = contador +1;
         });
-    
+        if(contador <= 0){
+            alerts.showNotification("top", "right", "Debes seleccionar al menos una opción para contienuar", "warnig");
+            return false;
+        }
+
         var formData = new FormData(this);
     
         checkboxesSeleccionados.forEach(function(id_vcompartida) {
@@ -1532,9 +1449,16 @@ $(".find_doc").click( function() {
     
 
     /**-------------------CAMBIO MODALIDAD------------------------------- */
-
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e) {
+            let idLote = $(this).attr("data-idLote")
+            $('#idLote').val(idLote);
+            $.post(general_base_url + "Incidencias/getComisionistas",{'idLote': idLote}, function (data) {
+                $("#modalCompartidos").modal();
+                construirModal(data);
+            },'json');
+    }); 
     
-    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e){
+    /*$("#tabla_inventario_contraloria tbody").on("click", ".cambioM2", function(e){
 
         id_cliente = $(this).attr("data-cliente");
         $('#cliente_modalidad').val(id_cliente);
@@ -1556,15 +1480,12 @@ $(".find_doc").click( function() {
                 'id_comision': $(this).attr("data-id-comision"),
                 'id_usuario': $(this).attr("data-id_usuario")
             },
-            success: function (INFORMACION) {
-                //console.log(INFORMACION);
+            success: function (data) {
+                //console.log(data);
         
-                htmlArmado(INFORMACION);
+                htmlArmado(data);
 
                 $("#modalCompartidos").modal();
-                //document.getElementById("cliente_modalidad").value = id_cliente;
-                //document.getElementById("compartida").value = compartida;
-                //document.getElementById("idLote").value = idLote;
             }
         });
 
@@ -1575,17 +1496,17 @@ $(".find_doc").click( function() {
             data:{
                 'id_cliente':id_cliente
             },
-            success: function (INFORMACION) {
-                //console.log(INFORMACION);
+            success: function (data) {
+                //console.log(data);
         
-                compartidasArmado(INFORMACION);
+                compartidasArmado(data);
 
                 //$("#modalCompartidos").modal();
           
             }
         });
     }); 
-
+*/
     
 
 
