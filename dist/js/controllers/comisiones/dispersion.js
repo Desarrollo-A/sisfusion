@@ -1098,7 +1098,14 @@ $("#form_NEODATA").submit( function(e) {
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                }else{
+                }
+                else if (data == 4) {
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "Comisión dispersada anteriormente, puedes revisarla en el panel de activas", "warning");
+                    $('#dispersar').prop('disabled', false);
+                    document.getElementById('dispersar').disabled = false;
+                }
+                else{
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
                     $('#dispersar').prop('disabled', false);
