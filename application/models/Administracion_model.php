@@ -256,4 +256,21 @@ class Administracion_model extends CI_Model {
 		WHERE cl.status = 1 $where
 		ORDER BY cl.id_cliente DESC")->result();
     }
+
+    public function getDatosLotes($idLote){
+        $query = $this->db->query("SELECT UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente, lo.idLote, UPPER(lo.nombreLote) nombreLote,CONVERT(VARCHAR,cl.fechaApartado, 103) fechaApartado, 
+        UPPER(co.nombre_condominio) nombreCondominio, re.nombreResidencial,UPPER(rl.nombre) representante
+        FROM clientes cl
+        INNER JOIN lotes lo ON lo.idLote = cl.idLote 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN opcs_x_cats rl ON rl.id_opcion = cl.rl
+        WHERE cl.idLote = $idLote  AND rl.id_catalogo = 77");
+        return $query->result_array();
+    }
+
+    public function getOpcionesMaster() {
+        return $this->db->query("SELECT cat.id_catalogo, UPPER(opc.nombre) opcion FROM catalogos cat 
+        INNER JOIN opcs_x_cats opc ON opc.id_catalogo = cat.id_catalogo WHERE cat.id_catalogo = 120;");
+    }
 }

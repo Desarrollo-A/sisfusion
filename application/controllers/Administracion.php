@@ -542,6 +542,23 @@ class Administracion extends CI_Controller{
 			echo json_encode(0);
         }
 	}
+
+	public function masterModulo (){
+		$this->load->view('template/header');
+		$this->load->view('administracion/master_view.php');
+	}
+	public function getDatosLotes($idLote) {
+		$data = $this->Administracion_model->getDatosLotes($idLote);
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
+	}
+
+	public function getOpcionesMaster() {
+		echo json_encode($this->Administracion_model->getOpcionesMaster()->result_array());
+	}
 }
 
 
