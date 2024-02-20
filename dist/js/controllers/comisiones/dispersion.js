@@ -200,7 +200,8 @@ $(document).ready(function () {
                         }
                         
                         disparador = 0;
-
+                        d.totalNeto2Cl = (parseInt(d.plan_comision) == 65  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? d.totalNeto2Cl : d.totalNeto2;
+                        d.totalNeto2Cl = (parseInt(d.proceso) === 6 || parseInt(d.proceso) === 5) ? d.totalNeto2 : d.totalNeto2Cl; 
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
@@ -466,8 +467,9 @@ $(document).ready(function () {
         $("#modal_NEODATA .modal-footer").html("");
         var tr = $(this).closest('tr');
         var row = $('#tabla_dispersar_comisiones').DataTable().row(tr);
-        let cadena = '';
-
+        let cadena = ''; 
+        
+        
         idLote = $(this).val();
         totalNeto2 = $(this).attr("data-totalNeto2");
         totalNeto2Cl = $(this).attr("data-totalNeto2Cl");
@@ -488,11 +490,17 @@ $(document).ready(function () {
         abonadoAnterior = $(this).attr("data-abonadoAnterior");
         procesoReestructura = $(this).attr("data-procesoReestructura");
         totalNeto2 = plan_comision == 66 ? total8P : totalNeto2;
+        
+        //<button href="#" type="button" class="btn-simple btn-danger" data-dismiss="modal_NEODATA" >
+        $("#modal_NEODATA .modal-header").append(`
+            <button href="#" class="close-modal-button" type="button" data-dismiss="modal"  data-dismiss="modal_NEODATA"></button> 
 
+            `);
         if(parseFloat(totalNeto2) > 0){
 
             $("#modal_NEODATA .modal-body").html("");
             $("#modal_NEODATA .modal-footer").html("");
+            
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 // alert("entra a get");
                 if(data.length > 0){
@@ -545,6 +553,7 @@ $(document).ready(function () {
 
                                 let labelPenalizacion = '';
                                 if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">(Penalización + 90 días)</b>';}
+                                // $("#modal_NEODATA .modal-header").append(`<i class="fas fa-times-circle"></i>`);
                                 $("#modal_NEODATA .modal-body").append(`
                                         <div class="row">
                                             <div class="col-md-12 text-center">
@@ -769,6 +778,7 @@ $(document).ready(function () {
                                 });
                             }
                             else{
+                                
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+estructura).done( function( datos ){
                                     let total0 = parseFloat((data[0].Aplicado));
                                     let total = 0;

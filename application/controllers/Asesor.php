@@ -9,7 +9,7 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', 'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -959,8 +959,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function prospecto_a_cliente()
-    {
+    public function prospecto_a_cliente() {
         $id_prospecto = $this->input->post('id_prospecto');
         $id_cliente = $this->input->post('id_cliente');
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
@@ -1000,25 +999,20 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
-
             if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-            //if (TRUE) {
                 $arcusData = array(
-                    //"propiedadRelacionada" => $this->input->post('idLote'),
+                    "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
                     "etapa" => "Propiedad apartada"
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
-
-            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
+            if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0)
                 $data_response['prospecto_update'] = 'OK';
-            } else {
+            else
                 $data_response['prospecto_update'] = 'FAIL';
-            }
-        } else {
+        } else
             $data_response['cliente_update'] = 'FAIL';
-        }
         echo json_encode($data_response);
     }
     /*********************************/
@@ -1932,6 +1926,7 @@ class Asesor extends CI_Controller {
         $rfcCopArray = $this->input->post("rfc_cop[]");
         $regimenFacArray = $this->input->post("regimen_fac[]");
         $numOfCoprops = $this->input->post('numOfCoprops');
+        $ventaExtranjero = $this->input->post('venta_check') == 'on' ? 2 : 1;
 
         if ($numOfCoprops > 0) {
             for ($i = 0; $i < $numOfCoprops; $i++) {
@@ -2177,6 +2172,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["tipo_nc"] = $tipo_nc;
         $arreglo_cliente["printPagare"] = $printPagare;
         $arreglo_cliente["tipo_comprobanteD"] = $tipo_comprobante;
+        $arreglo_cliente["venta_extranjero"] = $ventaExtranjero; 
 
         //ARRAY REFERENCIAS
         $arreglo_referencia1 = array();
@@ -3214,6 +3210,11 @@ class Asesor extends CI_Controller {
         $idCondominio = $this->input->post('idCondominio');
         $idCliente = $this->input->post('idCliente');
 
+
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
+            return;
+        }
+
         if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
@@ -3445,6 +3446,9 @@ class Asesor extends CI_Controller {
         $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
         $error_message = "";
         $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $labelCorridaFinanciera = '';
+        $corrida_financiera = ""; // CORRIDA FINANCIERA
+
         $leyendaResiciones = '';
         $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
@@ -3492,36 +3496,45 @@ class Asesor extends CI_Controller {
 
             if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
-                        : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
-                        : "";
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 34, 35" : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA $leyendaMsgValidacion" : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
 
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
-                    $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? "" : ", 35";
+                    $documentsNumber += $dataClient[0]['proceso'] == 3 = 0 : 1;
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "" : $leyendaMsgValidacion;
                 }
             }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-
-
-
+            #prueba
+            $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
+            $validacionAceptados = array(3, 13, 22, 31);
+            #prueba cf
+            if(in_array($validacionRes->idResidencial, $validacionAceptados)){
+                //si está en algun proyecto de león
+                $documentsNumber += 1; //añadir otro documento a la validación
+                $labelCorridaFinanciera = ', CORRIDA FINANCIERA';
+                $corrida_financiera = ', 7';
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $labelCorridaFinanciera $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra $corrida_financiera" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra $corrida_financiera";
         }
 
         $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
         $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
         $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
 
+
+//        print_r($documentsValidation);
+//        echo '<br>';
+//        print_r($documentsNumber);
+//        exit;
+
+
         if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
             $data['status'] = false;
-            $data['message'] = $error_message;
+            $data['message'] = 'MISSING_DOCUMENTS';
             $data['error_message'] = $error_message;
             echo json_encode($data);
             return false;
@@ -3529,19 +3542,20 @@ class Asesor extends CI_Controller {
 
         if($validacion) {
             $data['status'] = false;
-            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
+            $data['message'] = FALSE;
+            $data['error_message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
             echo json_encode($data);
             return false;
         }
 
-        if(count($validacionIM) > 0) {
-            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['status'] = false;
-                $data['message'] = 'Autorización de mensualidad pendiente.';
-                echo json_encode($data);
-                return false;
-            }
-        }
+//        if(count($validacionIM) > 0) {
+//            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+//                $data['status'] = false;
+//                $data['message'] = 'Autorización de mensualidad pendiente.';
+//                echo json_encode($data);
+//                return false;
+//            }
+//        }
 
 
         return true;

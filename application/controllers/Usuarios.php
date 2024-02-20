@@ -234,10 +234,9 @@ class Usuarios extends CI_Controller
         $url = 'https://prueba.gphsis.com/RHCV/index.php/WS/baja_asesor';
         if (isset($_POST) && !empty($_POST)) {
             if ($this->input->post("estatus") == 0) {
-                $estatus = 3;
+                $estatus = 0;
                 if ($this->input->post("idrol") == 'Asesor' || $this->input->post("idrol") == 'Coordinador de ventas' || $this->input->post("idrol") == 'Gerente') {
-
-                    
+                    $estatus = 3;
                     $dataBaja = array(
                         "fecha_baja" => $hoy,
                         "cantidad_descuento" => "0",
@@ -361,7 +360,7 @@ class Usuarios extends CI_Controller
 
             $sedeCH = 0;
             $sucursal = 0;
-            if (($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9 || $_POST['member_type'] == 2) && $this->session->userdata('tipo') == 1) {
+            if (($_POST['member_type'] == 3 || $_POST['member_type'] == 7 || $_POST['member_type'] == 9) && $this->session->userdata('tipo') == 1) {
                 $usersCH = 1;
                 #actualizar los registros en caso de que haya modificado de lider o tipo de miembro
                 /*
@@ -400,6 +399,17 @@ class Usuarios extends CI_Controller
                 $simbolicoPropiedad = NULL;
             }
 
+            if($_POST['leader'] != 0){
+                $dataLiderAAsignar = $this->Services_model->getInfoLider($_POST['leader']);
+                if($dataLiderAAsignar->tipo==2){
+                    $tipoUsuario =  $dataLiderAAsignar->tipo;
+                }else{
+                    $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
+                }
+            }else{
+                $tipoUsuario = 1;//tipo de usuario 1: comercializacion, 2:oaam
+            }
+
             $data = array( 
                 "nombre" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['name']))),
                 "apellido_paterno" => $this->formatter->eliminar_tildes(strtoupper(trim($_POST['last_name']))),
@@ -417,7 +427,8 @@ class Usuarios extends CI_Controller
                 "modificado_por" => $this->session->userdata('id_usuario'),
                 "sedech" => $sedeCH,
                 "sucursalch" => $sucursal,
-                "simbolico" => $simbolicoPropiedad
+                "simbolico" => $simbolicoPropiedad,
+                "tipo" => $tipoUsuario
             );
         }
         $insertData = array();

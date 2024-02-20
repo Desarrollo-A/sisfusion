@@ -205,8 +205,9 @@ function createAccordions(option, render, rol){
                     <thead>
                         <tr>
                             <th class="detail">MÁS</th>
-                            <th class="encabezado">`+option.toUpperCase()+`</th>
+                            <th class="encabezado text-center">`+option.toUpperCase()+`</th>
                             <th>GRAN TOTAL</th>
+                            <th class="text-center">SEDE</th>
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -323,7 +324,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                     }
                 }
             }
-        ],
+        }],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -358,6 +359,12 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                     //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede="${[d.apt_id_sede, d.cont_id_sede]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     
+                }
+            },
+            {
+                width:"20vw",
+                data: function (d) {
+                    return `<p class="m-0" style="white-space: normal">${d.sedeNombre}<p>`;
                 }
             },
             {
@@ -1021,8 +1028,8 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-          title = 'Reporte de ventas por dirección regional';
-          break;
+            title = 'Reporte de ventas por dirección regional';
+            break;
         case 'gerente':
             title = 'Reporte de ventas por gerencia';
             break;
@@ -1354,7 +1361,6 @@ function fillTableReport(dataObject) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title:'Desglose de lotes',
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
                         format: {
@@ -1371,7 +1377,7 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 3:
                                         return 'SUPERFICIE'
-                                        break;    
+                                        break;
                                     case 4:
                                         return 'PRECIO DE LISTA';
                                         break;
@@ -1401,7 +1407,7 @@ function fillTableReport(dataObject) {
                                         break;
                                     case 13:
                                         return 'FECHA DE APARTADO';
-                                        break;
+                                    break;
                                     case 14:
                                         return 'FECHA DE ÚLTIMO ESTATUS';
                                         break;
@@ -1450,118 +1456,39 @@ function fillTableReport(dataObject) {
             destroy: true,
             ordering: false,
             columns: [
+                { data: 'nombreResidencial' },
+                { data: 'nombreCondominio' },
+                { data: 'nombreLote' },
+                { data: 'sup' },
+                { data: 'precioLista' },
+                { data: 'precioDescuento' },
+                { data: 'casa' },
+                { data: 'nombreCliente' },
+                { data: 'nombreAsesor' },
+                { data: 'nombreCoordinador' },
+                { data: 'nombreGerente' },
+                { data: 'nombreSubdirector' },
+                { data: 'nombreRegional' },
+                { data: 'fechaApartado' },
+                { data: 'fechaUltimoStatus' },
+                { data: 'diasUltimoStatus' },
+                { data: 'nombreStatus' },
                 {
                     data: function (d) {
-                        return d.nombreResidencial;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCondominio;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.sup;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.precioLista;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.precioDescuento;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.casa;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCliente;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreAsesor;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreCoordinador;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreGerente;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreSubdirector;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreRegional;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.fechaApartado;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.fechaUltimoStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.diasUltimoStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.nombreStatus;
-                    }
-                },
-                {
-                    data: function (d) {
-                        if(d.fechaStatus9 == null){
+                        if(d.fechaStatus9 == null)
                             return 'NO APLICA';
-                        }
                         else
                             return d.fechaStatus9;
                     }
                 },
+                { data: 'diasStatus9' },
+                { data: 'estatusLote' },
                 {
                     data: function (d) {
-                        return d.diasStatus9;
-                    }
-                },
-                {
-                    data: function (d) {
-                        return d.estatusLote;
-                    }
-                },
-                {
-                    data: function (d) {
-                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1'){
+                        if (d.apartadoXReubicacion == 1 || d.apartadoXReubicacion == '1')
                             return 'APARTADO POR REUBICACIÓN';
-                        }
-                        else{
+                        else
                             return 'ESTÁNDAR';
-                        }
                     }
                 },
                 {

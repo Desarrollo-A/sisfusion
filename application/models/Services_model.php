@@ -107,4 +107,9 @@ class Services_model extends CI_Model
         $query = $this->db->query("SELECT * FROM sedes wHERE id_sede=".$id_sede);
         return $query->row();
     }
+
+    function getInfoLider($id_usuario){
+        $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario=".$id_usuario);
+        return $query->row();
+    }
 }
