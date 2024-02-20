@@ -2625,6 +2625,22 @@ class Comisiones_model extends CI_Model {
         GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, lo.referencia, com.estatus, pac.bonificacion, u.estatus, lo.tipo_venta, oxcest.color, pe.id_penalizacion, cl.lugar_prospeccion, com.estatus, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, id_cliente_reubicacion_2 ");
     }
 
+    public function getEstatusForLote($idLote) {
+        $query = $this->db->query("SELECT estatus from comisiones where id_lote = $idLote");
+        return $query->result_array();
+    }
+
+    public function updateRegistroComision($idLote){
+
+        $query = $this->db->query("UPDATE lotes set registro_comision=1 where idLote = $idLote");
+        if ($query) {
+            return 1;
+        } else {
+            return 0;
+        }
+        
+    }
+
     public function InsertNeo($idLote, $id_usuario, $TotComision,$user, $porcentaje,$abono,$pago,$rol,$idCliente,$tipo_venta,$ooam, $nombreOtro){
         
         if($porcentaje != 0 && $porcentaje != ''){
