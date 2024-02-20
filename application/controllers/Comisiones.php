@@ -19,7 +19,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Pagos_model');
     $this->load->model('reporteContratacion_model');
     $this->load->model('Contratacion_model');
-
+    $this->load->model('PlanesModel');
     
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
@@ -3247,6 +3247,19 @@ class Comisiones extends CI_Controller
     $puesto = $this->input->post('puesto');
     $usuario = $this->input->post('usuario');
     echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
+  }
+
+  public function planes() {
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
+        $this->load->view('template/header');
+        $this->load->view("comisiones/planes/list");
+  }
+
+  public function list_planes(){
+    $planes = $this->PlanesModel->getPlanesComision();
+    
+    echo json_encode(["data" => $planes]);
   }
   
 }
