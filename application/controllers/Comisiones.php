@@ -2311,9 +2311,8 @@ class Comisiones extends CI_Controller
     $idClienteEstatus = $this->input->post("idCliente");
 
     $estatus = $this->Comisiones_model->getEstatusForLote($lote_1);
-    $estatusArray = array_column($estatus, "estatus");
 
-    if (count($estatusArray) > 0) {
+    if (count($estatus) > 0) {
       $comision = $this->Comisiones_model->updateRegistroComision($lote_1, $this->session->userdata('id_usuario'));
       $respuesta = ($comision == 1) ? 4 : $comision;
       echo json_encode($respuesta);
