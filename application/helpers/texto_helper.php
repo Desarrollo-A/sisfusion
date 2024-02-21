@@ -1,14 +1,11 @@
 <?php
-
-use PHPMailer\PHPMailer\PHPMailer;
-
     function limpiar_dato($dato){
         $limpia = "";
 
         if($dato && $dato != " "){
             
             //DIVIDO LA CADENA POR LOS ESPACIOS QUE TENGA
-			$parts = preg_split("/[\s*]+/",$dato);
+            $parts = preg_split("/[\s*]+/",$dato);
             
             $palabras = 0;
             
@@ -34,10 +31,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 	function encriptar($texto_encriptar){
         return openssl_encrypt($texto_encriptar, 'AES-128-CBC', 'S1ST3MA_6E5T0R_RH_C1UD4D_MAD3RA5', 0, '8102cdmqsd0912vs');
 	}
-	function pruebaEncriptar($password)
-	{
-		return 'hola mundo esto es una prueba: '.$password;
-	}
+	
 	function desencriptar($texto_desencriptar){
 		return openssl_decrypt($texto_desencriptar, 'AES-128-CBC', 'S1ST3MA_6E5T0R_RH_C1UD4D_MAD3RA5', 0, '8102cdmqsd0912vs');
 	}
@@ -98,14 +92,21 @@ use PHPMailer\PHPMailer\PHPMailer;
 	    }
 	    return $resp;
 	}
+	function getFolderFile($documentType)
+    {
+        if ($documentType == 7) $folder = "static/documentos/cliente/corrida/";
+        else if ($documentType == 8) $folder = "static/documentos/cliente/contrato/";
+        else $folder = "static/documentos/cliente/expediente/";
+        return $folder;
+    }
 
     function validateUserVts($dataValidate){
     $id_sede = $dataValidate["id_sede"];
     $id_rol = $dataValidate["id_rol"];
     $id_lider = $dataValidate["id_lider"];
     $maxAsesores=0;
-    $maxCoordinador=5;//original: 10
-    $maxGerente=3; //original: 10
+    $maxCoordinador=10;//original: 10
+    $maxGerente=10; //original: 10
     $respuesta = 0;
     $mensaje = '';
     $sedeString = '';
@@ -120,9 +121,9 @@ use PHPMailer\PHPMailer\PHPMailer;
         case 7:
             if($id_sede == 4){
                 //si es CDMX debe dejar 40 asesores
-                $maxAsesores = 12;//original: 40
+                $maxAsesores = 40;//original: 40
             }else{
-                $maxAsesores = 5;//original: 20
+                $maxAsesores = 20;//original: 20
             }
             if(count($colabsData) < $maxAsesores){
                 //si puede ingresar más asesores
@@ -146,6 +147,9 @@ use PHPMailer\PHPMailer\PHPMailer;
                 $mensaje = 'No se pueden añadir más '.$palabra.', recuerda que el máximo para está sede('.$sedeString.') es:'.$maxPalabra;
             }
             break;
+        case 2:
+            $respuesta = 1;
+        break;
         default:
             break;
     }
@@ -154,6 +158,5 @@ use PHPMailer\PHPMailer\PHPMailer;
         "respuesta" => $respuesta,
         "mensaje" => $mensaje
     );
-}
-
+	}
 ?>
