@@ -286,11 +286,12 @@ class Incidencias extends CI_Controller
       
       for ($o=1; $o < $index; $o++) {
         if(!empty($this->input->post('checkBoxVC_'.$o))){
-          $respuesta = $this->Incidencias_model->updateEstatusVentasC($this->input->post('checkBoxVC_'.$o),$modificadoPor);
+          echo $this->input->post('checkBoxVC_'.$o);
+          //$respuesta = $this->Incidencias_model->updateEstatusVentasC($this->input->post('checkBoxVC_'.$o),$modificadoPor);
           array_push($idVentasCompartidas,$this->input->post('checkBoxVC_'.$o));
         } 
       }
-
+      var_dump($idVentasCompartidas);
 
 
       exit;
