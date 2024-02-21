@@ -2308,11 +2308,17 @@ class Comisiones extends CI_Controller
     $nombreOtro = $this->input->post("nombreOtro");
     $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
     $totalFilas = $responses->num_rows(); 
+    $idClienteEstatus = $this->input->post("idCliente");
 
     $estatus = $this->Comisiones_model->getEstatusForLote($lote_1);
     $estatusArray = array_column($estatus, "estatus");
 
-    if (!in_array(1, $estatusArray)) {
+    if (count($estatusArray) > 0) {
+      $comision = $this->Comisiones_model->updateRegistroComision($lote_1, $this->session->userdata('id_usuario'));
+      $respuesta = ($comision == 1) ? 4 : $comision;
+      echo json_encode($respuesta);
+      exit;
+    }
 
       if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
         // INICIA PRIMERA VALIDACION DE DISPERSION
@@ -2427,15 +2433,7 @@ class Comisiones extends CI_Controller
         } 
       echo json_encode( $respuesta );
 
-    } else {
-      $comision = $this->Comisiones_model->updateRegistroComision($lote_1);
-      
-      $respuesta = ($comision == 1) ? 4 : $comision;
-      
-      echo json_encode($respuesta);
-      
-
-    }
+    
   }
 
   public function porcentajes(){
