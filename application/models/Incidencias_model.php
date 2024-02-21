@@ -914,9 +914,9 @@ class Incidencias_model extends CI_Model {
         //         return $pagos;
         // }
 
-        public function updateEstatusVentasC($estatus, $id_vcompartida)
+        public function updateEstatusVentasC($id_vcompartida,$id_usuario)
         {
-            $query = $this->db->query("UPDATE ventas_compartidas set estatus=$estatus where id_vcompartida = $id_vcompartida");
+            $query = $this->db->query("UPDATE ventas_compartidas SET estatus=0,modificado_por=$id_usuario where id_vcompartida = $id_vcompartida");
             return $query;
         }
 

@@ -1196,6 +1196,9 @@ $(".find_doc").click( function() {
                 <div class="row" style="display: flex; justify-content: center;" >
                     <div class="col-md-2 mb-3">
                     <input type="hidden" name="index" id="index" value="${size}">
+                    <input type="hidden" name="idLote" id="idLote" value="${data[i].idLote}">
+                    <input type="hidden" name="idCliente" id="idCliente" value="${data[i].id_cliente}">
+
                         <label class="control-label" value="${data[i].id_asesor}">Asesor:<strong>${data[i].id_asesor}</strong></label>
                         <p><span>${data[i].asesor}</span></p>
                     </div>
@@ -1257,11 +1260,11 @@ $(".find_doc").click( function() {
                         <p><span>${data[i].regional2}</span></p>
                     </div>
                     <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
-                        <label for="checkBoxID_${i}" class="control-label">
+                        <label for="checkBoxVC_${i}" class="control-label">
                             <input class="form-check-input checkboxClase" 
                                 type="checkbox" 
-                                id="checkBoxID_${i}" 
-                                name="checkBoxID_${i}" 
+                                id="checkBoxVC_${i}" 
+                                name="checkBoxVC_${i}" 
                                 value="${data[i].id_vcompartida}" >
                                 Marcar
                         </label>
@@ -1286,7 +1289,7 @@ $(".find_doc").click( function() {
 
     var compartidasArreglo = [];
 
-    function compartidasArmado(data) {
+    /*function compartidasArmado(data) {
         const contenedor = document.getElementById('compartidasAll');
         compartidasArreglo.push(data);
         var sizeC = data.length;
@@ -1325,8 +1328,8 @@ $(".find_doc").click( function() {
                                 <label for="checkBoxID_${i}" class="control-label">
                                     <input class="form-check-input checkboxClase" 
                                         type="checkbox" 
-                                        id="checkBoxID_${i}" 
-                                        name="checkBoxID_${i}" 
+                                        id="checkBoxVC_${i}" 
+                                        name="checkBoxVC_${i}" 
                                         value="${data[i].id_vcompartida}" 
                                         data-asesor="${data[i].id_asesor}" 
                                         data-coordinador="${data[i].id_coordinador}" 
@@ -1368,7 +1371,7 @@ $(".find_doc").click( function() {
             </div>   
         `;
         contenedor.innerHTML = content;
-    }
+    }*/
     
 
     $("#compartidasForm").on('submit', function(e) {
@@ -1378,44 +1381,10 @@ $(".find_doc").click( function() {
             contador = contador +1;
         });
         if(contador <= 0){
-            alerts.showNotification("top", "right", "Debes seleccionar al menos una opción para contienuar", "warnig");
+            alerts.showNotification("top", "right", "Debes seleccionar al menos una opción para continuar", "warning");
             return false;
         }
-
         var formData = new FormData(this);
-    
-        checkboxesSeleccionados.forEach(function(id_vcompartida) {
-            formData.append('checkboxesSeleccionados[]', id_vcompartida);
-        });
-    
-        if (asesorSeleccionado !== null ) {
-            formData.append('asesorSeleccionado[]', asesorSeleccionado);
-        }
-
-        if (coordinadorSeleccionado !== null ) {
-            formData.append('coordinadorSeleccionado[]', coordinadorSeleccionado);
-        }
-
-        if (gerenteSeleccionado !== null ) {
-            formData.append('gerenteSeleccionado[]', gerenteSeleccionado);
-        }
-
-        if (subdirectorSeleccionado !== null ) {
-            formData.append('subdirectorSeleccionado[]', subdirectorSeleccionado);
-        }
-        
-        if (regionalSeleccionado !== null ) {
-            formData.append('regionalSeleccionado[]', regionalSeleccionado);
-        }
-
-        if(idClienteSeleccionado != null){
-            formData.append('idClienteSeleccionado', idClienteSeleccionado);
-        }
-
-        if(loteSeleccionado != null){
-            formData.append('loteSeleccionado', loteSeleccionado);
-        }
-    
         $.ajax({
             url: general_base_url + 'Incidencias/updateEstatusCompartidas',
             type: 'post',
