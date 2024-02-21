@@ -1,6 +1,7 @@
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 
+
 <body>
 <div class="wrapper">
     <?php
@@ -281,24 +282,55 @@
                     </div>
 
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group m-0">                  
-                            <label class="label-on-left m-0">
-                                TELÉFONO CASA
-                            </label>
-                            <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>"/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                <div class="form-group ">
+                                    <label class="label-on-left m-0">
+                                        LADA
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <select id="ladaTel1" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
+                                <div class="form-group m-0">
+                                    <label class="label-on-left m-0">
+                                        TELÉFONO CASA
+                                    </label>
+                                    <input class="form-control input-gral" name="telefono1" id="telefono1" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono1?>"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="form-group m-0">      
-                            <label class="label-on-left m-0">
-                                CELULAR
-                                (<small style="color: red;">*</small>)
-                            </label>
-                            <input class="form-control input-gral" required="true" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" />
-                        </div>        
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                                <div class="form-group ">
+                                    <label class="label-on-left m-0">
+                                        LADA
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!--No tocar este es el original-->
+                            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
+                                <div class="form-group m-0">
+                                    <label class="label-on-left m-0">
+                                        CELULAR
+                                        (<small style="color: red;">*</small>)
+                                    </label>
+                                    <input class="form-control input-gral" required="true" name="telefono2" id="telefono2" type="number" step="any" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==10) return false;" value="<?=$cliente[0]->telefono2?>" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="form-group m-0">
@@ -499,24 +531,52 @@
                                                 echo '
                                                     <h6 class="text-center">PROPIETARIO ' . ($i + 1) . '</h6>                    
                                                     <div class="row">
-                                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                                        <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12">
                                                             <div class="form-group label-floating">
                                                                 <label class="label-on-left m-0">NOMBRE (<small style="color: red;">*</small>)</label>
                                                                 <input readonly class="form-control input-gral" type="text" required="true" value="'.$copropiedad[$i]->nombre_cop.' '.$copropiedad[$i]->apellido_paterno.' '.$copropiedad[$i]->apellido_materno.'"/>
                                                                 <input id="id_cop[]" name="id_cop[]" type="hidden" value="'.$copropiedad[$i]->id_copropietario.'">
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                            <div class="form-group label-floating">
-                                                                <label class="label-on-left m-0">TELÉFONO CASA</label>
-                                                                <input  class="form-control input-gral" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" '.$statsInput.'/>
+                                                        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
+                                                                    <div class="form-group ">
+                                                                        <label class="label-on-left m-0">
+                                                                            LADA TÉLEFONO CASA
+                                                                        </label>
+                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>                                                            
+                                                                <div class="col-xs-12 col-sm-8 col-md-7 col-lg-7">
+                                                                    <div class="form-group label-floating">
+                                                                        <label class="label-on-left m-0">TELÉFONO CASA</label>
+                                                                        <input  class="form-control input-gral" name="telefono1_cop[]" id="telefono1_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono . '" ' . $statsInput . '/>
+                                                                    </div>
+                                                                </div>                                                            
                                                             </div>
                                                         </div>
-                                                        <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-                                                            <div class="form-group label-floating">
-                                                                <label class="label-on-left m-0">CELULAR (<small style="color: red;">*</small>)</label>
-                                                                <input  class="form-control input-gral" name="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" '.$statsInput.'/>
+                                                        <div class="col-xs-12 col-sm-4 col-md-6 col-lg-6">
+                                                            <div class="row">
+                                                                <div class="col-xs-12 col-sm-4 col-md-5 col-lg-5">
+                                                                    <div class="form-group ">
+                                                                        <label class="label-on-left m-0">
+                                                                            LADA CELULAR
+                                                                            (<small style="color: red;">*</small>)
+                                                                        </label>
+                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-xs-12 col-sm-4 col-md-7 col-lg-7">
+                                                                    <div class="form-group label-floating">
+                                                                        <label class="label-on-left m-0">CELULAR (<small style="color: red;">*</small>)</label>
+                                                                        <input  class="form-control input-gral" name="telefono2_cop[]" type="number" step="any" onKeyPress="if(this.value.length==10) return false;" value="' . $copropiedad[$i]->telefono_2 . '" '.$statsInput.'/>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+                                                            
                                                         </div>
                                                     </div>
 
@@ -685,7 +745,8 @@
                                                                 <input class="form-control input-gral" onblur="validarRFC(this)" name="rfc_cop[]" id="rfc_cop[]" type="text" $readOnly value="'; echo $copropiedad[$i]->rfc; echo ' '.$statsInput.'"/>
                                                                 <input type="hidden" value="'.$limite.'" name="numOfCoprops">
                                                             </div>
-                                                    </div>';
+                                                    </div>
+                                                    ';
                                             }
 
                                             echo '</div>';
@@ -1103,3 +1164,31 @@
 </script>
 <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/asesores/depositoFormato.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/asesores/ladasTels.js"></script>
+<script>
+    $('#ladaTel1 #ladaTel2').ready(()=>{
+        $('#ladaTel1').val('<?=$cliente[0]->ladaTel1?>');
+        $('#ladaTel2').val('<?=$cliente[0]->ladaTel2?>');
+
+        $('.selectpicker').selectpicker('refresh');
+    });
+
+
+    <?php
+        for($i=0; $i<$copropiedadTotal[0]->valor_propietarios; $i++){?>
+            $("#ladaCel<?=$i;?>").ready(() => {
+                $("#ladaCel<?=$i;?>").val("<?=$copropiedad[$i]->ladaCel?>");
+                $("#ladaCel<?=$i;?>").selectpicker("refresh");
+            });
+
+            $("#ladaTel<?=$i;?>").ready(() => {
+                $("#ladaTel<?=$i;?>").val("<?=$copropiedad[$i]->ladaTel?>");
+                $("#ladaTel<?=$i;?>").selectpicker("refresh");
+            });
+    <?php
+        }
+    ?>
+
+
+
+</script>

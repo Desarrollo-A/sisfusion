@@ -5737,7 +5737,7 @@
 
 
 
-            $http.get("<?=base_url()?>index.php/Corrida/getResidencialDisponible").then(
+            $http.get("<?=base_url()?>/Corrida/getResidencialDisponible").then(
                 function(data){
                     $scope.residencial = data.data;
                 },
