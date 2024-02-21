@@ -819,7 +819,7 @@
 
 function sendCsvFile() {
     data = new FormData();
-    data.append('customFile', $('#customFile')[0].files[0]);
+    data.append('file-uploadE', $('#file-uploadE')[0].files[0]);
     $.ajax({
         type: 'POST',
         url: 'uploadData',

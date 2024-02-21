@@ -622,8 +622,8 @@ function fillDataTable(idCondominio) {
                         }
 
                         if (d.dsType == 1 && (d.idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && d.idStatusContratacion == STATUS_CONTRATACION) &&
-                             d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)) {
-                             buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
+                                d.id_prospecto == 0 && (d.id_coordinador != 10807 && d.id_coordinador != 10806 && d.id_gerente != 10807 && d.id_gerente != 10806)) {
+                                buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                             }
                         }
 

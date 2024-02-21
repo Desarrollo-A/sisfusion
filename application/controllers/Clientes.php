@@ -238,7 +238,7 @@ public function getStatusMktdPreventa(){
         $search = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,Ã¡,Ã©,Ã,Ã³,Ãº,Ã±,ÃÃ¡,ÃÃ©,ÃÃ,ÃÃ³,ÃÃº,ÃÃ±,Ã“,Ã ,Ã‰,Ã ,Ãš,â€œ,â€ ,Â¿,ü");
         $replace = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,Ó,Á,É,Í,Ú,\",\",¿,&uuml;");
         $count=0;
-        $fp = fopen($_FILES['customFile']['tmp_name'],'r') or die("can't open file");
+        $fp = fopen($_FILES['file-uploadE']['tmp_name'],'r') or die("can't open file");
         while($csv_line = fgetcsv($fp,1024))
         {
             $count++;
@@ -293,7 +293,6 @@ public function getStatusMktdPreventa(){
                 'otro_lugar' => $insert_csv['otro_lugar'],
                 'fecha_vencimiento' => date("Y-m-d H:i:s",strtotime(date("Y-m-d H:i:s")."+ 30 days"))
             );
-
             // var_dump($data);
             $response = $this->Clientes_model->uploadData($data);
             //echo json_encode($response);
