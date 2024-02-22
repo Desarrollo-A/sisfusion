@@ -3903,8 +3903,9 @@ class Comisiones_model extends CI_Model {
         contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
-    public function getFechaCorteActual($tipoUsuario,$mesActual){
-    $filtro = $tipoUsuario == 2 ?  ( $mesActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
+    public function getFechaCorteActual($tipoUsuario,$diaActual){
+    $mesActual = date('m');
+    $filtro = $tipoUsuario == 2 ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
       return $consultaFechasCorte = $this->db->query("SELECT mes,fechaInicio,tipoCorte $filtro2 FROM fechasCorte WHERE estatus = 1 AND tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY tipoCorte ASC")->result_array();
     }
