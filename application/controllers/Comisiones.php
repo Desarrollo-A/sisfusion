@@ -2308,18 +2308,25 @@ class Comisiones extends CI_Controller
     $nombreOtro = $this->input->post("nombreOtro");
     $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
     $totalFilas = $responses->num_rows(); 
+
     $idClienteEstatus = $this->input->post("idCliente");
 
-    $estatus = $this->Comisiones_model->getEstatusForLote($lote_1); 
+   
 
-      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
+      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3) ) {
 
-        if (count($estatus) > 0) {
+
+        $estatus = $this->Comisiones_model->getEstatusForLote($lote_1, $ooam); 
+
+        $flag = (count($estatus) > 0);
+
+        if($flag){
           $comision = $this->Comisiones_model->updateRegistroComision($lote_1, $this->session->userdata('id_usuario'));
           $respuesta = ($comision == 1) ? 4 : $comision;
           echo json_encode($respuesta);
           exit;
-        } 
+        }
+            
         // INICIA PRIMERA VALIDACION DE DISPERSION
         $this->db->trans_begin();
         $replace = [",","$"];

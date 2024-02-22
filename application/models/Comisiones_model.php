@@ -1119,7 +1119,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
         LEFT JOIN lotes lor ON lor.idLote = clr.idLote
         LEFT JOIN (SELECT idLotePvOrigen, nombreLotes FROM lotesFusion WHERE destino = 1 GROUP BY idLotePvOrigen, nombreLotes) AS lf ON lf.idLotePvOrigen = clr.idLote
-        LEFT JOIN (SELECT COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
+        LEFT JOIN (SELECT COUNT(*) liquidada, id_lote FROM cofisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
@@ -1134,7 +1134,7 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
         LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote AND pc.bandera = 0
-        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= '2024-02-24 00:00:00' GROUP BY pc.bandera");
     }
 
     function getDatosNuevasMktd_pre(){
@@ -2625,12 +2625,12 @@ class Comisiones_model extends CI_Model {
         GROUP BY pci1.id_comision,com.ooam,com.loteReubicado, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, lo.referencia, com.estatus, pac.bonificacion, u.estatus, lo.tipo_venta, oxcest.color, pe.id_penalizacion, cl.lugar_prospeccion, com.estatus, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, id_cliente_reubicacion_2 ");
     }
 
-    public function getEstatusForLote($idLote) {
-        $query = $this->db->query("SELECT co.estatus FROM comisiones co 
+    public function getEstatusForLote($idLote, $ooam) {
+        $query = $this->db->query("		SELECT co.estatus FROM comisiones co 
 		INNER JOIN lotes l ON co.id_lote = l.idLote
-		INNER JOIN clientes c ON l.idLote = c.id_cliente 
-		INNER JOIN pago_comision pc ON co.id_lote = pc.id_lote
-		WHERE l.idLote = $idLote and co.estatus=1 and c.status=1 and l.registro_comision=1");
+		INNER JOIN clientes c ON c.id_cliente = l.idCliente
+		INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
+		WHERE l.idLote = $idLote and co.estatus=1 and c.status=1 and co.ooam = $ooam");
         return $query->result_array();
     }
 
