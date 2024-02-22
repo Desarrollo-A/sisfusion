@@ -2629,7 +2629,8 @@ class Comisiones_model extends CI_Model {
         $query = $this->db->query("SELECT co.estatus FROM comisiones co 
 		INNER JOIN lotes l ON co.id_lote = l.idLote
 		INNER JOIN clientes c ON l.idLote = c.id_cliente 
-		WHERE l.idLote = $idLote and co.estatus=1 and c.status=1");
+		INNER JOIN pago_comision pc ON co.id_lote = pc.id_lote
+		WHERE l.idLote = $idLote and co.estatus=1 and c.status=1 and l.registro_comision=1");
         return $query->result_array();
     }
 

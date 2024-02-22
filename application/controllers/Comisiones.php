@@ -2310,16 +2310,16 @@ class Comisiones extends CI_Controller
     $totalFilas = $responses->num_rows(); 
     $idClienteEstatus = $this->input->post("idCliente");
 
-    $estatus = $this->Comisiones_model->getEstatusForLote($lote_1);
-
-    if (count($estatus) > 0) {
-      $comision = $this->Comisiones_model->updateRegistroComision($lote_1, $this->session->userdata('id_usuario'));
-      $respuesta = ($comision == 1) ? 4 : $comision;
-      echo json_encode($respuesta);
-      exit;
-    }
+    $estatus = $this->Comisiones_model->getEstatusForLote($lote_1); 
 
       if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
+
+        if (count($estatus) > 0) {
+          $comision = $this->Comisiones_model->updateRegistroComision($lote_1, $this->session->userdata('id_usuario'));
+          $respuesta = ($comision == 1) ? 4 : $comision;
+          echo json_encode($respuesta);
+          exit;
+        } 
         // INICIA PRIMERA VALIDACION DE DISPERSION
         $this->db->trans_begin();
         $replace = [",","$"];
@@ -2429,7 +2429,9 @@ class Comisiones extends CI_Controller
           $respuesta[0] = 2;
         } else{
           $respuesta[0] = 3;
-        } 
+        }
+
+        
       echo json_encode( $respuesta );
 
     
