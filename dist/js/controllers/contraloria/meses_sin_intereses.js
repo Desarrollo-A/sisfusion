@@ -102,6 +102,9 @@ $(document).ready (function() {
                         case 4://autorizacion rechazada
                             color_estatus='background: #B03A2E18;color: #78281F;';
                             break;
+                        case 5://autorizacion rechazada
+                            color_estatus='background: #c377121c;color: #ff6e00;';
+                            break;
                     }
                     estatus_label = '<span class="label" style="'+color_estatus+'">'+data.estatus_autorizacion+'</span>';
                     return estatus_label;
@@ -705,7 +708,7 @@ $(document).on('click', '.btnHistorial', function () {
                 let icono_show;
                 let color_icono;
                 let bg_color;
-                if(estatus==1 || estatus==2 || estatus==3){
+                if(estatus==1 || estatus==2 || estatus==3 || estatus==5){
                     icono_show = 'fa-check';
                     color_icono= '#28B463';
                     bg_color = '#28B46318';
@@ -764,7 +767,7 @@ $(document).on('click', '.btnHistorial', function () {
                                 <div id="historial`+idHistorial+`" class="panel-collapse collapse ">`;
 
                 data_historial.map((element, index)=>{
-                    if(element.estatus_autorizacion==1 || element.estatus_autorizacion==2 || element.estatus_autorizacion==3){
+                    if(element.estatus_autorizacion==1 || element.estatus_autorizacion==2 || element.estatus_autorizacion==3 || element.estatus_autorizacion==5){
                         icono_show = 'fa-check';
                         color_icono= '#28B463';
                         bg_color = '#28B46318';
@@ -914,9 +917,9 @@ $(document).on('click', '.btnAvanzarAM', function(){
 
     dataUpdateGeneral[0] = id_aut;
     if(id_rol_general==17 || id_rol_general==70){
-        dataUpdateGeneral[1] = 3;
+        dataUpdateGeneral[1] = 5;
         $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
-        $('#leyendaAdvAM').text('Al aceptar se renovarán los MSI autorizados');
+        $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
     }else{
         dataUpdateGeneral[1] = 2;
         $('#tittleModalAM').text('Avanzar autorización');

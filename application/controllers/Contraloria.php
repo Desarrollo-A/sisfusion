@@ -1135,7 +1135,8 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
     }
 
-    if (!in_array($cliente->proceso, [2,4,5,6])) {
+
+    if ($cliente->proceso <= 1 ) {
         $data['message'] = 'OK';
         echo json_encode($data);
         return;
@@ -1184,6 +1185,7 @@ class Contraloria extends CI_Controller {
     }
 
     $numContrato = $this->generarNumContrato($idLote);
+
 
     if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
         $data['message'] = 'ERROR';
@@ -2821,6 +2823,7 @@ class Contraloria extends CI_Controller {
         $estatus_autorizacion = $this->input->post('estatus_autorizacion');
         $modo = $this->input->post('modo');
 
+
         $actualizar = array();
         $insert_historial = array();
         $update_lotes = array();
@@ -2831,7 +2834,8 @@ class Contraloria extends CI_Controller {
                 "estatus_autorizacion" => $estatus_autorizacion,
                 "comentario" => $comentario,
                 "fecha_modificacion" => $fecha_insercion,
-                "modificado_por" => $this->session->userdata('id_usuario')
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "modoActualizacion" => $modo
             );
 
             $data_historial = array(
@@ -2841,7 +2845,8 @@ class Contraloria extends CI_Controller {
                 "fecha_movimiento"      => $fecha_insercion,
                 "estatus"               => 1,
                 "comentario"            => $comentario,
-                "estatus_autorizacion"  => $estatus_autorizacion
+                "estatus_autorizacion"  => $estatus_autorizacion,
+                "modoActualizacion"     => $modo
             );
 
             $table = 'autorizaciones_msi';
@@ -2850,12 +2855,12 @@ class Contraloria extends CI_Controller {
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
             $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
-            if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
-                $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
-                $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
-            }else{
-                $update_lotes = true;
-            }
+            //if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
+            //    $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
+            //    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+            //}else{
+            //    $update_lotes = true;
+            //}
         }
         else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
@@ -2867,7 +2872,8 @@ class Contraloria extends CI_Controller {
                     "estatus_autorizacion" => $estatus_autorizacion,
                     "comentario" => $comentario,
                     "fecha_modificacion" => $fecha_insercion,
-                    "modificado_por" => $this->session->userdata('id_usuario')
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "modoActualizacion" => $modo
                 );
                 $data_historial = array(
                     "idAutorizacion"        => $id_aut,
@@ -2876,7 +2882,8 @@ class Contraloria extends CI_Controller {
                     "fecha_movimiento"      => $fecha_insercion,
                     "estatus"               => 1,
                     "comentario"            => $comentario,
-                    "estatus_autorizacion"  => $estatus_autorizacion
+                    "estatus_autorizacion"  => $estatus_autorizacion,
+                    "modoActualizacion" => $modo
                 );
 
                 $table = 'autorizaciones_msi';
@@ -2885,16 +2892,18 @@ class Contraloria extends CI_Controller {
                 $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
-                if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
+
+                //este proceso se debe dejar para que lo ejecute el servidor
+                /*if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
                     $array_update_lotes = $this->actualizaMSI($id_aut, $modo);
                     $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
                 }else{
                     $update_lotes = true;
-                }
+                }*/
             }
         }
 
-        if($actualizar && $insert_historial && $update_lotes){
+        if($actualizar && $insert_historial){//esta variable es para el update de lotes: && $update_lotes
             $data_response['message'] = 'OK';
         }else{
             $data_response['message'] = 'ERROR';
@@ -2902,6 +2911,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($data_response);
         //avanzar o rechazar autorizacion
     }
+
 
     function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
         //mandarlos a actualizar definitivamente
@@ -2950,6 +2960,9 @@ class Contraloria extends CI_Controller {
             return $updateData;
         }
     }
+
+
+
 
     public function inventarioComisionistas() {
         $this->load->view('template/header');
