@@ -2626,13 +2626,17 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getEstatusForLote($idLote, $ooam) {
-        $query = $this->db->query("		SELECT co.estatus FROM comisiones co 
-		INNER JOIN lotes l ON co.id_lote = l.idLote
-		INNER JOIN clientes c ON c.id_cliente = l.idCliente
-		INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
-		WHERE l.idLote = $idLote and co.estatus=1 and c.status=1 and co.ooam = $ooam");
+        $ooam = ($ooam !== null) ? $ooam : 0;
+    
+        $query = $this->db->query("SELECT co.estatus FROM comisiones co 
+            INNER JOIN lotes l ON co.id_lote = l.idLote
+            INNER JOIN clientes c ON c.id_cliente = l.idCliente
+            INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
+            WHERE l.idLote = $idLote and co.estatus = 1 and c.status = 1 and co.ooam = $ooam");
+    
         return $query->result_array();
     }
+    
 
     public function updateRegistroComision($idLote, $idUsuario){
 

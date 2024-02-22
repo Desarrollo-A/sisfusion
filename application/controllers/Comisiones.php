@@ -2311,8 +2311,6 @@ class Comisiones extends CI_Controller
 
     $idClienteEstatus = $this->input->post("idCliente");
 
-   
-
       if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3) ) {
 
 
