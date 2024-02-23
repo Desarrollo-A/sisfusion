@@ -817,7 +817,7 @@ $(document).ready(function(){
         $('.ladaSelect').append($('<option>', { value: parseInt(i.lada), text: ' (+' + parseInt(i.lada) + ') ' + i.name}));
     });
 
-    // $('.selectpicker').selectpicker('refresh');
+    $('.selectpicker').selectpicker('refresh');
     $('.ladaSelect').addClass('selectpicker');
     $('.ladaSelect').attr('data-live-search', 'true');
     $('.ladaSelect').selectpicker('refresh');

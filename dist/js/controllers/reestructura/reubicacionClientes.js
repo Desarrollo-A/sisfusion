@@ -374,7 +374,7 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
             lotesFusionados = responseLotesFusionados.data;
             lotesFusionados.map((elemento, index)=>{
                 superficie = parseFloat(elemento.sup) + superficie;
-                nombreLote += elemento.nombreLotes+' ';
+                nombreLote += (elemento.nombreLotes==null)? elemento.nombreLoteDO : elemento.nombreLotes+' ';
             });
             superficie = (superficie).toFixed(2);
         }

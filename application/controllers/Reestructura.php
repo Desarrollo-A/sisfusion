@@ -513,20 +513,22 @@ class Reestructura extends CI_Controller{
             $lotesString = implode(",", $idLotes);
             $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
             
-            if ( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] == 21 ){
-                //Reubicación en el mismo norte
-                $statusLote = 20;
-            }
-            else if( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] != 21 ){
-                //Reubicación normal
-                $statusLote = 16;
-            }
-            else{
-                //Reestructura
-                $statusLote =  17;
-            }
+
 
             foreach ($dataLoteDis as $index => $dataLote) {
+                if ( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] == 21 ){
+                    //Reubicación en el mismo norte
+                    $statusLote = 20;
+                }
+                else if( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] != 21 ){
+                    //Reubicación normal
+                    $statusLote = 16;
+                }
+                else{
+                    //Reestructura
+                    $statusLote =  17;
+                }
+
                 $arrayLoteApartado = array(
                     'idLote' => $dataLote['idLote'],
                     //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
