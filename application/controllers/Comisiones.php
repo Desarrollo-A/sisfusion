@@ -19,7 +19,6 @@ class Comisiones extends CI_Controller
     $this->load->model('Pagos_model');
     $this->load->model('reporteContratacion_model');
     $this->load->model('Contratacion_model');
-    $this->load->model('PlanesModel');
     
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));

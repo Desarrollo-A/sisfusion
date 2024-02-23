@@ -50,26 +50,43 @@
                     <div class="modal-body">
                         <div class="col-md-12">
                             <div class="col-md-6 col-lg-3">
-                                <label for="nombre" class="control-label">Nombre del plan</label>
-                                <input class="form-control input-gral" type="text" id="nombre" name="nombre" placeholder="Nombre" />
+                                <label for="nombre" class="control-label">Nombre</label>
+                                <input class="form-control input-gral" type="text" id="nombre" name="nombre" placeholder="NOMBRE DEL PLAN" />
                             </div>
                             <div class="col-md-6 col-lg-3">
-                                <label for="estatus" class="control-label">Activo</label>
-                                <input type="text" class="form-control input-gral" id="estatus" name="estatus" placeholder="Activo" />
+                                <label for="estatus" class="control-label label-gral">Activo</label>
+                                <select name="estatus" id="estatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                    <option>SI</option>
+                                    <option>NO</option>
+                                </select>
                             </div>
                             <div class="col-md-6 col-lg-3">
-                                <label for="fechaInicio" class="control-label label-gral">Fecha de inicio</label>
-                                <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaInicio" id="fechaInicio" placeholder="Fecha de inicio" />
+                                <label for="fechaInicio" class="control-label label-gral">inicio</label>
+                                <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaInicio" id="fechaInicio" placeholder="FECHA DE INICIO" />
                             </div>
                             <div class="col-md-6 col-lg-3">
-                                <label for="fechaFin" class="control-label label-gral">Fecha de termino</label>
-                                <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaFin" id="fechaFin" placeholder="Fecha de termino" />
+                                <label for="fechaFin" class="control-label label-gral">Termino</label>
+                                <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaFin" id="fechaFin" placeholder="FECHA DE TERMINO" />
                             </div>
                             <div class="col-md-6 col-lg-3">
                                 <label for="sede" class="control-label label-gral">Sede</label>
-                                <select class="selectpicker select-gral" id="sede" name="sede" ></select>
+                                <select name="sede" id="sede" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
                             </div>
-                            <span class="col-md-12 modal-title">Esquema de comisiones</span>
+                            <div class="col-md-6 col-lg-3">
+                                <label for="residencial" class="control-label label-gral">Residencial</label>
+                                <select name="residencial" id="residencial" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <label for="lote" class="control-label label-gral">Lote</label>
+                                <input id="lote" name="lote" class="form-control input-gral" type="text" placeholder="ID DEL LOTE" />
+                            </div>
+                            <div class="col-md-6 col-lg-3">
+                                <label for="prospeccion" class="control-label label-gral">Lugar de prospeccion</label>
+                                <select name="prospeccion" id="prospeccion" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
+                            </div>
+                        </div>
+                        <span class="col-md-12">Esquema de comisiones</span>
+                        <div class="col-md-12">
                             <div class="col-md-12">
                                 <label class="col-md-4 control-label">Puesto</label>
                                 <label class="col-md-4 control-label">Porcentaje</label>
@@ -116,21 +133,20 @@
                             </div>
                         </div>
                         <div id="usuarios_plan_comisiones"></div>
-                        <div class="col-md-12">
-                            <span>Añadir usuario comisionando</span>
-                        </div>
+                        <span class="col-md-12">Añadir usuario comisionando</span>
                         <div class="col-md-12">
                             <div class="col-md-4">
                                 <label for="id_usuario" class="control-label label-gral">ID del usuario</label>
                                 <input class="form-control input-gral" type="number" id="id_usuario" name="id_usuario" />
                             </div>
                             <div class="col-md-4">
-                                <button id="btn_abonar" class="btn btn-primary" onclick="addUsuarioPlanComision()">Añadir</button>
+                                <button id="btn_add_usuario_comision" class="btn btn-primary" >Buscar</button>
                             </div>
                         </div>
                     </div>
-                    <div id="mBody" class="modal-body pr-0 ml-4"></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="console.log('hide planes modal')">Cerrar</button></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>

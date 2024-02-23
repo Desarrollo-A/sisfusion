@@ -1,9 +1,33 @@
+let comision = {
+    idPlan: undefined,
+    nombre: undefined,
+    estatus: false,
+    fechaInicio: new Date(),
+    fechaFin: new Date(),
+    sede: undefined,
+}
+
+let condiciones = [
+    { id: 'proceso', label: 'Proceso', type: 'select', url: 'sedes/list' },
+    { id: 'compartida', label: 'Venta compartida', type: 'compartida', url: 'sedes/list' },
+    { id: 'gerente', label: 'Gerente', type: 'select', url: 'sedes/list' },
+    { id: 'asesor', label: 'Asesor', type: 'select', url: 'sedes/list' },
+    { id: 'tipo_venta', label: 'Tipo de venta', type: 'select', url: 'sedes/list' },
+    { id: 'venta_regional', label: 'Venta regional', type: 'bool', url: 'sedes/list' },
+]
+
+//let dispersionDataTable;
+
 $(document).ready(function () {
-    $("#plan-modal").modal();
+    getDataSelect('sede', `${general_base_url}planes/sedes`);
+    getDataSelect('residencial', `${general_base_url}planes/residenciales`);
+    getDataSelect('prospeccion', `${general_base_url}planes/prospecciones`);
+
+    //$("#plan-modal").modal();
 
     let titulos_intxt = [];
 
-    $('#tabla_planes_comisiones thead tr:eq(0) th').each(function (i) {
+    const tabla_planes_comisiones = $('#tabla_planes_comisiones thead tr:eq(0) th').each(function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
@@ -22,7 +46,7 @@ $(document).ready(function () {
         }
     });
 
-    dispersionDataTable = $('#tabla_planes_comisiones').dataTable({
+    const dispersionDataTable = $('#tabla_planes_comisiones').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -77,27 +101,49 @@ $(document).ready(function () {
                 data : null,
                 defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
             },
-            {data: 'id_plan'},
+            {data: 'idPlan'},
             {data: 'nombre'},
             { 
                 data: function (d) {
-                    return '<span class="label lbl-azure">'+d.fecha_modificacion+'</span>';
+                    const date = new Date(d.fechaActualizado)
+                    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+
+                    return `<span class="label lbl-azure">${date.toLocaleDateString('es-MX', options)}</span>`
                 }
             },
             {data: 'prioridad'},
-            {data: 'estado'},      
-            { 
+            { //STATUS
                 data: function (d) {
-                    return ''
+                    if(d.estatus == 1){
+                        return '<span class="label label-success">Activo</span>'
+                    }else{
+                        return '<span class="label label-default">Inactivo</span>'
+                    }
                 }
-            }],
-            columnDefs: [{
+            },
+            { //ACTIONS
+                data: function (data) {
+                    const subir_prioridad = tableButton('subir_prioridad', 'subir prioridad', 'arrow_upward', 'btn-deepGray')
+                    const bajar_prioridad = tableButton('bajar_prioridad', 'bajar prioridad', 'arrow_downward', 'btn-deepGray')
+                    const editar_plan = tableButton('edit_plan', 'editar plan', 'edit')
+                    
+                    let toggle_plan = tableButton('enable_plan', 'activar plan', 'play_arrow', 'btn-green', 'enablePlan', data.idPlan)
+                    if(data.estatus == 1){
+                        toggle_plan = tableButton('disable_plan', 'desactivar plan', 'pause', 'btn-yellow', 'disablePlan', data.idPlan)
+                    }
+
+                    return `<div class="d-flex justify-center">${subir_prioridad}${bajar_prioridad}${editar_plan}${toggle_plan}</div>`
+                }
+            }
+        ],
+        columnDefs: [
+            {
                 visible: false,
                 searchable: false
             }
         ],
         ajax: {
-            url: 'list_planes',
+            url: `${general_base_url}planes/list`,
             type: "GET",
             cache: false,
             data: function( d ){}
@@ -119,12 +165,69 @@ $(document).ready(function () {
             inline: true
         }
     });
+
+    $('#btn_add_usuario_comision').on('click', function() {
+        let id_usuario = $('#id_usuario').val();
+
+        getUserComisionando(id_usuario);
+    });
+
 })
 
-function addUsuarioPlanComision(){
+function enablePlan(idPlan){
+    $.getJSON( `${general_base_url}planes/enable?plan=${idPlan}` )
+    .done(function( data ) {
+        //dispersionDataTable.ajax()
+    })
+}
 
-    let html = '<div class="col-md-12"><div class="col-md-4"><div class="form-group"><input class="form-control input-gral" type="text" placeholder="Numero de usuario"><span class="material-input"></span></div></div><div class="col-md-4"><div class="form-group"><input class="form-control input-gral" type="number" value="Asesor"><span class="material-input"></span></div></div></div>'
+function disablePlan(idPlan){
+    $.getJSON( `${general_base_url}planes/disable?plan=${idPlan}` )
+    .done(function( data ) {
+        //dispersionDataTable.ajax()
+    })
+}
 
+function tableButton(id, label='', icon='', color='btn-blueMaderas', method=null, data=[]){
+    const button = $('<button />')
+        .addClass(`${id} btn-data ${color}`)
+        .attr('data-toggle', 'tooltip')
+        .attr('data-placement', 'top')
+        .attr('title', label.toUpperCase())
+        .append(
+            $('<i />')
+            .addClass('material-icons')
+            .text(icon)
+        )
+
+    if(method){
+        button.attr('onClick', `${method}(${data})`)
+    }
+
+    return button.prop('outerHTML')
+}
+
+function getUserComisionando(id_usuario){
+    $.getJSON( `${general_base_url}planes/usuario?id_usuario=${id_usuario}` )
+    .done(function( data ) {
+        let id = data.id_usuario
+        let nombre = `${data.nombre} ${data.apellido_paterno} ${data.apellido_materno}`
+
+        addUsuarioPlanComision(id, nombre)
+    })
+}
+
+function getDataSelect(element, url){
+    $.getJSON( url )
+    .done(function( data ) {
+        $.each( data, function( i, item ) {
+            $(`#${element}`).append($('<option>').val(item.id).text(item.label.toUpperCase()));
+            $(`#${element}`).selectpicker('refresh');
+        })
+    })
+}
+
+function addUsuarioPlanComision(id, nombre){
     $('#usuarios_plan_comisiones').append(
         $('<div />')
         .addClass('col-md-12')
@@ -138,7 +241,7 @@ function addUsuarioPlanComision(){
                     $('<input />')
                     .attr('type', 'text')
                     .addClass('form-control input-gral')
-                    .val('asdf')
+                    .val(nombre)
                 )
             ),
             $('<div />')
@@ -152,9 +255,14 @@ function addUsuarioPlanComision(){
                     .addClass('form-control input-gral')
                     .val(1)
                 )
+            ),
+            $('<div />')
+            .addClass('col-md-4')
+            .append(
+                $('<button />')
+                .addClass('btn btn-primary')
+                .text('Eliminar')
             )
         )
     )
-
-    // $('#usuarios_plan_comisiones').append(html)
 }
