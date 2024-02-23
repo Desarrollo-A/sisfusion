@@ -2635,10 +2635,10 @@ class Comisiones_model extends CI_Model {
         $sql = ($ooam == null) ? '0 OR co.ooam IS NULL' : $ooam;
     
         $query = $this->db->query("SELECT co.estatus FROM comisiones co 
-        INNER JOIN lotes l ON co.id_lote = l.idLote
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente
-        INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
-        WHERE l.idLote = $idLote and co.estatus = 1 and c.status = 1 and (co.ooam = $sql)");
+            INNER JOIN lotes l ON co.id_lote = l.idLote
+            INNER JOIN clientes c ON c.id_cliente = l.idCliente
+            INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
+            WHERE l.idLote = $idLote and co.estatus = 1 and c.status = 1 and (co.ooam = $sql)");
     
         return $query->result_array();
     }
@@ -3914,8 +3914,9 @@ class Comisiones_model extends CI_Model {
         contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
-    public function getFechaCorteActual($tipoUsuario,$mesActual){
-    $filtro = $tipoUsuario == 2 ?  ( $mesActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
+    public function getFechaCorteActual($tipoUsuario,$diaActual){
+    $mesActual = date('m');
+    $filtro = $tipoUsuario == 2 ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
       return $consultaFechasCorte = $this->db->query("SELECT mes,fechaInicio,tipoCorte $filtro2 FROM fechasCorte WHERE estatus = 1 AND tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY tipoCorte ASC")->result_array();
     }
@@ -3967,8 +3968,8 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getReporteDesc($sede, $empresa, $puesto, $usuario, $beginDate, $endDate){
-        $querySede = $sede != 0 ? "AND se.id_sede=".$sede : "";
-        $queryEmpresa = $empresa !=  0 ? "AND re.empresa='$empresa'" : "";
+        $querySede = intval($sede) != 0 ? "AND se.id_sede=".$sede : "";
+        $queryEmpresa = $empresa !=  '0' ? "AND re.empresa='$empresa'" : "";
         $queryPuesto = $puesto != 0 ? "AND u.id_rol=".$puesto : "";
         $queryUsuario = $usuario != 0 ? "AND u.id_usuario=".$usuario : "";
         $queryFecha = $beginDate != 0 ? "WHERE pa.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": "";
@@ -3987,9 +3988,9 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=pa.tipo AND opc.id_catalogo=23 
         LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
         LEFT JOIN opcs_x_cats emp ON emp.nombre=re.empresa AND emp.id_catalogo=61 
-        INNER JOIN sedes se ON se.id_sede = 
+        LEFT JOIN sedes se ON se.id_sede = 
 		(CASE WHEN u.id_usuario IN(2,3,1980,1981,1982,1988,4,5,9629,13546,13547,13548,1981,1982,26,27) THEN 2 WHEN u.id_usuario = 4 THEN 5 WHEN u.id_usuario = 5 THEN 3 WHEN u.id_usuario = 607 THEN 1 WHEN u.id_usuario = 7092 THEN 4 ELSE u.id_sede END) AND se.estatus = 1
-        $queryFecha $querySede $queryEmpresa $queryPuesto $queryUsuario
+        $queryFecha $queryEmpresa $querySede $queryPuesto $queryUsuario
         ORDER BY pa.id_prestamo DESC")->result_array();
     }
 

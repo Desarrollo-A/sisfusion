@@ -3,6 +3,53 @@
 <body>
     <div class="wrapper">
         <?php  $this->load->view('template/sidebar'); ?>
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Consulta de historial <b id="nomLoteHistorial"></b></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
+                                <li role="presentation" class="active">
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="tabHistoriaContratacion">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <table id="tablaHistorialContratacion">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>LOTE</th>
+                                                                <th>ESTATUS</th>
+                                                                <th>DETALLES</th>
+                                                                <th>COMENTARIO</th>
+                                                                <th>FECHA DE ESTATUS</th>
+                                                                <th>USUARIO</th>
+                                                            </tr>
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -29,6 +76,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>ESTATUS CONTRATACIÓN</th>
+                                                <th>ACCIONES</th>
                                             </tr>
                                         </thead>
                                     </table>

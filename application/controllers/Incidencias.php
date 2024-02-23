@@ -2,7 +2,7 @@
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
-
+ 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Incidencias extends CI_Controller
@@ -277,20 +277,24 @@ class Incidencias extends CI_Controller
 
     public function updateEstatusCompartidas()
     {
-      $idLote = $this->input->post('loteSeleccionado');
-      $idCliente = $this->input->post('idClienteSeleccionado');
+      $this->db->trans_begin();
+      $idLote = $this->input->post('idLote');
+      $idCliente = $this->input->post('idCliente');
+      $index = $this->input->post('index');
+      $idVentasCompartidas = [];
+      $modificadoPor = $this->session->userdata('id_usuario');
+      
+      for ($o=1; $o < $index; $o++) {
+        if(!empty($this->input->post('checkBoxVC_'.$o))){
+          echo $this->input->post('checkBoxVC_'.$o);
+          //$respuesta = $this->Incidencias_model->updateEstatusVentasC($this->input->post('checkBoxVC_'.$o),$modificadoPor);
+          array_push($idVentasCompartidas,$this->input->post('checkBoxVC_'.$o));
+        } 
+      }
+      var_dump($idVentasCompartidas);
 
-      $columnas = array(
-          'id_asesor' => $this->input->post('asesorSeleccionado'),
-          'id_coordinador' => $this->input->post('coordinadorSeleccionado'),
-          'id_gerente' => $this->input->post('gerenteSeleccionado'),
-          'id_subdirector' => $this->input->post('subdirectorSeleccionado'),
-          'id_regional' => $this->input->post('regionalSeleccionado')
-      );
 
-      $result_2 = array();
-
-      $result = $this->Incidencias_model->getRol_Nombre($idCliente, $idLote);
+      exit;
 
       $compartidas = $this->Incidencias_model->getAllCompartidas($idCliente);
 
@@ -315,7 +319,6 @@ class Incidencias extends CI_Controller
 
 
       $checkboxesSeleccionados = $this->input->post('checkboxesSeleccionados');
-      $nuevo_estatus = 0;
 
       foreach ($checkboxesSeleccionados as $id_vcompartida) {
           $respuesta = $this->Incidencias_model->updateEstatusVentasC($nuevo_estatus, $id_vcompartida);
@@ -327,18 +330,21 @@ class Incidencias extends CI_Controller
           'respuesta' => $respuesta,
           'result_2' => $result_2_json
       );
+      if ($this->db->trans_status() === false) {
+        $this->db->trans_rollback();
+        echo json_encode(0);
 
+    } else {
+        $this->db->trans_commit();
+        echo json_encode(1);
+    }
       echo json_encode($response);
     }
 
     
 
-    public function getRol_Nombre(){
-      $id_cliente = $this->input->post('id_cliente');
-      $idLote = $this->input->post('idLote');
-
-      $result = $this->Incidencias_model->getRol_Nombre($id_cliente, $idLote);
-
+    public function getComisionistas(){
+      $result = $this->Incidencias_model->getComisionistas($this->input->post('idLote'));
       echo json_encode($result);
     }
 

@@ -129,6 +129,17 @@ $('#all_users_datatable').DataTable({
                 return d.puesto;
             }
         },
+        {
+            data: function (d) {
+                tipo = '';
+                if (d.tipo == 2 || d.tipo == "2") {
+                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
+                } else {
+                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
+                }
+                return tipo;
+            }
+        },
         { data: function (d) {
                 return d.sede;
             }
@@ -149,7 +160,7 @@ $('#all_users_datatable').DataTable({
         },
         { data: function (d) {
             
-            return '<span class="label lbl-green">'+ d.nacionalidad+ '</span>';
+            return '<span class="label lbl-azure">'+ d.nacionalidad+ '</span>';
             }
         },
         { data: function (d) {

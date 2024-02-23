@@ -190,9 +190,7 @@ $("#tabla_deposito_seriedad").ready( function(){
                 },
                 {
                     "data": function(d){
-                        return '<center><button class="btn-data btn-green became_prospect_to_cliente"' +
-                            'data-id_prospecto="'+d.id_prospecto+'" data-id_cliente="'+id_cliente+'" data-idLote="'+idLoteValue+'" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO">' +
-                            '<i class="fas fa-user-check"></i></button></center>';
+                        return `<center><button class="btn-data btn-green became_prospect_to_cliente" data-id_prospecto="${d.id_prospecto}" data-id_cliente="${id_cliente}" data-idLote="${idLoteValue}" data-toggle="tooltip" data-placement="top" title="NUEVO PROSPECTO"> <i class="fas fa-user-check"></i> </button></center>`;
                     }
                 },
             ],
@@ -248,9 +246,8 @@ $("#tabla_deposito_seriedad").ready( function(){
                         $('#table_prospectos').DataTable().ajax.reload();
                         $('#tabla_deposito_seriedad').DataTable().ajax.reload();
                         alerts.showNotification('top', 'right', 'Se ha asignado correctamente', 'success');
-                    } else {
+                    } else
                         alerts.showNotification('top', 'right', 'Ha ocurrido un error inesperado verificalo ['+data+']', 'danger');
-                    }
                 },
                 error: function(){
                     $('#modal_loader_assign').modal("hide");

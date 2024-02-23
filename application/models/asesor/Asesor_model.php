@@ -494,6 +494,8 @@ class Asesor_model extends CI_Model {
                                         cl.edadFirma,
                                         cl.domicilio_empresa,
                                         ds.noRefPago,
+                                        cl.ladaTel1,
+                                        cl.ladaTel2,
                                         FORMAT(TRY_CAST(ds.costoM2 AS float), 'C') AS costoM2,
                                         ds.proyecto,
                                         ds.municipio AS municipioDS,
@@ -541,7 +543,7 @@ class Asesor_model extends CI_Model {
                                     co.nacionalidad as nacionalidad_valor, co.nombre as 
                                     nombre_cop, apellido_paterno, apellido_materno, telefono, telefono_2, correo, fecha_nacimiento, 
                                     originario_de, conyuge, domicilio_particular, 
-                                    ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc
+                                    ocupacion, empresa, posicion,  antiguedad, edadFirma, direccion, tipo_vivienda, rfc, ladaTel, ladaCel
                                     FROM copropietarios co 
                                     WHERE co.estatus = 1 AND co.id_cliente =" . $cliente);
         return $query->result();
@@ -1766,5 +1768,16 @@ class Asesor_model extends CI_Model {
         $query = $this->db->query('SELECT * FROM sedes WHERE id_sede IN(SELECT sede_residencial FROM residenciales 
             GROUP BY sede_residencial);');
         return $query->result_array();
+    }
+
+    function residencialParaValidacion($idLote){
+        //saca la información del residencial, condominio y lote para ver si este lote
+        //pertenece a algun desarrollo de león y pedirle la corrida financiera
+        $query = $this->db->query("SELECT res.idResidencial, cond.idCondominio, lot.idLote FROM lotes lot 
+        INNER JOIN condominios cond ON lot.idCondominio = cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        WHERE lot.idLote = $idLote;");
+        return $query->row();
+
     }
 }

@@ -869,7 +869,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
                 * */
 
             });
-            data.append("editarFile", editarContrafoFirmado);
+            data.append("editarFile", 1);
             data.append('totalContratos', arrayContratosFirmados.length);
             data.append('flagFusion', flagFusion);
 
@@ -881,7 +881,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             data.append("nombreLoteOriginal", nombreLote);
             data.append("idDocumento", arrayCF['idDocumento']);
             data.append("idCliente", arrayCF['idClienteCF']);
-            data.append("editarFile", editarContrafoFirmado);
+            data.append("editarFile", 1);
             data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
             data.append('idCondominio', arrayCF['idCondominio'] );
             data.append('nombreResidencial', arrayCF['nombreResidencial'] );
