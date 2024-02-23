@@ -297,7 +297,8 @@ class Comisiones extends CI_Controller
 
   
     $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
-    switch($this->session->userdata('id_rol')){
+    switch($this->session->userdata('id_rol'))
+    {
       case '1':
       case '2':
         if ($this->session->userdata('id_usuario') == 13546) {// ALEJANDRO GONZÁLEZ DÁVALOS
@@ -310,8 +311,8 @@ class Comisiones extends CI_Controller
       break;
       default:
      // $this->load->view('ooam/asesor_ooam_view');
-         $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
-         $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
+          $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
+          $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }

@@ -11,7 +11,13 @@ class Descuentos_model extends CI_Model {
     function lista_estatus_descuentos(){
         return $this->db->query(" SELECT * FROM opcs_x_cats WHERE id_catalogo=23 AND id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) and estatus = 1");
     }
-
+    function lista_estatus_descuentosEspecificos(){
+        return $this->db->query("SELECT * FROM opcs_x_cats oxc
+        INNER JOIN motivosRelacionPrestamos mrp on  oxc.id_opcion = mrp.id_opcion AND mrp.evidencia = 'true'
+        WHERE oxc.id_catalogo=23 
+        AND oxc.id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) 
+        AND oxc.estatus = 1");
+    }
 
     function getUsuariosRol($rol,$opc = ''){
         if($rol == 38){
@@ -126,7 +132,7 @@ class Descuentos_model extends CI_Model {
         $respuesta = $this->db->query("INSERT INTO pago_comision_ind(id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) VALUES ($ide_comision, $usuarioid, $monto, GETDATE(), GETDATE(), $pago_neodata, $estatus, $usuario, 'DESCUENTO ', 1 ,null, null)");
         $insert_id = $this->db->insert_id();
 
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente) VALUES ($usuarioid, $monto, 1, $monto, 'DESCUENTO REVISIÓN2', 2, 0, $user, GETDATE(), $user, GETDATE(), 1,  $estatus, 0)");
+        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente ,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto, 'DESCUENTO REVISIÓN2', 2, 0, $user, GETDATE(), $user, GETDATE(), 1,  $estatus, 0, $evidencia)");
         $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
 
         $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $user, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
@@ -168,8 +174,7 @@ class Descuentos_model extends CI_Model {
     }
 
 
-    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
-
+    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor,$insertar_descuento){
         $estatus = $monto < 1 ? 0 : 1;
         if($valor == 2){
             $estatus = $monto < 1 ? 0 : 4;
@@ -177,7 +182,7 @@ class Descuentos_model extends CI_Model {
             $estatus = $monto < 1 ? 0 : 1;
         }
 
-        $comentarios = 'DESCUENTO EN REVISIÓN '+$comentario;
+        $comentarios = 'DESCUENTO EN REVISIÓN '.$comentario;    
 
         $user = $this->session->userdata('id_usuario');
 
@@ -185,7 +190,7 @@ class Descuentos_model extends CI_Model {
         $insert_id = $this->db->insert_id();
 
 
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente) VALUES ($usuarioid, $monto, 1, $monto,  $comentarios, 1, 0, $usuario, GETDATE(), $usuario, GETDATE(), 1,  $estatus, 0)");
+        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto,  $comentarios, 1, 0, $usuario, GETDATE(), $usuario, GETDATE(), 1,  $estatus, 0,$insertar_descuento)");
         $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
 
 
