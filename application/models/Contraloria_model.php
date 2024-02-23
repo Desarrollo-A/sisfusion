@@ -278,19 +278,23 @@ class Contraloria_model extends CI_Model {
                 LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
                 LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.tipo_doc IN (41, 46) AND hd.status = 1
             WHERE 
-                l.status = 1 
-                AND l.idStatusContratacion IN (8, 11) 
-                AND l.idMovimiento IN (38, 65, 41) 
-                AND l.status8Flag = 1 
-                AND l.validacionEnganche != 'NULL' 
-                AND l.validacionEnganche IS NOT NULL 
-                AND (
-                l.totalNeto2 = 0.00 
-                OR l.totalNeto2 = '0.00' 
-                OR l.totalNeto2 <= 0.00 
-                OR l.totalNeto2 IS NULL
+                (
+                    l.status = 1 
+                    AND l.idStatusContratacion IN (8, 11) 
+                    AND l.idMovimiento IN (38, 65, 41) 
+                    AND l.status8Flag = 1 
+                    AND l.validacionEnganche != 'NULL' 
+                    AND l.validacionEnganche IS NOT NULL 
+                    AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
                 ) 
-                AND cl.status = 1 $filtroSede 
+                OR
+                (
+                    l.status = 1 
+                    AND l.idMovimiento IN (36, 41) 
+                    AND ISNULL(l.totalNeto, 0.00) > 0.00
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                )
             GROUP BY 
                 l.idLote, 
                 cl.id_cliente, 
@@ -830,13 +834,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return true;
     }
 
-    public function get_lp($idLote){
+    /*public function get_lp($idLote){
         $query = $this->db-> query("SELECT cl.lugar_prospeccion
         FROM clientes cl 
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         WHERE cl.lugar_prospeccion = 6 AND cl.idLote = $idLote AND cl.status = 1");
         return $query->row();
-    }
+    }*/
 
     public function getLotesAllAssistant($idCondominio) {
         $id_lider = $this->session->userdata('id_lider');
@@ -1325,10 +1329,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 $estatus_permitido='1, 3, 4';
                 break;
             case 17:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
                 break;
             case 70:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1916,5 +1920,14 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function getFilename($idDocumento) {
         return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
+    }
+
+    public function getContratoFirmado($idLote) {
+		return $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND tipo_doc = 30 AND status = 1")->result_array();
+	}
+    
+    public function autsAceptadasMSI(){
+        $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion=5");
+        return $query->result_array();
     }
 }

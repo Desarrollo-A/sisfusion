@@ -28,6 +28,9 @@
                                                 <th>ESTATUS</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>CONCEPTO</th>
+                                                <th>PROYECTO ORIGEN</th>
+                                                <th>CONDOMINIO ORIGEN</th>
+                                                <th>LOTE ORIGEN</th>
                                             </tr>
                                         </thead>
                                     </table>

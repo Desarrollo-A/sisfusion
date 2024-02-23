@@ -528,7 +528,8 @@ class Asesor_model extends CI_Model {
                                         tipo_comprobanteD,
                                         cl.regimen_fac,
                                         cl.cp_fac,
-                                        cl.venta_extranjero
+                                        cl.venta_extranjero, 
+                                        cl.proceso
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio

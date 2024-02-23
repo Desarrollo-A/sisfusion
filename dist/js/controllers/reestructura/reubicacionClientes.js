@@ -374,7 +374,7 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
             lotesFusionados = responseLotesFusionados.data;
             lotesFusionados.map((elemento, index)=>{
                 superficie = parseFloat(elemento.sup) + superficie;
-                nombreLote += elemento.nombreLotes+' ';
+                nombreLote += (elemento.nombreLotes==null)? elemento.nombreLoteDO : elemento.nombreLotes+' ';
             });
             superficie = (superficie).toFixed(2);
         }
@@ -1141,9 +1141,10 @@ $(document).on("submit", "#formReubicacion", function(e){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#spiner-loader').addClass('hide');
-            if(!data.message == 'ERROR'){
+            $('#reubicacionClientes').DataTable().ajax.reload();
+            /*if(!data.message == 'ERROR'){
                 $('#reubicacionClientes').DataTable().ajax.reload();
-            }
+            }*/
             hideModal();
         },
         error: function( data ){

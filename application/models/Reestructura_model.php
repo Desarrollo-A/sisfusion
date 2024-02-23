@@ -83,7 +83,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, COUNT(*) totalCorridas FROM propuestas_x_lote WHERE corrida IS NOT NULL GROUP BY idLote) pxl1 ON pxl1.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalContratos FROM propuestas_x_lote WHERE contrato IS NOT NULL GROUP BY idLote) pxl2 ON pxl2.idLote = lo.idLote
 		LEFT JOIN (SELECT idLote, COUNT(*) totalRescision FROM datos_x_cliente WHERE rescision IS NOT NULL GROUP BY idLote) dxc ON dxc.idLote = lo.idLote
-		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado, idcliente FROM historial_documento WHERE tipo_doc = 30 AND expediente IS NOT NULL AND status = 1 GROUP BY idLote, idcliente) hdcount ON hdcount.idLote = lo.idLote AND hdcount.idcliente = cl.id_cliente
+		LEFT JOIN (SELECT idLote, COUNT(*) totalContratoFirmado, idcliente FROM historial_documento WHERE tipo_doc = 30 AND expediente IS NOT NULL AND status = 1 GROUP BY idLote, idcliente) hdcount ON hdcount.idLote = lo.idLote AND hdcount.idcliente = lo.idCliente
 		
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalCorridaFusion FROM lotesFusion WHERE destino=1 AND corrida IS NOT NULL GROUP BY idLotePvOrigen) lf1 ON  lf1.idLotePvOrigen = lo.idLote
 		LEFT JOIN (SELECT idLotePvOrigen, COUNT(*) totalContratosFusion FROM lotesFusion WHERE destino=1 AND contrato IS NOT NULL GROUP BY idLotePvOrigen) lf3 ON lf3.idLotePvOrigen = lo.idLote
@@ -141,7 +141,7 @@ class Reestructura_model extends CI_Model
                 0 banderaProcesoUrgente
             FROM 
                 clientes cl 
-                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18 
+                LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.estado_civil AND oxc.id_catalogo = 18 
             WHERE 
                 id_cliente = $idCliente"
         )->row();
@@ -173,7 +173,7 @@ class Reestructura_model extends CI_Model
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
                     INNER JOIN condominios co ON co.idResidencial = re.idResidencial
-                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1
+                    INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
             $unionQuery
@@ -750,30 +750,77 @@ class Reestructura_model extends CI_Model
     }
 
     public function getInventario() {
-        return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
-        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
-        ISNULL(oxc2.nombre, 'Sin especificar') estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
-        lo.tipo_estatus_regreso, 'EXCLUSIVO REESTRUCTURA' tipo
-        FROM lotes lo
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE estatus = 1) lxr ON lxr.proyectoReubicacion = re.idResidencial
-        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
-        LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100
-        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (15, 16, 21, 20) AND lo.status = 1
-        UNION ALL
-        SELECT UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, co.nombre nombreCondominio,  lo.nombreLote, lo.idLote, 
-        lo.sup, oxc1.nombre tipoLote, FORMAT(lo.precio, 'C') preciom2, FORMAT(lo.total, 'C') total,
-        'NA' estatus, sl.nombre estatusContratacion, sl.background_sl, sl.color,
-        lo.tipo_estatus_regreso, 'ABIERTO' tipo
-        FROM lotes lo
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27
-        INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-        WHERE lo.idStatusLote IN (1) AND lo.status = 1
-        ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote")->result_array();
+        return $this->db->query(
+            "SELECT 
+                UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.idLote, 
+                lo.sup, 
+                oxc1.nombre tipoLote, 
+                FORMAT(lo.precio, 'C') preciom2, 
+                FORMAT(lo.total, 'C') total, 
+                ISNULL(oxc2.nombre, 'Sin especificar') estatus, 
+                sl.nombre estatusContratacion, 
+                sl.background_sl, 
+                sl.color, 
+                lo.tipo_estatus_regreso, 
+                'EXCLUSIVO REESTRUCTURA' tipo,
+                ISNULL(UPPER(CAST(re2.descripcion AS varchar(100))), 'NA') nombreResidencialOrigen, 
+                ISNULL(co2.nombre, 'NA') nombreCondominioOrigen, 
+                ISNULL(lo2.nombreLote, 'NA') nombreLoteOrigen
+            FROM 
+                lotes lo 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN (SELECT DISTINCT(proyectoReubicacion) proyectoReubicacion FROM loteXReubicacion WHERE estatus = 1) lxr ON lxr.proyectoReubicacion = re.idResidencial 
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote 
+                AND oxc1.id_catalogo = 27 
+                LEFT JOIN opcs_x_cats oxc2 on oxc2.id_opcion = lo.opcionReestructura AND oxc2.id_catalogo = 100 
+                INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+                LEFT JOIN (SELECT id_lotep, MAX(fecha_creacion) fecha_creacion FROM propuestas_x_lote WHERE estatus = 0 GROUP BY id_lotep) pxl0 ON pxl0.id_lotep = lo.idLote
+                LEFT JOIN propuestas_x_lote pxl1 ON pxl1.id_lotep = pxl0.id_lotep AND pxl1.fecha_creacion = pxl0.fecha_creacion AND pxl1.estatus = 0
+                LEFT JOIN lotes lo2 ON lo2.idLote = pxl1.idLote
+                LEFT JOIN condominios co2 ON co2.idCondominio = lo2.idCondominio 
+                LEFT JOIN residenciales re2 ON re2.idResidencial = co2.idResidencial 
+            WHERE
+                lo.idStatusLote IN (15, 16, 21, 20) 
+                AND lo.status = 1
+            UNION ALL 
+            SELECT 
+                UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.idLote, 
+                lo.sup, 
+                oxc1.nombre tipoLote, 
+                FORMAT(lo.precio, 'C') preciom2, 
+                FORMAT(lo.total, 'C') total, 
+                'NA' estatus, 
+                sl.nombre estatusContratacion, 
+                sl.background_sl, 
+                sl.color, 
+                lo.tipo_estatus_regreso, 
+                'ABIERTO' tipo,
+                'NA' nombreResidencialOrigen, 
+                'NA' nombreCondominioOrigen, 
+                'NA' nombreLoteOrigen
+            FROM 
+                lotes lo 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = co.tipo_lote AND oxc1.id_catalogo = 27 
+                INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+            WHERE 
+                lo.idStatusLote IN (1) 
+                AND lo.status = 1 
+                AND ISNULL(lo.tipo_venta, 0) != 1
+            ORDER BY 
+                UPPER(CAST(re.descripcion AS varchar(100))), 
+                co.nombre, 
+                lo.nombreLote
+            "
+        )->result_array();
     }
 
     public function getReporteVentas() {
@@ -995,7 +1042,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-        INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND cl.proceso IN (2, 3, 4, 5, 6)
+        INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
         WHERE pxl.estatus = 1
         ORDER BY lo.nombreLote")->result_array();

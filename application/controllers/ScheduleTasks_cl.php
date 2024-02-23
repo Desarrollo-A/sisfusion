@@ -2,7 +2,7 @@
 class ScheduleTasks_cl extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
-    $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model'));
+    $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model', 'Contraloria_model'));
 		$this->load->library(array('session','form_validation'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
@@ -1188,6 +1188,166 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         }
         $this->General_model->updateBatch('Presupuestos', $data, 'idPresupuesto');
       }
+    }
+
+
+    public function activaMSIListos(){
+        //Esta función la ejecuta el servidor
+        //revisa las autorizaciones en estatus 5
+        //y ejecuta la actualización de los MSI autorizados
+
+        //token autorizado para esta operación
+        //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
+
+        if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
+            echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "") // validar headers autorización
+                echo json_encode(array("status" => 365, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                if(apache_request_headers()["Authorization"] == "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4"){
+                    $autorizacionesAceptadas = $this->Contraloria_model->autsAceptadasMSI();
+                    $actualizar = array();
+                    $insert_historial = array();
+                    $update_lotes = array();
+                    if(count($autorizacionesAceptadas)>0){
+                        foreach($autorizacionesAceptadas as $autorizacion){
+                            //test funcion
+                            $fecha_insercion = date('Y-M-d H:i:s');
+                            if($autorizacion['modoActualizacion'] == 1){
+                                $data_actualizar = array(
+                                    "estatus_autorizacion" => 3,
+                                    "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "fecha_modificacion" => $fecha_insercion,
+                                    "modificado_por" => 1,//accion realizada por sistemas
+                                    "modoActualizacion" => $autorizacion['modoActualizacion']
+                                );
+
+                                $data_historial = array(
+                                    "idAutorizacion"        => $autorizacion['id_autorizacion'],
+                                    "tipo"                  => 2,
+                                    "id_usuario"            => 1,//accion realizada por sistemas
+                                    "fecha_movimiento"      => $fecha_insercion,
+                                    "estatus"               => 1,
+                                    "comentario"            => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "estatus_autorizacion"  => 3,
+                                    "modoActualizacion"     => $autorizacion['modoActualizacion']
+                                );
+
+                                $table = 'autorizaciones_msi';
+                                $key = 'id_autorizacion';
+                                $table_historial = 'historial_autorizacionesPMSI';
+                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+                                $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+                            }
+                            else if($autorizacion['modoActualizacion'] == 2){
+                                $fecha_insercion = date('Y-m-d H:i:s');
+
+                                $data_actualizar = array(
+                                    "estatus_autorizacion" => 3,
+                                    "comentario" => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "fecha_modificacion" => $fecha_insercion,
+                                    "modificado_por" => 1,//accion realizada por sistemas
+                                    "modoActualizacion" => $autorizacion['modoActualizacion']
+                                );
+                                $data_historial = array(
+                                    "idAutorizacion"        => $autorizacion['id_autorizacion'],
+                                    "tipo"                  => 2,
+                                    "id_usuario"            => 1,//accion realizada por sistemas
+                                    "fecha_movimiento"      => $fecha_insercion,
+                                    "estatus"               => 1,
+                                    "comentario"            => 'APROBADO Y EJECUTADO POR SERVIDOR',
+                                    "estatus_autorizacion"  => 3,
+                                    "modoActualizacion" => $autorizacion['modoActualizacion']
+                                );
+
+                                $table = 'autorizaciones_msi';
+                                $key = 'id_autorizacion';
+                                $table_historial = 'historial_autorizacionesPMSI';
+                                $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $autorizacion['id_autorizacion']);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
+                                $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
+
+
+                                //este proceso se debe dejar para que lo ejecute el servidor
+                                /**/
+
+                                $array_update_lotes = $this->actualizaMSI($autorizacion['id_autorizacion'], $autorizacion['modoActualizacion']);
+                                $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+
+
+                            }
+                            //test funcion
+                        }
+                        if($actualizar && $insert_historial && $update_lotes){//esta variable es para el update de lotes: && $update_lotes
+                            $data_response['message'] = 'OK';
+                        }else{
+                            $data_response['message'] = 'ERROR';
+                        }
+                    }else{
+                        $data_response['message'] = 'Nada que actualizar';
+                    }
+                    echo json_encode($data_response);
+                    exit;
+                }else{
+                    echo json_encode(array("status" => 365, "message" => "Token desconocido."), JSON_UNESCAPED_UNICODE);
+                }
+
+            }
+        }
+
+
+    }
+
+
+    function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
+        //mandarlos a actualizar definitivamente
+        if($modo == 1){
+            $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
+            $lotes_diferentes = json_decode($data_autorizacion[0]['lote'], JSON_NUMERIC_CHECK);
+            $idCondominio    = $data_autorizacion[0]['idCondominio'];
+            $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
+            $arrayVista = array(); //el array que armaremos par amandarlo a la vista
+            foreach ($lotes_general as $item){
+                $arrayManejo['idLote'] = $item['idLote'];
+                $arrayManejo['nombre'] = $item['nombreLote'];
+                $flag=0;
+                foreach($lotes_diferentes as $item2){
+                    if($item['idLote'] == $item2['ID']){
+                        $flag = 1;//flag para que no se inserte doble vez la posicion de ambos arrays
+                        $arrayManejo = array(
+                            'idLote'       =>  (int) $item2['ID'], //id del lote en el arreglo que son difernetes
+                            'msi'          =>   (int) $item2['MSNI'],
+                        );
+                        array_push($arrayVista, $arrayManejo );
+                    }
+                }
+                if($flag==0){
+                    $arrayManejo = array(
+                        'idLote' =>   $item['idLote'], //id del lote en el arreglo que son difernetes
+                        'msi'    =>   $data_autorizacion[0]['msi']//los demás se actualizan con los MSI que se definieron al principio
+                    );
+                    array_push($arrayVista, $arrayManejo);
+                }
+            }
+            $updateData = $arrayVista;
+            return $updateData;
+        }
+        else if($modo == 2){
+            $data_autorizacion = $this->Contraloria_model->getAutVis($id_autorizacion);
+            $idCondominio    = $data_autorizacion[0]['idCondominio'];
+            $lotes_general = $this->Contraloria_model->getLotesByResCond($idCondominio);
+            $arrayVista = array(); //el array que armaremos par amandarlo a la vista
+            foreach ($lotes_general as $item) {
+                $arrayManejo['idLote'] = $item['idLote'];
+                $arrayManejo['msi'] = $data_autorizacion[0]['msi'];
+                array_push($arrayVista, $arrayManejo);
+            }
+            $updateData = $arrayVista;
+            return $updateData;
+        }
     }
 
 }
