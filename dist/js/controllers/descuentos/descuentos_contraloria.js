@@ -1,8 +1,9 @@
-var totaPen = 0;
-var tr;
+var totaPen = 0, 
+    tr;
 let ObjRoles = new Object();
 
-$(document).ready(function() {    
+$(document).ready(function() {   
+    llenado(); 
     $.post(general_base_url+"Comisiones/getRolesIn",{ catalogo:1, roles:"1,2,3,7,9,38 "}, function (data) {
         var len = data.length;
         $("#roles").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
@@ -26,11 +27,27 @@ $(document).ready(function() {
     }, 'json');       
 });
 
+function llenado(){
+    $("#tipo")
+    $("#tipo").selectpicker('refresh'); 
+    $.post(general_base_url + "/Descuentos/lista_estatus_descuentosEspecificos", function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#tipo").append($('<option>').val(id).text(name));     
+        }
+        $("#tipo").selectpicker('refresh');
+    }, 'json');
+}
+
 $("#form_descuentos").on('submit', function(e){
     $("#idloteorigen").prop("disabled", false);
     e.preventDefault();
     document.getElementById('btn_abonar').disabled=true;
     let formData = new FormData(document.getElementById("form_descuentos"));
+
+    console.log(formData);
     $.ajax({
         url: 'saveDescuento/'+1,
         data: formData,
@@ -824,4 +841,44 @@ function mostrar(id){
     // $('#muestratexto'+id).addClass('hide');
     $('#muestratexto'+id).removeClass('hide');
     
+}
+
+
+
+
+function verificarMontos(){
+    let disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
+    disponible = remplazarCaracter(disponible, ',', '');
+    let monto = remplazarCaracter($('#monto').val(), ',', '');
+    let cuantos = $('#idloteorigen').val().length;
+    if(parseFloat(monto) <= parseFloat(disponible) ){
+        $("#idloteorigen").prop("disabled", true);
+        $("#btn_abonar").prop("disabled", false);    
+            let cantidad = parseFloat($('#numeroP').val());
+            resultado = monto /cantidad;
+            $('#pago').val(formatMoney(resultado));
+            document.getElementById('btn_abonar').disabled=false;
+
+            let cadena = '';
+            var data = $('#idloteorigen').select2('data')
+            for (let index = 0; index < cuantos; index++) {
+                let datos = data[index].id;
+                let montoLote = datos.split(',');
+
+                cadena = cadena+' , '+data[index].text;
+                document.getElementById('msj2').innerHTML='';
+            }
+            $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+        }
+        else if(parseFloat(monto) > parseFloat(disponible) ){
+        document.getElementById('btn_abonar').disabled=true; 
+        }
+}
+
+
+
+function changeName(e){
+    const fileName = e.files[0].name;
+    let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+    relatedTarget[0].value = fileName;
 }

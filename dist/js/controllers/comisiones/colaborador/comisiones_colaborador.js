@@ -14,11 +14,11 @@ var IdTablas ,
     recibidosOPN = new Array; //Contiene el estatus 8
 let contadorDentroFacturas = 0,
     columnas_datatable = {},
-    fin = userSede == 8 ? 16 : 13,
+    
     boton_sol_pago = (forma_pago != 2) ? '' : 'hidden',
 
     pagos = []; //arreglo de pagos  
-
+let fin = userSede == 8 ? 16 : 13;
 
 function asignarValorColumnasDT(nombre_datatable) { 
     if(!columnas_datatable[`${nombre_datatable}`]) {
