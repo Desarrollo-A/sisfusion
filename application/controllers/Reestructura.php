@@ -1859,7 +1859,7 @@ class Reestructura extends CI_Controller{
         $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : count(explode(',',$nombreLoteOriginal[0]));// $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
-            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
+            $numeroArchivos = in_array($id_rol, [17, 70, 71, 73]) ? count($arrayLotes) : $numeroArchivos; 
             $id_dxc = explode(',', $id_dxc[0]);
         }else{
             $arrayLotes = $nombreLoteOriginal;
@@ -1872,7 +1872,7 @@ class Reestructura extends CI_Controller{
                     mkdir($micarpeta, 0777, true) or die("Error en la generación");
                 }
         
-                if($flagAction==2 && $id_rol == 17){
+                if($flagAction==2 && in_array($id_rol, [17, 70, 71, 73])){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
                     if (!file_exists($micarpeta)) {
                         mkdir($micarpeta, 0777, true);
@@ -1998,7 +1998,7 @@ class Reestructura extends CI_Controller{
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
-            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
+            $numeroArchivos = in_array($id_rol, [17, 70, 71, 73]) ? count($arrayLotes) : $numeroArchivos; 
             $rescisionArchivo = $id_rol == 15 ? explode(',',$_POST['rescisionArchivo'][0]) : 0;
 
         }else{
@@ -2014,7 +2014,7 @@ class Reestructura extends CI_Controller{
                 mkdir($micarpeta, 0777, true);
             }
 
-            if($flagAction==2 && $id_rol == 17){
+            if($flagAction==2 && in_array($id_rol, [17, 70, 71, 73])){
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true);

@@ -82,7 +82,7 @@ class Usuarios_modelo extends CI_Model
                     $id_sede = "(usuarios.id_sede IN ('5', '12', '16'))";
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
-                else if($this->session->userdata('id_usuario') == 30) // 30 VALERIA PALACIOS
+                else if (in_array($this->session->userdata('id_usuario'), [30, 7401])) // 30 VALERIA PALACIOS / CLAUDIA LORENA SERRATO VEGA
                     $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11'))";
                 else 
                     $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";

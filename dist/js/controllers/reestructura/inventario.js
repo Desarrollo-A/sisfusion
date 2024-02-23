@@ -22,7 +22,7 @@ $('#tablaInventario').DataTable({
         titleAttr: 'Inventario disponible reubicación',
         title:"Inventario disponible reubicación",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -66,7 +66,10 @@ $('#tablaInventario').DataTable({
             data: function (d) {
                 return `<span class='label lbl-violetBoots'>${d.tipo}</span>`;
             }
-        }
+        },
+        { data: "nombreResidencialOrigen" },
+        { data: "nombreCondominioOrigen" },
+        { data: "nombreLoteOrigen" }
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getInventario`,

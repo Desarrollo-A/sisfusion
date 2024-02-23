@@ -1,23 +1,26 @@
 var arrayValores = [];
+const ROLES_SIN_ACCIONES = [4, 6];
+
 $(document).ready(function () {
-    $.post(`${general_base_url}Reestructura/getListaUsuariosParaAsignacion`, function (data) {
-        for (var i = 0; i < data.length; i++) {
-            $("#idAsesor").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombreUsuario']));
-        }
-        $("#idAsesor").selectpicker('refresh');
-    }, 'json');
+    if (!ROLES_SIN_ACCIONES.includes(id_rol_general)) {
+        $.post(`${general_base_url}Reestructura/getListaUsuariosParaAsignacion`, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                $("#idAsesor").append($('<option>').val(data[i]['id_usuario']).text(data[i]['nombreUsuario']));
+            }
+            $("#idAsesor").selectpicker('refresh');
+        }, 'json');
+    }
 });
 
 let titulosTabla = [];
 $('#tablaAsignacionCartera thead tr:eq(0) th').each(function (i) {
-    if(i>=1){
+    if(i >= 1){
         const title = $(this).text();
         titulosTabla.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($('#tablaAsignacionCartera').DataTable().column(i).search() !== this.value) {
+            if ($('#tablaAsignacionCartera').DataTable().column(i).search() !== this.value)
                 $('#tablaAsignacionCartera').DataTable().column(i).search(this.value).draw();
-            }
         });
     }
     $('[data-toggle="tooltip"]').tooltip();
@@ -34,7 +37,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         titleAttr: 'Lotes para reubicar',
         title:"Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx - 1] + ' ';
@@ -51,7 +54,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx - 1] + ' ';
@@ -84,20 +87,16 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
     destroy: true,
     columns: [
         {
-            "visible": (id_rol_general == 4) ? false : true,
-            "width": "30%",
-            "data": function (d) {
+            visible: (ROLES_SIN_ACCIONES.includes(id_rol_general)) ? false : true,
+            width: "30%",
+            data: function (d) {
                 let lblInput = '';
-
-                if(d.idFusion==null && d.idLotePvOrigen==null ){
-                    lblInput = '<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="'+d.idAsesorAsignado+'"' +
-                        'data-nombreLote="'+d.nombreLote+'" data-idCliente="'+d.idCliente+'" ' +
-                        'data-totalNeto2="'+d.totalNeto2+'" data-sup="'+d.sup+'" name="lotesOrigen[]" value="'+d.idLote+'" ></center>';
-                }else{
+                if(d.idFusion == null && d.idLotePvOrigen == null ){
+                    lblInput = `<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="${d.idAsesorAsignado}"
+                        'data-nombreLote="${d.nombreLote}" data-idCliente="${d.idCliente}"
+                        'data-totalNeto2="${d.totalNeto2}" data-sup="${d.sup}" name="lotesOrigen[]" value="${d.idLote}" ></center>`;
+                }else
                     lblInput = '<center><input type="checkbox" disabled></center>';
-                }
-
-
                 return lblInput;
             }
         },
@@ -106,15 +105,13 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                 let nombreResidencial = d.nombreResidencial;
                 let lblFusion = '';
                 if(d.idFusion!=null){
-                    if(d.idLotePvOrigen==d.idLote){
+                    if(d.idLotePvOrigen == d.idLote)
                         lblFusion = '<br><label class="label lbl-fusionMaderas ">FUSIÓN PV '+d.idLotePvOrigen+'</label>';
-                    }else{
+                    else
                         lblFusion = '<br><label class="label lbl-fusionMaderas ">FUSIÓN '+d.idLotePvOrigen+'</label>';
-                    }
                 }
                 return nombreResidencial+lblFusion;
             }
-            // data: "nombreResidencial"
         },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
@@ -143,6 +140,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         },
         { data: "nombreAsesorAsignado"},
         {
+            visible: (ROLES_SIN_ACCIONES.includes(id_rol_general)) ? false : true,
             data: function (d) {
                 if(d.idFusion==null && d.idLotePvOrigen==null){
                     btns = `<button class="btn-data btn-sky btn-asignar-venta"
@@ -353,7 +351,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
 
 function verificarCheck(valorActual){
-    const tr = $(this).closest('tr');
+const tr = $(this).closest('tr');
     const row = $('#tablaAsignacionCartera').DataTable().row(tr);
     let botonEnviar = document.getElementsByClassName('botonEnviar');
     let arrayInterno = [];
