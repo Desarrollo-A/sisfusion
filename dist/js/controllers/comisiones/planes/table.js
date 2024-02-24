@@ -1,29 +1,63 @@
-let comision = {
-    idPlan: undefined,
-    nombre: undefined,
-    estatus: false,
-    fechaInicio: new Date(),
-    fechaFin: new Date(),
-    sede: undefined,
+class AskDialog{
+    constructor({title, text, onOk, onCancel}) {
+        this.title = title
+        this.text = text
+        this.onOk = onOk
+        this.onCancel = onCancel
+    }
+    handleOk(){
+        if(this.onOk){
+            this.onOk()
+        }
+        $("#alert-modal").modal('hide');
+    }
+    show(){
+        $('#title-alert-modal').text(this.title)
+        $('#text-alert-modal').text(this.text)
+        $('#ok-button-alert-modal').off('click')
+        $('#ok-button-alert-modal').on('click', () => this.handleOk())
+        $("#alert-modal").modal();
+    }
 }
 
-let condiciones = [
-    { id: 'proceso', label: 'Proceso', type: 'select', url: 'sedes/list' },
-    { id: 'compartida', label: 'Venta compartida', type: 'compartida', url: 'sedes/list' },
-    { id: 'gerente', label: 'Gerente', type: 'select', url: 'sedes/list' },
-    { id: 'asesor', label: 'Asesor', type: 'select', url: 'sedes/list' },
-    { id: 'tipo_venta', label: 'Tipo de venta', type: 'select', url: 'sedes/list' },
-    { id: 'venta_regional', label: 'Venta regional', type: 'bool', url: 'sedes/list' },
-]
+class TableButton {
+    constructor({id, label, icon, color, onClick, data}) {
+        this.id = id || ''
+        this.label = label || ''
+        this.icon = icon || ''
+        this.color = color || 'btn-blueMaderas'
+        this.onClick = onClick
+        this.data = data
+    }
+    toString() {
+        const button = $('<button />')
+        .addClass(`btn-data ${this.color}`)
+        .attr('id', this.id)
+        .attr('data-toggle', 'tooltip')
+        .attr('data-placement', 'top')
+        .attr('title', this.label.toUpperCase())
+        .append(
+            $('<i />')
+            .addClass('material-icons')
+            .text(this.icon)
+        )
 
-//let dispersionDataTable;
+        if(this.onClick){
+            button.attr('onClick', `${this.onClick.name}(${JSON.stringify(this.data)})`)
+        }
+
+        return button.prop('outerHTML')
+    }
+}
+
+let dispersionDataTable;
 
 $(document).ready(function () {
     getDataSelect('sede', `${general_base_url}planes/sedes`);
     getDataSelect('residencial', `${general_base_url}planes/residenciales`);
     getDataSelect('prospeccion', `${general_base_url}planes/prospecciones`);
 
-    //$("#plan-modal").modal();
+    $("#plan-modal").modal();
 
     let titulos_intxt = [];
 
@@ -46,7 +80,7 @@ $(document).ready(function () {
         }
     });
 
-    const dispersionDataTable = $('#tabla_planes_comisiones').dataTable({
+    dispersionDataTable = $('#tabla_planes_comisiones').DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -99,7 +133,7 @@ $(document).ready(function () {
                 className: 'details-control',
                 orderable: false,
                 data : null,
-                defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i>'
+                defaultContent: '<div class="toggle-subTable"><i class="animacion fas fa-chevron-down fa-lg"></i></div>'
             },
             {data: 'idPlan'},
             {data: 'nombre'},
@@ -123,13 +157,13 @@ $(document).ready(function () {
             },
             { //ACTIONS
                 data: function (data) {
-                    const subir_prioridad = tableButton('subir_prioridad', 'subir prioridad', 'arrow_upward', 'btn-deepGray')
-                    const bajar_prioridad = tableButton('bajar_prioridad', 'bajar prioridad', 'arrow_downward', 'btn-deepGray')
-                    const editar_plan = tableButton('edit_plan', 'editar plan', 'edit')
+                    const subir_prioridad = new TableButton({label: 'subir prioridad', icon: 'arrow_upward', color: 'btn-deepGray', onClick: subirPrioridad, data})
+                    const bajar_prioridad = new TableButton({label: 'bajar prioridad', icon: 'arrow_downward', color: 'btn-deepGray', onClick: bajarPrioridad, data})
+                    const editar_plan = new TableButton({label: 'editar plan', icon: 'edit', color: 'btn-blueMaderas', onClick: editPlan, data: data})
                     
-                    let toggle_plan = tableButton('enable_plan', 'activar plan', 'play_arrow', 'btn-green', 'enablePlan', data.idPlan)
+                    let toggle_plan = new TableButton({label: 'activar plan', icon: 'play_arrow', color: 'btn-green', onClick: enablePlan, data: data})
                     if(data.estatus == 1){
-                        toggle_plan = tableButton('disable_plan', 'desactivar plan', 'pause', 'btn-yellow', 'disablePlan', data.idPlan)
+                        toggle_plan = new TableButton({label: 'desactivar plan', icon: 'pause', color: 'btn-yellow', onClick: disablePlan, data: data})
                     }
 
                     return `<div class="d-flex justify-center">${subir_prioridad}${bajar_prioridad}${editar_plan}${toggle_plan}</div>`
@@ -172,25 +206,156 @@ $(document).ready(function () {
         getUserComisionando(id_usuario);
     });
 
+    $('#tabla_planes_comisiones tbody').on('click', 'td.details-control', function () {
+        var tr = $(this).closest('tr');
+        var row = dispersionDataTable.row(tr);
+
+        if (row.child.isShown() ) {
+            row.child.hide();
+            tr.removeClass('shown');
+            $(this).parent().find('.animacion').removeClass("fas fa-chevron-up").addClass("fas fa-chevron-down");
+        } else {
+            let esquema = ''
+            let condiciones = ''
+
+            if(row.data().fechaInicio){
+                condiciones += `${row.data().fechaInicio}<br>`
+            }
+            if(row.data().fechaFin){
+                condiciones += `${row.data().fechaFin}<br>`
+            }
+            if(row.data().prospeccion_list){
+                condiciones += `prospeccion: ${row.data().prospeccion_list}<br>`
+            }
+            if(row.data().sedes_list){
+                condiciones += `sedes: ${row.data().sedes_list}<br>`
+            }
+
+            var html = `<div class="container subBoxDetail">
+                <div class="row">
+                    <div class="col-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
+                        <label>
+                            <b>
+                                Esquema de comisiones
+                            </b>
+                        </label>
+                        <br>
+                        ${esquema}
+                    </div>
+                    <div class="col-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
+                        <label>
+                            <b>
+                                condiciones del plan
+                            </b>
+                        </label>
+                        <br>
+                        ${condiciones}
+                    </div>
+                </div>
+            </div>`
+            row.child(html).show();
+            tr.addClass('shown');
+            $(this).parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
+        }
+    })
+
+    $('#ok-button-plan-modal').on('click', function(){
+        $( "#form-plan-modal" ).trigger( "submit" );
+    })
+
+    $( "#form-plan-modal" ).on( "submit", function( event ) {
+        event.preventDefault()
+
+        let data = {
+            nombre: new FormData(event.target).get('nombre'),
+            prospeccion: new FormData(event.target).getAll('prospeccion').toString(),
+        }
+
+        console.log(data)
+
+        $.post( `${general_base_url}planes/insertar`, data)
+            .done(function( response ) {
+                console.log( "Data Loaded: " + response );
+
+                $("#plan-modal").modal('hide');
+
+                dispersionDataTable.ajax.reload()
+        });
+    });
+
 })
 
-function enablePlan(idPlan){
-    $.getJSON( `${general_base_url}planes/enable?plan=${idPlan}` )
-    .done(function( data ) {
-        //dispersionDataTable.ajax()
-    })
+function editPlan(data){
+    console.log(data)
+
+    //$("#alert-modal").modal();
 }
 
-function disablePlan(idPlan){
-    $.getJSON( `${general_base_url}planes/disable?plan=${idPlan}` )
-    .done(function( data ) {
-        //dispersionDataTable.ajax()
-    })
+function subirPrioridad(data){
+    let title = 'Subir prioridad'
+    let text = `¿Desea subir la prioridad en el plan ${data.nombre}?`
+    let enable = function(){
+        $.getJSON( `${general_base_url}planes/subir?plan=${data.idPlan}` )
+        .done(function( data ) {
+            dispersionDataTable.ajax.reload()
+        })
+    }
+    
+    let alert = new AskDialog({title: title, text: text, onOk: enable})
+
+    alert.show()
 }
 
-function tableButton(id, label='', icon='', color='btn-blueMaderas', method=null, data=[]){
+function bajarPrioridad(data){
+    let title = 'Bajar prioridad'
+    let text = `¿Desea bajar la prioridad en el plan ${data.nombre}?`
+    let enable = function(){
+        $.getJSON( `${general_base_url}planes/bajar?plan=${data.idPlan}` )
+        .done(function( data ) {
+            dispersionDataTable.ajax.reload()
+        })
+    }
+    
+    let alert = new AskDialog({title: title, text: text, onOk: enable})
+
+    alert.show()
+}
+
+function enablePlan(data){
+    let title = 'Activar plan'
+    let text = `¿Desea activar el plan ${data.nombre}?`
+    let enable = function(){
+        $.getJSON( `${general_base_url}planes/enable?plan=${data.idPlan}` )
+        .done(function( data ) {
+            dispersionDataTable.ajax.reload()
+        })
+    }
+    
+    let alert = new AskDialog({title: title, text: text, onOk: enable})
+
+    alert.show()
+}
+
+function disablePlan(data){
+    let title = 'Desactivar plan'
+    let text = `¿Desea desactivar el plan ${data.nombre}?`
+
+    let alert = new AskDialog({title: title, text: text})
+
+    alert.onOk = function(){
+        $.getJSON( `${general_base_url}planes/disable?plan=${data.idPlan}` )
+        .done(function( data ) {
+            dispersionDataTable.ajax.reload()
+        })
+    }
+
+    alert.show()
+}
+
+function tableButton(id, label='', icon='', color='btn-blueMaderas', method=null, data=null){
     const button = $('<button />')
         .addClass(`${id} btn-data ${color}`)
+        .attr('id', id)
         .attr('data-toggle', 'tooltip')
         .attr('data-placement', 'top')
         .attr('title', label.toUpperCase())
@@ -201,7 +366,7 @@ function tableButton(id, label='', icon='', color='btn-blueMaderas', method=null
         )
 
     if(method){
-        button.attr('onClick', `${method}(${data})`)
+        button.attr('onClick', `${method.name}(${JSON.stringify(data)})`)
     }
 
     return button.prop('outerHTML')

@@ -67,4 +67,34 @@ class Planes extends CI_Controller{
         echo json_encode($is_ok);
     }
 
+    public function subir(){
+        $id_plan = $this->input->get('plan');
+
+        if($id_plan){
+            $is_ok = $this->PlanesModel->subirPrioridad($id_plan);
+        }
+
+        echo json_encode($is_ok);
+    }
+
+    public function bajar(){
+        $id_plan = $this->input->get('plan');
+
+        if($id_plan){
+            $is_ok = $this->PlanesModel->bajarPrioridad($id_plan);
+        }
+
+        echo json_encode($is_ok);
+    }
+
+    public function insertar(){
+        $data = (object) $this->input->post();
+
+        if($data){
+            $is_ok = $this->PlanesModel->insertarPlan($data);
+        }
+
+        echo json_encode($is_ok);
+    }
+
 }
