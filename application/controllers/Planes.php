@@ -20,6 +20,10 @@ class Planes extends CI_Controller{
 
     public function list(){
         $planes = $this->PlanesModel->getPlanesComision();
+
+        foreach ($planes as $key => $plan) {
+            $plan->usuarios = $this->PlanesModel->getUsuariosPlanComision($plan->idPlan);
+        }
         
         echo json_encode(["data" => $planes]);
     }
@@ -97,4 +101,29 @@ class Planes extends CI_Controller{
         echo json_encode($is_ok);
     }
 
+    public function guardar(){
+        $data = (object) $this->input->post();
+
+        if($data->fechaFin == ''){
+            $data->fechaFin = NULL;
+        }
+
+        $id = $data->idPlan;
+
+        if($id && $data){
+            $is_ok = $this->PlanesModel->guardarPlan($id, $data);
+        }
+
+        echo json_encode($is_ok);
+    }
+
+    public function borrar(){
+        $id_plan = $this->input->get('plan');
+
+        if($id_plan){
+            $is_ok = $this->PlanesModel->borrarPlan($id_plan);
+        }
+
+        echo json_encode($is_ok);
+    }
 }

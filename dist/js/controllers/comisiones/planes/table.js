@@ -9,13 +9,25 @@ class AskDialog{
         if(this.onOk){
             this.onOk()
         }
-        $("#alert-modal").modal('hide');
+        $("#ask-modal").modal('hide');
+    }
+    show(){
+        $('#title-ask-modal').text(this.title)
+        $('#text-ask-modal').html(this.text)
+        $('#ok-button-ask-modal').off('click')
+        $('#ok-button-ask-modal').on('click', () => this.handleOk())
+        $("#ask-modal").modal();
+    }
+}
+
+class AlertDialog{
+    constructor({title, text}) {
+        this.title = title
+        this.text = text
     }
     show(){
         $('#title-alert-modal').text(this.title)
-        $('#text-alert-modal').text(this.text)
-        $('#ok-button-alert-modal').off('click')
-        $('#ok-button-alert-modal').on('click', () => this.handleOk())
+        $('#text-alert-modal').html(this.text)
         $("#alert-modal").modal();
     }
 }
@@ -52,12 +64,21 @@ class TableButton {
 
 let dispersionDataTable;
 
+let defaults = {
+    estatus: 1,
+    comision_director: 1,
+    comision_regional: 1,
+    comision_subdirector: 1,
+    comision_gerente: 1,
+    comision_coordinador: 1,
+    comision_asesor: 3,
+    usuarios: []
+}
+
 $(document).ready(function () {
-    getDataSelect('sede', `${general_base_url}planes/sedes`);
+    getDataSelect('sedes', `${general_base_url}planes/sedes`);
     getDataSelect('residencial', `${general_base_url}planes/residenciales`);
     getDataSelect('prospeccion', `${general_base_url}planes/prospecciones`);
-
-    $("#plan-modal").modal();
 
     let titulos_intxt = [];
 
@@ -105,7 +126,7 @@ $(document).ready(function () {
                 text: '<i class="fa fa-check"></i> NUEVO PLAN',
                 action: function() {
                     console.log('Nuevo plan click')
-                    $("#plan-modal").modal();
+                    editPlan(defaults)
                 },
                 attr: {
                     class: 'btn btn-azure',
@@ -140,33 +161,47 @@ $(document).ready(function () {
             { 
                 data: function (d) {
                     const date = new Date(d.fechaActualizado)
+                    date.setTime( date.getTime() + date.getTimezoneOffset()*60*1000 )
+
                     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
 
                     return `<span class="label lbl-azure">${date.toLocaleDateString('es-MX', options)}</span>`
                 }
             },
-            {data: 'prioridad'},
             { //STATUS
                 data: function (d) {
                     if(d.estatus == 1){
-                        return '<span class="label label-success">Activo</span>'
+                        return '<span class="label label-success">Funcionando</span>'
                     }else{
                         return '<span class="label label-default">Inactivo</span>'
                     }
                 }
             },
+            {data: 'prioridad'},
             { //ACTIONS
                 data: function (data) {
-                    const subir_prioridad = new TableButton({label: 'subir prioridad', icon: 'arrow_upward', color: 'btn-deepGray', onClick: subirPrioridad, data})
-                    const bajar_prioridad = new TableButton({label: 'bajar prioridad', icon: 'arrow_downward', color: 'btn-deepGray', onClick: bajarPrioridad, data})
+                    const subir_prioridad = new TableButton({label: 'subir prioridad', icon: 'arrow_upward', color: 'btn-azure', onClick: subirPrioridad, data})
+                    const bajar_prioridad = new TableButton({label: 'bajar prioridad', icon: 'arrow_downward', color: 'btn-azure', onClick: bajarPrioridad, data})
+                    
+                    return `<div class="d-flex justify-center">${subir_prioridad}${bajar_prioridad}</div>`
+                }
+            },
+            { //ACTIONS
+                data: function (data) {
                     const editar_plan = new TableButton({label: 'editar plan', icon: 'edit', color: 'btn-blueMaderas', onClick: editPlan, data: data})
                     
                     let toggle_plan = new TableButton({label: 'activar plan', icon: 'play_arrow', color: 'btn-green', onClick: enablePlan, data: data})
+                    let delete_plan = new TableButton({label: 'borrar plan', icon: 'delete', color: 'btn-warning', onClick: deletePlan, data: data})
                     if(data.estatus == 1){
-                        toggle_plan = new TableButton({label: 'desactivar plan', icon: 'pause', color: 'btn-yellow', onClick: disablePlan, data: data})
+                        toggle_plan.label   = 'desactivar plan'
+                        toggle_plan.icon    = 'pause'
+                        toggle_plan.color   = 'btn-yellow'
+                        toggle_plan.onClick = disablePlan
+
+                        delete_plan.color = 'btn-deepGray'
                     }
 
-                    return `<div class="d-flex justify-center">${subir_prioridad}${bajar_prioridad}${editar_plan}${toggle_plan}</div>`
+                    return `<div class="d-flex justify-center">${editar_plan}${toggle_plan}${delete_plan}</div>`
                 }
             }
         ],
@@ -185,7 +220,7 @@ $(document).ready(function () {
     })
 
     $('.datepicker').datetimepicker({
-        format: 'DD/MM/YYYY',
+        format: 'YYYY-MM-DD',
         icons: {
             time: "fa fa-clock-o",
             date: "fa fa-calendar",
@@ -199,6 +234,16 @@ $(document).ready(function () {
             inline: true
         }
     });
+
+    /*
+    $(".datepicker #fechaInicio").on("change",function(){
+        fechaInicio = $(this).val();
+    });
+
+    $(".datepicker #fechaFin").on("change",function(){
+        fechaFin = $(this).val();
+    });
+    */
 
     $('#btn_add_usuario_comision').on('click', function() {
         let id_usuario = $('#id_usuario').val();
@@ -217,12 +262,41 @@ $(document).ready(function () {
         } else {
             let esquema = ''
             let condiciones = ''
+            let usuarios = ''
+
+            // ESQUEMA
+
+            if(row.data().comision_director){
+                esquema += `director: ${row.data().comision_director} %<br>`
+            }
+
+            if(row.data().comision_regional){
+                esquema += `gerente regional: ${row.data().comision_regional} %<br>`
+            }
+
+            if(row.data().comision_subdirector){
+                esquema += `subdirector: ${row.data().comision_subdirector} %<br>`
+            }
+
+            if(row.data().comision_gerente){
+                esquema += `gerente: ${row.data().comision_gerente} %<br>`
+            }
+
+            if(row.data().comision_coordinador){
+                esquema += `coordinador: ${row.data().comision_coordinador} %<br>`
+            }
+
+            if(row.data().comision_asesor){
+                esquema += `asesor: ${row.data().comision_asesor} %<br>`
+            }
+
+            // CONDICIONES
 
             if(row.data().fechaInicio){
-                condiciones += `${row.data().fechaInicio}<br>`
+                condiciones += `fecha inicio: ${row.data().fechaInicio}<br>`
             }
             if(row.data().fechaFin){
-                condiciones += `${row.data().fechaFin}<br>`
+                condiciones += `fecha fin: ${row.data().fechaFin}<br>`
             }
             if(row.data().prospeccion_list){
                 condiciones += `prospeccion: ${row.data().prospeccion_list}<br>`
@@ -230,6 +304,22 @@ $(document).ready(function () {
             if(row.data().sedes_list){
                 condiciones += `sedes: ${row.data().sedes_list}<br>`
             }
+            if(row.data().residencial_list){
+                condiciones += `residencial: ${row.data().residencial_list}<br>`
+            }
+            if(row.data().lotes_list){
+                condiciones += `lotes: ${row.data().lotes_list}<br>`
+            }
+
+            // USUARIOS
+            for (var i = 0; i < row.data().usuarios.length; i++) {
+                let id = row.data().usuarios[i].idUsuario
+                let nombre = row.data().usuarios[i].nombre
+                let comision = row.data().usuarios[i].valorComision
+                
+                usuarios += `${nombre}: ${comision} %<br>`
+            }
+
 
             var html = `<div class="container subBoxDetail">
                 <div class="row">
@@ -251,6 +341,15 @@ $(document).ready(function () {
                         <br>
                         ${condiciones}
                     </div>
+                    <div class="col-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
+                        <label>
+                            <b>
+                                otros usuarios comisionando en el plan
+                            </b>
+                        </label>
+                        <br>
+                        ${usuarios}
+                    </div>
                 </div>
             </div>`
             row.child(html).show();
@@ -267,33 +366,134 @@ $(document).ready(function () {
         event.preventDefault()
 
         let data = {
+            idPlan: new FormData(event.target).get('idPlan'),
             nombre: new FormData(event.target).get('nombre'),
+            estatus: new FormData(event.target).get('estatus'),
+            fechaInicio: new FormData(event.target).get('fechaInicio'),
+            fechaFin: new FormData(event.target).get('fechaFin'),
             prospeccion: new FormData(event.target).getAll('prospeccion').toString(),
+            sedes: new FormData(event.target).getAll('sedes').toString(),
+            residencial: new FormData(event.target).getAll('residencial').toString(),
+            lotes: new FormData(event.target).get('lotes'),
+            prioridad: new FormData(event.target).get('prioridad'),
+            comision_director: new FormData(event.target).get('comision_director'),
+            comision_regional: new FormData(event.target).get('comision_regional'),
+            comision_subdirector: new FormData(event.target).get('comision_subdirector'),
+            comision_gerente: new FormData(event.target).get('comision_gerente'),
+            comision_coordinador: new FormData(event.target).get('comision_coordinador'),
+            comision_asesor: new FormData(event.target).get('comision_asesor'),
         }
+
+        let usuarios = []
+        $.each($('#usuarios_plan_comisiones .user-plan-comision .input-name'), function(i,e){
+            console.log($(e).val())
+        })
 
         console.log(data)
 
-        $.post( `${general_base_url}planes/insertar`, data)
-            .done(function( response ) {
-                console.log( "Data Loaded: " + response );
+        let url = `${general_base_url}planes/insertar`;
+        if(data.idPlan != ''){
+            url = `${general_base_url}planes/guardar`;
+        }
 
-                $("#plan-modal").modal('hide');
+        /*
+        $.post( url, data)
+        .done(function( response ) {
+            console.log( "Data Loaded: " + response );
 
-                dispersionDataTable.ajax.reload()
+            $("#plan-modal").modal('hide');
+
+            dispersionDataTable.ajax.reload()
         });
+
+        event.target.reset();
+        */
     });
 
 })
 
+function deletePlan(data){
+    console.log(data)
+
+    if(data.estatus == 1){
+        let title = 'Borrar plan'
+        let text = `Debes desactivar el plan <b>${data.nombre.toUpperCase()}</b> para poderlo borrar.`
+
+        let alert = new AlertDialog({title: title, text: text})
+
+        alert.show()
+    }else{
+        let title = 'Borrar plan'
+        let text = `¿Desea borrar el plan <b>${data.nombre.toUpperCase()}</b>?`
+        let borrar = function(){
+            $.getJSON( `${general_base_url}planes/borrar?plan=${data.idPlan}` )
+            .done(function( data ) {
+                dispersionDataTable.ajax.reload()
+            })
+        }
+        
+        let ask = new AskDialog({title: title, text: text, onOk: borrar})
+
+        ask.show()
+    }
+}
+
 function editPlan(data){
     console.log(data)
 
-    //$("#alert-modal").modal();
+    $('#form-plan-modal #idPlan').val(data.idPlan)
+    $('#form-plan-modal #nombre').val(data.nombre)
+    $('#form-plan-modal #estatus').val(data.estatus).change()
+    $('#form-plan-modal #fechaInicio').val(data.fechaInicio)
+    $('#form-plan-modal #fechaFin').val(data.fechaFin)
+    $('#form-plan-modal #comision_director').val(data.comision_director)
+    $('#form-plan-modal #comision_regional').val(data.comision_regional)
+    $('#form-plan-modal #comision_subdirector').val(data.comision_subdirector)
+    $('#form-plan-modal #comision_gerente').val(data.comision_gerente)
+    $('#form-plan-modal #comision_coordinador').val(data.comision_coordinador)
+    $('#form-plan-modal #comision_asesor').val(data.comision_asesor)
+    
+    $('#form-plan-modal #sedes').val('')
+    if(data.sedes){
+        $.each(data.sedes.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #sedes option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #sedes').selectpicker('refresh')
+
+    $('#form-plan-modal #residencial').val('')
+    if(data.residencial){
+        $.each(data.residencial.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #residencial option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #residencial').selectpicker('refresh')
+
+    $('#form-plan-modal #prospeccion').val('')
+    if(data.prospeccion){
+        $.each(data.prospeccion.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #prospeccion option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #prospeccion').selectpicker('refresh')
+
+    $('#usuarios_plan_comisiones').html('')
+    for (var i = 0; i < data.usuarios.length; i++) {
+        let id = data.usuarios[i].idUsuario
+        let nombre = data.usuarios[i].nombre
+        
+        addUsuarioPlanComision(id, nombre)
+    }
+
+    $("#plan-modal").modal();
 }
 
 function subirPrioridad(data){
     let title = 'Subir prioridad'
-    let text = `¿Desea subir la prioridad en el plan ${data.nombre}?`
+    let text = `¿Desea subir la prioridad en el plan <b>${data.nombre.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/subir?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -301,14 +501,14 @@ function subirPrioridad(data){
         })
     }
     
-    let alert = new AskDialog({title: title, text: text, onOk: enable})
+    let ask = new AskDialog({title: title, text: text, onOk: enable})
 
-    alert.show()
+    ask.show()
 }
 
 function bajarPrioridad(data){
     let title = 'Bajar prioridad'
-    let text = `¿Desea bajar la prioridad en el plan ${data.nombre}?`
+    let text = `¿Desea bajar la prioridad en el plan <b>${data.nombre.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/bajar?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -316,14 +516,14 @@ function bajarPrioridad(data){
         })
     }
     
-    let alert = new AskDialog({title: title, text: text, onOk: enable})
+    let ask = new AskDialog({title: title, text: text, onOk: enable})
 
-    alert.show()
+    ask.show()
 }
 
 function enablePlan(data){
     let title = 'Activar plan'
-    let text = `¿Desea activar el plan ${data.nombre}?`
+    let text = `¿Desea activar el plan <b>${data.nombre.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/enable?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -331,25 +531,25 @@ function enablePlan(data){
         })
     }
     
-    let alert = new AskDialog({title: title, text: text, onOk: enable})
+    let ask = new AskDialog({title: title, text: text, onOk: enable})
 
-    alert.show()
+    ask.show()
 }
 
 function disablePlan(data){
     let title = 'Desactivar plan'
-    let text = `¿Desea desactivar el plan ${data.nombre}?`
+    let text = `¿Desea desactivar el plan <b>${data.nombre.toUpperCase()}</b>?`
 
-    let alert = new AskDialog({title: title, text: text})
+    let ask = new AskDialog({title: title, text: text})
 
-    alert.onOk = function(){
+    ask.onOk = function(){
         $.getJSON( `${general_base_url}planes/disable?plan=${data.idPlan}` )
         .done(function( data ) {
             dispersionDataTable.ajax.reload()
         })
     }
 
-    alert.show()
+    ask.show()
 }
 
 function tableButton(id, label='', icon='', color='btn-blueMaderas', method=null, data=null){
@@ -395,7 +595,7 @@ function getDataSelect(element, url){
 function addUsuarioPlanComision(id, nombre){
     $('#usuarios_plan_comisiones').append(
         $('<div />')
-        .addClass('col-md-12')
+        .addClass('user-plan-comision col-md-12')
         .append(
             $('<div />')
             .addClass('col-md-4')
@@ -405,7 +605,7 @@ function addUsuarioPlanComision(id, nombre){
                 .append(
                     $('<input />')
                     .attr('type', 'text')
-                    .addClass('form-control input-gral')
+                    .addClass('form-control input-gral input-name')
                     .val(nombre)
                 )
             ),
