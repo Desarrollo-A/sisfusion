@@ -95,18 +95,16 @@ class Planes extends CI_Controller{
         $data = (object) $this->input->post();
 
         if($data){
-            $is_ok = $this->PlanesModel->insertarPlan($data);
+            $id = $this->PlanesModel->insertarPlan($data);
         }
 
-        echo json_encode($is_ok);
+        $this->saveUsuariosPlanComision($id, $data);
+
+        echo json_encode($id);
     }
 
     public function guardar(){
         $data = (object) $this->input->post();
-
-        if($data->fechaFin == ''){
-            $data->fechaFin = NULL;
-        }
 
         $id = $data->idPlan;
 
@@ -114,7 +112,17 @@ class Planes extends CI_Controller{
             $is_ok = $this->PlanesModel->guardarPlan($id, $data);
         }
 
+        $this->saveUsuariosPlanComision($id, $data);
+
         echo json_encode($is_ok);
+    }
+
+    private function saveUsuariosPlanComision($id, $data){
+        foreach ($data->usuarios as $key => $usuario) {
+            $usuario = (object) $usuario;
+
+            $this->PlanesModel->saveUsuarioPlanComision($id, $usuario->id, $usuario->nombre, $usuario->comision);
+        }
     }
 
     public function borrar(){
@@ -125,5 +133,63 @@ class Planes extends CI_Controller{
         }
 
         echo json_encode($is_ok);
+    }
+
+    public function llenado(){
+        $planes = $this->PlanesModel->getPlanesComision();
+
+        foreach ($planes as $key => $plan) {
+            if($plan->estatus == 1){
+                $conditions = [];
+
+                if($plan->sedes){
+                    array_push($conditions, "cl.id_sede IN ($plan->sedes)");
+                }
+
+                if($plan->residencial){
+                    array_push($conditions, "r.idResidencial IN ($plan->residencial)");
+                }
+
+                if($plan->lotes){
+                    array_push($conditions, "l.idLote IN ($plan->lotes)");
+                }
+
+                if($plan->fechaInicio){
+                    array_push($conditions, "cl.fechaApartado >= '$plan->fechaInicio'");
+                }
+
+                if($plan->fechaFin){
+                    array_push($conditions, "cl.fechaApartado < '$plan->fechaFin'");
+                }
+
+                if($plan->prospeccion != NULL){
+                    if($plan->is_prospeccion == 0){
+                        array_push($conditions, "cl.lugar_prospeccion NOT IN ($plan->prospeccion)");
+                    }else{
+                        array_push($conditions, "cl.lugar_prospeccion IN ($plan->prospeccion)");
+                    }
+                }
+
+                if($plan->regional != null){
+                    if($plan->is_regional){
+                        array_push($conditions, "cl.id_regional IN ($plan->regional)");
+                    }else{
+                        array_push($conditions, "cl.id_regional NOT IN ($plan->regional)");
+                    }
+                }
+
+                if($plan->inicio_prospeccion){
+                    array_push($conditions, "ps.fecha_creacion > '$plan->inicio_prospeccion'");
+                }
+
+                if($plan->fin_prospeccion){
+                    array_push($conditions, "ps.fecha_creacion < '$plan->fin_prospeccion'");
+                }
+
+                $where = 'WHERE ' . implode(' AND ', $conditions) . "\n";
+                print_r($plan->nombre . ': ' . $where);
+            }
+        }
+        exit;
     }
 }

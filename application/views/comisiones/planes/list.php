@@ -91,42 +91,83 @@
                             <input type="hidden" id="idPlan" name="idPlan" />
 
                             <div class="col-md-12">
-                                <div class="col-md-6 col-lg-3">
+                                <div class="col-lg-3 col-md-6">
                                     <label for="nombre" class="control-label">Nombre</label>
                                     <input class="form-control input-gral" type="text" id="nombre" name="nombre" placeholder="NOMBRE DEL PLAN" />
                                 </div>
-                                <div class="col-md-6 col-lg-3">
+                                <div class="col-lg-3 col-md-6">
                                     <label for="estatus" class="control-label label-gral">Activo</label>
                                     <select name="estatus" id="estatus" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
                                         <option value="1">SI</option>
                                         <option value="0">NO</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <label for="fechaInicio" class="control-label label-gral">inicio</label>
-                                    <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaInicio" id="fechaInicio" placeholder="FECHA DE INICIO" />
+                            </div>
+                            <span class="col-md-12">Condiciones del plan</span>
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-lg-3 col-md-6">
+                                        <label for="fechaInicio" class="control-label label-gral">Fecha de apartado</label>
+                                        <input type="text" class="form-control input-gral datepicker fechaInicio" name="fechaInicio" id="fechaInicio" placeholder="Mayor a" />
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        <label for="fechaFin" class="control-label label-gral">Fecha de apartado</label>
+                                        <input type="text" class="form-control input-gral datepicker fechaFin" name="fechaFin" id="fechaFin" placeholder="Menor a" />
+                                    </div>
                                 </div>
                                 <div class="col-md-6 col-lg-3">
-                                    <label for="fechaFin" class="control-label label-gral">Termino</label>
-                                    <input type="text" class="form-control input-gral datepicker fechaFin" name="fechaFin" id="fechaFin" placeholder="FECHA DE TERMINO" />
-                                </div>
-                                <div class="col-md-6 col-lg-3">
-                                    <label for="sedes" class="control-label label-gral">Sede</label>
+                                    <label for="sedes" class="control-label label-gral">Sedes</label>
                                     <select name="sedes" id="sedes" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
                                 </div>
                                 <div class="col-md-6 col-lg-3">
-                                    <label for="residencial" class="control-label label-gral">Residencial</label>
+                                    <label for="residencial" class="control-label label-gral">Residenciales</label>
                                     <select name="residencial" id="residencial" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
                                 </div>
                                 <div class="col-md-6 col-lg-3">
                                     <label for="lotes" class="control-label label-gral">Lotes</label>
-                                    <input id="lotes" name="lotes" class="form-control input-gral" type="text" placeholder="IDS DE LOS LOTE, SEPARADOS POR COMA" />
+                                    <input id="lotes" name="lotes" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
                                 </div>
-                                <div class="col-md-6 col-lg-3">
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="is_regional" class="control-label label-gral">Regional</label>
+                                    <select name="is_regional" id="is_regional" value="0" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="1">SEA</option>
+                                        <option value="0">NO SEA</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="regional" class="control-label label-gral">Gerentes Regionales</label>
+                                    <input id="regional" name="regional" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="is_prospeccion" class="control-label label-gral">Prospeccion</label>
+                                    <select name="is_prospeccion" id="is_prospeccion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="1">Incluir</option>
+                                        <option value="0">No incluir</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
                                     <label for="prospeccion" class="control-label label-gral">Lugar de prospeccion</label>
                                     <select name="prospeccion" id="prospeccion" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
                                 </div>
-                                <div class="col-md-6 col-lg-3">
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="inicio_prospeccion" class="control-label label-gral">Fecha inicial de prospeccion</label>
+                                    <input type="text" class="form-control input-gral datepicker inicio_prospeccion" name="inicio_prospeccion" id="inicio_prospeccion" placeholder="Inicio" />
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="fin_prospeccion" class="control-label label-gral">Fecha final de prospeccion</label>
+                                    <input type="text" class="form-control input-gral datepicker fin_prospeccion" name="fin_prospeccion" id="fin_prospeccion" placeholder="Fin" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="col-lg-3 col-md-6">
                                     <label for="prioridad" class="control-label label-gral">Prioridad</label>
                                     <input id="prioridad" name="prioridad" class="form-control input-gral" type="number" value="0" placeholder="PRIORIDAD DE EJECUCION" />
                                 </div>

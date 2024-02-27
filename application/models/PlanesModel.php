@@ -10,10 +10,13 @@ class PlanesModel extends CI_Model{
         $query = "SELECT
             p.idPlan,
             p.nombre,
-            p.fechaActualizado,
+            p.fechaModificacion,
             p.fechaInicio,
             p.fechaFin,
+            p.is_prospeccion,
             p.prospeccion,
+            p.inicio_prospeccion,
+            p.fin_prospeccion,
             (SELECT STUFF((
                 select ', '+ nombre from opcs_x_cats o
                 WHERE
@@ -39,6 +42,8 @@ class PlanesModel extends CI_Model{
                     r.idLote IN (select value id from STRING_SPLIT(p.lotes, ',')) FOR XML PATH('') ),1,1,''
             )) AS lotes_list,
             p.prioridad,
+            p.is_regional,
+            p.regional,
             p.comision_director,
             p.comision_regional,
             p.comision_subdirector,
@@ -47,7 +52,7 @@ class PlanesModel extends CI_Model{
             p.comision_asesor,
             p.estatus
         FROM planes_comision p
-        ORDER BY prioridad ASC";
+        ORDER BY prioridad ASC, idPlan ASC";
 
         return $this->db->query($query)->result();
     }
@@ -103,96 +108,146 @@ class PlanesModel extends CI_Model{
             nombre as label
         FROM opcs_x_cats
         WHERE
-            id_catalogo=9
-        AND estatus = 1";
+            id_catalogo=9";
 
         return $this->db->query($query)->result_array();
     }
 
     public function enablePlan($idPlan){
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
+
         $query = "UPDATE planes_comision
-        SET
-            estatus = 1
-        WHERE
-            idPlan = $idPlan";
+            SET
+                estatus = 1,
+                modificadoPor = $user,
+                fechaModificacion = '$date'
+            WHERE
+                idPlan = $idPlan";
 
         return $this->db->query($query);
     }
 
     public function disablePlan($idPlan){
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
+
         $query = "UPDATE planes_comision
-        SET
-            estatus = 0
-        WHERE
-            idPlan = $idPlan";
+            SET
+                estatus = 0,
+                modificadoPor = $user,
+                fechaModificacion = '$date'
+            WHERE
+                idPlan = $idPlan";
 
         return $this->db->query($query);
     }
 
     public function subirPrioridad($idPlan){
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
+
         $query = "UPDATE planes_comision
-        SET
-            prioridad = CASE WHEN prioridad > 0 THEN prioridad - 1 ELSE 0 END
-        WHERE
-            idPlan = $idPlan";
+            SET
+                prioridad = CASE WHEN prioridad > 0 THEN prioridad - 1 ELSE 0 END,
+                modificadoPor = $user,
+                fechaModificacion = '$date'
+            WHERE
+                idPlan = $idPlan";
 
         return $this->db->query($query);
     }
 
     public function bajarPrioridad($idPlan){
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
+
         $query = "UPDATE planes_comision
-        SET
-            prioridad = prioridad + 1
-        WHERE
-            idPlan = $idPlan";
+            SET
+                prioridad = prioridad + 1,
+                modificadoPor = $user,
+                fechaModificacion = '$date'
+            WHERE
+                idPlan = $idPlan";
 
         return $this->db->query($query);
     }
 
     public function insertarPlan($data){
-        $date = date('Y-m-d');
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
 
         $query = "INSERT INTO planes_comision(
             nombre,
             estatus,
             fechaInicio,
             fechaFin,
+
+            is_prospeccion,
             prospeccion,
+            inicio_prospeccion,
+            fin_prospeccion,
+            
             prioridad,
             sedes,
             residencial,
             lotes,
+
+            is_regional,
+            regional,
+
             comision_director,
             comision_regional,
             comision_subdirector,
             comision_gerente,
             comision_coordinador,
             comision_asesor,
-            fechaActualizado
-        ) VALUES (
+            
+            creadoPor,
+            modificadoPor,
+            fechaCreacion,
+            fechaModificacion
+        )
+        VALUES (
             NULLIF('$data->nombre', ''),
             $data->estatus,
             NULLIF('$data->fechaInicio', ''),
             NULLIF('$data->fechaFin', ''),
+            
+            NULLIF('$data->is_prospeccion', ''),
             NULLIF('$data->prospeccion', ''),
+            NULLIF('$data->inicio_prospeccion', ''),
+            NULLIF('$data->fin_prospeccion', ''),
+
             $data->prioridad,
             NULLIF('$data->sedes', ''),
             NULLIF('$data->residencial', ''),
             NULLIF('$data->lotes', ''),
+
+            NULLIF('$data->is_regional', ''),
+            NULLIF('$data->regional', ''),
+
             $data->comision_director,
             $data->comision_regional,
             $data->comision_subdirector,
             $data->comision_gerente,
             $data->comision_coordinador,
             $data->comision_asesor,
+            
+            $user,
+            $user,
+            '$date',
             '$date'
         )";
 
-        return $this->db->query($query);
+        $this->db->query($query);
+
+        return $this->db->insert_id();
     }
 
     public function guardarPlan($idPlan, $data){
-        $date = date('Y-m-d');
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
 
         $query = "UPDATE planes_comision
         SET
@@ -200,11 +255,19 @@ class PlanesModel extends CI_Model{
             estatus     = $data->estatus,
             fechaInicio = NULLIF('$data->fechaInicio', ''),
             fechaFin    = NULLIF('$data->fechaFin', ''),
+            
+            is_prospeccion = NULLIF('$data->is_prospeccion', ''),
             prospeccion = NULLIF('$data->prospeccion', ''),
+            inicio_prospeccion = NULLIF('$data->inicio_prospeccion', ''),
+            fin_prospeccion = NULLIF('$data->fin_prospeccion', ''),
+
             prioridad   = $data->prioridad,
             sedes       = NULLIF('$data->sedes', ''),
             residencial = NULLIF('$data->residencial', ''),
             lotes       = NULLIF('$data->lotes', ''),
+
+            is_regional = NULLIF('$data->is_regional', ''),
+            regional    = NULLIF('$data->regional', ''),
 
             comision_director    = $data->comision_director,
             comision_regional    = $data->comision_regional,
@@ -213,7 +276,8 @@ class PlanesModel extends CI_Model{
             comision_coordinador = $data->comision_coordinador,
             comision_asesor      = $data->comision_asesor,
 
-            fechaActualizado = '$date'
+            modificadoPor = $user,
+            fechaModificacion = '$date'
         WHERE idPlan = $idPlan";
 
         return $this->db->query($query);
@@ -221,6 +285,58 @@ class PlanesModel extends CI_Model{
 
     public function borrarPlan($idPlan){
         $query = "DELETE FROM planes_comision WHERE idPlan = $idPlan";
+
+        return $this->db->query($query);
+    }
+
+    public function saveUsuarioPlanComision($idPlan, $idUsuario, $comentario, $valorComision){
+        $user = $this->session->userdata('id_usuario');
+        $date = date('Y-m-d H:i:s');
+
+        $query = "BEGIN
+            IF NOT EXISTS (
+                SELECT * FROM usuariosPlanComision 
+                WHERE
+                    idUsuario = $idUsuario
+                AND idPlan = $idPlan
+            )
+                BEGIN
+                    INSERT INTO usuariosPlanComision (
+                        idPlan, 
+                        idUsuario, 
+                        comentario, 
+                        valorComision, 
+                        valorNeodata,
+                        estatus,
+                        creadoPor,
+                        modificadoPor,
+                        fechaCreacion,
+                        fechaModificacion
+                    )
+                    VALUES (
+                        $idPlan, 
+                        $idUsuario, 
+                        '$comentario', 
+                        $valorComision, 
+                        $valorComision * 12.5,
+                        1,
+                        $user,
+                        $user,
+                        '$date',
+                        '$date'
+                    )
+                END
+            ELSE
+                BEGIN
+                    UPDATE usuariosPlanComision
+                    SET
+                        valorComision=$valorComision,
+                        fechaModificacion='$date'
+                    WHERE
+                        idPlan = $idPlan
+                    AND idUsuario = $idUsuario
+                END
+        END";
 
         return $this->db->query($query);
     }

@@ -66,6 +66,7 @@ let dispersionDataTable;
 
 let defaults = {
     estatus: 1,
+    prioridad: 0,
     comision_director: 1,
     comision_regional: 1,
     comision_subdirector: 1,
@@ -79,6 +80,8 @@ $(document).ready(function () {
     getDataSelect('sedes', `${general_base_url}planes/sedes`);
     getDataSelect('residencial', `${general_base_url}planes/residenciales`);
     getDataSelect('prospeccion', `${general_base_url}planes/prospecciones`);
+
+    $("#plan-modal").modal();
 
     let titulos_intxt = [];
 
@@ -160,7 +163,7 @@ $(document).ready(function () {
             {data: 'nombre'},
             { 
                 data: function (d) {
-                    const date = new Date(d.fechaActualizado)
+                    const date = new Date(d.fechaModificacion)
                     date.setTime( date.getTime() + date.getTimezoneOffset()*60*1000 )
 
                     const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
@@ -340,17 +343,21 @@ $(document).ready(function () {
                         </label>
                         <br>
                         ${condiciones}
-                    </div>
-                    <div class="col-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
-                        <label>
-                            <b>
-                                otros usuarios comisionando en el plan
-                            </b>
-                        </label>
-                        <br>
-                        ${usuarios}
-                    </div>
-                </div>
+                    </div>`
+
+            if(row.data().usuarios.length > 0){
+                html += `<div class="col-12" style="border-bottom: 2px solid #fff; color: #4b4b4b; margin-bottom: 7px">
+                    <label>
+                        <b>
+                            otros usuarios comisionando en el plan
+                        </b>
+                    </label>
+                    <br>
+                    ${usuarios}
+                </div>`
+            }
+
+            html += `</div>
             </div>`
             row.child(html).show();
             tr.addClass('shown');
@@ -366,16 +373,27 @@ $(document).ready(function () {
         event.preventDefault()
 
         let data = {
-            idPlan: new FormData(event.target).get('idPlan'),
+            idPlan: new FormData(event.target).get('idPlan') || null,
             nombre: new FormData(event.target).get('nombre'),
             estatus: new FormData(event.target).get('estatus'),
             fechaInicio: new FormData(event.target).get('fechaInicio'),
             fechaFin: new FormData(event.target).get('fechaFin'),
+
+            is_prospeccion: new FormData(event.target).get('is_prospeccion') || null,
             prospeccion: new FormData(event.target).getAll('prospeccion').toString(),
+            inicio_prospeccion: new FormData(event.target).get('inicio_prospeccion'),
+            fin_prospeccion: new FormData(event.target).get('fin_prospeccion'),
+            
+            // is_sede: new FormData(event.target).get('is_sede') || null,
             sedes: new FormData(event.target).getAll('sedes').toString(),
+
             residencial: new FormData(event.target).getAll('residencial').toString(),
             lotes: new FormData(event.target).get('lotes'),
-            prioridad: new FormData(event.target).get('prioridad'),
+            prioridad: new FormData(event.target).get('prioridad') || 0,
+            
+            is_regional: new FormData(event.target).get('is_regional') || 0,
+            regional: new FormData(event.target).get('regional'),
+
             comision_director: new FormData(event.target).get('comision_director'),
             comision_regional: new FormData(event.target).get('comision_regional'),
             comision_subdirector: new FormData(event.target).get('comision_subdirector'),
@@ -385,18 +403,27 @@ $(document).ready(function () {
         }
 
         let usuarios = []
-        $.each($('#usuarios_plan_comisiones .user-plan-comision .input-name'), function(i,e){
-            console.log($(e).val())
+        $.each($('#usuarios_plan_comisiones .user-plan-comision'), function(i,e){
+            usuario = {
+                id: $(e).find('.input-id').val(),
+                nombre: $(e).find('.input-nombre').val(),
+                comision: $(e).find('.input-comision').val(),
+            }
+
+            usuarios.push(usuario)
         })
+
+        // console.log(usuarios)
+
+        data.usuarios = usuarios
 
         console.log(data)
 
         let url = `${general_base_url}planes/insertar`;
-        if(data.idPlan != ''){
+        if(data.idPlan){
             url = `${general_base_url}planes/guardar`;
         }
 
-        /*
         $.post( url, data)
         .done(function( response ) {
             console.log( "Data Loaded: " + response );
@@ -407,7 +434,6 @@ $(document).ready(function () {
         });
 
         event.target.reset();
-        */
     });
 
 })
@@ -417,14 +443,14 @@ function deletePlan(data){
 
     if(data.estatus == 1){
         let title = 'Borrar plan'
-        let text = `Debes desactivar el plan <b>${data.nombre.toUpperCase()}</b> para poderlo borrar.`
+        let text = `Debes desactivar el plan <b>${data.nombre?.toUpperCase()}</b> para poderlo borrar.`
 
         let alert = new AlertDialog({title: title, text: text})
 
         alert.show()
     }else{
         let title = 'Borrar plan'
-        let text = `¿Desea borrar el plan <b>${data.nombre.toUpperCase()}</b>?`
+        let text = `¿Desea borrar el plan <b>${data.nombre?.toUpperCase()}</b>?`
         let borrar = function(){
             $.getJSON( `${general_base_url}planes/borrar?plan=${data.idPlan}` )
             .done(function( data ) {
@@ -446,6 +472,11 @@ function editPlan(data){
     $('#form-plan-modal #estatus').val(data.estatus).change()
     $('#form-plan-modal #fechaInicio').val(data.fechaInicio)
     $('#form-plan-modal #fechaFin').val(data.fechaFin)
+    $('#form-plan-modal #prioridad').val(data.prioridad)
+    
+    $('#form-plan-modal #is_regional').val(data.is_regional).change()
+    $('#form-plan-modal #regional').val(data.regional)
+
     $('#form-plan-modal #comision_director').val(data.comision_director)
     $('#form-plan-modal #comision_regional').val(data.comision_regional)
     $('#form-plan-modal #comision_subdirector').val(data.comision_subdirector)
@@ -453,6 +484,7 @@ function editPlan(data){
     $('#form-plan-modal #comision_coordinador').val(data.comision_coordinador)
     $('#form-plan-modal #comision_asesor').val(data.comision_asesor)
     
+    // $('#form-plan-modal #is_sede').val(data.is_sede).change()
     $('#form-plan-modal #sedes').val('')
     if(data.sedes){
         $.each(data.sedes.split(","), function(i,e){
@@ -471,6 +503,9 @@ function editPlan(data){
     }
     $('#form-plan-modal #residencial').selectpicker('refresh')
 
+    $('#form-plan-modal #inicio_prospeccion').val(data.inicio_prospeccion)
+    $('#form-plan-modal #fin_prospeccion').val(data.fin_prospeccion)
+    $('#form-plan-modal #is_prospeccion').val(data.is_prospeccion).change()
     $('#form-plan-modal #prospeccion').val('')
     if(data.prospeccion){
         $.each(data.prospeccion.split(","), function(i,e){
@@ -493,7 +528,7 @@ function editPlan(data){
 
 function subirPrioridad(data){
     let title = 'Subir prioridad'
-    let text = `¿Desea subir la prioridad en el plan <b>${data.nombre.toUpperCase()}</b>?`
+    let text = `¿Desea subir la prioridad en el plan <b>${data.nombre?.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/subir?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -508,7 +543,7 @@ function subirPrioridad(data){
 
 function bajarPrioridad(data){
     let title = 'Bajar prioridad'
-    let text = `¿Desea bajar la prioridad en el plan <b>${data.nombre.toUpperCase()}</b>?`
+    let text = `¿Desea bajar la prioridad en el plan <b>${data.nombre?.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/bajar?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -523,7 +558,7 @@ function bajarPrioridad(data){
 
 function enablePlan(data){
     let title = 'Activar plan'
-    let text = `¿Desea activar el plan <b>${data.nombre.toUpperCase()}</b>?`
+    let text = `¿Desea activar el plan <b>${data.nombre?.toUpperCase()}</b>?`
     let enable = function(){
         $.getJSON( `${general_base_url}planes/enable?plan=${data.idPlan}` )
         .done(function( data ) {
@@ -538,7 +573,7 @@ function enablePlan(data){
 
 function disablePlan(data){
     let title = 'Desactivar plan'
-    let text = `¿Desea desactivar el plan <b>${data.nombre.toUpperCase()}</b>?`
+    let text = `¿Desea desactivar el plan <b>${data.nombre?.toUpperCase()}</b>?`
 
     let ask = new AskDialog({title: title, text: text})
 
@@ -597,6 +632,11 @@ function addUsuarioPlanComision(id, nombre){
         $('<div />')
         .addClass('user-plan-comision col-md-12')
         .append(
+            $('<input />')
+            .attr('type', 'hidden')
+            .addClass('input-id')
+            .val(id)
+            ,
             $('<div />')
             .addClass('col-md-4')
             .append(
@@ -605,7 +645,7 @@ function addUsuarioPlanComision(id, nombre){
                 .append(
                     $('<input />')
                     .attr('type', 'text')
-                    .addClass('form-control input-gral input-name')
+                    .addClass('form-control input-gral input-nombre')
                     .val(nombre)
                 )
             ),
@@ -617,7 +657,7 @@ function addUsuarioPlanComision(id, nombre){
                 .append(
                     $('<input />')
                     .attr('type', 'text')
-                    .addClass('form-control input-gral')
+                    .addClass('form-control input-gral input-comision')
                     .val(1)
                 )
             ),
