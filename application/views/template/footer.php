@@ -66,7 +66,12 @@
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
+    let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
+    let sede_usuario_general_array = sede_usuario_general_div.split(",");
 
+    let sede_usuario_general = (sede_usuario_general_div.length > 1 ?  sede_usuario_general_array[0] : sede_usuario_general_div );
+
+    
 	$(document).ready(function() {
 		demo.initDashboardPageCharts();
 	});
