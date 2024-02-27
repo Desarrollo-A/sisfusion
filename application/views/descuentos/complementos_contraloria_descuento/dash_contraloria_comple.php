@@ -23,8 +23,9 @@
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div class="form-group">
-                    <button ype="button" class="btn-data-gral" data-toggle="modal" data-target="#miModal2">Descuento de  pagos en revisión contraloria</button>
+                <div class="form-group d-flex justify-center align-center">
+                    <!-- <button ype="button" class="btn-data-gral" data-toggle="modal" data-target="#miModal2"></button> -->
+                    <buttons Type="button"  data-toggle="modal" data-target="#miModal2"><i class="fas fa-plus"></i> Descuento de  pagos en revisión contraloria</buttons>
                 </div>
             </div>
             <?php } ?>

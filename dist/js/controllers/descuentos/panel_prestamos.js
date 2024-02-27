@@ -417,8 +417,11 @@ function setDataTableDescuentos(beginDate, endDate){
                         </button>`;
                 }
 
-                if (d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28 ) {
-                    botonesModal += `
+                if ((d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28)  ) {
+                    if((d.estatus == 2  && d.total_pagado == null )){
+                        
+                    }else{
+                        botonesModal += `
                         <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
                             data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
                             data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
@@ -426,6 +429,8 @@ function setDataTableDescuentos(beginDate, endDate){
                             <i class="fas fa-pen-nib">
                             </i>
                         </button>`;
+                    }
+
                 }
                 if(d.relacion_evidencia != '' ){
                     if(d.relacion_evidencia != 'true' ){
