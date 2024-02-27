@@ -9,6 +9,8 @@ class Administracion extends CI_Controller{
 		$this->load->model('registrolote_modelo');
 
 		$this->load->library(array('session', 'form_validation'));
+		
+		$this->load->model('General_model');
 		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
          $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
@@ -551,14 +553,96 @@ class Administracion extends CI_Controller{
 		$data = $this->Administracion_model->getDatosLotes($idLote);
 		if($data != null) {
 			echo json_encode($data);
-		} else {
-			echo json_encode(array());
+		}else {
+			json_encode(array());
 		}
 	}
-
-	public function getOpcionesMaster() {
-		echo json_encode($this->Administracion_model->getOpcionesMaster()->result_array());
+	public function getSedes() {
+		$data = $this->General_model->listSedes()->result_array();
+		if($data != null) {
+			echo json_encode($data);
+		}else {
+			json_encode(array());
+		}
 	}
+	public function anyEmpty(...$values) {
+		foreach ($values as $value) {
+			if ($value == null || $value == ''){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public function masterOptions(){
+		$accion = $this->input->post('opciones');
+		$data = $_POST;
+		$idCliente = $data['idCliente'];
+		$representante = $data['representante'];
+		$idLote = $data['idLote'];
+		$tipoVenta = $data['tipoVenta'];
+		$idSede = $data['sedes'];
+		$impuesto = $data['impuesto'];
+		$nombre = $data['nombre_rep'];
+		$paterno = $data['paterno_rep'];
+		$materno = $data['materno_rep'];
+		$estatus =  $data['repEstatus'];
+		$idRepresentante = $data['repData'];
+		//ACTUALIZAR RL
+		//if($accion == 1 && !(empty($representante)) && !(empty($idCliente))) {			
+		//if($accion == 1 && !(anyEmpty($representante, $idCliente))){
+		if($accion == 1 && !$this->anyEmpty($representante, $idCliente)){
+			$response = $this->General_model->updateRecord('clientes', array('rl' => $representante), 'id_cliente', $idCliente);
+			//echo json_encode($response);
+			echo json_encode(array("status"=> $response, "tabla" => true));
+		}	
+		//else if($accion == 2 && !(empty($tipoVenta)) && !(empty($idLote)) ) {
+		else if($accion == 2 && !$this->anyEmpty($tipoVenta, $idLote)){
+			$response = $this->General_model->updateRecord('lotes', array('tipo_venta' => $tipoVenta), 'idLote', $idLote);
+			//echo json_encode($response);
+			echo json_encode(array("status"=> $response, "tabla" => true));
+		}
+		//else if($accion == 3 && !(is_null($impuesto)) && !(is_null($idSede))) {
+		else if($accion == 3 && !$this->anyEmpty($impuesto, $idSede)){
+			$response = $this->General_model->updateRecord('sedes', array('impuesto' => $impuesto), 'id_sede', $idSede);
+			//echo "response: ",$response;
+			echo json_encode(array("status"=> $response, "tabla" => false));
+		}
+		else if($accion == 4 && !$this->anyEmpty($nombre, $paterno, $materno)){
+		//else if($accion == 4 && !(is_null($nombre)) && !(is_null($paterno)) && !(is_null($materno))) {
+			//public function getLastId($table, $where, $select) {}
+			$last_id = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 77), 'id_opcion');
+			
+			$data_insert = array(
+				'id_opcion' => $last_id + 1,
+				'id_catalogo' => 77,
+				'nombre' => $nombre. ' '.$paterno.' '.$materno,
+				'estatus' => 1,
+				'fecha_creacion' => date('Y-m-d H:i:s'), 
+				'creado_por' => 1,
+				'color' => null
+			);
+			$response = $this->General_model->addRecord('opcs_x_cats', $data_insert);
+			echo json_encode(array("status"=> $response, "reload" => true));
+		}
+		else if($accion == 5 && !$this->anyEmpty($estatus, $idRepresentante)) {
+			$response = $this->Administracion_model->updateRepresentante('opcs_x_cats', array('id_catalogo' => 77, 'id_opcion' => $idRepresentante), array('estatus' => $estatus));
+			echo json_encode(array("status" => $response, "reload" => true));
+		}
+		else {
+			
+			echo json_encode(array("status" => false));
+		}
+	}
+	public function getCatalogoMaster() {
+		$data = $this->Administracion_model->getCatalogoMaster()->result_array();
+		if($data != null) {
+			echo json_encode($data);
+		}else {
+			json_encode(array());
+		}
+	}
+	
 }
 
 

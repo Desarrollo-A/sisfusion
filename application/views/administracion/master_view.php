@@ -7,23 +7,88 @@
 		<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title">¿Qué opción desea hacer?</h4>
+					<div class="modal-header text-center">
+						<h4 class="modal-title">¿Qué acción desea realizar?</h4>
 					</div>
 					<div class="modal-body">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card card-plain">
 									<div class="card-content">
-										<!--<h4 id="idLotelbl"></h4>-->
-										<div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                                <div class="form-group overflow-hidden">
-                                                    <label class="control-label">OPCIÓN</label>
-                                                    <select name="optSelect" id="optSelect" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true"  data-container="body" required></select>
-                                                </div>
-                                            </div>
-                                    	</div>
+										<form method="post" id="form_rl">
+    										<div class="row">
+        										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            										<div class="form-group overflow-hidden">
+                										<label class="control-label">OPCIÓN</label>
+                										<select name="opciones" id="opciones" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+													<div class="form-group overflow-hidden">
+														<select name="representante" id="representante" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+													<div class="form-group overflow-hidden">
+														<select name="tipoVenta" id="tipoVenta" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+													</div>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+													<div class="form-group overflow-hidden">
+														<select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+													</div>
+												</div>
+												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+													<div class="form-group overflow-hidden">
+														<input class="form-control input-gral" id="impuesto" type="number" name="impuesto">
+													</div>
+												</div>
+											</div>
+											<!-- rep = Representante Legal CRUD-->
+											<div class="row">
+												<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+													<div class="form-group overflow-hidden">
+														<select name="repData" id="repData" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+													</div>
+												</div>
+												<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+													<div class="form-group overflow-hidden">
+														<select name="repEstatus" id="repEstatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+															<option value="0">INACTIVO</option>
+															<option value="1">ACTIVO</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											
+											<div class="row">
+												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+													<div class="form-group overflow-hidden">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el nombre" required value=''  id="nombre_rep" type="text" name="nombre_rep">
+													</div>
+												</div>
+												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+													<div class="form-group overflow-hidden">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido paterno" required value='' id="paterno_rep" type="text" name="paterno_rep">
+													</div>
+												</div>
+												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+													<div class="form-group overflow-hidden">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido materno" required value='' id="materno_rep" type="text" name="materno_rep">
+													</div>
+												</div>
+											</div>
+										
+											<input type="hidden" name="idCliente" id="idCliente" value="">
+                            				<input type="hidden" name="idLote" id="idLote" value="">
+										</form>
+										
 									</div>
 								</div>
 							</div>
@@ -31,6 +96,7 @@
 					</div>
 					<div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR </button>
+						<button type="button" id="btn_upt" class="btn btn-gral-data">GUARDAR</button>
                     </div>
 				</div>
 			</div>
@@ -57,6 +123,11 @@
 												<button type="button" class="btn-gral-data find_doc"> Buscar </button>
 											</div>
 										</div>
+										<div class="col-6 col-sm-6 col-md-4 col-lg-4 mt-3">
+											<div class="form-group">
+												<button class="btn-rounded btn-s-greenLight apply-action" id="moreOptions" name="moreOptions" title="Más opciones"><i class="fas fa-plus"></i></button>
+											</div>
+										</div>
 									</div>				
 								</div>
 								<div class="material-datatables">
@@ -78,6 +149,20 @@
 									</div>
 								</div>
 							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade modal-alertas" id="myModalUpdate" role="dialog">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="title_option">¿Realmente desea actualizar el dato?</h4>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
+							<button type="submit" class="btn btn-primary" id="actualizarBtn" data-dismiss="modal">ACEPTAR<div class="ripple-container"></div></button>
 						</div>
 					</div>
 				</div>

@@ -256,21 +256,43 @@ class Administracion_model extends CI_Model {
 		WHERE cl.status = 1 $where
 		ORDER BY cl.id_cliente DESC")->result();
     }
-
     public function getDatosLotes($idLote){
-        $query = $this->db->query("SELECT UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente, lo.idLote, UPPER(lo.nombreLote) nombreLote,CONVERT(VARCHAR,cl.fechaApartado, 103) fechaApartado, 
-        UPPER(co.nombre_condominio) nombreCondominio, re.nombreResidencial,UPPER(rl.nombre) representante
-        FROM clientes cl
-        INNER JOIN lotes lo ON lo.idLote = cl.idLote 
+        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN CLIENTE')) AS nombreCliente, cl.id_cliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'NA') AS fechaApartado, 
+        UPPER(co.nombre_condominio) nombreCondominio, re.nombreResidencial,UPPER(COALESCE(opx.nombre, 'SIN ESPECIFICAR')) representante,
+        COALESCE(tip.tipo_venta, 'NA') tipo_venta
+        FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN opcs_x_cats rl ON rl.id_opcion = cl.rl
-        WHERE cl.idLote = $idLote  AND rl.id_catalogo = 77");
+        LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+        LEFT JOIN opcs_x_cats opx ON opx.id_opcion = cl.rl AND opx.id_catalogo = 77
+        LEFT JOIN tipo_venta tip ON tip.id_tventa = lo.tipo_venta
+        WHERE lo.idLote = $idLote ");
         return $query->result_array();
     }
 
-    public function getOpcionesMaster() {
-        return $this->db->query("SELECT cat.id_catalogo, UPPER(opc.nombre) opcion FROM catalogos cat 
-        INNER JOIN opcs_x_cats opc ON opc.id_catalogo = cat.id_catalogo WHERE cat.id_catalogo = 120;");
+    public function getCatalogoMaster() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre, estatus
+        FROM (SELECT CAST(id_catalogo AS varchar(4)) id_catalogo, id_opcion, nombre, estatus
+        FROM opcs_x_cats WHERE id_catalogo IN (120, 77) AND estatus = 1
+        UNION ALL SELECT 'venta_tipo' id_catalogo, id_tventa id_opcion, tipo_venta nombre, NULL estatus FROM tipo_venta 
+        ) t1 ORDER BY id_catalogo, nombre");
+        return $query->result_array();
+    }
+    //Function to retrieve the lastId
+    public function getLastId($table, $where, $select) {
+        $this->db->select_max($select);
+        $this->db->where($where);
+        $query = $this->db->get($table);
+        if($query->num_rows() > 0) {
+            $row = $query->row();
+            return $row->$select;
+        }else {
+            return null;
+        }
+    }
+    public function updateRepresentante($table, $where, $data){
+        $this->db->where($where);
+        $response = $this->db->update($table, $data);
+        return $response; 
     }
 }
