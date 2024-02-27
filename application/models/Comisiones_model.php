@@ -1134,7 +1134,7 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
         LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote AND pc.bandera = 0
-        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= '2024-02-24 00:00:00' GROUP BY pc.bandera");
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
     function getDatosNuevasMktd_pre(){
