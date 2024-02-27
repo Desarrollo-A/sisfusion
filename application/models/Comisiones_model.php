@@ -213,7 +213,7 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         lor.sup AS supAnt, l.sup AS supAct, 
-        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu
+        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -239,6 +239,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,id_lote,idCliente FROM comisiones GROUP BY id_lote,idCliente) sumComisionReu ON sumComisionReu.id_lote = lor.idLote AND sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
+        LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
         AND (pc.bandera IN (0,100) OR pc.bandera IS NULL)
@@ -1134,7 +1135,7 @@ class Comisiones_model extends CI_Model {
         return $this->db->query("SELECT count(*) dispersion, pc.bandera 
         FROM comisiones com
         LEFT JOIN pago_comision pc ON pc.id_lote = com.id_lote AND pc.bandera = 0
-        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= '2024-02-24 00:00:00' GROUP BY pc.bandera");
+        WHERE com.id_lote = $lote AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
     function getDatosNuevasMktd_pre(){
@@ -2783,6 +2784,10 @@ class Comisiones_model extends CI_Model {
         }
 
         $sqlCompartida = $numAsesores > 1 ? "INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1" : "";
+        $sqlGerentes = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_gerente" : "";
+        $sqlCoor = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_coordinador" : "";
+        $sqlSub = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_subdirector" : "";
+        $sqlReg = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_regional" : "";
         $sqlNumAsesores = $numAsesores > 1 ? "/@numAsesores" : "";
         $fragmento = (in_array( $plan_comision, [74,65,66])) || $numAsesores <= 1 ? " " : " u1.id_usuario = v1.id_asesor OR ";
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
@@ -2817,7 +2822,7 @@ class Comisiones_model extends CI_Model {
             $joinLotes
             $sqlCompartida 
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.coordinador not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador $sqlCoor
             WHERE cA.id_cliente = @idCliente)
             
             UNION  /* GERENTE */
@@ -2829,7 +2834,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes
             $sqlCompartida  
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente $sqlGerentes
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.gerente not IN (0)
             WHERE cA.id_cliente = @idCliente)
             
@@ -2843,7 +2848,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes 
             $sqlCompartida 
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector $sqlSub
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.subdirector not IN (0)
             WHERE cA.id_cliente = @idCliente)
 
@@ -2857,7 +2862,7 @@ class Comisiones_model extends CI_Model {
             $joinLotes
             $sqlCompartida  
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.regional not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_regional
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_regional $sqlReg
             WHERE cA.id_cliente = @idCliente)
             $addCondition
             ORDER BY rolVal");
