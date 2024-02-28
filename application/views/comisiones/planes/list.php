@@ -102,7 +102,12 @@
                                         <option value="0">NO</option>
                                     </select>
                                 </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="prioridad" class="control-label label-gral">Prioridad</label>
+                                    <input id="prioridad" name="prioridad" class="form-control input-gral" type="number" value="0" placeholder="PRIORIDAD DE EJECUCION" />
+                                </div>
                             </div>
+
                             <span class="col-md-12">Condiciones del plan</span>
                             <div class="col-md-12">
                                 <div class="col-md-12">
@@ -131,18 +136,18 @@
 
                             <div class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
-                                    <label for="is_regional" class="control-label label-gral">Regional</label>
-                                    <select name="is_regional" id="is_regional" value="0" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
-                                        <option value="1">SEA</option>
-                                        <option value="0">NO SEA</option>
+                                    <label for="is_regional" class="control-label label-gral">Venta regional</label>
+                                    <select name="is_regional" id="is_regional" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="">NO APLICA</option>
+                                        <option value="1">No</option>
+                                        <option value="0">Si</option>
                                     </select>
                                 </div>
                                 <div class="col-lg-3 col-md-6">
-                                    <label for="regional" class="control-label label-gral">Gerentes Regionales</label>
-                                    <input id="regional" name="regional" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                    <label for="regional" class="control-label label-gral">Excepto gerentes</label>
+                                    <input id="regional" name="regional" value="0" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
                                 </div>
                             </div>
-
 
                             <div class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
@@ -165,13 +170,67 @@
                                     <input type="text" class="form-control input-gral datepicker fin_prospeccion" name="fin_prospeccion" id="fin_prospeccion" placeholder="Fin" />
                                 </div>
                             </div>
-
+                                
                             <div class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
-                                    <label for="prioridad" class="control-label label-gral">Prioridad</label>
-                                    <input id="prioridad" name="prioridad" class="form-control input-gral" type="number" value="0" placeholder="PRIORIDAD DE EJECUCION" />
+                                    <label for="descuento_mdb" class="control-label label-gral">Tiene descuento MDB</label>
+                                    <select name="descuento_mdb" id="descuento_mdb" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="" >NO APLICA</option>
+                                        <option value="1">SI</option>
+                                        <option value="0">NO</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="ismktd" class="control-label label-gral">Es asesor de marketing</label>
+                                    <select name="ismktd" id="ismktd" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="" >NO APLICA</option>
+                                        <option value="1">SI</option>
+                                        <option value="0">NO</option>
+                                    </select>
                                 </div>
                             </div>
+
+                            <span class="col-md-12">Aplique solo a:</span>
+                            <div class="col-md-12">
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="asesores" class="control-label label-gral">Asesores</label>
+                                    <input id="asesores" name="asesores" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="coordinadores" class="control-label label-gral">Coordinadores</label>
+                                    <input id="coordinadores" name="coordinadores" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="gerentes" class="control-label label-gral">Gerentes</label>
+                                    <input id="gerentes" name="gerentes" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="subdirectores" class="control-label label-gral">Subdirector</label>
+                                    <input id="subdirectores" name="subdirectores" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="tipo_venta" class="control-label label-gral">Tipo de venta</label>
+                                    <select name="tipo_venta" id="tipo_venta" multiple="multiple" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body"></select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="venta_compartida" class="control-label label-gral">Es venta compartida</label>
+                                    <select name="venta_compartida" id="venta_compartida" value="0" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="1">Si</option>
+                                        <option value="0">No</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 col-lg-3">
+                                    <label for="sedes_compartidas" class="control-label label-gral">Sedes compartidas</label>
+                                    <select name="sedes_compartidas" id="sedes_compartidas" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="procesos" class="control-label label-gral">Proceso</label>
+                                    <select name="procesos" id="procesos" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body"></select>
+                                </div>
+                            </div>
+
                             <span class="col-md-12">Esquema de comisiones</span>
                             <div class="col-md-12">
                                 <div class="col-md-12">

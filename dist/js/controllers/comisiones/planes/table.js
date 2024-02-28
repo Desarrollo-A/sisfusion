@@ -73,15 +73,20 @@ let defaults = {
     comision_gerente: 1,
     comision_coordinador: 1,
     comision_asesor: 3,
-    usuarios: []
+    usuarios: [],
+    is_regional: undefined,
+    regional: 0,
 }
 
 $(document).ready(function () {
     getDataSelect('sedes', `${general_base_url}planes/sedes`);
     getDataSelect('residencial', `${general_base_url}planes/residenciales`);
     getDataSelect('prospeccion', `${general_base_url}planes/prospecciones`);
-
-    $("#plan-modal").modal();
+    getDataSelect('tipo_venta', `${general_base_url}planes/tipo_venta`);
+    getDataSelect('procesos', `${general_base_url}planes/procesos`);
+    getDataSelect('sedes_compartidas', `${general_base_url}planes/sedes`);
+    
+    //$("#plan-modal").modal();
 
     let titulos_intxt = [];
 
@@ -296,10 +301,16 @@ $(document).ready(function () {
             // CONDICIONES
 
             if(row.data().fechaInicio){
-                condiciones += `fecha inicio: ${row.data().fechaInicio}<br>`
+                condiciones += `fecha de apartado desde: ${row.data().fechaInicio}<br>`
             }
             if(row.data().fechaFin){
-                condiciones += `fecha fin: ${row.data().fechaFin}<br>`
+                condiciones += `fecha de apartado hasta: ${row.data().fechaFin}<br>`
+            }
+            if(row.data().inicio_prospeccion){
+                condiciones += `fecha de prospeccion desde: ${row.data().inicio_prospeccion}<br>`
+            }
+            if(row.data().fin_prospeccion){
+                condiciones += `fecha de prospeccion hasta: ${row.data().fin_prospeccion}<br>`
             }
             if(row.data().prospeccion_list){
                 condiciones += `prospeccion: ${row.data().prospeccion_list}<br>`
@@ -312,6 +323,49 @@ $(document).ready(function () {
             }
             if(row.data().lotes_list){
                 condiciones += `lotes: ${row.data().lotes_list}<br>`
+            }
+            if(row.data().descuento_mdb !== null){
+                if(row.data().descuento_mdb === 1){
+                    condiciones += `tenga descuento mdb<br>`
+                }else{
+                    condiciones += `no tenga descuento mdb<br>`
+                }
+            }
+            if(row.data().ismktd !== null){
+                if(row.data().ismktd === 1){
+                    condiciones += `el asesor sea de marketing<br>`
+                }else{
+                    condiciones += `el asesor no sea de marketing<br>`
+                }
+            }
+            if(row.data().venta_compartida !== null){
+                if(row.data().venta_compartida === 1){
+                    condiciones += `la venta sea compartida<br>`
+
+                    if(row.data().sedes_compartidas_list){
+                        condiciones += `compartida con: ${row.data().sedes_compartidas_list}<br>`
+                    }
+                }else{
+                    condiciones += `la venta no sea compartida<br>`
+                }
+            }
+            if(row.data().gerentes_list){
+                condiciones += `gerentes: ${row.data().gerentes_list}<br>`
+            }
+            if(row.data().subdirectores_list){
+                condiciones += `subdirector: ${row.data().subdirectores_list}<br>`
+            }
+            if(row.data().coordinadores_list){
+                condiciones += `coordinadores: ${row.data().coordinadores_list}<br>`
+            }
+            if(row.data().asesores_list){
+                condiciones += `asesores: ${row.data().asesores_list}<br>`
+            }
+            if(row.data().tipo_venta_list){
+                condiciones += `tipo de venta: ${row.data().tipo_venta_list}<br>`
+            }
+            if(row.data().procesos_list){
+                condiciones += `proceso: ${row.data().procesos_list}<br>`
             }
 
             // USUARIOS
@@ -386,13 +440,25 @@ $(document).ready(function () {
             
             // is_sede: new FormData(event.target).get('is_sede') || null,
             sedes: new FormData(event.target).getAll('sedes').toString(),
+            sedes_compartidas: new FormData(event.target).getAll('sedes_compartidas').toString(),
 
             residencial: new FormData(event.target).getAll('residencial').toString(),
             lotes: new FormData(event.target).get('lotes'),
             prioridad: new FormData(event.target).get('prioridad') || 0,
             
-            is_regional: new FormData(event.target).get('is_regional') || 0,
+            is_regional: new FormData(event.target).get('is_regional'),
             regional: new FormData(event.target).get('regional'),
+
+            descuento_mdb: new FormData(event.target).get('descuento_mdb'),
+            ismktd: new FormData(event.target).get('ismktd'),
+
+            gerentes: new FormData(event.target).get('gerentes'),
+            coordinadores: new FormData(event.target).get('coordinadores'),
+            asesores: new FormData(event.target).get('asesores'),
+            subdirectores: new FormData(event.target).get('subdirectores'),
+            tipo_venta: new FormData(event.target).getAll('tipo_venta').toString(),
+            venta_compartida: new FormData(event.target).get('venta_compartida'),
+            procesos: new FormData(event.target).get('procesos'),
 
             comision_director: new FormData(event.target).get('comision_director'),
             comision_regional: new FormData(event.target).get('comision_regional'),
@@ -477,6 +543,44 @@ function editPlan(data){
     $('#form-plan-modal #is_regional').val(data.is_regional).change()
     $('#form-plan-modal #regional').val(data.regional)
 
+    $('#form-plan-modal #descuento_mdb').val(data.descuento_mdb).change()
+    $('#form-plan-modal #ismktd').val(data.ismktd).change()
+    $('#form-plan-modal #venta_compartida').val(data.venta_compartida).change()
+
+    $('#form-plan-modal #gerentes').val(data.gerentes)
+    $('#form-plan-modal #subdirectores').val(data.subdirectores)
+    $('#form-plan-modal #coordinadores').val(data.coordinadores)
+    $('#form-plan-modal #asesores').val(data.asesores)
+    
+    $('#form-plan-modal #tipo_venta').val('')
+    if(data.tipo_venta){
+        $.each(data.tipo_venta.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #tipo_venta option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #tipo_venta').selectpicker('refresh')
+
+    $('#form-plan-modal #venta_compartida').val(data.venta_compartida).change()
+
+    $('#form-plan-modal #sedes_compartidas').val('')
+    if(data.sedes_compartidas){
+        $.each(data.sedes_compartidas.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #sedes_compartidas option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #sedes_compartidas').selectpicker('refresh')
+    
+    $('#form-plan-modal #procesos').val('')
+    if(data.procesos){
+        $.each(data.procesos.split(","), function(i,e){
+            //console.log(e)
+            $("#form-plan-modal #procesos option[value='" + e + "']").prop("selected", true)
+        })
+    }
+    $('#form-plan-modal #procesos').selectpicker('refresh')
+
     $('#form-plan-modal #comision_director').val(data.comision_director)
     $('#form-plan-modal #comision_regional').val(data.comision_regional)
     $('#form-plan-modal #comision_subdirector').val(data.comision_subdirector)
@@ -502,6 +606,7 @@ function editPlan(data){
         })
     }
     $('#form-plan-modal #residencial').selectpicker('refresh')
+    $('#form-plan-modal #lotes').val(data.lotes)
 
     $('#form-plan-modal #inicio_prospeccion').val(data.inicio_prospeccion)
     $('#form-plan-modal #fin_prospeccion').val(data.fin_prospeccion)
@@ -519,8 +624,9 @@ function editPlan(data){
     for (var i = 0; i < data.usuarios.length; i++) {
         let id = data.usuarios[i].idUsuario
         let nombre = data.usuarios[i].nombre
+        let comision = data.usuarios[i].valorComision
         
-        addUsuarioPlanComision(id, nombre)
+        addUsuarioPlanComision(id, nombre, comision, data.idPlan)
     }
 
     $("#plan-modal").modal();
@@ -613,7 +719,7 @@ function getUserComisionando(id_usuario){
         let id = data.id_usuario
         let nombre = `${data.nombre} ${data.apellido_paterno} ${data.apellido_materno}`
 
-        addUsuarioPlanComision(id, nombre)
+        addUsuarioPlanComision(id, nombre, 1)
     })
 }
 
@@ -627,9 +733,27 @@ function getDataSelect(element, url){
     })
 }
 
-function addUsuarioPlanComision(id, nombre){
+function removeUsuarioPlanComision(event){
+    event.preventDefault()
+    
+    const data = event.data
+
+    console.log(data)
+
+    $(`#usuarios_plan_comisiones #${data.id}`).remove()
+
+    if(data.plan){
+        $.getJSON( `${general_base_url}planes/remove_usuario?usuario=${data.id}&plan=${data.plan}` )
+        .done(function( data ) {
+            console.log(data)
+        })
+    }
+}
+
+function addUsuarioPlanComision(id, nombre, comision, plan){
     $('#usuarios_plan_comisiones').append(
         $('<div />')
+        .attr('id', id)
         .addClass('user-plan-comision col-md-12')
         .append(
             $('<input />')
@@ -656,9 +780,9 @@ function addUsuarioPlanComision(id, nombre){
                 .addClass('form-group')
                 .append(
                     $('<input />')
-                    .attr('type', 'text')
+                    .attr('type', 'number')
                     .addClass('form-control input-gral input-comision')
-                    .val(1)
+                    .val(comision)
                 )
             ),
             $('<div />')
@@ -667,6 +791,7 @@ function addUsuarioPlanComision(id, nombre){
                 $('<button />')
                 .addClass('btn btn-primary')
                 .text('Eliminar')
+                .on('click', {id, plan}, removeUsuarioPlanComision)
             )
         )
     )

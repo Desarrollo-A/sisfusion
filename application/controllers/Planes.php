@@ -51,6 +51,14 @@ class Planes extends CI_Controller{
         echo json_encode($this->PlanesModel->getLugaresProspeccion());
     }
 
+    public function tipo_venta(){
+        echo json_encode($this->PlanesModel->getTipoVenta());
+    }
+
+    public function procesos(){
+        echo json_encode($this->PlanesModel->getProcesos());
+    }
+
     public function enable(){
         $id_plan = $this->input->get('plan');
 
@@ -118,10 +126,12 @@ class Planes extends CI_Controller{
     }
 
     private function saveUsuariosPlanComision($id, $data){
-        foreach ($data->usuarios as $key => $usuario) {
-            $usuario = (object) $usuario;
+        if($data->usuarios){
+            foreach ($data->usuarios as $key => $usuario) {
+                $usuario = (object) $usuario;
 
-            $this->PlanesModel->saveUsuarioPlanComision($id, $usuario->id, $usuario->nombre, $usuario->comision);
+                $this->PlanesModel->saveUsuarioPlanComision($id, $usuario->id, $usuario->nombre, $usuario->comision);
+            }
         }
     }
 
@@ -135,12 +145,30 @@ class Planes extends CI_Controller{
         echo json_encode($is_ok);
     }
 
+    public function remove_usuario()
+    {
+        $id_usuario = $this->input->get('usuario');
+        $id_plan = $this->input->get('plan');
+
+        $this->PlanesModel->removeUsuarioPlanComision($id_usuario, $id_plan);
+    }
+
     public function llenado(){
         $planes = $this->PlanesModel->getPlanesComision();
 
         foreach ($planes as $key => $plan) {
             if($plan->estatus == 1){
                 $conditions = [];
+
+                $where = '';
+
+                if($plan->venta_compartida){
+                    $where .= "INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1 AND cl.status = 1 ";
+
+                    if($plan->sedes_compartidas){
+                        array_push($conditions, "vc.id_sede IN ($plan->sedes_compartidas) AND vc.id_regional NOT IN(0)");
+                    }
+                }
 
                 if($plan->sedes){
                     array_push($conditions, "cl.id_sede IN ($plan->sedes)");
@@ -162,7 +190,7 @@ class Planes extends CI_Controller{
                     array_push($conditions, "cl.fechaApartado < '$plan->fechaFin'");
                 }
 
-                if($plan->prospeccion != NULL){
+                if($plan->prospeccion !== NULL){
                     if($plan->is_prospeccion == 0){
                         array_push($conditions, "cl.lugar_prospeccion NOT IN ($plan->prospeccion)");
                     }else{
@@ -170,12 +198,16 @@ class Planes extends CI_Controller{
                     }
                 }
 
-                if($plan->regional != null){
+                if($plan->is_regional !== null){
                     if($plan->is_regional){
                         array_push($conditions, "cl.id_regional IN ($plan->regional)");
                     }else{
                         array_push($conditions, "cl.id_regional NOT IN ($plan->regional)");
                     }
+                }
+
+                if($plan->subdirectores){
+                    array_push($conditions, "cl.id_subdirector IN ($plan->subdirectores)");
                 }
 
                 if($plan->inicio_prospeccion){
@@ -186,7 +218,31 @@ class Planes extends CI_Controller{
                     array_push($conditions, "ps.fecha_creacion < '$plan->fin_prospeccion'");
                 }
 
-                $where = 'WHERE ' . implode(' AND ', $conditions) . "\n";
+                if($plan->descuento_mdb !== null){
+                    if($plan->descuento_mdb == 1){
+                        array_push($conditions, "cl.descuento_mdb = 1");
+                    }else{
+                        array_push($conditions, "cl.descuento_mdb != 0");
+                    }
+                }
+
+                if($plan->gerentes){
+                    array_push($conditions, "cl.id_gerente IN ($plan->gerentes)");
+                }
+
+                if($plan->ismktd !== null){
+                    if($plan->ismktd == 0){
+                        array_push($conditions, "ae.ismktd != 1");
+                    }else{
+                        array_push($conditions, "ae.ismktd = 1");
+                    }
+                }
+
+                if($plan->procesos){
+                    array_push($conditions, "cl.proceso IN ($plan->procesos)");
+                }
+
+                $where .= 'WHERE ' . implode(' AND ', $conditions) . "\n";
                 print_r($plan->nombre . ': ' . $where);
             }
         }

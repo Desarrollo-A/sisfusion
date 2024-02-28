@@ -41,9 +41,55 @@ class PlanesModel extends CI_Model{
                 WHERE
                     r.idLote IN (select value id from STRING_SPLIT(p.lotes, ',')) FOR XML PATH('') ),1,1,''
             )) AS lotes_list,
+            p.gerentes,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.gerentes, ',')) FOR XML PATH('') ),1,1,''
+            )) AS gerentes_list,
+            p.asesores,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.asesores, ',')) FOR XML PATH('') ),1,1,''
+            )) AS asesores_list,
+            p.coordinadores,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.coordinadores, ',')) FOR XML PATH('') ),1,1,''
+            )) AS coordinadores_list,
+            p.subdirectores,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.subdirectores, ',')) FOR XML PATH('') ),1,1,''
+            )) AS subdirectores_list,
+            p.tipo_venta,
+            (SELECT STUFF((
+                select ', '+ tipo_venta from tipo_venta t
+                WHERE
+                    t.id_tventa IN (select value id from STRING_SPLIT(p.tipo_venta, ',')) FOR XML PATH('') ),1,1,''
+            )) AS tipo_venta_list,
+            p.procesos,
+            (SELECT STUFF((
+                select ', '+ nombre from opcs_x_cats o
+                WHERE
+                    o.id_catalogo=97
+                AND o.id_opcion IN (select value id from STRING_SPLIT(p.procesos, ',')) FOR XML PATH('') ),1,1,''
+            )) AS procesos_list,
             p.prioridad,
+            p.venta_compartida,
+            p.sedes_compartidas,
+            (SELECT STUFF((
+                select ', '+ nombre from sedes s
+                WHERE
+                    s.id_sede IN (select value id from STRING_SPLIT(p.sedes_compartidas, ',')) FOR XML PATH('') ),1,1,''
+            )) AS sedes_compartidas_list,
             p.is_regional,
             p.regional,
+            p.descuento_mdb,
+            p.ismktd,
             p.comision_director,
             p.comision_regional,
             p.comision_subdirector,
@@ -109,6 +155,29 @@ class PlanesModel extends CI_Model{
         FROM opcs_x_cats
         WHERE
             id_catalogo=9";
+
+        return $this->db->query($query)->result_array();
+    }
+
+    public function getTipoVenta(){
+        $query = "SELECT
+            id_tventa as id,
+            tipo_venta as label
+        FROM tipo_venta
+        WHERE
+            status=1";
+
+        return $this->db->query($query)->result_array();
+    }
+
+    public function getProcesos(){
+        $query = "SELECT
+            id_opcion as id,
+            nombre as label
+        FROM opcs_x_cats
+        WHERE
+            estatus = 1
+        AND id_catalogo = 97";
 
         return $this->db->query($query)->result_array();
     }
@@ -196,6 +265,18 @@ class PlanesModel extends CI_Model{
             is_regional,
             regional,
 
+            descuento_mdb,
+            ismktd,
+
+            gerentes,
+            asesores,
+            coordinadores,
+            subdirectores,
+            tipo_venta,
+            venta_compartida,
+            sedes_compartidas,
+            procesos,
+
             comision_director,
             comision_regional,
             comision_subdirector,
@@ -227,6 +308,18 @@ class PlanesModel extends CI_Model{
             NULLIF('$data->is_regional', ''),
             NULLIF('$data->regional', ''),
 
+            NULLIF('$data->descuento_mdb', ''),
+            NULLIF('$data->ismktd', ''),
+
+            NULLIF('$data->gerentes', ''),
+            NULLIF('$data->asesores', ''),
+            NULLIF('$data->coordinadores', ''),
+            NULLIF('$data->subdirectores', ''),
+            NULLIF('$data->tipo_venta', ''),
+            NULLIF('$data->venta_compartida', ''),
+            NULLIF('$data->sedes_compartidas', ''),
+            NULLIF('$data->procesos', ''),
+
             $data->comision_director,
             $data->comision_regional,
             $data->comision_subdirector,
@@ -256,10 +349,10 @@ class PlanesModel extends CI_Model{
             fechaInicio = NULLIF('$data->fechaInicio', ''),
             fechaFin    = NULLIF('$data->fechaFin', ''),
             
-            is_prospeccion = NULLIF('$data->is_prospeccion', ''),
-            prospeccion = NULLIF('$data->prospeccion', ''),
-            inicio_prospeccion = NULLIF('$data->inicio_prospeccion', ''),
-            fin_prospeccion = NULLIF('$data->fin_prospeccion', ''),
+            is_prospeccion      = NULLIF('$data->is_prospeccion', ''),
+            prospeccion         = NULLIF('$data->prospeccion', ''),
+            inicio_prospeccion  = NULLIF('$data->inicio_prospeccion', ''),
+            fin_prospeccion     = NULLIF('$data->fin_prospeccion', ''),
 
             prioridad   = $data->prioridad,
             sedes       = NULLIF('$data->sedes', ''),
@@ -268,6 +361,18 @@ class PlanesModel extends CI_Model{
 
             is_regional = NULLIF('$data->is_regional', ''),
             regional    = NULLIF('$data->regional', ''),
+
+            descuento_mdb   = NULLIF('$data->descuento_mdb', ''),
+            ismktd          = NULLIF('$data->ismktd', ''),
+
+            gerentes            = NULLIF('$data->gerentes', ''),
+            asesores            = NULLIF('$data->asesores', ''),
+            coordinadores       = NULLIF('$data->coordinadores', ''),
+            subdirectores       = NULLIF('$data->subdirectores', ''),
+            tipo_venta          = NULLIF('$data->tipo_venta', ''),
+            venta_compartida    = NULLIF('$data->venta_compartida', ''),
+            sedes_compartidas    = NULLIF('$data->sedes_compartidas', ''),
+            procesos            = NULLIF('$data->procesos', ''),
 
             comision_director    = $data->comision_director,
             comision_regional    = $data->comision_regional,
@@ -285,6 +390,12 @@ class PlanesModel extends CI_Model{
 
     public function borrarPlan($idPlan){
         $query = "DELETE FROM planes_comision WHERE idPlan = $idPlan";
+
+        return $this->db->query($query);
+    }
+
+    public function removeUsuarioPlanComision($idUsuario, $idPlan){
+        $query = "DELETE FROM usuariosPlanComision WHERE idPlan = $idPlan AND idUsuario = $idUsuario";
 
         return $this->db->query($query);
     }
