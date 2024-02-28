@@ -206,8 +206,7 @@ function createAccordions(option, render, rol){
                         <tr>
                             <th class="detail">MÁS</th>
                             <th class="encabezado text-center">`+option.toUpperCase()+`</th>
-                            <th>GRAN TOTAL</th>
-                            <th class="text-center">SEDE</th>
+                            <th>GRAN TOTAL</th>        
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
@@ -324,7 +323,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                     }
                 }
             }
-        }],
+        ],
         pagingType: "full_numbers",
         lengthMenu: [
             [10, 25, 50, -1],
@@ -359,12 +358,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                     //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede="${[d.apt_id_sede, d.cont_id_sede]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     
-                }
-            },
-            {
-                width:"20vw",
-                data: function (d) {
-                    return `<p class="m-0" style="white-space: normal">${d.sedeNombre}<p>`;
                 }
             },
             {
