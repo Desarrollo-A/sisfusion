@@ -5,14 +5,15 @@ var banderaNewEvidencia = 2;
 var datosDataTable = [];
 
 $(document).ready(function () {
- 
+    sp.initFormExtendedDatetimepickers();
+    $(".datepicker").datetimepicker({ locale: "es" });
+    setInitialValues();
     llenado();
 });
 
 function llenado(){
     $("#tipo")
     $("#tipo").selectpicker('refresh'); 
-
     $.post(general_base_url + "/Descuentos/lista_estatus_descuentos", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -23,7 +24,6 @@ function llenado(){
         $("#tipo").selectpicker('refresh');
     }, 'json');
 }
-
 function MostrarArchivo(tipo){
     var com2 = new FormData(); 
         com2.append("id_opcion", tipo);
@@ -126,26 +126,6 @@ $("#form_prestamos").on('submit', function (e) {
 
             $("#tipo").selectpicker('refresh');
             $("#roles").selectpicker('refresh');
-            // if (data == 1) {
-            //    
-            //     closeModalEng();
-            //     $('#miModal').modal('hide');
-            //     alerts.showNotification("top", "right", "Préstamo registrado con éxito.", "success");
-            // } else if (data == 2) {
-            //     $('#tabla_prestamos').DataTable().ajax.reload(null, false);
-            //     closeModalEng();
-            //     $('#miModal').modal('hide');
-            //     alerts.showNotification("top", "right", "Pago liquidado.", "warning");
-            // } else if (data == 3) {
-            //     closeModalEng();
-            //     $('#miModal').modal('hide');
-            //     alerts.showNotification("top", "right", "El usuario seleccionado ya tiene un préstamo activo.", "warning");
-            // }
-            // else if (data == 4) {
-            //     closeModalEng();
-            //     $('#miModal').modal('hide');
-            //     alerts.showNotification("top", "right", "Erro al subir el archivo activo.", "warning");
-            // }
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -229,7 +209,16 @@ $("#tabla_prestamos").ready(function () {
             }
         });
     });
-
+$("#btnTable").click(function(e){
+    e.preventDefault();
+    $('#spiner-loader').removeClass('hide');
+    let beginDate =  $(`#beginDate`).val() != '' ? $(`#beginDate`).val() : 0;
+    let endDate =  $(`#endDate`).val() != '' ? $(`#endDate`).val() : 0;
+    setDataTableDescuentos(beginDate, endDate);
+    $('#spiner-loader').addClass('hide');
+});
+setDataTableDescuentos(0,0);
+function setDataTableDescuentos(beginDate, endDate){
     $('#tabla_prestamos').on('xhr.dt', function (e, settings, json, xhr) {
         var total = 0;
         var total2 = 0;
@@ -342,7 +331,6 @@ $("#tabla_prestamos").ready(function () {
                 const letras = d.comentario.split(" ");
                 if(letras.length <= 4)
                 {
-
                     return '<p class="m-0">'+d.comentario+'</p>';
                 }else{
                     
@@ -380,7 +368,6 @@ $("#tabla_prestamos").ready(function () {
             "data": function (d) {
                 let etiqueta = '';
                 color = 'lbl-blueMaderas';
-
                 if (d.id_opcion == 18) { 
                     color = 'lbl-green';
                 } else if (d.id_opcion == 19) {
@@ -405,12 +392,10 @@ $("#tabla_prestamos").ready(function () {
         },
         {
             data: function (d) {
-                
                 if (d.fecha_creacion_referencia !== null && d.estatus == 1) {
                     const fecha = new Date(d.fecha_creacion_referencia);
                     const now = new Date();
                     const mesesDif = monthDiff(fecha, now);
-
                     if (mesesDif >= 2) {
                         return `<p> ${d.fecha_creacion_referencia.split('.')[0]} <span class="label" style="background: orange">Sin saldo en ${mesesDif} meses</label></p>`;
                     }
@@ -432,8 +417,11 @@ $("#tabla_prestamos").ready(function () {
                         </button>`;
                 }
 
-                if (d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28 ) {
-                    botonesModal += `
+                if ((d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28)  ) {
+                    if((d.estatus == 2  && d.total_pagado == null )){
+                        
+                    }else{
+                        botonesModal += `
                         <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
                             data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
                             data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
@@ -441,6 +429,8 @@ $("#tabla_prestamos").ready(function () {
                             <i class="fas fa-pen-nib">
                             </i>
                         </button>`;
+                    }
+
                 }
                 if(d.relacion_evidencia != '' ){
                     if(d.relacion_evidencia != 'true' ){
@@ -478,7 +468,6 @@ $("#tabla_prestamos").ready(function () {
                             </i>
                         </button>` : '';
                 }
-
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
         }],
@@ -490,11 +479,13 @@ $("#tabla_prestamos").ready(function () {
             url: general_base_url + "Descuentos/getPrestamos",
             type: "POST",
             cache: false,
-            data: function (d) {
+            data: {
+                beginDate: beginDate,
+                endDate: endDate
             }
         },
     });
-    
+}    
     $('#tabla_prestamos tbody').on('click', '.delete-prestamo', function () {
         const idPrestamo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
