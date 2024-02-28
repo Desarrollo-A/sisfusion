@@ -1,5 +1,13 @@
 let hiddenOptions = {};
 let titulos_intxt = [];
+const AccionDoc = {
+    DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
+    DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
+    SUBIR_DOC: 3, // NO HAY DOCUMENTO CARGADO, PERO TIENE PERMISO PARA SUBIRLO
+    ELIMINAR_DOC: 4, // LA RAMA TIENE UN DOCUMENTO CARGADO, TIENE PERMISO PARA ELIMINAR EL ARCHIVO
+    ENVIAR_SOLICITUD: 5
+};
+
 $(document).ready(function() {
     loadData();
 });
@@ -245,3 +253,140 @@ $(document).on('hidden.bs.modal', "#seeInformationModal", function(){
     $("#opciones option").css('display', 'block');
     $("#opciones, #tipoVenta, #representante, #sedes, #impuesto, #repEstatus, #repData").val('').selectpicker('refresh');
 });
+
+$(document).on("click", "")
+
+
+
+
+/**
+ * @param {number} tipoDocumento
+ * @returns {string}
+ */
+function getExtensionPorTipoDocumento(tipoDocumento) {
+    if (tipoDocumento === TipoDoc.CORRIDA) {
+        return 'xlsx';
+    }
+
+    if (tipoDocumento === TipoDoc.CONTRATO || tipoDocumento === TipoDoc.CONTRATO_FIRMADO) {
+        return 'pdf';
+    }
+
+    return 'jpg, jpeg, png, pdf';
+}
+
+/**
+ * Función para crear el botón a partir del tipo de acción
+ *
+ * @param {number} type
+ * @param {any} data
+ * @returns {string}
+ */
+function crearBotonAccion(type, data) {
+    const [
+        buttonTitulo,
+        buttonEstatus,
+        buttonClassColor,
+        buttonClassAccion,
+        buttonTipoAccion,
+        buttonIcono
+    ] = getAtributos(type);
+
+    const d = new Date();
+    const dateStr = [d.getMonth()+1,d.getDate(),d.getFullYear()].join('-');
+
+    const tituloDocumento =`${data.nombreResidencial}_${data.nombre.slice(0,4)}_${data.idLote}_${data.idCliente}`+
+        `_TDOC${data.tipo_doc}${data.movimiento.slice(0,4)}_${dateStr}`;
+
+    return `<button class="${buttonClassColor} ${buttonClassAccion}" 
+                title="${buttonTitulo}" 
+                data-expediente="${data.expediente}" 
+                data-accion="${buttonTipoAccion}" 
+                data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
+                data-toggle="tooltip" 
+                data-placement="left" 
+                data-nombre="${data.movimiento}" 
+                data-idDocumento="${data.idDocumento}" 
+                data-idLote="${data.idLote}" 
+                data-tituloDocumento="${tituloDocumento}"
+                data-idCliente="${data.idCliente ?? data.id_cliente}"
+                data-lp="${data.lugar_prospeccion}"
+                data-idProspeccion="${data.id_prospecto}">
+                    <i class="${buttonIcono}"></i>
+            </button>`
+}
+
+/**
+ * Función para obtener los atributos del botón de acción de la tabla
+ *
+ * @param {number} type
+ * @returns {string[]}
+ */
+function getAtributos(type) {
+    let buttonTitulo = '';
+    let buttonEstatus = '';
+    let buttonClassColor = '';
+    let buttonClassAccion = '';
+    let buttonIcono = '';
+    let buttonTipoAccion = '';
+
+    if (type === AccionDoc.DOC_NO_CARGADO) {
+        buttonTitulo = 'DOCUMENTO NO CARGADO';
+        buttonEstatus = 'disabled';
+        buttonClassColor = 'btn-data btn-orangeYellow';
+        buttonClassAccion = '';
+        buttonIcono = 'fas fa-file';
+        buttonTipoAccion = '';
+    }
+    if (type === AccionDoc.DOC_CARGADO) {
+        buttonTitulo = 'VER DOCUMENTO';
+        buttonEstatus = '';
+        buttonClassColor = 'btn-data btn-blueMaderas';
+        buttonClassAccion = 'verDocumento';
+        buttonIcono = 'fas fa-eye';
+        buttonTipoAccion = '3';
+    }
+    if (type === AccionDoc.SUBIR_DOC) {
+        buttonTitulo = 'SUBIR DOCUMENTO';
+        buttonEstatus = '';
+        buttonClassColor = 'btn-data btn-green';
+        buttonClassAccion = 'addRemoveFile';
+        buttonIcono = 'fas fa-upload';
+        buttonTipoAccion = '1';
+    }
+    if (type === AccionDoc.ELIMINAR_DOC) {
+        buttonTitulo = 'ELIMINAR DOCUMENTO';
+        buttonEstatus = '';
+        buttonClassColor = 'btn-data btn-warning';
+        buttonClassAccion = 'addRemoveFile';
+        buttonIcono = 'fas fa-trash';
+        buttonTipoAccion = '2';
+    }
+
+    return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
+}
+
+/**
+ * Método que busca si un valor está dentro del objeto
+ *
+ * @param {number[]|string[]} arr
+ * @param {string} searchArray
+ * @returns boolean
+ */
+function includesArray(arr, searchArray) {
+    return arr.includes(parseInt(searchArray));
+}
+
+/**
+ * Función para descargar un archivo en otra pestaña
+ *
+ * @param {string} pathUrl
+ * @param {string} filename
+ */
+function descargarArchivo(pathUrl, filename) {
+    const a = document.createElement("a");
+    a.href = pathUrl;
+    a.target = "_blank";
+    a.download = filename;
+    a.click();
+  }
