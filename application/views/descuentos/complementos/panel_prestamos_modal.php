@@ -40,11 +40,6 @@
 								<input class="form-control input-gral" type="text" step="any" required  id="MotivoAlta" name="MotivoAlta">
 							</div>
 							<div class="col-md-2" style="padding-top:18px;">
-							<!-- <div class="boxOnOff">
-								<input type="checkbox" id="nombreSwitch" class="switch-input d-none" onclick="turnOnOff(this)">
-								<label for="nombreSwitch" class="switch-label"></label>
-		
-							</div> -->
 								<div class="col-md-4">
 									<label class="switch">
 									<input class="nombreSwitch" id="nombreSwitch" name="nombreSwitch" type="checkbox">
@@ -75,18 +70,10 @@
 							<div class="col-md-12" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >
 								<div class="file-gph">
 									<input class="d-none" type="file" id="evidenciaSwitch" onchange="changeName(this)" name="evidenciaSwitch"  >
-									<input class="file-name overflow-text" id="evidenciaSwitch" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<input class="file-name overflow-text" id="evidenciaSwitch" type="text" placeholder="No has seleccionado nada aún" readonly="">
 									<label class="upload-btn w-auto" for="evidenciaSwitch"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
 								</div>
-								
-								<!-- <label class="input-group-btn">
-                                    <span class="btn btn-blueMaderas btn-file">Seleccionar archivo&hellip;
-                                        <input type="file" name="evidenciaSwitch" id="evidenciaSwitch" style="visibility: hidden" >
-                                    </span>
-								</label>
-									<input type="text" class="form-control" readonly> -->
 							</div>
-
 							<div class="col-md-12">
 								<label class="control-label">Descripción(<b class="text-danger">*</b>)</label>
 								<textarea id="descripcionAlta" name="descripcionAlta" class="text-modal" rows="3"></textarea>

@@ -1,111 +1,5 @@
-
 $(document).ready(function () {
-         
-
 });
-
-$("#modalCompartidos").on('submit', function(e){
-    e.preventDefault();
-
-    var data = new FormData();
-
-    var descripcion =  $("#descripcion").val();
-    var idCliente = $("#cliente_modalidad").val();
-    var estatus =  $("#compartida").val();
-    var idLote = $("#idLote").val();
-
-    data.append("descripcion", descripcion);
-    data.append("cliente_modalidad", idCliente);
-    data.append("compartida", estatus);
-    data.append("idLote", idLote);
-
-    $.ajax({
-        url: general_base_url + 'Incidencias/getModalidadCambio',
-        data: data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function(data) {
-
-            data=JSON.parse(data);
-            
-            if (data === true) {
-                alerts.showNotification("top", "right", "El cambio de modalidad se ha efectuado con éxito", "success");
-                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
-                $('#modalCompartidos').modal('hide');
-            }
-            else {
-                alerts.showNotification("top", "right", "El cambio de modalidad no se hizo con éxito.", "danger");
-                $('#spiner-loader').addClass('hide');
-
-            }
-        },
-        error: function(error){
-            console.error(error);
-        }
-    });
-});
-
-//  $("#tabla_Nombre_Porcentaje").DataTable({
-//     dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-//     width: 'auto',
-//     buttons: [],
-//     ajax:{
-//         "url": general_base_url+'Incidencias/getRol_Nombre/'
-//     },
-//     pagingType: "full_numbers",
-//     fixedHeader: true,
-//     language: {
-//         url: general_base_url+"/static/spanishLoader_v2.json",
-//         paginate: {
-//             previous: "<i class='fa fa-angle-left'>",
-//             next: "<i class='fa fa-angle-right'>"
-//         }
-//     },
-//     lengthMenu: [
-//         [10, 25, 50, -1],
-//         [10, 25, 50, "Todos"]
-//     ],
-//     scrollX: true,
-//     destroy: true,
-//     ordering: false,
-//     columns: [ 
-//     {data: 'NombreUsuario'},
-//     {data: 'RolGenerado'},
-//     {data: 'porcentaje_decimal'},
-//     ]
-// });
-
-
-
-// $("#btn_sub").on('submit', function(e){
-//     e.preventDefault();
-
-//     var idCliente = $(this).attr("data-cliente");
-
- 
-//     $.ajax({
-//         type: 'POST',
-//         url: general_base_url+'Incidencias/getModalidadCambio',
-//         data: {
-//             descripcion: $("#descripcion").val(),
-//             estatus: 0,
-//             id_cliente: idCliente 
-            
-//         },
-//         contentType: false,
-//         cache: false,
-//         processData:false,
-//         success: function(data) {
-//             console.log(data);
-
-//         },
-//         error: function(error){
-//             console.error(error);
-//         }
-//     });
-// });
 
 $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     var len = data.length;
@@ -114,7 +8,6 @@ $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
         var name = data[i]['nombre'];
         $("#asesorold").append($('<option>').val(id).text(name.toUpperCase()));
     }
- 
     $("#asesorold").selectpicker('refresh');
 }, 'json'); 
 
@@ -122,13 +15,8 @@ $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
 
-
-
-
 var rol  = id_rol_general;
 var id_user  = id_usuario_general;
-
-
 var idLote = 0;
 
 function selectOpcion(){
@@ -1151,6 +1039,8 @@ $(".find_doc").click( function() {
             "orderable": false,
             "data": function( data ){
                 var BtnStats ='';
+
+                let btnCompartida = `<button class="btn-data btn-warning cambioM" title="Borrar venta compartida" data-idLote="${data.idLote}" data-registro="${data.registro_comision}" data-cliente="${data.id_cliente}" data-precioAnt="${data.totalNeto2}" data-compartida="${data.compartida}"><i class="fas fa-ban"></i></button>`;
                 if(data.totalNeto2==null && data.idStatusContratacion > 8 ) {
                     BtnStats += '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                     if(data.tipo_venta == 'null' || data.tipo_venta == 0  || data.tipo_venta == null){
@@ -1169,9 +1059,15 @@ $(".find_doc").click( function() {
                         BtnStats = '<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
                         
-                        if(data.compartida != null){
-                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
-                        }
+
+
+                        /*if (data.compartida !== null) {
+                            if (data.compartida) {
+                                BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                            } else {
+                                return;
+                            }
+                        }*/
                         
 
                     }
@@ -1180,20 +1076,30 @@ $(".find_doc").click( function() {
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
 
-                        if(data.compartida != null){
-                            BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
-                        }
+
+                        /*if (data.compartida !== null) {
+                            if (data.compartida) {
+                                BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
+                            } else {
+                                return;
+                            }
+                        }*/
                             
                     }
                     else {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario" title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
-                        if(data.compartida !== null){
+                        
+
+
+                        /*if(data.compartida !== null){
                             BtnStats += '<button class="btn-data btn-warning cambioM" title="Cambiar modalidad" value="'+data.idLote+'" data-idLote="'+data.idLote+'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'" data-compartida="'+data.compartida+'"><i class="fas fa-ban"></i></button>';
-                        }
+                        }*/
                     }
                 }
+
+                BtnStats +=  data.compartida > 0 ? btnCompartida : '';
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }]
@@ -1273,27 +1179,255 @@ $(".find_doc").click( function() {
         cambios[idUsuario] = nuevoPorcentaje;
     });
 
-    let objInputs = {};
+    var generalArreglo = [];
 
-    $(document).on('click', '#btn_aceptar_porcentajes', function() {
+    function construirModal(data) {
+        const contenedor = document.getElementById('nombrePorcentaje');
+        
+        generalArreglo.push(data);
+
+        var size = data.length;
+        let content = '';
+    
+        for (let i = 0; i < size; i++) {
+
+            content += i == 0 ? `
+            <div class="container-fluid">
+                <div class="row" style="display: flex; justify-content: center;" >
+                    <div class="col-md-2 mb-3">
+                    <input type="hidden" name="index" id="index" value="${size}">
+                    <input type="hidden" name="idLote" id="idLote" value="${data[i].idLote}">
+                    <input type="hidden" name="idCliente" id="idCliente" value="${data[i].id_cliente}">
+
+                        <label class="control-label" value="${data[i].id_asesor}">Asesor:<strong>${data[i].id_asesor}</strong></label>
+                        <p><span>${data[i].asesor}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                        <p><span>${data[i].coordinador}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_gerente" class="control-label">Gerente:<strong>${data[i].id_gerente}</strong></label>
+                        <p><span>${data[i].gerente}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                        <p><span>${data[i].subdirector}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-2">
+                        <label for="id_regional" class="control-label">Regional:<strong>${data[i].id_regional}</strong></label>
+                        <p><span>${data[i].regional}</span></p>
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <label for="id_regional" class="control-label">Regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                        <p><span>${data[i].regional2}</span></p>
+                    </div>
+                </div>
+            </div>
+            `:
+            `<div class="container-fluid" id="div_${data[i].id_vcompartida}">
+                <div class="row pr-3" style="display: flex; justify-content: center;">
+                    <div class="col-md-2 mb-3">
+                            <label class="control-label" value="${data[i].id_asesor}">Asesor:<strong>${data[i].id_asesor}</strong></label>
+                            <p><span>${data[i].asesor}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label class="control-label" for="id_coordinador">Coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                        <p><span>${data[i].coordinador}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_gerente" class="control-label">Gerente:<strong>${data[i].id_gerente}</strong></label>
+                        <p><span>${data[i].gerente}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_subdirector" class="control-label">Subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                        <p><span>${data[i].subdirector}</span></p>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="id_regional" class="control-label">Regional:<strong>${data[i].id_regional}</strong></label>
+                        <p><span>${data[i].regional}</span></p>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="id_regional" class="control-label">Regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                        <p><span>${data[i].regional2}</span></p>
+                    </div>
+                    <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
+                        <label for="checkBoxVC_${i}" class="control-label">
+                            <input class="form-check-input checkboxClase" 
+                                type="checkbox" 
+                                id="checkBoxVC_${i}" 
+                                name="checkBoxVC_${i}" 
+                                value="${data[i].id_vcompartida}" >
+                                Marcar
+                        </label>
+                    </div>
+                </div>
+            </div>`;       
+        }
+        let content2 = `
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <textarea class="form-control" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" id="btnAcept" class="btn btn-primary">ACEPTAR</button>
+                    </div>   
+                `;
+    
+        contenedor.innerHTML = content;
+        document.getElementById('footer').innerHTML = content2;
+    }
+
+    var compartidasArreglo = [];
+
+    /*function compartidasArmado(data) {
+        const contenedor = document.getElementById('compartidasAll');
+        compartidasArreglo.push(data);
+        var sizeC = data.length;
+        let content = '';
+    
+        for (let i = 0; i < sizeC; i++) {
+            if (data[i].estatusCompartida === 1) {
+                content += `
+                    <div class="container-fluid">
+                        <div class="row pr-3" style="display: flex; justify-content: center;">
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id asesor:<strong>${data[i].id_asesor}</strong></label>
+                                <input type="text" id="nombre_asesor${i}" class="form-control input-gral" readonly value="${data[i].asesor}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id coordinador:<strong>${data[i].id_coordinador}</strong></label>
+                                <input type="text" id="nombre_coordinador${i}" class="form-control input-gral" readonly value="${data[i].coordinador}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id gerente:<strong>${data[i].id_gerente}</strong></label>
+                                <input type="text" id="nombre_gerente${i}" class="form-control input-gral" readonly value="${data[i].gerente}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id subdirector:<strong>${data[i].id_subdirector}</strong></label>
+                                <input type="text" id="nombre_subdirector${i}" class="form-control input-gral" readonly value="${data[i].subdirector}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id regional:<strong>${data[i].id_regional}</strong></label>
+                                <input type="text" id="nombre_regional${i}" class="form-control input-gral" readonly value="${data[i].regional}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label class="control-label">id regional 2:<strong>${data[i].id_regional_2}</strong></label>
+                                <input type="text" id="nombre_regional_2${i}" class="form-control input-gral" readonly value="${data[i].id_regional_2}">
+                            </div>
+                            <div class="col-md-1 mb-3 form-check form-switch pt-2 offset-md-1">
+                                <label for="checkBoxID_${i}" class="control-label">
+                                    <input class="form-check-input checkboxClase" 
+                                        type="checkbox" 
+                                        id="checkBoxVC_${i}" 
+                                        name="checkBoxVC_${i}" 
+                                        value="${data[i].id_vcompartida}" 
+                                        data-asesor="${data[i].id_asesor}" 
+                                        data-coordinador="${data[i].id_coordinador}" 
+                                        data-gerente="${data[i].id_gerente}" 
+                                        data-subdirector="${data[i].id_subdirector}" 
+                                        data-regional="${data[i].id_regional}" 
+                                        data-cliente="${data[i].id_cliente}" 
+                                        data-lote="${data[i].idLote}">
+                                        Marcar
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                content += `
+                    <div class="row" style="display: flex; align-content: center; flex-wrap: wrap; flex-direction: column-reverse;">
+                        <div class="col-md-3 mb-3">
+                            <textarea class="text-modal" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" id="btnAcept" class="btn btn-primary">ACEPTAR</button>
+                    </div>   
+                `;
+    
+
+            }
+            
+        }
+    
+        content += `
+            <div class="row" style="display: flex; align-content: center; flex-wrap: wrap; flex-direction: column-reverse;">
+                <div class="col-md-3 mb-3">
+                    <textarea class="text-modal" id="comentario" name="comentario" rows="6" placeholder="Escriba detalles del cambio." required></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <button type="submit" id="marcarTodosBtn" class="btn btn-primary">CAMBIAR MODALIDADES</button>
+            </div>   
+        `;
+        contenedor.innerHTML = content;
+    }*/
+    
+
+    $("#compartidasForm").on('submit', function(e) {
+        e.preventDefault();   
+        let contador=0; 
+        $(".checkboxClase:checked").each(function() {
+            contador = contador +1;
+        });
+        if(contador <= 0){
+            alerts.showNotification("top", "right", "Debes seleccionar al menos una opción para continuar", "warning");
+            return false;
+        }
+        var formData = new FormData(this);
         $.ajax({
-            url: general_base_url + 'Incidencias/NUEVAFUNCION',
+            url: general_base_url + 'Incidencias/updateEstatusCompartidas',
             type: 'post',
-            dataType: 'JSON',
-            data: { cambios: cambios },
-            success: function (respuesta) {
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(respuesta) {
                 console.log(respuesta);
+                if (respuesta === true || respuesta === 'true'){
+                    alerts.showNotification("top", "right", "Cambio de modalidad exitoso. RECUERDA VERIFICAR CORRECTAMENTE LOS PORCENTAJES EN AJUSTES", "success");
+                    $('#modalCompartidos').modal('toggle');
+    
+                    $('#modalCompartidos').on('hidden.bs.modal', function () {
+                        $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    });
+                }
             },
-            error: function (error) {
-                console.error(error);
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error en la actualización:', textStatus, errorThrown);
+                console.log(jqXHR.responseText); 
             }
         });
     });
+    
+
+
+    
+    
+    
+    
 
     /**-------------------CAMBIO MODALIDAD------------------------------- */
-    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e){
-
-        document.getElementById("nombrePorcentaje").innerHTML = '';
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambioM", function(e) {
+            let idLote = $(this).attr("data-idLote")
+            $('#idLote').val(idLote);
+            $.post(general_base_url + "Incidencias/getComisionistas",{'idLote': idLote}, function (data) {
+                $("#modalCompartidos").modal();
+                construirModal(data);
+            },'json');
+    }); 
+    
+    /*$("#tabla_inventario_contraloria tbody").on("click", ".cambioM2", function(e){
 
         id_cliente = $(this).attr("data-cliente");
         $('#cliente_modalidad').val(id_cliente);
@@ -1303,6 +1437,7 @@ $(".find_doc").click( function() {
 
         idLote = $(this).attr("data-idLote");
         $('#idLote').val(idLote);
+
 
         $.ajax({
             url: general_base_url + 'Incidencias/getRol_Nombre',
@@ -1314,103 +1449,33 @@ $(".find_doc").click( function() {
                 'id_comision': $(this).attr("data-id-comision"),
                 'id_usuario': $(this).attr("data-id_usuario")
             },
-            success: function (INFORMACION) {
-                //console.log(INFORMACION);
+            success: function (data) {
+                //console.log(data);
         
-                const size = INFORMACION.length;
-                let htmlTableBody = `
-                    <table style="border-collapse: collapse; width: 100%; margin-top: 20px; border: 1px solid #ddd;">
-                        <thead style="background-color: #343a40; color: white;">
-                            <tr>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE USUARIO</th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">NOMBRE ROL</th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Antiguo </th>
-                                <th style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">Porcentaje Decimal Nuevo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-        
-                for (let i = 0; i < size; i++) {
-                    const {id_comision, id_usuario, nuevo_porcentaje_decimal, porcentaje_antiguo, NombreUsuario, NombreRol } = INFORMACION[i];
-        
-                    const rowColor = i % 2 === 0 ? '#f2f2f2' : '#ffffff';
-        
-                    htmlTableBody += `
-                        <tr style="background-color: ${rowColor};">
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreUsuario}</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${NombreRol}</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">${porcentaje_antiguo}%</td>
-                            <td style="padding: 12px; text-align: center; border-bottom: 1px solid #ddd;">
-                              
-                                <input class="form-control input-gral decimals" data-old="" data-id-usuario="${id_usuario}"
-                                value="${nuevo_porcentaje_decimal}" data-original-value="${id_comision}" data-original-value="${id_usuario}" data-original-value="${id_usuario}" data-original-value="${nuevo_porcentaje_decimal}">
+                htmlArmado(data);
 
-
-                            </td>
-                        </tr>
-                    `;
-                    objInputs[id_usuario] = nuevo_porcentaje_decimal;
-
-                }
-                console.log(objInputs);
-
-        
-                htmlTableBody += `
-                        </tbody>
-                    </table>
-                `;
-                // Limpiar el contenido existente
-                $('#nombrePorcentaje').html('');
-
-                // Agregar la tabla al contenedor
-                $('#nombrePorcentaje').html(htmlTableBody);
-
-                // Agregar los botones al contenedor
-                $('#nombrePorcentaje').append('<div class="d-flex justify-center">');
-                $('#nombrePorcentaje').append('<button type="button" id="btn_aceptar_porcentajes" class="btn btn-danger btn-simple mx-auto">RECHAZAR PORCENTAJES</button>');
-                $('#nombrePorcentaje').append('<button type="button" id="btn_cancelar_porcentajes" class="btn btn-success btn-simple mx-auto">ACEPTAR PORCENTAJES</button>');
-                $('#nombrePorcentaje').append('</div>');
-        
                 $("#modalCompartidos").modal();
-                document.getElementById("cliente_modalidad").value = id_cliente;
-                document.getElementById("compartida").value = compartida;
-                document.getElementById("idLote").value = idLote;
+            }
+        });
 
-                $('#btn_aceptar_porcentajes').hide();
+        $.ajax({
+            url: general_base_url + 'Incidencias/getAllCompartidas',
+            type: 'post',
+            dataType: 'JSON',
+            data:{
+                'id_cliente':id_cliente
+            },
+            success: function (data) {
+                //console.log(data);
+        
+                compartidasArmado(data);
 
-                $('#btn_aceptar_porcentajes').on('click', function () {
-                    $('.decimals').removeAttr('readonly');
-                    $(this).hide();
-                    $('#btn_cancelar_porcentajes').show();
-                    alerts.showNotification("top", "right", "El porcentaje ha sido cancelado.", "danger");
-
-                });
-
-                $('#btn_cancelar_porcentajes').on('click', function () {
-                    $('.decimals').attr('readonly', true);
-                    $(this).hide();
-                    $('#btn_aceptar_porcentajes').show();
-                    alerts.showNotification("top", "right", "El porcentaje ha sido aceptado.", "success");
-                    let arrInputs = document.querySelectorAll(".decimals");
-                    console.log(arrInputs[0].value)
-                    console.log(arrInputs.length)
-                    let dataEnviar = []
-                    
-                    for(let contador = 0; contador <= arrInputs.length ; contador ++ )
-                    {
-                        objInputs[contador] =  arrInputs[contador];
-                       // dataEnviar.push(arrInputs[i].value);
-                       //console.log(dataEnviar);
-                    }
-                    console.log(objInputs);
-
-                });
-
+                //$("#modalCompartidos").modal();
+          
             }
         });
     }); 
-
+*/
     
 
 
@@ -2368,7 +2433,7 @@ function SaveAjuste(i){
         }
     });
 }
-
+    
 $("#form_ceder").on('submit', function(e){ 
     e.preventDefault();
     document.getElementById('btn_ceder').disabled=true;
@@ -2383,7 +2448,7 @@ $("#form_ceder").on('submit', function(e){
         cache: false,
         processData:false,
         success: function(data) {
-            console.log(data);
+            //console.log(data);
             if (data == 1) {
                  $("#asesorold").selectpicker('refresh');
                 // $('#tabla_inventario_contraloria').DataTable().ajax.reload(null, false);

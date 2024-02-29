@@ -50,13 +50,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-md-4 p-r">
-                                                    <div class="form-group d-flex">
-                                                        <input type="text" class="form-control datepicker" id="beginDate" value="" autocomplete='off' />
-                                                        <input type="text" class="form-control datepicker" id="endDate" value="" autocomplete='off' />
-                                                        <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="btnTable"><span class="material-icons update-dataTable">search</span></button>
-                                                    </div>
-                                                </div>
+                                                <?php $this->load->view('descuentos/complementos/rangoFechas'); ?>
                                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 m-0">
                                                     <div class="form-group d-flex justify-center align-center">
                                                         <h4 class="title-tot center-align m-0">Total préstamos:</h4>
@@ -103,6 +97,7 @@
 </div>
 	<?php $this->load->view('template/footer');?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/funcionesGeneralesComisiones.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/contraloria/reporteDescuentos.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script type="text/javascript">

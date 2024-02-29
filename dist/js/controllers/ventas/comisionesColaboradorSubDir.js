@@ -141,6 +141,8 @@ for (let m = 0; m < datosTablas.length; m++) {
         }
     });    
 }
+
+
 async function crearTabla(idTabla,data2,estatus){
     console.log(idTabla)
     console.log(data2)
@@ -150,6 +152,7 @@ async function crearTabla(idTabla,data2,estatus){
     let idProyecto = $(`#${datosTbActual[0].idSelect}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelect}`).val() ,idCondominio = $(`#${datosTbActual[0].idSelectCond}`).val() == '' ? 0 : $(`#${datosTbActual[0].idSelectCond}`).val();  
 
     $(`#${idTabla}`).prop("hidden", false);
+
    $(`#${idTabla}`).DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100",
@@ -416,7 +419,7 @@ async function crearTabla(idTabla,data2,estatus){
         initComplete: function () {
 			//$('#spiner-loader').addClass('hide'); 
             if(estatus == 1){
-                tabla_nuevas = $(`#${idTabla}`).DataTable();
+                tabla_nuevas = $(`#${idTabla}`).DataTable(); 
             }else if(estatus == 4){
                 tabla_revision = $(`#${idTabla}`).DataTable();
             }else if(estatus == 3){
@@ -425,25 +428,24 @@ async function crearTabla(idTabla,data2,estatus){
                 tabla_intmex = $(`#${idTabla}`).DataTable();
             }else if(estatus == 6){
                 tabla_pausadas = $(`#${idTabla}`).DataTable();
-            }
-
-		},fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
-            $(`#${idTabla}`).on('xhr.dt', function(e, settings, json, xhr) {
+            }           
+            $(`#${idTabla}`).on('xhr.dt', function (e, settings, json, xhr) {
+                alert()
                 var total = 0;
-                $.each(json.data, function(i, v) {
+                $.each(json, function (i, v) {
                     total += parseFloat(v.impuesto);
                 });
                 var to = formatMoney(total);
                 document.getElementById(`${datosTbActual[0].idTitle}`).textContent = to;
-                $(`#${datosTbActual[0].idTitle}`).html(formatMoney(to));
-            });            
+            });
+		},fnRowCallback: function (nRow, aData, iDisplayIndex, iDisplayIndexFull) { 
+            
         },
     });
 
     $(`#${idTabla}`).on('draw.dt', function() {
         $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
-
 
     $(document).off("click", ".consultar_logs_nuevas").on("click", ".consultar_logs_nuevas", function () {
         id_pago = $(this).val();
