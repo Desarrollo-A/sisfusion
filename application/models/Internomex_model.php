@@ -396,7 +396,8 @@ class Internomex_model extends CI_Model {
         return $this->db->query("SELECT re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_materno, ' ', cl.apellido_materno)) nombreCliente, fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_materno, ' ', u0.apellido_materno)) END nombreAsesor,
-        tv.tipo_venta tipoVenta, se.nombre ubicacion, FORMAT(lo.totalNeto, 'C') engancheContraloria, FORMAT(lo.totalValidado, 'C') engancheAdministracion
+        tv.tipo_venta tipoVenta, se.nombre ubicacion, FORMAT(lo.totalNeto, 'C') engancheContraloria, FORMAT(lo.totalValidado, 'C') engancheAdministracion, 
+        eng.idEnganche, lo.idCliente
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $id_condominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -404,6 +405,7 @@ class Internomex_model extends CI_Model {
         LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
         LEFT JOIN sedes se ON se.id_sede = lo.ubicacion
+        LEFT JOIN enganche eng ON lo.idLote = eng.idLote 
         WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result();
     }
 
@@ -414,12 +416,12 @@ class Internomex_model extends CI_Model {
 
     // CONSULTA PARA TRAER LOS DATOS DE LOS ENGANCHES DE UN LOTE
     function getEnganches($idLote) {
-        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa FROM enganche eng
-        INNER JOIN det_enganche det_eng ON det_eng.idEnganche=eng.idEnganche
-        INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.forma_pago AND opcFormaP.id_catalogo = 110
-        INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = det_eng.instrumento_monetario AND opcInsMon.id_catalogo = 111
-        INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = det_eng.moneda_divisa AND opcMonedaD.id_catalogo = 112
-        WHERE det_eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.id_lote=$idLote)");
+        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa 
+    FROM enganche eng
+    INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.formaPago AND opcFormaP.id_catalogo = 110
+    INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = eng.instrumentoMonetario AND opcInsMon.id_catalogo = 111
+    INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = eng.monedaDivisa AND opcMonedaD.id_catalogo = 112
+    WHERE eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.idLote=$idLote)");
 	}
 
 }

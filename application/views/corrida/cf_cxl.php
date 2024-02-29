@@ -447,7 +447,7 @@
 
 
                                     <td rowspan=4 align="left"><img src="https://maderascrm.gphsis.com/static/images/logo_ciudadmaderasAct.jpg" style=" max-width: 70%; height: auto;padding:20px"></td>
-                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR><button ng-click="resetYears()">OK</button></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
+                                    <td rowspan=4 align="right"><p style="font-size: 1.5em;font-family: 'Open Sans', sans-serif;letter-spacing: 5px"> CORRIDA FINANCIERA<BR></p><small style="font-size: 1.5em; font-family: 'Sabon LT Std', 'Hoefler Text', 'Palatino Linotype', 'Book Antiqua', serif; color: #777;"></small>
                                     </td>
                                     <td align="right">&nbsp&nbsp</td>
                                 </tr>
@@ -497,60 +497,68 @@
 
                                 <!-- datos del proyecto -->
                                 <div class="row">
-                                    <div class="col-md-3" >
-                                        <label>Proyecto:<span class="required-label">*</span></label><br>
-                                        <select id="proyectoS" ng-model = "proyecto"
-                                                ng-options = "item.descripcion for item in residencial"
-                                                ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
-                                                width="100%">
-                                            <option value = ""> - Selecciona un Proyecto - </option>
-                                        </select>
-                                        <p id="proyectotext" style="color: red;"></p>
+
+                                        <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding: 0px">
+                                            <div class="col-md-4" >
+                                                <label>Proyecto:<span class="required-label">*</span></label><br>
+                                                <select id="proyectoS" ng-model = "proyecto"
+                                                        ng-options = "item.descripcion for item in residencial"
+                                                        ng-change="onSelectChangep(proyecto)"  class="selectList js-example-basic-single js-states form-control"
+                                                        width="100%">
+                                                    <option value = ""> - Selecciona un Proyecto - </option>
+                                                </select>
+                                                <p id="proyectotext" style="color: red;"></p>
 
 
-                                    </div>
-                                    <div class="col-md-2 form-group" id="condominioCont">
-                                        <label>Condominio:<span class="required-label">*</span></label>
-                                        <select id="condominioS" ng-model="condominio"
-                                                ng-options="item.nombre for item in condominios"
-                                                ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
-                                            <option value = ""> - Selecciona un Condominio - </option>
-                                        </select>
-                                        <p id="condominiotext" style="color: red;"></p>
+                                            </div>
+                                            <div class="col-md-4 form-group" id="condominioCont">
+                                                <label>Condominio:<span class="required-label">*</span></label>
+                                                <select id="condominioS" ng-model="condominio"
+                                                        ng-options="item.nombre for item in condominios"
+                                                        ng-change="onSelectChangec(condominio)" class="selectList js-example-basic-single js-states form-control" style="text-transform: uppercase;">
+                                                    <option value = ""> - Selecciona un Condominio - </option>
+                                                </select>
+                                                <p id="condominiotext" style="color: red;"></p>
 
-                                    </div>
-                                    <div class="col-md-3 form-group" id="loteCont">
-                                        <label>Lote:<span class="required-label">*</span></label>
-                                        <select ng-model="lote" class="selectList js-example-basic-single js-states form-control"
-                                                id="lote" ng-options="item.nombreLote for item in lotes"
-                                                ng-change="onSelectChangel(lote)" >
-                                            <option value = ""> - Selecciona un Lote - </option>
-                                        </select>
-                                        <p id="lotetext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group hide" id="tcasa">
-                                        <label>Tipo casa:</label>
-                                        <select ng-model="tipo_casa" id="tipo_casa" ng-options="item.nombre for item in tipo_casas" ng-change="onSelectChangeLC(tipo_casa, lote)" class="form-control">
-                                            <option value = ""> - Selecciona un Lote - </option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-2 form-group" >
-                                        <label>Plan:<span class="required-label">*</span></label>
-                                        <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
-                                            <option value = ""> - Selecciona un plan - </option>
-                                            <option value = "Crédito"> Crédito </option>
-                                            <option value = "Contado"> Contado </option>
-                                        </select>
-                                        <p id="plantext" style="color: red;"></p>
-                                    </div>
-                                    <div class="col-md-2 form-group" id="anioCont">
-                                        <label>Años:<span class="required-label">*</span></label>
-                                        <select ng-model="yearplan" id="yearplanID" ng-options="item.yearplan for item in yearsplan"
-                                                class="selectList js-example-basic-single js-states form-contro" ng-change="getAgePlan()" disabled>
-                                            <option value = ""> - Selecciona los años - </option>
-                                        </select>
-                                        <p id="aniotext" style="color: red;"></p>
-                                    </div>
+                                            </div>
+                                            <div class="col-md-4 form-group" id="loteCont">
+                                                <label>Lote:<span class="required-label">*</span></label>
+                                                <select ng-model="lote" class="selectList js-example-basic-single js-states form-control"
+                                                        id="lote" ng-options="item.nombreLote for item in lotes"
+                                                        ng-change="onSelectChangel(lote)" >
+                                                    <option value = ""> - Selecciona un Lote - </option>
+                                                </select>
+                                                <p id="lotetext" style="color: red;"></p>
+                                            </div>
+                                            <div class="col-md-4 form-group hide" id="tcasa">
+                                                <label>Tipo casa:</label>
+                                                <select ng-model="tipo_casa" id="tipo_casa" ng-options="item.nombre for item in tipo_casas" ng-change="onSelectChangeLC(tipo_casa, lote)" class="form-control">
+                                                    <option value = ""> - Selecciona un Lote - </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col col-xs-12 col-sm-12 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6" style="padding:0px">
+                                            <div class="col-md-6 form-group" >
+                                                <label>Plan:<span class="required-label">*</span></label><br>
+                                                <select ng-model = "plan" class="form-control" id="planSL" ng-change="payPlan()">
+                                                    <option value = ""> - Selecciona un plan - </option>
+                                                    <option value = "Crédito"> Crédito </option>
+                                                    <option value = "Contado"> Contado </option>
+                                                </select>
+                                                <p id="plantext" style="color: red;"></p>
+                                            </div>
+                                            <div class="col-md-6 form-group" id="anioCont">
+                                                <label>Años:<span class="required-label">*</span></label><br>
+                                                <select ng-model="yearplan" id="yearplanID" ng-options="item.yearplan for item in yearsplan"
+                                                        class="selectList js-example-basic-single js-states form-contro" style="width: 100%" ng-change="getAgePlan()" disabled>
+                                                    <option value = ""> - Selecciona los años - </option>
+                                                </select>
+                                                <p id="aniotext" style="color: red;"></p>
+                                            </div>
+                                        </div>
+
+
                                 </div>
                                 <!-- datos de asesore, gerente.coord -->
                                 <input type="hidden" ng-model="id_clienteP">

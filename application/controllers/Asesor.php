@@ -3514,6 +3514,7 @@ class Asesor extends CI_Controller {
         $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
+
         if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
             $documentsNumber = 3;
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
@@ -3572,10 +3573,13 @@ class Asesor extends CI_Controller {
                 }
             }
             #prueba
-            $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
-            $validacionAceptados = array(3, 13, 22, 31);
+            #$validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
+            #$validacionAceptados = array(3, 13, 22, 31);
+            $validacionRes =  $this->session->userdata('id_sede');//valida que el asesor es de león para pedirle la corrida financiera
+            $validacionAceptados = array(5);
+
             #prueba cf
-            if(in_array($validacionRes->idResidencial, $validacionAceptados)){
+            if(in_array($validacionRes, $validacionAceptados)){
                 //si está en algun proyecto de león
                 $documentsNumber += 1; //añadir otro documento a la validación
                 $labelCorridaFinanciera = ', CORRIDA FINANCIERA';
