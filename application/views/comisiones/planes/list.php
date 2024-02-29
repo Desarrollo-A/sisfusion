@@ -136,21 +136,6 @@
 
                             <div class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
-                                    <label for="is_regional" class="control-label label-gral">Venta regional</label>
-                                    <select name="is_regional" id="is_regional" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
-                                        <option value="">NO APLICA</option>
-                                        <option value="1">No</option>
-                                        <option value="0">Si</option>
-                                    </select>
-                                </div>
-                                <div class="col-lg-3 col-md-6">
-                                    <label for="regional" class="control-label label-gral">Excepto gerentes</label>
-                                    <input id="regional" name="regional" value="0" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="col-lg-3 col-md-6">
                                     <label for="is_prospeccion" class="control-label label-gral">Prospeccion</label>
                                     <select name="is_prospeccion" id="is_prospeccion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
                                         <option value="1">Incluir</option>
@@ -211,9 +196,31 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
+                                    <label for="is_regional" class="control-label label-gral">Incluir gerente regional</label>
+                                    <select name="is_regional" id="is_regional" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
+                                        <option value="">NO APLICA</option>
+                                        <option value="1">Ninguno, solo los siguientes</option>
+                                        <option value="0">Todos, excepto los siguientes</option>
+                                    </select>
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="regional" class="control-label label-gral">Ids de los gerentes</label>
+                                    <input id="regional" name="regional" value="0" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-lg-3 col-md-6">
                                     <label for="tipo_venta" class="control-label label-gral">Tipo de venta</label>
                                     <select name="tipo_venta" id="tipo_venta" multiple="multiple" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body"></select>
                                 </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="procesos" class="control-label label-gral">Proceso</label>
+                                    <select name="procesos" id="procesos" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body"></select>
+                                </div>
+                            </div>
+
+                            <span class="col-md-12">Venta compartida</span>
+                            <div  class="col-md-12">
                                 <div class="col-lg-3 col-md-6">
                                     <label for="venta_compartida" class="control-label label-gral">Es venta compartida</label>
                                     <select name="venta_compartida" id="venta_compartida" value="0" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body">
@@ -226,8 +233,12 @@
                                     <select name="sedes_compartidas" id="sedes_compartidas" multiple="multiple" class="selectpicker select-gral mt-2" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-container="body"></select>
                                 </div>
                                 <div class="col-lg-3 col-md-6">
-                                    <label for="procesos" class="control-label label-gral">Proceso</label>
-                                    <select name="procesos" id="procesos" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-container="body"></select>
+                                    <label for="asesor_compartida" class="control-label label-gral">Asesor venta compartida</label>
+                                    <input id="asesor_compartida" name="asesor_compartida" value="0" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
+                                </div>
+                                <div class="col-lg-3 col-md-6">
+                                    <label for="coordinador_compartida" class="control-label label-gral">Coordinador venta compartida</label>
+                                    <input id="coordinador_compartida" name="coordinador_compartida" value="0" class="form-control input-gral" type="text" placeholder="IDS SEPARADOS POR COMA" />
                                 </div>
                             </div>
 

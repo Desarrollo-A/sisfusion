@@ -6,7 +6,7 @@ class PlanesModel extends CI_Model{
         parent::__construct();
     }
 
-    public function getPlanesComision(){
+    public function getPlanesComision($idPlan = null){
         $query = "SELECT
             p.idPlan,
             p.nombre,
@@ -79,6 +79,7 @@ class PlanesModel extends CI_Model{
                 AND o.id_opcion IN (select value id from STRING_SPLIT(p.procesos, ',')) FOR XML PATH('') ),1,1,''
             )) AS procesos_list,
             p.prioridad,
+            
             p.venta_compartida,
             p.sedes_compartidas,
             (SELECT STUFF((
@@ -86,6 +87,19 @@ class PlanesModel extends CI_Model{
                 WHERE
                     s.id_sede IN (select value id from STRING_SPLIT(p.sedes_compartidas, ',')) FOR XML PATH('') ),1,1,''
             )) AS sedes_compartidas_list,
+            p.asesor_compartida,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.asesor_compartida, ',')) FOR XML PATH('') ),1,1,''
+            )) AS asesores_compartida_list,
+            p.coordinador_compartida,
+            (SELECT STUFF((
+                select ', '+ nombre + ' ' + apellido_paterno from usuarios u
+                WHERE
+                    u.id_usuario IN (select value id from STRING_SPLIT(p.coordinador_compartida, ',')) FOR XML PATH('') ),1,1,''
+            )) AS coordinadores_compartida_list,
+
             p.is_regional,
             p.regional,
             p.descuento_mdb,
@@ -97,8 +111,13 @@ class PlanesModel extends CI_Model{
             p.comision_coordinador,
             p.comision_asesor,
             p.estatus
-        FROM planes_comision p
-        ORDER BY prioridad ASC, idPlan ASC";
+        FROM planes_comision p";
+
+        if($idPlan){
+            $query .= " WHERE p.idPlan IN ($idPlan) ";
+        }
+
+        $query .= " ORDER BY prioridad ASC, idPlan ASC";
 
         return $this->db->query($query)->result();
     }
@@ -272,10 +291,14 @@ class PlanesModel extends CI_Model{
             asesores,
             coordinadores,
             subdirectores,
+
             tipo_venta,
+            procesos,
+
             venta_compartida,
             sedes_compartidas,
-            procesos,
+            asesor_compartida,
+            coordinador_compartida,
 
             comision_director,
             comision_regional,
@@ -315,10 +338,14 @@ class PlanesModel extends CI_Model{
             NULLIF('$data->asesores', ''),
             NULLIF('$data->coordinadores', ''),
             NULLIF('$data->subdirectores', ''),
+
             NULLIF('$data->tipo_venta', ''),
+            NULLIF('$data->procesos', ''),
+
             NULLIF('$data->venta_compartida', ''),
             NULLIF('$data->sedes_compartidas', ''),
-            NULLIF('$data->procesos', ''),
+            NULLIF('$data->asesor_compartida', ''),
+            NULLIF('$data->coordinador_compartida', ''),
 
             $data->comision_director,
             $data->comision_regional,
@@ -370,9 +397,12 @@ class PlanesModel extends CI_Model{
             coordinadores       = NULLIF('$data->coordinadores', ''),
             subdirectores       = NULLIF('$data->subdirectores', ''),
             tipo_venta          = NULLIF('$data->tipo_venta', ''),
-            venta_compartida    = NULLIF('$data->venta_compartida', ''),
-            sedes_compartidas    = NULLIF('$data->sedes_compartidas', ''),
             procesos            = NULLIF('$data->procesos', ''),
+
+            venta_compartida        = NULLIF('$data->venta_compartida', ''),
+            sedes_compartidas       = NULLIF('$data->sedes_compartidas', ''),
+            asesor_compartida       = NULLIF('$data->asesor_compartida', ''),
+            coordinador_compartida  = NULLIF('$data->coordinador_compartida', ''),
 
             comision_director    = $data->comision_director,
             comision_regional    = $data->comision_regional,
@@ -450,6 +480,133 @@ class PlanesModel extends CI_Model{
         END";
 
         return $this->db->query($query);
+    }
+
+    public function queries($id_plan = null){
+        $planes = $this->getPlanesComision($id_plan);
+
+        $queries = [];
+        foreach ($planes as $key => $plan) {
+            if($plan->estatus == 1){
+                $conditions = [];
+
+                $where = '';
+
+                if($plan->venta_compartida){
+                    $where .= "INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1 AND cl.status = 1 ";
+
+                    if($plan->sedes_compartidas !== NULL){
+                        array_push($conditions, "vc.id_sede IN ($plan->sedes_compartidas)");
+                    }
+
+                    if($plan->asesor_compartida !== NULL){
+                        array_push($conditions, "vc.id_asesor IN ($plan->asesor_compartida)");
+                    }
+
+                    if($plan->coordinador_compartida !== NULL){
+                        array_push($conditions, "vc.id_coordinador IN ($plan->coordinador_compartida)");
+                    }
+
+                    if($plan->is_regional !== null){
+                        if($plan->is_regional === 0){
+                            array_push($conditions, "vc.id_regional NOT IN ($plan->regional)");
+                        }
+                    }
+                }
+
+                if($plan->sedes){
+                    array_push($conditions, "cl.id_sede IN ($plan->sedes)");
+                }
+
+                if($plan->residencial){
+                    array_push($conditions, "r.idResidencial IN ($plan->residencial)");
+                }
+
+                if($plan->lotes){
+                    array_push($conditions, "l.idLote IN ($plan->lotes)");
+                }
+
+                if($plan->fechaInicio){
+                    array_push($conditions, "cl.fechaApartado >= '$plan->fechaInicio'");
+                }
+
+                if($plan->fechaFin){
+                    array_push($conditions, "cl.fechaApartado < '$plan->fechaFin'");
+                }
+
+                if($plan->prospeccion !== NULL){
+                    if($plan->is_prospeccion == 0){
+                        array_push($conditions, "cl.lugar_prospeccion NOT IN ($plan->prospeccion)");
+                    }else{
+                        array_push($conditions, "cl.lugar_prospeccion IN ($plan->prospeccion)");
+                    }
+                }
+
+                if($plan->is_regional !== null){
+                    if($plan->is_regional){
+                        array_push($conditions, "cl.id_regional IN ($plan->regional)");
+                    }else{
+                        array_push($conditions, "cl.id_regional NOT IN ($plan->regional)");
+                    }
+                }
+
+                if($plan->subdirectores){
+                    array_push($conditions, "cl.id_subdirector IN ($plan->subdirectores)");
+                }
+
+                if($plan->inicio_prospeccion){
+                    array_push($conditions, "ps.fecha_creacion > '$plan->inicio_prospeccion'");
+                }
+
+                if($plan->fin_prospeccion){
+                    array_push($conditions, "ps.fecha_creacion < '$plan->fin_prospeccion'");
+                }
+
+                if($plan->descuento_mdb !== null){
+                    if($plan->descuento_mdb == 1){
+                        array_push($conditions, "cl.descuento_mdb = 1");
+                    }else{
+                        array_push($conditions, "cl.descuento_mdb != 0");
+                    }
+                }
+
+                if($plan->gerentes !== null){
+                    array_push($conditions, "cl.id_gerente IN ($plan->gerentes)");
+                }
+
+                if($plan->coordinadores !== null){
+                    array_push($conditions, "cl.id_coordinador IN ($plan->coordinadores)");
+                }
+
+                if($plan->asesores){
+                    array_push($conditions, "cl.id_asesor IN ($plan->asesores)");
+                }
+
+                if($plan->ismktd !== null){
+                    if($plan->ismktd == 0){
+                        array_push($conditions, "ae.ismktd != 1");
+                    }else{
+                        array_push($conditions, "ae.ismktd = 1");
+                    }
+                }
+
+                if($plan->procesos){
+                    array_push($conditions, "cl.proceso IN ($plan->procesos)");
+                }
+
+                if($plan->tipo_venta !== null){
+                    array_push($conditions, "l.tipo_venta IN ($plan->tipo_venta)");
+                }
+
+                $where .= 'WHERE ' . implode(' AND ', $conditions) . "\n";
+            }
+
+            $query = (object) ['plan' => $plan->idPlan, 'cadena' => $where];
+
+            array_push($queries, $query);
+        }
+
+        return $queries;
     }
 
 }

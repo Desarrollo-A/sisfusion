@@ -2,6 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
+//require_once(APPPATH.'controllers/Planes.php');
 
 class ScheduleTasks_com extends CI_Controller{
     public function __construct(){
@@ -11,6 +12,7 @@ class ScheduleTasks_com extends CI_Controller{
         $this->load->database('default');
         $this->load->model('ComisionesNeo_model');
         $this->load->model('Comisiones_model');
+        $this->load->model('PlanesModel');
     }
 
     public function index(){
@@ -84,23 +86,14 @@ class ScheduleTasks_com extends CI_Controller{
     }
 
     public function LlenadoPlan(){ //CRON diario
-        $this->db->query("DELETE FROM comisiones where id_usuario = 0");
-        $this->db->query("DELETE FROM pago_comision_ind where estatus = 0 and abono_neodata = 0");
-        $this->db->query("DELETE from comisiones where porcentaje_decimal = 0 and id_comision not in (select id_comision from pago_comision_ind)");
+        // $this->db->query("DELETE FROM comisiones where id_usuario = 0");
+        // $this->db->query("DELETE FROM pago_comision_ind where estatus = 0 and abono_neodata = 0");
+        // $this->db->query("DELETE from comisiones where porcentaje_decimal = 0 and id_comision not in (select id_comision from pago_comision_ind)");
 
-        $QUERY_V = $this->db->query("SELECT MAX(prioridad) DATA_V FROM plan_comision");
-        $DAT = $QUERY_V->row()->DATA_V;
-        for($j = 0; $j < $DAT+1; $j++){
-            $datos = $this->ComisionesNeo_model->getPrioridad($j)->result_array();
-            if(count($datos) > 0){
-                $data = array();
-                for($i = 0; $i < COUNT($datos); $i++){
-                    $data[$i] = $this->ComisionesNeo_model->updatePlan($j, $datos[$i]['id_plan']);
-                }
-            }else{
-                echo NULL;
+        $queries = $this->PlanesModel->queries();
 
-            }
+        foreach ($queries as $key => $query) {
+            $this->ComisionesNeo_model->updatePlan($query->plan, $query->cadena);
         }
     }
 

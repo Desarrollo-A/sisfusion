@@ -302,17 +302,17 @@ class ComisionesNeo_model extends CI_Model {
         return $this->db->query("SELECT id_plan, CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', regional, ' ', otro) cadena FROM plan_comision WHERE prioridad = $prioridad");
     }
 
-    public function updatePlan($prioridad, $plan){
-        $whereData =  $this->db->query("SELECT CONCAT(where_principal,' ', fecha_inicio, ' ', fecha_fin, ' ', lugar_prospeccion, ' ', venta_regional, ' ', otro_vobo) cadena FROM plan_comision WHERE id_plan = $plan AND prioridad = $prioridad");
-        $whereRes = $whereData->row()->cadena;
-        return $this->db->query("UPDATE clientes set modificado_por = 1, plan_comision = $plan WHERE id_cliente IN (
+    public function updatePlan($plan, $where){
+        $query = "UPDATE clientes set modificado_por = 1, plan_comision = $plan WHERE id_cliente IN (
             SELECT cl.id_cliente FROM clientes cl
             INNER JOIN lotes l ON l.idCliente = cl.id_cliente AND l.status = 1 AND l.registro_comision NOT IN (7) AND l.idStatusContratacion BETWEEN 9 AND 15
             INNER JOIN condominios c ON c.idCondominio = l.idCondominio
             INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
             INNER JOIN usuarios ae ON ae.id_usuario = cl.id_asesor
             LEFT JOIN prospectos ps ON ps.id_prospecto = cl.id_prospecto AND cl.lugar_prospeccion = 6
-            $whereRes AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )");
+            $where AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) AND cl.status = 1 AND cl.fechaApartado >= '2020-03-01' AND cl.id_sede NOT IN (0) AND (cl.plan_comision IS NULL OR cl.plan_comision IN (0)) )";
+
+        return $this->db->query($query);
     }
 
     public function getFlag(){

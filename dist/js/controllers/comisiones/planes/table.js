@@ -348,6 +348,12 @@ $(document).ready(function () {
                 }else{
                     condiciones += `la venta no sea compartida<br>`
                 }
+                if(row.data().asesores_compartida_list){
+                    condiciones += `asesores que comparten: ${row.data().asesores_compartida_list}<br>`
+                }
+                if(row.data().coordinadores_compartida_list){
+                    condiciones += `coordinador que comparte: ${row.data().coordinadores_compartida_list}<br>`
+                }
             }
             if(row.data().gerentes_list){
                 condiciones += `gerentes: ${row.data().gerentes_list}<br>`
@@ -440,7 +446,6 @@ $(document).ready(function () {
             
             // is_sede: new FormData(event.target).get('is_sede') || null,
             sedes: new FormData(event.target).getAll('sedes').toString(),
-            sedes_compartidas: new FormData(event.target).getAll('sedes_compartidas').toString(),
 
             residencial: new FormData(event.target).getAll('residencial').toString(),
             lotes: new FormData(event.target).get('lotes'),
@@ -456,9 +461,15 @@ $(document).ready(function () {
             coordinadores: new FormData(event.target).get('coordinadores'),
             asesores: new FormData(event.target).get('asesores'),
             subdirectores: new FormData(event.target).get('subdirectores'),
+            
             tipo_venta: new FormData(event.target).getAll('tipo_venta').toString(),
-            venta_compartida: new FormData(event.target).get('venta_compartida'),
             procesos: new FormData(event.target).get('procesos'),
+
+            //VENTAS COMPARTIDAS
+            venta_compartida: new FormData(event.target).get('venta_compartida'),
+            sedes_compartidas: new FormData(event.target).getAll('sedes_compartidas').toString(),
+            asesor_compartida: new FormData(event.target).get('asesor_compartida'),
+            coordinador_compartida: new FormData(event.target).get('coordinador_compartida'),
 
             comision_director: new FormData(event.target).get('comision_director'),
             comision_regional: new FormData(event.target).get('comision_regional'),
@@ -545,7 +556,6 @@ function editPlan(data){
 
     $('#form-plan-modal #descuento_mdb').val(data.descuento_mdb).change()
     $('#form-plan-modal #ismktd').val(data.ismktd).change()
-    $('#form-plan-modal #venta_compartida').val(data.venta_compartida).change()
 
     $('#form-plan-modal #gerentes').val(data.gerentes)
     $('#form-plan-modal #subdirectores').val(data.subdirectores)
@@ -561,7 +571,10 @@ function editPlan(data){
     }
     $('#form-plan-modal #tipo_venta').selectpicker('refresh')
 
+    // VENTA COMPARTIDA
     $('#form-plan-modal #venta_compartida').val(data.venta_compartida).change()
+    $('#form-plan-modal #asesor_compartida').val(data.asesor_compartida)
+    $('#form-plan-modal #coordinador_compartida').val(data.coordinador_compartida)
 
     $('#form-plan-modal #sedes_compartidas').val('')
     if(data.sedes_compartidas){

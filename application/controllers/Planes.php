@@ -7,8 +7,6 @@ class Planes extends CI_Controller{
         parent::__construct();
 
         $this->load->model('PlanesModel');
-        $this->load->model('Usuarios_modelo');
-        $this->load->model('General_model');
     }
 
     public function index() {
@@ -154,98 +152,11 @@ class Planes extends CI_Controller{
     }
 
     public function llenado(){
-        $planes = $this->PlanesModel->getPlanesComision();
+        $id_plan = $this->input->get('plan');
+        
+        $queries = $this->PlanesModel->queries($id_plan);
 
-        foreach ($planes as $key => $plan) {
-            if($plan->estatus == 1){
-                $conditions = [];
-
-                $where = '';
-
-                if($plan->venta_compartida){
-                    $where .= "INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1 AND cl.status = 1 ";
-
-                    if($plan->sedes_compartidas){
-                        array_push($conditions, "vc.id_sede IN ($plan->sedes_compartidas) AND vc.id_regional NOT IN(0)");
-                    }
-                }
-
-                if($plan->sedes){
-                    array_push($conditions, "cl.id_sede IN ($plan->sedes)");
-                }
-
-                if($plan->residencial){
-                    array_push($conditions, "r.idResidencial IN ($plan->residencial)");
-                }
-
-                if($plan->lotes){
-                    array_push($conditions, "l.idLote IN ($plan->lotes)");
-                }
-
-                if($plan->fechaInicio){
-                    array_push($conditions, "cl.fechaApartado >= '$plan->fechaInicio'");
-                }
-
-                if($plan->fechaFin){
-                    array_push($conditions, "cl.fechaApartado < '$plan->fechaFin'");
-                }
-
-                if($plan->prospeccion !== NULL){
-                    if($plan->is_prospeccion == 0){
-                        array_push($conditions, "cl.lugar_prospeccion NOT IN ($plan->prospeccion)");
-                    }else{
-                        array_push($conditions, "cl.lugar_prospeccion IN ($plan->prospeccion)");
-                    }
-                }
-
-                if($plan->is_regional !== null){
-                    if($plan->is_regional){
-                        array_push($conditions, "cl.id_regional IN ($plan->regional)");
-                    }else{
-                        array_push($conditions, "cl.id_regional NOT IN ($plan->regional)");
-                    }
-                }
-
-                if($plan->subdirectores){
-                    array_push($conditions, "cl.id_subdirector IN ($plan->subdirectores)");
-                }
-
-                if($plan->inicio_prospeccion){
-                    array_push($conditions, "ps.fecha_creacion > '$plan->inicio_prospeccion'");
-                }
-
-                if($plan->fin_prospeccion){
-                    array_push($conditions, "ps.fecha_creacion < '$plan->fin_prospeccion'");
-                }
-
-                if($plan->descuento_mdb !== null){
-                    if($plan->descuento_mdb == 1){
-                        array_push($conditions, "cl.descuento_mdb = 1");
-                    }else{
-                        array_push($conditions, "cl.descuento_mdb != 0");
-                    }
-                }
-
-                if($plan->gerentes){
-                    array_push($conditions, "cl.id_gerente IN ($plan->gerentes)");
-                }
-
-                if($plan->ismktd !== null){
-                    if($plan->ismktd == 0){
-                        array_push($conditions, "ae.ismktd != 1");
-                    }else{
-                        array_push($conditions, "ae.ismktd = 1");
-                    }
-                }
-
-                if($plan->procesos){
-                    array_push($conditions, "cl.proceso IN ($plan->procesos)");
-                }
-
-                $where .= 'WHERE ' . implode(' AND ', $conditions) . "\n";
-                print_r($plan->nombre . ': ' . $where);
-            }
-        }
+        print_r($queries);
         exit;
     }
 }
