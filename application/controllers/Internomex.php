@@ -228,11 +228,11 @@
 
   // FUNCION PARA TRAER LOS CATALOGOS Y ENGANCHES REGISTRADOS DEL DETALLE DE ENGANCHE DEL LOTE
   public function catalogosEnganche() {
-    $response = array("status"=>-1,"mensaje"=>"Ha ocurrido un error a","data"=>[]);
-    $data = json_decode( file_get_contents('php://input') );
+    $response = array("status"=>-1,"mensaje"=>"Ha ocurrido un error a","data"=>array());
     $idLote = $this->input->post('idLote');
-    $dtoCatalogos = $this->Internomex_model->getCatalogos()->result_array();
-    $dtoEnganches = $this->Internomex_model->getEnganches($idLote)->result_array();
+
+        $dtoCatalogos = $this->Internomex_model->getCatalogoFormaPago()->result_array();
+        $dtoEnganches = $this->Internomex_model->getEnganches($idLote)->result_array();
     if(count($dtoCatalogos) > 0)
       $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "dtoEnganches"=> $dtoEnganches );
     else
@@ -242,67 +242,69 @@
 
     // FUNCION PARA AGREGAR ENGANCHE Y DETALLE DE ENGANCHE
 	public function guardarEnganches() {
-    $data = $this->input->post('dtoEnganche');
-    $dtoInstrumentoMonetario=[];
-    $response=$response = array( "status" => 3, "mensaje"=>"Error no entro a validaciones");
-    try {
-      $this->db->trans_begin();
-      if(array_key_exists('enganchesGuardados', $data)) {
-        foreach ($data['enganchesGuardados'] as $key => $dto) {
-              $objActualizarDetEnganche[]=array(
-                "id_det_enganche"=>$dto['id_det_enganche'],
-                "instrumento_monetario"=>$dto['instrumento_monetario'],
-                "moneda_divisa"=>$dto['moneda_divisa'],
-                "fecha_pago"=>$dto['fecha_pago'],
-                "estatus"=>"1",
-                "idEnganche"=>$dto['idEnganche']
-              );
+        try {
+            $this->db->trans_begin();
+            $idLote = $this->input->post('txtIdLote');
+            $cmbFormaPago = $this->input->post('cmbFormaPago');
+            $cmbInsMonetario= $this->input->post('cmbInsMonetario');
+            $cmbMonedaDiv = $this->input->post('cmbMonedaDiv');
+            $idEnganche = ($this->input->post('idEnganche')=='null') ? 0 : $this->input->post('idEnganche');
+            $montoEnganche = str_replace ( array('$', ','), '', $this->input->post('montoEnganche'));
+            $idCliente = $this->input->post('idCliente');
+            $txtFechaPago = $this->input->post('txtFechaPago');
+            $table = 'enganche';
+            $ahora = date('Y-m-d H:i:s');
+            $arrayFecha = explode('/', $txtFechaPago);
+            $originalDate = $arrayFecha[2].'-'.$arrayFecha[1].'-'.$arrayFecha[0];
+            $newDate = date("Y/m/d", strtotime($originalDate));
+
+            if($idEnganche != 0){ //si ya existe un registro del enganche de actualiza
+                $key = 'idEnganche';
+
+                $dataEnganche = array(
+                    "formaPago" => $cmbFormaPago,
+                    "idLote" => $idLote,
+                    "instrumentoMonetario" => $cmbInsMonetario,
+                    "monedaDivisa" => $cmbMonedaDiv,
+                    "fechaPago" => $newDate, //CAMBIAR FECHAS
+                    "montoPago" => $montoEnganche,
+                    "fechaModificacion" => $ahora,
+                    "idModificacion" => $this->session->userdata('id_usuario')
+                );
+                $respuesta = $this->General_model->updateRecord($table, $dataEnganche, $key, $idEnganche);
+            }else{ //si no existe se crea otro nuevo
+
+                $dataEnganche = array(
+                    "formaPago" => $cmbFormaPago,
+                    "idLote" => $idLote,
+                    "idCliente" => $idCliente,
+                    "instrumentoMonetario" => $cmbInsMonetario,
+                    "monedaDivisa" => $cmbMonedaDiv,
+                    "fechaPago" => $newDate,
+                    "montoPago" => $montoEnganche,
+                    "conceptoPago" =>  1, //este es el enganche
+                    "estatus" => 1,
+                    "fechaCreacion" => $ahora,
+                    "idCreacion" => $this->session->userdata('id_usuario'),
+                    "fechaModificacion" => $ahora,
+                    "idModificacion" => null
+                );
+                $respuesta = $this->General_model->addRecord($table, $dataEnganche);
+            }
+
+
+            if ( $respuesta ) {
+                $this->db->trans_commit();
+                $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+            } else  {
+                $this->db->trans_rollback();
+                $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
+            }
+
+        } catch (\Throwable $th) {
+            $response = array( "status" => 0, "mensaje"=>"Error al ejecutar funcion de guardar enganche", "error"=> $th);
         }
-        if(count($objActualizarDetEnganche) > 0)
-          $dtoInstrumentoMonetario = $this->General_model->updateBatch('det_enganche', $objActualizarDetEnganche, 'id_det_enganche');
-      }
-      if (array_key_exists('nuevoEnganche', $data)) {
-        foreach ($data['nuevoEnganche'] as $key => $dtoN) {
-          $objNuevoEnganche=[];
-          $objNuevoDetEnganche=[];
-          $objNuevoEnganche[]=array(
-            "forma_pago"=>$dtoN['forma_pago'],
-            "id_lote"=>$dtoN['id_lote'],
-            "fecha_creacion"=>date('Y-m-d\TH:i:s'),
-            "id_creacion"=>$this->session->userdata('id_usuario'),
-            "fecha_modificacion"=>NULL,
-            "id_modificacion"=>NULL,
-            "estatus"=>"1"
-          );
-          if (count($objNuevoEnganche)) {
-            $dtoNuevoEnganche = $this->General_model->addRecord("enganche", $objNuevoEnganche); // MJ: LLEVA 2 PARÁMETROS $table
-            $idEnganche = $this->db->insert_id();
-            if(!empty($idEnganche)) {
-              $objNuevoDetEnganche[]=array(
-                "instrumento_monetario"=>$dtoN['instrumento_monetario'],
-                "moneda_divisa"=>$dtoN['moneda_divisa'],
-                "fecha_pago"=>$dtoN['fecha_pago'],
-                "estatus"=>1,
-                "idEnganche"=>$idEnganche
-              );
-              $dtoNuevoDetEnganche = $this->General_model->addRecord("det_enganche", $objNuevoDetEnganche); // MJ: LLEVA 2 PARÁMETROS
-            } else
-              $response = array( "status" => 2, "mensaje"=>"Error al obtener el id del enganche");
-          } else
-              $response = array( "status" => 2, "mensaje"=>"Error al llenar arreglo de nuevo enganche");            
-        }
-      }
-      if ($dtoInstrumentoMonetario || $response['status']!=2 || $this->db->trans_status() === TRUE ) {
-        $this->db->trans_commit();
-        $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos");
-      } else  {
-        $this->db->trans_rollback();
-        $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos");
-      }
-    } catch (\Throwable $th) {
-      $response = array( "status" => 0, "mensaje"=>"Error al ejecutar funcion de guardar enganche", "error"=> $th);
-    }
-    echo json_encode($response);
+        echo json_encode($response);
 	}
 
 }

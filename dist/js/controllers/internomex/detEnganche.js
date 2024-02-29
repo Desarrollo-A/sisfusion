@@ -162,24 +162,46 @@ function fillTable(index_proyecto, index_condominio) {
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
             { data: 'idLote' },
-            { data: 'nombreCliente' },
-            { data: 'fechaApartado' },
+            {
+                data: function (d) {
+                    let nombreCliente = (d.nombreCliente == null || d.nombreCliente == "  ") ? 'SIN ESPECIFICAR' : d.nombreCliente;
+                    return `${nombreCliente}`;
+                }
+            },
+            {
+                data: function (d) {
+                    let fechaApartado = (d.fechaApartado == null || d.fechaApartado == "  ") ? 'SIN ESPECIFICAR' : d.fechaApartado;
+                    return `${fechaApartado}`;
+                }
+            },
             { data: 'nombreAsesor' },
             {
                 data: function (d) {
-                    return `<span class='label lbl-azure'>${d.tipoVenta}</span>`;
+                    let tipoVenta = (d.tipoVenta == null) ? 'SIN REGISTRO' : d.tipoVenta;
+                    return `<span class='label lbl-green'>${tipoVenta}</span>`;
                 }
             },
             {
                 data: function (d) {
-                    return `<span class='label blueMaderas'>${d.ubicacion}</span>`;
+                    let ubicacion = (d.ubicacion == null) ? 'SIN REGISTRO' : d.ubicacion;
+                    return `<span class='label lbl-violetBoots'>${ubicacion}</span>`;
                 }
             },
-            { data: 'engancheContraloria' },
-            { data: 'engancheAdministracion' },
             {
                 data: function (d) {
-                    return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}"><i class="material-icons">attach_money</i></button>`;
+                    let engancheContraloria = (d.engancheContraloria == null || d.engancheContraloria == "  ") ? 'SIN ESPECIFICAR' : d.engancheContraloria;
+                    return `${engancheContraloria}`;
+                }
+            },
+            {
+                data: function (d) {
+                    let engancheAdministracion = (d.engancheAdministracion == null || d.engancheAdministracion == "  ") ? 'SIN ESPECIFICAR' : d.engancheAdministracion;
+                    return `${engancheAdministracion}`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}" data-idEnganche="${d.idEnganche}" data-idCliente="${d.idCliente}"><i class="material-icons">attach_money</i></button>`;
                 }
             }
         ],
@@ -221,7 +243,10 @@ $(document).on('click', '.cop', function (e) {
     e.preventDefault();
     var $itself = $(this);
     var id_lote = $itself.attr('data-idLote');
+    var id_enganche = $itself.attr('data-idEnganche');
+    var id_cliente= $itself.attr('data-idCliente');
     id_lote_global = id_lote;
+    $('#verDetalles').modal('show');
     $.ajax({
         type: "POST",
         url: `${general_base_url}Internomex/catalogosEnganche`,
@@ -233,7 +258,10 @@ $(document).on('click', '.cop', function (e) {
                 try {
                     if (dto.status == 1) {
                         $('#txtIdLote').val(id_lote);
+                        $('#idEnganche').val(id_enganche);
+                        $('#idCliente').val(id_cliente);
                         generarInputCatalogos(dto);
+
                         $('#verDetalles').modal('show');
                     }
                     else
@@ -269,19 +297,43 @@ function cerrarModalDetEnganche() {
 }
 
 function generarInputCatalogos(dto) {
-    dto.dtoCatalogos.forEach((catalogoOpciones) => {
-        if (catalogoOpciones.id__catalogo == 110) // FROMA DE PAGO
+    const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    dto.dtoCatalogos.map((catalogoOpciones) => {
+        if (catalogoOpciones.id_catalogo == 110) // FROMA DE PAGO
             $("#cmbFormaPago").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
-        if (catalogoOpciones.id__catalogo == 111) // INSTRUMENTO MONETARIO
+        if (catalogoOpciones.id_catalogo == 111) // INSTRUMENTO MONETARIO
             $("#cmbInsMonetario").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
-        if (catalogoOpciones.id__catalogo == 112) // MONEDA O DIVISA
+        if (catalogoOpciones.id_catalogo == 112) // MONEDA O DIVISA
             $("#cmbMonedaDiv").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
     });
-    if (dto.dtoEnganches.length > 0)
-        agregarEngancheT(dto.dtoEnganches);
+
+
+    if(dto.dtoEnganches.length>0){
+        $("#cmbMonedaDiv").val(dto.dtoEnganches[0].monedaDivisa);
+        $("#cmbInsMonetario").val(dto.dtoEnganches[0].instrumentoMonetario);
+        $("#cmbFormaPago").val(dto.dtoEnganches[0].formaPago);
+        let fechaBase = dto.dtoEnganches[0].fechaPago.split("-");
+        $('#txtFechaPago').val(fechaBase[2]+'/'+fechaBase[1]+'/'+fechaBase[0]);
+        // Create our number formatter.
+        $("#montoEnganche").val(formatter.format(dto.dtoEnganches[0].montoPago));
+    }else{
+        $("#montoEnganche").val(formatter.format(0));
+    }
+
+
+
+
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
+
+    if (dto.dtoEnganches.length > 0)
+        agregarEngancheT(dto.dtoEnganches);
+
+
 }
 
 function agregarEngancheT(enganche) {
@@ -456,22 +508,31 @@ $(document).on("submit", "#formEnganches", function (e) {
         objEnganche.enganchesGuardados = [];
     else if (objEnganche.nuevoEnganche <= 0)
         objEnganche.nuevoEnganche = [];
+
     $.ajax({
-        type: "POST",
+        type: 'POST',
         url: `${general_base_url}Internomex/guardarEnganches`,
-        dataType: "json",
-        // contentType: 'application/json',
-        data: { dtoEnganche: objEnganche },
-    })
-        .done(function (dto) {
+        data: new FormData(this),
+        contentType: false,
+        cache: false,
+        processData:false,
+        beforeSend:()=>{
+            return validateInputs();
+        },
+        success:(dto)=>{
             if (dto != []) {
                 try {
+                    dto = JSON.parse(dto);
+                    console.log(dto);
                     if (dto.status == 1) {
                         cerrarModalDetEnganche();
-                        alerts.showNotification("top", "right", "Exito, se registraron los datos correctamente.", "success");
+                        alerts.showNotification("top", "right", dto.mensaje, "success");
+                        tabla_valores_cliente.ajax.reload();
                     }
                     else
-                        alerts.showNotification("top", "right", "Oops, algo salió mal al guardar los datos", "danger");
+                        alerts.showNotification("top", "right", dto.mensaje, "danger");
+
+
                 } catch (error) {
                     if (error instanceof SyntaxError) {
                         console.log(error)
@@ -480,11 +541,70 @@ $(document).on("submit", "#formEnganches", function (e) {
                     }
                 }
             }
-            else 
+            else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. inténtalo más tarde.", "danger");
             return dto;
-        })
-        .fail(function () {
+        },
+        error:()=>{
             alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catálogos de enganche.", "danger");
-        });
+        }
+    })
+        // .done(function (dto) {
+        //     if (dto != []) {
+        //         try {
+        //             if (dto.status == 1) {
+        //                 cerrarModalDetEnganche();
+        //                 alerts.showNotification("top", "right", "Exito, se registraron los datos correctamente.", "success");
+        //             }
+        //             else
+        //                 alerts.showNotification("top", "right", "Oops, algo salió mal al guardar los datos", "danger");
+        //         } catch (error) {
+        //             if (error instanceof SyntaxError) {
+        //                 console.log(error)
+        //             } else {
+        //                 throw error; // si es otro error, que lo siga lanzando
+        //             }
+        //         }
+        //     }
+        //     else
+        //         alerts.showNotification("top", "right", "Oops, algo salió mal. inténtalo más tarde.", "danger");
+        //     return dto;
+        // })
+        // .fail(function () {
+        //     alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los catálogos de enganche.", "danger");
+        // });
 });
+
+function validateInputs(){
+    let idLote = $('#txtIdLote').val();
+    let cmbFormaPago = $('#cmbFormaPago').val();
+    let cmbInsMonetario = $('#cmbInsMonetario').val();
+    let cmbMonedaDiv = $('#cmbMonedaDiv').val();
+    let txtFechaPago = $('#txtFechaPago').val();
+    let montoPago = $('#montoEnganche').val();
+
+    if(idLote=='' || idLote==null){
+        alerts.showNotification('top', 'right', 'Debes haber seleccionado un lote', 'warning');
+        return false;
+    }
+    if(cmbFormaPago=='' || cmbFormaPago==null){
+        alerts.showNotification('top', 'right', 'Debes seleccionar una forma de pago', 'warning');
+        return false;
+    }
+    if(cmbInsMonetario=='' || cmbInsMonetario==null){
+        alerts.showNotification('top', 'right', 'Debes seleccionar el instrumento monetario', 'warning');
+        return false;
+    }
+    if(cmbMonedaDiv=='' || cmbMonedaDiv==null){
+        alerts.showNotification('top', 'right', 'Debes seleccionar la divisa de la moneda', 'warning');
+        return false;
+    }
+    if(txtFechaPago=='' || txtFechaPago==null){
+        alerts.showNotification('top', 'right', 'Ingresa fecha del pago', 'warning');
+        return false;
+    }
+    if(montoPago=='' || montoPago==null || montoPago==0){
+        alerts.showNotification('top', 'right', 'Ingresa un monto', 'warning');
+        return false;
+    }
+}
