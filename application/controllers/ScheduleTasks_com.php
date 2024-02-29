@@ -86,9 +86,9 @@ class ScheduleTasks_com extends CI_Controller{
     }
 
     public function LlenadoPlan(){ //CRON diario
-        // $this->db->query("DELETE FROM comisiones where id_usuario = 0");
-        // $this->db->query("DELETE FROM pago_comision_ind where estatus = 0 and abono_neodata = 0");
-        // $this->db->query("DELETE from comisiones where porcentaje_decimal = 0 and id_comision not in (select id_comision from pago_comision_ind)");
+        $this->db->query("DELETE FROM comisiones where id_usuario = 0");
+        $this->db->query("DELETE FROM pago_comision_ind where estatus = 0 and abono_neodata = 0");
+        $this->db->query("DELETE from comisiones where porcentaje_decimal = 0 and id_comision not in (select id_comision from pago_comision_ind)");
 
         $queries = $this->PlanesModel->queries();
 
