@@ -178,13 +178,13 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     let tipoVenta = (d.tipoVenta == null) ? 'SIN REGISTRO' : d.tipoVenta;
-                    return `<span class='label lbl-azure'>${tipoVenta}</span>`;
+                    return `<span class='label lbl-green'>${tipoVenta}</span>`;
                 }
             },
             {
                 data: function (d) {
                     let ubicacion = (d.ubicacion == null) ? 'SIN REGISTRO' : d.ubicacion;
-                    return `<span class='label lbl-blueMaderas'>${ubicacion}</span>`;
+                    return `<span class='label lbl-violetBoots'>${ubicacion}</span>`;
                 }
             },
             {
