@@ -179,35 +179,28 @@ function selectOpcion(){
 
             $('#miModalInventario .invent').html('');
             $('#miModalInventario .invent').append(`
-            <h5>Usuarios titulares registrados</h5>
+            <h5><b>Usuarios titulares registrados</b></h5>
             <div class="row">
-            <div class="col-md-6" id="ase2">
-            <b><label class="control-label" >Asesor</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
-        
-            </div>
-            <div class="col-md-6" id="coor2">
-            <b><label class="control-label" >Coordinador</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
-         
-            </div>
-            <div class="col-md-6" id="ger2">
-            <b><label class="control-label" >Gerente</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
- 
-            </div>
-            
-            <div class="col-md-6" id="sub">
-            <b><label class="control-label" >Sub-director</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
-          
-            </div>
-            <div class="col-md-6" id="regio">
-            <b><label class="control-label" >Regional</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
-         
-            </div>
-
+                <div class="col-md-6" id="ase2">
+                    <b><label class="control-label" >Asesor</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="coor2">
+                    <b><label class="control-label" >Coordinador</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="ger2">
+                    <b><label class="control-label" >Gerente</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="sub">
+                    <b><label class="control-label" >Sub-director</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="regio">
+                    <b><label class="control-label" >Regional</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
+                </div>
             </div>
             <input type="hidden" value="${data.id_asesor}" id="asesor" name="asesor">
             <input type="hidden" value="${data.id_coordinador}" id="coordinador" name="coordinador">
@@ -322,32 +315,45 @@ function selectOpcion(){
             else if(cuantos == 1){
                 $('#miModalVc .vc').html('');
                 $('#miModalVc .vc').append(`
-                    <h5>Usuarios registrados en venta compartida</h5>
+                    <h4><b>Usuarios registrados en venta compartida</b></h4>
                     <div class="row">
-                    <div class="col-md-4" id="ase">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].asesor}" style="font-size:12px;">
-                    <b><p style="font-size:12px;">Asesor</b></p>
+                        <div class="col-md-6" id="ase">
+                            <label class="control-label"><b>Asesor</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].asesor}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="coor">
+                            <label class="control-label"><b>Coordinador</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'NO REGISTRADO' : data[0].coordinador}" style="font-size:12px;color:${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'red' : 'black'}">
+                        </div>
+                        <div class="col-md-6" id="ger">
+                            <label class="control-label"><b>Gerente</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].gerente}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="sub">
+                            <label class="control-label"><b>Sub-director</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].subdirector}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="dir">
+                            <label class="control-label"><b>Director General</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].lider}" style="font-size:12px;">
+                        </div>
                     </div>
-                    <div class="col-md-4" id="coor">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'NO REGISTRADO' : data[0].coordinador}" style="font-size:12px;color:${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'red' : 'black'}">
-                    <b><p style="font-size:12px;">Coordinador</b></p>
-                    </div>
-                    <div class="col-md-4" id="ger">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].gerente}" style="font-size:12px;">
-                    <b><p style="font-size:12px;">Gerente</b></p>
-                    </div>
-                    </div>
+
                     <input type="hidden" value="${data[0].id_vcompartida}" id="id_vc" name="id_vc">
                     <input type="hidden" value="${cuantos}" id="cuantos" name="cuantos">
                     <input type="hidden" value="${data[0].id_asesor}" id="asesor" name="asesor">
                     <input type="hidden" value="${data[0].id_coordinador}" id="coordinador" name="coordinador">
                     <input type="hidden" value="${data[0].id_gerente}" id="gerente" name="gerente">
+                    <input type="hidden" value="${data[0].id_subdirector}" id="subdirector" name="subdirector">
             
             
             
                     <input type="hidden" value="${data[0].asesor}" id="asesorname" name="asesorname">
                     <input type="hidden" value="${data[0].coordinador}" id="coordinadorname" name="coordinadorname">
                     <input type="hidden" value="${data[0].gerente}" id="gerentename" name="gerentename">
+                    <input type="hidden" value="${data[0].subdirector}" id="subdirectorname" name="subdirectorname">
+                    <input type="hidden" value="${data[0].regional}" id="regionalname" name="regionalname">
+
                     <input type="hidden" value="${idLote}" id="idLote" name="idLote" >
                     <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">
                     
@@ -415,7 +421,7 @@ $("#asesorold").change(function() {
 $("#roles3").change(function() {
     var parent = $(this).val();
     document.getElementById('UserSelect').innerHTML = '';
-    document.getElementById('UserSelectDirec').innerHTML = '';
+    //document.getElementById('UserSelectDirec').innerHTML = '';
     let user =0;
     let bandera59 = 0 ;
     let nameUser='';
@@ -437,7 +443,7 @@ $("#roles3").change(function() {
         $('#coor').addClass('coor');
         $('#ase').removeClass('ase');
         $('#ger').removeClass('ger');
-        document.getElementById('UserSelectDirec').innerHTML = '';
+        //document.getElementById('UserSelectDirec').innerHTML = '';
     }
     else if(parent == 3){
         user = $('#gerente').val();
@@ -445,7 +451,7 @@ $("#roles3").change(function() {
         $('#ger').addClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
-        document.getElementById('UserSelectDirec').innerHTML = '';
+        //document.getElementById('UserSelectDirec').innerHTML = '';
 
     }else if(parent == 2){
         user = $('#subdirector').val();
@@ -454,7 +460,7 @@ $("#roles3").change(function() {
         $('#ger').removeClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
-        document.getElementById('UserSelectDirec').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
+        //document.getElementById('UserSelectDirec').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
 
     }else if(parent == 59){
         
@@ -603,6 +609,68 @@ $("#rolesvc").change(function() {
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
     }
+    else if(parent == 2){
+        user = $('#subdirector').val();
+        nameUser = $('#subdirectorname').val();
+        $('#sub').addClass('sub');
+        $('#ger').removeClass('ger');
+        $('#ase').removeClass('ase');
+        $('#coor').removeClass('coor');
+        //document.getElementById('UserSelectvc').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
+    }
+    else if(parent == 59){
+        
+        subdirector = $('#subdirector').val();
+        var respuesta = 0;
+        console.log(subdirector);
+        console.log(subdirector);
+        console.log('subdirector')
+        bandera59 = 1;
+        $.ajax({
+            url: general_base_url+'Incidencias/tieneRegional',
+            data: {
+                'usuario' : parseInt(subdirector)
+            },
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST',
+            success: function(data) {
+                
+                if( data != false ){
+
+                    console.log(data[0].id_usuario)    
+
+                    document.getElementById('UserSelect').innerHTML = '';
+              
+                    user = $('#regional').val();
+                    nameUser = $('#regionalname').val();
+                 
+                    $('#regio').addClass('regio');
+                    $('#sub').removeClass('sub');
+                    $('#ger').removeClass('ger');
+                    $('#ase').removeClass('ase');
+                    $('#coor').removeClass('coor');
+                    
+                     $("#usuarioid3").append($('<option>').val(data[0].id_usuario).attr('data-value', data[0].id_usuario).text(data[0].name));
+                     $("#usuarioid3").selectpicker("refresh");
+                   }else {
+                    $("#roles3").val('');
+                    $("#roles3").selectpicker("refresh");
+                    alerts.showNotification("top", "right", "El siguiente usuario no es necesario el regional", "warning");
+                  
+                    $("#usuarioid3").val('');
+                    $("#usuarioid3").selectpicker('refresh');
+          
+                }
+            }
+        });
+        // console.log(res['readyState']);
+        // console.log(res.responseJSON);
+        // console.log(res['responseJSON']);
+
+  
+    }
+    
     document.getElementById('UserSelectvc').innerHTML = '<em>Usuario a cambiar: <b>'+nameUser+'</b></em>';
     }
     else if(cuantos2 == 2){
@@ -661,6 +729,7 @@ $("#rolesvc").change(function() {
             </div>
             `);
         }
+        
     }
 
     $('#usuarioid4 option').remove(); 
@@ -684,16 +753,18 @@ function open_Modal(){
 }
 
 /**-----------------------------INVENTARIO---------------------------------------- */
-function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
+function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,sub,asesor,coordinador,gerente,subdirector){
     $("#miModalInventario .invent").html('');
 
     $('#miModalInventario .invent').append(`
     <input type="hidden" value="${ase}" id="asesor" name="asesor">
     <input type="hidden" value="${coor}" id="coordinador" name="coordinador">
     <input type="hidden" value="${ger}" id="gerente" name="gerente">
+    <input type="hidden" value="${sub}" id="subdirector" name="subdirector">
     <input type="hidden" value="${asesor}" id="asesorname" name="asesorname">
     <input type="hidden" value="${coordinador}" id="coordinadorname" name="coordinadorname">
     <input type="hidden" value="${gerente}" id="gerentename" name="gerentename">
+    <input type="hidden" value="${subdirector}" id="subdirectorname" name="subdirectorname">
     <input type="hidden" value="${idLote}" id="idLote" name="idLote" >
     <input type="hidden" value="${idCliente}" id="idCliente" name="idCliente">
     `);

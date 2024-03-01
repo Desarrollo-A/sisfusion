@@ -402,7 +402,12 @@ class Incidencias_model extends CI_Model {
                     $this->db->query("UPDATE ventas_compartidas SET id_coordinador=$newColab WHERE id_cliente=$idCliente AND estatus=1;");
                 }else if($rolSelect == 3){
                     $this->db->query("UPDATE ventas_compartidas SET id_gerente=$newColab WHERE id_cliente=$idCliente AND estatus=1;");
+                }else if($rolSelect == 2){
+                    $this->db->query("UPDATE ventas_compartidas SET id_subdirector=$newColab WHERE id_cliente=$idCliente AND estatus=1;");
+                }else if($rolSelect == 59){
+                    $this->db->query("UPDATE ventas_compartidas SET id_subdirector=$newColab WHERE id_cliente=$idCliente AND estatus=1;");
                 }
+                
                 $respuesta = $this->db->query("INSERT INTO historial_log VALUES (".$idCliente.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'MOTIVO ACTUALIZACIÓN: ".$comentario."', 'ventas_compartidas',NULL, null, null, null)");
             }
             
@@ -471,6 +476,29 @@ class Incidencias_model extends CI_Model {
                     $por=0.33333;
                 }
             }
+            else if ($rolSelect == 2){
+                if($count_com->row()->val_total == 0){
+                    $por=1;
+                } else if($count_com->row()->val_total == 1){
+                    $por=0.5;
+                } else if($count_com->row()->val_total == 2){
+                    $por=0.33333;
+                } else if($count_com->row()->val_total == 3){
+                    $por=0.33333;
+                }
+            }
+            else if ($rolSelect == 59){
+                if($count_com->row()->val_total == 0){
+                    $por=1;
+                } else if($count_com->row()->val_total == 1){
+                    $por=0.5;
+                } else if($count_com->row()->val_total == 2){
+                    $por=0.33333;
+                } else if($count_com->row()->val_total == 3){
+                    $por=0.33333;
+                }
+            }
+            
             
             $comision_total=$precio_lote * ($por /100);
             if(empty($validate->row()->id_usuario)){
@@ -492,7 +520,7 @@ class Incidencias_model extends CI_Model {
         }
 
         public function getUserVC($id_cliente){
-            return  $this->db->query("SELECT vc.id_vcompartida,cl.id_cliente,cl.nombre, cl.apellido_paterno, cl.apellido_materno, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente
+            return  $this->db->query("SELECT vc.id_vcompartida,cl.id_cliente,cl.nombre, cl.apellido_paterno, cl.apellido_materno, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector,di.id_usuario AS id_lider, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS lider
             FROM ventas_compartidas vc
             INNER JOIN clientes cl ON vc.id_cliente = cl.id_cliente
             INNER JOIN  usuarios ae ON ae.id_usuario = vc.id_asesor
