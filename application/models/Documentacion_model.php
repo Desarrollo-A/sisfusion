@@ -157,4 +157,28 @@ class Documentacion_model extends CI_Model {
 
         return $pathBase;
     }
+
+    public function getTotalFilesIsNotBucket(){
+        $query = "SELECT COUNT(*) AS total
+        FROM historial_documento";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function getDocument($idDocumento){
+        $query = "SELECT *
+        FROM historial_documento
+        WHERE
+            idDocumento = $idDocumento
+        AND bucket NOT IN (1)
+        AND status IN (1)";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function updateDocumentToBucket($idDocumento){
+        $query = "UPDATE historial_documento SET bucket=1 WHERE idDocumento = $idDocumento";
+
+        return $this->db->query($query);
+    }
 }

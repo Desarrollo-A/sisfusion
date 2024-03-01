@@ -1,6 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+require 'vendor/autoload.php';
+
+use Google\Cloud\Storage\StorageClient;
+
 class Documentacion extends CI_Controller {
+
+    private $bucket;
 
     public function __construct() {
         parent::__construct();
@@ -14,6 +20,75 @@ class Documentacion extends CI_Controller {
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+
+        $storage = new StorageClient([
+            'keyFilePath' => APPPATH . 'config/google.json'
+        ]);
+
+        $this->bucket = $storage->bucket('bucket_prueba_php');
+    }
+
+    public function migracion(){
+        $documents = $this->Documentacion_model->getTotalFilesIsNotBucket();
+
+        $chunk = $this->input->get('lote');
+        
+        $rows = 100000;
+        $start = ($chunk * $rows) - $rows + 1;
+        $end = $rows * $chunk; 
+        
+        $total = $documents->total;
+
+        $updated = 0;
+        for ($i=$start; $i <= $total; $i++) {
+            $file = $this->Documentacion_model->getDocument($i);
+
+            if($file && $file->idLote){
+                $lote = (object) $this->Registrolote_modelo->getNameLote($file->idLote);
+
+                if($lote){
+                    $folder = $this->Documentacion_model->getCarpetaArchivo($file->tipo_documento, $lote->proceso, $lote->nombreLote, $file->expediente);
+
+                    if($file->expediente){
+                        $filename = $folder . $file->expediente;
+
+                        if (file_exists($filename)) {
+                            print_r($filename . ' Existe' . "\n");
+
+                            $object = $this->bucket->upload(
+                                fopen($filename, 'r'),
+                                [
+                                    'name' => $file->expediente,
+                                    //'predefinedAcl' => 'publicRead'
+                                ]
+                            );
+
+                            if($object){
+                                print_r($filename . ' Subido' . "\n");
+
+                                $result = $this->Documentacion_model->updateDocumentToBucket($file->idDocumento);
+
+                                if($result){
+                                    print_r('Documento actualizado:' . $file->idDocumento . "\n");
+
+                                    $updated += 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if($i == $end){
+                break;
+            }
+        }
+
+        print_r('Actualizados: ' . $updated . "\n");
+        print_r('Chunk: ' . $chunk . "\n");
+        print_r('Lineas: ' . $rows . "\n");
+        print_r('Inicio: ' . $start . "\n");
+        print_r('Fin: ' . $i . "\n");
     }
     
     public function documentacion() {
@@ -61,13 +136,24 @@ class Documentacion extends CI_Controller {
     }
 
     function actualizarRamaDeDocumento($file, string $folder, string $documentName, $idDocumento): array {
-        $movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
+        //$movement = move_uploaded_file($file["tmp_name"], $folder . $documentName);
 
-        if ($movement) {
+        $file = $this->bucket->upload(
+            fopen($file["tmp_name"], 'r'),
+            [
+                'name' => $documentName,
+                //'predefinedAcl' => 'publicRead'
+            ]
+        );
+
+        //$movement = false;
+
+        if ($file) {
             $updateDocumentData = array(
                 "expediente" => $documentName,
                 "modificado" => date('Y-m-d H:i:s'),
-                "idUser" => $this->session->userdata('id_usuario')
+                "idUser" => $this->session->userdata('id_usuario'),
+                "bucket" => 1
             );
 
             $result = $this->General_model->updateRecord("historial_documento", $updateDocumentData, "idDocumento", $idDocumento);
@@ -86,7 +172,8 @@ class Documentacion extends CI_Controller {
         $updateDocumentData = array(
             "expediente" => NULL,
             "modificado" => date('Y-m-d H:i:s'),
-            "idUser" => $this->session->userdata('id_usuario')
+            "idUser" => $this->session->userdata('id_usuario'),
+            "bucket" => 0
         );
 
         $nombreExp = $this->Registrolote_modelo->getNomExp($idDocumento);
@@ -97,17 +184,22 @@ class Documentacion extends CI_Controller {
             return;
         }
 
-        $filename = $this->Documentacion_model
-            ->getFilename($idDocumento)
-            ->row()
-            ->expediente;
+        $documento = $this->Documentacion_model->getFilename($idDocumento)->row();
 
-        $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $infoLote->proceso, $infoLote->nombreLote, $filename, true);
+        $filename = $documento->expediente;
 
-        $file = $folder . $filename;
+        if($documento->bucket){
+            $object = $this->bucket->object($filename);
 
-        if (file_exists($file)) {
-            unlink($file);
+            $object->delete();
+        }else{
+            $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $infoLote->proceso, $infoLote->nombreLote, $filename, true);
+
+            $file = $folder . $filename;
+
+            if (file_exists($file)) {
+                unlink($file);
+            }
         }
 
         $result = $this->General_model->updateRecord("historial_documento", $updateDocumentData, "idDocumento", $idDocumento);
@@ -159,7 +251,7 @@ class Documentacion extends CI_Controller {
                 'contenido' => $contenido
             ], true));
 
-            $this->email->send();
+            //$this->email->send();
 
         echo json_encode($response);
     }

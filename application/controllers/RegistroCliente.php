@@ -6179,7 +6179,11 @@ class RegistroCliente extends CI_Controller {
             return $row;
         }
 
-        $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+        if($row['bucket']){
+            $path = "https://storage.googleapis.com/bucket_prueba_php/";
+        }else{
+            $path = $this->Documentacion_model->getCarpetaArchivo($row['tipo_doc'], $row['proceso'], $row['nombreLote'], $row['expediente']);
+        }
 
         $row['expediente'] = $path.$row['expediente'];
 
