@@ -1,6 +1,15 @@
 <link href="<?= base_url() ?>dist/css/depositoSeriedad.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
+<style>
+    div.dropdown-menu.open{
+        max-height: 314px !important;
+        overflow: hidden;
+    }
+    ul.dropdown-menu.inner{
+        max-height: 260px !important;
+        overflow-y: auto;
+    }
+</style>
 
 <body>
 <div class="wrapper">
@@ -48,6 +57,7 @@
                         <h6 class="m-0">Folio: <span><?php echo $cliente[0]->clave; ?></span></h6>
                         <input type="hidden" name="clavevalor" id="clavevalor"  value="<?php echo $cliente[0]->clave; ?>">
                         <input type="hidden" name="id_cliente" id="id_cliente"  value="<?php echo $cliente[0]->id_cliente; ?>">
+                        <input type="hidden" name="proceso" id="proceso"  value="<?php echo $cliente[0]->proceso; ?>">
                     </div>
                 </div>
                 <!-- encabezados -->
@@ -289,7 +299,7 @@
                                         LADA
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel1" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                    <select id="ladaTelN" name="ladaTel1" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-size="7" data-live-search="true" data-container="body" data-width="100%" <?php echo $statsInput; ?> required>
 
                                     </select>
                                 </div>
@@ -315,7 +325,9 @@
                                         LADA
                                         (<small style="color: red;">*</small>)
                                     </label>
-                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                    <select id="ladaTel2" name="ladaTel2" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect"
+                                            data-size="7" <?php echo $readOnly; ?>
+                                            data-live-search="true" data-container="body" data-width="100%" required>
                                     </select>
                                 </div>
                             </div>
@@ -545,7 +557,10 @@
                                                                         <label class="label-on-left m-0">
                                                                             LADA TÉLEFONO CASA
                                                                         </label>
-                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body" data-width="100%">
+                                                                        <select name="ladaTelCop[]" id="ladaTel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        class=" m-0 select-gral ladaSelect" data-live-search="true" data-container="body"
+                                                                        data-size="7" 
+                                                                         data-width="100%">
                                                                         </select>
                                                                     </div>
                                                                 </div>                                                            
@@ -565,7 +580,10 @@
                                                                             LADA CELULAR
                                                                             (<small style="color: red;">*</small>)
                                                                         </label>
-                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" data-container="body" data-width="100%" required>
+                                                                        <select name="ladaCelCop[]" id="ladaCel'.$i.'" title="SELECCIONA UNA OPCIÓN"  
+                                                                        class=" m-0 select-gral ladaSelect copSelect" data-live-search="true" 
+                                                                        data-size="7"
+                                                                        data-container="body" data-width="100%" required>
                                                                         </select>
                                                                     </div>
                                                                 </div>
@@ -1166,8 +1184,8 @@
 <script src="<?= base_url() ?>dist/js/controllers/asesores/depositoFormato.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/asesores/ladasTels.js"></script>
 <script>
-    $('#ladaTel1 #ladaTel2').ready(()=>{
-        $('#ladaTel1').val('<?=$cliente[0]->ladaTel1?>');
+    $('#ladaTelN #ladaTel2').ready(()=>{
+        $('#ladaTelN').val('<?=$cliente[0]->ladaTel1?>');
         $('#ladaTel2').val('<?=$cliente[0]->ladaTel2?>');
 
         $('.selectpicker').selectpicker('refresh');

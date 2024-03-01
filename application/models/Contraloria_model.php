@@ -1329,10 +1329,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 $estatus_permitido='1, 3, 4';
                 break;
             case 17:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
                 break;
             case 70:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1964,4 +1964,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		)->result_array();
     }
     
+    public function autsAceptadasMSI(){
+        $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion=5");
+        return $query->result_array();
+    }
 }

@@ -136,7 +136,7 @@
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
-        var userSede = <?= $this->session->userdata('id_sede') ?>;
+        
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/comisiones/colaborador/comisiones_colaborador.js"></script>

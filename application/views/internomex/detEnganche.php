@@ -29,68 +29,48 @@
                             <div class="modal-body pt-0">
                                 <div class="container-fluid">
                                     <div class="row">
-                                        <div class="col-md-6 pr-0">
+                                        <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Lote (<small style="color: red;">*</small>)</label>
                                                 <input id="txtIdLote" name="txtIdLote" data-idDetEnganche="0" data-idDetEngancheNuevo="0" class="form-control input-gral" type="text" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 pr-0">
+                                        <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Forma de pago (<small style="color: red;">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="cmbFormaPago" name="cmbFormaPago" data-live-search="true">
                                             </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 pr-0">
+                                        <div class="col-md-4 pr-0">
+                                            <div class="form-group text-left m-0">
+
+                                                <label class="control-label">Fecha (<small style="color: red;">*</small>)</label>
+                                                <input type="text" class="form-control datepicker" id="txtFechaPago" name="txtFechaPago" placeholder="Seleccione una fecha" autocomplete="off" value="01/01/2024"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Instrumento monetario (<small style="color: red;">*</small>)</label>
                                                 <select class="selectpicker select-gral" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="cmbInsMonetario" name="cmbInsMonetario" data-live-search="true">
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 pr-0">
+                                        <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Moneda divisa (<small style="color: red;">*</small>)</label>
                                                 <select class="selectpicker select-gral" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="cmbMonedaDiv" name="cmbMonedaDiv" data-live-search="true">
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-12 pr-0">
+                                        <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
-                                                        <script> date = new Date().toLocaleDateString(); 
-                                                            document.getElementById("txtFechaPago").innerHTML = date; 
-                                                        </script>
-                                                        <input type="text" class="form-control datepicker" id="txtFechaPago" placeholder="Seleccione una fecha" value="01/01/2024"/>
-                                                    </div>
-                                        </div>
-                                        <div class="col-md-12 pr-0">
-                                            <div class="form-group text-left m-0">
-                                                <button class="btn-blueMaderas btn-data" onclick="agregarNuevoEgnacheT()" id="agregarEnganche" name="agregarEnganche" type="button" ><i class="material-icons">add_circle</i></button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12 pr-0">
-                                            <div class="material-datatables">
-                                                <div class="form-group">
-                                                    <table class="table-striped table-hover " style="display:none;" 
-                                                        id="table_detalle_enganche" name="table_detalle_enganche">
-                                                        <thead style="margin: 4px; border: 1px solid transparent; border-radius: 5px;
-                                                        color: #fff; text-align: center; font-weight: 300; font-size: 10px !important; background-color: #143860; text-transform: uppercase;">
-                                                            <tr>
-                                                                <th>ID ENGANCHE</th>
-                                                                <th>LOTE</th>
-                                                                <th>FORMA PAGO</th>
-                                                                <th>FECHA PAGO</th>
-                                                                <th>INSTRUMENTO MONETARIO</th>
-                                                                <th>MONEDA DIVISA</th>
-                                                                <th>ACCIONES</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="pila-carrito">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                <label class="control-label label-gral">Monto Enganche (<small style="color: red;">*</small>)</label>
+                                                <input id="montoEnganche" name="montoEnganche" class="form-control input-gral"
+                                                       data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"  step="any" type="text" >
                                             </div>
                                         </div>
 
@@ -98,6 +78,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
+                                <input type="hidden" id="idEnganche" name="idEnganche">
+                                <input type="hidden" id="idCliente" name="idCliente">
                                 <button type="button" id="cerrarModalEnganche" name="cerrarModalEnganche" class="btn btn-danger btn-simple" onclick="cerrarModalDetEnganche()" >Cancelar</button>
                                 <button type="submit" id="RequestInformacion" class="btn btn-primary">Aceptar</button>
                             </div>

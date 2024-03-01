@@ -1,16 +1,4 @@
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
-<body>
-    <div class="wrapper">
-        <?php $this->load->view('template/sidebar'); ?>
-
-        <style type="text/css">
-            .msj{
-                z-index: 9999999;
-            }
-        </style>
-
-        <div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
+<div class="modal fade modal-alertas" id="myModalEspera" role="dialog">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <form method="post" id="form_espera_uno">
@@ -19,7 +7,7 @@
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <div class="modal fade modal-alertas" id="modal-delete" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-sm">
@@ -38,7 +26,7 @@
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
 
         <div class="modal fade modal-alertas" id="miModal" role="dialog">
             <div class="modal-dialog">
@@ -50,20 +38,27 @@
                     <form method="post" id="form_descuentos">
                         <div class="modal-body">
                             <div class="form-group">
-                                <label class="label control-label">Tipo descuentos</label>
-                                <select class="selectpicker select-gral m-0 tipo" name="tipo" id="tipo" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
-                                </select>
-                            </div>
-                            <!--<div class="form-group" id="evidenciaSwitchDIV" name="evidenciaSwitchDIV" style="padding-top:30px;" >
-								<div class="file-gph">
-									<input class="d-none" type="file" id="evidenciaSwitch" onchange="changeName(this)" name="evidenciaSwitch"  >
-									<input class="file-name overflow-text" id="evidenciaSwitch" type="text" placeholder="No has seleccionado nada aún" readonly="">
-									<label class="upload-btn w-auto" for="evidenciaSwitch"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
-								</div>
-							</div>-->
+								<label class="control-label">Tipo descuento (<b class="text-danger">*</b>)</label>
+								<select class="selectpicker select-gral" name="tipo" id="tipo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>
+							</div>
+                            <div class=" col-md-12 form-group input-group evidenciaDIVarchivo " id="evidenciaDIVarchivo" name="evidenciaDIVarchivo">
+									<div class="file-gph col-md-12">
+									<input class="d-none" type="file" id="evidencia" onchange="changeName(this)" name="evidencia"  >
+									<input class="file-name overflow-text" id="evidencia" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="evidencia"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+									</div>
+							</div>
+                            
                             <div class="form-group">
+                                
                                 <label class="label control-label">Puesto del usuario</label>
-                                <select class="selectpicker select-gral m-0 rolesGlobal" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                <select class="selectpicker select-gral m-0 roles" name="roles" id="roles" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                    <option value="7">Asesor</option>
+                                    <option value="38">MKTD</option>
+                                    <option value="9">Coordinador</option>
+                                    <option value="3">Gerente</option>
+                                    <option value="2">Sub director</option>  
+                                    <option value="1">Director</option> 
                                 </select>
                             </div>
                             <div class="form-group hide" id="users">
@@ -76,6 +71,8 @@
                             </div>
                             <b id="msj2" style="color: red;"></b>
                             <b id="sumaReal"></b>
+
+
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <div class="form-group" >
@@ -116,7 +113,13 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="label control-label">Puesto del usuario</label>
-                                <select class="selectpicker m-0 select-gral rolesGlobal" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%" data-live-search="true" name="roles2" id="roles2" required>
+                                <select class="selectpicker m-0 select-gral roles2" title="SELECCIONA UNA OPCIÓN" data-container="body" data-width="100%" data-live-search="true" name="roles2" id="roles2" required>
+                                    <option value="7">Asesor</option>
+                                    <option value="38">MKTD</option>
+                                    <option value="9">Coordinador</option>
+                                    <option value="3">Gerente</option>
+                                    <option value="2">Sub director</option>  
+                                    <option value="1">Director</option> 
                                 </select>
                             </div>
                             <div class="form-group hide usuario_seleccionar" id="users">
@@ -171,73 +174,3 @@
                 </div>
             </div>
         </div>
-
-        <div class="content boxContent">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
-                            <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="material-icons">money_off</i>
-                            </div>
-                            <div class="card-content">
-                                <div class="encabezadoBox">
-                                    <div>
-                                        <h3 class="card-title center-align" >Descuentos de comisiones</h3>
-                                        <p class="card-title">(Descuentos aplicados a usuarios, todas las comisiones que aparecen en el listado de lotes para poder descontar son solicitudes en estatus 'Nueva, sin solicitar')</p>
-                                    </div>
-                                </div>
-                                <div class="toolbar">
-                                    <div class="container-fluid p-0">
-                                        <div class="row">
-                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 ">
-                                                <div class="form-group text-center">
-                                                    <h4 class="title-tot center-align m-0">Total descuentos sin aplicar:</h4>
-                                                    <p class="input-tot pl-1" name="totalpv" id="totalp">$0.00</p>
-                                                </div>
-                                            </div>
-                                            <?php if($this->session->userdata('id_rol') != 63){?>
-                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                                <div class="form-group">
-                                                    <button type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">Descuento de  pagos nuevos sin solicitar</button>
-                                                </div>
-                                            </div>
-                                            <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                                <div class="form-group">
-                                                    <button ype="button" class="btn-data-gral" data-toggle="modal" data-target="#miModal2">Descuento de  pagos en revisión contraloria</button>
-                                                </div>
-                                            </div>
-                                            <?php } ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="material-datatables">
-                                    <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_descuentos" name="tabla_descuentos">
-                                            <thead>
-                                                <tr>
-                                                    <th>ID</th>
-                                                    <th>USUARIO</th>
-                                                    <th>DESCUENTO</th>
-                                                    <th>LOTE</th>
-                                                    <th>MOTIVO</th>
-                                                    <th>ESTATUS</th>
-                                                    <th>CREADO POR</th>
-                                                    <th>FECHA DE CAPTURA</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
-                                    </div>
-                                </div>     
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php $this->load->view('template/footer_legend');?>
-    </div>
-    <?php $this->load->view('template/footer');?>
-	<script src="<?=base_url()?>dist/js/controllers/comisiones/descuentos.js"></script>
-</body>
