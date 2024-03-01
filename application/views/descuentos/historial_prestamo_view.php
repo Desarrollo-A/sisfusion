@@ -99,44 +99,36 @@
                                         </div>
 
                                         <div class="row">
-                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0"
-                                                           for="roles">Puesto</label>
-                                                    <select class="selectpicker select-gral"
-                                                            name="roles"
-                                                            id="roles"
-                                                            required>
-                                                        <option value=""
-                                                                disabled
-                                                                selected>
-                                                            Selecciona un rol
-                                                        </option>
-                                                        <option value="7">Asesor</option>
-                                                        <option value="9">Coordinador</option>
-                                                        <option value="3">Gerente</option>
-                                                        <option value="2">Sub director</option>
+                                                                    <label for="proyecto">Mes</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona mes" data-size="7" required>
+                                                        <?php
+                                                            setlocale(LC_ALL, 'es_ES');
+                                                            for ($i = 1; $i <= 12; $i++) {
+                                                            $monthNum  = $i;
+                                                            $dateObj   = DateTime::createFromFormat('!m', $monthNum);
+                                                            $monthName = strftime('%B', $dateObj->getTimestamp());
+                                                            echo '<option value="' . $i . '">' . $monthName . '</option>';
+                                                                            }
+                                                        ?>
                                                     </select>
                                                 </div>
-                                            </div> -->
-
-                                            <!-- <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                            </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                 <div class="form-group">
-                                                    <label class="m-0"
-                                                           for="users">Usuario</label>
-                                                    <select class="selectpicker select-gral"
-                                                            id="users"
-                                                            name="users"
-                                                            data-style="btn"
-                                                            data-show-subtext="true"
-                                                            data-live-search="true"
-                                                            title="SELECCIONA UN USUARIO"
-                                                            data-size="7"
-                                                            required>
+                                                            <label>Año</label>
+                                                            <select name="anio" id="anio" class="selectpicker select-gral m-0" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona año" data-size="7" required>
+                                                            <?php
+                                                            setlocale(LC_ALL, 'es_ES');
+                                                            for ($i = 2021; $i <= 2024; $i++) {
+                                                            $yearName  = $i;
+                                                            echo '<option value="' . $i . '">' . $yearName . '</option>';
+                                                            }
+                                                            ?>
                                                     </select>
                                                 </div>
-                                            </div> -->
-                                              Z
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

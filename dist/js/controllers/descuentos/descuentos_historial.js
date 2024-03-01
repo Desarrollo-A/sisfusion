@@ -5,19 +5,14 @@ var totalLeon = 0,
     totalCdmx = 0,
     totalCancun = 0,
     totaPen = 0;
-var tabla_factura2 ;
+var tabla_descuento_historial ;
 var tr;
 let titulos = [];
 
-function cleanCommentsfactura() {
-    var myCommentsList = document.getElementById('comentariosFactura');
-    var myCommentsLote = document.getElementById('nombreLote');
-    myCommentsList.innerHTML = '';
-    myCommentsLote.innerHTML = '';
-}
+
 
 $(document).ready(function() {
-    $("#tabla_factura").prop("hidden", true);
+    $("#tabla_descuento_historial").prop("hidden", true);
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
@@ -53,7 +48,7 @@ $('#catalogo_descuento').change(function(ruta){
     condominio = $('#condominio_descuento').val();
     if(condominio == '' || condominio == null || condominio == undefined)
         condominio = 0;
-    getFacturaCommissions(proyecto, condominio);
+    getDescuentos(proyecto, condominio);
 });
 
 $('#condominio_descuento').change(function(ruta){
@@ -61,42 +56,42 @@ $('#condominio_descuento').change(function(ruta){
     condominio = $('#condominio_descuento').val();
     if(condominio == '' || condominio == null || condominio == undefined)
         condominio = 0;
-    getFacturaCommissions(proyecto, condominio);
+    getDescuentos(proyecto, condominio);
 });
 
-$('#tabla_factura thead tr:eq(0) th').each( function (i) {
+$('#tabla_descuento_historial thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
 
     titulos.push(title);
     $(this).html('<input class="textoshead" type="text" placeholder="' + title + '" title="'+title+'" />');
     $('input', this).on('keyup change', function() {
-        if (tabla_factura2.column(i).search() !== this.value) {
-            tabla_factura2.column(i).search(this.value).draw();
+        if (tabla_descuento_historial.column(i).search() !== this.value) {
+            tabla_descuento_historial.column(i).search(this.value).draw();
             var total = 0;
-            var index = tabla_factura2.rows({ selected: true, search: 'applied' }).indexes();
-            var data = tabla_factura2.rows(index).data();
+            var index = tabla_descuento_historial.rows({ selected: true, search: 'applied' }).indexes();
+            var data = tabla_descuento_historial.rows(index).data();
 
             $.each(data, function(i, v) {
                 total += parseFloat(v.monto);
             });
             var to1 = formatMoney(total);
-            document.getElementById("totpagarfactura").textContent = to1;
+            document.getElementById("total_pagar_descuento").textContent = to1;
         }
     });
 });
 
-function getFacturaCommissions(proyecto, condominio) {
-    $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
+function getDescuentos(proyecto, condominio) {
+    $('#tabla_descuento_historial').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.monto);
         });
         var to = formatMoney(total);
-        document.getElementById("totpagarfactura").textContent = to;
+        document.getElementById("total_pagar_descuento").textContent = to;
     });
 
-    $("#tabla_factura").prop("hidden", false);
-    tabla_factura2 = $("#tabla_factura").DataTable({
+    $("#tabla_descuento_historial").prop("hidden", false);
+    tabla_descuento_historial = $("#tabla_descuento_historial").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -212,9 +207,9 @@ function getFacturaCommissions(proyecto, condominio) {
         },
     });
 
-    $('#tabla_factura').on('click', 'input', function() {
+    $('#tabla_descuento_historial').on('click', 'input', function() {
         tr = $(this).closest('tr');
-        var row = tabla_factura2.row(tr).data();
+        var row = tabla_descuento_historial.row(tr).data();
 
         if (row.pa == 0) {
             row.pa = row.monto;
@@ -227,17 +222,17 @@ function getFacturaCommissions(proyecto, condominio) {
         $("#totpagarPen").html(formatMoney(totaPen));
     });
 
-    $("#tabla_factura tbody").on("click", ".consultar_logs_asimilados", function(e){
+    $("#tabla_descuento_historial tbody").on("click", ".consultar_logs_asimilados", function(e){
         $('#spiner-loader').removeClass('hide');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
+        $("#seeInformationModalDescuentos").modal();
         $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON(general_base_url+"Comisiones/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append(`
+                $("#comments-list-descuentos").append(`
                 <li>
                     <div class="container-fluid">
                     <div class="row">
@@ -264,12 +259,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 $(window).resize(function(){
-    tabla_factura2.columns.adjust();
+    tabla_descuento_historial.columns.adjust();
 });
 
-$(document).on("click", ".btn-historial-lo", function(){
-    window.open(`${general_base_url}Comisiones/getHistorialEmpresa`, "_blank");
-});
 
 function preview_info(archivo){
     $("#documento_preview .modal-dialog").html("");

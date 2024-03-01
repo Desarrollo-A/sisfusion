@@ -4,7 +4,7 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade" id="seeInformationModalDescuentos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header"></div>
@@ -13,14 +13,14 @@
                             <h6 id="nameLote"></h6>
                             <div class="container-fluid" id="changelogTab">
                                 <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                    <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                    <ul class="timeline-3" id="comments-list-descuentos"></ul>
                                 </div>
                             
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Total descontado:</h4>
                                                     <i class="fas fa-file-invoice-dollar fa-2x"  style=" color: #0067d4; padding-top:20px;"></i>
-                                                    <p class="input-tot pl-1"  style=" padding-top:20px;" name="totpagarfactura" id="totpagarfactura">$0.00</p>
+                                                    <p class="input-tot pl-1"  style=" padding-top:20px;" name="total_pagar_descuento" id="total_pagar_descuento">$0.00</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <table class="table-striped table-hover" id="tabla_factura" name="tabla_factura">
+                                        <table class="table-striped table-hover" id="tabla_descuento_historial" name="tabla_descuento_historial">
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>                                
