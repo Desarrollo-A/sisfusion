@@ -48,7 +48,7 @@ $('#mes').change(function(ruta){
     
     if(mes == '' || anio == ''){
     }else{
-       createPrestamosDataTable(mes, anio);
+        createPrestamosDataTable(mes, anio);
     }
 });
 
