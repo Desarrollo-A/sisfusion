@@ -550,7 +550,13 @@ class Administracion extends CI_Controller{
 		$this->load->view('administracion/master_view.php');
 	}
 	public function getDatosLotes($idLote) {
+		//$data = $this->Administracion_model->getDatosLotes($idLote);
 		$data = $this->Administracion_model->getDatosLotes($idLote);
+		/*$data = array_merge(
+			$query, 
+		//	$this->registrolote_modelo->getExpedienteAll($idLote)
+		);*/
+		//$documents = $this->registrolote_modelo->getExpedienteAll
 		if($data != null) {
 			echo json_encode($data);
 		}else {
@@ -589,30 +595,20 @@ class Administracion extends CI_Controller{
 		$estatus =  $data['repEstatus'];
 		$idRepresentante = $data['repData'];
 		//ACTUALIZAR RL
-		//if($accion == 1 && !(empty($representante)) && !(empty($idCliente))) {			
-		//if($accion == 1 && !(anyEmpty($representante, $idCliente))){
 		if($accion == 1 && !$this->anyEmpty($representante, $idCliente)){
 			$response = $this->General_model->updateRecord('clientes', array('rl' => $representante), 'id_cliente', $idCliente);
-			//echo json_encode($response);
 			echo json_encode(array("status"=> $response, "tabla" => true));
 		}	
-		//else if($accion == 2 && !(empty($tipoVenta)) && !(empty($idLote)) ) {
 		else if($accion == 2 && !$this->anyEmpty($tipoVenta, $idLote)){
 			$response = $this->General_model->updateRecord('lotes', array('tipo_venta' => $tipoVenta), 'idLote', $idLote);
-			//echo json_encode($response);
 			echo json_encode(array("status"=> $response, "tabla" => true));
 		}
-		//else if($accion == 3 && !(is_null($impuesto)) && !(is_null($idSede))) {
 		else if($accion == 3 && !$this->anyEmpty($impuesto, $idSede)){
 			$response = $this->General_model->updateRecord('sedes', array('impuesto' => $impuesto), 'id_sede', $idSede);
-			//echo "response: ",$response;
 			echo json_encode(array("status"=> $response, "tabla" => false));
 		}
 		else if($accion == 4 && !$this->anyEmpty($nombre, $paterno, $materno)){
-		//else if($accion == 4 && !(is_null($nombre)) && !(is_null($paterno)) && !(is_null($materno))) {
-			//public function getLastId($table, $where, $select) {}
 			$last_id = $this->Administracion_model->getLastId('opcs_x_cats', array('id_catalogo' => 77), 'id_opcion');
-			
 			$data_insert = array(
 				'id_opcion' => $last_id + 1,
 				'id_catalogo' => 77,
@@ -630,7 +626,6 @@ class Administracion extends CI_Controller{
 			echo json_encode(array("status" => $response, "reload" => true));
 		}
 		else {
-			
 			echo json_encode(array("status" => false));
 		}
 	}
@@ -638,6 +633,18 @@ class Administracion extends CI_Controller{
 		$data = $this->Administracion_model->getCatalogoMaster()->result_array();
 		if($data != null) {
 			echo json_encode($data);
+		}else {
+			json_encode(array());
+		}
+	}
+
+	public function getDocumentos($idLote) {
+		$data = $_POST;
+		//echo "idLote:  ".$idLote;
+		//$response = $this->registrolote_modelo->getExpedienteAll($idLote);
+		$response = $this->registrolote_modelo->expedientesWS($idLote);
+		if($response != null) {
+			echo json_encode($response);
 		}else {
 			json_encode(array());
 		}

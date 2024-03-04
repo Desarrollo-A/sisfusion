@@ -5,7 +5,7 @@ const rolesPermitidosContratoEspecial = [8];
 const rolesPermitidosEstatus7 = [15];
 const usuariosPermitidosContratoEspecial = [2762, 2747];
 const movimientosPermitidosContratoFirmado = [45];
-const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106];
+const movimientosPermitidosEstatus6 = [35, 22, 62, 75, 94, 106, 45];
 const rolesPermitidosEstatus6And15 = [17, 70];
 const movimientosPermitidosEstatus8 = [37, 7, 64, 66, 77, 41];
 const rolesPermitidosEstatus8 = [5, 2, 6];
@@ -472,7 +472,8 @@ $('#idLote').change(function () {
     });
 });
 
-$(document).on('click', '.verDocumento', function () {
+$(document).on('click', '.verDocumento', function (e) {
+    e.preventDefault();
     const $itself = $(this);
 
     let pathUrl = general_base_url + $itself.attr("data-expediente");
@@ -574,8 +575,7 @@ $(document).on("click", ".addRemoveFile", function (e) {
     }
 });
 
-$(document).on("click", "#sendRequestButton", function (e) {
-    e.preventDefault();
+$(document).on("click", "#sendRequestButton", function () {
     const accion = parseInt($("#accion").val());
 
     if (accion === AccionDoc.DOC_NO_CARGADO) { // UPLOAD FILE
@@ -611,7 +611,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append('tituloDocumento', $('#tituloDocumento').val());
 
         $.ajax({
-            url: "subirArchivo",
+            //url: "subirArchivo",
+            url: `${general_base_url}Documentacion/subirArchivo`,
             data: data,
             cache: false,
             contentType: false,
@@ -621,11 +622,14 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 $('#uploadFileButton').prop('disabled', true);
             },
             success: function (response) {
+                console.log("response: ", response);
                 const res = JSON.parse(response);
 
                 if (res.code === 200) {
                     alerts.showNotification("top", "right", `El documento ${nombreDocumento} se ha cargado con éxito.`, "success");
+                    console.log("documentacionTable: ", documentacionLoteTabla);
                     documentacionLoteTabla.ajax.reload();
+                    
                     $("#addDeleteFileModal").modal("hide");
                 }
 
@@ -649,7 +653,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
         data.append("tipoDocumento", parseInt($("#tipoDocumento").val()));
 
         $.ajax({
-            url: "eliminarArchivo",
+            //url: "eliminarArchivo",
+            url: `${general_base_url}Documentacion/eliminarArchivo`,
             data: data,
             cache: false,
             contentType: false,

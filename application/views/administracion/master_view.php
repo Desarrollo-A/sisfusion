@@ -3,6 +3,7 @@
 <body>
 	<div class="wrapper">
 		<?php $this->load->view('template/sidebar'); ?>
+		<?php  $this->load->view('documentacion/documentosModales'); ?> <!--Modales para el manejo de los documentos-->
 
 		<div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-lg">
@@ -20,28 +21,28 @@
         										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             										<div class="form-group overflow-hidden">
                 										<label class="control-label">OPCIÓN</label>
-                										<select name="opciones" id="opciones" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+                										<select name="opciones" id="opciones" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 													<div class="form-group overflow-hidden">
-														<select name="representante" id="representante" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+														<select name="representante" id="representante" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 													<div class="form-group overflow-hidden">
-														<select name="tipoVenta" id="tipoVenta" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+														<select name="tipoVenta" id="tipoVenta" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 											</div>
 											<div class="row">
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
-														<select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+														<select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
@@ -54,12 +55,12 @@
 											<div class="row">
 												<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 													<div class="form-group overflow-hidden">
-														<select name="repData" id="repData" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required></select>
+														<select name="repData" id="repData" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 												<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 													<div class="form-group overflow-hidden">
-														<select name="repEstatus" id="repEstatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+														<select name="repEstatus" id="repEstatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" >
 															<option value="0">INACTIVO</option>
 															<option value="1">ACTIVO</option>
 														</select>
@@ -70,23 +71,25 @@
 											<div class="row">
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
-														<input class="form-control input-gral m-0" placeholder="Ingrese el nombre" required value=''  id="nombre_rep" type="text" name="nombre_rep">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el nombre"  value=''  id="nombre_rep" type="text" name="nombre_rep">
 													</div>
 												</div>
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
-														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido paterno" required value='' id="paterno_rep" type="text" name="paterno_rep">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido paterno"  value='' id="paterno_rep" type="text" name="paterno_rep">
 													</div>
 												</div>
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
-														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido materno" required value='' id="materno_rep" type="text" name="materno_rep">
+														<input class="form-control input-gral m-0" placeholder="Ingrese el apellido materno"  value='' id="materno_rep" type="text" name="materno_rep">
 													</div>
 												</div>
 											</div>
+											<div class="row" id="rowArchivo"></div>
 										
 											<input type="hidden" name="idCliente" id="idCliente" value="">
-                            				<input type="hidden" name="idLote" id="idLote" value="">
+                            				<input type="hidden" name="idLoteValue" id="idLoteValue" value="">
+											<input type="hidden" name="docTipo" id="docTipo" value="">
 										</form>
 										
 									</div>
@@ -132,7 +135,7 @@
 								</div>
 								<div class="material-datatables">
                                     <div class="form-group">
-										<table class="table-striped table-hover hide" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
+										<table class="table-striped table-hover hide" id="tableDoct" name="tableDoct">
 											<thead>
 												<tr>
 													<th>PROYECTO</th>
@@ -172,5 +175,9 @@
 	</div>
 	</div>
 	<?php $this->load->view('template/footer');?>
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+    <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/administracion/master_view.js"></script>
+	<!--<script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js?=1.1.2"></script>-->
+	<script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
 </body>

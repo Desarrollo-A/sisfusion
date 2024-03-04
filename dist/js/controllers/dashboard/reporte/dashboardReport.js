@@ -343,7 +343,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-sede="${[d.apt_id_sede, d.cont_id_sede, d.cancont_id_sede, d.canapt_id_sede]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    //return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-sede="${[d.apt_id_sede, d.cont_id_sede, d.cancont_id_sede, d.canapt_id_sede]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idarr="${[d.apt_arr, d.cont_arr]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
                    
                 }
             },
@@ -356,7 +357,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede="${[d.apt_id_sede, d.cont_id_sede]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede=0 data-idarr="${[d.apt_arr, d.cont_arr]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     
                 }
             },
@@ -369,7 +370,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = ${d.apt_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede=0 data-idarr="${[d.apt_arr]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -385,8 +386,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = ${d.canapt_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-idarr="${[d.canapar_arr]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                 }
             },
             {
@@ -397,8 +397,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = ${d.cont_id_sede} data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede=0 data-idarr="${[d.cont_arr]}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                 }
             },
             {
@@ -414,8 +413,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = ${d.cancont_id_sede} data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede=0 data-idarr="${[d.cancon_arr]}" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
             },
             {
@@ -440,6 +438,9 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
+            beforeSend: function(res){
+                console.log("rol: ", rol);
+            },
             data: {
                 "typeTransaction": transaction,
                 "where": '1',
@@ -709,9 +710,11 @@ $(document).on('click', '.btnSub', function () {
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
-        regional: $(this).data("dr")
-        ,sede:  $(this).data("sede")
+        regional: $(this).data("dr"),
+        sede:  $(this).data("sede")
+        ,idarr: $(this).data("idarr")
     }
+    console.log("data: ", data);
     //initDetailRow(data);
     initDetailRow($(this).closest('tr'), data);
 });
@@ -1125,20 +1128,15 @@ function initDetailRow(tr,dataObj){
     if (row.child.isShown()) {
         tr.removeClass('details');
         row.child.hide();
-
-        // Remove from the 'open' array
         detailRows.splice(idx, 1);
     } else {
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
         createDetailRow(row, tr, dataObj);
-        // Add to the 'open' array
         if (idx === -1) {
             detailRows.push(tr.attr('id'));
         }
     }
-    console.log("initDetailRow: ", dataObj);
-
 }
 
 function createDetailRow(row, tr, dataObj){
@@ -1155,19 +1153,17 @@ function createDetailRow(row, tr, dataObj){
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
-        filters: filters
-        ,sede:dataObj.sede
+        filters: filters,
+        sede:dataObj.sede
+        ,idarr: dataObj.idarr
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
-        
-        
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
         row = $(`#table${dataObj.option}`).DataTable().row(tr);
         row.child(buildTableDetail(row.data().sedesData, dataObj)).show();
         tr.addClass('shown');
         dataObj.thisVar.parent().find('.animacion').removeClass("fa-caret-right").addClass("fa-caret-down");
         $('#spiner-loader').addClass('hide');
-       // console.log("response: ", JSON.parse(response));
     }, 'json');
 }
 
@@ -1192,18 +1188,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.apt_id_sede, v.cont_id_sede]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.id_sede]}" data-idarr="${[v.apt_arr, v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.apt_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${[v.id_sede]}" data-idarr="${[v.apt_arr]}"  data-rol="${dataObj.rol}"  data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.canapt_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${[v.id_sede]}" data-idarr="${[v.canapar_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.cont_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${[v.id_sede]}" data-idarr="${[v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.cancont_id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${[v.id_sede]}" data-idarr="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -1308,6 +1304,7 @@ $(document).on('click', '.btnModalDetails', function () {
     let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
+        idarr : $(this).data("idarr"),
         leader: $(this).data("leader"),
         transaction: $(this).data("transaction"),
         user: $(this).data("iduser"),
@@ -1320,6 +1317,7 @@ $(document).on('click', '.btnModalDetails', function () {
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
     }
+    console.log("dataObject: ", dataObject);
     fillTableReport(dataObject);
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
         $("#seeInformationModalReport").modal();
@@ -1502,6 +1500,7 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
+                    "idarr": dataObject.idarr,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1780,6 +1779,7 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
+                    "idarr": dataObject.idarr,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,

@@ -1,32 +1,25 @@
 let hiddenOptions = {};
 let titulos_intxt = [];
-const AccionDoc = {
-    DOC_NO_CARGADO: 1, // NO HAY DOCUMENTO CARGADO
-    DOC_CARGADO: 2, // LA RAMA TIENE UN DOCUMENTO CARGADO
-    SUBIR_DOC: 3, // NO HAY DOCUMENTO CARGADO, PERO TIENE PERMISO PARA SUBIRLO
-    ELIMINAR_DOC: 4, // LA RAMA TIENE UN DOCUMENTO CARGADO, TIENE PERMISO PARA ELIMINAR EL ARCHIVO
-    ENVIAR_SOLICITUD: 5
-};
 
 $(document).ready(function() {
     loadData();
 });
 
-$('#tabla_inventario_contraloria thead tr:eq(0) th').each(function (i) {
+$('#tableDoct thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_intxt.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
     $( 'input', this ).on('keyup change', function () {
-        if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value ) {
-            $('#tabla_inventario_contraloria').DataTable().column(i).search(this.value).draw();
+        if ($('#tableDoct').DataTable().column(i).search() !== this.value ) {
+            $('#tableDoct').DataTable().column(i).search(this.value).draw();
         }
     });
 });
 
 $(".find_doc").click( function() {
-    $("#tabla_inventario_contraloria").removeClass('hide');
+    $("#tableDoct").removeClass('hide');
     var idLote = $('#inp_lote').val();
-    tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
+    documentacionLoteTabla = $("#tableDoct").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -81,29 +74,66 @@ $(".find_doc").click( function() {
         tabla_inventario.columns.adjust();
     });
 });
-
-$("#tabla_inventario_contraloria").on('draw.dt', function(){
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: "hover"
-    });
-});
-
-$(document).on("click", "#moreOptions", function(){
-    $("#seeInformationModal").modal();
-    hideOption("opciones", [1,2,6]);
-    console.log('Hide options 1,2,6');
+$('#addDeleteFileModal').on('show.bs.modal', function () {
+    $(this).css('z-index', 1500); 
+    $('.modal-backdrop').css('z-index', 1490); 
 });
 
 $(document).on("click", ".btn_accion", function() {
-    $("#seeInformationModal").modal();
     hideOption("opciones", [3,4,5]);
+    var idLote = $("#inp_lote").val();
+    let buttonMain = '';
+    let buttonDelete = '';
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}registroCliente/expedientesWS/${idLote}`,
+        dataType: 'json',
+        success: function(data) {
+            if(data.length > 0) {
+                $.each(data, function(i, v){
+                    if(v.tipo_doc == TipoDoc.CORRIDA){
+                        if(v.expediente == null || v.expediente === "") {
+                            buttonMain = includesArray(movimientosPermitidosEstatus6, v.idMovimiento)
+                                ? crearBotonAccion(AccionDoc.SUBIR_DOC, v)
+                                : crearBotonAccion(AccionDoc.DOC_NO_CARGADO, v);
+                                $("#rowArchivo").html(`<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`);
+                                $("#docTipo").val(0);
+                        }else {
+                            buttonMain = crearBotonAccion(AccionDoc.DOC_CARGADO, v);
+                            buttonDelete = crearBotonAccion(AccionDoc.ELIMINAR_DOC, v);
+                            $("#docTipo").val(1);
+                            $("#rowArchivo").html(`<div class="d-flex justify-center">${buttonMain} ${buttonDelete}</div>`);
+                        }
+                    }
+                })
+            }
+        }
+    });
+    $("#seeInformationModal").modal();
 });
+
+$('#addDeleteFileModal').on('show.bs.modal', function () {
+    $(this).css('z-index', 1500); 
+    $('.modal-backdrop').css('z-index', 1490); 
+});
+$('#addDeleteFileModal').on('hidden.bs.modal', function () {
+    $(this).css('z-index', ''); 
+    $('.modal-backdrop').css('z-index', ''); 
+});
+
+$('#seeInformationModal').on('hide.bs.modal', function () {
+    $('#addDeleteFileModal').css('z-index', ''); 
+    $('.modal-backdrop').css('z-index', ''); 
+});
+
 $("#opciones").change(function(){
     $("#representante").closest('.row').hide();
     $("#tipoVenta").closest('.row').hide();
     $("#sedes").closest('.row').hide();
     $("#nombre_rep").closest('.row').hide();
     $("#repData").closest('.row').hide();
+    $("#rowArchivo").hide();
+    
     let accion = $("#opciones").val();
     //1 RL
     if(accion == 1) {
@@ -131,6 +161,11 @@ $("#opciones").change(function(){
         $("#repData").closest('.row').show();
         setValorExterno("repData","repEstatus", "estatus");
     }
+
+    //UPLOAD DELETE CORRIDA
+    else if(accion == 6) {
+        $("#rowArchivo").closest('.row').show();
+    }
 });
 
 $("#btn_upt").on('click', function(){
@@ -140,9 +175,9 @@ $("#btn_upt").on('click', function(){
 $(document).on('click', "#actualizarBtn", function(e){
     e.preventDefault();
     let formData = new FormData(document.getElementById("form_rl"));
-    $("#idLote").val($(".btn_accion").attr('value'));
+    $("#idLoteValue").val($(".btn_accion").attr('value'));
     $("#idCliente").val($(".btn_accion").data('idcliente'));
-    formData.append("idLote", $("#idLote").val());
+    formData.append("idLote", $("#idLoteValue").val());
     formData.append("idCliente", $("#idCliente").val());
     $.ajax({
         type: 'POST',
@@ -157,7 +192,7 @@ $(document).on('click', "#actualizarBtn", function(e){
                 alerts.showNotification("top", "right", "Se han realizado los cambios con exito.", "success");
 
                 if(response.tabla === true) {
-                    $("#tabla_inventario_contraloria").DataTable().ajax.reload(null, false);
+                    $("#tableDoct").DataTable().ajax.reload(null, false);
                     document.getElementById("form_rl").reset();
                 }
                 if(response.reload === true){
@@ -206,18 +241,12 @@ function setValorExterno(sourceId, targetId, attr) {
     });
 }
 function loadData() {
-    $("#representante").closest('.row').hide();
-    $("#tipoVenta").closest('.row').hide();
-    $("#sedes").closest('.row').hide();
-    $("#nombre_rep").closest('.row').hide();
-    $("#repEstatus").closest('.row').hide();
-    $("#repData").closest('.row').hide();
+    $("#representante, #tipoVenta, #sedes, #nombre_rep, #repData, #rowArchivo").closest('.row').hide();
+    let selectsVacios = ["#opciones", "#representante", "#tipoVenta", "#repData", "#sedes"];
+    selectsVacios.forEach(function(element) {
+        $(element).empty().selectpicker('refresh');
+    });
 
-    $("#opciones").empty().selectpicker('refresh');
-    $("#representante").empty().selectpicker('refresh');
-    $("#tipoVenta").empty().selectpicker('refresh');
-    $("#repData").empty().selectpicker('refresh');
-    $("#sedes").empty().selectpicker('refresh');
     //$("#repEstatus").empty().selectpicker('refresh');
 
     $.post(`${general_base_url}Administracion/getCatalogoMaster`, function(data) {
@@ -248,145 +277,7 @@ function loadData() {
 }
 
 $(document).on('hidden.bs.modal', "#seeInformationModal", function(){
-    console.log("hide modal");
-    $("#representante, #tipoVenta, #sedes, #nombre_rep, #repData").closest('.row').hide();
+    $("#representante, #tipoVenta, #sedes, #nombre_rep, #repData, #rowArchivo").closest('.row').hide();
     $("#opciones option").css('display', 'block');
     $("#opciones, #tipoVenta, #representante, #sedes, #impuesto, #repEstatus, #repData").val('').selectpicker('refresh');
 });
-
-$(document).on("click", "")
-
-
-
-
-/**
- * @param {number} tipoDocumento
- * @returns {string}
- */
-function getExtensionPorTipoDocumento(tipoDocumento) {
-    if (tipoDocumento === TipoDoc.CORRIDA) {
-        return 'xlsx';
-    }
-
-    if (tipoDocumento === TipoDoc.CONTRATO || tipoDocumento === TipoDoc.CONTRATO_FIRMADO) {
-        return 'pdf';
-    }
-
-    return 'jpg, jpeg, png, pdf';
-}
-
-/**
- * Función para crear el botón a partir del tipo de acción
- *
- * @param {number} type
- * @param {any} data
- * @returns {string}
- */
-function crearBotonAccion(type, data) {
-    const [
-        buttonTitulo,
-        buttonEstatus,
-        buttonClassColor,
-        buttonClassAccion,
-        buttonTipoAccion,
-        buttonIcono
-    ] = getAtributos(type);
-
-    const d = new Date();
-    const dateStr = [d.getMonth()+1,d.getDate(),d.getFullYear()].join('-');
-
-    const tituloDocumento =`${data.nombreResidencial}_${data.nombre.slice(0,4)}_${data.idLote}_${data.idCliente}`+
-        `_TDOC${data.tipo_doc}${data.movimiento.slice(0,4)}_${dateStr}`;
-
-    return `<button class="${buttonClassColor} ${buttonClassAccion}" 
-                title="${buttonTitulo}" 
-                data-expediente="${data.expediente}" 
-                data-accion="${buttonTipoAccion}" 
-                data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
-                data-toggle="tooltip" 
-                data-placement="left" 
-                data-nombre="${data.movimiento}" 
-                data-idDocumento="${data.idDocumento}" 
-                data-idLote="${data.idLote}" 
-                data-tituloDocumento="${tituloDocumento}"
-                data-idCliente="${data.idCliente ?? data.id_cliente}"
-                data-lp="${data.lugar_prospeccion}"
-                data-idProspeccion="${data.id_prospecto}">
-                    <i class="${buttonIcono}"></i>
-            </button>`
-}
-
-/**
- * Función para obtener los atributos del botón de acción de la tabla
- *
- * @param {number} type
- * @returns {string[]}
- */
-function getAtributos(type) {
-    let buttonTitulo = '';
-    let buttonEstatus = '';
-    let buttonClassColor = '';
-    let buttonClassAccion = '';
-    let buttonIcono = '';
-    let buttonTipoAccion = '';
-
-    if (type === AccionDoc.DOC_NO_CARGADO) {
-        buttonTitulo = 'DOCUMENTO NO CARGADO';
-        buttonEstatus = 'disabled';
-        buttonClassColor = 'btn-data btn-orangeYellow';
-        buttonClassAccion = '';
-        buttonIcono = 'fas fa-file';
-        buttonTipoAccion = '';
-    }
-    if (type === AccionDoc.DOC_CARGADO) {
-        buttonTitulo = 'VER DOCUMENTO';
-        buttonEstatus = '';
-        buttonClassColor = 'btn-data btn-blueMaderas';
-        buttonClassAccion = 'verDocumento';
-        buttonIcono = 'fas fa-eye';
-        buttonTipoAccion = '3';
-    }
-    if (type === AccionDoc.SUBIR_DOC) {
-        buttonTitulo = 'SUBIR DOCUMENTO';
-        buttonEstatus = '';
-        buttonClassColor = 'btn-data btn-green';
-        buttonClassAccion = 'addRemoveFile';
-        buttonIcono = 'fas fa-upload';
-        buttonTipoAccion = '1';
-    }
-    if (type === AccionDoc.ELIMINAR_DOC) {
-        buttonTitulo = 'ELIMINAR DOCUMENTO';
-        buttonEstatus = '';
-        buttonClassColor = 'btn-data btn-warning';
-        buttonClassAccion = 'addRemoveFile';
-        buttonIcono = 'fas fa-trash';
-        buttonTipoAccion = '2';
-    }
-
-    return [buttonTitulo, buttonEstatus, buttonClassColor, buttonClassAccion, buttonTipoAccion, buttonIcono]
-}
-
-/**
- * Método que busca si un valor está dentro del objeto
- *
- * @param {number[]|string[]} arr
- * @param {string} searchArray
- * @returns boolean
- */
-function includesArray(arr, searchArray) {
-    return arr.includes(parseInt(searchArray));
-}
-
-/**
- * Función para descargar un archivo en otra pestaña
- *
- * @param {string} pathUrl
- * @param {string} filename
- */
-function descargarArchivo(pathUrl, filename) {
-    const a = document.createElement("a");
-    a.href = pathUrl;
-    a.target = "_blank";
-    a.download = filename;
-    a.click();
-  }

@@ -159,8 +159,11 @@ class Reporte extends CI_Controller {
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
         $sede = $this->input->post("sede");
+        $idArr = trim($this->input->post('idarr'), ',');
+        $idArr = empty($idArr) ? ['0'] : explode(',', $idArr);
+        
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $sede, $leader)->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $sede,$idArr,$leader)->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -189,9 +192,15 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
+            /*$idArr = explode(',', trim($this->input->post('idarr'), ','));
+            $idArr = empty($idArr) ? ['0'] : $idArr;*/
+            $idArr = trim($this->input->post('idarr'), ',');
+            $idArr = empty($idArr) ? ['0'] : explode(',', $idArr);
+
+
             
 
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $idArr,$leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             for ( $x = 0; $x < count($data['data']); $x++ ){
                 $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
