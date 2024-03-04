@@ -414,7 +414,7 @@ class Reestructura extends CI_Controller{
         $idProyecto = $this->input->post('idProyecto');
 
         $varibaleCiertoFalso = '';
-        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22){
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 25){
             $varibaleCiertoFalso = true;
         }
         foreach ($idLotes as $elementoLote) { 
@@ -497,11 +497,11 @@ class Reestructura extends CI_Controller{
 
 
             foreach ($dataLoteDis as $index => $dataLote) {
-                if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 )){
+                if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22)){
                     //Reubicación en el mismo norte
                     $statusLote = 20;
                 }
-                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14) ){
+                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22) ){
                     //Reubicación normal
                     $statusLote = 16;
                 }
