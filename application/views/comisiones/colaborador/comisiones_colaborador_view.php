@@ -7,7 +7,7 @@
         
         <?php 
         $this->load->view('template/sidebar'); 
-       // $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
+        $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
         //echo($complementos[0]);
         $usuarioid =  $this->session->userdata('id_usuario');
         ?>

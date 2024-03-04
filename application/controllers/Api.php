@@ -1587,7 +1587,7 @@ class Api extends CI_Controller
                                             $dataComisiones['creado_por'] = 1;            
                                             
                                             if($dataReturn->comisionistas[$i]->rolGenerado == 7){
-                                                $dataLineaVenta['idAsesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                                $dataLineaVenta['id_asesor'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
                                                 $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){

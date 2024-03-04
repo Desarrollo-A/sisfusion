@@ -3369,4 +3369,15 @@ class Contraloria extends CI_Controller {
 		$this->load->view('template/header');
 		$this->load->view("contraloria/reporteDescuentos_view");
 	}
+
+    public function reporteCoincidenciasCT(){
+		$this->load->view('template/header');
+        $this->load->view("contraloria/reporteCoincidencias_view");
+	}	
+
+    public function getReporteCoincidenciasCT() {
+        $registros = $this->Contraloria_model->getReporteCoincidenciasCT();
+        echo json_encode($registros, JSON_NUMERIC_CHECK);
+    }
+    
 }
