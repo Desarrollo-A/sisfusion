@@ -300,4 +300,17 @@ class Reporte extends CI_Controller {
         }
     }
 
+    public function ventasPorUsuario(){
+        $this->load->view('template/header');
+        $this->load->view("reportes/ventasPorUsuario");
+    }
+    public function getListadoDeVentas() {
+        $fechaInicio = explode('/', $this->input->post("beginDate"));
+        $fechaFin = explode('/', $this->input->post("endDate"));
+        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $result['data'] = $this->Reporte_model->getListadoDeVentas($beginDate, $endDate);
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+    }
+
 }

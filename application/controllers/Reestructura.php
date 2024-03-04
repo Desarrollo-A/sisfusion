@@ -152,8 +152,8 @@ class Reestructura extends CI_Controller{
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
-		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
-		$datos["apellido_materno"] = $dataPost['apellidomCli'];
+		$datos["apellido_paterno"] = str_replace("'","`", $dataPost['apellidopCli']);
+		$datos["apellido_materno"] = str_replace("'","`", $dataPost['apellidomCli']);
         $datos["telefono1"] = $dataPost['telefonoCli'];
         $datos["correo"] = $dataPost['correoCli'];
         $datos["domicilio_particular"] = $dataPost['domicilioCli'];
@@ -413,9 +413,8 @@ class Reestructura extends CI_Controller{
         $flagFusion = $this->input->post('flagFusion');
         $idProyecto = $this->input->post('idProyecto');
 
-
         $varibaleCiertoFalso = '';
-        if($idProyecto == 21){
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22){
             $varibaleCiertoFalso = true;
         }
         foreach ($idLotes as $elementoLote) { 
@@ -428,6 +427,7 @@ class Reestructura extends CI_Controller{
                 }
             }
         }
+
         if ($flagConteo == $totalLotes) { //si todos estan disponibles se avanza
             $arrayLotes = array();
             $arrayLotesApartado = array();
@@ -497,11 +497,11 @@ class Reestructura extends CI_Controller{
 
 
             foreach ($dataLoteDis as $index => $dataLote) {
-                if ( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] == 21 ){
+                if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 )){
                     //Reubicación en el mismo norte
                     $statusLote = 20;
                 }
-                else if( $proceso == 2 && $dataLoteDis[$index]['idResidencial'] != 21 ){
+                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14) ){
                     //Reubicación normal
                     $statusLote = 16;
                 }

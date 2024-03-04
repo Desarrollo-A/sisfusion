@@ -844,7 +844,7 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $("#loteAOcupar").html("").selectpicker('refresh');
 
     const idProyecto = $(this).val();
-if(idProyecto==21){
+    if(idProyecto==21 || idProyecto==14 || idProyecto==22 || idProyecto==25){
         idProyectoRE = idProyecto;
     }
     idProyectoConteo.push($(this).val());
@@ -911,7 +911,7 @@ $(document).on("change", "#loteAOcupar", function(e){
     let mensajeMaxLotes = '';
     // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
 
-    if(idProyecto == 21 ){//si es norte limitamos a una sola propuesta
+    if(idProyecto == 21 || idProyecto==14 || idProyecto==22 || idProyecto==25){//si es norte limitamos a una sola propuesta
         arrayProyIdProp.push(idProyectoRE);
 
         numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
@@ -946,6 +946,24 @@ $(document).on("change", "#loteAOcupar", function(e){
         let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
         if(conteoRepeticiones>=2 && idProyectoCO==21){
             alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones2 = contarRepeticiones('14', idProyectoConteo);
+        if(conteoRepeticiones2>=2 && idProyectoCO==14){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Montaña San Luis ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones3 = contarRepeticiones('22', idProyectoConteo);
+        if(conteoRepeticiones3>=2 && idProyectoCO==22){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Cañada León ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones4 = contarRepeticiones('25', idProyectoConteo);
+        if(conteoRepeticiones4>=2 && idProyectoCO==25){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de Privada Península ", "danger");
             return;
         }
     }
@@ -1191,7 +1209,7 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     let data = new FormData($(this)[0]);
 
     data.append("flagFusion", flagFusion);
-    if(idProyectoRE==21){
+    if(idProyectoRE==21 || idProyectoRE==14 || idProyectoRE==22 || idProyectoRE==25){
         data.append('idProyecto', idProyectoRE);
     }
     data.append("proceso", TIPO_PROCESO.REUBICACION);

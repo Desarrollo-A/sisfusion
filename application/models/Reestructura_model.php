@@ -149,9 +149,9 @@ class Reestructura_model extends CI_Model
 
     public function getProyectosDisponibles($proyecto, $superficie, $flagFusion){
         $unionQuery = '';
-        if($proyecto == 21){
+        if($proyecto == 21 || $proyecto == 14 || $proyecto == 22 || $proyecto == 25){
             $unionQuery = '
-            UNION ALL 
+            UNION ALL   
             SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, \' - \', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
                     FROM loteXReubicacion lr
             INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
@@ -168,7 +168,7 @@ class Reestructura_model extends CI_Model
                     INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 15 AND lo.status = 1
                     WHERE lr.idProyecto = $proyecto
                     GROUP BY lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))
-            UNION ALL
+            UNION ALL   
             SELECT lr.proyectoReubicacion, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles
                     FROM loteXReubicacion lr
                     INNER JOIN residenciales re ON re.idResidencial = lr.proyectoReubicacion AND re.status = 1
@@ -183,8 +183,8 @@ class Reestructura_model extends CI_Model
 
     public function getCondominiosDisponibles($proyecto, $superficie, $flagFusion){
         $validacionSL = '';
-        if($proyecto == 21){
-            $validacionSL = ', 21'; //validación statusLote
+        if($proyecto == 21 || $proyecto == 14 || $proyecto == 22 || $proyecto == 25){
+            $validacionSL = ', 21, 14, 22, 25'; //validación statusLote
         }
         $query = $this->db->query("SELECT lo.idCondominio, co.nombre, COUNT(*) disponibles
         FROM condominios co
@@ -197,8 +197,8 @@ class Reestructura_model extends CI_Model
 
     public function getLotesDisponibles($condominio, $superficie, $flagFusion, $idProyecto){
         $validacionSL = '';
-        if($idProyecto == 21){
-            $validacionSL = ', 21'; //validación statusLote
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 25){
+            $validacionSL = ', 21, 14, 22, 25'; //validación statusLote
         }
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
@@ -860,7 +860,7 @@ class Reestructura_model extends CI_Model
 
     public function checarDisponibleRe($idLote, $idProyecto){
         $validacionStatus = '';
-        if($idProyecto == 21){
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22){
             $validacionStatus = 'OR idStatusLote = 21';
         }
         $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote = 15 OR idStatusLote = 1 OR idStatusLote = 2 ".$validacionStatus.") AND idLote=".$idLote);
