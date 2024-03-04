@@ -860,7 +860,7 @@ class Reestructura_model extends CI_Model
 
     public function checarDisponibleRe($idLote, $idProyecto){
         $validacionStatus = '';
-        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22){
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 22){
             $validacionStatus = 'OR idStatusLote = 21';
         }
         $query = $this->db->query("SELECT * FROM lotes WHERE (idStatusLote = 15 OR idStatusLote = 1 OR idStatusLote = 2 ".$validacionStatus.") AND idLote=".$idLote);
