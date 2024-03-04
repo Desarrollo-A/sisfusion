@@ -263,6 +263,7 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
+                pr.id_salesforce,
                 CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado
             FROM 
                 lotes l 
@@ -320,6 +321,7 @@ class Contraloria_model extends CI_Model {
                 cl.lugar_prospeccion, 
                 pr.id_arcus, 
                 pr.id_prospecto,
+                pr.id_salesforce,
                 CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END
             ORDER BY 
                 l.nombreLote

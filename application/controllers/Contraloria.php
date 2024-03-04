@@ -4,7 +4,7 @@ class Contraloria extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model(array('Contraloria_model', 'registrolote_modelo', 'Clientes_model', 'asesor/Asesor_model', 'General_model', 'Caja_model_outside', 'Reestructura_model'));
-        $this->load->library(array('session','form_validation', 'get_menu', 'Formatter','permisos_sidebar',  'Arcus'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Formatter','permisos_sidebar',  'Arcus', 'Salesforce'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         $this->load->library('email');
@@ -14,6 +14,14 @@ class Contraloria extends CI_Controller {
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+    }
+
+    public function test_salesforce(){
+        $id = $this->input->get('id');
+
+        // print_r($id);
+
+        $this->salesforce->sendLeadId($id);
     }
 
     public function index() {
@@ -1654,6 +1662,10 @@ class Contraloria extends CI_Controller {
         $charactersNoPermit = array('$',',');
         $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
         $id_usuario = $this->session->userdata('id_usuario');
+        $id_salesforce = $this->input->post('id_salesforce');
+
+        print_r($id_salesforce);
+        exit;
 
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 9;
@@ -1694,6 +1706,20 @@ class Contraloria extends CI_Controller {
                         "etapa" => 'Contratado'
                     );
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
+                }
+                if($this->input->post('lugar_prospeccion') == 52){ // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE SALESFORCE
+                    $response = $this->Salesforce->sendLeadId($id_salesforce);
+
+                    $data = [
+                        "id_salesforce" => $id_salesforce,
+                        "response" => $response,
+                        "idLote" => $idLote,
+                        "idCliente" => $idCliente,
+                        "fecha_modificacion" => date("Y-m-d H:i:s"),
+                        "modificado_por" => $id_usuario,
+                    ];
+
+                    $this->Salesforce->isertData($data);
                 }
                 $data['message'] = 'OK';
                 echo json_encode($data);
