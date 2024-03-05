@@ -344,7 +344,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
                     //return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-sede="${[d.apt_id_sede, d.cont_id_sede, d.cancont_id_sede, d.canapt_id_sede]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idarr="${[d.apt_arr, d.cont_arr]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idarr="${[d.apt_arr, d.cont_arr, d.canapar_arr, d.cancon_arr]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
                    
                 }
             },
@@ -438,9 +438,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
-            beforeSend: function(res){
-                console.log("rol: ", rol);
-            },
             data: {
                 "typeTransaction": transaction,
                 "where": '1',
@@ -1157,6 +1154,7 @@ function createDetailRow(row, tr, dataObj){
         sede:dataObj.sede
         ,idarr: dataObj.idarr
     }).done(function (response) {
+        console.log("response getDetails: ", response);
         row.data().sedesData = JSON.parse(response);
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
         row = $(`#table${dataObj.option}`).DataTable().row(tr);
@@ -1497,6 +1495,9 @@ function fillTableReport(dataObject) {
                 url: `${base_url}Reporte/getLotesInformation`,
                 type: "POST",
                 cache: false,
+                beforeSend: function(resp) {
+                    console.log("dataObject: ", dataObject);
+                },
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
@@ -1777,6 +1778,7 @@ function fillTableReport(dataObject) {
                 type: "POST",
                 cache: false,
                 data: {
+                    
                     "type": dataObject.type,
                     "sede": dataObject.sede,
                     "idarr": dataObject.idarr,
