@@ -97,8 +97,8 @@ class Pagos extends CI_Controller
   public function getBonosPorUserContra($estado){
     $dat = $this->Pagos_model->getBonosPorUserContra($estado);
     for( $i = 0; $i < count($dat); $i++ ){
-    $dat[$i]['pa'] = 0;
-  }
+      $dat[$i]['pa'] = 0;
+    }
   echo json_encode( array( "data" => $dat));
   }
 
@@ -110,11 +110,12 @@ class Pagos extends CI_Controller
   public function getDatosNuevasAContraloria(){
     $proyecto = $this->input->post('proyecto');  
     $condominio = $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasAContraloria($proyecto,$condominio);
-  for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
-  }
-  echo json_encode( array( "data" => $dat));
+    $modoSubida = $this->input->post('modoSubida');
+    $dat =  $this->Pagos_model->getDatosNuevasAContraloria($proyecto,$condominio,$modoSubida);
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
 
   function despausar_solicitud(){

@@ -95,13 +95,22 @@ class Pagos_model extends CI_Model {
         return true;
     }
 
-    function getDatosNuevasAContraloria($proyecto, $condominio){
+    function getDatosNuevasAContraloria($proyecto, $condominio, $modoSubida){
+
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
         }
         else { // CONTRALORÍA
+            
+            if($modoSubida == 0){
+                $ooam = "AND com.ooam IN (0)";
+            }else{
+                $ooam = "AND com.ooam NOT IN (0)";
+            }
+            
             $filtro = "pci1.estatus IN (4)";
+
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
             else
@@ -133,7 +142,7 @@ class Pagos_model extends CI_Model {
             LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5
             WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
             LEFT JOIN opcs_x_cats oest ON oest.id_opcion = u.estatus AND oest.id_catalogo = 3
-            WHERE $filtro $whereFiltro AND com.id_usuario NOT IN(7689,6019)
+            WHERE $filtro $whereFiltro AND com.id_usuario NOT IN(7689,6019) $ooam
             GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, 
             com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, 
             pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, 
