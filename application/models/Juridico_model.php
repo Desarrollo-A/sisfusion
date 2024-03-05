@@ -68,8 +68,8 @@ class Juridico_model extends CI_Model {
 			
 			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
-			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla y lo de Estado de México Norte
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15', '14')";
 			else if($id_sede == 5) // JURÍDICO LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
 			else

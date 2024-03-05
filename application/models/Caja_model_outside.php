@@ -1399,8 +1399,8 @@
         WHEN us.id_lider = 7886 THEN 5
         ELSE 0 END) id_regional,
 		CASE 
-		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
-		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
+		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 7092) THEN 3
+		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 3) THEN 7092
 		ELSE 0 END id_regional_2
         FROM usuarios us
         LEFT JOIN usuarios u0 ON u0.id_usuario = us.id_lider
