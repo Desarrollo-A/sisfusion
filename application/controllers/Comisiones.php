@@ -563,12 +563,15 @@ class Comisiones extends CI_Controller
   public function getDesarrolloSelect($a = ''){
     $validar_sede = $this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
-    $tipo = $this->session->userdata('tipo') == 1 ? 0 : 1;
+    $tipo = $this->session->userdata('tipo') == 1 ? 1 : 2;
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
-
+   
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
+   
     $fecha_actual = strtotime($obtenerFechaSql);
+    
     $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+    
     $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
       if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin)){
         if($a == ''){
@@ -757,7 +760,7 @@ class Comisiones extends CI_Controller
     $validar_sede =$this->session->userdata('id_sede');
     $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
+    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 2 ELSE 1 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
     $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
 
     $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
@@ -3217,8 +3220,9 @@ class Comisiones extends CI_Controller
   }
 
   public function getDatosFechasProyecCondm(){
-
-    $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
+    
+    $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') : '1' );
+    //var_dump(date('N') );
     //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
     $diaActual = date('d'); 
     $data = array(
