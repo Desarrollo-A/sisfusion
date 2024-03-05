@@ -3,13 +3,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
 <div class="wrapper">
-    <?php  $this->load->view('template/sidebar'); ?>
+    <?php $this->load->view('template/sidebar'); ?>
     
-    <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
+    <div class="modal fade" id="modal_pregunta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false" style="z-index: 1600;" >
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
-                <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
+                    <h4 class="modal-title">¿Realmente desea asignar este prospecto al cliente?</h4>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" id="cancelar" data-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="asignar_prospecto" data-dismiss="modal">ASIGNAR<div class="ripple-container"></div></button>
@@ -47,7 +47,7 @@
                     <input type="hidden" id="idLoteValue" name="idLoteValue">
                     <div class="modal-body">
                         <div class="material-datatables">
-                            <table class=" table-striped table-hover" id="table_prospectos">
+                            <table class="table-striped table-hover" id="table_prospectos">
                                 <thead>
                                     <th>NOMBRE</th>
                                     <th>CORREO</th>
@@ -263,24 +263,40 @@
         </div>
     </div>
 
+    <div class="modal fade" id="autorizaciones-modal" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Enviar nuevamente a postventa (despúes de un rechazo de postventa) - <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <label>Comentario:</label>
+                    <textarea class="form-control" id="comentarioST3PV2" rows="3"></textarea>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="guardar_re3pv" class="btn btn-primary"> Registrar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="card">
                         <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                            <a href="https://youtu.be/1zcshxE2nP4" class="align-center justify-center u2be" target="_blank">
+                            <a href="https://youtu.be/2pvgEilVZrg" class="align-center justify-center u2be" target="_blank">
                                 <i class="fab fa-youtube p-0" rel="tooltip" data-placement="top" title="Tutorial" style="font-size:25px!important"></i>
                             </a>
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <?php if ($this->session->userdata('id_rol') != 6) { ?>
-                                    <h3 class="card-title center-align">Tus ventas</h3>
-                                <?php } else { ?>
-                                    <h3 class="card-title center-align">Ventas</h3>
-                                <?php } ?>
-
+                                <h3 class="card-title center-align">Tus ventas</h3>
                                 <p class="card-title pl-1"></p>
                             </div>
                             <?php

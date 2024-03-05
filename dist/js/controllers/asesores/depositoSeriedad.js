@@ -29,18 +29,6 @@ const ESTATUS_AUTORIZACION = Object.freeze({
 });
 const STATUS_CONTRATACION = 1;
 
-$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
-    const title = $(this).text();
-    titulos_intxt.push(title);
-    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
-
-    $('input', this).on('keyup change', function () {
-        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
-            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
-        }
-    });
-});
-
 $(document).ready(function() {
     if (id_usuario_general == 9651) { // MJ: ERNESTO DEL PINO SILVA
         $('#tabla_deposito_seriedad').addClass('hide');
@@ -85,6 +73,17 @@ $('#proyecto').change( function(){
 $('#condominio').change( function(){
     $('#tabla_deposito_seriedad').removeClass('hide');
     fillDataTable($(this).val());
+});
+
+$('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
+    const title = $(this).text();
+    titulos_intxt.push(title);
+    $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>`);
+    $('input', this).on('keyup change', function () {
+        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
+            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
+        }
+    });
 });
 
 $("#tabla_deposito_seriedad").ready( function(){
@@ -338,23 +337,23 @@ function fillDataTable(idCondominio) {
                 }
             }
         },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'Tus ventas',
-                title:"Tus ventas",
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
-                        }
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Tus ventas',
+            title:"Tus ventas",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
-            }],
+            }
+        }],
         columnDefs: [{
             defaultContent: "",
             targets: "_all",
@@ -486,7 +485,7 @@ function fillDataTable(idCondominio) {
                     if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
                         return 'ASIGNADO CORRECTAMENTE';
                     }
-                return '<p>DEBES ASIGNAR EL PROSPECTOS AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIENTE</p>';
+                return '<p>DEBES ASIGNAR EL PROSPECTO AL CLIENTE PARA PODER ACCEDER AL DEPÓSITO DE SERIEDAD O INTEGRAR EL EXPEDIENTE</p>';
                 }
             },
             {
@@ -558,8 +557,8 @@ function fillDataTable(idCondominio) {
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_5_II) ? construirBotonEstatus(d, d.modificado, 'getInfo5_2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_II) ? construirBotonEstatus(d, d.fechaVenc, 'return1')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3) ? construirBotonEstatus(d, d.fechaVenc, 'enviar_nuevamente_estatus3', '', 'Enviar a estatus 3')
-                            : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
+                            : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_2_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_POSTVENTA_ESTATUS_3_II) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_CONTRALORIA_ESTATUS_6_III) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
                             : (idMovimiento === MOVIMIENTOS.RECHAZO_JURIDICO_ESTATUS_7_III) ? construirBotonEstatus(d, d.fechaVenc, 'getInfo2')
@@ -567,7 +566,7 @@ function fillDataTable(idCondominio) {
                             : d.comentario;
                     }
                     let urlToGo  = '';
-                    if (d.idMovimiento == 31 && d.idStatusContratacion == STATUS_CONTRATACION) {
+                    if (d.idMovimiento == MOVIMIENTOS.NUEVO_APARTADO && d.idStatusContratacion == STATUS_CONTRATACION) {
                         if (d.id_prospecto == 0) { // APARTADO DESDE LA PAGINA DE CIUDAD MADERAS
                             if (d.id_coordinador == 10807 || d.id_coordinador == 10806 || d.id_gerente == 10807 || d.id_gerente == 10806) {
                                 atributoButton = '';
@@ -623,18 +622,6 @@ function fillDataTable(idCondominio) {
                              buttons += `<button class="btn-data btn-green abrir_prospectos btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="ASIGNAR PROSPECTO" data-idCliente="${d.id_cliente}" data-nomCliente="${d.nombreCliente}"> <i class="fas fa-user-check"></i></button>`;
                             }
                         }
-
-                    // Botón para descargar la carta de reubicación
-                    if (idMovimiento === MOVIMIENTOS.NUEVO_APARTADO) {
-                            if ([2,4].includes(parseInt(d.proceso))) {
-                                const url = `${general_base_url}Reestructura/imprimirCartaReubicacion/${d.id_cliente}`;
-                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REUBICACIÓN"><i class="fas fa-download"></i></a>`;
-                            }
-                            if (d.proceso == 3) {
-                                const url = `${general_base_url}Reestructura/imprimirCartaReestructura/${d.id_cliente}`;
-                                buttons += `<a href="${url}" target="_blank" class="btn-data btn-orangeYellow btn-fab btn-fab-mini" data-toggle="tooltip" data-placement="left" title="DESCARGAR CARTA REESTRUCTURA"><i class="fas fa-download"></i></a>`;
-                            }
-                    }
                     
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
@@ -648,6 +635,9 @@ function fillDataTable(idCondominio) {
             data: {
                 "idCondominio": idCondominio,
             }
+        },
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip();
         }
     });
 }
