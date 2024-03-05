@@ -191,7 +191,9 @@ class Documentacion extends CI_Controller {
         if($documento->bucket){
             $object = $this->bucket->object($filename);
 
-            $object->delete();
+            if($object->exists()){
+                $object->delete();
+            }
         }else{
             $folder = $this->Documentacion_model->getCarpetaArchivo($tipoDocumento, $infoLote->proceso, $infoLote->nombreLote, $filename, true);
 
@@ -463,5 +465,18 @@ class Documentacion extends CI_Controller {
         } else {
             echo json_encode(2); // EL ARCHIVO NO SE PUDO MOVER
         }
+    }
+
+    public function archivo($name)
+    {
+        $object = $this->bucket->object($name);
+
+        $contentType = $object->info()['contentType'];
+
+        $file = $object->downloadAsString();
+
+        header("Content-type: $contentType");
+
+        print($file);
     }
 }
