@@ -468,24 +468,18 @@ hr {
             </div>
         </div>
 
-<!--MIO -->
+<!--MODAL QUITAR VENTA COMPARITIDA -->
         <div class="modal fade modal-alertas" id="modalCompartidos" role="dialog">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header pb-4">
-                        <h3 class="card-title text-center"><b>Cambiar modalidad a individual</b></h3>
+                        <h3 class="card-title text-center"><b>Quitar venta compartida</b></h3>
                     </div>
                 <form id="compartidasForm">
-                    <div class="card-content text-center" id="nombrePorcentaje" style="display: flex; flex-direction: column; flex-wrap: nowrap; align-items: center;">
+                    <div class="card-content text-center" id="nombrePorcentaje" >
                     </div>
                 
-                    <div class="card-content text-center" id="compartidasAll">
-
-                        <input type="hidden" name="compartida" readonly="true" id="compartida">
-                        <input type="hidden" name="idLote" readonly="true" id="idLote">
-                        <input type="text" name="id_lote" readonly="true" id="id_lote">
-                        <input type="text" name="id_usuario" readonly="true" id="id_usuario">
-
+                    <div class="card-content text-center" id="footer">
                     </div>
                 </form>
                 </div>
@@ -696,11 +690,9 @@ hr {
                                                         <th>TIPO VENTA</th>
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
-                                                        
                                                         <th>PLAN VENTA</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
-
                                                         <th>ENT. VENTA</th>
                                                         <th>ESTATUS COM.</th>
                                                         <th>MÁS</th>

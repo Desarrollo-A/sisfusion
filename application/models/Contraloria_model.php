@@ -225,45 +225,109 @@ class Contraloria_model extends CI_Model {
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
-       else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
+        else if ($id_sede == 2) // CONTRALORÍA QUERÉTARO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+        else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 		
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreClientes,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, convert(varchar,l.modificado,120) as modificado, cl.rfc, sd.nombre as nombreSede,
-		CAST(l.comentario AS varchar(MAX)) as comentario, convert(varchar,l.fechaVenc,120) as fechaVenc, l.perfil, res.nombreResidencial, cond.nombre as nombreCondominio,
-		l.ubicacion, ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl, cl.tipo_nc residencia,
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
-		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
-		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, cl.lugar_prospeccion, pr.id_arcus, pr.id_prospecto
-		FROM lotes l
-		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
-		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-		INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-		LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-		LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-		LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
-		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
-		WHERE l.status = 1 AND l.idStatusContratacion IN (8, 11) AND l.idMovimiento IN (38, 65, 41) 
-		AND l.status8Flag = 1 AND l.validacionEnganche != 'NULL' AND l.validacionEnganche IS NOT NULL
-		AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL)
-		AND cl.status = 1 $filtroSede
-		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, cl.tipo_nc,sd.nombre,
-		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-		tv.tipo_venta, l.observacionContratoUrgente,
-		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
-		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		cond.idCondominio, ISNULL(oxc0.nombre, 'Normal'), cl.lugar_prospeccion, pr.id_arcus, pr.id_prospecto
-		ORDER BY l.nombreLote");
-        return $query->result();
+		return $this->db-> query(
+            "SELECT 
+                l.idLote, 
+                cl.id_cliente, 
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+                l.nombreLote, 
+                l.idStatusContratacion, 
+                l.idMovimiento, 
+                convert(varchar, l.modificado, 120) as modificado, 
+                cl.rfc, 
+                sd.nombre as nombreSede, 
+                CAST(l.comentario AS varchar(MAX)) as comentario, 
+                convert(varchar, l.fechaVenc, 120) as fechaVenc, 
+                l.perfil, 
+                res.nombreResidencial, 
+                cond.nombre as nombreCondominio, 
+                l.ubicacion, 
+                ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, 
+                l.observacionContratoUrgente as vl, 
+                cl.tipo_nc residencia, 
+                concat(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor, 
+                concat(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador, 
+                concat(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente, 
+                cond.idCondominio, 
+                ISNULL(oxc0.nombre, 'Normal') tipo_proceso, 
+                cl.lugar_prospeccion, 
+                pr.id_arcus, 
+                pr.id_prospecto,
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END validacionContratoFirmado
+            FROM 
+                lotes l 
+                INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote 
+                INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio 
+                INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial 
+                LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario 
+                LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario 
+                LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario 
+                LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion 
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta 
+                LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97 
+                LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
+                LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.tipo_doc IN (41, 46) AND hd.status = 1
+            WHERE 
+                (
+                    l.status = 1 
+                    AND l.idStatusContratacion IN (8, 11) 
+                    AND l.idMovimiento IN (38, 65, 41) 
+                    AND l.status8Flag = 1 
+                    AND l.validacionEnganche != 'NULL' 
+                    AND l.validacionEnganche IS NOT NULL 
+                    AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
+                ) 
+                OR
+                (
+                    l.status = 1 
+                    AND l.idMovimiento IN (36, 41) 
+                    AND ISNULL(l.totalNeto, 0.00) > 0.00
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                )
+            GROUP BY 
+                l.idLote, 
+                cl.id_cliente, 
+                cl.nombre, 
+                cl.apellido_paterno, 
+                cl.apellido_materno, 
+                l.nombreLote, 
+                l.idStatusContratacion, 
+                l.idMovimiento, 
+                l.modificado, 
+                cl.rfc, 
+                cl.tipo_nc, 
+                sd.nombre, 
+                CAST(l.comentario AS varchar(MAX)), 
+                l.fechaVenc, 
+                l.perfil, 
+                cond.nombre, 
+                res.nombreResidencial, 
+                l.ubicacion, 
+                tv.tipo_venta, 
+                l.observacionContratoUrgente, 
+                concat(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno), 
+                concat(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno), 
+                concat(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno), 
+                cond.idCondominio, 
+                ISNULL(oxc0.nombre, 'Normal'), 
+                cl.lugar_prospeccion, 
+                pr.id_arcus, 
+                pr.id_prospecto,
+                CASE WHEN hd.expediente IS NULL THEN 0 ELSE 1 END
+            ORDER BY 
+                l.nombreLote
+            ")->result();
     }
 
     public function validateSt9($idLote){
@@ -377,6 +441,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+        else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -416,6 +484,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+        else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
@@ -480,6 +552,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '12','16')";
         else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE PUEBLA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+        else if ($id_sede == 11) // CONTRALORÍA MONTERREY TAMBIÉN VE EXPEDIENTES DE CIUDAD JUÁREZ
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '17')";
+        else if ($id_sede == 4) // CONTRALORÍA CIUDAD DE MÉXICO TAMBIÉN VE EXPEDIENTES DE ESTADO DE MÉXICO OCCIDENTE
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13')";
         else
             $filtroSede = "AND l.ubicacion IN ('$id_sede')";
         $query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', ISNULL(cl.apellido_paterno, ''), ' ', ISNULL(cl.apellido_materno, ''))) nombreCliente,
@@ -491,7 +567,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion, res.idResidencial
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -512,7 +588,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal'),
-        pro.lugar_prospeccion
+        pro.lugar_prospeccion, res.idResidencial
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -758,13 +834,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return true;
     }
 
-    public function get_lp($idLote){
+    /*public function get_lp($idLote){
         $query = $this->db-> query("SELECT cl.lugar_prospeccion
         FROM clientes cl 
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         WHERE cl.lugar_prospeccion = 6 AND cl.idLote = $idLote AND cl.status = 1");
         return $query->row();
-    }
+    }*/
 
     public function getLotesAllAssistant($idCondominio) {
         $id_lider = $this->session->userdata('id_lider');
@@ -1253,10 +1329,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 $estatus_permitido='1, 3, 4';
                 break;
             case 17:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
                 break;
             case 70:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1844,5 +1920,52 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function getFilename($idDocumento) {
         return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
+    }
+
+    public function getContratoFirmado($idLote) {
+		return $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND tipo_doc = 30 AND status = 1")->result_array();
+	}
+
+    public function getReporteCoincidenciasCT() {
+        return $this->db->query(
+			"SELECT 
+				re.nombreResidencial,
+				co.nombre nombreCondominio,
+				lo.nombreLote,
+				lo.idLote,
+				UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+				cl.fechaApartado,
+				CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+				CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+				CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+				CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+				CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+				CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+				cl.correo corretoCliente,
+				cl.telefono1 telefonoCliente,
+				u0.correo correoAsesor,
+				u0.telefono telefonoAsesor
+			FROM lotes lo
+			INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado > '2024-01-31 23:59:59.999'
+			INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+			INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+			INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+			LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+			LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+			LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+			LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+			LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+			WHERE 
+				lo.status = 1 
+				AND (u0.correo = cl.correo OR u0.telefono = cl.telefono1)
+			ORDER BY
+				cl.fechaApartado
+			"
+		)->result_array();
+    }
+    
+    public function autsAceptadasMSI(){
+        $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion=5");
+        return $query->result_array();
     }
 }

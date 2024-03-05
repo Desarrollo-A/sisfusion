@@ -127,7 +127,7 @@ function htmlArmado(tipoCorte, containerId) {
     container.innerHTML = '';
 
     for (let i = 0; i < fechas.length; i++) {
-        const editarBtn = (permisosEdicion === "1") ? `<a class="btn btn-primary btn-edit" onclick="editarFila(${fechas[i].idFechaCorte})">Editar</a>` : '';
+        const editarBtn = (permisosEdicion === "1") ? ` <a class="btn btn-primary btn-edit" onclick="editarFila(${fechas[i].idFechaCorte})">Editar</a>` : '';
 
         container.innerHTML += `
         <div class="row justify-center col-xs-10 col-sm-10 col-md-10 col-lg-10">
@@ -138,24 +138,24 @@ function htmlArmado(tipoCorte, containerId) {
                         <hr class="my-4">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="mes_ventas">MES:</label>
+                        <label class="label control-label d-flex" for="mes_ventas">MES:</label>
                         <input type="text" id="mes_ventas" name="mes_ventas" class="form-control input-gral" readonly value="${fechas[i].nombreMes}">
                         <input id="mes_${fechas[i].idFechaCorte}" name="mes_${fechas[i].idFechaCorte}" class="form-control input-gral" type="hidden" value="${fechas[i].mes}">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="fechaInicio_ventas">FECHA INICIO:</label>
+                        <label class="label control-label d-flex" for="fechaInicio_ventas">FECHA INICIO:</label>
                         <input type="text" id="fechaInicio_${fechas[i].idFechaCorte}" name="fechaInicio_ventas" class="form-control input-gral" value="${fechas[i].fechaInicioSinHora}" oninput="validarNumeros(this)">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="fechaFin_ventas">FECHA FIN GENERAL:</label>
+                        <label class="label control-label d-flex" for="fechaFin_ventas">FECHA FIN GENERAL:</label>
                         <input type="text" id="fechaFin_${fechas[i].idFechaCorte}" name="fechaFin_ventas" class="form-control input-gral" value="${fechas[i].fechaFinGeneralSinHora}" oninput="validarNumeros(this)">
                     </div>
                     <div class="col-md-3 mb-3">
-                        <label for="fechaTijuana_ventas">FECHA TIJUANA:</label>
+                        <label class="label control-label d-flex" for="fechaTijuana_ventas">FECHA TIJUANA:</label>
                         <input type="text" id="fechaTijuana_${fechas[i].idFechaCorte}" name="fechaTijuana_ventas" class="form-control input-gral" value="${fechas[i].fechaTijuanaSinHora}" oninput="validarNumeros(this)">
                     </div>
                     <div class="col-md-1 mb-3 text-center">
-                        <label for="editarVentas">ACCIONES:</label>
+                    <label class="label control-label d-flex" for="editarVentas">ACCIONES:</label>
                         ${editarBtn}
                     </div>
                     <div class="col-md-1">

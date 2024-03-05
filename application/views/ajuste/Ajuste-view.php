@@ -11,7 +11,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                 <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a href="#ventas" role="tab" id="ventas_tabla" data-toggle="tab">VENTAS</a>
+                                <a href="#ventas" role="tab" id="ventas_tabla" data-toggle="tab">COMERCIALIZACIÓN</a>
                             </li>
                             <li>
                                 <a href="#ooam" role="tab" id="ooam_tabla" data-toggle="tab">OOAM</a>
@@ -27,13 +27,13 @@
                                     <div class="tab-pane active" id="ventas">
                                         <div class="card-content">
                                             <div class="text-center">
-                                                <h3 class="card-title center-align"><b>TABLA ASIMILIADOS</b></h3>
+                                                <h3 class="card-title center-align"><b>Fechas comercialización</b></h3>
+                                                <p class="card-title pl-1 center-align">Fechas comercialización para modificar.</p>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid justify-center">
                                                     <div class="fechasAjuste" id="fechasAjuste" >
-                                                      <!-- <input type="hidden" id="permisos-edicion" value="<?php echo $permisos_edicion; ?>"> -->
-
+                                                        <input type="hidden" id="permisos-edicion" value="<?php echo $permisos_edicion; ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="tab-pane" id="ooam">
                                         <div class="text-center">
-                                            <h3 class="card-title center-align"><b>TABLA OOAM</b></h3>
+                                            <h3 class="card-title center-align"><b>Fechas OOAM</b></h3>
                                         </div>
                                         <div class="toolbar">
                                                 <div class="container-fluid ">
@@ -54,7 +54,7 @@
                                     </div>
                                     <div class="tab-pane" id="resguardo">
                                         <div class="text-center">
-                                            <h3 class="card-title center-align"><b>TABLA RESGUARDOS</b></h3>
+                                            <h3 class="card-title center-align"><b>Fechas Resguardo</b></h3>
                                         </div>
                                         <div class="toolbar">
                                                 <div class="container-fluid">

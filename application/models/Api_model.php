@@ -21,12 +21,21 @@ class Api_model extends CI_Model
     }
 
     function getAdviserLeaderInformation($id_asesor) {
-        return $this->db->query("SELECT u.id_rol, u.id_sede, u.id_lider id_coordinador, ge.id_usuario id_gerente, sb.id_usuario id_subdirector, ISNULL(CASE rg.id_usuario WHEN 2 THEN 0 ELSE rg.id_usuario END, 0) id_regional FROM usuarios u 
-        LEFT JOIN usuarios uu ON uu.id_usuario = u.id_lider
-		LEFT JOIN usuarios ge ON ge.id_usuario = uu.id_lider
-        LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
-        LEFT JOIN usuarios rg ON rg.id_usuario = sb.id_lider
-        WHERE u.id_usuario = $id_asesor")->row();
+        return $this->db->query(
+            "SELECT 
+                u.id_rol, 
+                u.id_sede, 
+                u.id_lider id_coordinador, 
+                CASE WHEN uu.id_rol = 3 THEN u.id_lider ELSE ge.id_usuario END id_gerente, 
+                CASE WHEN uu.id_rol = 3 THEN ge.id_usuario ELSE sb.id_usuario END id_subdirector, 
+                CASE WHEN uu.id_rol = 3 THEN sb.id_usuario ELSE ISNULL(CASE rg.id_usuario WHEN 2 THEN 0 ELSE rg.id_usuario END, 0) END id_regional 
+            FROM usuarios u 
+                    LEFT JOIN usuarios uu ON uu.id_usuario = u.id_lider
+                    LEFT JOIN usuarios ge ON ge.id_usuario = uu.id_lider
+                    LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
+                    LEFT JOIN usuarios rg ON rg.id_usuario = sb.id_lider
+            WHERE u.id_usuario = $id_asesor
+        ")->row();
     }
 
     function generateFilename($idLote, $idDocumento)
@@ -189,9 +198,12 @@ class Api_model extends CI_Model
         return $query->result_array();
     }
 
-    public function getListaResidenciales()
-    {
-        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)")->result_array();
+    public function getListaResidenciales() {
+        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25)")->result_array();
+    }
+
+    public function validacionIdSalesforce($id_salesforce) {
+        return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
     }
 
     public function aplicaLiberacion($datos){

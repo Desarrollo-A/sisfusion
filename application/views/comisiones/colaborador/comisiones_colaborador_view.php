@@ -7,7 +7,7 @@
         
         <?php 
         $this->load->view('template/sidebar'); 
-       // $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
+        $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
         //echo($complementos[0]);
         $usuarioid =  $this->session->userdata('id_usuario');
         ?>
@@ -136,7 +136,7 @@
         Shadowbox.init();
         var forma_pago = <?= $this->session->userdata('forma_pago') ?>;
         var tipo_usuario = <?= $this->session->userdata('tipo') ?>;
-        var userSede = <?= $this->session->userdata('id_sede') ?>;
+        
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
     <script src="<?=base_url()?>dist/js/controllers/comisiones/colaborador/comisiones_colaborador.js"></script>

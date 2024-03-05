@@ -213,7 +213,7 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         lor.sup AS supAnt, l.sup AS supAct, 
-        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu
+        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -239,6 +239,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,id_lote,idCliente FROM comisiones GROUP BY id_lote,idCliente) sumComisionReu ON sumComisionReu.id_lote = lor.idLote AND sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
+        LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
         AND (pc.bandera IN (0,100) OR pc.bandera IS NULL)
@@ -573,8 +574,14 @@ class Comisiones_model extends CI_Model {
     function getDatosComisionesAsesor($estado){
         $user_data = $this->session->userdata('id_usuario');
         $sede = $this->session->userdata('id_sede');
-        
-        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) lote, re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, 
+        $sedeValidada = '';
+        $conteo = explode( ',', $sede );
+        // var_dump(count($conteo));
+        count($conteo)>1 ? $sedeValidada = $conteo[0] : $sedeValidada = $sede  ;
+        return $this->db->query("(SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' <i>(',com.loteReubicado,')</i>') ELSE lo.nombreLote END) lote, 
+        re.nombreResidencial as proyecto, lo.totalNeto2 precio_lote, com.comision_total, 
+        com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+        pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente, 
             /*(CASE WHEN com.ooam = 1 THEN ' (EEC)' ELSE '' END) estatus_actual, */
             (CASE WHEN com.ooam = 1 THEN  CONCAT(oxcest.nombre,' (EEC)') ELSE oxcest.nombre END) estatus_actual,
 
@@ -595,7 +602,7 @@ class Comisiones_model extends CI_Model {
             /*INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23*/
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
 
-            LEFT JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+            LEFT JOIN sedes sed ON sed.id_sede = $sedeValidada and sed.estatus = 1
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
             WHERE pci1.estatus IN (1,4,6,8) AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8 AND com.estatus IN (8))) 
             AND com.id_usuario = $user_data
@@ -627,7 +634,7 @@ class Comisiones_model extends CI_Model {
             LEFT JOIN pago_comision pac ON pac.id_lote = com.id_lote
             /*INNER JOIN opcs_x_cats oxcC ON pci1.estatus = oxcC.id_opcion and oxcC.id_catalogo = 23*/
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
-            INNER JOIN sedes sed ON sed.id_sede = $sede and sed.estatus = 1
+            INNER JOIN sedes sed ON sed.id_sede = $sedeValidada and sed.estatus = 1
             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
             WHERE pci1.estatus IN (1,4,6,8) AND com.estatus in (1) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
@@ -2629,10 +2636,10 @@ class Comisiones_model extends CI_Model {
         $sql = ($ooam == null) ? '0 OR co.ooam IS NULL' : $ooam;
     
         $query = $this->db->query("SELECT co.estatus FROM comisiones co 
-        INNER JOIN lotes l ON co.id_lote = l.idLote
-        INNER JOIN clientes c ON c.id_cliente = l.idCliente
-        INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
-        WHERE l.idLote = $idLote and co.estatus = 1 and c.status = 1 and (co.ooam = $sql)");
+            INNER JOIN lotes l ON co.id_lote = l.idLote
+            INNER JOIN clientes c ON c.id_cliente = l.idCliente
+            INNER JOIN pago_comision pc ON pc.id_lote = co.id_lote 
+            WHERE l.idLote = $idLote and co.estatus = 1 and c.status = 1 and (co.ooam = $sql)");
     
         return $query->result_array();
     }
@@ -2783,6 +2790,10 @@ class Comisiones_model extends CI_Model {
         }
 
         $sqlCompartida = $numAsesores > 1 ? "INNER JOIN ventas_compartidas v1 ON v1.id_cliente = cA.id_cliente AND v1.estatus = 1 AND cA.status = 1" : "";
+        $sqlGerentes = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_gerente" : "";
+        $sqlCoor = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_coordinador" : "";
+        $sqlSub = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_subdirector" : "";
+        $sqlReg = $numAsesores > 1 ? "OR u1.id_usuario = cA.id_regional" : "";
         $sqlNumAsesores = $numAsesores > 1 ? "/@numAsesores" : "";
         $fragmento = (in_array( $plan_comision, [74,65,66])) || $numAsesores <= 1 ? " " : " u1.id_usuario = v1.id_asesor OR ";
         return $this->db->query("DECLARE @idCliente INTEGER, @numAsesores INTEGER, @numCoordinadores INTEGER, @numGerente INTEGER, @numSubdir INTEGER, @numDir INTEGER
@@ -2817,7 +2828,7 @@ class Comisiones_model extends CI_Model {
             $joinLotes
             $sqlCompartida 
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.coordinador not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_coordinador $sqlCoor
             WHERE cA.id_cliente = @idCliente)
             
             UNION  /* GERENTE */
@@ -2829,7 +2840,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes
             $sqlCompartida  
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_gerente $sqlGerentes
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.gerente not IN (0)
             WHERE cA.id_cliente = @idCliente)
             
@@ -2843,7 +2854,7 @@ class Comisiones_model extends CI_Model {
             FROM clientes cA 
             $joinLotes 
             $sqlCompartida 
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_subdirector $sqlSub
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.subdirector not IN (0)
             WHERE cA.id_cliente = @idCliente)
 
@@ -2857,7 +2868,7 @@ class Comisiones_model extends CI_Model {
             $joinLotes
             $sqlCompartida  
             INNER JOIN plan_comision pl ON pl.id_plan = cA.plan_comision AND pl.regional not IN (0)
-            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_regional
+            INNER JOIN usuarios u1 ON u1.id_usuario = cA.id_regional $sqlReg
             WHERE cA.id_cliente = @idCliente)
             $addCondition
             ORDER BY rolVal");
@@ -3908,8 +3919,9 @@ class Comisiones_model extends CI_Model {
         contrato.expediente, com.id_lote, pci1.id_pago_i, pci1.id_usuario, pci1.id_comision ORDER BY lo.nombreLote");
     }
 
-    public function getFechaCorteActual($tipoUsuario,$mesActual){
-    $filtro = $tipoUsuario == 2 ?  ( $mesActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
+    public function getFechaCorteActual($tipoUsuario,$diaActual){
+    $mesActual = date('m');
+    $filtro = $tipoUsuario == 2 ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
       return $consultaFechasCorte = $this->db->query("SELECT mes,fechaInicio,tipoCorte $filtro2 FROM fechasCorte WHERE estatus = 1 AND tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY tipoCorte ASC")->result_array();
     }
@@ -3961,8 +3973,8 @@ class Comisiones_model extends CI_Model {
     }
 
     public function getReporteDesc($sede, $empresa, $puesto, $usuario, $beginDate, $endDate){
-        $querySede = $sede != 0 ? "AND se.id_sede=".$sede : "";
-        $queryEmpresa = $empresa !=  0 ? "AND re.empresa='$empresa'" : "";
+        $querySede = intval($sede) != 0 ? "AND se.id_sede=".$sede : "";
+        $queryEmpresa = $empresa !=  '0' ? "AND re.empresa='$empresa'" : "";
         $queryPuesto = $puesto != 0 ? "AND u.id_rol=".$puesto : "";
         $queryUsuario = $usuario != 0 ? "AND u.id_usuario=".$usuario : "";
         $queryFecha = $beginDate != 0 ? "WHERE pa.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'": "";
@@ -3981,9 +3993,9 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN opcs_x_cats opc ON opc.id_opcion=pa.tipo AND opc.id_catalogo=23 
         LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
         LEFT JOIN opcs_x_cats emp ON emp.nombre=re.empresa AND emp.id_catalogo=61 
-        INNER JOIN sedes se ON se.id_sede = 
+        LEFT JOIN sedes se ON se.id_sede = 
 		(CASE WHEN u.id_usuario IN(2,3,1980,1981,1982,1988,4,5,9629,13546,13547,13548,1981,1982,26,27) THEN 2 WHEN u.id_usuario = 4 THEN 5 WHEN u.id_usuario = 5 THEN 3 WHEN u.id_usuario = 607 THEN 1 WHEN u.id_usuario = 7092 THEN 4 ELSE u.id_sede END) AND se.estatus = 1
-        $queryFecha $querySede $queryEmpresa $queryPuesto $queryUsuario
+        $queryFecha $queryEmpresa $querySede $queryPuesto $queryUsuario
         ORDER BY pa.id_prestamo DESC")->result_array();
     }
 

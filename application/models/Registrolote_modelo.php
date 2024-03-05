@@ -1550,42 +1550,92 @@
 	}
 
     public function lotesContratados() {
-        $query = $this->db->query("SELECT lotes.idLote, ISNULL(UPPER(s.nombre), 'SIN ESPECIFICAR') AS nombreSede, 
-		CONCAT(cl.nombre,' ', cl.apellido_paterno,' ',cl.apellido_materno) AS nombreCliente,
-		cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno, lotes.nombreLote, 
-        lotes.idStatusContratacion, lotes.idMovimiento, CONVERT(VARCHAR, hd.modificado, 120) modificado, CAST(lotes.comentario AS varchar(MAX)) as comentario, 
-        lotes.fechaVenc, lotes.perfil, residencial.nombreResidencial, cond.nombre as nombreCondominio, lotes.ubicacion, lotes.tipo_venta,
-        lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado,
-        concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno) as asesor, idAsesor,
-        concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno) as gerente, lotes.totalNeto2, lotes.referencia,
-        UPPER(CASE CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) WHEN '' THEN hd.usuario ELSE 
-        CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno) END) nombreUsuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
-		ISNULL(hd2.expediente, 0) documentoCargado, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta
-        FROM lotes as lotes
-        INNER JOIN clientes as cl ON lotes.idLote=cl.idLote AND cl.status=1
-        LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
-        INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
-        INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial
-        LEFT JOIN usuarios us ON cl.id_asesor=us.id_usuario
-        LEFT JOIN usuarios coord ON cl.id_coordinador=coord.id_usuario
-        LEFT JOIN usuarios as ge ON cl.id_gerente=ge.id_usuario 
-        INNER JOIN (SELECT MAX(modificado) modificado, idStatusContratacion, idMovimiento, idLote, status, usuario FROM historial_lotes
-        WHERE idStatusContratacion = 15 AND idMovimiento = 45 
-        GROUP BY idStatusContratacion, idMovimiento, idLote, status, usuario) hd ON hd.idLote = lotes.idLote AND hd.idStatusContratacion = 15 AND hd.idMovimiento = 45 AND hd.status = 1
-        LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = CAST(hd.usuario AS VARCHAR(45))
-        LEFT JOIN historial_documento hd2 ON hd2.idLote = lotes.idLote AND hd2.idCliente = lotes.idCliente AND hd2.status = 1 AND hd2.tipo_doc = 30
-		LEFT JOIN tipo_venta as tv ON tv.id_tventa = lotes.tipo_venta
-		WHERE lotes.status = 1 AND lotes.idStatusContratacion = 15 AND lotes.idMovimiento = 45
-        GROUP BY lotes.idLote, s.nombre, cl.id_cliente, cl.nombre, cl.apellido_materno, cl.apellido_paterno,
-        lotes.nombreLote, lotes.idStatusContratacion, lotes.idMovimiento, hd.modificado,
-        CAST(lotes.comentario AS varchar(MAX)), lotes.fechaVenc, lotes.perfil,
-        residencial.nombreResidencial, cond.nombre, lotes.ubicacion, lotes.tipo_venta,
-        cl.id_gerente, cl.id_coordinador, concat(us.nombre,' ', us.apellido_paterno, ' ', us.apellido_materno),
-        concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL,
-        lotes.validacionEnganche, cl.fechaApartado, lotes.totalNeto2, lotes.referencia, CONCAT(u.nombre,' ', u.apellido_paterno, ' ', u.apellido_materno), hd.usuario,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), hd2.expediente, tv.tipo_venta");
-        return $query->result();
+        return $this->db->query(
+			"SELECT 
+				lo.idLote, 
+				ISNULL(UPPER(se.nombre), 'SIN ESPECIFICAR') AS nombreSede, 
+				CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) AS nombreCliente, 
+				cl.id_cliente, 
+				cl.nombre, 
+				cl.apellido_paterno, 
+				cl.apellido_materno, 
+				lo.nombreLote, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento, 
+				CONVERT(VARCHAR, hl1.modificado, 120) modificado, 
+				CAST(lo.comentario AS varchar(MAX)) comentario, 
+				lo.fechaVenc, 
+				lo.perfil, 
+				re.nombreResidencial, 
+				co.nombre nombreCondominio, 
+				lo.ubicacion, 
+				lo.tipo_venta, 
+				lo.fechaSolicitudValidacion, 
+				lo.firmaRL, 
+				lo.validacionEnganche, 
+				CONVERT(VARCHAR, cl.fechaApartado, 120) fechaApartado, 
+				CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno) asesor, 
+				idAsesor, 
+				CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) gerente, 
+				lo.totalNeto2, 
+				lo.referencia, 
+				UPPER(CASE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) WHEN '' THEN hl2.usuario ELSE CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno) END) nombreUsuario, 
+				cl.id_cliente_reubicacion, 
+				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
+				ISNULL(hd.expediente, 0) documentoCargado, 
+				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta 
+			FROM lotes lo 
+				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
+				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+				INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+				LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+				LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_gerente 
+				INNER JOIN (SELECT MAX(modificado) modificado, idLote, idCliente FROM historial_lotes WHERE idStatusContratacion = 15 AND idMovimiento = 45 AND status = 1 GROUP BY idLote, idCliente) hl1 
+				ON hl1.idLote = lo.idLote AND hl1.idCliente = lo.idCliente
+				INNER JOIN historial_lotes hl2 ON hl2.idLote = hl1.idLote AND hl2.idCliente = hl1.idCliente AND hl2.modificado = hl1.modificado AND hl2.status = 1
+				LEFT JOIN usuarios u3 ON CAST(u3.id_usuario AS VARCHAR(45)) = CAST(hl2.usuario AS VARCHAR(45)) 
+				LEFT JOIN historial_documento hd ON hd.idLote = lo.idLote AND hd.idCliente = lo.idCliente AND hd.status = 1 AND hd.tipo_doc = 30 
+				LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+			WHERE 
+				lo.status = 1 
+				AND lo.idStatusContratacion = 15 
+				AND lo.idMovimiento = 45
+			GROUP BY 
+				lo.idLote, 
+				se.nombre, 
+				cl.id_cliente, 
+				cl.nombre, 
+				cl.apellido_materno, 
+				cl.apellido_paterno, 
+				lo.nombreLote, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento, 
+				hl1.modificado, 
+				CAST(lo.comentario AS varchar(MAX)), 
+				lo.fechaVenc, 
+				lo.perfil, 
+				re.nombreResidencial, 
+				co.nombre, 
+				lo.ubicacion, 
+				lo.tipo_venta, 
+				cl.id_gerente, 
+				CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno), 
+				CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno), 
+				idAsesor, 
+				lo.fechaSolicitudValidacion, 
+				lo.firmaRL, 
+				lo.validacionEnganche, 
+				cl.fechaApartado, 
+				lo.totalNeto2, 
+				lo.referencia, 
+				CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno), 
+				hl2.usuario, 
+				cl.id_cliente_reubicacion, 
+				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
+				hd.expediente, 
+				tv.tipo_venta"
+		)->result();
     }
 
 	public function reportLotesPost45(){
@@ -3384,39 +3434,39 @@
                 break;
             case '5': // ASISTENTE SUBDIRECTOR
 				$id_usuario = $this->session->userdata('id_usuario');
+				$id_lider = $this->session->userdata('id_lider');
 				$id_sede = $this->session->userdata('id_sede');
-				$where_sede = '';
-				if ($id_usuario == 30) // MJ: VALERIA PALACIOS VERÁ LO DE SLP + TIJUANA
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '8'))";
-				else if (in_array($id_usuario, array(7096, 7097, 10924, 7324, 5620, 13094))) { // MJ: EDGAR, GRISELL Y DALIA VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
-					$where_sede = 'AND clientes.id_sede IN(4, 9, 13, 14)';
-					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '9', '13', '14')) OR id_usuario IN (7092, 690))";
-				}
-				else if (in_array($id_usuario, array(28))) { // MJ: ADRINA RODRIGUEZ VERÁN LO DE CDMX, SMA, EDOMEXO Y EDOMEXP
-					$where_sede = 'AND clientes.id_sede IN (2, 4, 13, 14, 15)';
-					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '4', '13', '14', '15')))";
-				}
-				else if ($id_usuario == 29 || $id_usuario == 7934) // MJ: FERNANDA MONJARAZ VE CINTHYA TANDAZO
-					$where = "(SELECT id_usuario FROM usuarios WHERE (id_rol = 3 AND id_sede IN ('$id_sede', '12', '16')) OR id_usuario = 666)";
-				else if ($id_usuario == 4888 || $id_usuario == 546){ // MJ: ADRIANA PEREZ Y DIRCE
-					$validacionDirce = $id_usuario == 546 ? 'OR id_usuario=681' : '';
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede', '11') $validacionDirce )";
-				} 
-				else if ($id_usuario == 6831) // MJ: YARETZI MARICRUZ ROSALES HERNANDEZ VE ITZEL ALVAREZ MATA
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR id_usuario = 690)";
-				else if ($id_usuario == 12962) // MJ: DULCE MARIA FACUNDO TORRES TAMBIÉN LO DE LA SUBDIRECCIÓN DE ADRI MAÑAS EN MTY
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede') OR (id_usuario = 7886 AND id_sede IN ('$id_sede')))";
-				else
-					$where = "(SELECT id_usuario FROM usuarios WHERE id_rol = 3 AND id_sede IN ('$id_sede'))";
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN $where
-                AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                UNION ALL
-                SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote $where_sede
-                INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                WHERE vc.id_gerente IN $where AND vc.estatus = 1 AND 
-                clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio ORDER BY lotes.idLote");
+                $query = $this->db->query(
+					"SELECT 
+						lo.idLote, 
+						lo.nombreLote, 
+						lo.idStatusLote, 
+						cl.id_asesor, 
+						'1' venta_compartida 
+					FROM 
+						lotes lo
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
+					WHERE 
+						lo.status = 1 
+						AND lo.idCondominio = $condominio 
+					UNION ALL 
+					SELECT 
+						lo.idLote, 
+						lo.nombreLote, 
+						lo.idStatusLote, 
+						vc.id_asesor, 
+						'2' venta_compartida 
+					FROM 
+						lotes lo
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
+					WHERE 
+						vc.estatus = 1 
+						AND lo.status = 1 
+						AND lo.idCondominio = $condominio 
+					ORDER BY 
+						lo.idLote
+				");
                 break;
             case '6': // ASISTENTE GERENTE
 				$id_lider = $this->session->userdata('id_lider');
@@ -3447,7 +3497,7 @@
 					$id_lider = $id_lider . ', 12688';
 					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-					$id_lider = $id_lider . ', 560';
+					$id_lider = $id_lider . ', 5604';
 					$sede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
@@ -3457,6 +3507,9 @@
 					$sede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
 					$id_lider = $id_lider . ', 21, 1545';
+					$sede = "";
+				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
+					$id_lider = $id_lider . ', 12027, 13059, 2599';
 					$sede = "";
 				}
 
@@ -3865,15 +3918,15 @@
         } else { // SE FILTRA POR CONDOMINIO
 			$where = "AND cond.idCondominio = $id_condominio";
         }
-
+		
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
 		telefono3, fecha_nacimiento, lugar_prospeccion, otro_lugar,
-		medio_publicitario, plaza_venta, tp.tipo, estado_civil,
+		medio_publicitario, plaza_venta, ISNULL(tp.tipo, 'SIN ESPECIFICAR')tipo, estado_civil,
 		regimen_matrimonial, nombre_conyuge, domicilio_particular,
 		tipo_vivienda, ocupacion, cl.empresa, puesto, edadFirma,
-		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
+		antiguedad, domicilio_empresa, telefono_empresa,  ISNULL(noRecibo, 'SIN ESPECIFICAR') noRecibo,
 		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
 		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
 		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
@@ -3889,7 +3942,8 @@
 		WHERE cl.id_gerente=id_usuario ) AS gerente,
 		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
 		FROM usuarios
-		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status
+		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status,
+		cl.correo, cl.telefono1
 		FROM clientes as cl
 		LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
 		LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
@@ -3899,6 +3953,7 @@
 		WHERE cl.status = 1 $where
 		ORDER BY cl.id_cliente DESC")->result();
     }
+
 
     public function getLotesGralTwo($idCondominio, $residencial) {
 		$query = $this->db-> query("SELECT * FROM lotes lo

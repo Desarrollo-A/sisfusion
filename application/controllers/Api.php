@@ -14,7 +14,7 @@ class Api extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo', 'Ooam_model','Seguro_model'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Ooam_model','Seguro_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -211,21 +211,16 @@ class Api extends CI_Controller
         }
     }
 
-    public function setStatusContratacion()
-    {
+    public function setStatusContratacion() {
         $objDatos = json_decode(base64_decode(file_get_contents("php://input")), true);
-       
         $datos = array('status_contratacion' => $objDatos['bandera'],
             'fecha_modificacion' => date("Y-m-d H:i:s"),
             'modificado_por' => $objDatos['modificado_por']);
         $result = $this->Api_model->updateUserContratacion($datos, $objDatos['idusuario']);
-
-        if ($result == 1) {
+        if ($result == 1)
             $row = json_encode(array('resultado' => true));
-        } else {
+        else
             $row = json_encode(array('resultado' => false));
-        }
-
         echo base64_encode($row);
     }
 
@@ -245,7 +240,7 @@ class Api extends CI_Controller
             $documentName = $time . "_" . ($time + (24 * 60 * 60)) . "_" . $this->input->post("id_asesor") . "_" . $this->input->post("id_gerente") . "." . substr(strrchr($_FILES["uploaded_file"]["name"], "."), 1);
             $upload_file_response = move_uploaded_file($file["tmp_name"], "static/documentos/evidence_token/" . $documentName);
             if ($upload_file_response == true) {
-                $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 0, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"), "nombre_archivo" => $documentName);
+                $data = array("token" => $token, "para" => $this->input->post("id_asesor"), "estatus" => 1, "creado_por" => $this->input->post("id_gerente"), "fecha_creacion" => date("Y-m-d H:i:s"), "nombre_archivo" => $documentName);
                 $response = $this->General_model->addRecord("tokens", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
                 if ($response == 1)
                     echo json_encode(array("status" => 200, "message" => "El token se ha generado de manera exitosa.", "id_token" => $token));
@@ -372,7 +367,7 @@ class Api extends CI_Controller
     }
 
    
-    public function external_dashboard(){
+    public function external_dashboard() {
         $response = $this->validateToken_dashboard($_GET['tkn']);
         $res = json_decode($response);
         if($res->status == 200){
@@ -421,7 +416,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n') == 1 ? 12 : date('n') - 1;
                         $year = date('n') == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month);//CAMBIAR A SUS VARIABLES
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month);
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -435,7 +430,7 @@ class Api extends CI_Controller
                             $data2[$i]['cliente']['nacionalidad'] = $dbTransaction[$i]['nacionalidad'];
                             $data2[$i]['cliente']['direccion'] = $dbTransaction[$i]['direccion'];
                             $data2[$i]['propiedad']['tipo_propiedad'] = $dbTransaction[$i]['tipo_propiedad'];
-                            $data2[$i]['propiedad']['nombrePropiedad'] = $dbTransaction[$i]['nombrePropiedad'];
+                            $data2[$i]['propiedad']['nombrePropiedad'] = $dbTransaction[$i]['nombre_propiedad'];
                             $data2[$i]['propiedad']['tamanio_terreno'] = $dbTransaction[$i]['tamanio_terreno'];
                             $data2[$i]['propiedad']['costo'] = $dbTransaction[$i]['costo'];
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
@@ -446,7 +441,9 @@ class Api extends CI_Controller
                             $data2[$i]['pagos']['forma_pago_enganche'] = $dbTransaction[$i]['forma_pago_enganche'];
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_enganche'] = $dbTransaction[$i]['fecha_pago'];
-                            $data2[$i]['pagos']['total_pagos_enganche'] = $dbTransaction[$i]['total_pagos'];
+                            $data2[$i]['pagos']['total_pagos_enganche'] = 1;
+                            $data2[$i]['pagos']['concepto_pago'] = $dbTransaction[$i]['concepto_pago'];
+                            //$data2[$i]['pagos']['monto_pago'] = $dbTransaction[$i]['monto_pago'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago_comisionista'])));
@@ -845,42 +842,6 @@ class Api extends CI_Controller
                     else{
                         echo ($checkSingup);
                         header('Content-Type: application/json');
-                    }
-                }
-            }
-        }
-    }
-
-    //funcion de prueba para el servicio de Arcus, borrar despues de pruebas y Vo.Bo.
-    function exitoArcus() {
-        if (!isset(apache_request_headers()["authorization"]))
-            echo json_encode(array("status" => 400, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
-        else {
-            if (apache_request_headers()["authorization"] == "")
-                echo json_encode(array("status" => 400, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
-            else{
-                $token = apache_request_headers()["authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
-                $valida_token = json_decode($this->validateToken($token, 5918));
-                if ($valida_token->status !== 200)
-                    echo json_encode($valida_token);
-                else {
-                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
-                    $valida_token = NULL;
-                    foreach ($result->data as $key => $value) {
-                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
-                            $valida_token = false;
-                    }
-                    if(is_null($valida_token))
-                        $valida_token = true;
-                    if(!empty($result->data) && $valida_token)
-                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
-                    else {
-                        $checkSingup = null;
-                        echo json_encode(array("status" => 400, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
-                    } if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
-                        $data = file_get_contents("php://input");
-                        echo json_encode(array("status" => 200, "message" => "Consulta realizada con éxito.", "datos"   =>  $data), JSON_UNESCAPED_UNICODE);
                     }
                 }
             }
@@ -1355,37 +1316,66 @@ class Api extends CI_Controller
                                 if ($result->id_rol != 7)
                                     echo json_encode(array("status" => -1, "message" => "El valor ingresado para OWNER no corresponde a un ID de usuario con rol de asesor."), JSON_UNESCAPED_UNICODE);
                                 else {
-                                    $data = array(
-                                        "id_asesor" => $data->Owner,
-                                        "id_coordinador" => $result->id_coordinador,
-                                        "id_gerente" => $result->id_gerente,
-                                        "id_sede" => $result->id_sede,    
-                                        "id_subdirector" => $result->id_subdirector,
-                                        "id_regional" => $result->id_regional,
-                                        "personalidad_juridica" => 2,
-                                        "nombre" => $data->NOMBRE,
-                                        "apellido_paterno" => $data->APELLIDOPATERNO,
-                                        "apellido_materno" => $data->APELLIDOMATERNO,
-                                        "correo" => $data->Mail,
-                                        "telefono" => $data->Phone,
-                                        "lugar_prospeccion" => 52, 
-                                        "otro_lugar" => $data->CampaignID,
-                                        "plaza_venta" => 0,
-                                        "fecha_creacion" => date("Y-m-d H:i:s"),
-                                        "creado_por" => 1,
-                                        "fecha_modificacion" => date("Y-m-d H:i:s"),
-                                        "modificado_por" => 1,
-                                        "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
-                                        "observaciones" => $data->Comments,
-                                        "desarrollo" => $data->ProductID,
-                                        "score" => $data->iScore,
-                                        "source" => $data->Source,
-                                        "id_salesforce" => $data->IDSALESFORCE
-                                    );
-                                    $dbTransaction = $this->General_model->addRecord("prospectos", $data); // MJ: LLEVA 2 PARÁMETROS $table, $data
-                                     
+                                    $validacionIdSalesforce = $this->Api_model->validacionIdSalesforce($data->IDSALESFORCE);
+                                    if (count($validacionIdSalesforce) <= 0) { // NO SE ENCONTRÓ NINGÚN CON EL ID SALESFORCE QUE VIENE INFORMADO (SE REALIZA INSERT)
+                                        $dataArray = array(
+                                            "id_asesor" => $data->Owner,
+                                            "id_coordinador" => $result->id_coordinador,
+                                            "id_gerente" => $result->id_gerente,
+                                            "id_sede" => $result->id_sede,    
+                                            "id_subdirector" => $result->id_subdirector,
+                                            "id_regional" => $result->id_regional,
+                                            "personalidad_juridica" => 2,
+                                            "nombre" => $data->NOMBRE,
+                                            "apellido_paterno" => $data->APELLIDOPATERNO,
+                                            "apellido_materno" => $data->APELLIDOMATERNO,
+                                            "correo" => $data->Mail,
+                                            "telefono" => $data->Phone,
+                                            "lugar_prospeccion" => 52, 
+                                            "otro_lugar" => $data->CampaignID,
+                                            "plaza_venta" => 0,
+                                            "fecha_creacion" => date("Y-m-d H:i:s"),
+                                            "creado_por" => 1,
+                                            "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                            "modificado_por" => 1,
+                                            "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                            "observaciones" => $data->Comments,
+                                            "desarrollo" => $data->ProductID,
+                                            "score" => $data->iScore,
+                                            "source" => $data->Source,
+                                            "id_salesforce" => $data->IDSALESFORCE
+                                        );
+                                        $dbTransaction = $this->General_model->addRecord("prospectos", $dataArray); // MJ: LLEVA 2 PARÁMETROS $table, $data
+                                    }
+                                    else {
+                                        $dataArray = array(
+                                            "id_asesor" => $data->Owner,
+                                            "id_coordinador" => $result->id_coordinador,
+                                            "id_gerente" => $result->id_gerente,
+                                            "id_sede" => $result->id_sede,    
+                                            "id_subdirector" => $result->id_subdirector,
+                                            "id_regional" => $result->id_regional,
+                                            "personalidad_juridica" => 2,
+                                            "nombre" => $data->NOMBRE,
+                                            "apellido_paterno" => $data->APELLIDOPATERNO,
+                                            "apellido_materno" => $data->APELLIDOMATERNO,
+                                            "correo" => $data->Mail,
+                                            "telefono" => $data->Phone,
+                                            "lugar_prospeccion" => 52, 
+                                            "otro_lugar" => $data->CampaignID,
+                                            "plaza_venta" => 0,
+                                            "fecha_modificacion" => date("Y-m-d H:i:s"),
+                                            "modificado_por" => 1,
+                                            "fecha_vencimiento" => date("Y-m-d H:i:s", strtotime(date("Y-m-d H:i:s") . "+ 30 days")),
+                                            "observaciones" => $data->Comments,
+                                            "desarrollo" => $data->ProductID,
+                                            "score" => $data->iScore,
+                                            "source" => $data->Source
+                                        );
+                                        $dbTransaction = $this->General_model->updateRecord('prospectos', $dataArray, 'id_prospecto', $validacionIdSalesforce[0]['id_prospecto']);
+                                    }
                                     if ($dbTransaction) // SUCCESS TRANSACTION
-                                        echo json_encode(array("status" => 1, "message" => "Registro guardado con éxito."), JSON_UNESCAPED_UNICODE);
+                                        echo json_encode(array("status" => 1, "message" => count($validacionIdSalesforce) == 0 ? 'Registro guardado con éxito.' : 'Registro actualizado con éxito.'), JSON_UNESCAPED_UNICODE);
                                     else // ERROR TRANSACTION
                                         echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                                 }
@@ -1597,7 +1587,7 @@ class Api extends CI_Controller
                                             $dataComisiones['creado_por'] = 1;            
                                             
                                             if($dataReturn->comisionistas[$i]->rolGenerado == 7){
-                                                $dataLineaVenta['idAsesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                                $dataLineaVenta['id_asesor'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
                                                 $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){

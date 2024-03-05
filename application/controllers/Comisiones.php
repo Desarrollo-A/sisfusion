@@ -297,7 +297,8 @@ class Comisiones extends CI_Controller
 
   
     $this->load->view('comisiones/complementos/comisiones_colaborador_comple'); 
-    switch($this->session->userdata('id_rol')){
+    switch($this->session->userdata('id_rol'))
+    {
       case '1':
       case '2':
         if ($this->session->userdata('id_usuario') == 13546) {// ALEJANDRO GONZÁLEZ DÁVALOS
@@ -310,8 +311,8 @@ class Comisiones extends CI_Controller
       break;
       default:
      // $this->load->view('ooam/asesor_ooam_view');
-         $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
-         $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
+          $this->load->view('comisiones/complementos/modales/comisiones_colaborador_com'); //aqui mero va los modales
+          $this->load->view("comisiones/colaborador/comisiones_colaborador_view", $datos);
       break;
     }
   }
@@ -375,11 +376,11 @@ class Comisiones extends CI_Controller
 
     if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
       $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
+      $diaActual = date('d');
+      $filtro = $consultaTipoUsuario[0]['tipo'] == 2 ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
       $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
-      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual")->result_array();
-
+      $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaFinGeneral)*/ AND mes = $mesActual $filtro")->result_array();
       $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;
-      
       if( $consulta_comisiones->num_rows() > 0 && $consultaFechasCorte ){
         $validar_sede = $this->session->userdata('id_sede');
         $fecha_actual = strtotime($obtenerFechaSql);
@@ -3219,10 +3220,10 @@ class Comisiones extends CI_Controller
 
     $tipoUsuario = $this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2';
     //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
-    $mesActual = date('m'); 
+    $diaActual = date('d'); 
     $data = array(
       "proyectos" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
-      "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$mesActual),
+      "fechasCorte" => $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual),
       "condominios" => $this->Comisiones_model->get_condominios_lista()->result_array(),
       "sumaPagos" => $this->Comisiones_model->getSumaPagos($this->session->userdata('id_usuario'))->result_array(),
       "opinion" => $this->Usuarios_modelo->Opn_cumplimiento($this->session->userdata('id_usuario'))->result_array()
