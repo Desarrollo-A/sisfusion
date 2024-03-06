@@ -42,9 +42,11 @@
                                                 <th>TIPO DE VENTA</th>
                                                 <th>FECHA DE CONTRATACIÓN</th>
                                                 <th>PROCESO DE CONTRATACIÓN</th>
+                                                <th>ESTATUS LOTE</th>
                                                 <th>CLIENTE</th>
                                                 <th>ENGANCHE</th>
-                                                <th>ESTATUS DE VENTA</th>
+                                                <th>VENTA COMPARTIDA</th>
+                                                <th>NÚMERO COMPARTIDA</th>
                                             </tr>
                                         </thead>
                                     </table>
