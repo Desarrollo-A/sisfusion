@@ -315,7 +315,7 @@ class Reestructura_model extends CI_Model
         
         $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
         $id_cliente = $this->db->query("SELECT id_cliente,plan_comision, oxc.nombre as tipoCancelacion FROM clientes 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = tipoCancelacion AND id_catalogo = 117
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = tipoCancelacion AND id_catalogo = 117
         WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
         $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
         $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
@@ -1075,39 +1075,96 @@ class Reestructura_model extends CI_Model
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lf2.idLote AND cl.status = 1 AND cl.proceso IN (5, 6)
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97")->result_array();
     }
+
     public function getReporteEstatus() {
         return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
-        re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
-        STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
-        STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
-        FROM propuestas_x_lote pxl
-        INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
-        LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
-        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre
-        UNION ALL
-        SELECT 'Reubicación' tipo_proceso, tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
-        STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
-        STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
-        FROM (
-        SELECT lf1.idLotePvOrigen, re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, 
-        lo.referencia referenciaOrigen, lo.idLote idLoteOrigen, CASE WHEN (lo.validacionEnganche = 'NULL' OR lo.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion
-        FROM lotesFusion lf1
-        INNER JOIN lotes lo ON lo.idLote = lf1.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        WHERE lf1.origen = 1 AND lf1.destino = 0) tb
-        INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen AND lf2.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1
-        INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106
-        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion
-        ORDER BY nombreLoteDestino")->result_array();
+            re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, CAST(lo.referencia AS VARCHAR (250)) referenciaOrigen, CAST(lo.idLote AS VARCHAR (250)) idLoteOrigen,
+                STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
+                STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
+                FROM propuestas_x_lote pxl
+                INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera IN (1,0) AND lo.solicitudCancelacion != 2
+                INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+                INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
+                LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
+                LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
+                LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
+                GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre
+                UNION ALL
+        SELECT 
+          'Reubicación' tipo_proceso,
+          STRING_AGG(tb2.nombreResidencialOrigen, ', ') nombreResidencialOrigen, 
+          STRING_AGG(tb2.nombreCondominioOrigen, ', ') nombreCondominioOrigen, 
+          STRING_AGG(tb2.nombreLoteOrigen, ', ') nombreLoteOrigen, 
+          STRING_AGG(tb2.referenciaOrigen, ', ') referenciaOrigen, 
+          STRING_AGG(tb2.idLoteOrigen, ', ') idLoteOrigen, 
+          tb2.nombreResidencialDestino, 
+          tb2.nombreCondominioDestino, 
+          tb2.nombreLoteDestino, 
+          tb2.referenciaDestino, 
+          tb2.idLoteDestino, 
+          tb2.validacionAdministracion, 
+          2 tipo, 
+          tb2.estatusProceso 
+        FROM  (
+          SELECT 
+            tb.nombreResidencialOrigen, 
+            tb.nombreCondominioOrigen, 
+            tb.nombreLoteOrigen, 
+            tb.referenciaOrigen, 
+            tb.idLoteOrigen, 
+            STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, 
+            STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, 
+            STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
+            STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
+            STRING_AGG(lo2.idLote, ', ') idLoteDestino, 
+            tb.validacionAdministracion, 
+            STRING_AGG(oxc0.nombre, ', ') estatusProceso 
+          FROM 
+            (
+              SELECT 
+                lf1.idLotePvOrigen, 
+                re.nombreResidencial nombreResidencialOrigen, 
+                co.nombre nombreCondominioOrigen, 
+                lo.nombreLote nombreLoteOrigen, 
+                lo.referencia referenciaOrigen, 
+                lo.idLote idLoteOrigen, 
+                CASE WHEN (
+                  lo.validacionEnganche = 'NULL' 
+                  OR lo.validacionEnganche IS NULL
+                ) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion 
+              FROM 
+                lotesFusion lf1 
+                INNER JOIN lotes lo ON lo.idLote = lf1.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2 
+                INNER JOIN condominios co ON lo.idCondominio = co.idCondominio 
+                INNER JOIN residenciales re ON co.idResidencial = re.idResidencial 
+              WHERE 
+                lf1.origen = 1 
+                AND lf1.destino = 0
+            ) tb 
+            INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen
+            INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1 
+            INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio 
+            INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial 
+            INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106 
+          GROUP BY 
+            tb.nombreResidencialOrigen, 
+            tb.nombreCondominioOrigen, 
+            tb.nombreLoteOrigen, 
+            tb.referenciaOrigen, 
+            tb.idLoteOrigen, 
+            tb.validacionAdministracion 
+        ) tb2
+        GROUP BY 
+          tb2.nombreResidencialDestino, 
+          tb2.nombreCondominioDestino, 
+          tb2.nombreLoteDestino, 
+          tb2.referenciaDestino, 
+          tb2.idLoteDestino,
+          tb2.validacionAdministracion,
+          tb2.estatusProceso 
+        ORDER BY 
+            nombreLoteDestino")->result_array();
     }
 
     public function getHistorialPorLote($idLote){
