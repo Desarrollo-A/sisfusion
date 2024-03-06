@@ -179,6 +179,7 @@ class Reporte_model extends CI_Model {
 
         return [$ventasContratadas, $ventasApartadas, $canceladasContratadas, $canceladasApartadas];
     }
+    
     public function setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction = null, $leader = null) {
         $comodin = '';
         $current_rol = $this->session->userdata('id_rol');
@@ -187,7 +188,8 @@ class Reporte_model extends CI_Model {
             if ($render == 1) {
                 if ($typeTransaction == null) {
                     if ($current_rol == 9)
-                        $filtro .= " AND (cl.id_asesor = $id_usuario OR vc.id_asesor = $id_usuario) AND (cl.id_coordinador = $leader OR vc.id_coordinador = $leader)";
+                        //$filtro .= " AND (cl.id_asesor = $id_usuario OR vc.id_asesor = $id_usuario) AND (cl.id_coordinador = $leader OR vc.id_coordinador = $leader)";
+                        $filtro .= " AND((cl.id_asesor = $id_usuario or vc.id_asesor = $id_usuario) or (cl.id_coordinador = $leader or vc.id_coordinador = $leader))";
                     else
                         $filtro .= " AND (cl.id_asesor = $id_usuario OR vc.id_asesor = $id_usuario)";
                 }
@@ -968,7 +970,7 @@ class Reporte_model extends CI_Model {
 			LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaUltimoStatus FROM historial_lotes GROUP BY idLote, idCliente) hl3 ON hl3.idLote = lo.idLote AND hl3.idCliente = cl.id_cliente
             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.venta_extranjero AND oxc0.id_catalogo = 116
            WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12874) AND cl.id_gerente NOT IN (6739)
-            $filtro 
+            --$filtro 
             $filtroExt
             $loteFiltro
             GROUP BY
@@ -1041,7 +1043,7 @@ class Reporte_model extends CI_Model {
             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.venta_extranjero AND oxc0.id_catalogo = 116
             WHERE (cl.cancelacion_proceso != 2 OR (isNULL(noRecibo, '') != 'CANCELADO' AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12874) AND cl.id_gerente NOT IN (6739)))
             $statusLote
-            $filtro
+            --$filtro
             $loteFiltro
 			GROUP BY CAST(re.descripcion AS VARCHAR(150)), UPPER(co.nombre), UPPER(lo.nombreLote), 
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
