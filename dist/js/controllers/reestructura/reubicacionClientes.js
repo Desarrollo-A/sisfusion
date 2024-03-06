@@ -915,9 +915,9 @@ $(document).on("change", "#loteAOcupar", function(e){
         arrayProyIdProp.push(idProyectoRE);
 
         numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
-        mensajeMaxLotes = '';
-    }else{
         mensajeMaxLotes = ' más de tres lotes';
+    }else{
+        mensajeMaxLotes = ' ';
     }
 
     if ($itself.val() === '') {
