@@ -96,7 +96,7 @@ class VentasAsistentes_model extends CI_Model {
     }
    
 	public function registroStatusContratacion8 () {
-        list($filtroProceso, $where) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
+        list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
 		return $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
         CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -107,7 +107,7 @@ class VentasAsistentes_model extends CI_Model {
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion,
         ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1 $filtroProceso
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $validacionMktd $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -117,7 +117,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE $where
+        WHERE l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -228,7 +228,7 @@ class VentasAsistentes_model extends CI_Model {
 	}
 	
     public function registroStatusContratacion14 () {
-        list($filtroProceso, $where) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
+        list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
         return $this->db->query(" SELECT l.idLote, cl.id_cliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) AS modificado, cl.rfc,
         CAST(l.comentario AS VARCHAR(MAX)) AS comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -240,7 +240,7 @@ class VentasAsistentes_model extends CI_Model {
         cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede,
         ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $filtroProceso
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $validacionMktd $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
@@ -249,7 +249,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE $where
+        WHERE l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
         CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -287,9 +287,10 @@ class VentasAsistentes_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function setFilters() {
+    public function setFilters($id_rol, $id_usuario, $id_sede, $id_lider, $tipo) {
         $filtroProceso = "";
         $where = "";
+        $validacionMktd = $id_rol == 54 ? "AND cl.lugar_prospeccion IN (52, 42)" : "";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -298,10 +299,10 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;
+            $where = "AND cl.status = 1".$filtroUsuarioBR;
         }
         else if (in_array($id_rol, array(54, 63, 4)))  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO OR ASISTENTES DIRECCIÓN COMERCIAL
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
+            $where = "AND cl.status = 1";
         else { // MJ: ES COMERCIALIZACIÓN
             if ($tipo == 1) { // SON COMERCIALIZACIÓN
                 if ($id_sede == 9)
@@ -375,9 +376,9 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroSede = "";
             }
             
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
+            $where = "AND cl.status = 1 $filtroSede $filtroGerente";
         }
-        return [$filtroProceso, $where];
+        return [$filtroProceso, $where, $validacionMktd];
     }
 
 }
