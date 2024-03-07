@@ -471,12 +471,18 @@ class Documentacion extends CI_Controller {
     {
         $object = $this->bucket->object($name);
 
-        $contentType = $object->info()['contentType'];
+        if($object->exists()){
+            $contentType = $object->info()['contentType'];
 
-        $file = $object->downloadAsString();
+            $file = $object->downloadAsString();
 
-        header("Content-type: $contentType");
+            header("Content-type: $contentType");
 
-        print($file);
+            print($file);
+        }else{
+            header("HTTP/1.1 404 Not Found");
+
+            http_response_code(404);
+        }
     }
 }

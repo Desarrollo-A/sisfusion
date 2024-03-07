@@ -1609,6 +1609,7 @@ const botonesAccionReubicacion = (d) => {
             data-toggle="tooltip" 
             data-placement="left"
             title="${tooltipCF}"
+            data-bucket="${d.bucket}"
             data-idCliente="${d.idCliente}"
             data-idLote="${d.idLote}"
             data-nombreLote="${d.nombreLote}"

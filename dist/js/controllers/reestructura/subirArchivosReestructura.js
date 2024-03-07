@@ -105,6 +105,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     let telefono1 = datos[0]['telefono1'];
     let ocupacion = datos[0]['ocupacion'];
     let infoClienteContenedor = document.getElementById('info-cliente');
+    let bucket = datos[0]['bucket'];
     let contenidoHTMLinfoCL = `
     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
         <div class="col-12 col-sm-12 col-md-6 col-lg-6 text-left">
@@ -261,7 +262,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3 mt-4">\n' +
                 '                           <div class="d-flex justify-center">' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
-                '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-sky ver-archivo" data-bucket="'+ elemento.bucket +'" data-idPxl="' + elemento.id_pxl + '" ' +
                 '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
@@ -547,7 +548,8 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 }
                 $.ajax({
                     type: 'POST',
-                    url: 'updateArchivos',
+                    url: 'actualizaExpecifico',
+                    //url: 'updateArchivos',
                     data: data,
                     contentType: false,
                     cache: false,
@@ -600,6 +602,8 @@ $(document).on('click', '.ver-archivo', function () {
     let url_base = general_base_url + 'static/documentos/contratacion-reubicacion-temp/' + nombreArchivoOriginal + '/';
     let carpetaVisor = '';
     let url = '';
+    let bucket = $(this).attr("data-bucket");
+
     if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
         carpetaVisor = 'CONTRATO/';
         if (excel == 1) {
@@ -611,7 +615,13 @@ $(document).on('click', '.ver-archivo', function () {
     if (rescision == 1) {
         carpetaVisor = 'RESCISIONES/';
     }
-    url = url_base + carpetaVisor + nombreArchivo;
+    
+    if(bucket){
+        url = general_base_url + 'documentacion/archivo/' + nombreArchivo;
+    }else{
+        url = url_base + carpetaVisor + nombreArchivo;
+    }
+
     if ((flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) || rescision == 1) {
         if (excel == 1) {
             window.open(url, "_blank");
@@ -626,6 +636,7 @@ $(document).on('click', '.ver-archivo', function () {
 
 $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
     $('#contratoFirmadoModal').modal('toggle');
+    let bucket = $(this).attr("data-bucket");
     let flagEditar = $(this).attr("data-editar");
     let formularioArchivoscf = document.getElementById('formularioArchivoscf');
     let contenidoHTMLCF = '';
@@ -705,6 +716,10 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
         }
         document.getElementById('dialoSection').classList.add('modal-lg');
         let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/';
+
+        if(bucket == 1){
+            ruta = general_base_url + 'documentacion/archivo/';
+        }
 
         if(flagFusion ==1){
             const dataFusionDes = await totalSuperficieFusion(idLote, 1);
