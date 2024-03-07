@@ -110,7 +110,7 @@ class Pagos extends CI_Controller
   public function getDatosNuevasAContraloria(){
     $proyecto = $this->input->post('proyecto');  
     $condominio = $this->input->post('condominio');  
-    $modoSubida = $this->input->post('modoSubida');
+    $modoSubida = $this->input->post('modoSubida'); 
     $dat =  $this->Pagos_model->getDatosNuevasAContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
         $dat[$i]['pa'] = 0;
@@ -324,10 +324,11 @@ class Pagos extends CI_Controller
       }
   }
 
-  public function getDatosNuevasRContraloria(){
+  public function getDatosNuevasRemanenteContraloria(){
     $proyecto = $this->input->post('proyecto');  
-    $condominio =   $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasRContraloria($proyecto,$condominio);
+    $condominio =   $this->input->post('condominio');
+    $modoSubida = $this->input->post('modoSubida');  
+    $dat =  $this->Pagos_model->getDatosNuevasRemanenteContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }
@@ -384,7 +385,8 @@ class Pagos extends CI_Controller
   public function getDatosNuevasFContraloria(){
     $proyecto = $this->input->post('proyecto');  
     $condominio =   $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio);
+    $modoSubida = $this->input->post('modoSubida');
+    $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }

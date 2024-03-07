@@ -355,7 +355,7 @@ function getDataRemanente(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasRContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/" ,
             type: "POST",
             cache: false,
             data :{

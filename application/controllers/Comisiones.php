@@ -1152,8 +1152,8 @@ class Comisiones extends CI_Controller
     echo json_encode($respuesta);
   }
   
-  public function getDatosNuevasRContraloria($proyecto,$condominio){
-    $dat =  $this->Comisiones_model->getDatosNuevasRContraloria($proyecto,$condominio)->result_array();
+  public function getDatosNuevasRemanenteContraloria($proyecto,$condominio){
+    $dat =  $this->Comisiones_model->getDatosNuevasRemanenteContraloria($proyecto,$condominio)->result_array();
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }
