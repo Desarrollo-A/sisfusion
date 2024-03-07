@@ -301,7 +301,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                               <button data-toggle="tooltip" data-placement="top" title="Visualizar archivo"' +
                 '                               class="btn-data btn-sky ver-archivo" data-idPxl="' + idArchivo + '" ' +
                 '                               data-nomArchivo="' + elemento.rescisionArchivo + '" data-nombreOriginalLote="' + elemento.nombreLote + '"' +
-                '                               data-rescision="1"><i class="fas fa-eye"></i></button>' +
+                '                               data-rescision="1" data-bucket="'+ elemento.bucket +'" data-rescisioncl="' + elemento.rescisioncl + '"><i class="fas fa-eye"></i></button>' +
                 '                           </div>' +
                 '                        </div>';
 
@@ -455,9 +455,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("flagEditarRescision_"+m, flagEditarRescision);
             }
             data.append("countArchResi",idsArchivos.length);
-            if (editarFile == 1) {
-                data.append('rescisionArchivo[]', rescisionArchivos);
-            }
+            data.append('rescisionArchivo[]', rescisionArchivos);
         }
         console.log(flagEnviar);
         if (flagEnviar) {
@@ -542,9 +540,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                         data.append("archivoResicion_"+m, $(`#Resicion_${idsArchivos[m]}`)[0].files[0]);
                     }
                     data.append("countArchResi",idsArchivos.length);
-                    if (editarFile == 1) {
-                        data.append('rescisionArchivo[]', rescisionArchivos);
-                    }
+                    data.append('rescisionArchivo[]', rescisionArchivos);
                 }
                 $.ajax({
                     type: 'POST',
@@ -596,8 +592,11 @@ $(document).on("click", "#sendRequestButton", function (e) {
 $(document).on('click', '.ver-archivo', function () {
     let id_pxl = $(this).attr("data-idPxl");
     let nombreArchivo = $(this).attr("data-nomArchivo");
-    let nombreArchivoOriginal = $(this).attr("data-nombreOriginalLote");
     let rescision = $(this).attr("data-rescision");
+    if(rescision == 1){
+        let nombreArchivo = $(this).attr("data-rescisioncl");
+    }
+    let nombreArchivoOriginal = $(this).attr("data-nombreOriginalLote");
     let excel = $(this).attr("data-excel");
     let url_base = general_base_url + 'static/documentos/contratacion-reubicacion-temp/' + nombreArchivoOriginal + '/';
     let carpetaVisor = '';

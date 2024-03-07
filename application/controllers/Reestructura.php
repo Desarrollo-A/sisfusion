@@ -1993,7 +1993,9 @@ class Reestructura extends CI_Controller{
 
         }else{
             $arrayLotes = $nombreLoteOriginal;
-            $rescisionArchivo = $id_rol == 15 ? $_POST['rescisionArchivo'] : 0;
+            if(isset($_POST['rescisionArchivo'])){
+                $rescisionArchivo = $id_rol == 15 ? $_POST['rescisionArchivo'] : 0;
+            }
 
         }
         for ($j=0; $j < $numeroArchivos ; $j++) {
@@ -2041,67 +2043,67 @@ class Reestructura extends CI_Controller{
             $flagInterno = 0;
             for($i=0; $i<$arrayLength; $i++){
                 //$resultado = $this->upload->do_upload('archivo'.$i);
-                $file = $_FILES["archivo".$i];
+                if(isset($_FILES["archivo".$i])){
 
-                $old_file = $_POST['archivoEliminar'.$i];
+                    $file = $_FILES["archivo".$i];
 
-                if($file){
-                    $filename = $pre . "_" . $this->input->post('nombreLote'.$i) . "_" . date('dmY') . "." . pathinfo($file['name'], PATHINFO_EXTENSION);//$this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLoteOriginal, $idCliente[$i], $file["name"]);
+                    $old_file = $_POST['archivoEliminar'.$i];
 
-                    $uploaded = $this->uploadFileToBucket($file, $filename, $old_file);
+                    if($file){
+                        $filename = $pre . "_" . $this->input->post('nombreLote'.$i) . "_" . date('dmY') . "." . pathinfo($file['name'], PATHINFO_EXTENSION);//$this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLoteOriginal, $idCliente[$i], $file["name"]);
 
-                    print_r($uploaded);
+                        $uploaded = $this->uploadFileToBucket($file, $filename, $old_file);
 
-                    if($uploaded){
-                        $idpxl = $this->input->post('idLoteArchivo'.$i);
+                        if($uploaded){
+                            $idpxl = $this->input->post('idLoteArchivo'.$i);
 
+                            $updateDocumentData = array(
+                                $nameField => $filename,
+                                $columnFecha => date('Y-m-d H:i:s'),
+                                $columnModificado => $this->session->userdata('id_usuario'),
+                                "bucket" => 1,
+                            );
+
+                            $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
+                            $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_pxl';
+
+                            $result = $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $idpxl);
+
+                            if($result){
+                                $flagInterno += 1;
+                            }
+                        }
+
+                        //$archivoSubido = $this->upload->data();
+                        //$fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
+                        //$fileExtension = strtolower(end($fileNameCmps));
+                        //$fechaActual = date_create(date('Y-m-d H:i:s'));
+                        //$nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension;
+                        //rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
+                        //$idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
+                        //$idpxl = $this->input->post('idLoteArchivo'.$i);
+
+                        /*
                         $updateDocumentData = array(
-                            $nameField => $filename,
-                            $columnFecha => date('Y-m-d H:i:s'),
-                            $columnModificado => $this->session->userdata('id_usuario'),
-                            "bucket" => 1,
+                            $nameField => $nuevoNombre,
+                            $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
+                            $columnModificado => $this->session->userdata('id_usuario')
                         );
+                        */
 
+                        /*
                         $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
                         $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_pxl';
-
                         $result = $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $idpxl);
-
                         if($result){
-                            $flagInterno += 1;
+                            $flagInterno = $flagInterno + 1;
+                            if($editar==1){
+                                $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
+                                $this->eliminaArchivoServer($urlEliminar);
+                            }
                         }
+                            */
                     }
-
-                    //$archivoSubido = $this->upload->data();
-                    //$fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
-                    //$fileExtension = strtolower(end($fileNameCmps));
-                    //$fechaActual = date_create(date('Y-m-d H:i:s'));
-                    //$nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension;
-                    //rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
-                    //$idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
-                    //$idpxl = $this->input->post('idLoteArchivo'.$i);
-
-                    /*
-                    $updateDocumentData = array(
-                        $nameField => $nuevoNombre,
-                        $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
-                        $columnModificado => $this->session->userdata('id_usuario')
-                    );
-                    */
-
-                    /*
-                    $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
-                    $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_pxl';
-                    $result = $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $idpxl);
-                    if($result){
-                        $flagInterno = $flagInterno + 1;
-                        if($editar==1){
-                            $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
-                            $this->eliminaArchivoServer($urlEliminar);
-                        }
-                    }
-                        */
-                    
                 }
             }
             if($flagAction == 2 && $id_rol == 15){
@@ -2128,7 +2130,7 @@ class Reestructura extends CI_Controller{
 
 
                     if($file){
-                        $filename = $pre . "_" . $this->input->post('nombreLote'.$i) . "_" . date('dmY') . "." . pathinfo($file['name'], PATHINFO_EXTENSION);//$this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLoteOriginal, $idCliente[$i], $file["name"]);
+                        $filename = $pre . "_" . $nombreLoteOriginal . "_" . date('dmY') . "." . pathinfo($file['name'], PATHINFO_EXTENSION);//$this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLoteOriginal, $idCliente[$i], $file["name"]);
 
                         //$archivoSubido2 = $this->upload->data();
                         //$fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
@@ -2174,11 +2176,7 @@ class Reestructura extends CI_Controller{
             }
         }
 
-        if($flagInterno == $arrayLength){
-            print_r( json_encode(array('code' => 200)));
-        }else{
-            print_r( json_encode(array('code' => 400)));
-        }
+        print_r( json_encode(array('code' => 200)));
     }
 
     public function obtenerPropuestasXLote(){
@@ -2677,6 +2675,7 @@ class Reestructura extends CI_Controller{
 
     public function uploadFileToBucket($file, $filename, $old_file=null){
         if($file){
+
             $object = $this->bucket->upload(
                 fopen($file["tmp_name"], 'r'),
                 [
@@ -2684,7 +2683,7 @@ class Reestructura extends CI_Controller{
                 ]
             );
 
-            if($old_file){
+            if($old_file && $old_file != $filename){
                 $old_object = $this->bucket->object($old_file);
 
                 if($old_object->exists()){
