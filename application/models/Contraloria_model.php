@@ -605,7 +605,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function getAllDsByLote($idLote) {
         $query = $this->db->query("	SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
-			cl.apellido_materno, cl.status, cl.idLote, fechaApartado, fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
+			cl.apellido_materno, cl.status, cl.idLote, fechaApartado, cl.fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
 			cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
 			cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
 			FROM deposito_seriedad AS ds

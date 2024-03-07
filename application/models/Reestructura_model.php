@@ -841,7 +841,8 @@ class Reestructura_model extends CI_Model
                 cl.fechaApartado,
                 sl.nombre estatusLote,
                 sc.nombreStatus estatusContratacion,
-                mo.descripcion detalleUltimoEstatus
+                mo.descripcion detalleUltimoEstatus,
+                hl.modificado ultiModificacion
             FROM lotes lo
                 INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -853,6 +854,8 @@ class Reestructura_model extends CI_Model
                 INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
                 INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
                 INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+                LEFT JOIN historial_lotes hl ON hl.idLote = lo.idLote AND hl.idHistorialLote = (
+	            SELECT MAX(hl2.idHistorialLote) FROM historial_lotes hl2 WHERE hl2.idLote = hl.idLote)
             WHERE lo.status = 1
             ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote"
         )->result_array();
@@ -1079,7 +1082,8 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
         re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
         STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
-        STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
+        STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
+        hpl.fecha_modificacion fechaUltimoMovimiento
         FROM propuestas_x_lote pxl
         INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -1088,11 +1092,14 @@ class Reestructura_model extends CI_Model
         LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
 		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
-        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre
+		LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
+        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
+        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre, hpl.fecha_modificacion
         UNION ALL
         SELECT 'Reubicación' tipo_proceso, tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
         STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
-        STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
+        STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
+        hpl.fecha_modificacion fechaUltimoMovimiento
         FROM (
         SELECT lf1.idLotePvOrigen, re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, 
         lo.referencia referenciaOrigen, lo.idLote idLoteOrigen, CASE WHEN (lo.validacionEnganche = 'NULL' OR lo.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion
@@ -1106,7 +1113,9 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
 		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106
-        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion
+        LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = tb.idLotePvOrigen AND hpl.idHistoPreproceso = (
+        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
+        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion, hpl.fecha_modificacion
         ORDER BY nombreLoteDestino")->result_array();
     }
 
