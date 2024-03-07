@@ -948,7 +948,7 @@ $(document).on("change", "#loteAOcupar", function(e){
             return;
     }else{
         let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
-        if(conteoRepeticiones>=2 && idProyectoCO==21){
+        if(conteoRepeticiones > 2 && idProyectoCO==21){
             alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
             return;
         }
@@ -1101,9 +1101,9 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
-                        <input type="checkbox" name="idLotes"  value="${idLote}">
+                        <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">
                         
-                        <span class="w-100 d-flex justify-between">
+                        <span class="w-100 d-flex justify-between"> 
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
                         </span>
                         <span class="w-100 d-flex justify-between">
@@ -1141,9 +1141,7 @@ $(document).on("submit", "#formReubicacion", function(e){
             data = JSON.parse(data);
             alerts.showNotification("top", "right", ""+data.message+"", ""+data.color+"");
             $('#spiner-loader').addClass('hide');
-            if(!data.message == 'ERROR'){
-                $('#reubicacionClientes').DataTable().ajax.reload();
-            }
+            $('#reubicacionClientes').DataTable().ajax.reload();
             hideModal();
         },
         error: function( data ){
@@ -1616,7 +1614,7 @@ const botonesAccionReubicacion = (d) => {
                     <i class="fas fa-map-marker"></i>
                 </button>`;
 
-    const BTN_DESHACER_REESTRUCURA = `<button class="btn-data btn-warning deshacer-reestructura"
+    const BTN_DESHACER_PREPROCESO = `<button class="btn-data btn-warning deshacer-preproceso"
                     data-toggle="tooltip" 
                     data-placement="left"
                     title="DESHACER LA REESTRUCTURA"
@@ -1682,14 +1680,14 @@ const botonesAccionReubicacion = (d) => {
     let BUTTONREGRESO = '';
 
     if(d.idStatusLote == 17)
-        BUTTONREGRESO = BTN_DESHACER_REESTRUCURA;
+        BUTTONREGRESO = BTN_DESHACER_PREPROCESO;
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
         return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASLP) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
-            return BTN_PROPUESTAS + BTN_INFOCLIENTE;
+            return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
         else if (d.idLoteXcliente == null && d.idStatusLote == 17){
             return BTN_INFOCLIENTE + BUTTONREGRESO;
         }
@@ -1700,7 +1698,7 @@ const botonesAccionReubicacion = (d) => {
     }
     if (idEstatusPreproceso === 1 && id_rol_general == 7){ // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
-    }
+    } 
 
     if (idEstatusPreproceso === 2 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general) && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
         if(flagFusion==1){
@@ -2001,7 +1999,7 @@ const obtenerSedesLista = () =>{
 
 
 
-$(document).on('click', '.deshacer-reestructura', function(){
+$(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
     let id_lote = $(this).attr('data-idlote');
@@ -2009,7 +2007,7 @@ $(document).on('click', '.deshacer-reestructura', function(){
     arrayManejo['id_lote'] = id_lote;
     arrayManejo['id_cliente'] = id_cliente;
     arrayDeshacerRees.push(arrayManejo);
-    $('#tituloDeshacer').text('¿Deseas deshacer la reestrucura del lote '+ id_lote + ' ?' );
+    $('#tituloDeshacer').text('¿Desea deshacer la reestructura del lote '+ id_lote + ' ?' );
     $('#textDeshacer').text('Se revertiran los cambios al hacer este lote como reestrucura');
     $('#deshacerReestrucura').modal('toggle');
 });
