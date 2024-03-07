@@ -1130,4 +1130,61 @@ class Reporte_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getListadoDeVentas($beginDate, $endDate) {
+        $id_usuario = $this->session->userdata('id_usuario');
+        $id_lider = $this->session->userdata('id_lider');
+        $id_rol = $this->session->userdata('id_rol');
+        $filtroRol = "";
+        if ($id_rol == 7) // CONSULTA UN ASESOR
+            $filtroRol = "AND cl.id_asesor = $id_usuario";
+        else if ($id_rol == 9) // CONSULTA UN COORDINADOR
+            $filtroRol = "AND (cl.id_asesor = $id_usuario OR cl.id_coordinador = $id_usuario)";
+        else if ($id_rol == 3) // CONSULTA UN GERENTE
+            $filtroRol = "AND cl.id_gerente = $id_usuario";
+        else if ($id_rol == 6) // CONSULTA UN ASISTENTE DE GERENTE
+            $filtroRol = "AND cl.id_gerente = $id_lider";
+        else if ($id_rol == 5) // CONSULTA UN ASISTENTE DE SUBDIRECTOR
+            $filtroRol = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider)";
+
+        return $this->db->query(
+            "SELECT 
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+                cl.fechaApartado,
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+                CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+                sc.nombreStatus estatusContratacion,
+                mo.descripcion detalleMovimiento,
+                sl.nombre estatusLote,
+                sl.color coloStatusLote, sl.background_sl as fondoStatuslote,
+                CASE WHEN lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) THEN 'Sí' ELSE 'No' END estaConAsesor,
+                CASE WHEN lo.idMovimiento IN (85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) THEN 'Rechazado' WHEN lo.idMovimiento IN (31) THEN 'Nuevo' ELSE 'No aplica' END detalleEstatus
+            FROM lotes lo
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' $filtroRol
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+            LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+            LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+            LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+            LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+            LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+            INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+            INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+            WHERE 
+                lo.status = 1 
+            ORDER BY
+                cl.fechaApartado
+            "
+        )->result_array();
+    }
+
 }

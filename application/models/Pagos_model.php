@@ -95,13 +95,24 @@ class Pagos_model extends CI_Model {
         return true;
     }
 
-    function getDatosNuevasAContraloria($proyecto, $condominio){
+    function getDatosNuevasAContraloria($proyecto, $condominio, $modoSubida){
+
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
         }
         else { // CONTRALORÍA
+
+            if($modoSubida == 0){ //Reestructura
+                $ooam = "AND com.ooam IN (0)";
+                $tipo = "AND u.tipo = 2";
+            }else{ //Comercialización
+                $ooam = "AND com.ooam NOT IN (0)";
+                $tipo = "AND u.tipo = 1";
+            }
+            
             $filtro = "pci1.estatus IN (4)";
+
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
             else
@@ -117,12 +128,12 @@ class Pagos_model extends CI_Model {
 
         pci1.estatus, CONVERT(VARCHAR,pci1.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, cp.codigo_postal
             FROM pago_comision_ind pci1 
-            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8) 
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (1,0) 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (3)
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (3) $tipo
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
             INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
@@ -244,17 +255,28 @@ class Pagos_model extends CI_Model {
         return $query->result_array();
     }
     
-    function getDatosNuevasRContraloria($proyecto,$condominio){
-        if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
-            $filtro = " pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
+    function getDatosNuevasRemanenteContraloria($proyecto,$condominio,$modoSubida){
+        if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
+            $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
-        } else { // CONTRALORÍA
-            $filtro = " pci1.estatus IN (4)";
+        }
+        else { // CONTRALORÍA
+
+            if($modoSubida != 0){ //Reestructura
+                $ooam = "AND com.ooam IN (0)";
+                $tipo = "AND u.tipo = 2";
+            }else{ //Comercialización
+                $ooam = "AND com.ooam NOT IN (0)";
+                $tipo = "AND u.tipo = 1";
+            }
+            
+            $filtro = "pci1.estatus IN (4)";
+
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
-                else
-                    $whereFiltro = "AND co.idCondominio  = $condominio";
-            }
+            else
+                $whereFiltro = "AND co.idCondominio  = $condominio";       
+        }
 
             $cmd = "SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,(CASE WHEN com.ooam = 1 THEN ' (OOAM)' ELSE oxcest.nombre END) estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
             com.comision_total, com.porcentaje_decimal, 
@@ -268,7 +290,7 @@ class Pagos_model extends CI_Model {
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (4)
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (4) $tipo
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
             INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
@@ -358,17 +380,28 @@ class Pagos_model extends CI_Model {
         WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
     }
     
-    function getDatosNuevasFContraloria($proyecto,$condominio){
-        if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
-            $filtro = " pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
+    function getDatosNuevasFContraloria($proyecto,$condominio,$modoSubida){
+        if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
+            $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
-        } else { // CONTRALORÍA
-            $filtro = " pci1.estatus IN (4)";
+        }
+        else { // CONTRALORÍA
+
+            if($modoSubida != 0){ //Reestructura
+                $ooam = "AND com.ooam IN (0)";
+                $tipo = "AND u.tipo = 2";
+            }else{ //Comercialización
+                $ooam = "AND com.ooam NOT IN (0)";
+                $tipo = "AND u.tipo = 1";
+            }
+            
+            $filtro = "pci1.estatus IN (4)";
+
             if($condominio == 0)
                 $whereFiltro = "AND co.idResidencial  = $proyecto";
-                else
-                    $whereFiltro = "AND co.idCondominio  = $condominio";
-            }
+            else
+                $whereFiltro = "AND co.idCondominio  = $condominio";       
+        }
 
             $cmd = "SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,(CASE WHEN com.ooam = 1 THEN ' (OOAM)' ELSE oxcest.nombre END) estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
             com.comision_total, com.porcentaje_decimal, 
@@ -382,7 +415,7 @@ class Pagos_model extends CI_Model {
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2) $tipo
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
             INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23

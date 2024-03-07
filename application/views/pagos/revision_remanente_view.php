@@ -75,6 +75,22 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div>
+                                                        <h3 class="card-title center-align">Cambio de modalidad</h3>  
+                                                    </div>
+                                                    <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
+                                                        <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                                            <div>
+                                                                <div class="radio_container w-100">
+                                                                    <input class="d-none generate" type="radio" name="modoSubida" id="condominioM" checked value="1">
+                                                                    <label for="condominioM" class="w-50">Reestructura</label>
+                                                                    <input class="d-none find-results" type="radio" name="modoSubida" id="loteM" value="0">
+                                                                    <label for="loteM" class="w-50">Comercialización</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="row aligned-row d-flex align-end">
                                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">          
                                                             <div class="form-group">

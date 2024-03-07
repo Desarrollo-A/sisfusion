@@ -1,8 +1,8 @@
 <?php
-   // require_once 'static/autoload.php';
+    require_once 'static/autoload.php';//linea debe descomentarse en PROD
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    require '../../vendor/autoload.php';
+//    require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
 class Corrida extends CI_Controller {
 
@@ -2129,7 +2129,7 @@ legend {
 
 
 	function getResidencialDisponible() {
-        $modalidad = 1;//modo= 0: mostrara todas las sedes - modo = 1: mostrar sólo león
+        $modalidad = 0;//modo= 0: mostrara todas las sedes - modo = 1: mostrar sólo león
 		$residenciales = $this->Corrida_model->getResidencialDis($modalidad);
 
 		if($residenciales != null) {
