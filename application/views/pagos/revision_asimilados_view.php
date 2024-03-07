@@ -76,7 +76,7 @@
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <h3 class="text-center"><b>Cambio de modalidad</b></h3>  
+                                                        <h3 class="card-title center-align">Cambio de modalidad</h3>  
                                                     </div>
                                                     <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
                                                         
