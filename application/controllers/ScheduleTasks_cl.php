@@ -1,5 +1,4 @@
-<?php
-class ScheduleTasks_cl extends CI_Controller {
+<?php class ScheduleTasks_cl extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
     $this->load->model(array('scheduleTasks_model', 'Comisiones_model', 'asesor/Asesor_model', 'General_model', 'Contraloria_model'));
@@ -8,8 +7,7 @@ class ScheduleTasks_cl extends CI_Controller {
 		$this->load->database('default');
 		$this->load->library('email');
     date_default_timezone_set('America/Mexico_City');
-//    $this->gphsis = $this->load->database('GPHSIS', TRUE);
-    $this->load->database('default');
+    $this->gphsis = $this->load->database('GPHSIS', TRUE);
 		
 	}
 
@@ -50,167 +48,181 @@ class ScheduleTasks_cl extends CI_Controller {
 	
 	
 	
-    public function sendRv5(){
-        $datos["sendApartados_old"]= $this->scheduleTasks_model->sendMailVentasRetrasos();
+  public function sendRv5(){
+    $datos["sendApartados_old"]= $this->scheduleTasks_model->sendMailVentasRetrasos();
+
+    $contenido[] = array();
+    foreach ($datos['sendApartados_old'] as $key  =>  $valor) {
+        $fechaHoy = $valor->fechaApartado;
+        $fechaDes = date('Y-m-d');
+        $arregloFechas2 = array();
+        $a = 0;
+
+        while($fechaHoy <= $fechaDes) {
+          $hoy_strtotime = strtotime($fechaHoy);
+          $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
+          $sig_fecha = date("Y-m-d", $sig_strtotime );
+          $excluir_dia = date('D', $sig_strtotime);
+          $excluir_feriado = date('d-m', $sig_strtotime);
+
+          if($excluir_dia == "Sat" || $excluir_dia == "Sun" || $excluir_feriado == "01-01" || $excluir_feriado == "06-02" ||
+              $excluir_feriado == "20-03" || $excluir_feriado == "01-05" || $excluir_feriado == "16-09" || $excluir_feriado == "20-11" ||
+              $excluir_feriado == "25-12") {
+          } else {
+          $arregloFechas2[$a]= $sig_fecha;
+          $a++;
+        }
+
+        $fechaHoy = $sig_fecha;
+      }
+
+      if (count($arregloFechas2)>=5) {
+        $contenido[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
+                                  'nombreCondominio'  =>  $valor->nombreCondominio,
+                                  'nombreLote'        =>  $valor->nombreLote,
+                                  'fechaApartado'     =>  $valor->fechaApartado,
+                                  'nomCliente'        =>  $valor->nc." ".$valor->appc." ".$valor->apmc,
+                                  'gerente'           =>  $valor->gerente,
+                                  'coordinador'       =>  $valor->coordinador,
+                                  'asesor'            =>  $valor->asesor,
+                                  'diasAcumulados'    =>  count($arregloFechas2) );
+      }
+    }
+
+    $encabezados = [
+        'nombreResidencial' =>  'PLAZA',
+        'nombreCondominio'  =>  'CONDOMINIO',
+        'nombreLote'        =>  'LOTE',
+        'fechaApartado'     =>  'FECHA APARTADO',
+        'nomCliente'        =>  'CLIENTE',
+        'gerente'           =>  'GERENTE',
+        'coordinador'       =>  'COORDINADOR',
+        'asesor'            =>  'ASESOR',
+        'diasAcumulados'    =>  'DÍAS ACUMULADOS SIN INTEGRAR EXPEDIENTE'
+    ];
+
+    $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to(['mariela.sanchez@ciudadmaderas.com',
+            'rigel.silva@prohabitacion.com',
+            'rafael.bautista@ciudadmaderas.com',
+            'vicky.paulin@ciudadmaderas.com',
+            'adriana.rodriguez@ciudadmaderas.com',
+            'aurea.garcia@ciudadmaderas.com',
+            'valeria.palacios@ciudadmaderas.com',
+            'juanamaria.guzman@ciudadmaderas.com',
+            'adriana.perez@ciudadmaderas.com',
+            'fernanda.monjaraz@ciudadmaderas.com',
+            'grisell.malagon@ciudadmaderas.com',
+            'stephanie.quintero@ciudadmaderas.com',
+            'luz.angeles@ciudadmaderas.com',
+            'leydi.sanchez@ciudadmaderas.com',
+            'monserrat.cazares@ciudadmaderas.com',
+            'danae.perez@ciudadmaderas.com',
+            'nestor.vera@ciudadmaderas.com',
+            'dirce.pardenilla@ciudadmaderas.com',
+            'nohemi.castillo@ciudadmaderas.com',
+            'esmeralda.vega@ciudadmaderas.com',
+            'yaretzi.rosales@ciudadmaderas.com',
+            'jorge.mugica@ciudadmaderas.com',
+            'leonardo.aguilar@ciudadmaderas.com',
+            'carolina.guerrero@ciudadmaderas.com',
+            'victoria.diaz@ciudadmaderas.com'])
+        ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
+        ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
+            'encabezados' => $encabezados,
+            'contenido' => $contenido
+        ], true));
+
+    $this->email->send();
+  } 
+
+
+
+public function eventBloqueos(){
+  
+  $datos= array();
+  $datos= $this->scheduleTasks_model->getBloqueos();
     
-        $contenido[] = array();
-        foreach ($datos['sendApartados_old'] as $key  =>  $valor) {
-            $fechaHoy = $valor->fechaApartado;
-            $fechaDes = date('Y-m-d');
-            $arregloFechas2 = array();
-            $a = 0;
+  foreach ($datos as $bloqueosAct){
+	  
+  if($bloqueosAct[0]['idStatusLote'] <> 8) {
 
-            while($fechaHoy <= $fechaDes) {
-              $hoy_strtotime = strtotime($fechaHoy);
-              $sig_strtotime = strtotime('+1 days', $hoy_strtotime);
-              $sig_fecha = date("Y-m-d", $sig_strtotime );
-              $excluir_dia = date('D', $sig_strtotime);
-              $excluir_feriado = date('d-m', $sig_strtotime);
+    $data=array();
+    $data["idLote"]=$bloqueosAct[0]['idLote'];
+		
+    $descAct = $this->scheduleTasks_model->updateStatusBloqueo($data);
 
-              if($excluir_dia == "Sat" || $excluir_dia == "Sun" || $excluir_feriado == "01-01" || $excluir_feriado == "06-02" ||
-                  $excluir_feriado == "20-03" || $excluir_feriado == "01-05" || $excluir_feriado == "16-09" || $excluir_feriado == "20-11" ||
-                  $excluir_feriado == "25-12") {
-              } else {
-              $arregloFechas2[$a]= $sig_fecha;
-              $a++;
-            }
-
-            $fechaHoy = $sig_fecha;
-          }
-
-          if (count($arregloFechas2)>=5) {
-            $contenido[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
-                                      'nombreCondominio'  =>  $valor->nombreCondominio,
-                                      'nombreLote'        =>  $valor->nombreLote,
-                                      'fechaApartado'     =>  $valor->fechaApartado,
-                                      'nomCliente'        =>  $valor->nc." ".$valor->appc." ".$valor->apmc,
-                                      'gerente'           =>  $valor->gerente,
-                                      'coordinador'       =>  $valor->coordinador,
-                                      'asesor'            =>  $valor->asesor,
-                                      'diasAcumulados'    =>  count($arregloFechas2) );
-          }
-        }
-
-        $encabezados = [
-            'nombreResidencial' =>  'PLAZA',
-            'nombreCondominio'  =>  'CONDOMINIO',
-            'nombreLote'        =>  'LOTE',
-            'fechaApartado'     =>  'FECHA APARTADO',
-            'nomCliente'        =>  'CLIENTE',
-            'gerente'           =>  'GERENTE',
-            'coordinador'       =>  'COORDINADOR',
-            'asesor'            =>  'ASESOR',
-            'diasAcumulados'    =>  'DÍAS ACUMULADOS SIN INTEGRAR EXPEDIENTE'
-        ];
-
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            /*->to(['mariela.sanchez@ciudadmaderas.com',
-                'rigel.silva@prohabitacion.com',
-                'rafael.bautista@ciudadmaderas.com',
-                'vicky.paulin@ciudadmaderas.com',
-                'adriana.rodriguez@ciudadmaderas.com',
-                'aurea.garcia@ciudadmaderas.com',
-                'valeria.palacios@ciudadmaderas.com',
-                'juanamaria.guzman@ciudadmaderas.com',
-                'adriana.perez@ciudadmaderas.com',
-                'fernanda.monjaraz@ciudadmaderas.com',
-                'grisell.malagon@ciudadmaderas.com',
-                'stephanie.quintero@ciudadmaderas.com',
-                'luz.angeles@ciudadmaderas.com',
-                'irene.vallejo@ciudadmaderas.com',
-                'leydi.sanchez@ciudadmaderas.com',
-                'monserrat.cazares@ciudadmaderas.com',
-                'danae.perez@ciudadmaderas.com',
-                'nestor.vera@ciudadmaderas.com',
-                'dirce.pardenilla@ciudadmaderas.com',
-                'nohemi.castillo@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com',
-                'yaretzi.rosales@ciudadmaderas.com',
-                'jorge.mugica@ciudadmaderas.com',
-                'leonardo.aguilar@ciudadmaderas.com',
-                'carolina.guerrero@ciudadmaderas.com',
-                'victoria.diaz@ciudadmaderas.com '])*/
-            ->subject('Acumulado de lotes sin integrar Expediente al: '.date("Y-m-d H:i:s"))
-            ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
-                'encabezados' => $encabezados,
-                'contenido' => $contenido
-            ], true));
+  } 
+ }
+}
 
 
-        $this->email->send();
+
+
+public function mailBloqueosAfter45(){
+  $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
+
+  $contenido[] = array();
+  foreach ($datos["mailbloqueos"] as $key  =>  $valor) {
+    $fechaBloqueo = date_create($valor->create_at);
+    $fechaHoy = date_create(date("Y-m-d H:i:s"));
+
+    $diff=date_diff($fechaBloqueo,$fechaHoy);
+    $countDias = ($diff->format("%a") + 1);
+
+    if ($countDias>=45) {
+      //array_push($contenido, json_decode(json_encode($value), true));
+      $contenido[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
+                                'nombreCondominio'  =>  $valor->nombreCondominio,
+                                'nombreLote'        =>  $valor->nombreLote,
+                                'sup'               =>  $valor->sup,
+                                'gerente'           =>  $valor->gerente,
+                                'coordinador'       =>  $valor->coordinador,
+                                'asesor'            =>  $valor->asesor,
+                                'create_at'         =>  $valor->create_at,
+                                'countDias'         =>  $countDias );
     }
+  }
 
-    public function eventBloqueos(){
-        $datos= array();
+  $encabezados = [
+      'nombreResidencial' =>  'PROYECTO',
+      'nombreCondominio'  =>  'CONDOMINIO',
+      'nombreLote'        =>  'LOTE',
+      'sup'               =>  'SUPERFICIE',
+      'gerente'           =>  'GERENTE',
+      'coordinador'       =>  'COORDINADOR',
+      'asesor'            =>  'ASESOR',
+      'create_at'         =>  'FECHA BLOQUEO',
+      'countDias'         =>  'DÍAS ACUMULADOS CON ESTATUS BLOQUEADO'
+  ];
 
-        $datos= $this->scheduleTasks_model->getBloqueos();
+  $this->email
+      ->initialize()
+      ->from('Ciudad Maderas')
+      ->to('contraloria.corporativa6@ciudadmaderas.com')
+      ->subject('LOTES BLOQUEADOS - CIUDAD MADERAS')
+      ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
+          'encabezados' => $encabezados,
+          'contenido' => $contenido
+      ], true));
 
-        foreach ($datos as $bloqueosAct){
-            if($bloqueosAct[0]['idStatusLote'] <> 8) {
+  $this->email->send();
+}
 
-            $data=array();
-            $data["idLote"]=$bloqueosAct[0]['idLote'];
 
-            $descAct = $this->scheduleTasks_model->updateStatusBloqueo($data);
+	
+	
 
-            }
-        }
-    }
 
-    public function mailBloqueosAfter45(){
-        $datos["mailbloqueos"]= $this->scheduleTasks_model->sendMailBloqueosDireccion();
-    
-        $contenido[] = array();
-        foreach ($datos["mailbloqueos"] as $key  =>  $valor) {
-          $fechaBloqueo = date_create($valor->create_at);
-          $fechaHoy = date_create(date("Y-m-d H:i:s"));
 
-          $diff=date_diff($fechaBloqueo,$fechaHoy);
-          $countDias = ($diff->format("%a") + 1);
 
-          if ($countDias>=45) {
-            //array_push($contenido, json_decode(json_encode($value), true));
-            $contenido[$key] = array( 'nombreResidencial' =>  $valor->nombreResidencial,
-                                      'nombreCondominio'  =>  $valor->nombreCondominio,
-                                      'nombreLote'        =>  $valor->nombreLote,
-                                      'sup'               =>  $valor->sup,
-                                      'gerente'           =>  $valor->gerente,
-                                      'coordinador'       =>  $valor->coordinador,
-                                      'asesor'            =>  $valor->asesor,
-                                      'create_at'         =>  $valor->create_at,
-                                      'countDias'         =>  $countDias );
-          }
-        }
-
-        $encabezados = [
-            'nombreResidencial' =>  'PROYECTO',
-            'nombreCondominio'  =>  'CONDOMINIO',
-            'nombreLote'        =>  'LOTE',
-            'sup'               =>  'SUPERFICIE',
-            'gerente'           =>  'GERENTE',
-            'coordinador'       =>  'COORDINADOR',
-            'asesor'            =>  'ASESOR',
-            'create_at'         =>  'FECHA BLOQUEO',
-            'countDias'         =>  'DÍAS ACUMULADOS CON ESTATUS BLOQUEADO'
-        ];
-
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            //->to('contraloria.corporativa6@ciudadmaderas.com')
-            ->subject('LOTES BLOQUEADOS - CIUDAD MADERAS')
-            ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
-                'encabezados' => $encabezados,
-                'contenido' => $contenido
-            ], true));
-
-        $this->email->send();
-    }
 //---------------------------------------- T A S K   C O M I S I O N E S ------------------------------------------
+
+
+
+
 
 function insertar_gph_maderas_normal(){ //HACER INSERT DE LOS LOTES EN 0 Y PASARLOS A 1 VENTA ORDINARIA
 
@@ -900,55 +912,51 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
 /*****Fncion para enviar el correo de las evidencias rechazadas******/
     function sendMailReportER()
     {
-      $data_request = null;
-      $data_enviar_mail = NULL;
       $users_array = $this->scheduleTasks_model->getUsersList();
-      
       for ($i = 0; $i < count($users_array); $i++) {
         $rol = explode(", ", $users_array[$i]['id_sede']);
         $result = "'" . implode("', '", $rol) . "'";
-        if($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 20){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR COBRANZA PARA SUBDIRECTOR (19) Y GERNETE MKTD (20)
+        if ($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 20){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR COBRANZA PARA SUBDIRECTOR (19) Y GERNETE MKTD (20)
           $data_rechazo_cobranza = $this->scheduleTasks_model->getRejectList($result, '10', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_sEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
-          
           if (count($data_rechazo_cobranza) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_cobranza, 'REPORTE SEMANA ' . date("W") . ' COBRANZA ', $users_array[$i]['id_rol']);
             //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente (cobranza).';
+              $data_request['msg'] = 'Correo enviado correctamente.';
             } else {
-              $data_request['msg'] = 'Correo no enviado (cobranza).';
+              $data_request['msg'] = 'Correo no enviado.';
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo (cobranza).';
+            $data_request['msg'] = 'No hay registros para enviar un correo.';
           }
         }
         if ($users_array[$i]['id_rol'] == 19 || $users_array[$i]['id_rol'] == 28){ // MJ: SE TRAEN LOS RECHAZOS HECHOS POR CONTRALORÍA PARA SUBDIRECTOR (19) Y COBRANZA (28)
           $data_rechazo_contraloria = $this->scheduleTasks_model->getRejectList($result, '20', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_SEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
-          
           if (count($data_rechazo_contraloria) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_contraloria, 'REPORTE SEMANA ' . date("W") . ' CONTRALORÍA ', $users_array[$i]['id_rol']);
+            //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente (controlaria).';
+              $data_request['msg'] = 'Correo enviado correctamente.';
             } else {
-              $data_request['msg'] = 'Correo no enviado (controlaria).';
+              $data_request['msg'] = 'Correo no enviado.';
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo (controlaria).';
+            $data_request['msg'] = 'No hay registros para enviar un correo.';
           }
         }
         if ($users_array[$i]['id_rol'] == 32){ // MJ: SE TRAEN LOS LOTES DONDE SE INDICÓ QUE NO ERA UNA VENTA DE MKTD
           $data_rechazo_mktd = $this->scheduleTasks_model->getRejectList($result, '0', $users_array[$i]['id_rol']); // MJ: MANDA 3 PARÁMETRROS; ID_SEDE, TIPO_RECHAZO (10 COBRANZA | 20 CONTRALORÍA)
-
           if (count($data_rechazo_mktd) > 0) {
             $data_enviar_mail = $this->notifyRejEv($users_array[$i]['correo'], $data_rechazo_mktd, 'REPORTE SEMANA ' . date("W") . ' CONTRALORÍA (ELIMINADOS DE LA LISTA MKTD)', $users_array[$i]['id_rol']);
+            //echo $data_enviar_mail;
             if ($data_enviar_mail > 0) {
-              $data_request['msg'] = 'Correo enviado correctamente (MKTD).';
+              $data_request['msg'] = 'Correo enviado correctamente.';
             } else {
-              $data_request['msg'] = 'Correo no enviado (MKTD).';
+              $data_request['msg'] = 'Correo no enviado.';
 
             }
           } else {
-            $data_request['msg'] = 'No hay registros para enviar un correo (MKTD).';
+            $data_request['msg'] = 'No hay registros para enviar un correo.';
           }
         }
         if ($data_request != null) {
@@ -959,78 +967,113 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
       }
     }
 
-    public function notifyRejEv($correo, $data_eviRec, $subject, $userType) {
-        $encabezados = ($userType === 32)
-            ? [
-                'idLote'            =>  'ID LOTE',
-                'nombreLote'        =>  'LOTE',
-                'observacion'       =>  'COMENTARIO',
-                'nombreCliente'     =>  'CLIENTE',
-                'nombreSolicitante' =>  'USUARIO',
-                'fecha_creacion'    =>  'FECHA'
-            ]
-            : [
-                'weekNumber'    =>  'Número semana',
-                'plaza'         =>  'Plaza',
-                'nombreSolicitante' =>  'Solicitante',
-                'nombreLote'    =>  'Lote',
-                'comentario_autorizacion'   =>  'Comentario',
-                'fecha_creacion'=>  'Fecha creación',
-                'fechaRechazo'  =>  'Fecha rechazo'
-            ];
-
-        $comentario = ($userType === 32)
-            ? '¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias donde se removió <b>marketing digital</b> de la venta, te invito a leer las observaciones.'
-            : '¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias rechazadas por <b>cobranza/contraloría</b>, te invito a leer las observaciones. Recuerda que deben ser corregidas a más tardar los jueves a las 12:00 PM, con esto ayudas a que el proceso en cobranza sea en tiempo y forma, dando como resultado el cobro a tiempo de las comisiones.';
-
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            // ->to($correo)
-            ->subject($subject)
-            ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
-                'encabezados' => $encabezados,
-                'contenido' => $data_eviRec,
-                'comentario' => $comentario
-            ], true));
-
-        $result = $this->email->send();
-
-        return ($result) ? true : $this->email->print_debugger();
-    }
-
-  public function mailContentComptrollerNotification()
+  public function notifyRejEv($correo, $data_eviRec, $subject, $userType) 
   {
-    $date = date("Y-m-d");
-    $mod_date = strtotime($date."- 1000 days");
-    $finalDate = date("Y-m-d", $mod_date);
-    $data_second_report = $this->scheduleTasks_model->getReportInformation(2, $finalDate);
+    $encabezados = ($userType === 32)
+        ? [
+            'idLote'            =>  'ID LOTE',
+            'nombreLote'        =>  'LOTE',
+            'observacion'       =>  'COMENTARIO',
+            'nombreCliente'     =>  'CLIENTE',
+            'nombreSolicitante' =>  'USUARIO',
+            'fecha_creacion'    =>  'FECHA'
+        ]
+        : [
+            'weekNumber'    =>  'Número semana',
+            'plaza'         =>  'Plaza',
+            'nombreSolicitante' =>  'Solicitante',
+            'nombreLote'    =>  'Lote',
+            'comentario_autorizacion'   =>  'Comentario',
+            'fecha_creacion'=>  'Fecha creación',
+            'fechaRechazo'  =>  'Fecha rechazo'
+        ];
 
+    $comentario = ($userType === 32)
+        ? '¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias donde se removió <b>marketing digital</b> de la venta, te invito a leer las observaciones.'
+        : '¿Cómo estás?, espero que bien, te adjunto el reporte semanal de las evidencias rechazadas por <b>cobranza/contraloría</b>, te invito a leer las observaciones. Recuerda que deben ser corregidas a más tardar los jueves a las 12:00 PM, con esto ayudas a que el proceso en cobranza sea en tiempo y forma, dando como resultado el cobro a tiempo de las comisiones.';
 
-    // MJ: SECOND EMAIL - LIBERACIONES
-    if (count($data_second_report) > 0) {
-      $data_enviar_mail = $this->sendComptrollerNotification($data_second_report, $finalDate, 2);
-      //echo $data_enviar_mail;
-      if ($data_enviar_mail > 0) {
-        $data_request['msg'] = 'Correo enviado correctamente.';
-        echo $data_request['msg'];
+    $this->email
+        ->initialize()
+        ->from('Ciudad Maderas')
+        ->to($correo)
+        ->subject($subject)
+        ->view($this->load->view('mail/schedule-tasks-cl/send-rv-5', [
+            'encabezados' => $encabezados,
+            'contenido' => $data_eviRec,
+            'comentario' => $comentario
+        ], true));
+
+    $result = $this->email->send();
+
+    return ($result) ? true : $this->email->print_debugger();
+  }
+
+    public function mailContentComptrollerNotification()
+    {
+      $date = date("Y-m-d");
+      $mod_date = strtotime($date."- 1 days");
+      $finalDate = date("Y-m-d", $mod_date);
+      $data_first_report = $this->scheduleTasks_model->getReportInformation(1, $finalDate);
+      $data_second_report = $this->scheduleTasks_model->getReportInformation(2, $finalDate);
+      // MJ: FIRST EMAIL - ESTATUS 10
+      if (count($data_first_report) > 0) {
+        $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, 'REPORTE ESTATUS 10 ' . $finalDate, 1);
+        //echo $data_enviar_mail;
+        if ($data_enviar_mail > 0) {
+          $data_request['msg'] = 'Correo enviado correctamente.';
+          echo $data_request['msg'];
+        } else {
+          $data_request['msg'] = 'Correo no enviado.';
+          echo $data_request['msg'];
+        }
       } else {
-        $data_request['msg'] = 'Correo no enviado.';
+        $data_enviar_mail = $this->sendComptrollerNotification($data_first_report, 'REPORTE ESTATUS 10 ' . $finalDate, 3);
+        if ($data_enviar_mail > 0) {
+            $data_request['msg'] = 'Correo enviado correctamente.';
+            echo $data_request['msg'];
+        } else {
+            $data_request['msg'] = 'Correo no enviado.';
+            echo $data_request['msg'];
+        }
+      }
+
+      // MJ: SECOND EMAIL - LIBERACIONES
+      if (count($data_second_report) > 0) {
+        $data_enviar_mail = $this->sendComptrollerNotification($data_second_report, 'REPORTE LOTES PARA LIBERAR ' . $finalDate, 2);
+        //echo $data_enviar_mail;
+        if ($data_enviar_mail > 0) {
+          $data_request['msg'] = 'Correo enviado correctamente.';
+          echo $data_request['msg'];
+        } else {
+          $data_request['msg'] = 'Correo no enviado.';
+          echo $data_request['msg'];
+        }
+      } else {
+        $data_request['msg'] = 'No hay registros para enviar un correo.';
         echo $data_request['msg'];
       }
-    } else {
-      $data_request['msg'] = 'No hay registros para enviar un correo.';
-      echo $data_request['msg'];
-    }
 
     }
 
     public function sendComptrollerNotification($data_eviRec, $subject, $typeTransaction)
     {
-        $encabezados = ($typeTransaction === 2)
-            ? 
-                array('nombreResidencial' =>  'PROYECTO',
+        $encabezados = ($typeTransaction === 1)
+            ? [
+                'tipo_proceso'      => 'TIPO DE PROCESO',
+                'nombreSede'        => 'SEDE',
+                'nombreResidencial' => 'PROYECTO',
+                'nombreCondominio'  => 'CONDOMINIO',
+                'nombreLote'        => 'LOTE',
+                'nombreCliente'     => 'CLIENTE',
+                'sup'               => 'SUPERFICIE',
+                'referencia'        => 'REFERENCIA',
+                'nombreGerente'     => 'GERENTE',
+                'nombreAsesor'      => 'ASESOR',
+                'estatusLote'       => 'ESTATUS',
+                'fechaApartado'     => 'FECHA APARTADO'
+            ]
+            : [
+                'nombreResidencial' =>  'PROYECTO',
                 'nombreCondominio'  =>  'CONDOMINIO',
                 'nombreLote'        =>  'LOTE',
                 'sup'               =>  'SUPERFICIE',
@@ -1039,11 +1082,12 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
                 'nombreAsesor'      =>  'ASESOR',
                 'estatusLote'       =>  'ESTATUS',
                 'fechaApartado'     =>  'FECHA APARTADO',
-                'fechaLiberacion'   =>  'FECHA LIBERACIÓN')
+                'fechaLiberacion'   =>  'FECHA LIBERACIÓN'
+            ];
 
-            : [];
-
-        if ($typeTransaction === 2) {
+        if ($typeTransaction === 1) {
+            $comentario = '¿Cómo estás?, espero que bien. ¿Cómo estás?, espero que bien. Este es el listado de todos aquellos lotes a los cuales se les registró estatus 10';
+        } else if ($typeTransaction === 2) {
             $comentario = '¿Cómo estás?, espero que bien. Este es el listado de todos los registros de lotes que se marcaron para liberación.';
         } else {
             $comentario = '¿Cómo estás?, espero que bien. El día de hoy no hay registros de lotes cuyo contrato se envió a firma de RL.';
@@ -1056,12 +1100,10 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            /*->to('supervisor.bd@ciudadmaderas.com',
+            ->to(['supervisor.bd@ciudadmaderas.com',
                 'coord.contraloriacorporativa@ciudadmaderas.com',
                 'mariela.sanchez@ciudadmaderas.com',
-                'coord.bd@ciudadmaderas.com',
-                'irene.vallejo@ciudadmaderas.com')*/
+                'coord.bd@ciudadmaderas.com'])
             ->subject($subj)
             ->view($this->load->view('mail/schedule-tasks-cl/send-comp-notification', [
                 'encabezados' => $encabezados,
@@ -1121,7 +1163,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         echo json_encode($response);
         $this->destroySession();
     }
-
     public function destroySession(){
       $this->session->sess_destroy();
 
@@ -1129,66 +1170,53 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
     }
 
     public function change_password_mail($key){
-        $encabezados = [
-            'usuario'       =>  'USUARIO',
-            'contraseña'    =>  'CONTRASEÑA NUEVA',
-            'diasVencer'    =>  'DÍAS VÁLIDOS',
-            'fechaAccion'   =>  'FECHA CREACIÓN'
-        ];
+      $encabezados = [
+          'usuario'       =>  'USUARIO',
+          'contraseña'    =>  'CONTRASEÑA NUEVA',
+          'diasVencer'    =>  'DÍAS VÁLIDOS',
+          'fechaAccion'   =>  'FECHA CREACIÓN'
+      ];
 
-        $contenido[] = [
-            'usuario'      =>  'ASESORCOMODIN',
-            'contraseña'   =>  $key,
-            'diasVencer'   =>  '1 mes',
-            'fechaAccion'  =>  date('Y-m-d H:i:s')
-        ];
+      $contenido[] = [
+          'usuario'      =>  'ASESORCOMODIN',
+          'contraseña'   =>  $key,
+          'diasVencer'   =>  '1 mes',
+          'fechaAccion'  =>  date('Y-m-d H:i:s')
+      ];
 
-        $this->email
-            ->initialize()
-            ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
-            /*->to('mariadejesus.garduno@ciudadmaderas.com',
-                'rafael.bautista@ciudadmaderas.com',
-                'vicky.paulin@ciudadmaderas.com',
-                'adriana.perez@ciudadmaderas.com',
-                'leonardo.aguilar@ciudadmaderas.com',
-                'grisell.malagon@ciudadmaderas.com',
-                'jorge.mugica@ciudadmaderas.com',
-                'adriana.rodriguez@ciudadmaderas.com',
-                'fernanda.monjaraz@ciudadmaderas.com',
-                'valeria.palacios@ciudadmaderas.com',
-                'juanamaria.guzman@ciudadmaderas.com',
-                'monserrat.cazares@ciudadmaderas.com',
-                'leydi.sanchez@ciudadmaderas.com',
-                'nohemi.castillo@ciudadmaderas.com',
-                'lorena.serrato@ciudadmaderas.com',
-                'yaretzi.rosales@ciudadmaderas.com',
-                'esmeralda.vega@ciudadmaderas.com')*/
-            ->subject('Cambio de contraseña ASESOR COMODÍN.')
-            ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
-                'encabezados' => $encabezados,
-                'contenido' => $contenido
-            ], true));
+      $this->email
+          ->initialize()
+          ->from('Ciudad Maderas')
+          ->to(['mariadejesus.garduno@ciudadmaderas.com',
+              'rafael.bautista@ciudadmaderas.com',
+              'vicky.paulin@ciudadmaderas.com',
+              'adriana.perez@ciudadmaderas.com',
+              'leonardo.aguilar@ciudadmaderas.com',
+              'grisell.malagon@ciudadmaderas.com',
+              'jorge.mugica@ciudadmaderas.com',
+              'adriana.rodriguez@ciudadmaderas.com',
+              'fernanda.monjaraz@ciudadmaderas.com',
+              'valeria.palacios@ciudadmaderas.com',
+              'juanamaria.guzman@ciudadmaderas.com',
+              'monserrat.cazares@ciudadmaderas.com',
+              'leydi.sanchez@ciudadmaderas.com',
+              'nohemi.castillo@ciudadmaderas.com',
+              'lorena.serrato@ciudadmaderas.com',
+              'yaretzi.rosales@ciudadmaderas.com',
+              'esmeralda.vega@ciudadmaderas.com'])
+          ->subject('Cambio de contraseña ASESOR COMODÍN.')
+          ->view($this->load->view('mail/schedule-tasks-cl/change-password', [
+              'encabezados' => $encabezados,
+              'contenido' => $contenido
+          ], true));
 
 
-        $result = $this->email->send();
+      $result = $this->email->send();
 
-        return ($result) ? true : $this->email->print_debugger();
-    }
+      return ($result) ? true : $this->email->print_debugger();
+  }
 
-    function updatePresupuestos() {
-      $getPresupuestos = $this->scheduleTasks_model->getPresupuestos()->result_array();
-      if (count($getPresupuestos) >= 1) {
-        for ($r = 0; $r < count($getPresupuestos); $r++) {
-          $data[] = array(
-            "idPresupuesto" => $getPresupuestos[$r]["idPresupuesto"],
-            "bandera" => 0, 
-            "modificado_por" => 1
-          );
-        }
-        $this->General_model->updateBatch('Presupuestos', $data, 'idPresupuesto');
-      }
-    }
+
 
 
     public function activaMSIListos(){
@@ -1196,8 +1224,6 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
         //revisa las autorizaciones en estatus 5
         //y ejecuta la actualización de los MSI autorizados
 
-        //token autorizado para esta operación
-        //eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDQ4MTAzNTgsImV4cCI6MTcwNDg5Njc1OCwiZGF0YSI6eyJ1c2VybmFtZSI6IjAwNE1fQ09NNTAyIiwicGFzc3dvcmQiOiIyMjM1JjgzMlNEVlcifX0.bqVjnDZeaHVvFQdDoTN8zxhvNOt5owMOYqdG1jCf6k4
 
         if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
@@ -1349,6 +1375,5 @@ public function select_gph_maderas_64(){ //HACER INSERT DE LOS LOTES EN 0 Y PASA
             return $updateData;
         }
     }
-
+  
 }
-?>

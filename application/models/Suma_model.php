@@ -47,18 +47,18 @@ class Suma_model extends CI_Model
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE us.id_sede END)
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         WHERE ps.estatus = $estatus AND ps.id_usuario = $user");
         return $query->result_array();
@@ -72,18 +72,18 @@ class Suma_model extends CI_Model
         INNER JOIN pagos_suma ps ON ps.referencia = cs.referencia
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE us.id_sede END)
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 16
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = ps.estatus AND oxc2.id_catalogo = 74 
         WHERE ps.id_usuario = $user AND year(ps.fecha_creacion) = $year");
@@ -155,18 +155,18 @@ class Suma_model extends CI_Model
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE us.id_sede END)
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = $formaPago AND ps.estatus IN (2, 4)");
         return $datos;
@@ -176,18 +176,18 @@ class Suma_model extends CI_Model
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE us.id_sede END)
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = us.id_rol AND oxc2.id_catalogo = 1
         WHERE ps.id_usuario = $idUsuario AND us.id_rol = $idRol AND us.forma_pago = $formaPago AND ps.estatus IN (3, 5)");
@@ -235,18 +235,18 @@ class Suma_model extends CI_Model
         FROM pagos_suma ps
         INNER JOIN usuarios us ON us.id_usuario = ps.id_usuario
         INNER JOIN sedes se ON se.id_sede = (CASE us.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE us.id_sede END)
+                 WHEN 2 THEN 2 
+                 WHEN 3 THEN 2 
+                 WHEN 1980 THEN 2 
+                 WHEN 1981 THEN 2 
+                 WHEN 1982 THEN 2 
+                 WHEN 1988 THEN 2 
+                 WHEN 4 THEN 5
+                 WHEN 5 THEN 3
+                 WHEN 607 THEN 1 
+                 WHEN 7092 THEN 4
+                     WHEN 9629 THEN 2
+                 ELSE us.id_sede END)
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ps.estatus AND oxc.id_catalogo = 74
         WHERE us.forma_pago = 4 AND ps.estatus IN (2, 4, 5)");
         return $datos;
@@ -276,7 +276,7 @@ class Suma_model extends CI_Model
         INNER JOIN facturas_suma fa ON fa.id_pago_suma = ps.id_pago_suma
         GROUP BY ps.total_comision, cm.referencia, ps.id_pago_suma")->result_array();
     }
-    
+
     function factura_comision( $uuid){
         return $this->db->query("SELECT DISTINCT(CAST(f.uuid AS VARCHAR(MAX))) AS uuid, u.nombre, u.apellido_paterno, u.apellido_materno, f.fecha_factura, f.folio_factura, 
 		f.metodo_pago, f.regimen, f.forma_pago, f.cfdi, f.unidad, f.claveProd, f.total, f.total as porcentaje_dinero, f.nombre_archivo, 
@@ -289,7 +289,7 @@ class Suma_model extends CI_Model
     
     function verificar_uuid( $uuid ){
         return $this->db->query("SELECT * FROM facturas_suma WHERE uuid = '".$uuid."'");
-    }  
+    }
     public function allAsesor(){
         return $this->db->query("SELECT u.id_usuario id_asesor, 
         CASE WHEN (u.id_lider = 0 AND u.id_rol = 9) THEN u.id_usuario ELSE u.id_lider END id_coordinador, 

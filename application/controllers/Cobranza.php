@@ -7,10 +7,11 @@ class Cobranza extends CI_Controller
     {
         parent::__construct();
         $this->load->model(array('Cobranza_model','Contraloria_model'));
-        $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
+        $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
+        $this->jwt_actions->authorize('8900', $_SERVER['HTTP_HOST']);
         $this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -42,7 +43,7 @@ class Cobranza extends CI_Controller
     public function getInformation()
     {
         if (isset($_POST) && !empty($_POST)) {
-            $typeTransaction = $this->input->post("typeTransaction");       
+            $typeTransaction = $this->input->post("typeTransaction");
             $fechaInicio = explode('/', $this->input->post("beginDate"));
             $fechaFin = explode('/', $this->input->post("endDate"));
             $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
@@ -79,10 +80,8 @@ class Cobranza extends CI_Controller
     public function getDetails(){
         $id = $_POST['id'];
         $checks = $_POST['checks'];
-        $fechaInicio = explode('/', $this->input->post("beginDate"));
-        $fechaFin = explode('/', $this->input->post("endDate"));
-        $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-        $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+        $beginDate = $_POST['beginDate'];
+        $endDate = $_POST['endDate'];
         $sede = $_POST['sede'];
         $data =$this->Cobranza_model->getDetails($id, $checks, $beginDate, $endDate, $sede)->result_array();
         echo json_encode($data);
@@ -185,7 +184,7 @@ class Cobranza extends CI_Controller
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
-
+        
         $this->load->view('template/header');
         $this->load->view("cobranza/cobranza_reporte_master_historico");
     }
@@ -204,19 +203,19 @@ class Cobranza extends CI_Controller
         } else
             $idLote = '';
         $data['data'] = $this->Cobranza_model->informationMasterCobranzaHistorial($idLote, $beginDate, $endDate)->result_array();
-        echo json_encode($data);
+         echo json_encode($data);
     }
 
     public function getComments($pago){
         echo json_encode($this->Cobranza_model->getComments($pago)->result_array());
     }
-    
-    public function LotesPorComisionista() {
+
+    public function reporteLotesPorComisionista() {
         if ($this->session->userdata('id_rol') == FALSE) {
             redirect(base_url());
         }
         $this->load->view('template/header');
-        $this->load->view("cobranza/comisionista/reporte_lotes_x_comisionista_view");
+        $this->load->view("comisiones/reporteLotesPorComisionista_view");
     }
 
     public function getReporteLotesPorComisionista() {
@@ -232,9 +231,9 @@ class Cobranza extends CI_Controller
     }
 
     public function getOpcionesParaReporteComisionistas() {
+        $seeAll = $this->input->post("seeAll");
         $condicionXUsuario = '';
-        
-        if ( !in_array($this->session->userdata('id_rol'), [1, 4, 5, 6, 18, 63]) ){
+        if ($seeAll == 0 ){
             $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
         }
         echo json_encode($this->Cobranza_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());

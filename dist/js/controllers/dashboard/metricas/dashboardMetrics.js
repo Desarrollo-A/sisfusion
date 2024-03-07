@@ -258,10 +258,10 @@ var optionsMedio = {
     dataLabels: {
         enabled: false,
         formatter: function (val) {
-            return val.toLocaleString('es-MX');
+          return val.toLocaleString('es-MX');
         }
-    },
-    responsive: [{
+      },
+      responsive: [{
         breakpoint: 500,
         options: {
             chart: {
@@ -272,7 +272,7 @@ var optionsMedio = {
             },
             yaxis: {
                 show: false
-            },
+              },
         }
     }],
     tooltip: { 
@@ -311,7 +311,7 @@ var optionsVentasMetros = {
         show: true,
     },
     tooltip: {
-        show: false
+      show: false
     },
     grid: {
         show: true,
@@ -391,7 +391,7 @@ var optionsPromedio = {
             }
         }
     },
-};
+  };
 
 
 function readyMetrics(){
@@ -575,7 +575,7 @@ function formatMetrosData(data){
 
     metrosChart.updateOptions({
         xaxis: {
-            categories: categories
+           categories: categories
         },
     });
 }
@@ -1308,23 +1308,23 @@ function buildTablePromedio(data){
 
 function getCacheDates(){
     let obj ={ 
-        beginDate_Promedio : $('#tableBegin_promedio').val(),
-        endDate_Promedio : $('#tableEnd_promedio').val(),
-    }
+         beginDate_Promedio : $('#tableBegin_promedio').val(),
+         endDate_Promedio : $('#tableEnd_promedio').val(),
+     }
             
-    return obj;
-}
+     return obj;
+ }
 
-function getCacheSelectedOptions(){
+ function getCacheSelectedOptions(){
     let obj ={ 
-        sede_promedio : $('#sedes').val(),
-        proyecto_promedio : $('#proyecto2').val(),
-    }
+         sede_promedio : $('#sedes').val(),
+         proyecto_promedio : $('#proyecto2').val(),
+     }
             
-    return obj;
-}
+     return obj;
+ }
 
-function buildDatePikcer(dates){
+ function buildDatePikcer(dates){
     $('.datepicker').datetimepicker({
         format: 'DD/MM/YYYY',
         icons: {
@@ -1341,8 +1341,8 @@ function buildDatePikcer(dates){
         }
     });
 
-    $('#tableBegin_promedio').val(dates.beginDate_Promedio);
-    $('#tableEnd_promedio').val(dates.endDate_Promedio);
+     $('#tableBegin_promedio').val(dates.beginDate_Promedio);
+     $('#tableEnd_promedio').val(dates.endDate_Promedio);
 }
 
 function buildSelect(selected, dataSelect){

@@ -6,8 +6,18 @@ class Contratacion_model extends CI_Model {
         parent::__construct();
     }
 
-   function get_proyecto_lista() {
-      return $this->db->query("SELECT idResidencial, UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion,ciudad, status, empresa, clave_residencial, abreviatura, active_comission, sede_residencial, sede FROM residenciales WHERE status = 1");
+    function get_proyecto_lista() {
+      return $this->db->query("SELECT idResidencial, 
+      UPPER(CONCAT(nombreResidencial, ' - '  ,descripcion)) descripcion, 
+      ciudad, 
+      status, 
+      empresa, 
+      clave_residencial, 
+      abreviatura, 
+      active_comission, 
+      sede_residencial, 
+      sede FROM residenciales
+      WHERE status = 1");
    }
    
    function get_condominio_lista($proyecto) {
@@ -39,7 +49,7 @@ class Contratacion_model extends CI_Model {
                                 INNER JOIN residenciales res ON res.idResidencial = con.idResidencial WHERE cli.status = 1 AND cliente.idLote = ".$lote."");
      }
 
-     public function getProspectingPlaceDetail() {
+   public function getProspectingPlaceDetail() {
       $id_rol = $this->session->userdata('id_rol');
       if ($id_rol == 19 || $id_rol == 63)
          $lpReturn = "CONCAT(REPLACE(ISNULL(oxc.nombre, 'Sin especificar'), ' (especificar)', ''), (CASE pr.source WHEN '0' THEN '' ELSE CONCAT(' - ', pr.source) END))";
@@ -50,7 +60,8 @@ class Contratacion_model extends CI_Model {
    }
 
    function getInventarioData($estatus, $condominio, $proyecto) {
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : ( $this->session->userdata('id_rol') == 40 ? "AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "");      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : $this->session->userdata('id_rol') == 40 ? "AND lot.idStatusLote NOT IN (15, 16, 17, 20, 21)" : "";
+      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       $filtroProyecto = "";
       $filtroCondominio = "";
       $filtroEstatus = "";
@@ -115,15 +126,15 @@ class Contratacion_model extends CI_Model {
       return $query->result_array();
    }
 
-   function get_datos_historial($lote){
-       return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
-              modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
-              usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
-                              FROM historial_liberacion 
-                              INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
-                              LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion 
-                              WHERE idLote = ".$lote." ORDER BY modificado");                       
-   }
+      function get_datos_historial($lote){
+         return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
+                modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
+                usuarios.apellido_paterno, usuarios.apellido_materno , comentarioLiberacion
+                                FROM historial_liberacion 
+                                INNER JOIN statuslote ON statuslote.idStatusLote = historial_liberacion.status 
+                                LEFT JOIN usuarios ON usuarios.usuario = historial_liberacion.userLiberacion 
+                                WHERE idLote = ".$lote." ORDER BY modificado");                       
+     }
 
      function get_datos_proceso($lote){
          return $this->db->query("SELECT idHistorialLote, nombreLote, UPPER(statuslote.nombre) as stlt, comentario, UPPER(perfil) as perfil,
@@ -164,15 +175,15 @@ class Contratacion_model extends CI_Model {
 	 }
 
 
-   function getClient($idLote){
+	 function getClient($idLote){
       return $this->db->query(
          "SELECT idLote, idCliente
           FROM lotes
           WHERE idLote = $idLote");
-   }
+    }
 
    function getCoSallingAdvisers($id_cliente) {
-      return $this->db-> query("SELECT id_cliente,
+      return $this->db-> query("SELECT id_cliente, 
       CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
       CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END coordinador,
       CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END gerente,
@@ -180,22 +191,22 @@ class Contratacion_model extends CI_Model {
       CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END regional,
       CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END regional2,
       CONVERT(varchar, vc.fecha_creacion, 20) fecha_creacion, (CASE vc.creado_por WHEN '1297' THEN 'Control interno' ELSE vc.creado_por END) creado_por 
-         FROM ventas_compartidas vc 
-         LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
-         LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
-         LEFT JOIN usuarios u2 ON u2.id_usuario = vc.id_gerente
-         LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
-         LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
-         LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2
-         WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente")->result_array();
+      FROM ventas_compartidas vc 
+      LEFT JOIN usuarios u0 ON u0.id_usuario = vc.id_asesor
+      LEFT JOIN usuarios u1 ON u1.id_usuario = vc.id_coordinador
+      LEFT JOIN usuarios u2 ON u2.id_usuario = vc.id_gerente
+      LEFT JOIN usuarios u3 ON u3.id_usuario = vc.id_subdirector
+      LEFT JOIN usuarios u4 ON u4.id_usuario = vc.id_regional
+      LEFT JOIN usuarios u5 ON u5.id_usuario = vc.id_regional_2
+      WHERE vc.estatus IN (1, 2) AND vc.id_cliente = $id_cliente ORDER BY vc.id_cliente")->result_array();
    }
 
     function getClauses($lote){
          return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1");                        
     }
 
-    function getInventoryBylote($idLote){
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
+   function getInventoryBylote($idLote) {
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       return $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup as superficie, 
       lot.total, lot.totalNeto2, lot.referencia, UPPER(CONVERT(VARCHAR,lot.comentario)) AS comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' CASA') ELSE sl.nombre END as descripcion_estatus, sl.color, tv.tipo_venta, con.msni,
@@ -225,7 +236,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto
       WHERE lot.status = 1 and lot.idLote = $idLote $whereProceso ORDER BY lot.idLote");
    }
-   
+
    public function getCatalogosParaUltimoEstatus(){
       return $this->db->query("SELECT re.sede_residencial id, se.nombre, 1 tipo FROM residenciales re
       INNER JOIN sedes se ON se.id_sede = re.sede_residencial
@@ -239,7 +250,7 @@ class Contratacion_model extends CI_Model {
       ini_set('max_execution_time', 900);
       set_time_limit(900);
       ini_set('memory_limit','2048M');
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
       $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       return $this->db->query("SELECT lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, lot.totalNeto2,
       res.nombreResidencial, lot.idStatusLote, con.idCondominio, lot.sup, 
@@ -301,5 +312,5 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios us ON us.id_usuario = TRY_CAST (au.creado_por AS INT)
       WHERE id_parametro = $id_parametro AND tabla = 'lotes' AND col_afect = 'idStatusLote' ORDER BY id_auditoria");
   }
-     
+
 }

@@ -14,33 +14,6 @@ $(document).ready(function () {
     }, 'json');
 });
 
-$(document).ready(function () {
-	$.post(`${general_base_url}Contratacion/sedesPorDesarrollos`, function (data) {
-		var len = data.length;
-		for (var i = 0; i < len; i++) {
-			var id = data[i]['id_sede'];
-			var name = data[i]['nombre'];
-			$("#sedes").append($('<option>').val(id).text(name.toUpperCase()));
-		}
-		$("#sedes").selectpicker('refresh');
-	}, 'json');
-});
-
-$(document).on('change', "#sedes", function () {
-	$('#tablaInventario').removeClass('hide');
-	$('#spiner-loader').removeClass('hide');
-    index_idResidencial = $(this).val();
-    $("#idCondominioInventario").html("");
-    $(document).ready(function () {
-        $.post(`${general_base_url}Contratacion/lista_condominio/${index_idResidencial}`, function (data) {
-            for (var i = 0; i < data.length; i++) {
-                $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
-            }
-            $("#idCondominioInventario").selectpicker('refresh');
-        }, 'json');
-    });   
-});
-
 $('#idResidencial').change(function () {
     $('#spiner-loader').removeClass('hide');
     $('#tablaInventario').removeClass('hide');
@@ -52,8 +25,9 @@ $('#idResidencial').change(function () {
                 $("#idCondominioInventario").append($('<option>').val(data[i]['idCondominio']).text(data[i]['nombre']));
             }
             $("#idCondominioInventario").selectpicker('refresh');
+            $('#spiner-loader').addClass('hide');
         }, 'json');
-    });    
+    });
 });
 
 let titulosInventario = [];
@@ -63,59 +37,57 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
     $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
     $('input', this).on('keyup change', function () {
         if ($('#tablaInventario').DataTable().column(i).search() !== this.value) {
-            $('#tablaInventario').DataTable().column(i).search(this.value).draw(); 
+            $('#tablaInventario').DataTable().column(i).search(this.value).draw();
         }
     });
 });
 
-$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus, #sedes',  function () {
-    ix_idResidencial = ($("#idResidencial").val() == '') ? 0 : $("#idResidencial").val();
+$(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
+    ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
-    ix_sedes = ($("#sedes").val() == '') ? 0 : $("#sedes").val();
     tabla_inventario = $("#tablaInventario").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
-        bAutoWidth: true,
         destroy: true,
         searching: true,
         ajax: {
-            url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}/${ix_sedes}`,
+            url: `${general_base_url}Contratacion/get_inventario/${ix_idEstatus}/${ix_idCondominio}/${ix_idResidencial}`,
             dataSrc: ""
         },
         buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Inventario lotes',
-            exportOptions: {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'Inventario lotes',
+                exportOptions: {
                 columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31]),
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx] + ' ';
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosInventario[columnIdx] + ' ';
+                        }
                     }
                 }
-            }
-        },
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'PDF',
-            title: 'Inventario lotes',
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosInventario[columnIdx]  + ' ';
+            },
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+                className: 'btn buttons-pdf',
+                titleAttr: 'PDF',
+                title: 'Inventario lotes',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 22],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulosInventario[columnIdx]  + ' ';
+                        }
                     }
                 }
-            }
-        }],
+            }],
         columnDefs: [{
             targets: [22, 23, 24, 32],
             visible: coordinador = ((id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70) || (id_usuario_general == 2748 || id_usuario_general == 5957)) ? true : false
@@ -142,192 +114,191 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus, #
         { 
             data: 'nombreCondominio' 
         },
-        {
-            data: function (d) {
-                if (d.casa == 1)
+            {
+                data: function (d) {
+                    if (d.casa == 1)
                     return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
-                else
-                    return d.nombreLote;
-            }
-        },
-        { data: 'idLote' },
-        {
-            data: function (d) {
-                return d.superficie + ' <b>m<sup>2</sup></b>';
-            }
-        },
-        {
-            data: function (d) {
-                return formatMoney(d.precio * d.sup);
-            }
-        },
-        {
-            data: function (d) {
-                return formatMoney(d.totalNeto2);
-            }
-        },
-        {
-            data: function (d) {
-                return formatMoney(d.precio);
-            }
-        },
-        { data: 'referencia' },
-        { data: 'msni' },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.asesor2;
-                else
-                    return d.asesor;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.coordinador2;
-                else
-                    return d.coordinador;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.gerente2;
-                else
-                    return d.gerente;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.subdirector2;
-                else
-                    return d.subdirector;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.regional22;
-                else
-                    return d.regional;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return 'SIN ESPECIFICAR';
-                else
-                    return d.regional2;
-            }
-        },
-        {
-            data: function (d) {
-                let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
-                return d.tipo_venta == null ?
-                    `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
-                    `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
-            }
-        },
-        { data: 'statusContratacion' },
-        {
-            data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
-                if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
-                    return d.fecha_modst;
-                else
-                    return d.fechaApartado;
-            }
-        },
-        {
-            data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
-                if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
-                    return 'SIN ESPECIFICAR';
-                else
-                    return d.comentario;
-            }
-        },
-        { data: 'lugar_prospeccion' },
-        { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
-        {
-            data: function (d) {
-                return formatMoney(d.cantidad_enganche);
-            }
-        },
-        {
-            visible: (id_rol_general == 11) ? true : false,
-            data: function (d) {
-                return d.idStatusContratacion; // VALIDAR ESTATUS NULL DESDE LA QUERY
-            }
-        },
-        {
-            visible: ((id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70) || (id_usuario_general == 2748 || id_usuario_general == 5957)) ? true : false,
-            data: function (d) {
-                return d.nombreCliente; // VALIDAR CLIENTE NULL DESDE LA QUERY
-            }
-        },
-        {
-            visible: (id_rol_general == 11) ? true : false,
-            data: function (d) {
-                return d.nombreCopropietario; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
-            }
-        },
-        { data: 'comentario_administracion' },
-        {
-            data: function(d){
-                if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
-                    return 'SIN ESPECIFICAR';
-                else
-                    return d.fecha_creacion;
-            }
-        },
-        {
-            data: function(d){
-                if(d.apartadoXReubicacion == 1)
-                    return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
-                else
-                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-            }         
-        },
-        {
-            data: function(d){
-                if(d.apartadoXReubicacion == 1)
-                    return d.fechaAlta;
-                else
-                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                
-            }         
-        },
-        {
-            data: function(d){
-                if(d.venta_compartida != 0)
-                    return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
-                else
-                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-            }         
-        },
-        {
+                    else
+                        return d.nombreLote;
+                }
+            },
+            { data: 'idLote' },
+            {
+                data: function (d) {
+                    return d.superficie + ' <b>m<sup>2</sup></b>';
+                }
+            },
+            {
+                data: function (d) {
+                    return '$' + formatMoney(d.precio * d.sup);
+                }
+            },
+            {
+                data: function (d) {
+                    return '$' + formatMoney(d.totalNeto2);
+                }
+            },
+            {
+                data: function (d) {
+                    return '$' + formatMoney(d.precio);
+                }
+            },
+            { data: 'referencia' },
+            { data: 'msni' },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.asesor2;
+                    else
+                        return d.asesor;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.coordinador2;
+                    else
+                        return d.coordinador;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.gerente2;
+                    else
+                        return d.gerente;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.subdirector2;
+                    else
+                        return d.subdirector;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.regional22;
+                    else
+                        return d.regional;
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return 'SIN ESPECIFICAR';
+                    else
+                        return d.regional2;
+                }
+            },
+            {
+                data: function (d) {
+                    let libContraloria = (d.observacionContratoUrgente == '1') ? '<center><span class="label lbl-pink">Lib. Contraloría</span> <center><p><p>' : '';
+                    return d.tipo_venta == null ?
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> ${libContraloria} <center>` :
+                        `<center><span class="label" style="background:#${d.background_sl}18; color:#${d.color};">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> ${libContraloria} <center>`;
+                }
+            },
+            { data: 'statusContratacion' },
+            {
+                data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
+                    if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
+                        return d.fecha_modst;
+                    else
+                        return d.fechaApartado;
+                }
+            },
+            {
+                data: function (d) { // VALIDAR FECHAS NULL DESDE LA QUERY
+                    if (d.comentario == null || d.comentario == 'NULL' || d.comentario == '')
+                        return 'SIN ESPECIFICAR';
+                    else
+                        return d.comentario;
+                }
+            },
+            { data: 'lugar_prospeccion' },
+            { data: 'fecha_validacion' }, // VALIDAR FECHA NULL DESDE LA QUERY
+            {
+                data: function (d) {
+                    return '$' + formatMoney(d.cantidad_enganche);
+                }
+            },
+            {
+                visible: (id_rol_general == 11) ? true : false,
+                data: function (d) {
+                    return d.idStatusContratacion; // VALIDAR ESTATUS NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: ((id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70) || (id_usuario_general == 2748 || id_usuario_general == 5957)) ? true : false,
+                data: function (d) {
+                    return d.nombreCliente; // VALIDAR CLIENTE NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_rol_general == 11) ? true : false,
+                data: function (d) {
+                    return d.nombreCopropietario; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            { data: 'comentario_administracion' },
+            {
+                data: function(d){
+                    if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
+                        return 'SIN ESPECIFICAR';
+                    else
+                        return d.fecha_creacion;
+                }
+            },
+            {
+                data: function(d){
+                    if(d.apartadoXReubicacion == 1)
+                        return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
+                    else
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
+                data: function(d){
+                    if(d.apartadoXReubicacion == 1)
+                        return d.fechaAlta;
+                    else
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                
+                }         
+            },
+            {
+                data: function(d){
+                    if(d.venta_compartida != 0)
+                        return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
+                    else
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
             data: function(d) {
-                if(d.ubicacion != null)
-                    return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
-                else
-                    return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
-            }         
-        },
-        {
-            data: function (d) {
-                return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
-            }
-        },
-        {
-            visible: (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 70) ? true : false,
-            data: function (d) {
-                return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
-            }
+                    if(d.ubicacion != null)
+                        return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
+                    else
+                        return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;                   
+                }         
+            },
+            {
+                visible: (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 70) ? true : false,
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
+                }
         }],
         initComplete: function() {
             $('[data-toggle="tooltip"]').tooltip();
-            $('#spiner-loader').addClass('hide');
         }
-    });  
+    });
 });
 
 $(document).on("click", ".ver_historial", function () {
@@ -335,7 +306,7 @@ $(document).on("click", ".ver_historial", function () {
     let element = document.getElementById("divTabClausulas");
     let elementHistorialEstatus = document.getElementById("divTabHistorialEstatus");
     let idLote = $(this).val();
-    let rolesContraloria = [17, 70, 71, 73];
+    let rolesContraloria = [17, 70, 71, 73, 12];
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/${idLote}`).done(function (data) {
             if (data.length == 1)
@@ -357,10 +328,10 @@ $(document).on("click", ".ver_historial", function () {
     consultarVentasCompartidas(idLote);
     //CONSULTA EL HISTORIAL DE LOS MOVIMIENTOS DEL IDSTTAUSLOTE
     if (rolesContraloria.includes(id_rol_general)) {
-        $('#HistorialEstatus').empty();
         $.getJSON(`${general_base_url}Contratacion/getInformationHistorialEstatus/${idLote}`).done(function (data) {
+            $('#HistorialEstatus').empty()
             if (data.length == 0)
-                $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b');
+                $("#HistorialEstatus").append('<b>NO HAY REGISTROS</b>');
             else
                 fillChangelog(data);
         });
@@ -370,11 +341,6 @@ $(document).on("click", ".ver_historial", function () {
         $("#HistorialEstatus").html('');
     }
 });
-
-function cleanComments() {
-    var myChangelog = document.getElementById('HistorialEstatus');
-    myChangelog.innerHTML = '';
-}
 
 
 let titulostablaHistorialContratacion = [];
@@ -425,10 +391,10 @@ function consultarHistoriaContratacion(idLote) {
             { data: "nombreLote" },
             { data: "nombreStatus" },
             { data: "descripcion" },
-            {
+            { 
                 data: function (d) {
                     return d.comentario.toUpperCase();
-                }
+                } 
             },
             { data: "modificado" },
             { data: "usuario" }
@@ -437,19 +403,11 @@ function consultarHistoriaContratacion(idLote) {
             url: `${general_base_url}Contratacion/historialProcesoLoteOp/${idLote}`,
             dataSrc: ""
         },
+        initComplete: function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        }
     });
 }
-
-$('#tablaHistoriaLiberacion').on('draw.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" });
-});
-
-// Volver a aplicar tooltips en elementos filtrados
-$('#tablaHistoriaLiberacion').on('search.dt', function() {
-    $('[data-toggle="tooltip"]').tooltip('dispose'); // Elimina los tooltips actuales
-    $('[data-toggle="tooltip"]').tooltip({ trigger: "manual" }); // Vuelve a inicializar los tooltips en todos los elementos
-    $('[data-toggle="tooltip"]').tooltip('show'); // Muestra los tooltips en todos los elementos
-});
 
 let titulosTablaHistoriaLiberacion = [];
 $('#tablaHistoriaLiberacion thead tr:eq(0) th').each(function (i) {
@@ -590,49 +548,3 @@ function fillChangelog(v) {
     '</li>');
     }
 }
-
-
-/*cambio de tab para switcheat*/
-$('input[type=radio][name=modoSubida]').change(function(e) {
-    let selectorInv = $('#selectoresInv');
-    let selectorDescInv = $('#selectoresDescInv');
-    if (this.value == 1) {
-        console.log(1);
-
-        selectorInv.removeClass('hide');
-        selectorDescInv.addClass('hide');
-        // flagTipoUploadMeses=1;
-        // //se queda asi ta cual
-        // //se debe mostrar el proyecto nomás
-        // $('#contenedor-condominio').addClass('hide');
-        // $('#filtro3').attr('onChange', 'changeCondominio()');
-        // $('#filtro3').val('default').selectpicker('deselectAll');
-        // $('#filtro3').selectpicker('refresh');
-        // $('#filtro4').empty();
-        // $('#filtro4').selectpicker('refresh');
-        // $('#tabla_msni').DataTable().clear().destroy();
-        // $('#typeTransaction').val(this.value);
-        //
-        // $('.anclaClass').attr('placeholder', 'ID CONDOMINIO');
-    }
-    else if (this.value == 0) {
-        console.log(2);
-        selectorInv.addClass('hide');
-        selectorDescInv.removeClass('hide');
-
-
-        // flagTipoUploadMeses=0;
-
-        // //se debe mostrar el proyecto y condominio nomás
-        // $('#contenedor-condominio').removeClass('hide');
-        // $('#filtro3').attr('onChange', 'changeLote()');
-        // $('#filtro3').val('default').selectpicker('deselectAll');
-        // $('#filtro3').selectpicker('refresh');
-        // $('#tabla_msni').DataTable().clear().destroy();
-        // $('#typeTransaction').val(this.value);
-        //
-        // $('.anclaClass').attr('placeholder', 'ID LOTE');
-    }
-});
-
-

@@ -8,8 +8,6 @@ class Pagos_model extends CI_Model {
     {
         parent::__construct();
     }
-
-    //MODELO DEDICADO A EL PROCESO DE REVISION CONTRALORIA Y REVISION INTERNOMEX, VALIDAR Y ENVIAR PAGOS QUE SOLICITA VENTAS CADA CORTE
     
     function getBonosPorUserContra($estado){
         $filtro = '';
@@ -111,7 +109,7 @@ class Pagos_model extends CI_Model {
         $cmd = "SELECT pci1.id_pago_i, pci1.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,(CASE WHEN com.ooam = 1 THEN ' (OOAM)' ELSE oxcest.nombre END) estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
         
         com.comision_total, com.porcentaje_decimal, 
-        pci1.abono_neodata solicitado, pci1.pago_neodata pago_cliente, 
+        pci1.abono_neodata solicitado, pci1.pago_neodata pago_cliente,  
         (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, 
         (CASE u.forma_pago WHEN 3 THEN (((sed.impuesto)/100)*pci1.abono_neodata) ELSE 0 END) dcto, sed.impuesto valimpuesto,
 

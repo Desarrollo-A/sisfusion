@@ -194,42 +194,24 @@
         return $query->result_array();
      }
 	
-	//  public function interesMenos(){
-	// 	return $this->db->query("SELECT * FROM condominios where msni > 0 AND status = 1 AND idResidencial NOT IN (3,13,22)");
-	// }
-
 	public function interesMenos(){
 		$query = $this->db->query("SELECT idLote, c.idCondominio, idResidencial, msi as msni, nombre, l.fecha_creacion as create_at
         FROM lotes l 
         INNER JOIN condominios c ON c.idCondominio=l.idCondominio
-        WHERE c.idResidencial NOT IN (3, 13, 22) 
-        AND msni > 0 
-        AND (l.fecha_creacion < DATEADD(DAY, -15, GETDATE()) OR l.fecha_creacion IS NULL) ");
+        WHERE c.idResidencial NOT IN (3, 13, 22) 
+        AND l.msi > 0 
+        AND (l.fecha_creacion < DATEADD(DAY, -15, GETDATE()) OR l.fecha_creacion IS NULL)");
 
 
 //		return $updateArrayData;
         return $query->result_array();
 	}
-
+	
 	public function SessionDestroy(){
 		$array = array();
 		$getID = $this->db->query("SELECT id_usuario FROM usuarios WHERE id_rol = 61")->row();
 		$user = $getID->id_usuario;
 		$query = $this->db->query("DELETE FROM session_sisfusion WHERE id IN (SELECT id FROM session_sisfusion WHERE data LIKE '%id_usuario|i:$user%')");
 		return $query;
-	}
-
-	public function getPresupuestos(){
-		$mes = date('m');
-		$year = date('Y');
-
-		return $this->db->query("SELECT idPresupuesto, expediente, idSolicitud, estatus, tipo, fecha_creacion, creado_por, modificado_por, bandera
-		FROM Presupuestos
-		WHERE estatus = 0 AND tipo = 2 
-		AND idPresupuesto NOT IN 
-			(SELECT idPresupuesto 
-			FROM Presupuestos
-			WHERE fecha_creacion BETWEEN '$year-$mes-01 00:00:00' AND '$year-$mes-10 23:59:59')");
-									
 	}
 }

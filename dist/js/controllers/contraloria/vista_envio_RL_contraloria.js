@@ -134,7 +134,7 @@ $("#tabla_envio_RL").ready(function () {
             dataSrc: "",
             type: "POST",
             cache: false,
-        },
+                    },
         order: [[1, 'asc']]
     });
 });

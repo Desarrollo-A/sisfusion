@@ -1,4 +1,3 @@
-
 $("#form_bonos").on('submit', function(e){ 
     e.preventDefault();
     let formData = new FormData(document.getElementById("form_bonos"));

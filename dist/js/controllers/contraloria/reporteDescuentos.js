@@ -187,8 +187,8 @@ function setTablaReporte(sede = 0, empresa = 0, puesto = 0, usuario = 0, beginDa
         { 
             data: function (d) {
             let botonesModal = '';
-            let ruta =  d.relacion_evidencia == null ? `` :((d.relacion_evidencia == "true" && d.evidencia != null) ? `static/documentos/evidencia_prestamo_auto` : `UPLOADS/EvidenciaGenericas`); 
-            let archivo =  d.relacion_evidencia == null ? `` :(d.relacion_evidencia == "true" ? `${d.evidencia}` : `${d.relacion_evidencia}`);
+            let ruta =  (d.relacion_evidencia == 'true' && d.evidencia == null ) ? '' :((d.relacion_evidencia == "true" && d.evidencia != null) ? `static/documentos/evidencia_prestamo_auto` : `UPLOADS/EvidenciaGenericas`); 
+            let archivo =  (d.relacion_evidencia == 'true' && d.evidencia == null ) ? `` :(d.relacion_evidencia == "true" ? `${d.evidencia}` : `${d.relacion_evidencia}`);
                 return botonesModal = ruta == '' ? '' :  `
                         <div class="d-flex justify-center">
                             <button href="#" value="${d.id_prestamo}"  id="preview" 

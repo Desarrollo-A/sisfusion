@@ -1,20 +1,26 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  
+
+ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Clientes extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
         $this->load->model(array('Clientes_model', 'Statistics_model', 'asesor/Asesor_model', 'Caja_model_outside', 'General_model'));
+        //$this->load->model('asesor/Asesor_model');
         $this->load->library(array('session','form_validation'));
-        $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
+        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
+        $this->jwt_actions->authorize('137', $_SERVER['HTTP_HOST']);
         date_default_timezone_set('America/Mexico_City');
         $this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+	}
 
 	public function index()
 	{
@@ -27,10 +33,10 @@ class Clientes extends CI_Controller {
 		$this->load->view('template/footer');
 	}
 /**Reporte clientes  */
-    public function RpClientes(){
-        $this->load->view('template/header');
-        $this->load->view("clientes/RpClientes");
-    }
+public function RpClientes(){
+    $this->load->view('template/header');
+    $this->load->view("clientes/RpClientes");
+}
 public function getRpClientes()
     {
         $data['data'] = $this->Clientes_model->getRpClientes();
@@ -185,7 +191,7 @@ public function getStatusMktdPreventa(){
         $this->load->view("clientes/consulta_clientes");
     }
 
-    public function consultProspectsMktd(){
+    public function consultProspectsMktd(){ 
         $this->load->view('template/header');
         $this->load->view("clientes/consulta_prospectos_mktd");
     }
@@ -1131,12 +1137,12 @@ public function getStatusMktdPreventa(){
         else
             $cambio = $_POST['lives_at_home'];
 
-        $specify = $_POST['specify'];
+            $specify = $_POST['specify'];
         if ($specify == '' || $specify == null)
             $final_specification = 0;
         else
             $final_specification = $specify;
-        
+
         $date = date("Y-m-d");
         $date = strtotime($date . "+ 30 days");
         $data = array(
@@ -1215,7 +1221,7 @@ public function getStatusMktdPreventa(){
             $data["id_asesor"] = $this->session->userdata('id_usuario');
             $data["id_coordinador"] = $this->session->userdata('id_usuario');
             $data["id_gerente"] = $this->session->userdata('id_usuario');
-            $data["id_subdirector"] = $this->session->userdata('id_lider_4');
+            $data["id_subdirector"] = $this->session->userdata('id_lider');
             $data["id_regional"] = $this->session->userdata('id_lider_5');
             $data["id_regional_2"] = $this->session->userdata('id_regional_2');
         }
@@ -1503,127 +1509,315 @@ public function getStatusMktdPreventa(){
             </style>
         </head>
         <body>
-            <section class="content">
-                <div class="row">
-                    <div class="col-xs-10 col-md-offset-1">
+              <section class="content">
+                    <div class="row">
+                        <div class="col-xs-10 col-md-offset-1">
                         <div class="box">
                             <div class="box-body">
-                                <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
+                                  <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
                                     <tr>
                                         <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
                                         <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small></td>
                                     </tr>
                                 </table>
-                                <br><br>
-                                <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                                                                <br><br>
+                                  <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
                                     <tr>
                                         <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b></td>
                                     </tr>
                                 </table>							
                                 <br>                       
-                                <div class="row">                
-                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                    <div class="row">                
+                                  <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
                                         <tr>
                                             <td style="font-size: 1em;">
-                                                <b>Nombre:</b><br>
-                                                '.$informacion->cliente.'
+                                             <b>Nombre:</b><br>
+                                             '.$informacion->cliente.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                                <b>CURP:</b><br>
-                                                '.$informacion->curp.'
+                                            <b>CURP:</b><br>
+                                            '.$informacion->curp.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                                <b>RFC:</b><br>
-                                                '.$informacion->rfc.'
+                                            <b>RFC:</b><br>
+                                            '.$informacion->rfc.'
                                             </td>
                                         </tr>                                        
                                         <tr>
                                             <td style="font-size: 1em;">
-                                                <b>Correo electrónico:</b><br>
-                                                '.$informacion->correo.'
+                                             <b>Correo electrónico:</b><br>
+                                             '.$informacion->correo.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                                <b>Teléfono:</b><br>
-                                                '.$informacion->telefono.'
+                                            <b>Teléfono:</b><br>
+                                            '.$informacion->telefono.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                                <b>Teléfono 2 (opcional):</b><br>
-                                                '.$informacion->telefono_2.'
+                                            <b>Teléfono 2 (opcional):</b><br>
+                                            '.$informacion->telefono_2.'
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="font-size: 1em;">
-                                                <b>Personalidad jurídica:</b><br>
-                                                '.$informacion->personalidad.'
+                                             <b>Personalidad jurídica:</b><br>
+                                             '.$informacion->personalidad.'
                                             </td>
                                             <td style="font-size: 1em;">
-                                                <b>Nacionalidad:</b><br>
-                                                '.$informacion->nacionalidad.'
+                                            <b>Nacionalidad:</b><br>
+                                            '.$informacion->nacionalidad.'
                                             </td>
                                         </tr>
                                     </table>
                                     <br>
                                     <br>
                                     <br>                       
-                                    <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
-                                        <tr>
-                                            <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
-                                            </td>
-                                        </tr>
-                                    </table>							
-                                    <br><br>                                  
-                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                        <tr>
-                                            <td style="font-size: 1em;">
-                                                <b>Asesor:</b><br>
-                                                '.$informacion->asesor.'
-                                            </td>
-                                            <td style="font-size: 1em;">
-                                                <b>Coordinador:</b><br>
-                                                '.$informacion->coordinador.'
-                                            </td> 
-                                            <td style="font-size: 1em;">
-                                                <b>Gerente:</b><br>
-                                                '.$informacion->gerente.'
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="font-size: 1em;">
-                                                <b>Teléfono asesor:</b><br>
-                                                '.$informacion->telefono_asesor.'
-                                            </td>
-                                                <td style="font-size: 1em;">
-                                                <b>Teléfono coordinador:</b><br>
-                                            '.$informacion->telefono_coordinador.'
-                                            </td> 
-                                                <td style="font-size: 1em;">
-                                                <b>Teléfono gerente:</b><br>
-                                            '.$informacion->telefono_gerente.'
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
-                                        <tr>
-                                            <td style="font-size: 1em;">
-                                                <b>Medio de contacto:</b><br>
-                                                '.$informacion->lugar.'<br>
-                                                '.$informacion_lugar->especificar.'
-                                            </td>
-                                            <td style="font-size: 1em;">
-                                                <b>Plaza de venta:</b><br>
-                                                '.$informacion->plaza.'
-                                            </td>
-                                            <td style="font-size: 1em;">
-                                                <b>Creado por:</b><br>
-                                                '.$informacion->creacion.'
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <br>
-                                    <br>
-                                    <br>
-            <body>
+                                  <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
+                                    <tr>
+                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
+                                        </td>
+                                    </tr>
+                                </table>							
+                                <br><br>                                  
+                                <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                <tr>
+                                    <td style="font-size: 1em;">
+                                     <b>Asesor:</b><br>
+                                     '.$informacion->asesor.'
+                                    </td>
+                                    <td style="font-size: 1em;">
+                                    <b>Coordinador:</b><br>
+                                    '.$informacion->coordinador.'
+                                    </td> 
+                                    <td style="font-size: 1em;">
+                                    <b>Gerente:</b><br>
+                                    '.$informacion->gerente.'
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td style="font-size: 1em;">
+                                 <b>Teléfono asesor:</b><br>
+                                 '.$informacion->telefono_asesor.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Teléfono coordinador:</b><br>
+                                '.$informacion->telefono_coordinador.'
+                                </td> 
+                                <td style="font-size: 1em;">
+                                <b>Teléfono gerente:</b><br>
+                                '.$informacion->telefono_gerente.'
+                                </td>
+                            </tr>
+                            </table>
+                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                            <tr>
+                                <td style="font-size: 1em;">
+                                 <b>Medio de contacto:</b><br>
+                                 '.$informacion->lugar.'<br>
+                                 '.$informacion_lugar->especificar.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Plaza de venta:</b><br>
+                                '.$informacion->plaza.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Creado por:</b><br>
+                                '.$informacion->creacion.'
+                                </td>
+                            </tr>
+                        </table>
+                            <br>
+                            <br>
+                            <br>
+                                  <body>
             </html>';
+
+            $pdf->writeHTMLCell(0, 0, $x = '', $y = '10', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);ob_end_clean();
+            $pdf->Output(utf8_decode("Informacion_".$informacion->cliente.".pdf"), 'I');
+        }
+    }
+
+    public function printProspectInfo2($id_prospecto){
+        $this->load->library('Pdf');
+        $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        // $pdf->SetAuthor('Sistemas Victor Manuel Sanchez Ramirez');
+        $pdf->SetTitle('INFORMACIÓN GENERAL DE PROSPECCIÓN');
+        $pdf->SetSubject('Información personal de prospecto / cliente (CRM)');
+        $pdf->SetKeywords('CRM, INFROMACION, PERSONAL, PROSPECTO');
+        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        // se pueden modificar en el archivo tcpdf_config.php de libraries/config
+        $pdf->SetAutoPageBreak(TRUE, 0);
+        //relación utilizada para ajustar la conversión de los píxeles
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setPrintHeader(false);
+        // $pdf->setPrintFooter();
+        $pdf->setFontSubsetting(true);
+        $pdf->SetFont('Helvetica', '', 9, '', true);
+        $pdf->SetMargins(7, 10, 10, true);
+        $pdf->AddPage('P', 'LETTER');
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $bMargin = $pdf->getBreakMargin();
+        $auto_page_break = $pdf->getAutoPageBreak();
+        $pdf->Image('dist/img/ar4c.png', 120, 0, 300, 0, 'PNG', '', '', false, 150, '', false, false, 0, false, false, false);
+        $pdf->setPageMark();
+        $informacion = $this->Clientes_model->getPrintableInformation($id_prospecto)->row();
+        $informacion_lugar = $this->Clientes_model->getProspectSpecification($id_prospecto)->row();
+
+        print_r($informacion);
+        exit;
+
+        if($informacion){
+
+            
+            $html = '
+            <!DOCTYPE html>
+            <html lang="es_mx"  ng-app="CRM">
+        <head>
+            <style>
+            legend {
+                background-color: #296D5D;
+                color: #fff;
+            }           
+            </style>
+        </head>
+        <body>
+              <section class="content">
+                    <div class="row">
+                        <div class="col-xs-10 col-md-offset-1">
+                        <div class="box">
+                            <div class="box-body">
+                                  <table width="100%" style="height: 100px; border: 1px solid #ddd;" width="690">
+                                    <tr>
+                                        <td colspan="2" align="left"><img src="https://www.ciudadmaderas.com/assets/img/logo.png" style=" max-width: 70%; height: auto;"></td>
+                                        <td colspan="2" align="right"><b style="font-size: 2em; "> Información<BR></b><small style="font-size: 2em; color: #777;"> Prospecto</small> 
+                                        </td>
+                                    </tr>
+                                </table>
+                                
+                                <br><br>
+                                  <table width="100%" style="padding:10px 0px; text-align: center;height: 45px; border: 1px solid #ddd;" width="690">
+                                    <tr>
+                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos generales</b>
+                                        </td>
+                                    </tr>
+                                </table>                            
+                                <br>                       
+                                    <div class="row">                
+                                  <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                             <b>Nombre:</b><br>
+                                             '.$informacion->cliente.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                            <b>CURP:</b><br>
+                                            ';
+
+                                            if($informacion->curp==''){
+                                                $html .='';
+                                            }else{
+                                                $html .= $informacion->curp;
+                                            }
+
+                                            $html .='
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                            <b>RFC:</b><br>
+                                            '.$informacion->rfc.'
+                                            </td>
+                                        </tr>                                        
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                             <b>Correo electrónico:</b><br>
+                                             '.$informacion->correo.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                            <b>Teléfono:</b><br>
+                                            '.$informacion->telefono.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                            <b>Teléfono 2 (opcional):</b><br>
+                                            '.$informacion->telefono_2.'
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="font-size: 1em;">
+                                             <b>Personalidad jurídica:</b><br>
+                                             '.$informacion->personalidad.'
+                                            </td>
+                                            <td style="font-size: 1em;">
+                                            <b>Nacionalidad:</b><br>
+                                            '.$informacion->nacionalidad.'
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <br>
+                                    <br>
+                                    <br>                       
+                                  <table width="100%" style="text-align: center;padding:10px;height: 45px; border-top: 1px solid #ddd;border-left: 1px solid #ddd;border-right: 1px solid #ddd;" width="690">
+                                    <tr>
+                                        <td colspan="2" style="background-color: #15578B;color: #fff;padding: 3px 6px; "><b style="font-size: 2em; ">Datos de prospección</b>
+                                        </td>
+                                    </tr>
+                                </table>                            
+                                <br><br>                                  
+                                <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                                <tr>
+                                    <td style="font-size: 1em;">
+                                     <b>Asesor:</b><br>
+                                     '.$informacion->asesor.'
+                                    </td>
+                                    <td style="font-size: 1em;">
+                                    <b>Coordinador:</b><br>
+                                    '.$informacion->coordinador.'
+                                    </td> 
+                                    <td style="font-size: 1em;">
+                                    <b>Gerente:</b><br>
+                                    '.$informacion->gerente.'
+                                    </td>
+                                </tr>
+                                <tr>
+                                <td style="font-size: 1em;">
+                                 <b>Teléfono asesor:</b><br>
+                                 '.$informacion->telefono_asesor.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Teléfono coordinador:</b><br>
+                                '.$informacion->telefono_coordinador.'
+                                </td> 
+                                <td style="font-size: 1em;">
+                                <b>Teléfono gerente:</b><br>
+                                '.$informacion->telefono_gerente.'
+                                </td>
+                            </tr>
+                            </table>
+                            <table width="100%" style="padding:10px 3px;height: 45px; border: 1px solid #ddd; text-align: center;" width="690">
+                            <tr>
+                                <td style="font-size: 1em;">
+                                 <b>Medio de contacto:</b><br>
+                                 '.$informacion->lugar.'<br>
+                                 '.$informacion_lugar->especificar.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Plaza de venta:</b><br>
+                                '.$informacion->plaza.'
+                                </td>
+                                <td style="font-size: 1em;">
+                                <b>Creado por:</b><br>
+                                '.$informacion->creacion.'
+                                </td>
+                            </tr>
+                        </table>
+                            <br>
+                            <br>
+                            <br>
+                                  <body>
+            </html>
+                                  ';
+
+                                  
 
             $pdf->writeHTMLCell(0, 0, $x = '', $y = '10', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);ob_end_clean();
             $pdf->Output(utf8_decode("Informacion_".$informacion->cliente.".pdf"), 'I');
@@ -1813,10 +2007,8 @@ public function getStatusMktdPreventa(){
         } else {
 
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByGerente($id_gerente, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -1833,18 +2025,14 @@ public function getStatusMktdPreventa(){
         if ($this->session->userdata('id_rol') == 19) {
             $dato = $this->Clientes_model->getSedeByUser($id_coord);
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListByCoord($id_coord, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -1860,17 +2048,10 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByAsesor($id_asesor)
     {
         $typeTransaction = $this->input->post("typeTransaction");
-        if($this->input->post("beginDate") != 0 && $this->input->post("endDate") != 0){
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-            $where = $this->input->post("where");
-            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
-        }
-        else{
-            $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, 0, 0, 0);
-        }
+        $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+        $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
+        $where = $this->input->post("where");
+        $data = $this->Clientes_model->getProspectsListByAsesor($id_asesor, $typeTransaction, $beginDate, $endDate, $where);
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -2211,10 +2392,8 @@ public function getStatusMktdPreventa(){
     public function getProspectsListByGteAll($id_gte){
         if (isset($_POST) && !empty($_POST)) {
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
-            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data['data'] = $this->Clientes_model->getProspectsListByGteAll($id_gte, $typeTransaction, $beginDate, $endDate, $where);
             echo json_encode($data);
@@ -2253,7 +2432,7 @@ public function getStatusMktdPreventa(){
     }
 	
 	
-    public function changeProspectingPlace()
+        public function changeProspectingPlace()
     {
         $this->load->view('template/header');
         $this->load->view("clientes/change_lp");
@@ -2335,7 +2514,7 @@ public function getStatusMktdPreventa(){
             case '17': // CONTRALORÍA
             case '63': // CONTROL INTERNO
             case '70': // EJECUTIVO CONTRALORIA JR
-                $this->load->view("clientes/clients_report_ventas");
+                        $this->load->view("clientes/clients_report_ventas");
             break;
         }
     }
@@ -2625,18 +2804,14 @@ public function getStatusMktdPreventa(){
         if ($this->session->userdata('id_rol') == 19) {
             $dato = $this->Clientes_model->getSedeByUser($idSubdir);
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
-            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($dato[0]['id_sede'], $typeTransaction, $beginDate, $endDate, $where);
         } else {
             $typeTransaction = $this->input->post("typeTransaction");
-            $fechaInicio = explode('/', $this->input->post("beginDate"));
-            $fechaFin = explode('/', $this->input->post("endDate"));
-            $beginDate = date("Y-m-d", strtotime("$fechaInicio[2]-$fechaInicio[1]-$fechaInicio[0]"));
-            $endDate = date("Y-m-d", strtotime("$fechaFin[2]-$fechaFin[1]-$fechaFin[0]"));
+            $beginDate = date("Y-m-d", strtotime($this->input->post("beginDate")));
+            $endDate = date("Y-m-d", strtotime($this->input->post("endDate")));
             $where = $this->input->post("where");
             $data = $this->Clientes_model->getProspectsListBySubdirector($idSubdir, $typeTransaction, $beginDate, $endDate, $where);
         }
@@ -2648,7 +2823,7 @@ public function getStatusMktdPreventa(){
         }
         exit;
     }
-
+    
     public function prospectsReport(){
         $this->load->view('template/header');
         $this->load->view("marketing/prospectsReportMarketing");
@@ -2678,12 +2853,13 @@ public function getStatusMktdPreventa(){
         $id_dragon = $this->input->post("id_dragon");
         $id_salesforce = $this->input->post("id_salesforce");
         $tipo_busqueda = $this->input->post("TB");
+        $lotesDragon = $this->input->post("lotesDragon");
 
         $fechaInicio = explode('/', $this->input->post("fecha_init"));
         $fechaFin = explode('/', $this->input->post("fecha_end"));
         $fecha_init = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
         $fecha_end = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
-
+        
         $data_search = array(
             'idLote' => $idLote,
             'nombre' => $name,
@@ -2694,7 +2870,8 @@ public function getStatusMktdPreventa(){
             'id_salesforce' => $id_salesforce,
             'tipo_busqueda' => $tipo_busqueda,
             'fecha_init' => $fecha_init,
-            'fecha_end' => $fecha_end
+            'fecha_end' => $fecha_end,
+            'lotesDragon' => $lotesDragon,
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);
@@ -2718,18 +2895,8 @@ public function getStatusMktdPreventa(){
         $this->load->view("marketing/dragonsClientsList");
     }
 
-    public function salesforceClientList() {
-        $this->load->view('template/header');
-        $this->load->view("marketing/salesforceClientList");
-    }
-
     public function getDragonsClientsList() {
         $result['data'] = $this->Clientes_model->getDragonsClientsList();
-        echo json_encode($result, JSON_NUMERIC_CHECK);    
-    }
-
-    public function getSalesforceClientsList() {
-        $result['data'] = $this->Clientes_model->getSalesforceClientsList();
         echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
@@ -2792,6 +2959,16 @@ public function getStatusMktdPreventa(){
 
         $data = $this->Clientes_model->getLotesApartadosReubicacion($fechaInicio, $fechaFin);
         echo json_encode($data);
+    }
+
+    public function listaClientesSalesforce(){
+        $this->load->view('template/header');
+        $this->load->view("marketing/listaClientesSalesforce");
+    }
+
+    public function getListaClientesSalesforce() {
+        $result['data'] = $this->Clientes_model->getListaClientesSalesforce();
+        echo json_encode($result, JSON_NUMERIC_CHECK);    
     }
 
     public function listaClientesArcus() {

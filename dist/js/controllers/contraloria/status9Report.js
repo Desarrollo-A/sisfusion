@@ -35,16 +35,16 @@ $('#estatusNueveTable thead tr:eq(0) th').each( function (i) {
     $( 'input', this ).on('keyup change', function () {
         if ($('#estatusNueveTable').DataTable().column(i).search() !== this.value ) {
             $('#estatusNueveTable').DataTable().column(i).search(this.value).draw();
-        }
+}
     });
-    $('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip();
 })
 
 function fillTable(typeTransaction, beginDate, endDate) {
     generalDataTable = $('#estatusNueveTable').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        buttons: [
+                buttons: [
             {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -52,7 +52,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                 titleAttr: 'REPORTE ESTATUS 9',
                 title: 'Reporte estatus 9',
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulos[columnIdx] + ' ';
@@ -107,7 +107,7 @@ function fillTable(typeTransaction, beginDate, endDate) {
                     if (d.id_cliente_reubicacion != 0 && d.id_cliente_reubicacion != null)
                         return d.fechaAlta;
                     else
-                        return '<span class="label lbl-gray">NO APLICA</span>';
+                        return 'NO APLICA';
                 }
             }
         ],

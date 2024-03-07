@@ -1,3 +1,15 @@
+$(document).ready(function() {
+    $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['idResidencial'];
+            var name = data[i]['descripcion'];
+            $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#filtro3").selectpicker('refresh');
+    }, 'json');
+});
+
 var idResidencial;
 var grupo;
 var clusterSelect;
@@ -11,21 +23,10 @@ var totalSelect2;
 var mesesSelect;
 var mesesSelect2;
 
-$(document).ready(function() {
-    $.post(`${general_base_url}index.php/Contratacion/lista_proyecto`, function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['idResidencial'];
-            var name = data[i]['descripcion'];
-            $("#filtro3").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#filtro3").selectpicker('refresh');
-    }, 'json');
-});
-
 $('#filtro3').change(function(){
     residencial = $('#filtro3').val();
     grupo = $('#filtro5').val();
+
     if(residencial == 0){
         $("#filtro4").empty().selectpicker('refresh');
         $.ajax({
@@ -42,6 +43,7 @@ $('#filtro3').change(function(){
                 $("#filtro4").selectpicker('refresh');
             }
         });
+
         $("#filtro6").empty().selectpicker('refresh');
         $.ajax({
             url: `${general_base_url}Asesor/getSupOneTodos/`,
@@ -252,7 +254,6 @@ function dataTable(ruta) {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
-        bAutoWidth: true,   
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip("destroy");
             $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
@@ -265,36 +266,36 @@ function dataTable(ruta) {
             }
         },
         buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'Reporte Inventario Disponible',
-            exportOptions: {
-                columns: num_colum_encabezado,
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'Reporte Inventario Disponible',
+                exportOptions: {
+                    columns: num_colum_encabezado,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                },
+            } ,
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
+                className: 'btn buttons-pdf',
+                titleAttr: 'Descargar archivo PDF',
+                title: 'Reporte Inventario Disponible',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                exportOptions: {
+                    columns: num_colum_encabezado,
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
                     }
                 }
-            },
-        } ,
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Descargar archivo PDF',
-            title: 'Reporte Inventario Disponible',
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: num_colum_encabezado,
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' '+titulos_encabezado[columnIdx] +' ';
-                    }
-                }
-            }
         }],
         destroy: true,
         columnDefs: [{
@@ -331,7 +332,15 @@ function dataTable(ruta) {
                 function(data){ 
                     if(data.tipo_venta == 1) { 
                         return `<center>
-                                    <button class="btn-data btn-blueMaderas ver_historial" value="${data.idLote}" data-nomLote="${data.nombreLote}" data-tipo-venta="${data.tipo_venta}" data-toggle="tooltip" data-placement="top" title="INFORMACIÓN" ><i class="fas fa-info"></i></button>
+                                    <button class="btn-data btn-blueMaderas ver_historial"
+                                            value="${data.idLote}" 
+                                            data-nomLote="${data.nombreLote}"
+                                            data-tipo-venta="${data.tipo_venta}"
+                                            data-toggle="tooltip" 
+                                            data-placement="top"
+                                            title="INFORMACIÓN" >
+                                        <i class="fas fa-info"></i>
+                                    </button>
                                 </center>`;
                     } else { 
                         return "" 

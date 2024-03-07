@@ -31,7 +31,7 @@ var optionsTotalVentas = {
                     offsetY: 120,
                     formatter: function (w) {
                         // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
-
+                        
                         let val = w.globals.labels[0];
                         return `${val.toLocaleString('es-MX')}`;
                     }
@@ -91,7 +91,7 @@ var optionsProspectos = {
             colorStops: []
         }
     },
-    tooltip: {
+    tooltip: { 
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -157,7 +157,7 @@ var optionsProspClients = {
             colorStops: []
         }
     },
-    tooltip: {
+    tooltip: { 
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -213,7 +213,7 @@ var optionsWeekly = {
         categories: ['Prospectos nuevos','Prospectos c/cita','Ventas totales','Ventas contratadas',
         'Ventas apartadas','Cancelados contratados','Cancelados apartados']
     },
-    tooltip: {
+    tooltip: { 
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -253,7 +253,7 @@ var optionsFunnel = {
     legend: {
         show: false
     },
-    tooltip: {
+    tooltip: { 
         enabled: true,
         y: {
             formatter: (value) => value.toLocaleString('es-MX'),
@@ -332,11 +332,11 @@ function loadInit(){
         typeTransaction = validateMainFilters();
         var com2 = new FormData();
         com2.append("typeTransaction", typeTransaction);
-        getProspectsByYear(com2);
+        getProspectsByYear(com2); 
         getSalesByYear(com2);
-        generalMetrics(typeTransaction);
+        generalMetrics(typeTransaction); 
         cicloVenta(com2);
-        getClientsAndProspectsByYear();
+        getClientsAndProspectsByYear(); 
 }
 
 function getSalesByYear(com2){
@@ -398,9 +398,9 @@ function getProspectsByYear(com2) {
             }])
             prospectosChart.updateOptions({
                 xaxis: {
-                    categories: months
+                   categories: months
                 },
-                });
+             });
             $('#numberGraphic').text(count.toLocaleString('es-MX'));
             document.getElementById('numberGraphic').title = count.toLocaleString('es-MX');
             $('.loadProspectosChart').addClass('d-none');
@@ -530,10 +530,10 @@ function cicloVenta(com2){
         dataType: 'json',
         success : function (response) {
             chartFunnel.updateSeries([
-                response.totalProspectosCita, response.totalProspectosCitaSeguimiento,
+               response.totalProspectosCita, response.totalProspectosCitaSeguimiento, 
                 response.totalApartados, response.prospectosNoInteresados
             ]);
-
+            
             addTextFields2(response);
             $('.loadChartFunnel').addClass('d-none');
         }
@@ -746,7 +746,7 @@ async function prospectsTable(){
     $('#tablePR thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}"placeholder="${title}"/>`);
-            $( 'input', this ).on('keyup change', function () {
+        $( 'input', this ).on('keyup change', function () {
             if ($('#tablePR').DataTable().column(i).search() !== this.value ) {
                 $('#tablePR').DataTable().column(i).search(this.value).draw();
             }
@@ -794,7 +794,7 @@ function createAccordionsPR(option, render, rol) {
     let html = '';
     html = `<div class="bk ${render == 1 ? 'parentTable': 'childTable'}">
                 <div class="card p-2 h-auto boxTabla">
-                    <div class="d-flex justify-between align-center">
+                    <div class="d-flex justify-between align-center">   
                         <div class="cursor-point accordionToggle">
                             <a class="purple-head hover-black" onclick="changeIcon(this)" id="myBtn">
                             <i class="less fas fa-angle-down"></i>
@@ -865,6 +865,7 @@ function multirol(){
                 items_activos.push('asesors');
                 createFilters(1, items_activos);
                 loadSbdir();
+
             }
             break;
         case 2:
@@ -877,7 +878,6 @@ function multirol(){
                     items_activos.push('gerente');
                     items_activos.push('coordinadors');
                     items_activos.push('asesors');
-                    loadSbdir();
                     createFilters(59, items_activos);
                     getFirstFilter(59, 2);
                 }else{
@@ -1144,6 +1144,9 @@ $(document).on('change', '#gerente', function () {
         }
         $("#coordinadors").selectpicker('refresh');
     }, 'json');
+
+
+
     /**///carga tabla
     var url = general_base_url+"Clientes/getProspectsListByGerente/"+gerente;
     let finalBeginDate = $("#beginDate3").val();
@@ -1201,7 +1204,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let monthP = ((newDate.getMonth()+1)<10) ? '0'+(newDate.getMonth()+1) : (newDate.getMonth()+1);
     let dayP = (newDate.getDate()<10) ? '0'+ newDate.getDate() : newDate.getDate();
 
-    beginDate = dayP+'/'+monthP+'/'+yearP;
+    beginDate = dayP+'-'+monthP+'-'+yearP;
 
     let oldDateend = endDate.split('/');
     let newDateEnd = new Date(oldDateend[1]+'-'+oldDateend[0]+'-'+oldDateend[2]).toISOString();
@@ -1209,7 +1212,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
     let yearPE = newDateEnd.getFullYear();
     let monthPE = ((newDateEnd.getMonth()+1)<10) ? '0'+(newDateEnd.getMonth()+1) : (newDateEnd.getMonth()+1);
     let dayPE = (newDateEnd.getDate()<10) ? '0'+ newDateEnd.getDate() : newDateEnd.getDate();
-    endDate = dayPE+'/'+monthPE+'/'+yearPE;
+    endDate = dayPE+'-'+monthPE+'-'+yearPE;
 
     prospectsTables = $('#tablePR').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -1282,10 +1285,10 @@ function updateTable(url, typeTransaction, beginDate, endDate, where){
         destroy: true,
         columns: [
             { data: function (d) {
-                if (d.estatus == 1)
-                    return '<center><span class="label lbl-green">Vigente</span><center>';
-                else
-                    return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
+                    if (d.estatus == 1)
+                        return '<center><span class="label lbl-green">Vigente</span><center>';
+                    else
+                        return '<center><span class="label lbl-warning">Sin vigencia</span><center>';
             } },
             { data: function (d) {
                 if(d.estatus_particular == 1) // DESCARTADO

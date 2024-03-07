@@ -2,6 +2,7 @@ let descuentosYCondiciones;
 $('#li-plan').addClass(id_rol_global == 17 ||  id_rol_global == 70 ? 'hidden' : '')
 llenarTipoDescuentos();
 
+
 sp = {
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -22,10 +23,7 @@ sp = {
     }
 }
 
-$(document).ready(function(){
-
-
-
+$(document).ready(function(){ /**FUNCIÓN PARA LLENAR EL SELECT DE LOS FILTROS DE ESTATUS */
     $.post('getCatalogo', {
         id_catalogo: 90
     }, function (data) {        
@@ -34,7 +32,7 @@ $(document).ready(function(){
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             $("#estatusAut").append($('<option>').val(id).text(name));
-                if(i == data.length -1) { 
+                if(i == data.length -1) { //DESPUES DE LA ULTIMA OPCIÓN DE LOS ESTATUS, AGREGAR LA OPCIÓN "TODOS" PARA TRAER TODOS LOS ESTATUS
                     $("#estatusAut").append($('<option>').val(0).text('Todos'));
                 }
         } 
@@ -48,9 +46,13 @@ $(document).ready(function(){
 
 function verificarEdicion(){
     if($('#idSolicitudAut').val() == ''){
+        //NO SE HA SELECCIONADO NINGUN PLAN Y DEJA CAMBIAR ENTRE PESTAÑAS
     }else{
         $("#modalConfirm").modal();
-    } 
+    }
+    //verificar si la variable de id_autorizacion esta llena
+    /* si si, ejecutar modal y preguntar si desea eliminar los datos cargados al editar, si si recargar tabla y limpiar form de planes
+      si no, ejecutar modal y preguntar si desea eliminar los datos cargados al editar, si no regresar al otro div de cargar plan*/ 
 }
 $(document).on('click', '#btnCancel', function (e) { 
     $('#li-plan').addClass('active');
@@ -76,11 +78,12 @@ $(document).on('click', '#btnLimpiar', function (e) {
         $("#modalConfirm").modal('toggle');
 });
 
+
     let titulos = [];
     $('#autorizacionesPVentas thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
         titulos.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $(this).html('<input type="text"  class="textoshead" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function() {
             if (tablaAutorizacion.column(i).search() !== this.value) {
                 tablaAutorizacion.column(i).search(this.value).draw();
@@ -91,7 +94,6 @@ $(document).on('click', '#btnLimpiar', function (e) {
             }
         });
     });
-
     ConsultarTabla();
     function ConsultarTabla(opcion = 1,anio = '',estatus = ''){
     tablaAutorizacion = $("#autorizacionesPVentas").DataTable({
@@ -175,14 +177,14 @@ $(document).on('click', '#btnLimpiar', function (e) {
         },
         {
             "data": function( d ){
-                let fecha_creacion = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
+               let fecha_creacion = moment(d.fecha_creacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')
                 return `<p class="m-0">${fecha_creacion}</p>`;
         }
         },
         {  
             "data": function( d ){
                 return `<p class="m-0">${d.creadoPor}</p>`;
-            }
+             }
         },
         {  
             "data": function( d ){
@@ -202,7 +204,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                         }
                     break;
                     case 17:
-                    case 70:
+                    case 70:   
                         if(d.estatus_autorizacion == 2){
                             botones += botonesPermiso(1,0,1,1,d.id_autorizacion,d.estatus_autorizacion);
                         }
@@ -216,7 +218,7 @@ $(document).on('click', '#btnLimpiar', function (e) {
                 }
                 botones += `<button data-idAutorizacion="${d.id_autorizacion}" id="btnHistorial" class="btn-data btn-gray" data-toggle="tooltip" data-placement="top" title="Historial de movimientos"><i class="fas fa-info"></i></button>`; ;
                 return '<div class="d-flex justify-center">' + botones + '<div>';
-            }
+             }
         }],
         columnDefs: [{}],
         ajax: {
@@ -233,15 +235,16 @@ $(document).on('click', '#btnLimpiar', function (e) {
             [1, 'asc']
         ]
     });
-    $('#autorizacionesPVentas').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    });
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
         let botones = '';
+        /**Permisos
+         * 1.- vista
+         * 2.- Editar
+         * 3.- Avanzar
+         * 4.- Rechazar
+         * */
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
             if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>`; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
@@ -252,6 +255,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $(document).on('click', '#btnEditar', function (e) {
         e.preventDefault();
         $('#spiner-loader').removeClass('hide');
+
         var data = tablaAutorizacion.row($(this).parents('tr')).data();
         document.getElementById('fechainicio').value = data.fecha_inicio;
         document.getElementById('fechafin').value = data.fecha_fin;
@@ -271,6 +275,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         for (let m = 0; m < residenciales.length; m++) {
             residencialesSelect.push(residenciales[m]);
         }
+
         setTimeout(() => {
             $(`#residencial`).val(residencialesSelect).trigger('change');
         }, 1000);
@@ -306,9 +311,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         let idAutorizacion = $(this).attr('data-idAutorizacion');
         let estatus = $(this).attr('data-estatus');
         let tipo = $(this).attr('data-tipo');
-        tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
-        document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
-        $('#id_autorizacion').val(idAutorizacion);
+         tipo == 1  ? $('#modalAutorizacion').addClass("modal-sm") : $('#modalAutorizacion').addClass("modal-md") ;
+         document.getElementById('titleAvance').innerHTML = tipo == 1 ? '¿Estás seguro de avanzar está autorización?' : '¿Estás seguro de rechazar está autorización?';
+         $('#id_autorizacion').val(idAutorizacion);
         $('#estatus').val(estatus);
         $('#tipo').val(tipo);
         document.getElementById('modal-body').innerHTML = tipo == 2 ? `<textarea class="text-modal scroll-styles" max="255" type="text" name="comentario" id="comentario" autofocus="true" onkeyup="javascript:this.value=this.value.toUpperCase();" placeholder="Escriba aquí su comentario"></textarea>
@@ -417,6 +422,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                 if(existe != undefined){
                     crearDivs(dataPaquetes[m],tiposDescuentos,descuentosByPlan);
                 }
+
                 if(m == dataPaquetes.length -1){
                     $('#spiner-loader').addClass('hide');
                 }
@@ -456,7 +462,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     if(descuentosByPlan[o].id_condicion == tiposDescuentos[m].condicion.id_condicion){
                         let porcentaje = descuentosByPlan[o].id_condicion == 4 || descuentosByPlan[o].id_condicion == 12 ? '$'+formatMoney(descuentosByPlan[o].porcentaje) : (descuentosByPlan[o].id_condicion == 13 ? descuentosByPlan[o].porcentaje : descuentosByPlan[o].porcentaje + '%'  )
                         $(`#tipoDescPaquete_${dataPaquete.id_paquete}_${tiposDescuentos[m].condicion.id_condicion}`).append(`
-                            <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
+                           <span class="label lbl-green" style="margin: 0 5px">${porcentaje} ${descuentosByPlan[o].id_condicion == 13 ? '' :(descuentosByPlan[o].msi_descuento != null && descuentosByPlan[o].msi_descuento != 0 ? ' +  '+descuentosByPlan[o].msi_descuento+'MSI' : '')}</span>`);
                     }
                 }
             }       
@@ -478,7 +484,9 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     
         sp.initFormExtendedDatetimepickers();
         $('.datepicker').datetimepicker({ locale: 'es' });
+        //Función para mandar parametros por defecto en filtros de fecha
         setInitialValues();
+        //Función para mandar estatus vacio por defecto 
         sinPlanesDiv();
     });
 
@@ -513,13 +521,6 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
     $("#residencial").select2({containerCssClass: "select-gral",dropdownCssClass: "custom-dropdown"});
     
     function addDescuento(id_condicion, descripcion){
-        const arrayCondiciones = [1,2,13];
-        var desc = document.getElementById("descuento");
-
-        const found = arrayCondiciones.find((element) => element == id_condicion);
-        console.log(found)
-        found != undefined ? desc.setAttribute("data-type","") : desc.setAttribute("data-type","currency") ;
-        
         $('#descuento').val('');
         $('#label_descuento').html();
         $('#id_condicion').val(id_condicion);
@@ -543,6 +544,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }
     });
     
+    //Agregar formato tipo moneda y decimales para ciertas condiciones 
     function formatCurrency(input, blur) {
         var input_val = input.val();
         if (input_val === "") { return; }
@@ -572,7 +574,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         caret_pos = updated_len - original_len + caret_pos;
         input[0].setSelectionRange(caret_pos, caret_pos);
     }
-
+    
+    //Fn para obtener las condiciones y descuentos que pertenecen a ellas (tablas condiciones en BD)
     function getDescuentosYCondiciones(){
         $('#spiner-loader').removeClass('hide');
         return new Promise ((resolve, reject) => {   
@@ -628,8 +631,8 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
                     title: 'DESCUENTOS AL '+ descripcion.toUpperCase()
                 },
                 {
-                    text: `<button  onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</button>`,
-                    className: 'btn btn-blueMaderas text-white',
+                    text: `<a href="#" onclick="addDescuento(${id_condicion}, '${descripcion}');">Agregar descuento</a>`,
+                    className: 'btn-azure',
                 }],
                 pagingType: "full_numbers",
                 language: {
@@ -683,7 +686,7 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
             processData:false,
             success: function(data) {
                 data =  JSON.parse(data);
-                if ( data['status'] == 402 ){
+                if ( data['status'] = 402 ){
                     descuentosYCondiciones.forEach(element => {
                         if ( element['condicion']['id_condicion'] == data['detalle'][0]['condicion']['id_condicion'] ){
                             element['data'] = [];

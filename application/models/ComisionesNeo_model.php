@@ -262,7 +262,7 @@ class ComisionesNeo_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) total, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) ventas ON ventas.id_lote = l.idLote
         WHERE (p.bandera = 1 AND l.registro_comision IN (1) 
 		AND (l.idStatusContratacion = 15 OR (l.idStatusContratacion >= 9 AND (CASE WHEN ooam.total > 1 THEN 1 ELSE 0 END) = 0 
-		AND (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) = 1)) AND p.ultimo_pago > 0 AND r.idResidencial = 1
+		AND (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) = 1)) AND p.ultimo_pago > 0 AND r.idResidencial = $res
 		AND (((abonado - ultimo_pago) > 10 AND (new_neo-ultimo_pago) > 10) OR (total_comision - abonado) > 10)  AND total_comision > 1)
 		OR l.registro_comision IN (4,6) 
 		OR (l.registro_comision IN (3) AND l.idStatusContratacion = 15 )");
@@ -282,7 +282,6 @@ class ComisionesNeo_model extends CI_Model {
     }
 
     public function UpdateBanderaPagoComision($idLote, $bonificacion, $FechaAplicado, $FPoliza, $Aplicado){
-        $this->db->query("UPDATE lotes SET registro_comision = 1 WHERE registro_comision IN (3,4,6) AND idLote = ".$idLote."");
         return $this->db->query("UPDATE pago_comision SET bandera = 0, fecha_modificacion = GETDATE(), bonificacion = ".$bonificacion.", fecha_neodata = '".$FechaAplicado."', modificado_por = 'NEO' WHERE id_lote = ".$idLote."");
     }
 

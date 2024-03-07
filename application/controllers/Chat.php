@@ -6,21 +6,16 @@ class Chat extends CI_Controller {
         header("Access-Control-Allow-Headers: Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
         $this->load->model(array('Chat_modelo'));
-                $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
-                $this->load->model('Clientes_model');
-                
-                     //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-                     $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
-        $this->load->library(array('session','form_validation'));
+        $this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+        $this->load->model('Clientes_model');
+        //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
+        $this->jwt_actions->authorize('2296', $_SERVER['HTTP_HOST']);
         $this->load->library('phpmailer_lib');
-
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+        $this->validateSession();
+	}
 
 	public function index()
 	{
@@ -33,8 +28,7 @@ class Chat extends CI_Controller {
     {
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
         {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
-            redirect(base_url() . "index.php/login");
+            redirect(base_url() . "login");
         }
     }
 
@@ -44,10 +38,14 @@ class Chat extends CI_Controller {
 
     public function getEstados(){
             echo json_encode($this->Clientes_model->getEstados()->result_array());
-        }
+    }
 
 public function UserChat()
 {
+      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+      /*-------------------------------------------------------------------------------*/
+
 if ($this->session->userdata('id_rol') == 19) {
     $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
         $datos['online'] = $this->Chat_modelo->OnlineSG($this->session->userdata('id_sede'))->result();
@@ -77,6 +75,8 @@ $datos['online'] = $this->Chat_modelo->Online($this->session->userdata('id_sede'
 
         if(!empty($datos['permiso']) && $this->session->userdata('id_rol') == 20){
             
+            /*$this->load->view('template/header');
+            $this->load->view("Chat/UserChat", $datos);*/
             if($this->session->userdata('id_rol') == 20 && $datos['permiso'][0]['estado'] ==0){
               echo '        
                 <html>
@@ -324,34 +324,49 @@ $datos['online'] = $this->Chat_modelo->Online($this->session->userdata('id_sede'
          
 
 }
-    public function Perfil()
-    {
+public function Perfil()
+{
+      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+      /*-------------------------------------------------------------------------------*/
         $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
 
+            $this->load->view('template/header');
+        $this->load->view("Chat/Perfil", $datos);        
+
+}
+public function ChatVivo()
+{
+       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       /*-------------------------------------------------------------------------------*/
+        $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
+
+            $this->load->view('template/header');
+        $this->load->view("Chat/ChatVivo", $datos);        
+
+}
+public function HistorialAdmin()
+{
+      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+      /*-------------------------------------------------------------------------------*/
+
+            $this->load->view('template/header');
+        $this->load->view("Chat/historialChat", $datos);        
+
+}
+public function HistorialProspeccion()
+{
+       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       /*-------------------------------------------------------------------------------*/
         $this->load->view('template/header');
-        $this->load->view("Chat/Perfil", $datos);
+        $this->load->view("Chat/HistorialGte", $datos);        
 
-    }
-    public function ChatVivo()
-    {
-           $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
+}
 
-           $this->load->view('template/header');
-           $this->load->view("Chat/ChatVivo", $datos);
-
-    }
-    public function HistorialAdmin()
-    {
-        $this->load->view('template/header');
-        $this->load->view("Chat/historialChat");
-    }
-    public function HistorialProspeccion()
-    {
-        $this->load->view('template/header');
-        $this->load->view("Chat/HistorialGte");
-    }
-
-    public function Busqueda(){
+public function Busqueda(){
     $nombre = $this->input->post("buscar");
     $valor = $this->input->post("estatus");
     $datos = array();
@@ -474,19 +489,23 @@ $datos['online'] = $this->Chat_modelo->Online($this->session->userdata('id_sede'
 
 }
     public function UsersOnline($valor){
-        if ($valor == 1) {
-            switch ($this->session->userdata('id_rol')) {
-                case 19:
-                    $datos['usuarios'] = $this->Chat_modelo->usuarios_onlineSG($this->session->userdata('id_sede'))->result_array();
-                break;
-                case 20:
-                    $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
-                    $datos['usuarios'] = $this->Chat_modelo->usuarios_online($this->session->userdata('id_sede'))->result_array();
-                break;
-                case 28:
-                    $datos['usuarios'] = $this->Chat_modelo->usuarios_onlineAdmin()->result_array();
-                break;
-            }
+             /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+         $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+         /*-------------------------------------------------------------------------------*/
+
+            if ($valor == 1) {
+                switch ($this->session->userdata('id_rol')) {
+                    case 19:
+                        $datos['usuarios'] = $this->Chat_modelo->usuarios_onlineSG($this->session->userdata('id_sede'))->result_array();  
+                    break;
+                    case 20:
+                        $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
+                        $datos['usuarios'] = $this->Chat_modelo->usuarios_online($this->session->userdata('id_sede'))->result_array();   
+                    break;
+                    case 28:
+                        $datos['usuarios'] = $this->Chat_modelo->usuarios_onlineAdmin()->result_array(); 
+                    break;
+                }
 
             }
             elseif($valor == 2){
@@ -523,6 +542,9 @@ $datos['online'] = $this->Chat_modelo->Online($this->session->userdata('id_sede'
 
 public function Chat()
 {
+       /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+       $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+       /*-------------------------------------------------------------------------------*/
         $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
         $datos['carpetas'] = $this->Chat_modelo->getAllFoldersPDF()->result_array();    
         $permiso_estado = (count($datos['permiso']) <= 0 ) ? '' : $datos['permiso'][0]['estado']; 
@@ -640,22 +662,31 @@ public function Chat()
 
 }
 
-    public function HistorialGte()
-    {
+public function HistorialGte()
+{
+      /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+      $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+      /*-------------------------------------------------------------------------------*/
         $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
-        $this->load->view('template/header');
-        $this->load->view("Chat/HistorialGte", $datos);
-    }
-    public function ConfiguracionChat()
-    {
-        if($this->session->userdata('id_rol') != 28 && $this->session->userdata('id_rol') != 18){
-            $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
 
-        }
+            $this->load->view('template/header');
+        $this->load->view("Chat/HistorialGte", $datos);        
 
-        $this->load->view('template/header');
-        $this->load->view("Chat/ConfiguracionChat", $datos);
-    }
+}
+public function ConfiguracionChat()
+{
+    /*--------------------NUEVA FUNCIÓN PARA EL MENÚ--------------------------------*/           
+    $datos = $this->get_menu->get_menu_data($this->session->userdata('id_rol'));
+    /*-------------------------------------------------------------------------------*/
+if($this->session->userdata('id_rol') != 28 && $this->session->userdata('id_rol') != 18){
+    $datos['permiso'] = $this->Chat_modelo->Tiene_permisos($this->session->userdata('id_usuario'))->result_array();
+
+}
+
+            $this->load->view('template/header');
+        $this->load->view("Chat/ConfiguracionChat", $datos);        
+
+}
 public function UserChats()
 {
         $data["data"] = $this->Chat_modelo->UserChats($this->session->userdata('id_sede'))->result_array();

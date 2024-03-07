@@ -54,19 +54,18 @@ class Juridico_model extends CI_Model {
 		concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
         concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre,
-		ISNULL(oxc0.nombre, 'Normal')
+		concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre, ISNULL(oxc0.nombre, 'Normal')
         ORDER BY l.modificado DESC");
 		} 
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097", "2825", "14183")))
+			if(in_array($this->session->userdata('id_usuario'), array(2765, 2776, 10463, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11129, 11258, 12047, 12842, 11097, 2825, 10437, 14183)))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
 			
-			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
+			if($id_sede == 11) // JURÍDICO Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
 			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
@@ -77,7 +76,7 @@ class Juridico_model extends CI_Model {
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
-			ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
+		    ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, cond.idCondominio, l.observacionContratoUrgente as vl, et.descripcion as etapa,
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) as asesor,
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) as coordinador,
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
@@ -102,8 +101,7 @@ class Juridico_model extends CI_Model {
 			concat(asesor.nombre,' ', asesor.apellido_paterno, ' ', asesor.apellido_materno),
 			concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 			concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre,
-			ISNULL(oxc0.nombre, 'Normal')
+			concat(juridico.nombre,' ', juridico.apellido_paterno, ' ', juridico.apellido_materno), se.nombre, ISNULL(oxc0.nombre, 'Normal')
 			ORDER BY l.modificado DESC");
 		}
 		return $query->result();
@@ -232,7 +230,7 @@ class Juridico_model extends CI_Model {
 		return $this->db->query("SELECT us.id_usuario, CONCAT(UPPER(us.nombre), ' ', UPPER(us.apellido_paterno), ' ', 
 		UPPER(us.apellido_materno), ' (', se.nombre, ')') nombreUsuario FROM usuarios us 
 		INNER JOIN sedes se ON se.id_sede = us.id_sede
-		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 12842, 11097, 14183) AND us.id_rol = 15 AND us.estatus = 1 
+		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 12842, 11097, 14183, 10437, 14872, 14873) AND us.id_rol = 15 AND us.estatus = 1 
 		ORDER BY us.id_sede, nombreUsuario")->result_array();
 	}
 
@@ -257,7 +255,7 @@ class Juridico_model extends CI_Model {
 		return $query->row();
 	}
 
-    public function validateDocumentation($idLote, $documentOptions) {
+	public function validateDocumentation($idLote, $documentOptions) {
         $query = $this->db->query("SELECT expediente, idCliente, tipo_doc 
             FROM historial_documento 
             WHERE idLote = $idLote AND status = 1 AND expediente IS NOT NULL AND tipo_doc IN ($documentOptions)");

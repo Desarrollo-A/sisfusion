@@ -12,13 +12,23 @@ class LP extends CI_Controller {
 				$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
 		$this->load->model(array('Ventas_modelo', 'Statistics_model'));
 		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-		$this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
-
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		$this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
+		$this->jwt_actions->authorize('5995', $_SERVER['HTTP_HOST']);
+		$this->validateSession();
+		$val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+		$rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+		
+	}
+
+	public function validateSession()
+	{
+		if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
+		{
+			redirect(base_url() . "index.php/login");
+		}
+	}
 
 	public function index(){
 		if($this->session->userdata("id_rol")== '18' || $this->session->userdata("id_rol") == '28'){

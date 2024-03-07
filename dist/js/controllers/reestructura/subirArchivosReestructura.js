@@ -11,7 +11,6 @@ var acceptFiles = '';
 var nombreLote = '';
 var nombreLotes = [];
 var arrayCF = [];
-var arrayContratosFirmados = [];
 var editarContrafoFirmado = 0;
 var archivosResicion = [];
 var banderaTipoProceso = 0;
@@ -34,16 +33,16 @@ $(document).ready(function () {
     $('.collapse').collapse();
     $('[data-toggle="tooltip"]').tooltip();
 
+
 });
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     let banderaFusion = $(this).attr("data-banderaFusion");
-    console.log(banderaFusion)
     var flagProcesoContraloria = $(this).attr("data-flagProcesoContraloria");
     var flagProcesoJuridico = $(this).attr("data-flagProcesoJuridico");
     flagProcesoJuridicoGlobal = flagProcesoJuridico;
     flagProcesoContraloriaGlobal = flagProcesoContraloria;
-    banderaFusion = banderaFusion == null ? 0 : banderaFusion;
+    banderaFusion = banderaFusion == null ? 0 : banderaFusion
     banderaFusionGlobal = banderaFusion;
     nombreLote = $(this).attr("data-nombreLote");
     flagFusion = $(this).attr("data-fusion");
@@ -93,7 +92,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     nombreLotes = [];
     rescisionArchivos = [];
     let label = '';
-    console.log(datos)
     let contenedorArchivos = document.getElementById('formularioArchivos');
     let contenidoHTML = '';
     flagProceso = estatusProceso;
@@ -131,7 +129,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         case 70:
             label = '<b>Subir corrida del lote</b>';
             flagProceso = 2;
-            acceptFiles = '.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
+            acceptFiles = '.xlsb, .csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel';
             columnWith = 'col-md-12 col-lg-12';
             hideButton = 'hide';
             break;
@@ -143,14 +141,10 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             hideButton = '';
             break;
     }
-    console.log(flagProceso);
-    console.log(flagProcesoJuridico);
-    console.log(id_rol_general)
     if (flagEditar == 0) {
         editarFile = 0;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
        let nuevosDatosDestino = banderaFusion != 0 ?  datos.filter(destino => destino.destino == 1) : datos;
-       console.log(nombreLote);
       /* nuevosDatosOrigenBack.map((elementoBack, index2) => {
        // elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16
         banderaFusion != 0  ?  nombreLotes.push(elementoBack.nombreLote) : nombreLotes.push(nombreLote);
@@ -163,7 +157,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     }else{
         nombreLotes.push(nombreLote);
     }
-    console.log('nombreLotes', nombreLotes);
        nuevosDatosDestino.map((elemento, index) => {
         id_pxls.push(elemento.id_pxl);
         banderaTipoProceso=elemento.tipo_proceso;
@@ -201,7 +194,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
             //se esta subiendo contrato se debe pedir uno adicional
             //cambiar el último número de la siguiente línea por datos[0]['tipo_proceso']
             let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"tipo_proceso":5,"id_pxl" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
-            console.log(datos);
             nuevosDatosOrigen.map((elemento, index) => {
             nombreLotes.length == 0 ?  nombreLotes.push(elemento.nombreLote) : 0;
             idsArchivos.push(elemento.id_pxl);
@@ -224,7 +216,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     else if (flagEditar == 1) {
         editarFile = 1;
         let nuevosDatosOrigenBack= banderaFusion != 0 ?  datos.filter(destino => destino.origen == 1) : datos;
-        console.log(datos);
         /*nuevosDatosOrigenBack.map((elementoBack, index2) => {
          elementoBack.idStatusLote == 17 || elementoBack.idStatusLote == 16 || elementoBack.idStatusLote == 2  ?  nombreLotes.push(elementoBack.nombreLote) : '';
      });*/
@@ -246,6 +237,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 nombreArchivo = elemento.corrida;
             }
             archivosAborrar.push(nombreArchivo);
+            console.log('archivosAborrar', archivosAborrar);
             contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-9 col-lg-9 mb-2">\n' +
                 '                            <input type="hidden" name="idLotep' + elemento.id_pxl + '" id="idLotep' + elemento.id_pxl + '" value="' + elemento.id_pxl + '">\n' +
                 '                            <input type="hidden" id="nombreLote' + elemento.id_pxl + '" value="' + elemento.nombreLote + '">\n' +
@@ -387,7 +379,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     let arrayResicion = [];
     let validacionArray = [];
     let flagValidacion = 0;
-    console.log(idsArchivos);
     for (let m = 0; m < idsArchivos.length; m++) {
         if($(`#Resicion_${idsArchivos[m]}`)[0].files[0] != undefined){
             arrayResicion.push(1);
@@ -403,8 +394,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
     });
 
     if (editarFile == 1) {
-        console.log('arrayResicion')
-        console.log(arrayResicion);
         if (flagValidacion > 0 && banderaFusionGlobal == 0) {
             //hay al menos un archivo actualizado
             flagEnviar = true;
@@ -458,7 +447,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append('rescisionArchivo[]', rescisionArchivos);
             }
         }
-        console.log(flagEnviar);
         if (flagEnviar) {
             $.ajax({
                 type: 'POST',
@@ -528,7 +516,6 @@ $(document).on("click", "#sendRequestButton", function (e) {
                 data.append("id_pxls[]",id_pxls);
                 data.append("editarFile", editarFile);
                 data.append("flagFusion", flagFusion);
-                console.log(arrayKeysArchivos);
                 arrayKeysArchivos.map((elemento, index) => {
                     let idLotePR = (flagFusion==1) ? elemento.idFusion : elemento.id_pxl;
                     data.append("archivo" + index, $("#fileElm" + index)[0].files[0]);
@@ -624,14 +611,13 @@ $(document).on('click', '.ver-archivo', function () {
 });
 
 
-$(document).on('click', '.btn-abrir-contratoFirmado', async function(){
+$(document).on('click', '.btn-abrir-contratoFirmado', function(){
     $('#contratoFirmadoModal').modal('toggle');
     let flagEditar = $(this).attr("data-editar");
     let formularioArchivoscf = document.getElementById('formularioArchivoscf');
     let contenidoHTMLCF = '';
     let idLote = $(this).attr("data-idLote");
     let nombreLotecf = $(this).attr("data-nombreLote");
-    var flagFusion = $(this).attr("data-fusion");
     nombreLote = nombreLotecf;
     let estatusProceso = $(this).attr("data-tipotransaccion");
     arrayCF['idCondominio'] = $(this).attr("data-idCondominio");
@@ -641,57 +627,24 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
     arrayCF['nombreResidencial'] = $(this).attr("data-nombreResidencial");
     arrayCF['nombreCondominio'] = $(this).attr("data-nombreCondominio");
     arrayCF['nombreDocumento'] = $(this).attr("data-contratofirmado");
-    arrayCF['flagFusion'] = flagFusion;
-    arrayContratosFirmados = [];
-
-
-
 
     editarContrafoFirmado = flagEditar;
     editarFile = flagEditar;
     let heightIframe = '400px';
     if(flagEditar == 0){//es primera ves no hay archivo
-        if(flagFusion == 1){
-            const dataFusionDes = await totalSuperficieFusion(idLote, 1);
-                document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-                document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
-                document.getElementById('dialoSection').classList.remove('modal-lg');
-
-                dataFusionDes.data.map((elemento, index)=>{
-                    contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-                        '                            <h6 class="text-left"><b>Subir: </b>' + elemento.nombreLotes + '<span class="text-red">*</span></h6>\n' +
-                        '                            <div class="" id="selectFileSectionResicioncf'+index+'">\n' +
-                        '                                <div class="file-gph">' +
-                        '                                    <input type="hidden" name="idLoteo'+elemento.idLote+'" id="idLote'+elemento.idLote+'" value="'+elemento.idLote+'">   '+
-                        '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado'+index+'">\n' +
-                        '                                    <input class="file-name" id="contratoFirmado-name'+index+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                        '                                    <label class="upload-btn m-0" for="contratoFirmado'+index+'"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                        '                                </div>\n' +
-                        '                            </div>\n' +
-                        '                 </div>';
-                    arrayContratosFirmados.push(elemento);
-                });
-        }
-        else{
-            document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
-            document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
-            document.getElementById('dialoSection').classList.remove('modal-lg');
-            contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-                '                            <div class="" id="selectFileSectionResicioncf">\n' +
-                '                                <div class="file-gph">\n' +
-                '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-                '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                '                                </div>\n' +
-                '                            </div>\n' +
-                '                        </div>';
-        }
-
-
-        //ese return detiene la ejecuición del javascript
-        // return '';
-    }
-    else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
+        document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
+        document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
+        document.getElementById('dialoSection').classList.remove('modal-lg');
+        contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
+    '                            <div class="" id="selectFileSectionResicioncf">\n' +
+    '                                <div class="file-gph">\n' +
+    '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+    '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+    '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+    '                                </div>\n' +
+    '                            </div>\n' +
+    '                        </div>';
+    }else if(flagEditar == 1){//ya hay un archivo hay que actualizarlo
         if(estatusProceso==2){
             document.getElementById('txtTituloCF').innerHTML = 'Archivo actual asociado a <b>CONTRATO FIRMADO</b>';
             document.getElementById('secondaryLabelDetail').innerHTML = 'Si selecciona algún archivo y da clic en el botón de "<b>Guardar</b>", este reemplezara al mostrado.';
@@ -704,52 +657,24 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
             heightIframe = '650px';
         }
         document.getElementById('dialoSection').classList.add('modal-lg');
-        let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/';
+        let contratoFirmado = $(this).attr("data-contratoFirmado");
+        let ruta = general_base_url+'static/documentos/cliente/contratoFirmado/'+contratoFirmado;
+        contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
+            '  width="100%"\n' +
+            '  height="'+heightIframe+'"\n' +
+            '  src="'+ruta+'">\n' +
+            '</iframe>';
 
-        if(flagFusion ==1){
-            const dataFusionDes = await totalSuperficieFusion(idLote, 1);
-            dataFusionDes.data.map((elemento, index)=>{
-                contenidoHTMLCF += '<h4>'+elemento.nombreLotes+'</h4>';
-                contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
-                    '  width="100%"\n' +
-                    '  height="'+heightIframe+'"\n' +
-                    '  src="'+ruta + elemento.expediente +'">\n' +
-                    '</iframe>';
-
-                if(estatusProceso==2){
-                    contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-4 mt-4">\n' +
-                        '                            <div class="" id="selectFileSectionResicioncf'+index+'">\n' +
-                        '                                <div class="file-gph">' +
-                        '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado'+index+'">' +
-                        '                                    <input class="file-name" id="contratoFirmado-name'+index+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                        '                                    <label class="upload-btn m-0" for="contratoFirmado'+index+'"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                        '                                </div>\n' +
-                        '                            </div>\n' +
-                        '                        </div>';
-                }
-                contenidoHTMLCF += '<hr style="color: black; background-color: black; width:75%;" /> <br>';
-                arrayContratosFirmados.push(elemento);
-            });
-        }else{
-            let contratoFirmado = $(this).attr("data-contratoFirmado");
-            ruta = ruta + contratoFirmado;
-            contenidoHTMLCF += '<iframe id="inlineFrameExample" title="Inline Frame Example"\n' +
-                '  width="100%"\n' +
-                '  height="'+heightIframe+'"\n' +
-                '  src="'+ruta+'">\n' +
-                '</iframe>';
-
-            if(estatusProceso==2 && (id_rol_general==17 || id_rol_general == 70)){
-                contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
-                    '                            <div class="" id="selectFileSectionResicioncf">\n' +
-                    '                                <div class="file-gph">\n' +
-                    '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
-                    '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
-                    '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
-                    '                                </div>\n' +
-                    '                            </div>\n' +
-                    '                        </div>';
-            }
+        if(estatusProceso==2 && (id_rol_general==17 || id_rol_general == 70)){
+            contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
+        '                            <div class="" id="selectFileSectionResicioncf">\n' +
+        '                                <div class="file-gph">\n' +
+        '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
+        '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+        '                                    <label class="upload-btn m-0" for="contratoFirmado"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>\n' +
+        '                                </div>\n' +
+        '                            </div>\n' +
+        '                        </div>';
         }
 
 
@@ -775,123 +700,45 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
     let flagEnviar = true;
     let validacionArray = [];
     let flagValidacion = 0;
-    let flagFusion = arrayCF['flagFusion'];
-    let data = new FormData();
-    let mensajeGuardar = 'guardar';
     $('#sendRequestButtoncf').attr('disabled', true);
 
 
-
     if (editarFile == 1) {
-        if(flagFusion==1){
-            let validacionInterna = 0;
-            arrayContratosFirmados.map((elemento, index)=>{
-                if ($("#contratoFirmado"+index)[0].files[0] != undefined) {
-                    validacionInterna = validacionInterna + 1;
-                }
-            });
-
-            if(validacionInterna==0){
-                // $("#spiner-loader").addClass('hide');
-                // alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
-                mensajeGuardar = 'actualizar';
-                flagEnviar = false;
-            }else{
-                flagEnviar = true;
-            }
-            console.log(flagEnviar);
-            // return '';//test
+        if ($("#contratoFirmado")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
+            flagEnviar = false;
         }else{
-            if ($("#contratoFirmado")[0].files[0] == undefined) {
-                $("#spiner-loader").addClass('hide');
-                alerts.showNotification('top', 'right', 'Nada que actualizar', 'warning');
-                flagEnviar = false;
-            }else{
-                flagEnviar = true;
-            }
+            flagEnviar = true;
         }
-
     }
     else if (editarFile == 0) {
 
-        if(flagFusion==1){
-            arrayContratosFirmados.map((elemento, index)=>{
-                if ($("#contratoFirmado"+index)[0].files[0] == undefined) {
-                    flagEnviar = false;
-                }else{
-                    flagEnviar = true;
-                }
-            });
+        if ($("#contratoFirmado")[0].files[0] == undefined) {
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification('top', 'right', 'Selecciona el contrato firmado', 'warning');
+            flagEnviar = false;
+        }
+        else {
+            flagEnviar = true;
+        }
 
-        }
-        else{
-            if ($("#contratoFirmado")[0].files[0] == undefined) {
-                flagEnviar = false;
-            }
-            else {
-                flagEnviar = true;
-            }
-        }
     }
 
-
-    // return ''; //prueba: detiene la ejecucion del javascript
-
-    let arrayManejoI = [];
     if (flagEnviar) {
-        if(flagFusion==1){
-
-
-            arrayContratosFirmados.map((elemento, index)=>{
-                data.append('idLote[]', elemento.idLote);
-                data.append('nombreLoteOriginal[]', elemento.nombreLotes);
-                data.append('idCliente[]', elemento.idCliente);
-                data.append('contratoFirmado'+index, $("#contratoFirmado"+index)[0].files[0]);
-                data.append("idDocumento[]", elemento.idDocumento);
-                data.append('idCondominio[]', elemento.idCondominio);
-                data.append('nombreResidencial[]', elemento.nombreResidencial);
-                data.append('nombreCondominio[]', elemento.nombreCondominio);
-                data.append('nombreDocumento[]', elemento.expediente);
-                data.append('archivoEditado[]', ($("#contratoFirmado"+index)[0].files[0] == undefined) ? 0 : 1);
-
-
-                /*
-                    data.append("idLote", arrayCF['idLoteCF']);
-                    data.append("nombreLoteOriginal", nombreLote);
-                    data.append("idDocumento", arrayCF['idDocumento']);
-                    data.append("idCliente", arrayCF['idClienteCF']);
-                    data.append("editarFile", editarContrafoFirmado);
-                    data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
-                    data.append('idCondominio', arrayCF['idCondominio'] );
-                    data.append('nombreResidencial', arrayCF['nombreResidencial'] );
-                    data.append('nombreCondominio', arrayCF['nombreCondominio'] );
-                    data.append('nombreDocumento', arrayCF['nombreDocumento'] );
-                * */
-
-            });
-            data.append("editarFile", 1);
-            data.append('totalContratos', arrayContratosFirmados.length);
-            data.append('flagFusion', flagFusion);
-
-            // return '';
-        }
-        else{
-
-            data.append("idLote", arrayCF['idLoteCF']);
-            data.append("nombreLoteOriginal", nombreLote);
-            data.append("idDocumento", arrayCF['idDocumento']);
-            data.append("idCliente", arrayCF['idClienteCF']);
-            data.append("editarFile", 1);
-            data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
-            data.append('idCondominio', arrayCF['idCondominio'] );
-            data.append('nombreResidencial', arrayCF['nombreResidencial'] );
-            data.append('nombreCondominio', arrayCF['nombreCondominio'] );
-            data.append('nombreDocumento', arrayCF['nombreDocumento'] );
-            let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
-            data.append("flagEditarCF", flagEditarCF);
-        }
-
-        //submit de la data, independientemente sea fusion o normal
+        let data = new FormData();
+        data.append("idLote", arrayCF['idLoteCF']);
+        data.append("nombreLoteOriginal", nombreLote);
+        data.append("idDocumento", arrayCF['idDocumento']);
+        data.append("idCliente", arrayCF['idClienteCF']);
+        data.append("editarFile", 1/*editarContrafoFirmado*/);
+        data.append('contratoFirmado', $("#contratoFirmado")[0].files[0]);
+        data.append('idCondominio', arrayCF['idCondominio'] );
+        data.append('nombreResidencial', arrayCF['nombreResidencial'] );
+        data.append('nombreCondominio', arrayCF['nombreCondominio'] );
+        data.append('nombreDocumento', arrayCF['nombreDocumento'] );
+        let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
+        data.append("flagEditarCF", flagEditarCF);
         $.ajax({
             type: 'POST',
             url: 'contratoFirmadoR',
@@ -933,20 +780,5 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
                 $('#sendRequestButtoncf').attr('disabled', false);
             }
         });
-    }else{
-        $('#sendRequestButtoncf').attr('disabled', false);
-        $("#spiner-loader").addClass('hide');
-        alerts.showNotification('top', 'right', 'Selecciona el o los contrato(s) firmado(s) para '+mensajeGuardar, 'warning');
     }
 });
-
-const dlotesFusionados = async (idLoteOriginal, tipoOrigenDestino) => {
-    return new Promise((resolve) => {
-        $('#spiner-loader').removeClass('hide');
-        $.post(`${general_base_url}Reestructura/getFusion`, {idLote: idLoteOriginal, tipoOrigenDestino: tipoOrigenDestino}, (data) => {
-            $("#spiner-loader").addClass('hide');
-            const response = JSON.parse(data);
-            resolve(response);
-        });
-    });
-}

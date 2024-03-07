@@ -478,8 +478,12 @@ $('#idLote').change(function () {
 
 $(document).on('click', '.verDocumento', function () {
     const $itself = $(this);
-    let pathUrl = general_base_url + $itself.attr("data-expediente");
-    
+
+    let pathUrl = $itself.attr("data-expediente");
+    if($itself.attr("data-bucket") != 1){
+        pathUrl = general_base_url + $itself.attr("data-expediente");
+    }
+
     if ($itself.attr('data-tipoDocumento') === TipoDoc.DS_NEW || $itself.attr('data-tipoDocumento') === TipoDoc.DS_OLD) {
         const idCliente = $itself.attr('data-idCliente');
         const urlDs = ($itself.attr('data-expediente') === 'Depósito de seriedad')
@@ -512,7 +516,7 @@ $(document).on('click', '.verDocumento', function () {
         Shadowbox.open({
             content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${pathUrl}"></iframe></div>`,
             player: "html",
-            title: `Visualizando archivo: ${$itself.attr('data-titulodocumento')}`,
+            title: `Visualizando archivo: ${$itself.attr('data-nombre')}`,
             width: 985,
             height: 660
         });
@@ -768,7 +772,8 @@ function crearBotonAccion(type, data) {
 
     return `<button class="${buttonClassColor} ${buttonClassAccion}" 
                 title="${buttonTitulo}" 
-                data-expediente="${data.expediente}" 
+                data-expediente="${data.expediente}"
+                data-bucket="${data.bucket}"
                 data-accion="${buttonTipoAccion}" 
                 data-tipoDocumento="${data.tipo_doc}" ${buttonEstatus} 
                 data-toggle="tooltip" 

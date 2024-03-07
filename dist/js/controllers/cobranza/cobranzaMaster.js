@@ -85,7 +85,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
         ],
         language: {
             url: `${general_base_url}/static/spanishLoader_v2.json`,
-                paginate: {
+            paginate: {
                 previous: "<i class='fa fa-angle-left'>",
                 next: "<i class='fa fa-angle-right'>"
             }
@@ -198,26 +198,26 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             data: function (d) {
                 var labelStatus;
                 if(d.rec == 8){
-                        labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
+                    labelStatus = '<span class="label lbl-warning">VENTA CANCELADA</span>';
                 }else{
-                switch (d.idStatusLote) {
-                    case 1:
-                    case '1':
-                        labelStatus = '<span class="label lbl-green">DISPONIBLE</span>';
-                        break;
-                    case 2:
-                    case '2':
-                        labelStatus = '<span class="label lbl-sky">CONTRATADO</span>';
-                        break;
-                    case 3:
-                    case '3':
-                        labelStatus = '<span class="label lbl-orangeYellow">APARTADO</span>';
-                        break;
-                    default:
-                        labelStatus = '<span class="label lbl-warning">SIN ESTATUS REGISTRADO</span>';
-                        break;
+                    switch (d.idStatusLote) {
+                        case 1:
+                        case '1':
+                            labelStatus = '<span class="label lbl-green">DISPONIBLE</span>';
+                            break;
+                        case 2:
+                        case '2':
+                            labelStatus = '<span class="label lbl-sky">CONTRATADO</span>';
+                            break;
+                        case 3:
+                        case '3':
+                            labelStatus = '<span class="label lbl-orangeYellow">APARTADO</span>';
+                            break;
+                        default:
+                            labelStatus = '<span class="label lbl-warning">SIN ESTATUS REGISTRADO</span>';
+                            break;
+                    }
                 }
-            }
                 return labelStatus;
             }
         },
@@ -225,31 +225,31 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
             data: function (d) {
                 var labelStatus;
                 if(d.rec == 8){
-                        labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
+                labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
                 }else{
-                    switch (d.registroComision) {
-                        case 0:
-                        case '0':
-                        case 2:
-                        case '2':
-                            labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
-                            break;
-                        case 7:
-                        case '7':
-                            labelStatus = '<span class="label lbl-warning">LIQUIDADA</span>';
-                            break;
-                        case 8:
-                        case '8':
-                        case 88:
-                        case '88':
-                            labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
-                            break;
-                        case 1:
-                        case '1':
-                        default:
-                            labelStatus = '<span class="label lbl-violetBoots">ACTIVA</span>';
-                            break;
-                    }
+                switch (d.registroComision) {
+                    case 0:
+                    case '0':
+                    case 2:
+                    case '2':
+                        labelStatus = '<span class="label" style="background:#27AE60;">SIN DISPERSAR</span>';
+                        break;
+                    case 7:
+                    case '7':
+                        labelStatus = '<span class="label lbl-warning">LIQUIDADA</span>';
+                        break;
+                    case 8:
+                    case '8':
+                    case 88:
+                    case '88':
+                        labelStatus = '<span class="label lbl-brown">RECISIÓN DE CONTRATO</span>';
+                        break;
+                    case 1:
+                    case '1':
+                    default:
+                        labelStatus = '<span class="label lbl-violetBoots">ACTIVA</span>';
+                        break;
+                }
             }
                 return labelStatus;
             }
@@ -284,9 +284,7 @@ function fillTable(typeTransaction, beginDate, endDate, where) {
                     btns = '';
                 }else{
                 btns = '<button class="btn-data btn-blueMaderas" data-idLote="' + d.idLote + '" data-registroComision="' + d.registroComision + '" id="verifyNeodataStatus" data-toggle="tooltip" data-placement="top" title="VER MÁS"></body><i class="fas fa-info"></i></button>';
-                if (d.estatusEvidencia == 3 && (d.registroComision == 0 ) && (d.idStatusContratacion == 11 || d.idStatusContratacion == 15))
-                    btns += '<button class="btn-data btn-green" data-idLote="' + d.idLote + '" id="requestCommissionPayment" title="Solicitar pago"><i class="fas fa-money-bill-wave"></i></button>';
-                }
+            }
                 return '<div class="d-flex justify-center">'+btns+'</div>';
             }
             

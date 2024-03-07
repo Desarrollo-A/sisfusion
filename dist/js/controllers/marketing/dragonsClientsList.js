@@ -7,7 +7,7 @@ let titulos = [];
 $('#dragonsClientsTable thead tr:eq(0) th').each(function (i) {
 	const title = $(this).text();
 	titulos.push(title);
-	$(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+	$(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
 	$('input', this).on('keyup change', function () {
 		if ($("#dragonsClientsTable").DataTable().column(i).search() !== this.value) {
 			$("#dragonsClientsTable").DataTable().column(i).search(this.value).draw();
@@ -19,7 +19,7 @@ function fillDragonsClientsTable() {
     $("#dragonsClientsTable").dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
-        scrollX: true,
+		scrollX: true,
         buttons: [{
 			extend: 'excelHtml5',
 			text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -91,7 +91,7 @@ function fillDragonsClientsTable() {
 		},
 		{
 			data: function (d) {
-				return formatMoney(d.engancheCliente)
+				return '$' + formatMoney(d.engancheCliente)
 			}
 		},
 		{

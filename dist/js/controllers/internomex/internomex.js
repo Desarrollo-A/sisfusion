@@ -6,15 +6,18 @@ $(document).ready(function () {
         relatedTarget.val(fileName);
     });
     setInitialDates();
-    if( id_rol_global == 31 )
+    if( id_rol_global == 31 ) {
         $('.generate').trigger('click');
+        document.getElementById("one").setAttribute("checked", true);  
+    }
     else
         $('.find-results').trigger('click');
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
 });
 
-sp = { 
+
+sp = { // MJ: SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
             format: 'DD/MM/YYYY',
@@ -59,8 +62,8 @@ $('#tableLotificacion thead tr:eq(0) th').each(function (i) {
     $( 'input', this).on('keyup change', function () {
         if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
             $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
-        }
-    });
+            }
+        });
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
@@ -70,29 +73,31 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX:true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title:'Consulta pago final' ,
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title:'Consulta pago final' ,
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
                     }
                 }
+            },
+            {
+                text: '<i class="fas fa-play"></i>',
+                className: `btn btn-dt-youtube buttons-youtube`,
+                titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+                action: function (e, dt, button, config) {
+                    window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
+                }
             }
-        },
-        {
-            text: '<i class="fas fa-play"></i>',
-            className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
-            action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
-            }
-        }],
+        ],
         pagingType: "full_numbers",
         fixedHeader: true,
         lengthMenu: [
@@ -108,68 +113,58 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         },
         destroy: true,
         ordering: false,
-        columns: [{
-            data: function (d) {
-                return d.id_pagoi;
-            }
-        },
-        {
-            data: function (d) {
-                return d.nombre;
-            }
-        },
-        {
-            data: function (d) {
-                return d.rol;
-            }
-        },
-        {
-            data: function (d) {
-                return d.forma_pago;
-            }
-        },
-        {
-            data: function (d) {
-                return d.sede;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_sin_descuento;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_con_descuento;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_internomex;
-            }
-        },
-        {
-            data: function (d) {
-                return d.fecha_creacion;
-            }
-        },
-        {
-            data: function (d) {
-                return d.comentario;
-            }
-        },
-        {
-            "visible": false,
-            data: function (d) {
-                if (id_rol_global == 31) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+        columns: [
+            {
+                data: function (d) {
+                    return d.id_pagoi;
                 }
-                else{
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+            },
+            {
+                data: function (d) {
+                    return d.nombre;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.rol;
+                }
+            },
+            { 
+                data: function (d) {
+                    return d.forma_pago;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.sede;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_sin_descuento;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_con_descuento;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.monto_internomex;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fecha_creacion;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.comentario;
                 }
             }
-        }],
+        ],
         columnDefs: [{
             visible: false,
             searchable: false
@@ -182,77 +177,10 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
                 beginDate: fechaInicio,
                 endDate: fechaFin
             }
-        },
-        initComplete: function(){
-            $("#spiner-loader").addClass('hide');
         }
     });
 }
 
-$(document).on('click', '.edit-monto-internomex', function(e){
-    id_pago = $(this).attr("data-id-pago");
-    monto = $(this).attr("data_monto_internomex");
-    $("#editMontoInternomex").modal();
-    $("#monto").val(monto);
-    $("#id_pago").val(id_pago);
-});
-
-$(document).on('click', '.see-bitacora', function(e){
-    id_pago = $(this).attr("data-id-pago");
-    $.post("getBitacora/"+id_pago).done( function( data ){
-        $("#changesBitacora").modal();
-        $.each( JSON.parse(data), function(i, v){
-            fillChangelogUsers(v);
-        });
-    });
-});
-
-function fillChangelogUsers(v) {
-    var nombreMovimiento;
-    var dataMovimiento;
-    nombreMovimiento = v.col_afect;
-    dataMovimiento = '<b>Valor anterior:</b> ' + v.anterior + '\n' +
-        '            <br>\n' +
-        '            <b>Valor nuevo:</b> ' + v.nuevo + '\n';
-            $("#changelogUsers").append('<li class="timeline-inverted">\n' +
-        '    <div class="timeline-badge success"><span class="material-icons">done</span></div>\n' +
-        '    <div class="timeline-panel">\n' +
-        '            <label><h6 style="text-transform:uppercase">' + nombreMovimiento + '</h6></label><br>\n' +
-                    dataMovimiento +
-        '        <h6>\n' +
-        '            <span class="small text-gray"><i class="fa fa-clock-o mr-1"></i> ' + v.fecha + ' - ' + v.usuario + '</span>\n' +
-        '        </h6>\n' +
-        '    </div>\n' +
-        '</li>');
-}
-
-$(document).on('click', '#aceptarMonto', function(e){
-    let monto = $("#monto").val();
-    let id_pago = $("#id_pago").val();
-    $.ajax({
-        type: 'POST',
-        url: 'updateMontoInternomex',
-        data: {
-            'monto': monto,
-            'id_pago': id_pago
-        },
-        dataType: 'json',
-        success: function (data) {
-            if (data.status == 200) {
-                $("#editMontoInternomex").modal("hide");
-                alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
-                let fechaInicio = formatDate( $(".beginDate").val());
-                let fechaFin = formatDate( $(".endDate").val());
-                fillTableLotificacion(fechaInicio, fechaFin);
-            } else {
-                alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
-            }
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    });
-});
 
 $(document).on('click', '.searchByDateRange', function(){
     let fechaInicio = formatDate( $(".beginDate").val());
@@ -265,30 +193,28 @@ $(document).on('click', '.searchByDateRange', function(){
 });
 
 $(document).on('click', '.find-results', function () {
-    $("#spiner-loader").removeClass('hide');
+    document.getElementById("one").removeAttribute("checked");  
     $(".row-load").addClass("hide");
     $(".box-table").removeClass("hide");
     let fechaInicio = formatDate( $(".beginDate").val());
     let fechaFin = formatDate( $(".endDate").val());
     fillTableLotificacion(fechaInicio, fechaFin);
-    $('#tipo_pago_selector').addClass('hide');
 });
 
 $(document).on('click', '.generate', function () {
+    document.getElementById("two").removeAttribute("checked");  
     $(".row-load").removeClass("hide");
     $(".box-table").addClass("hide");
-    $('#tipo_pago_selector').removeClass('hide');
 });
 
 $(document).on('click', '#downloadFile', function () {
-    let tipo_pago = $('#tipo_accion').val();
     $.ajax({
-        url: 'getPaymentsListByCommissionAgent/'+tipo_pago,
+        url: 'getPaymentsListByCommissionAgent',
         type: 'post',
         dataType: 'json',
         beforeSend: function() {
             $('#spiner-loader').removeClass('hide');
-        },
+          },
         success: function (response) {
             var len = response.length;
             var createXLSLFormatObj = [];
@@ -310,19 +236,25 @@ $(document).on('click', '#downloadFile', function () {
                 innerRowData.push(response[i]['comentario']);
                 createXLSLFormatObj.push(innerRowData);
             }
-
+            /* File Name */
             let date = new Date();
             var filename = "PlantillaComisionistas_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
+            /* Sheet Name */
             var ws_name = "Plantilla";
+            //if (typeof console !== 'undefined') console.log(new Date());
             var wb = XLSX.utils.book_new(),
                 ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
+            /* Add worksheet to workbook */
             XLSX.utils.book_append_sheet(wb, ws, ws_name);
+            /* Write workbook and Download */
+            //if (typeof console !== 'undefined') console.log(new Date());
             XLSX.writeFile(wb, filename);
+            //if (typeof console !== 'undefined') console.log(new Date());
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 });
@@ -357,7 +289,6 @@ function readFileAsync(selectedFile) {
 }
 
 $(document).on('click', '#cargaCoincidencias', function () {
-    let tipo_pago = $('#tipo_accion').val();
     fileElm = document.getElementById("fileElm");
     file = fileElm.value;
     if (file == '')
@@ -365,10 +296,10 @@ $(document).on('click', '#cargaCoincidencias', function () {
     else {
         let extension = file.substring(file.lastIndexOf("."));
         let statusValidateExtension = validateExtension(extension, ".xlsx");
-        if (statusValidateExtension == true) { 
+        if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
             processFile(fileElm.files[0]).then(jsonInfo => {
                 $.ajax({
-                    url: 'insertInformation/'+tipo_pago,
+                    url: 'insertInformation',
                     type: 'post',
                     dataType:'json',
                     data: {'data': generateJWT(jsonInfo)},
@@ -385,7 +316,7 @@ $(document).on('click', '#cargaCoincidencias', function () {
                     }
                 });
             });
-        } else
+        } else // MJ: EL ARCHIVO QUE SE INTENTA CARGAR TIENE UNA EXTENSIÓN INVÁLIDA
             alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
     }
 });
@@ -396,6 +327,7 @@ $(document).on('click', '#uploadFile', function () {
 });
 
 function generateJWT(excelData) {
+    // Defining our token parts
     var header = {"alg": "HS256", "typ": "JWT"};
     var data = excelData;
     var secret = "thisismysecretkeytest";
@@ -410,25 +342,28 @@ function generateJWT(excelData) {
 }
 
 function base64url(source) {
+    // Encode in classical base64
     encodedSource = CryptoJS.enc.Base64.stringify(source);
+    // Remove padding equal characters
     encodedSource = encodedSource.replace(/=+$/, '');
+    // Replace characters according to base64url specifications
     encodedSource = encodedSource.replace(/\+/g, '-');
     encodedSource = encodedSource.replace(/\//g, '_');
     return encodedSource;
-}
+  }
 
-function validaTipoPago(tipo_pago){
-    let one = $('#one');
-    let two = $('#two');
-    let cargarLabel = $('#cargarLabel');
-    if(tipo_pago>0){
-        one.removeAttr('disabled');
-        one.attr('name', 'radio');
-        two.removeAttr('disabled');
-        two.attr('name', 'radio');
-        cargarLabel.removeAttr('style');
-        cargarLabel.removeAttr('disabled');
-        $(".row-load").removeClass("hide");
-        $(".box-table").addClass("hide");
-    }
-}
+// function validaTipoPago(tipo_pago){
+//     let one = $("#one");
+//     let two = $('#two');
+//     let cargarLabel = $('#cargarLabel');
+//     if(tipo_pago>0){
+//         one.removeAttr('disabled');
+//         one.attr('name', 'radio');
+//         two.removeAttr('disabled');
+//         two.attr('name', 'radio');
+//         cargarLabel.removeAttr('style');
+//         cargarLabel.removeAttr('disabled');
+//         $(".row-load").removeClass("hide");
+//         $(".box-table").addClass("hide");
+//     }
+// }

@@ -18,7 +18,7 @@ $("#tabla_ingresar_14").ready(function () {
     tabla_14 = $("#tabla_ingresar_14").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        scrollX: true,
+scrollX: true,
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
@@ -29,6 +29,9 @@ $("#tabla_ingresar_14").ready(function () {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8],
                 format: {
                     header: function (d, columnIdx) {
+                        if (columnIdx == 0) {
+                            return ' ' + d + ' ';
+                        }
                         return ' ' + titulos[columnIdx - 1] + ' ';
                     }
                 }

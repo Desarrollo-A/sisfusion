@@ -3,15 +3,13 @@ class Caja extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->model(array('Caja_model', 'General_model'));
-		$this->load->library(array('session','form_validation', 'Jwt_actions', 'permisos_sidebar'));
+		$this->load->library(array('session','form_validation', 'Jwt_actions'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		$this->jwt_actions->authorize('0739', $_SERVER['HTTP_HOST']);
 		$this->validateSession();
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
 	public function index() {
@@ -76,20 +74,4 @@ class Caja extends CI_Controller {
 		else
 			echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
     }
-
-	public function EditVentaParticular(){
-
-		$tipo_venta = $this->input->post('tipo_venta');
-        $id_usuario = $this->session->userdata('id_usuario');
-        $idLote=$this->input->post('idLote');
-
-		$dataToUpdate = array("tipo_venta"=> $tipo_venta, "usuario" => $this->session->userdata('id_usuario'));
-        $responseUpdate = $this->General_model->updateRecord("lotes", $dataToUpdate, "idLote", $idLote);
-
-		$dataToUpdate2 = array('estatus'=> 0);
-        $responseUpdate2 = $this->General_model->updateRecord("clausulas", $dataToUpdate2, "id_lote", $idLote);
-
-            $data['message'] = 'OK';
-            echo json_encode($data);
-	}
 }

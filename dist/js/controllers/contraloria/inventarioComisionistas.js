@@ -83,38 +83,38 @@ $(document).on('change', '#residenciales, #condominios, #idEstatus', function ()
         { 
             data: 'nombreCondominio' 
         },
-        {
-            data: function (d) {
-                if (d.casa == 1)
+            {
+                data: function (d) {
+                    if (d.casa == 1)
                     return `${d.nombreLote} <br><span class="label lbl-violetDeep">${d.nombre_tipo_casa}</span>`
-                else
-                    return d.nombreLote;
-            }
-        },
-        { data: 'referencia' },
-        { data: 'nombreAsesor1' },
-        { data: 'nombreCoordinador1' },
-        { data: 'nombreGerente1' },
-        { data: 'nombreAsesor2' },
-        { data: 'nombreCoordinador2' },
-        { data: 'nombreGerente2' },
-        { data: 'nombreAsesor3' },
-        { data: 'nombreCoordinador3' },
-        { data: 'nombreGerente3' },
-        {
-            data: function (d) {
-                return d.tipo_venta == null ?
+                    else
+                        return d.nombreLote;
+                }
+            },
+            { data: 'referencia' },
+            { data: 'nombreAsesor1' },
+            { data: 'nombreCoordinador1' },
+            { data: 'nombreGerente1' },
+            { data: 'nombreAsesor2' },
+            { data: 'nombreCoordinador2' },
+            { data: 'nombreGerente2' },
+            { data: 'nombreAsesor3' },
+            { data: 'nombreCoordinador3' },
+            { data: 'nombreGerente3' },
+            {
+                data: function (d) {
+                    return d.tipo_venta == null ?
                     `<center><span class="label lbl-yellow">${d.descripcion_estatus}</span> <center>` :
                     `<center><span class="label label lbl-yellow">${d.descripcion_estatus}</span> <p><p> <span class="label lbl-green">${d.tipo_venta}</span> <center>`;
-            }
-        },
-        {
-            data: function (d) {
-                if (d.fechaApartado == '' || d.fechaApartado == null || d.fechaApartado == 'null')
-                    return 'SIN ESPECIFICAR';
-                else
-                    return d.fechaApartado;
-            }
+                }
+            },
+            {
+                data: function (d) {
+                    if (d.fechaApartado == '' || d.fechaApartado == null || d.fechaApartado == 'null')
+                        return 'SIN ESPECIFICAR';
+                    else
+                        return d.fechaApartado;
+                }
         }],
         initComplete: function () {
             $('[data-toggle="tooltip"]').tooltip();

@@ -64,11 +64,11 @@ $(document).on('click', '.see-comments', function(e){
 function cleanComments() {
     var myCommentsList = document.getElementById('comments-list');
     if( myCommentsList != null )
-        myCommentsList.innerHTML = '';
+    myCommentsList.innerHTML = '';
 
     var myChangelog = document.getElementById('changelog');
     if( myChangelog != null )
-        myChangelog.innerHTML = '';
+    myChangelog.innerHTML = '';
 }
 
 function fillTimeline (v) {
@@ -91,25 +91,20 @@ function fillTimeline (v) {
 }
 
 function fillChangelog (v) {
-    $("#changelog").append('<li>\n' +
-    '    <div class="container-fluid">\n' +
-    '       <div class="row">\n' +
-    '           <div class="col-md-6">\n' +
-    '               <a><small>CAMPO: </small><b>' + v.parametro_modificado + '</b></a><br>\n' +
-    '           </div>\n' +
-    '           <div class="float-end text-right">\n' +
-    '               <a>' + v.fecha_creacion + '</a>\n' +
-    '           </div>\n' +
-    '           <div class="col-md-12">\n' +
-    ' 	            <p class="m-0"><small>USUARIO: </small><b> ' + v.creador + '</b></p>\n'+
-    '               <p class="m-0"><small>VALOR ANTERIOR: </small><b> ' + v.anterior + '</b></p>\n' +
-    '               <p class="m-0"><small>VALOR NUEVO: </small><b> ' + v.nuevo + '</b></p>\n' +
-    '           </div>\n' +
-    '        <h6>\n' +
-    '        </h6>\n' +
-    '       </div>\n' +
-    '    </div>\n' +
-    '</li>');
+    $("#changelog").append(
+        '<li class="timeline-inverted">\n' +
+            '<div class="container-fluid">'+
+                '<div class="row>'+
+                    '<div class="timeline-panel">\n' +
+                        '<div class="col-sm-6 col-md-6 col-lg-6 p-0"><a>Campo: '+v.parametro_modificado+'</a><br></div>\n' +
+                        '<div class="col-sm-6 col-md-6 col-lg-6 text-right"><a class="float-end"> '+v.fecha_creacion+'</a></div>\n' +
+                        '<p class="m-0">USUARIO: <b>'+v.creador+' </b></p>'+
+                        '<p class="m-0">CAMPO ANTERIOR:<b> '+v.anterior+'</b></p>'+                       
+                        '<p class="m-0">CAMPO NUEVO:<b> '+v.nuevo+'</b></p>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</li>');
 }
 
     $(document).on('click', '.to-comment', function(e){

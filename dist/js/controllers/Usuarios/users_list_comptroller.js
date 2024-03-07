@@ -1,17 +1,19 @@
 const usuariosContraloria = [2767, 5957, 4878, 2754, 14481];
 
 $(document).ready(function() {
-    $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
-    var len = data.length;
-    for( var i = 0; i<len; i++)
-    {
-        var id = data[i]['id_opcion'];
-        var name = data[i]['nombre'];
-        $('#payment_method').append($('<option>').val(id).text(name.toUpperCase()));
-    }
-    $('#payment_method').selectpicker('refresh');
+    if (usuariosContraloria.includes(id_usuario_general)) {
+        $.post(`${general_base_url}Usuarios/getPaymentMethod`, function(data) {
+        var len = data.length;
+        for( var i = 0; i<len; i++)
+        {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $('#payment_method').append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $('#payment_method').selectpicker('refresh');
 
-    }, 'json');
+        }, 'json');
+    }
 });
 
 let titulos = [];
@@ -26,7 +28,7 @@ $('#all_users_datatable thead tr:eq(0) th').each( function (i) {
     });
 });
 
-$('#all_users_datatable').DataTable({
+all_users_datatable = $('#all_users_datatable').DataTable({
     dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
     width: "100%",
     scrollX: true,
@@ -133,7 +135,7 @@ $('#all_users_datatable').DataTable({
             data: function (d) {
                 tipo = '';
                 if (d.tipo == 2 || d.tipo == "2") {
-                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
+                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
                 } else {
                     tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
                 }
@@ -144,6 +146,8 @@ $('#all_users_datatable').DataTable({
                 return d.sede;
             }
         },
+
+
         { 
             data: function (d) {
                 if (id_rol_general == 49) {
@@ -164,7 +168,7 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-                return d.jefe_directo;
+            return d.jefe_directo;
             }
         },
         {
@@ -176,7 +180,7 @@ $('#all_users_datatable').DataTable({
             }
         },
         { data: function (d) {
-            return d.fecha_creacion;
+                return d.fecha_creacion;
             }
         },
         { 
@@ -266,7 +270,9 @@ $("#editUserForm").on('submit', function(e){
         beforeSend: function(){
         },
         success: function(data) {
-            if (data == 1) {
+            data = JSON.parse(data);
+            if (data.respuesta == 1) {
+                all_users_datatable.ajax.reload();
                 $('#editUserModal').modal("hide");
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
             } else if (data.respuesta == 0) {

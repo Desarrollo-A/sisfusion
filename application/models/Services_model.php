@@ -24,7 +24,7 @@ class Services_model extends CI_Model
 
         $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
         CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
-         FROM opcs_x_cats WHERE id_catalogo = 11 and id_opcion in(0, 1, 14, 17, 20, 68, 5, 28, 54)")->result_array();
+         FROM opcs_x_cats WHERE id_catalogo = 11 and id_opcion in(0, 1, 5, 14, 17, 20, 68, 28, 54)")->result_array();
         for ($m=0; $m <count($Nacionalidades) ; $m++) { 
                 if($m == 0){
                     $Nacionalidades[$m]['tipo_pago'] = $ArrayMex;
@@ -35,26 +35,34 @@ class Services_model extends CI_Model
         return $Nacionalidades;
     }
 
-
+    function hola(){
+        return 'hola from modeloservicio';
+    }
 
      function saveUserCH($data) {
         if ($data != '' && $data != null) {
             $this->db->db_debug = false;
             $response = $this->db->insert("usuarios", $data);
-            $id = $this->db->insert_id();
-
             if (!$response) {  
             $error = $this->db->error();
             $datos = explode('.',$error['message']);
+            //echo  $error['message'];
+           // echo  $error['code'];
+            //echo $datos[3];
+            //$message = $datos[3];
             if($error['code'] == "23000/2627"){
+                //$separarCadena = explode('is ',$datos[3]);
                 $message = "El nombre de usuario ya se encuentra registrado";
             }else{
                 $message = "Error desconocido ";
+
             }
             return $finalAnswer = array("result" => false,
                                         "code" => $error['code'],
                                         "message" => $message);
             } else {
+                $id = $this->db->insert_id();
+
                 return $finalAnswer = array("result" => true,
                 "id_usuario" => $id);
             } 
@@ -64,8 +72,8 @@ class Services_model extends CI_Model
             return 0;
         }
     }
-    function getLider($id_lider,$id_rol)
-    {
+     function getLider($id_lider,$id_rol)
+	{
         if($id_rol == 7){
             //Asesor
             $query = $this->db->query("SELECT coor.id_lider as id_gerente,u.id_lider as id_subdirector, (CASE WHEN u.id_lider = 7092 THEN 3 WHEN u.id_lider = 9471 THEN 607 ELSE 0 END) id_regional
@@ -86,18 +94,16 @@ class Services_model extends CI_Model
             WHERE u.id_usuario=$id_lider");
             return $query->result_array();
         }
-    }
+	}
 
     function getRFC($rfc){
         $query = $this->db->query("select * from usuarios where rfc='$rfc'");
         return $query->result_array();
     }
-
     function getSubdirectores(){
         $query = $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_rol=2 and estatus=1");
         return $query->result_array();
     }
-
     function countColabsByRol($idRol, $id_sede, $id_lider){
         $query = $this->db->query("SELECT * FROM usuarios WHERE estatus=1 AND id_rol=".$idRol." AND id_sede LIKE '%".$id_sede."%' AND id_lider=".$id_lider);
         return $query->result_array();
@@ -112,4 +118,5 @@ class Services_model extends CI_Model
         $query = $this->db->query("SELECT * FROM usuarios WHERE id_usuario=".$id_usuario);
         return $query->row();
     }
+
 }

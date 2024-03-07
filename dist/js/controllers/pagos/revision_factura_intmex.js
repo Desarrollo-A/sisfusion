@@ -372,6 +372,7 @@ function getAssimilatedCommissions(proyecto, condominio){
         },
     });
 
+
     $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
         $("#nombreLote").html('');
         $("#comentariosFactura").html('');
@@ -660,6 +661,7 @@ $("#form_multiples").submit( function(e) {
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
+        console.log(data);
         $.ajax({
             url: general_base_url + "Pagos/IntMexPagadosByProyect",
             data: data,

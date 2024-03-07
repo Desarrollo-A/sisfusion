@@ -5,7 +5,7 @@ $('#tabla_ingresar_9 thead tr:eq(0) th').each(function (i) {
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value)
+            if ($('#tabla_ingresar_9').DataTable().column(i).search() !== this.value) 
                 $('#tabla_ingresar_9').DataTable().column(i).search(this.value).draw();
         });
     }
@@ -137,7 +137,7 @@ $("#tabla_ingresar_9").ready(function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
-    });
+    });    
 
     $('#tabla_ingresar_9 tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
@@ -151,15 +151,15 @@ $("#tabla_ingresar_9").ready(function () {
             var fechaVenc;
             if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38)
                 status = 'Status 8 listo (Asistentes de Gerentes)';
-            else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65)
+            else if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) 
                 status = 'Status 8 enviado a Revisión (Asistentes de Gerentes)';
-            else
+            else 
                 status = 'N/A';
             if (row.data().idStatusContratacion == 8 && row.data().idMovimiento == 38 ||
                 row.data().idStatusContratacion == 8 && row.data().idMovimiento == 65) {
                 fechaVenc = row.data().fechaVenc;
             }
-            else
+            else 
                 fechaVenc = 'N/A';
             var informacion_adicional = '<div class="container subBoxDetail">';
             informacion_adicional += '  <div class="row">';

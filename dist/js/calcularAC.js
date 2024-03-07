@@ -1,9 +1,12 @@
 function calcularCF2(){
-
+let fecha_input = new Date($scope.fechaField);
+let dayCorrect = (fecha_input.getDate() < 10) ? '0'+fecha_input.getDate() : fecha_input.getDate();
+let monthCorrect = ((fecha_input.getMonth()+ 1) < 10) ? '0'+(fecha_input.getMonth()+ 1) : (fecha_input.getMonth()+ 1);
+let yearCorrect = (fecha_input.getFullYear());
 //INICIO FECHA
 	var day;
 	var month = (new Date().getMonth() + 1);
-	var yearc = new Date().getFullYear();
+	var yearc = yearCorrect;
 
 
 	if (month == 1){
@@ -43,7 +46,7 @@ function calcularCF2(){
 		day = 17;
 	}
 
-	var mes = ($scope.apartado && $scope.mesesdiferir > 0) ? (new Date().getMonth() + 2) : (new Date().getMonth() + 3);
+	var mes = monthCorrect;
 
 //FIN FECHA
 

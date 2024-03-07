@@ -17,10 +17,8 @@ class Login extends CI_Controller
 		$this->load->library(array('session','form_validation','get_menu'));
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    }
-		
+	}
+
 	public function index()
 	{
 
@@ -37,7 +35,7 @@ class Login extends CI_Controller
 				redirect(base_url().$this->session->userdata('controlador'));
 			}
 		}
-}
+	}
 
 	public function token()
 	{
@@ -182,7 +180,7 @@ class Login extends CI_Controller
 						document.write(localStorage.setItem("nombreUsuario", "'.$check_user[0]->nombre.' '.$check_user[0]->apellido_paterno.' '.$check_user[0]->apellido_materno.'"));
 						</script>';
 						
- 
+
 						$data = array(
 							'is_logued_in' 	        => 		TRUE,
 							'id_usuario' 	        => 		$check_user[0]->id_usuario,
@@ -222,10 +220,11 @@ class Login extends CI_Controller
 						else if ($check_user[0]->tipo == 2 && ($check_user[0]->id_rol == 2 ||  $check_user[0]->id_rol == 5))
 							$id_rol = 93;
 						else if ($check_user[0]->id_usuario == 12841)
-							$id_rol = 84;
+							$id_rol = 85;
 						else
 							$id_rol = $check_user[0]->id_rol;
-						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
+
+						$datos = $this->get_menu->get_menu_data($id_rol,$check_user[0]->id_usuario,$check_user[0]->estatus);
 						$opcionesMenu = $this->get_menu->get_menu_opciones();
 						$_SESSION['rutaActual'] = $_SERVER["HTTP_HOST"] == 'prueba.gphsis.com' || $_SERVER["HTTP_HOST"] == 'localhost' ? '/sisfusion/' : '/';
 						$data['datos'] = $datos;

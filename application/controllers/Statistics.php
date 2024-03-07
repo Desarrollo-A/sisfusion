@@ -7,23 +7,24 @@ class Statistics extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Statistics_model');
+        $this->load->library(array('Jwt_actions'));
+        $this->jwt_actions->authorize('8', $_SERVER['HTTP_HOST']);
         $this->validateSession();
-
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-        $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
     }
 
     public function index()
     {    }
 
     public function consultMktdChart(){
+        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/consult_statistics_em");
+        $this->load->view("clientes/consult_statistics_em", $datos);
     }
 
     public function consultProspectingPlaceChart(){
+        $datos=array();
         $this->load->view('template/header');
-        $this->load->view("clientes/consult_statistics_lp");
+        $this->load->view("clientes/consult_statistics_lp", $datos);
     }
 
     function getSubdirectories()
@@ -737,7 +738,3 @@ class Statistics extends CI_Controller
         echo json_encode($data);
     }
 }
-
-
-
-

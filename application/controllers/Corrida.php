@@ -1,36 +1,49 @@
-<?php
-    require_once 'static/autoload.php';//linea debe descomentarse en PROD
-    use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-//    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+<?php 
+
+
+
+// Notificar todos los errores de PHP
+// error_reporting(-1);
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+   require_once 'static/autoload.php';
+   use PhpOffice\PhpSpreadsheet\Spreadsheet;
+   use PhpOffice\PhpSpreadsheet\Writer\Xlsx; //libreria para generar excel
 
 class Corrida extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-        $this->load->model(array('registrolote_modelo', 'General_model'));
-        $this->load->model('model_queryinventario');
-        $this->load->model('Corrida_model');
-        $this->load->database('default');
-        $this->load->library(array('session','form_validation', 'get_menu', 'pdf','permisos_sidebar'));
-        $this->load->model('asesor/Asesor_model');
-        $this->validateSession();
-
+		$this->load->model(array('registrolote_modelo', 'General_model'));
+		// $this->load->model('model_queryinventario');
+		$this->load->model('Corrida_model');
+		$this->load->database('default');
+		$this->load->library('Pdf');
+        $this->load->library('permisos_sidebar');
+		$this->load->library('get_menu');
+		$this->load->library('Jwt_actions');
+		$this->validateSession();
+		$this->jwt_actions->authorize('2410', $_SERVER['HTTP_HOST']);
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+        
+	}
 
 	public function index()
 	{
 	}
 
 	public function descuentos() {
+
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$idLote = $objDatos->lote;
 		$paquetes = $this->Corrida_model->getPaquetes($idLote);
 		$response = $this->Corrida_model->getDescuentos();
+
+
 		for( $i = 0; $i < count($paquetes); $i++ ){
 			$array = array();
 			for( $c = 0; $c < count( $response ); $c++ ){
@@ -39,19 +52,28 @@ class Corrida extends CI_Controller {
 				}
 			}
 			$paquetes[$i]['response'] = $array;
+
 		}
-		echo json_encode($paquetes, JSON_NUMERIC_CHECK);
+
+		echo json_encode($paquetes);
 	}
 
 
-
-	public function cf(){
-        $this->load->view("corrida/cf_cxl");
+	public function cf_test(){ //OFICAL TEST
+		$this->load->view("corrida/cf_testing");
 	}
+	public function cf(){ //OFICIAL
+		// $this->load->view("corrida/cf_view");
+		// $this->load->view("corrida/corrida_financiera");
+		$this->load->view("corrida/cf_cxl");
+		// $this->load->view("corrida/cf_testing");
+	}
+
 
 	public function cf2(){
 		$this->load->view("corrida/cf_view2");
 	}
+
     public function pagos_capital(){
         $this->load->view("corrida/pagos_capital");
     }
@@ -59,10 +81,6 @@ class Corrida extends CI_Controller {
 	public function cf3(){
 		$this->load->view("corrida/cf_view_PAC");
 	}
-	public function cf_testing(){
-        $this->load->view("corrida/cf_cambios");
-
-    }
 
 	public function getGerente() {
 		$data= $this->Corrida_model->getGerente();
@@ -82,6 +100,7 @@ class Corrida extends CI_Controller {
 			echo json_encode(array());
 		}
 	}
+
 	public function getAsesor() {
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$data= $this->Corrida_model->getAsesores($objDatos->coordinador);
@@ -91,29 +110,90 @@ class Corrida extends CI_Controller {
 			echo json_encode(array());
 		}
 	}
+
  
-	public function editar_ds(){
+	/*public function editar_ds(){
 
 		$objDatos = json_decode(file_get_contents("php://input"));
-//        echo '$objDatos';
-//        print_r($objDatos);
-//        exit;
+		
+		$idLote = (int)$objDatos->id_lote;
+		$id_asesor = (int)$objDatos->asesor;
+		$id_gerente = (int)$objDatos->gerente;
+		$cantidad_enganche = (int)$objDatos->cantidad_enganche;
+		$paquete = (int)$objDatos->paquete;
+
+
+		$arreglo =array();
+		$arreglo["nombre"]= $objDatos->nombre;
+		$arreglo["id_lote"]= $idLote;
+		$arreglo["edad"]= $objDatos->edad;
+		$arreglo["telefono"]= $objDatos->telefono;
+		$arreglo["correo"]= $objDatos->correo;
+		$arreglo["id_asesor"]= $id_asesor;
+		$arreglo["id_gerente"]= $id_gerente;
+		$arreglo["plan_corrida"]= $objDatos->plan;
+		$arreglo["anio"]= $objDatos->anio;
+		$arreglo["dias_pagar_enganche"]= $objDatos->dias_pagar_enganche;
+		$arreglo["porcentaje_enganche"]= $objDatos->porcentaje_enganche;
+		$arreglo["cantidad_enganche"]= $cantidad_enganche;
+		$arreglo["meses_diferir"]= $objDatos->meses_diferir;
+ 		$arreglo["paquete"]= $paquete;
+		$arreglo["opcion_paquete"]= $objDatos->opcion_paquete;
+		$arreglo["precio_m2_final"]= $objDatos->precio_m2_final;
+		$arreglo["saldo"]= $objDatos->saldoc;
+		$arreglo["precio_final"]= $objDatos->precioFinalc;
+		$arreglo["fecha_limite"]= $objDatos->fechaEngc;
+		$arreglo["pago_enganche"]= $objDatos->engancheFinalc;
+		$arreglo["msi_1p"]= ($objDatos->msi_1p == '' || $objDatos->msi_1p == NULL) ? 0 :$objDatos->msi_1p;
+		$arreglo["msi_2p"]= ($objDatos->msi_2p == '' || $objDatos->msi_2p == NULL) ? 0 :$objDatos->msi_2p;
+		$arreglo["msi_3p"]= ($objDatos->msi_3p == '' || $objDatos->msi_3p == NULL) ? 0 :$objDatos->msi_3p;
+		$arreglo["primer_mensualidad"]= $objDatos->primer_mensualidad;
+		$arreglo["finalMesesp1"]= $objDatos->finalMesesp1;
+		$arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
+		$arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
+		$arreglo["observaciones"]= $objDatos->observaciones;
+		
+		
+		
+		$response = $this->Corrida_model->insertCf($arreglo);
+
+		if($response) {
+			$this->Corrida_model->insertPreciosAll($objDatos->allDescuentos, $idLote, $response[0]['id_corrida']);
+			$response['message'] = 'OK';
+			echo json_encode($response);
+
+		}else {
+
+			$response['message'] = 'ERROR';
+			echo json_encode($response);
+		}
+
+
+	}*/
+
+public function editar_ds(){
+
+		$objDatos = json_decode(file_get_contents("php://input"));
+		//        echo '$objDatos';
+		//        print_r($objDatos);
+		//        exit;
 
 
 		$idLote = (int)$objDatos->id_lote;
-		$id_asesor = ($objDatos->asesor!='')?(int)$objDatos->asesor : $objDatos->asesor;
+		$id_asesor = (int)$objDatos->asesor;
 		$id_gerente = (int)$objDatos->gerente;
 		$id_coordinador = (int)$objDatos->coordinador;
 		$cantidad_enganche = (int)$objDatos->cantidad_enganche;
 		$paquete = (int)$objDatos->paquete;
 
-//		echo 'Asesor';
-//		print_r($id_asesor);
-//		echo '<br>Coordinador<br>';
-//        print_r($id_coordinador);
-//        echo '<br>Gerente<br>';
-//        print_r($objDatos->telefono);
-//        exit;
+		//		echo 'Asesor';
+		//		print_r($id_asesor);
+		//		echo '<br>Coordinador<br>';
+		//        print_r($id_coordinador);
+		//        echo '<br>Gerente<br>';
+		//        print_r($objDatos->telefono);
+		//        exit;
+
 
 		$arreglo =array();
 		$arreglo["nombre"]= $objDatos->nombre;
@@ -154,10 +234,9 @@ class Corrida extends CI_Controller {
         $tipoIM = $objDatos->tipoIM;
         $arreglo["tipoPM"] = $tipoIM;
         $arreglo["fechaInicioPM"] = $objDatos->customDate;
-//        $arreglo["fechaApartado"] = (isset($objDatos->fechaApartado)) ? $objDatos->customDate : $objDatos->fechaApartado;
-        $clienteID = ($objDatos->id_cliente!=null || $objDatos->id_cliente!='') ?  $objDatos->id_cliente: 0;
 
-        if($tipoIM == 3 && $clienteID>0){
+        
+        if($tipoIM == 3){
             $verifica = $this->Corrida_model->revisaFIFCDOC($idLote,  $objDatos->id_cliente);
             if(count($verifica) == 0){
                 $data_insert = array(
@@ -266,72 +345,8 @@ class Corrida extends CI_Controller {
 		$objDatos = json_decode(file_get_contents("php://input"));
 		$response = $this->Corrida_model->insertCorrida($objDatos->data, $objDatos->id_corrida);
 	}
-    public function updateCorrida(){
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $id_corrida = $objDatos->id_corrida;
-        $activo= $objDatos->status;
-        $idLote=$objDatos->id_lote;
-
-        /*echo 'id_corrida:<br>';
-        print_r($objDatos->id_corrida);
-        echo '<br><br>data a insertar:<br>';
-        print_r($objDatos->data);*/
-
-        #update el corrida dump, all lo que se piba en el corridas dump
-
-        $response = $this->Corrida_model->updateCorridaDump($id_corrida, $objDatos->data);
-        if($response==1){
-
-            if($activo == 1){
-                /*parte de la regeneració dle excel*/
-                #solo con el estatus
-                #Borra el expediente anterior
-                $expediente = $this->Corrida_model->getExpedienteCorrida($idLote);
-                $dir_expediente = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/';
-                $exp_cf = $expediente->expediente;
-                $req = delete_img($dir_expediente, $exp_cf);
-
-                #Regenera el archivo de nuevo
-                $resultado =  $this->excelFile($id_corrida);
-
-                if($resultado['status'] == 1){
-                    /*$data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
-                    //update rama de documentación
-                    $response['message'] = ($data == 1) ? 'OK' : 'ERROR';*/
-                    $data_documento_update = array(
-                        'modificado' => date('Y-m-d H:i:s'),
-                        'idUser' => $this->session->userdata('id_usuario'),
-                        'expediente' => $resultado['corrida_generada']
-                    );
-                    $this->Corrida_model->updateExpCorr($idLote, $data_documento_update);
 
 
-                    $response_msg['message'] = 'OK';
-                    $response_msg['id_corrida'] = $id_corrida;
-                    echo json_encode($response_msg);
-                }else{
-                    $response_msg['message'] = 'OK';
-                    $response_msg['detail'] = 'Se guardo correctamente pero no se pudo regenerar el excel, intentalo de nuevo';
-                    echo json_encode($response_msg);
-                }
-                /*finaliza parte de la regeneración del excel*/
-            }
-            else{
-                $response_msg['message'] = 'OK';
-                $response_msg['id_corrida'] = $id_corrida;
-                echo json_encode($response_msg);
-
-            }
-            //$data['message'] = 'OK';
-            //echo json_encode($data);
-            //echo json_encode($response_msg);
-        }else{
-            $data['message'] = 'ERROR';
-            echo json_encode($data);
-        }
-
-
-    }
 	public function caratula_mal(){
 		setlocale(LC_MONETARY, 'en_US.UTF-8');
 
@@ -342,8 +357,8 @@ class Corrida extends CI_Controller {
 
 		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Ciudad Maderas');
-        $pdf->SetTitle('Corrida Financiera');
+		$pdf->SetAuthor('Sistemas María José Martínez Martínez');
+		$pdf->SetTitle('Corrida Financiera');
 		$pdf->SetSubject('Corrida Financiera');
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		$pdf->SetAutoPageBreak(TRUE, 0);
@@ -577,7 +592,10 @@ class Corrida extends CI_Controller {
  
 	$pdf->Output(utf8_decode($namePDF), 'I');
 }
-	public function caratula(){
+
+
+
+public function caratula(){
 		setlocale(LC_MONETARY, 'en_US.UTF-8');
 
 		$informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
@@ -595,6 +613,8 @@ class Corrida extends CI_Controller {
 				$informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
 			}*/
 
+		$informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
+		$informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
 
         if($informacion_corrida->id_asesor!=0){
             $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
@@ -614,13 +634,6 @@ class Corrida extends CI_Controller {
 //        echo 'gerente:<br>';
 //        print_r($data_gerente);
 //        echo '<br>';
-
-        $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
-        $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
-
-        $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
-
-
         $informacion_vendedor = array(
             "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
             "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
@@ -761,17 +774,17 @@ legend {
 								<b>Superficie:</b> '.$informacion_loteCorrida->sup.'m<sup>2</sup>
 								</td>
 								<td style="font-size: 1.4em;">
-								<b>Precio m2:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->precio).' 
+								<b>Precio m2:</b> '.money_format('%(#10n',$informacion_loteCorrida->precio).' 
 								</td> 
 								<td style="font-size: 1.4em;">
-								<b>Total:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->total).'
+								<b>Total:</b> '.money_format('%(#10n',$informacion_loteCorrida->total).'
 								</td>
 								<td style="font-size: 1.4em;">
 								<b>Porcentaje:</b> '.$informacion_loteCorrida->porcentaje.'%
 								</td>
 							
 								<td style="font-size: 1.4em;">
-								<b>Enganche:</b> '.$this->money_format('%(#10n',$informacion_loteCorrida->enganche).'
+								<b>Enganche:</b> '.money_format('%(#10n',$informacion_loteCorrida->enganche).'
 								</td>
 							</tr>		
 					  </table>
@@ -875,16 +888,16 @@ legend {
 					  </table>
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
-
-                            foreach ($informacion_diferidos as $row){
-                                $html .='
-                                                  <tr align="center">
-                                                  <td style="font-size: 1.4em;">'.$row->fecha.'</td>
-                                                  <td style="font-size: 1.4em;">'.$row->pago.'</td>
-                                                  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
-                                                  </tr>';
-                            }
-
+                      
+                          foreach ($informacion_diferidos as $row){
+                              $html .='
+                              <tr align="center">
+							  <td style="font-size: 1.4em;">'.$row['fecha'].'</td>
+							  <td style="font-size: 1.4em;">'.$row['pago'].'</td>
+							  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row['total']).'</td>
+                              </tr>';
+                          }
+                          
                         $html .='</table>
                         
                         <br>
@@ -1031,6 +1044,10 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 
 
 }
+
+
+
+
 	public function caratulacf_mal(){
 		setlocale(LC_MONETARY, 'en_US.UTF-8');
 
@@ -1043,8 +1060,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 		$pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
 
 		$pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Ciudad Maderas');
-        $pdf->SetTitle('Corrida Financiera');
+		$pdf->SetAuthor('Sistemas María José Martínez Martínez');
+		$pdf->SetTitle('Corrida Financiera');
 		$pdf->SetSubject('Corrida Financiera');
 		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 		$pdf->SetAutoPageBreak(TRUE, 0);
@@ -1309,8 +1326,8 @@ $pdf->Output(utf8_decode($namePDF), 'I');
 	$pdf->Output(utf8_decode($namePDF), 'I');
 }
 
-    public function caratulacf()
-    {
+
+public function caratulacf(){
         setlocale(LC_MONETARY, 'en_US.UTF-8');
 
         $informacion_corrida = $this->Corrida_model->getinfoCorrida($this->uri->segment(3));
@@ -1330,38 +1347,41 @@ $pdf->Output(utf8_decode($namePDF), 'I');
             $informacion_vendedor = $this->Corrida_model->getGerenteCorrida($informacion_corrida->id_asesor, $informacion_corrida->id_gerente);
         }*/
 
-        if ($informacion_corrida->id_asesor != 0) {
+        if($informacion_corrida->id_asesor!=0){
             $data_asesor = $this->Corrida_model->getDataAsesorToPR($informacion_corrida->id_asesor);
         }
-        if ($informacion_corrida->id_coordinador != 0) {
+        if($informacion_corrida->id_coordinador!=0){
             $data_coord = $this->Corrida_model->getDataCoordToPR($informacion_corrida->id_coordinador);
         }
-        if ($informacion_corrida->id_gerente != 0) {
+        if($informacion_corrida->id_gerente!=0){
             $data_gerente = $this->Corrida_model->getDataGerToPR($informacion_corrida->id_gerente);
         }
-//        echo 'asesor:<br>';
-//        print_r($data_asesor);
-//        echo '<br>';
-//        echo ' coordinador:<br>';
-//        print_r($data_coord);
-//        echo '<br>';
-//        echo 'gerente:<br>';
-//        print_r($data_gerente);
-//        echo '<br>';
+       // echo 'asesor:<br>';
+       // print_r($data_asesor);
+       // echo '<br>';
+       // echo ' coordinador:<br>';
+       // print_r($data_coord);
+       // echo '<br>';
+       // echo 'gerente:<br>';
+       // print_r($data_gerente);
+       // echo '<br>';
         $informacion_vendedor = array(
-            "idAsesor" => ($data_asesor->idAsesor == "") ? 'NA' : $data_asesor->idAsesor,
-            "nombreAsesor" => ($data_asesor->nombreAsesor == "") ? 'NA' : $data_asesor->nombreAsesor,
-            "idCoordinador" => ($data_coord->idCoordinador == "") ? 'NA' : $data_coord->idCoordinador,
-            "nombreCoordinador" => ($data_coord->nombreCoordinador == "") ? 'NA' : $data_coord->nombreCoordinador,
-            "idGerente" => ($data_gerente->idGerente == "") ? 'NA' : $data_gerente->idGerente,
-            "nombreGerente" => ($data_gerente->nombreGerente == "") ? 'NA' : $data_gerente->nombreGerente
+            "idAsesor" => ($data_asesor->idAsesor=="")?'NA':$data_asesor->idAsesor,
+            "nombreAsesor" => ($data_asesor->nombreAsesor=="")?'NA':$data_asesor->nombreAsesor,
+            "idCoordinador" => ($data_coord->idCoordinador=="")?'NA':$data_coord->idCoordinador,
+            "nombreCoordinador" => ($data_coord->nombreCoordinador=="")?'NA':$data_coord->nombreCoordinador,
+            "idGerente" => ($data_gerente->idGerente=="")?'NA':$data_gerente->idGerente,
+            "nombreGerente" => ($data_gerente->nombreGerente=="")?'NA':$data_gerente->nombreGerente
         );
-        $informacion_vendedor = (object)$informacion_vendedor;
+        $informacion_vendedor = (object) $informacion_vendedor;
 
         $informacion_plan = $this->Corrida_model->getPlanCorrida($this->uri->segment(3));
         $informacion_plan = json_decode($informacion_plan[0]['corrida_dump']);
 
         $informacion_diferidos = array_slice($informacion_plan, 0, $informacion_corrida->meses_diferir);
+
+
+
 
 
         $pdf = new TCPDF('P', 'mm', 'LETTER', 'UTF-8', false);
@@ -1608,12 +1628,12 @@ legend {
 
                       <table width="100%" style="height: 45px; border: 1px solid #ddd;" width="690">';
 
-        foreach ($informacion_diferidos as $row){
-            $html .='
+        foreach ($informacion_diferidos as $row) {
+            $html .= '
                               <tr align="center">
-							  <td style="font-size: 1.4em;">'.$row->fecha.'</td>
-							  <td style="font-size: 1.4em;">'.$row->pago.'</td>
-							  <td style="font-size: 1.4em;">'.money_format('%(#10n',$row->total).'</td>
+							  <td style="font-size: 1.4em;">' . $row['fecha'] . '</td>
+							  <td style="font-size: 1.4em;">' . $row['pago'] . '</td>
+							  <td style="font-size: 1.4em;">' . money_format('%(#10n', $row['total']) . '</td>
                               </tr>';
         }
 
@@ -1792,6 +1812,7 @@ legend {
         $pdf->Output(utf8_decode($namePDF), 'I');
 
 
+
     }
 
 	/*
@@ -1806,93 +1827,9 @@ legend {
 	The function is tested using PHP 5.1.4 in Windows XP
 	and Apache WebServer.
 	*/
-    /*function money_format($format, $number)
-    {
-        $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'.
-            '(?:#([0-9]+))?(?:\.([0-9]+))?([in%])/';
-        if (setlocale(LC_MONETARY, 0) == 'C') {
-            setlocale(LC_MONETARY, '');
-        }
-        $locale = localeconv();
-        preg_match_all($regex, $format, $matches, PREG_SET_ORDER);
-        foreach ($matches as $fmatch) {
-            $value = floatval($number);
-            $flags = array(
-                'fillchar'  => preg_match('/\=(.)/', $fmatch[1], $match) ?
-                    $match[1] : ' ',
-                'nogroup'   => preg_match('/\^/', $fmatch[1]) > 0,
-                'usesignal' => preg_match('/\+|\(/', $fmatch[1], $match) ?
-                    $match[0] : '+',
-                'nosimbol'  => preg_match('/\!/', $fmatch[1]) > 0,
-                'isleft'    => preg_match('/\-/', $fmatch[1]) > 0
-            );
-            $width      = trim($fmatch[2]) ? (int)$fmatch[2] : 0;
-            $left       = trim($fmatch[3]) ? (int)$fmatch[3] : 0;
-            $right      = trim($fmatch[4]) ? (int)$fmatch[4] : $locale['int_frac_digits'];
-            $conversion = $fmatch[5];
 
-            $positive = true;
-            if ($value < 0) {
-                $positive = false;
-                $value  *= -1;
-            }
-            $letter = $positive ? 'p' : 'n';
 
-            $prefix = $suffix = $cprefix = $csuffix = $signal = '';
-
-            $signal = $positive ? $locale['positive_sign'] : $locale['negative_sign'];
-            switch (true) {
-                case $locale["{$letter}_sign_posn"] == 1 && $flags['usesignal'] == '+':
-                    $prefix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 2 && $flags['usesignal'] == '+':
-                    $suffix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 3 && $flags['usesignal'] == '+':
-                    $cprefix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 4 && $flags['usesignal'] == '+':
-                    $csuffix = $signal;
-                    break;
-                case $flags['usesignal'] == '(':
-                case $locale["{$letter}_sign_posn"] == 0:
-                    $prefix = '(';
-                    $suffix = ')';
-                    break;
-            }
-            if (!$flags['nosimbol']) {
-                $currency = $cprefix .
-                    ($conversion == 'i' ? $locale['int_curr_symbol'] : $locale['currency_symbol']) .
-                    $csuffix;
-            } else {
-                $currency = '';
-            }
-            $space  = $locale["{$letter}_sep_by_space"] ? ' ' : '';
-
-            $value = number_format($value, $right, $locale['mon_decimal_point'],
-                $flags['nogroup'] ? '' : $locale['mon_thousands_sep']);
-            $value = @explode($locale['mon_decimal_point'], $value);
-
-            $n = strlen($prefix) + strlen($currency) + strlen($value[0]);
-            if ($left > 0 && $left > $n) {
-                $value[0] = str_repeat($flags['fillchar'], $left - $n) . $value[0];
-            }
-            $value = implode($locale['mon_decimal_point'], $value);
-            if ($locale["{$letter}_cs_precedes"]) {
-                $value = $prefix . $currency . $space . $value . $suffix;
-            } else {
-                $value = $prefix . $value . $space . $currency . $suffix;
-            }
-            if ($width > 0) {
-                $value = str_pad($value, $width, $flags['fillchar'], $flags['isleft'] ?
-                    STR_PAD_RIGHT : STR_PAD_LEFT);
-            }
-
-            $format = str_replace($fmatch[0], $value, $format);
-        }
-        return $format;
-    }*/
-	/*function money_format($floatcurr, $curr = 'EUR')
+	function money_format($floatcurr, $curr = 'EUR')
 	{
 		$currencies['ARS'] = array(2, ',', '.');          //  Argentine Peso
 		$currencies['AMD'] = array(2, '.', ',');          //  Armenian Dram
@@ -2029,107 +1966,19 @@ legend {
 		}
 		else
 		{
-		    print_r($floatcurr);
-		    echo '<br>';
-            print_r($currencies);
-            echo '<br>';
-            print_r($curr);
-            echo '<br>';
-            exit;
 			return number_format($floatcurr, $currencies[$curr][0], $currencies[$curr][1], $currencies[$curr][2]);
 		}
-	}*/
-    function money_format($format, $number)
-    {
-        $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'.
-            '(?:#([0-9]+))?(?:\.([0-9]+))?([in%])/';
-        if (setlocale(LC_MONETARY, 0) == 'C') {
-            setlocale(LC_MONETARY, '');
-        }
-        $locale = localeconv();
-        preg_match_all($regex, $format, $matches, PREG_SET_ORDER);
-        foreach ($matches as $fmatch) {
-            $value = floatval($number);
-            $flags = array(
-                'fillchar'  => preg_match('/\=(.)/', $fmatch[1], $match) ?
-                    $match[1] : ' ',
-                'nogroup'   => preg_match('/\^/', $fmatch[1]) > 0,
-                'usesignal' => preg_match('/\+|\(/', $fmatch[1], $match) ?
-                    $match[0] : '+',
-                'nosimbol'  => preg_match('/\!/', $fmatch[1]) > 0,
-                'isleft'    => preg_match('/\-/', $fmatch[1]) > 0
-            );
-            $width      = trim($fmatch[2]) ? (int)$fmatch[2] : 0;
-            $left       = trim($fmatch[3]) ? (int)$fmatch[3] : 0;
-            $right      = trim($fmatch[4]) ? (int)$fmatch[4] : $locale['int_frac_digits'];
-            $conversion = $fmatch[5];
-
-            $positive = true;
-            if ($value < 0) {
-                $positive = false;
-                $value  *= -1;
-            }
-            $letter = $positive ? 'p' : 'n';
-
-            $prefix = $suffix = $cprefix = $csuffix = $signal = '';
-
-            $signal = $positive ? $locale['positive_sign'] : $locale['negative_sign'];
-            switch (true) {
-                case $locale["{$letter}_sign_posn"] == 1 && $flags['usesignal'] == '+':
-                    $prefix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 2 && $flags['usesignal'] == '+':
-                    $suffix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 3 && $flags['usesignal'] == '+':
-                    $cprefix = $signal;
-                    break;
-                case $locale["{$letter}_sign_posn"] == 4 && $flags['usesignal'] == '+':
-                    $csuffix = $signal;
-                    break;
-                case $flags['usesignal'] == '(':
-                case $locale["{$letter}_sign_posn"] == 0:
-                    $prefix = '(';
-                    $suffix = ')';
-                    break;
-            }
-            if (!$flags['nosimbol']) {
-                $currency = $cprefix .
-                    ($conversion == 'i' ? $locale['int_curr_symbol'] : $locale['currency_symbol']) .
-                    $csuffix;
-            } else {
-                $currency = '';
-            }
-            $space  = $locale["{$letter}_sep_by_space"] ? ' ' : '';
-
-            $value = number_format($value, $right, $locale['mon_decimal_point'],
-                $flags['nogroup'] ? '' : $locale['mon_thousands_sep']);
-            $value = @explode($locale['mon_decimal_point'], $value);
-
-            $n = strlen($prefix) + strlen($currency) + strlen($value[0]);
-            if ($left > 0 && $left > $n) {
-                $value[0] = str_repeat($flags['fillchar'], $left - $n) . $value[0];
-            }
-            $value = implode($locale['mon_decimal_point'], $value);
-            if ($locale["{$letter}_cs_precedes"]) {
-                $value = $prefix . $currency . $space . $value . $suffix;
-            } else {
-                $value = $prefix . $value . $space . $currency . $suffix;
-            }
-            if ($width > 0) {
-                $value = str_pad($value, $width, $flags['fillchar'], $flags['isleft'] ?
-                    STR_PAD_RIGHT : STR_PAD_LEFT);
-            }
-
-            $format = str_replace($fmatch[0], $value, $format);
-        }
-        return $format;
-    }
+	}
 
 
-
-	function getResidencialDisponible() {
-        $modalidad = 0;//modo= 0: mostrara todas las sedes - modo = 1: mostrar sólo león
+		function getResidencialDisponible() {
+		/*$recidenciales = $this->Corrida_model->getResidencialDis();
+		if($recidenciales != null) {
+			echo json_encode($recidenciales);
+		} else {
+			echo json_encode(array());
+		}*/
+		$modalidad = 0;//modo= 0: mostrara todas las sedes - modo = 1: mostrar sólo león
 		$residenciales = $this->Corrida_model->getResidencialDis($modalidad);
 
 		if($residenciales != null) {
@@ -2138,6 +1987,8 @@ legend {
 			echo json_encode(array());
 		}
 	}
+
+	
 	function getCondominioDisponibleA() {
 
 		$objDatos = json_decode(file_get_contents("php://input"));
@@ -2149,6 +2000,35 @@ legend {
 			echo json_encode(array());
 		}
 	}
+
+	 public function validateSession()
+    {
+        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
+        {
+            //echo "<script>console.log('No hay sesión iniciada');</script>";
+            redirect(base_url() . "index.php/login");
+        }
+    }
+
+    
+    public function calculoMoratorio()
+    {
+
+            $this->load->view("corrida/moratorio");
+    	
+        // if($this->session->userdata('id_usuario') == 5107)
+        // {
+            // $this->load->view("corrida/moratorio");
+        // }
+        // else
+        // {
+            /*redirect(base_url().'yola');*/
+            // redirect(base_url().'login');
+        // }
+
+//		$this->load->view("moratorioII"); //avance
+    }
+
     function getCondominioDisponibleAMora() {
 
         $objDatos = json_decode(file_get_contents("php://input"));
@@ -2160,14 +2040,785 @@ legend {
             echo json_encode(array());
         }
     }
-	 public function validateSession()
-    {
-        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')=="")
-        {
-            //echo "<script>console.log('No hay sesión iniciada');</script>";
-            redirect(base_url() . "index.php/login");
+    function getAllLotesY() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $lotes = $this->Corrida_model->getAllLotesY($objDatos->condominio);
+        if($lotes != null) {
+            echo json_encode($lotes);
+        } else {
+            echo json_encode(array());
         }
     }
+    public function getinfoLoteDisponibleYL()
+    {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data = $this->Corrida_model->getLotesInfoY($objDatos->lote);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function generateExcelMR($data_corrida){
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        //        print_r('printing...');
+        #imagen ciudad maderas
+        // Add a drawing to the worksheet
+        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
+        $drawing->setName('Ciudad Maderas');
+        $drawing->setDescription('Ciudad Maderas');
+        $drawing->setPath(__DIR__.'/../../static/images/logo_ciudadmaderasAct.jpg');
+        $drawing->setHeight(100);
+        $drawing->setCoordinates('D1');
+        $drawing->setOffsetX(55);
+        $drawing->setOffsetY(20);
+        $drawing->setWorksheet($sheet);
+        $sheet->getRowDimension('1')->setRowHeight(100);
+        $sheet->setShowGridlines(true);
+
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('B:L')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('B:L')->getAlignment()->setVertical('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $i = 15;
+        #aqui empieza el rango de de las corridas normales
+        $range1 = 'C1';
+        $range2 = 'I1';
+        $sheet->mergeCells("$range1:$range2");
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
+        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
+        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
+
+        $sheet->setCellValue('C2', 'Cálculo de intereses moratorios');
+        $range12 = 'C2';
+        $range22 = 'I2';
+        $sheet->mergeCells("$range12:$range22");
+        $sheet->getStyle("C2:I2")->getFont()->setSize(26);
+        $sheet->getStyle('C2')->getFont()->getColor()->setARGB('FFFFFF');
+        $sheet->getStyle( 'C1:C2' )->getFont()->setName('Calibri');
+        $sheet->getStyle('C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
+
+
+
+        $sheet->setCellValue('D4', 'PROYECTO');
+        $sheet->setCellValue('E4', 'CONDOMINIO');
+        $sheet->setCellValue('F4', 'LOTE');
+        $sheet->setCellValue('G4', 'CLIENTE');
+        $sheet->setCellValue('H4', 'SALDO INSOLUTO');
+
+			/*
+			 *         $data = array(
+			            'proyecto' => $proyecto,
+			            'condominio' => $condominio,
+			            'lote' => $lote,
+			            'cliente' => $cliente,
+			            'plazo' => $plazo,
+			            'msi' => $msi,
+			            'im' => $im,
+			            'fecha_pago' => $fecha_pago,
+			            'saldo_insoluto' => $saldo_insoluto,
+			            'data_corrida' => $data_corrida
+
+			        );*/
+			        #set values
+        $sheet->setCellValue('D5', $data_corrida['proyecto']);
+        $sheet->setCellValue('E5', $data_corrida['condominio']);
+        $sheet->setCellValue('F5', $data_corrida['nombreLote']);
+        $sheet->setCellValue('G5', $data_corrida['cliente']);
+        $sheet->getStyle('H5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+        $sheet->setCellValue('H5', $data_corrida['saldo_insoluto']);
+		//        $sheet->setCellValue('I5', 666);
+		//        $sheet->getStyle('I5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+        $sheet->getStyle("D4:I4")->getFont()->setSize(10);
+        $sheet->getStyle('D4:I4')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D4:I4' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D4:I4' )->getFont()->setName('Arial');
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(25);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(23);
+        $sheet->getColumnDimension('G')->setWidth(25);
+        $sheet->getColumnDimension('H')->setWidth(18);
+        $sheet->getColumnDimension('I')->setWidth(15);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(15);
+        $sheet->getColumnDimension('L')->setWidth(15);
+
+        $sheet->getStyle('D5:H5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+
+
+
+        $sheet->setCellValue('D7', 'PLAZO');
+        $sheet->setCellValue('E7', 'MSI');
+        $sheet->setCellValue('F7', 'INTERÉS MORATORIO');
+        $sheet->setCellValue('G7', 'FECHA PAGO');
+        $sheet->getStyle("D7:I7")->getFont()->setSize(10);
+        $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'D7:I7' )->getFont()->setBold( true );
+        $sheet->getStyle( 'D7:I7' )->getFont()->setName('Arial');
+        $sheet->getStyle('D8:G8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        #set values
+        $sheet->setCellValue('D8', $data_corrida['plazo']);
+        $sheet->setCellValue('E8', $data_corrida['msi']);
+        $sheet->setCellValue('F8', $data_corrida['im']);
+        $fecha_formateada = new DateTime($data_corrida['fecha_pago']);
+        $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
+
+
+        $sheet->setCellValue('F10', 'INTERÉS MORATORIO ACUMULADO');
+        $sheet->setCellValue('G10', 'INTERÉS ORDINARIO ACUMULADO');
+        $sheet->getStyle("F10:G10")->getFont()->setSize(10);
+        $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
+        $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
+        $sheet->getStyle( 'F10:G10' )->getFont()->setBold( true );
+        $sheet->getStyle( 'F10:G10' )->getFont()->setName('Arial');
+        $sheet->setCellValue('F11', $data_corrida['ima']);
+        $sheet->setCellValue('G11', $data_corrida['ioa']);
+        $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
+
+
+        /*encabezados de la tabla*/
+        $sheet->setCellValue('B15', 'FECHAS');
+        $sheet->setCellValue('C15', 'PAGO');
+        $sheet->setCellValue('D15', 'CAPITAL');
+        $sheet->setCellValue('E15', 'INTERESES');
+        $sheet->setCellValue('F15', 'IMPORTE');
+        $sheet->setCellValue('G15', 'FECHA PAGO');
+        $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
+        $sheet->setCellValue('I15', 'INTERÉS MORATORIO');
+        $sheet->setCellValue('J15', 'TOTAL');
+        $sheet->setCellValue('K15', 'SALDO MORATORIO');
+        $sheet->setCellValue('L15', 'SALDO');
+        $sheet->getStyle( 'B15:L15' )->getFont()->setBold( true );
+        $sheet->getStyle('B15:L15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+        $sheet->getStyle('B15:L15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+        $sheet->getStyle("H15")->getAlignment()->setWrapText(true);
+        $sheet->getStyle("J15")->getAlignment()->setWrapText(true);
+
+        #termina encabezado
+
+        $array_dump = json_encode($data_corrida['data_corrida']);
+        $array_dump = json_decode(($array_dump));
+        $total_array = count($array_dump);
+        foreach($array_dump as $item=>$value) {
+            $i++;
+
+            #fecha
+            $sheet->setCellValue('B'.$i, $value->fecha);
+            $sheet->getStyle('B'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #pago
+            $sheet->setCellValue('C'.$i, $value->pago);
+            $sheet->getStyle('C'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #capital
+            $sheet->setCellValue('D'.$i, $value->capital);
+            $sheet->getStyle('D'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('D'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #intereses
+            $sheet->setCellValue('E'.$i, $value->interes);
+            $sheet->getStyle('E'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('E'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #importe
+            $sheet->setCellValue('F'.$i, $value->importe);
+            $sheet->getStyle('F'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('F'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #fecha pago
+            $sheet->setCellValue('G'.$i, $value->fechaPago);
+            $sheet->getStyle('G'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #dias_retraso
+            $sheet->setCellValue('H'.$i, $value->diasRetraso);
+            $sheet->getStyle('H'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #IM
+            $sheet->setCellValue('I'.$i, $value->interesMoratorio);
+            $sheet->getStyle('I'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('I'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #total
+            $sheet->setCellValue('J'.$i, $value->total);
+            $sheet->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('J'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo moratorio
+            $sheet->setCellValue('K'.$i, $value->saldo);
+            $sheet->getStyle('K'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('K'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+            #saldo
+            $sheet->setCellValue('L'.$i, $value->saldoNormal);
+            $sheet->getStyle('L'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $sheet->getStyle('L'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $nombre_archivo = 'moratorios.xlsx';
+
+
+        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/'.$nombre_archivo;
+        $dir_2 = str_replace("\ ", '/', $dir_2);
+
+        $writer = new Xlsx($spreadsheet);
+
+
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="'. $nombre_archivo .'"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save("php://output");// download file
+			//        $writer->save($dir_2);
+			//        $data_response = array(
+			//            'message' => 'Corrida generada en excel correctamente',
+			//            'status' => 1,
+			//            'corrida_generada' => $nombre_archivo
+			//        );
+			//        return $data_response;
+    }
+    public function excel_moratorios(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $proyecto = $objDatos->proyecto;
+        $condominio = $objDatos->condominio;
+        $lote = $objDatos->lote;
+        $nombreLote = $objDatos->nombreLote;
+        $cliente = $objDatos->cliente;
+        $plazo = $objDatos->plazo;
+        $msi = $objDatos->msi;
+        $im = $objDatos->im;
+        $fecha_pago = $objDatos->fecha_pago;
+        $saldo_insoluto = $objDatos->saldo_insoluto;
+        $ima = $objDatos->ima;
+        $ioa = $objDatos->ioa;
+        $data_corrida = $objDatos->data_corrida;
+
+        $data = array(
+            'proyecto' => $proyecto,
+            'condominio' => $condominio,
+            'lote' => $lote,
+            'nombreLote' => $nombreLote,
+            'cliente' => $cliente,
+            'plazo' => $plazo,
+            'msi' => $msi,
+            'im' => $im,
+            'fecha_pago' => $fecha_pago,
+            'saldo_insoluto' => $saldo_insoluto,
+            'ima'=> $ima,
+            'ioa'=> $ioa,
+            'data_corrida' => $data_corrida
+        );
+			//        echo __DIR__;
+			//        exit;
+
+			//        print_r($proyecto);
+			//        echo '<br>';
+			//        print_r($condominio);
+			//        echo '<br>';
+			//        print_r($lote);
+			//        echo '<br>';
+			//        print_r($cliente);
+			//        echo '<br>';
+			//        print_r($plazo);
+			//        echo '<br>';
+			//        print_r($msi);
+			//        echo '<br>';
+			//        print_r($im);
+			//        echo '<br>';
+			//        print_r($fecha_pago);
+			//        echo '<br>';
+			//        print_r($saldo_insoluto);
+			//        echo '<br>';
+			//        print_r($data_corrida);
+			//        echo '<br>';
+
+        $responde = $this->generateExcelMR($data);
+
+
+    }
+
+
+    function listado_cf(){
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view('template/header');
+
+        $this->load->view("corrida/corridas_generadas", $datos);
+    }
+    function getLotesWCF($condominio,$residencial)
+    {
+        $data['lotes'] = $this->Corrida_model->getLotesAsesor($condominio, $residencial);
+        //$data2 = array();
+        if(count($data['lotes'])<=0)
+        {
+            $data['lotes'][0]['idLote'] = 0;
+            $data['lotes'][0]['nombreLote'] = 'SIN CORRIDAS PARA ESTE LOTE';
+            echo json_encode($data['lotes']);
+        }
+        else{
+            echo json_encode($data['lotes']);
+        }
+    }
+    function getCorridasByLote($idLote){
+        $data_lotes = $this->Corrida_model->getCorridasByLote($idLote);
+        if($data_lotes != null) {
+            echo json_encode($data_lotes);
+        } else {
+            echo json_encode(array());
+        }
+
+
+    }
+
+    function editacf($id_corrida){
+        $data_corrida = array(
+            "id_corrida" => $id_corrida,
+            "nombre" => 'LOTE TEST'
+        );
+        $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
+               // print_r($data_corrida);
+       // exit;
+        $this->load->view("corrida/editar_corrida", $data_corrida);
+    }
+
+
+	public function getPaquetesByCondominio()
+    {
+        $time = time();
+        $object = json_decode(file_get_contents("php://input"));
+
+
+        if(!isset($object->id_condominio))
+            echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Condominium id is a required parameter to make this request.", "message" => "Verify that the parameter is specified."));
+        else if($object->id_condominio == '' || $object->id_condominio == null || $object->id_condominio == 'undefined')
+            echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Some parameter does not have a specified value.", "message" => "Verify that all parameters contain a specified value."));
+        else {
+				//            print_r($object->id_condominio);
+				//            echo '<br>';
+				//            print_r($object->id_corrida);
+				//            exit;
+            $data = $this->Corrida_model->getPaquetesByCondominio($object->id_condominio, $object->id_corrida)->result_array();
+            if (count($data) > 0){
+                $array_descuentos = $data;
+                $array_validado = array();
+                /*hacer la validación para traer solo los ultimos 2 meses de descuentos*/
+                foreach ($array_descuentos as $descuento){
+                    $d1 = strtotime($descuento['fecha_creacion']);
+                    $d2 = strtotime($descuento['fecha_inicio']);
+                    $min_date = min($d1, $d2);
+                    $max_date = max($d1, $d2);
+                    $i = 0;
+                    while (($min_date = strtotime("+2 MONTH", $min_date)) <= $max_date) {
+                        $i++;
+                    }
+                    if($i<=2){
+                        array_push($array_validado, $descuento);
+                    }
+                };
+                //print_r($array_validado);
+                echo json_encode($array_validado);
+
+            }
+            else{
+                echo json_encode(array("status" => 200, "message" => "No information to display.", "data"=>array()));
+            }
+        }
+    }
+
+
+
+    function getGerenteByID(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_gerente = $objDatos->gerente;
+        $data= $this->Corrida_model->getGerenteByID($id_gerente);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getCoordinadorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getCoordinadorByID($objDatos->coordinador);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getAsesorByID() {
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $data= $this->Corrida_model->getAsesorByID($objDatos->asesor);
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+
+	public function descuentosCCF() {
+
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_cxl = $objDatos->id_cxl;
+        $data_back = $this->Corrida_model->getcxl($id_cxl);
+        $paquetes_data= json_decode(str_replace("'", '"', $data_back->detalle_paquete));
+        /*echo 'Paquetes al momento: <br>';
+        print_r(count($paquetes_data));
+        exit;*/
+        $paquete_view = array();
+
+        if($paquetes_data!=''){
+            for( $i = 0; $i < count($paquetes_data); $i++ ){
+                //echo 'id_paquete: <br>';
+                //print_r($paquetes_data[$i]->id_paquete);
+                //echo '<br>';
+                $paquete_info = $this->Corrida_model->getPaqById($paquetes_data[$i]->id_paquete);
+                $paquete_view[$i] = array(
+                    'id_paquete' => $paquete_info->id_paquete,
+                    'descripcion' => $paquete_info->descripcion,
+                    /*'fecha_inicio' => $paquete_info->fecha_inicio,
+                    'fecha_fin' => $paquete_info->fecha_fin,
+                    'estatus' => $paquete_info->fecha_fin,
+                    'sede' => $paquete_info->fecha_fin,*/
+                );
+                //print_r($paquete_view);
+                //echo '<br><br>';
+
+
+                for( $c = 0; $c < count($paquetes_data[$i]->descuentos); $c++ ){
+
+                    //echo 'Descuento:<br>';
+                    //print_r($paquetes_data[$i]->descuentos[$c]->id_descuento);
+                    $data_descuento = $this->Corrida_model->getDescById($paquetes_data[$i]->descuentos[$c]->id_descuento);
+                    //print_r($data_descuento);
+                    //echo '<br>';
+                    $paquete_view[$i]['response'][$c]['id_descuento'] = $data_descuento->id_descuento;
+                    $paquete_view[$i]['response'][$c]['id_tdescuento'] = $data_descuento->id_tdescuento;
+                    $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
+                    $paquete_view[$i]['response'][$c]['fin'] = $data_descuento->fin;
+                    $paquete_view[$i]['response'][$c]['id_condicion'] = $data_descuento->id_condicion;
+                    $paquete_view[$i]['response'][$c]['porcentaje'] = (int)$data_descuento->porcentaje;
+                    $paquete_view[$i]['response'][$c]['eng_top'] = $data_descuento->eng_top;
+                    $paquete_view[$i]['response'][$c]['apply'] = $data_descuento->apply;
+                    $paquete_view[$i]['response'][$c]['leyenda'] = $data_descuento->leyenda;
+                    $paquete_view[$i]['response'][$c]['prioridad'] = $data_descuento->prioridad;
+                    //$paquete_view[$i]['response'][$c]['estatus'] = str_replace('"', '', $paquetes_data[$i]->descuentos[$c]->estatus);
+                    $paquete_view[$i]['response'][$c]['estatus'] = $paquetes_data[$i]->descuentos[$c]->estatus;
+                    $paquete_view[$i]['response'][$c]['id_paquete'] = $paquetes_data[$i]->id_paquete;
+                    $paquete_view[$i]['response'][$c]['msi_descuento'] = (int) $data_descuento->msi_descuento;
+                }
+            }
+        }else{
+            $paquete_view = array();
+        }
+
+        print_r(json_encode($paquete_view));
+
+
+        //print_r(json_decode(str_replace("'", '"', $data_back->detalle_paquete)));
+
+
+
+        /*$idLote = $objDatos->lote;
+        $paquetes = $this->Corrida_model->getPaquetes($idLote);
+        print_r($paquetes);
+        exit;
+        $response = $this->Corrida_model->getDescuentos();
+
+
+        for( $i = 0; $i < count($paquetes); $i++ ){
+            $array = array();
+            for( $c = 0; $c < count( $response ); $c++ ){
+                if( $paquetes[$i]['id_paquete'] == $response[$c]['id_paquete'] ){
+                    $array[] = $response[$c];
+                }
+            }
+            $paquetes[$i]['response'] = $array;
+        }
+
+        echo json_encode($paquetes);*/
+    }
+
+
+	function checCFActived($idLote){
+        $data = $this->Corrida_model->checCFActived($idLote);
+        $response['message'] = count($data);
+        if($response != null) {
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    function update_financialR(){
+
+        $objDatos = json_decode(file_get_contents("php://input"));
+
+        $id_corrida = (int)$objDatos->id_corrida;
+        $idLote = (int)$objDatos->id_lote;
+        $id_asesor = (int)$objDatos->asesor;
+        $id_gerente = (int)$objDatos->gerente;
+        $cantidad_enganche = (int)$objDatos->cantidad_enganche;
+        $paquete = $objDatos->paquete;
+        $activo = $objDatos->status;
+
+
+
+        $datos_arreglo = array(
+            "idLote" => $idLote,
+            "idAsesor" => $id_asesor,
+            "idGerente" => $id_gerente,
+            "cantidadEnganche" => $cantidad_enganche,
+            "paquete" => $paquete
+        );
+
+        $arreglo =array();
+        $arreglo["nombre"]= $objDatos->nombre;
+        $arreglo["id_lote"]= $idLote;
+        $arreglo["edad"]= $objDatos->edad;
+        $arreglo["telefono"]= $objDatos->telefono;
+        $arreglo["correo"]= $objDatos->correo;
+        $arreglo["id_asesor"]= $id_asesor;
+        $arreglo["id_gerente"]= $id_gerente;
+        $arreglo["plan_corrida"]= $objDatos->plan;
+        $arreglo["anio"]= $objDatos->anio;
+        $arreglo["dias_pagar_enganche"]= $objDatos->dias_pagar_enganche;
+        $arreglo["porcentaje_enganche"]= $objDatos->porcentaje_enganche;
+        $arreglo["cantidad_enganche"]= $cantidad_enganche;
+        $arreglo["meses_diferir"]= $objDatos->meses_diferir;
+        $arreglo["apartado"]= ($objDatos->apartado == '') ? 0 : $objDatos->apartado;
+        $arreglo["paquete"]= $paquete;
+        $arreglo["opcion_paquete"]= $objDatos->opcion_paquete;
+        $arreglo["precio_m2_final"]= $objDatos->precio_m2_final;
+        $arreglo["saldo"]= $objDatos->saldoc;
+        $arreglo["precio_final"]= $objDatos->precioFinalc;
+        $arreglo["fecha_limite"]= $objDatos->fechaEngc;
+        $arreglo["pago_enganche"]= $objDatos->engancheFinalc;
+        $arreglo["msi_1p"]= ($objDatos->msi_1p == '' || $objDatos->msi_1p == NULL) ? 0 :$objDatos->msi_1p;
+        $arreglo["msi_2p"]= ($objDatos->msi_2p == '' || $objDatos->msi_2p == NULL) ? 0 :$objDatos->msi_2p;
+        $arreglo["msi_3p"]= ($objDatos->msi_3p == '' || $objDatos->msi_3p == NULL) ? 0 :$objDatos->msi_3p;
+        $arreglo["primer_mensualidad"]= $objDatos->primer_mensualidad;
+        $arreglo["finalMesesp1"]= $objDatos->finalMesesp1;
+        $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
+        $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
+        $arreglo["observaciones"]= $objDatos->observaciones;
+        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
+        $arreglo["fechaApartado"] = $objDatos->fechaApartado;
+
+        /*print_r($arreglo);
+        exit;*/
+
+        /*print_r($arreglo["telefono"]);
+        exit;*/
+
+        $array_allPackages = json_decode($objDatos->allPackages);
+        $arrayTocxp = array();
+
+
+
+
+        $arrayDescApply = ($objDatos->descApply == null || $objDatos->descApply == 'undefined') ? array(): $objDatos->descApply;
+        if(count($arrayDescApply)>0){
+            foreach ($array_allPackages as $key => $value) { //recorre todos los paquetes
+                $arrayTocxp[$key]['id_paquete'] = $value->id_paquete;
+
+                foreach ($value->response as $key2 => $value2) { //recorre los descuentos dentro de los paquetes
+                    $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
+                    $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
+                    //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
+                    for ($i = 0; $i < count($arrayDescApply); $i++) {
+                        if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
+                            $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
+                        }
+                    }
+                }
+            }
+
+
+            foreach ($arrayTocxp as $key => $value) {
+                foreach ($value['descuentos'] as $key2 => $value2) {
+                    (empty($value2['estatus'])) ? $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 0 : $value2['estatus'];
+                }
+            }
+
+
+
+            //print_r(json_encode($arrayTocxp));
+
+        }
+
+
+
+
+
+
+
+
+        /* echo 'Arreglo: <br>';
+         print_r($arreglo);
+         echo '<br><br> id_lote: '.$idLote.' <br><br>';
+         echo 'id_corrida: '.$id_corrida.' <br><br>';
+         echo '<br><br>allDescuentos: <br>';
+         print_r($objDatos->allDescuentos);
+         echo '<br><br>descuento cxl: <br>';
+         print_r($arrayTocxp);
+         echo '<br><br>';
+
+         if(count($objDatos->allDescuentos) > 0){
+             echo 'Se va actualizar All descuentos';
+         }else{
+             echo 'No hay nada xd';
+         }
+
+
+         exit;*/
+
+
+
+
+
+        $response = $this->Corrida_model->updateCF($id_corrida, $arreglo);
+        $respuesta = $this->Corrida_model->update_cxl($arrayTocxp, $id_corrida);
+        //$response = 1;
+        if($response == 1 && $respuesta==1) {
+            $this->Corrida_model->updatePreciosAll($objDatos->allDescuentos, $idLote, $id_corrida);
+
+
+                $response_msg['message'] = 'OK';
+                $response_msg['id_corrida'] = $id_corrida;
+                echo json_encode($response_msg);
+        }
+        else {
+            $response_msg['message'] = 'ERROR';
+            echo json_encode($response_msg);
+        }
+
+
+
+
+
+        /*MAKE NEXT STEPS*/
+        /*$response = $this->Corrida_model->insertCf($arreglo);
+
+        if($response) {
+            $this->Corrida_model->insertPreciosAll($objDatos->allDescuentos, $idLote, $response[0]['id_corrida']);
+            $response['message'] = 'OK';
+            echo json_encode($response);
+        }else {
+            $response['message'] = 'ERROR';
+            echo json_encode($response);
+        }*/
+
+    }
+
+
+
+
+
+public function updateCorrida(){
+        $objDatos = json_decode(file_get_contents("php://input"));
+        $id_corrida = $objDatos->id_corrida;
+        $activo= $objDatos->status;
+        $idLote=$objDatos->id_lote;
+
+        /*echo 'id_corrida:<br>';
+        print_r($objDatos->id_corrida);
+        echo '<br><br>data a insertar:<br>';
+        print_r($objDatos->data);*/
+
+        #update el corrida dump, all lo que se piba en el corridas dump
+
+        $response = $this->Corrida_model->updateCorridaDump($id_corrida, $objDatos->data);
+        if($response==1){
+
+            if($activo == 1){
+                /*parte de la regeneració dle excel*/
+                #solo con el estatus
+                #Borra el expediente anterior
+                $expediente = $this->Corrida_model->getExpedienteCorrida($idLote);
+                $dir_expediente = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/';
+                $exp_cf = $expediente->expediente;
+                $req = delete_img($dir_expediente, $exp_cf);
+
+                #Regenera el archivo de nuevo
+                $resultado =  $this->excelFile($id_corrida);
+
+                if($resultado['status'] == 1){
+                    /*$data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
+                    //update rama de documentación
+                    $response['message'] = ($data == 1) ? 'OK' : 'ERROR';*/
+                    $data_documento_update = array(
+                        'modificado' => date('Y-m-d H:i:s'),
+                        'idUser' => $this->session->userdata('id_usuario'),
+                        'expediente' => $resultado['corrida_generada']
+                    );
+                    $this->Corrida_model->updateExpCorr($idLote, $data_documento_update);
+
+
+                    $response_msg['message'] = 'OK';
+                    $response_msg['id_corrida'] = $id_corrida;
+                    echo json_encode($response_msg);
+                }else{
+                    $response_msg['message'] = 'OK';
+                    $response_msg['detail'] = 'Se guardo correctamente pero no se pudo regenerar el excel, intentalo de nuevo';
+                    echo json_encode($response_msg);
+                }
+                /*finaliza parte de la regeneración del excel*/
+            }
+            else{
+                $response_msg['message'] = 'OK';
+                $response_msg['id_corrida'] = $id_corrida;
+                echo json_encode($response_msg);
+
+            }
+            //$data['message'] = 'OK';
+            //echo json_encode($data);
+            //echo json_encode($response_msg);
+        }else{
+            $data['message'] = 'ERROR';
+            echo json_encode($data);
+        }
+
+
+    }
+
+
     /*COSAS DE LA CORRIDA Y DEL EXPORT DEL EXCEL*/
     public function excelFile($id_corrida){
         //echo 'Estoy creadno el excel';
@@ -2212,9 +2863,9 @@ legend {
             $casas = str_replace('"', '', $casas );
             $casas = str_replace("'", '"', $casas );
             $casas = json_decode($casas);
-//            echo 'Tipo de casa:';
-//            print_r($data_corrida->tipo_casa);
-//            echo '<br>';
+				//            echo 'Tipo de casa:';
+				//            print_r($data_corrida->tipo_casa);
+				//            echo '<br>';
             $nombre_casa = '';
             $sup_casa = '';
             $precio_m2_casa = '';
@@ -2224,16 +2875,16 @@ legend {
             foreach ($casas as $clave=>$valor)
             {
                 if((int) $data_corrida->tipo_casa === (int) $valor->id){
-//                    echo 'el elegido es:<br>';
-//                    print_r($valor);
-//                    echo'<br>';
+							//                    echo 'el elegido es:<br>';
+							//                    print_r($valor);
+							//                    echo'<br>';
                     $nombre_casa = $valor->nombre;
                     $sup_casa = $valor->superficie;
                     $precio_m2_casa = $valor->precio_m2;
                     $precio_casa = $valor->total_const;
                     //vamos a avanzar los extras para mostrarlos y que concidan los numeros
                     if(count($valor->extras) >= 1){
-//                        print_r($valor);
+								//                        print_r($valor);
                         $n=0;
                         foreach($valor->extras as $indice=>$valor_extras){
                             $extras['techado'] = $valor_extras->techado;
@@ -2274,7 +2925,7 @@ legend {
             $sheet->setCellValue('G4', 'Precio casa');
             $sheet->setCellValue('H4', 'Plazo');
             $sheet->setCellValue('I4', 'Apartado');
-//            $sheet->setCellValue('I4', '10% precio m2');
+				// 			           $sheet->setCellValue('I4', '10% precio m2');
 
             #set values
             $sheet->setCellValue('D5', $nombre_casa);
@@ -2330,8 +2981,8 @@ legend {
             //$sheet->getStyle( 'D8' )->getFont()->setBold( true );
             //$sheet->getStyle('D8:H8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D8E4BC');
 
-//            print_r(count($extras_general));
-//            exit;
+					//            print_r(count($extras_general));
+					//            exit;
             $contador=10;
             $extras_total = 0;
             if(count($extras_general) >= 1){
@@ -2378,34 +3029,34 @@ legend {
                 $sheet->setCellValue('D'.$contador2, 'Descuento');
                 $sheet->getStyle( 'D'.$contador2 )->getFont()->setBold( true )->setSize(13);
                 $sheet->getStyle('D'.$contador2 )->getFont()->getColor()->setARGB('4472C4');
-//                $sheet->getStyle('D'.$contador2.':'.'E'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+					//                $sheet->getStyle('D'.$contador2.':'.'E'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
                 $sheet->mergeCells("F".$contador2.":"."G".$contador2);
                 $sheet->setCellValue('F'.$contador2, 'Cantidad ahorro');
                 $sheet->getStyle( 'F'.$contador2 )->getFont()->setBold( true )->setSize(13);
                 $sheet->getStyle('F'.$contador2 )->getFont()->getColor()->setARGB('4472C4');
 
-//                $sheet->getStyle('F'.$contador2.':'.'G'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+					//                $sheet->getStyle('F'.$contador2.':'.'G'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
                 $sheet->setCellValue('H'.$contador2, 'Aplicable a ');
                 $sheet->getStyle('H'.$contador2)->getFont()->setBold( true );
                 $sheet->getStyle('H'.$contador2 )->getFont()->getColor()->setARGB('4472C4');
 
 
-//                $sheet->setCellValue('H'.$contador2, 'Aplicable a');
-//                $sheet->getStyle( 'H'.$contador2 )->getFont()->setBold( true );
-//                $sheet->getStyle('H'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
+						//                $sheet->setCellValue('H'.$contador2, 'Aplicable a');
+						//                $sheet->getStyle( 'H'.$contador2 )->getFont()->setBold( true );
+						//             	   $sheet->getStyle('H'.$contador2)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
                 $flag_cell = 0;
                 $suma_descuentos=0;
                 $precio_final_excel=0;
-//                print_r(count($informacion_descCorrida));
-//                echo '<br>';
+						//                print_r(count($informacion_descCorrida));
+						//                echo '<br>';
                 $nuevo_preciom2casa = $precio_m2_casa;
                 $descuento_variable = 0;
                 $descuento_variable2 = 0;
                 $nuevo_preciom2lote = $data_corrida->preciom2;
                 foreach($informacion_descCorrida as $item=>$value){
-//                    print_r($item+1);
+							//                    print_r($item+1);
 
                     //print_r($value['porcentaje']);
                     $contador2++;
@@ -2430,20 +3081,20 @@ legend {
                     $sheet->getStyle('H')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
 
 
-//                    $flag_val = $this->check_prime(4);
-                    /*print_r($value);
+								//                    $flag_val = $this->check_prime(4);
+								                    /*print_r($value);
 
-                    echo '<br>';*/
-//                    if(count($informacion_descCorrida) == ($item+1)){
-//                        $precio_final_excel = $value['pm'];
-//                        print_r();
-//                    }
+								                    echo '<br>';*/
+								//                    if(count($informacion_descCorrida) == ($item+1)){
+								//                        $precio_final_excel = $value['pm'];
+								//                        print_r();
+								//                    }
 
                     if($value['id_condicion']!=12){
-//                        print_r($value);
+								//                        print_r($value);
                         $descuento_variable = ( $value['porcentaje'] * $nuevo_preciom2casa / 100);
                         $nuevo_preciom2casa = $nuevo_preciom2casa - $descuento_variable;
-//                        echo '<br>';
+								//                        echo '<br>';
 
                         $descuento_variable2 = ($value['porcentaje'] * $nuevo_preciom2lote / 100);
                         $nuevo_preciom2lote = $nuevo_preciom2lote - $descuento_variable2;
@@ -2451,11 +3102,11 @@ legend {
                     }
 
                 }
-//                print_r($nuevo_preciom2casa);
-//                echo '<br>';
-                /*echo 'TOTAL DESCUENTOS:<br>';
-                print_r($suma_descuentos);*/
-//                exit;
+							//                print_r($nuevo_preciom2casa);
+							//                echo '<br>';
+							                /*echo 'TOTAL DESCUENTOS:<br>';
+							                print_r($suma_descuentos);*/
+							//                exit;
 
 
 
@@ -2564,7 +3215,7 @@ legend {
             $sheet->setCellValue('C29', 'Mensualidad Con/Int. 1.108% SSI ');
             $sheet->getStyle('C29')->getFont()->setBold( true );
             $sheet->setCellValue('E29', ($data_corrida->finalMesesp2 + $data_corrida->finalMesesp3));
-//            $sheet->getStyle('C25:E25')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+				//            $sheet->getStyle('C25:E25')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
             #encabezado de los intereses
             $sheet->setCellValue('F28', 'Interés Mensual');
@@ -2628,7 +3279,7 @@ legend {
             $sheet->setCellValue('F4', 'Superficie');
             $sheet->setCellValue('G4', 'Precio m2');
             $sheet->setCellValue('H4', 'Plazo');
-            $sheet->setCellValue('I4', '10% precio m2');
+            $sheet->setCellValue('I4', 'Precio Final m2');
 
             #set values
             $sheet->setCellValue('D5', $data_corrida->nombreCondominio);
@@ -2855,7 +3506,7 @@ legend {
 
         }
 
-//        exit;
+			//        exit;
 
         #CMML_KAN100_11022021_40513_247_KANJIROBA-100.xlsx
         $resName = $data_corrida->nombreResidencial;
@@ -2868,7 +3519,7 @@ legend {
 
         $nombre_archivo = $resName.'_'.$cond3Letras.$numberLote.'_'.$date_file.'_'.$idCliente.'_'.$randNumber.'.xlsx';
 
-        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/'.$nombre_archivo;
+        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'static/documentos/cliente/corrida/'.$nombre_archivo;
         $dir_2 = str_replace("\ ", '/', $dir_2);
 
         $writer = new Xlsx($spreadsheet);
@@ -2888,290 +3539,8 @@ legend {
         return $data_response;
     }
 
-    function check_prime($num)
-    {
-        if ($num == 1)
-            return 0;
-        for ($i = 2; $i <= $num/2; $i++)
-        {
-            if ($num % $i == 0)
-                return 0;
-        }
-        return 1;
-    }
 
-    function listado_cf(){
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("corrida/corridas_generadas", $datos);
-    }
-    function editacf($id_corrida){
-        $data_corrida = array(
-            "id_corrida" => $id_corrida,
-            "nombre" => 'LOTE TEST'
-        );
-        $data_corrida['data_corrida'] = $this -> Corrida_model -> getInfoCorridaByID($id_corrida);
-        $fecha_formateada = explode('-', $data_corrida['data_corrida']->primer_mensualidad );
-        $data_corrida['data_corrida']->primer_mensualidad = $fecha_formateada[2].'-'.$fecha_formateada[1].'-'.$fecha_formateada[0];
-
-        $this->load->view("corrida/editar_corrida", $data_corrida);
-    }
-    function update_financialR(){
-
-        $objDatos = json_decode(file_get_contents("php://input"));
-
-        $id_corrida = (int)$objDatos->id_corrida;
-        $idLote = (int)$objDatos->id_lote;
-        $id_asesor = (int)$objDatos->asesor;
-        $id_gerente = (int)$objDatos->gerente;
-        $cantidad_enganche = (int)$objDatos->cantidad_enganche;
-        $paquete = $objDatos->paquete;
-        $activo = $objDatos->status;
-
-
-
-        $datos_arreglo = array(
-            "idLote" => $idLote,
-            "idAsesor" => $id_asesor,
-            "idGerente" => $id_gerente,
-            "cantidadEnganche" => $cantidad_enganche,
-            "paquete" => $paquete
-        );
-
-        $arreglo =array();
-        $arreglo["nombre"]= $objDatos->nombre;
-        $arreglo["id_lote"]= $idLote;
-        $arreglo["edad"]= $objDatos->edad;
-        $arreglo["telefono"]= $objDatos->telefono;
-        $arreglo["correo"]= $objDatos->correo;
-        $arreglo["id_asesor"]= $id_asesor;
-        $arreglo["id_gerente"]= $id_gerente;
-        $arreglo["plan_corrida"]= $objDatos->plan;
-        $arreglo["anio"]= $objDatos->anio;
-        $arreglo["dias_pagar_enganche"]= $objDatos->dias_pagar_enganche;
-        $arreglo["porcentaje_enganche"]= $objDatos->porcentaje_enganche;
-        $arreglo["cantidad_enganche"]= $cantidad_enganche;
-        $arreglo["meses_diferir"]= $objDatos->meses_diferir;
-        $arreglo["apartado"]= ($objDatos->apartado == '') ? 0 : $objDatos->apartado;
-        $arreglo["paquete"]= $paquete;
-        $arreglo["opcion_paquete"]= $objDatos->opcion_paquete;
-        $arreglo["precio_m2_final"]= $objDatos->precio_m2_final;
-        $arreglo["saldo"]= $objDatos->saldoc;
-        $arreglo["precio_final"]= $objDatos->precioFinalc;
-        $arreglo["fecha_limite"]= $objDatos->fechaEngc;
-        $arreglo["pago_enganche"]= $objDatos->engancheFinalc;
-        $arreglo["msi_1p"]= ($objDatos->msi_1p == '' || $objDatos->msi_1p == NULL) ? 0 :$objDatos->msi_1p;
-        $arreglo["msi_2p"]= ($objDatos->msi_2p == '' || $objDatos->msi_2p == NULL) ? 0 :$objDatos->msi_2p;
-        $arreglo["msi_3p"]= ($objDatos->msi_3p == '' || $objDatos->msi_3p == NULL) ? 0 :$objDatos->msi_3p;
-        $arreglo["primer_mensualidad"]= $objDatos->primer_mensualidad;
-        $arreglo["finalMesesp1"]= $objDatos->finalMesesp1;
-        $arreglo["finalMesesp2"]= $objDatos->finalMesesp2;
-        $arreglo["finalMesesp3"]= $objDatos->finalMesesp3;
-        $arreglo["observaciones"]= $objDatos->observaciones;
-        $arreglo["fecha_modificacion"] = date("Y-m-d H:i:s");
-        $arreglo["fechaApartado"] = $objDatos->fechaApartado;
-
-        /*print_r($arreglo);
-        exit;*/
-
-        /*print_r($arreglo["telefono"]);
-        exit;*/
-
-        $array_allPackages = json_decode($objDatos->allPackages);
-        $arrayTocxp = array();
-
-
-
-
-        $arrayDescApply = ($objDatos->descApply == null || $objDatos->descApply == 'undefined') ? array(): $objDatos->descApply;
-        if(count($arrayDescApply)>0){
-            foreach ($array_allPackages as $key => $value) { //recorre todos los paquetes
-                $arrayTocxp[$key]['id_paquete'] = $value->id_paquete;
-
-                foreach ($value->response as $key2 => $value2) { //recorre los descuentos dentro de los paquetes
-                    $arrayTocxp[$key]['descuentos'][$key2]['prioridad'] = $value2->prioridad;
-                    $arrayTocxp[$key]['descuentos'][$key2]['id_descuento'] = $value2->id_descuento;
-                    //$arrayTocxp[$key]['descuentos'][$key2]['estatus'] =  0;
-                    for ($i = 0; $i < count($arrayDescApply); $i++) {
-                        if ($arrayDescApply[$i]->id_descuento == $value2->id_descuento && $arrayDescApply[$i]->id_paquete == $value->id_paquete) {
-                            $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 1;
-                        }
-                    }
-                }
-            }
-
-
-            foreach ($arrayTocxp as $key => $value) {
-                foreach ($value['descuentos'] as $key2 => $value2) {
-                    (empty($value2['estatus'])) ? $arrayTocxp[$key]['descuentos'][$key2]['estatus'] = 0 : $value2['estatus'];
-                }
-            }
-        }
-
-        $response = $this->Corrida_model->updateCF($id_corrida, $arreglo);
-        $respuesta = $this->Corrida_model->update_cxl($arrayTocxp, $id_corrida);
-        //$response = 1;
-        if($response == 1 && $respuesta==1) {
-            $this->Corrida_model->updatePreciosAll($objDatos->allDescuentos, $idLote, $id_corrida);
-                $response_msg['message'] = 'OK';
-                $response_msg['id_corrida'] = $id_corrida;
-                echo json_encode($response_msg);
-        }
-        else {
-            $response_msg['message'] = 'ERROR';
-            echo json_encode($response_msg);
-        }
-
-    }
-
-    public function getPaquetesByCondominio()
-    {
-        $time = time();
-        $object = json_decode(file_get_contents("php://input"));
-
-
-        if(!isset($object->id_condominio))
-            echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Condominium id is a required parameter to make this request.", "message" => "Verify that the parameter is specified."));
-        else if($object->id_condominio == '' || $object->id_condominio == null || $object->id_condominio == 'undefined')
-            echo json_encode(array("timestamp" => $time, "status" => 400, "error" => "Bad request", "exception" => "Some parameter does not have a specified value.", "message" => "Verify that all parameters contain a specified value."));
-        else {
-            $data = $this->Corrida_model->getPaquetesByCondominio($object->id_condominio, $object->id_corrida)->result_array();
-            if (count($data) > 0){
-                $array_descuentos = $data;
-                $array_validado = array();
-                /*hacer la validación para traer solo los ultimos 2 meses de descuentos*/
-                foreach ($array_descuentos as $descuento){
-                    $d1 = strtotime($descuento['fecha_creacion']);
-                    $d2 = strtotime($descuento['fecha_inicio']);
-                    $min_date = min($d1, $d2);
-                    $max_date = max($d1, $d2);
-                    $i = 0;
-                    while (($min_date = strtotime("+2 MONTH", $min_date)) <= $max_date) {
-                        $i++;
-                    }
-                    if($i<=2){
-                        array_push($array_validado, $descuento);
-                    }
-                };
-                //print_r($array_validado);
-                echo json_encode($array_validado);
-
-            }
-            else{
-                echo json_encode(array("status" => 200, "message" => "No information to display.", "data"=>array()));
-            }
-        }
-    }
-    public function descuentosCCF() {
-
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $id_cxl = $objDatos->id_cxl;
-        $data_back = $this->Corrida_model->getcxl($id_cxl);
-        $paquetes_data= json_decode(str_replace("'", '"', $data_back->detalle_paquete));
-        /*echo 'Paquetes al momento: <br>';
-        print_r(count($paquetes_data));
-        exit;*/
-        $paquete_view = array();
-
-        if($paquetes_data!=''){
-            for( $i = 0; $i < count($paquetes_data); $i++ ){
-                $paquete_info = $this->Corrida_model->getPaqById($paquetes_data[$i]->id_paquete);
-                $paquete_view[$i] = array(
-                    'id_paquete' => $paquete_info->id_paquete,
-                    'descripcion' => $paquete_info->descripcion,
-                );
-
-                for( $c = 0; $c < count($paquetes_data[$i]->descuentos); $c++ ){
-                    $data_descuento = $this->Corrida_model->getDescById($paquetes_data[$i]->descuentos[$c]->id_descuento);
-                    $paquete_view[$i]['response'][$c]['id_descuento'] = $data_descuento->id_descuento;
-//                    $paquete_view[$i]['response'][$c]['id_tdescuento'] = $data_descuento->id_tdescuento;
-//                    $paquete_view[$i]['response'][$c]['inicio'] = $data_descuento->inicio;
-//                    $paquete_view[$i]['response'][$c]['fin'] = $data_descuento->fin;
-                    $paquete_view[$i]['response'][$c]['id_condicion'] = $data_descuento->id_condicion;
-                    $paquete_view[$i]['response'][$c]['porcentaje'] = (int)$data_descuento->porcentaje;
-//                    $paquete_view[$i]['response'][$c]['eng_top'] = $data_descuento->eng_top;
-                    $paquete_view[$i]['response'][$c]['apply'] = $data_descuento->apply;
-                    $paquete_view[$i]['response'][$c]['leyenda'] = $data_descuento->leyenda;
-                    $paquete_view[$i]['response'][$c]['prioridad'] = $data_descuento->prioridad;
-                    $paquete_view[$i]['response'][$c]['estatus'] = $paquetes_data[$i]->descuentos[$c]->estatus;
-                    $paquete_view[$i]['response'][$c]['id_paquete'] = $paquetes_data[$i]->id_paquete;
-                    $paquete_view[$i]['response'][$c]['msi_descuento'] = (int) $data_descuento->msi_descuento;
-                }
-            }
-        }else{
-            $paquete_view = array();
-        }
-
-        print_r(json_encode($paquete_view));
-    }
-    function getDescsByCondominio(){
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $id_condominio = $objDatos->id_condominio;
-        $id_pxc = $objDatos->id_pxc;
-        $data_descuentos = $this->Corrida_model->getDescsByCondominio($id_condominio, $id_pxc);
-
-        $object_descuentos = json_decode($data_descuentos->id_paquete);
-        $array_descuentos = explode(',', $object_descuentos->paquetes, 999);
-        $tipo_superficie = $object_descuentos->tipo_superficie;
-
-        //recibe un array separados por "," así: Array ( [0] => 326 [1] => 328 [2] => 334 )
-        for($i=0; $i<count($array_descuentos); $i++){
-            $paquete_info = $this->Corrida_model->getPaqById($array_descuentos[$i]);
-            $paquete_view[$i] = array(
-                'id_paquete' => $paquete_info->id_paquete,
-                'descripcion' => $paquete_info->descripcion,
-                'aplicable_a' => $tipo_superficie->tipo,
-                'sup1'        => $tipo_superficie->sup1,
-                'sup2'        => $tipo_superficie->sup2,
-            );
-
-            $data_desc_paq = $this->Corrida_model->getRelDescByIdPq($paquete_info->id_paquete);
-            for($q = 0; $q<count($data_desc_paq); $q++){
-                $data_descuento = $this->Corrida_model->getDescById($data_desc_paq[$q]['id_descuento']);
-                $paquete_view[$i]['response'][$q]['id_descuento'] = $data_descuento->id_descuento;
-//                $paquete_view[$i]['response'][$q]['id_tdescuento'] = $data_descuento->id_tdescuento;
-//                $paquete_view[$i]['response'][$q]['inicio'] = $data_descuento->inicio;
-//                $paquete_view[$i]['response'][$q]['fin'] = $data_descuento->fin;
-                $paquete_view[$i]['response'][$q]['id_condicion'] = $data_descuento->id_condicion;
-                $paquete_view[$i]['response'][$q]['porcentaje'] = (int)$data_descuento->porcentaje;
-//                $paquete_view[$i]['response'][$q]['eng_top'] = $data_descuento->eng_top;
-                $paquete_view[$i]['response'][$q]['apply'] = $data_descuento->apply;
-                $paquete_view[$i]['response'][$q]['leyenda'] = $data_descuento->leyenda;
-                $paquete_view[$i]['response'][$q]['prioridad'] = $data_descuento->prioridad;
-                $paquete_view[$i]['response'][$q]['estatus'] = 0;
-                $paquete_view[$i]['response'][$q]['id_paquete'] = $paquete_info->id_paquete;
-                $paquete_view[$i]['response'][$q]['msi_descuento'] = (int)$data_descuento->msi_descuento;
-            }
-        }
-        print_r(json_encode($paquete_view, JSON_NUMERIC_CHECK ));
-
-        exit;
-    }
-    function getLotesWCF($condominio,$residencial)
-    {
-        $data['lotes'] = $this->Corrida_model->getLotesAsesor($condominio, $residencial);
-        //$data2 = array();
-        if(count($data['lotes'])<=0)
-        {
-            $data['lotes'][0]['idLote'] = 0;
-            $data['lotes'][0]['nombreLote'] = 'SIN CORRIDAS PARA ESTE LOTE';
-            echo json_encode($data['lotes']);
-        }
-        else{
-            echo json_encode($data['lotes']);
-        }
-    }
-    function getCorridasByLote($idLote){
-        $data_lotes = $this->Corrida_model->getCorridasByLote($idLote);
-        if($data_lotes != null) {
-            echo json_encode($data_lotes);
-        } else {
-            echo json_encode(array());
-        }
-
-
-    }
-    function actionMCorrida($id_corrida, $action){
+	function actionMCorrida($id_corrida, $action){
         $id_lote = $this->input->post('idLote');
         $data_documento_update = array();
         if($action == 1){
@@ -3184,7 +3553,7 @@ legend {
             }else{
                 $response['message'] = 'ERROR';
             }
-            
+
             $data_documento_update = array(
                 'modificado' => date('Y-m-d H:i:s'),
                 'idUser' => $this->session->userdata('id_usuario'),
@@ -3192,9 +3561,17 @@ legend {
             );
         }else{
             $expediente = $this->Corrida_model->getExpedienteCorrida($id_lote);
-            $dir_expediente = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/';
+            $dir_expediente = $_SERVER['DOCUMENT_ROOT'].'static/documentos/cliente/corrida/';
             $exp_cf = $expediente->expediente;
             $req = delete_img($dir_expediente, $exp_cf);
+            /*print_r($expediente);
+            echo '<br>';
+            print_r($expediente->expediente);
+            echo '<br>';
+
+
+            print_r($dir_expediente);
+            exit;*/
             $data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
             $response['message'] = ($data == 1) ? 'OK' : 'ERROR';
 
@@ -3213,72 +3590,16 @@ legend {
         } else {
             echo json_encode(array());
         }
-    }
-    function checCFActived($idLote){
-        $data = $this->Corrida_model->checCFActived($idLote);
-        $response['message'] = count($data);
-        if($response != null) {
-            echo json_encode($response);
-        } else {
-            echo json_encode(array());
-        }
-    }
+   }
 
-
-    #Traer costos de las casas de ciudad mederas
-    function getInfoCasasRes(){
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $idLote = $objDatos->idLote;
-        $data_casas = $this->Corrida_model->getInfoCasasRes($idLote);
-        //$casas = json_decode(str_replace('"', '', $data_casas->tipo_casa));
-        $casas = str_replace("'tipo_casa':", '', $data_casas->tipo_casa);
-        $casas = str_replace('"', '', $casas );
-        $casas = str_replace("'", '"', $casas );
-
-        print_r($casas);
-        exit;
-
-
-        $response = $casas;
-        if($response != null) {
-            echo json_encode($response);
-        } else {
-            echo json_encode(array());
-        }
-    }
-
-    public function calculoMoratorio()
-    {
-        if($this->session->userdata('id_usuario') == 5107)
-        {
-            $this->load->view("corrida/moratorio");
-        }
-        else
-        {
-            redirect(base_url().'login');
-        }
-    }
-
-    public function moratorios()
-    {
-            $this->load->view("corrida/moratorios_nv");
-    }
-
-    public function listado_corridaspc(){
-        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
-        $this->load->view('template/header');
-        $this->load->view("corrida/corridas_pagosc", $datos);
-    }
-    function getCorridasPCByLote($idLote){
-        $data_lotes = $this->Corrida_model->getCorridasPCByLote($idLote);
-        if($data_lotes != null) {
-            echo json_encode($data_lotes);
-        } else {
-            echo json_encode(array());
-        }
-    }
     public function insertPagoCapitalCorrida()
     {
+
+        #idLote: id_lote,  plan_pc: plan, anio:anio, precio_m2: precio_m2_final, total: precioFinalc,
+        #porcentajeEng:porcentaje_engCliente, engancheCantidad: cantidad_enganche, diasPagoEng:dias_pagar_enganche,
+        #apartado: apartado, mesesDiferir:meses_diferir, fecha_limite: fechaEngc, mplan_1: finalMesesp1, mplan_2: finalMesesp2,
+        #mplan_3:finalMesesp3, pp_1:msi_1p, pp_2:msi_2p, pp_3:msi_3p, primer_mensualidad:primer_mensualidad, corrida_dump:$scope.alphaNumeric
+
         $objDatos = json_decode(file_get_contents("php://input"));
         $idLote = (int)$objDatos->idLote;
         $arreglo = array();
@@ -3302,7 +3623,15 @@ legend {
         $arreglo["fecha_creacion"] = date('Y-m-d H:i:s');
         $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
         $arreglo["creado_por"] = $this->session->userdata('id_usuario');
+
+
+        /*print_r(json_encode($arreglo['corrida_dump']));
+        exit;*/
+
+
+        //$response = $this->Corrida_model->insertPC($arreglo);#inserta el pago a capital
         $data_response = $this->General_model->addRecord('pagos_capital', $arreglo);
+
 
         if($data_response) {
             $response['message'] = 'OK';
@@ -3333,6 +3662,9 @@ legend {
             "nombre" => 'LOTE TEST'
         );
         $data_corrida['data_corrida'] = $this->Corrida_model->getInfoPCyID($id_corrida);
+
+		//        print_r($data_corrida);
+		//        exit;
         $this->load->view("corrida/editarPC", $data_corrida);
     }
 
@@ -3346,8 +3678,6 @@ legend {
         $table = 'pagos_capital';
         $key = 'id_pc';
         $data_response = $this->General_model->updateRecord($table, $data, $key, $id_pc); // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
-
-
         if($data_response) {
             $response['message'] = 'OK';
             echo json_encode($response);
@@ -3357,309 +3687,25 @@ legend {
         }
 
     }
-
-    function getAllLotesY() {
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $lotes = $this->Corrida_model->getAllLotesY($objDatos->condominio);
-        if($lotes != null) {
-            echo json_encode($lotes);
+	 public function listado_corridaspc(){
+	        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+	        $this->load->view('template/header');
+	        $this->load->view("corrida/corridas_pagosc", $datos);
+	    }
+    function getCorridasPCByLote($idLote){
+        $data_lotes = $this->Corrida_model->getCorridasPCByLote($idLote);
+        if($data_lotes != null) {
+            echo json_encode($data_lotes);
         } else {
             echo json_encode(array());
         }
     }
-    public function getinfoLoteDisponibleYL()
+    public function moratorios()
     {
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $data = $this->Corrida_model->getLotesInfoY($objDatos->lote);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
-    function generateExcelMR($data_corrida){
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        //        print_r('printing...');
-        #imagen ciudad maderas
-        // Add a drawing to the worksheet
-        $drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
-        $drawing->setName('Ciudad Maderas');
-        $drawing->setDescription('Ciudad Maderas');
-        $drawing->setPath(__DIR__.'/../../static/images/logo_ciudadmaderasAct.jpg');
-        $drawing->setHeight(100);
-        $drawing->setCoordinates('D1');
-        $drawing->setOffsetX(55);
-        $drawing->setOffsetY(20);
-        $drawing->setWorksheet($sheet);
-        $sheet->getRowDimension('1')->setRowHeight(100);
-        $sheet->setShowGridlines(true);
-
-        $range1 = 'C1';
-        $range2 = 'I1';
-        $sheet->mergeCells("$range1:$range2");
-        $sheet->getStyle('B:L')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('B:L')->getAlignment()->setVertical('center');
-        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
-        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
-
-        $i = 15;
-        #aqui empieza el rango de de las corridas normales
-        $range1 = 'C1';
-        $range2 = 'I1';
-        $sheet->mergeCells("$range1:$range2");
-        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('C:I')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle("C1:I1")->getFont()->setSize(28);
-        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->getColor()->setARGB('808080');
-
-        $sheet->setCellValue('C2', 'Cálculo de intereses moratorios');
-        $range12 = 'C2';
-        $range22 = 'I2';
-        $sheet->mergeCells("$range12:$range22");
-        $sheet->getStyle("C2:I2")->getFont()->setSize(26);
-        $sheet->getStyle('C2')->getFont()->getColor()->setARGB('FFFFFF');
-        $sheet->getStyle( 'C1:C2' )->getFont()->setName('Calibri');
-        $sheet->getStyle('C2')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('1F497D');
-
-
-
-        $sheet->setCellValue('D4', 'PROYECTO');
-        $sheet->setCellValue('E4', 'CONDOMINIO');
-        $sheet->setCellValue('F4', 'LOTE');
-        $sheet->setCellValue('G4', 'CLIENTE');
-        $sheet->setCellValue('H4', 'SALDO INSOLUTO');
-        $sheet->setCellValue('D5', $data_corrida['proyecto']);
-        $sheet->setCellValue('E5', $data_corrida['condominio']);
-        $sheet->setCellValue('F5', $data_corrida['nombreLote']);
-        $sheet->setCellValue('G5', $data_corrida['cliente']);
-        $sheet->getStyle('H5')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-        $sheet->setCellValue('H5', $data_corrida['saldo_insoluto']);
-
-        $sheet->getStyle("D4:I4")->getFont()->setSize(10);
-        $sheet->getStyle('D4:I4')->getFont()->getColor()->setARGB('4472C4');
-        $sheet->getStyle( 'D4:I4' )->getFont()->setBold( true );
-        $sheet->getStyle( 'D4:I4' )->getFont()->setName('Arial');
-        $sheet->getColumnDimension('B')->setWidth(15);
-        $sheet->getColumnDimension('C')->setWidth(15);
-        $sheet->getColumnDimension('D')->setWidth(25);
-        $sheet->getColumnDimension('E')->setWidth(15);
-        $sheet->getColumnDimension('F')->setWidth(23);
-        $sheet->getColumnDimension('G')->setWidth(25);
-        $sheet->getColumnDimension('H')->setWidth(18);
-        $sheet->getColumnDimension('I')->setWidth(15);
-        $sheet->getColumnDimension('J')->setWidth(15);
-        $sheet->getColumnDimension('K')->setWidth(15);
-        $sheet->getColumnDimension('L')->setWidth(15);
-
-        $sheet->getStyle('D5:H5')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
-
-
-
-        $sheet->setCellValue('D7', 'PLAZO');
-        $sheet->setCellValue('E7', 'MSI');
-        $sheet->setCellValue('F7', 'INTERÉS MORATORIO');
-        $sheet->setCellValue('G7', 'FECHA PAGO');
-        $sheet->getStyle("D7:I7")->getFont()->setSize(10);
-        $sheet->getStyle('D7:I7')->getFont()->getColor()->setARGB('4472C4');
-        $sheet->getStyle( 'D7:I7' )->getFont()->setBold( true );
-        $sheet->getStyle( 'D7:I7' )->getFont()->setName('Arial');
-        $sheet->getStyle('D8:G8')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
-        #set values
-        $sheet->setCellValue('D8', $data_corrida['plazo']);
-        $sheet->setCellValue('E8', $data_corrida['msi']);
-        $sheet->setCellValue('F8', $data_corrida['im']);
-        $fecha_formateada = new DateTime($data_corrida['fecha_pago']);
-        $sheet->setCellValue('G8',  $fecha_formateada->format('d-m-Y'));
-
-
-        $sheet->setCellValue('F10', 'INTERÉS MORATORIO ACUMULADO');
-        $sheet->setCellValue('G10', 'INTERÉS ORDINARIO ACUMULADO');
-        $sheet->getStyle("F10:G10")->getFont()->setSize(10);
-        $sheet->getStyle("F10:G10")->getAlignment()->setWrapText(true);
-        $sheet->getStyle('F10:G10')->getFont()->getColor()->setARGB('4472C4');
-        $sheet->getStyle( 'F10:G10' )->getFont()->setBold( true );
-        $sheet->getStyle( 'F10:G10' )->getFont()->setName('Arial');
-        $sheet->setCellValue('F11', $data_corrida['ima']);
-        $sheet->setCellValue('G11', $data_corrida['ioa']);
-        $sheet->getStyle('F11:G11')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
-        $sheet->getStyle('F11:G11')->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-
-        #leyenda....
-        $sheet->setCellValue('C13', '*Este sistema simula las operaciones de intereses moratorios e intereses ordinados, puede ser diferente al cálculo real');
-        $rangel = 'C13';
-        $rangel2 = 'I13';
-        $sheet->mergeCells("$rangel:$rangel2");
-        $sheet->getStyle("C13:I13")->getFont()->setSize(11);
-        $sheet->getStyle('C13')->getFont()->getColor()->setARGB('ddd');
-        $sheet->getStyle( 'C13:I13' )->getFont()->setName('Calibri');
-        $sheet->getStyle("C13:I13")->getAlignment()->setWrapText(true);
-        $sheet->getStyle( 'C13:I13' )->getFont()->setBold( true );
-        $sheet->getStyle('C13:I13')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-
-
-
-
-        /*encabezados de la tabla*/
-        $sheet->setCellValue('B15', 'FECHAS');
-        $sheet->setCellValue('C15', 'PAGO');
-        $sheet->setCellValue('D15', 'CAPITAL');
-        $sheet->setCellValue('E15', 'INTERESES');
-        $sheet->setCellValue('F15', 'IMPORTE');
-        $sheet->setCellValue('G15', 'FECHA PAGO');
-        $sheet->setCellValue('H15', 'DÍAS DE RETRASO');
-        $sheet->setCellValue('I15', 'INTERÉS MORATORIO');
-        $sheet->setCellValue('J15', 'TOTAL');
-        $sheet->setCellValue('K15', 'SALDO INSOLUTO');
-        $sheet->setCellValue('L15', 'SALDO');
-        $sheet->getStyle( 'B15:L15' )->getFont()->setBold( true );
-        $sheet->getStyle('B15:L15')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('D9D9D9');
-        $sheet->getStyle('B15:L15')->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $sheet->getStyle("H15")->getAlignment()->setWrapText(true);
-        $sheet->getStyle("J15")->getAlignment()->setWrapText(true);
-
-        #termina encabezado
-
-        $array_dump = json_encode($data_corrida['data_corrida']);
-        $array_dump = json_decode(($array_dump));
-        $total_array = count($array_dump);
-        foreach($array_dump as $item=>$value) {
-            $i++;
-
-            #fecha
-            $sheet->setCellValue('B'.$i, $value->fecha);
-            $sheet->getStyle('B'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #pago
-            $sheet->setCellValue('C'.$i, $value->pago);
-            $sheet->getStyle('C'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #capital
-            $sheet->setCellValue('D'.$i, $value->capital);
-            $sheet->getStyle('D'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('D'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #intereses
-            $sheet->setCellValue('E'.$i, $value->interes);
-            $sheet->getStyle('E'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('E'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #importe
-            $sheet->setCellValue('F'.$i, $value->importe);
-            $sheet->getStyle('F'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('F'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #fecha pago
-            $sheet->setCellValue('G'.$i, $value->fechaPago);
-            $sheet->getStyle('G'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #dias_retraso
-            $sheet->setCellValue('H'.$i, $value->diasRetraso);
-            $sheet->getStyle('H'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #IM
-            $sheet->setCellValue('I'.$i, $value->interesMoratorio);
-            $sheet->getStyle('I'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('I'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #total
-            $sheet->setCellValue('J'.$i, $value->total);
-            $sheet->getStyle('J'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('J'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #saldo moratorio
-            $sheet->setCellValue('K'.$i, $value->saldo);
-            $sheet->getStyle('K'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('K'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-            #saldo
-            $sheet->setCellValue('L'.$i, $value->saldoNormal);
-            $sheet->getStyle('L'.$i)->getNumberFormat()->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
-            $sheet->getStyle('L'.$i)->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-
-        }
-
-        $nombre_archivo = 'moratorios.xlsx';
-
-
-        $dir_2 = $_SERVER['DOCUMENT_ROOT'].'sisfusion/static/documentos/cliente/corrida/'.$nombre_archivo;
-        $dir_2 = str_replace("\ ", '/', $dir_2);
-
-        $writer = new Xlsx($spreadsheet);
-
-
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="'. $nombre_archivo .'"');
-        header('Cache-Control: max-age=0');
-
-        $writer->save("php://output");// download file
-    }
-    public function excel_moratorios(){
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $proyecto = $objDatos->proyecto;
-        $condominio = $objDatos->condominio;
-        $lote = $objDatos->lote;
-        $nombreLote = $objDatos->nombreLote;
-        $cliente = $objDatos->cliente;
-        $plazo = $objDatos->plazo;
-        $msi = $objDatos->msi;
-        $im = $objDatos->im;
-        $fecha_pago = $objDatos->fecha_pago;
-        $saldo_insoluto = $objDatos->saldo_insoluto;
-        $ima = $objDatos->ima;
-        $ioa = $objDatos->ioa;
-        $data_corrida = $objDatos->data_corrida;
-
-        $data = array(
-            'proyecto' => $proyecto,
-            'condominio' => $condominio,
-            'lote' => $lote,
-            'nombreLote' => $nombreLote,
-            'cliente' => $cliente,
-            'plazo' => $plazo,
-            'msi' => $msi,
-            'im' => $im,
-            'fecha_pago' => $fecha_pago,
-            'saldo_insoluto' => $saldo_insoluto,
-            'ima'=> $ima,
-            'ioa'=> $ioa,
-            'data_corrida' => $data_corrida
-        );
-        $responde = $this->generateExcelMR($data);
+            $this->load->view("corrida/moratorios_nv");
     }
 
-    function getGerenteByID(){
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $id_gerente = $objDatos->gerente;
-        $data= $this->Corrida_model->getGerenteByID($id_gerente);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
-    public function getCoordinadorByID() {
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $data= $this->Corrida_model->getCoordinadorByID($objDatos->coordinador);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
-    public function getAsesorByID() {
-        $objDatos = json_decode(file_get_contents("php://input"));
-        $data= $this->Corrida_model->getAsesorByID($objDatos->asesor);
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
 }

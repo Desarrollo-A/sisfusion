@@ -8,7 +8,7 @@ class Cobranza_model extends CI_Model {
     {
         parent::__construct();
     }
-    
+
     public function getInformation($typeTransaction, $beginDate, $endDate, $where) {
         if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
             $filter = " AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
@@ -31,8 +31,8 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, CONVERT( VARCHAR,cl.fechaApartado ,20) AS fechaApartado, UPPER(s.nombre) plaza,
         ISNULL(ec.estatus, 0) estatusEvidencia, 
         (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-		WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-		WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
+		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
         idStatusContratacion, idStatusLote, pc.bandera estatusComision,
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
@@ -44,7 +44,7 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN evidencia_cliente ec ON ec.idLote = l.idLote AND ec.idCliente = l.idCliente
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.status = 1 AND (cl.lugar_prospeccion IN(6,29) OR cl.descuento_mdb = 1 OR (ec.estatus = 3 and cl.lugar_prospeccion not IN(6,29)) ) $filter
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
-        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result) 
+        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor AND u.id_sede IN ($result)
         INNER JOIN sedes s ON s.id_sede = (CASE WHEN l.ubicacion_dos != 0 THEN l.ubicacion_dos WHEN l.ubicacion != 0 and l.ubicacion_dos = 0 THEN l.ubicacion WHEN u.id_sede != 0 and l.ubicacion_dos = 0 and l.ubicacion  = 0 THEN u.id_sede END)
         LEFT JOIN comisiones cm ON cm.id_lote = l.idLote AND cm.rol_generado = 38
         LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote    
@@ -57,8 +57,8 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL(l.totalNeto2, '0.00'), 'C') precioTotalLote, FORMAT(l.total, 'C') total_sindesc, CONVERT( VARCHAR,cl.fechaApartado ,20) AS fechaApartado, UPPER(s.nombre) plaza,
         ISNULL(ec.estatus, 0) estatusEvidencia, 
         (CASE l.idStatusContratacion WHEN '1' THEN '01' WHEN '2' THEN '02' WHEN '3' THEN '03' WHEN '4' THEN '04' WHEN '5' THEN '05' WHEN '6' THEN '06' 
-        WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
-        WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
+		 WHEN '7' THEN '07' WHEN '8' THEN '08' WHEN '9' THEN '09' WHEN '10' THEN '10' WHEN '11' THEN '11' WHEN '12' THEN '12' 
+		 WHEN '13' THEN '13' WHEN '14' THEN '14' WHEN '15' THEN '15' END) 
         idStatusContratacion, idStatusLote, pc.bandera estatusComision,
         FORMAT(ISNULL(cm.comision_total, '0.00'), 'C') comisionTotal, 
         FORMAT(ISNULL(pci3.abonoDispersado, '0.00'), 'C') abonoDispersado, 
@@ -82,7 +82,7 @@ class Cobranza_model extends CI_Model {
         WHERE l.status = 1 $filterTwo";
        // var_dump($query);
         return $this->db->query($query);
-        
+
     }
 
     public function updateRecord($table, $data, $key, $value) // MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
@@ -97,7 +97,7 @@ class Cobranza_model extends CI_Model {
 
         /*********************/
     function getClientsByAsesor($asesor){
-        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.telefono1, c.correo, l.nombreLote, CONVERT(VARCHAR,c.fechaApartado,20) AS fechaApartado, 
+        return $this->db->query("SELECT c.id_cliente, CONCAT(c.nombre, ' ', c.apellido_paterno, ' ', c.apellido_materno) nombre, c.telefono1, c.correo, l.nombreLote, c.fechaApartado, 
         c.idLote, CONCAT(u.nombre,  ' ', u.apellido_paterno, ' ', u.apellido_materno) gerente, c.lugar_prospeccion, 
         ISNULL (oxc.nombre, 'Sin especificar') nombre_lp, oxc2.id_opcion tipo_controversia
         FROM clientes c
@@ -110,14 +110,13 @@ class Cobranza_model extends CI_Model {
                 WHERE c.id_asesor = $asesor AND ec.id_evidencia IS NULL AND c.status = 1");
     }
     function getDetails($id, $checks, $beginDate, $endDate, $sede){
-        ini_set('max_execution_time', 900);
-        set_time_limit(900);
-        ini_set('memory_limit','8192M');
         $query["data"] = $this->db->query("SELECT * FROM clientes WHERE id_cliente = $id")->row();
+
         $name = str_replace(array(' ', '.'),'',$query["data"]->nombre);
         $correo = $query["data"]->correo;
         $telefono = $query["data"]->telefono1;
         $string = "";
+
         foreach($checks as $check){
             if( $check["value"] == "on" && $check["key"] == 'nombre'){
                 $string .= " AND REPLACE(REPLACE(p.nombre, ' ', ''),'.', '') LIKE '%$name%'";
@@ -131,13 +130,16 @@ class Cobranza_model extends CI_Model {
                 $string .= " AND p.fecha_creacion BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             }
         }
+
         $WHERE = substr($string, 4);
-        $query2["data"] = $this->db->query("SELECT CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, UPPER(oxc.nombre) AS namePros, UPPER(p.correo) AS correo, p.telefono, p.fecha_creacion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, 
+
+        $query2["data"] = $this->db->query("SELECT CONCAT(p.nombre, ' ', p.apellido_paterno, ' ', p.apellido_materno) nombre, oxc.nombre namePros, p.correo, p.telefono, p.fecha_creacion, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreAsesor, 
         CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreGerente
         FROM prospectos p 
         INNER JOIN usuarios u ON u.id_usuario = p.id_asesor
         INNER JOIN usuarios us ON us.id_usuario = p.id_gerente
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = p.lugar_prospeccion WHERE $WHERE AND oxc.id_catalogo = 9");
+
         return $query2["data"];
     }
 
@@ -147,7 +149,7 @@ class Cobranza_model extends CI_Model {
     }
 
     function getSedes(){
-        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0 ORDER BY nombre ");
+        return $this->db->query("SELECT * FROM sedes WHERE estatus != 0");
     }
     //Se verifica si el lote ya tiene una controversia
     public function verificarControversia($idLote){
@@ -211,7 +213,7 @@ class Cobranza_model extends CI_Model {
         if ($idLote == '' || $idLote ==  0)
             $query = '';
         else
-            $query = "AND lo.idLote = $idLote";
+            $query = "AND lo.idLote = $idLote";   
         if( $beginDate != '') {
             $query2  = " WHERE cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59'";
             $query3  =  " ";
@@ -228,10 +230,10 @@ class Cobranza_model extends CI_Model {
         FORMAT(ISNULL( pci2.abono_pagado , '0.00'), 'C') pagado ,
         FORMAT(ISNULL( pci3.abono_neodata , '0.00'), 'C') pagado3 ,
         FORMAT(ISNULL( pc14.abono_pagado2  , '0.00'), 'C') pago_neodata4,
-        FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
-        FORMAT(ISNULL(com.comision_total-pc14.abono_pagado2, '0.00'),'C') restantes3, 
-        FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes,
-        ISNULL(ec.estatus, 0) estatusEvidencia, 
+			FORMAT(ISNULL( pci3.pago_neodata , '0.00'), 'C') pago_neodata3,
+			FORMAT(ISNULL(com.comision_total-pc14.abono_pagado2, '0.00'),'C') restantes3, 
+         FORMAT(ISNULL(com.comision_total-pci2.abono_pagado , '0.00'),'C') restantes,
+		 ISNULL(ec.estatus, 0) estatusEvidencia, 
         com.porcentaje_decimal,  UPPER(s.nombre) plaza, UPPER(s3.nombre) plazaB,
         pci1.estatus, CONVERT(VARCHAR, cl.fechaApartado,20) AS fecha_apartado, pci1.fecha_abono fecha_abono,
         (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion,
@@ -250,8 +252,8 @@ class Cobranza_model extends CI_Model {
         FROM pago_comision_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado2, id_usuario ,id_comision
-        FROM pago_comision_ind   WHERE estatus = (11)
-        GROUP BY id_usuario,id_comision) pc14 ON pci1.id_usuario = pc14.id_usuario AND pc14.id_comision =  pci1.id_comision  and estatus = (11)
+			FROM pago_comision_ind   WHERE estatus = (11)
+			GROUP BY id_usuario,id_comision) pc14 ON pci1.id_usuario = pc14.id_usuario AND pc14.id_comision =  pci1.id_comision  and estatus = (11)
 		INNER JOIN pago_comision_ind pci3 on pci1.id_pago_i = pci3.id_pago_i
         INNER JOIN comisiones com ON pci1.id_comision = com.id_comision
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 $query
@@ -269,7 +271,7 @@ class Cobranza_model extends CI_Model {
         LEFT JOIN sedes s3 ON lo.ubicacion = s3.id_sede 
         LEFT JOIN statuslote slo ON slo.idStatusLote = lo.idStatusLote
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
-        $query2 
+      $query2 
         GROUP BY pci1.id_comision, lo.idLote ,lo.nombreLote, co.nombre, lo.totalNeto2, com.comision_total,pac.bandera , pac.bonificacion ,
         com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado,pc14.abono_pagado2,pci3.abono_neodata,pci3.pago_neodata,  pci1.estatus,cl.fechaApartado, pci1.fecha_abono,  pci1.fecha_abono,
         pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, 
@@ -528,24 +530,11 @@ class Cobranza_model extends CI_Model {
     }
     
     public function getOpcionesParaReporteComisionistas($condicionXUsuario) {
-        $idRol = $this->session->userdata('id_rol');
-        $idLider = $this->session->userdata('id_lider');
-        $arrayRol = array(1, 2, 3, 7, 9);
-        $filtroQuery = 'AND id_lider IN (SELECT id_usuario FROM usuarios where id_lider = '. $idLider .')';
-
-        ($idRol === 5) ? $arrayRol = array(1, 2, 3, 7, 9) :
-        ($idRol === 6 ? $arrayRol = array(1, 2, 3, 7, 9) :
-        $filtroQuery = '');
-        
-        $roles = implode(', ', array_values($arrayRol)); //hace que el array se pueda usar en la consulta
-
-        return $this->db->query("SELECT us.id_usuario id_opcion, 
-        UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
+        return $this->db->query("SELECT us.id_usuario id_opcion, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombre, 
         us.estatus atributo_extra, 1 id_catalogo, oxc.nombre atributo_extra2
 		FROM usuarios us
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
-		WHERE us.id_rol IN ($roles) AND us.estatus != 0 $filtroQuery AND (us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '' ) NOT LIKE '%test_%' 
-        AND ISNULL(us.correo, '' ) NOT LIKE '%OOAM%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%') $condicionXUsuario
+		WHERE us.id_rol IN (1, 2, 3, 9, 7) AND us.estatus != 0 AND (us.rfc NOT LIKE '%TSTDD%' AND ISNULL(us.correo, '' ) NOT LIKE '%test_%' AND ISNULL(us.correo, '') NOT LIKE '%CASA%') $condicionXUsuario
 		UNION ALL
 		SELECT id_opcion, UPPER(nombre) nombre, id_catalogo atributo_extra, 2 id_catalogo,'0' atributo_extra2
         FROM opcs_x_cats WHERE id_catalogo = 1 AND id_opcion IN (1, 2, 3, 9, 7, 59)

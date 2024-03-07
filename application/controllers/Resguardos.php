@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
 class Resguardos extends CI_Controller
 {
+  private $gph;
   public function __construct()
   {
     parent::__construct();
@@ -15,12 +16,11 @@ class Resguardos extends CI_Controller
     $this->load->database('default');
     $this->jwt_actions->authorize('6512', $_SERVER['HTTP_HOST']);
     $this->validateSession();
-
     $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-    $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-  }
+    $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+    $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+   }
 
   public function index(){
     redirect(base_url());
@@ -32,9 +32,8 @@ class Resguardos extends CI_Controller
   }
 
   public function retiros() {
-        if ($this->session->userdata('id_rol') == FALSE) {
-            redirect(base_url());
-        }
+    if ($this->session->userdata('id_rol') == FALSE)
+        redirect(base_url());
         $this->load->view('template/header');
         $this->load->view("resguardos/retiros-view");
       }

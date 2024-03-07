@@ -1,9 +1,5 @@
 //jquery
   $(document).on('change','#gerente', function(){
-    removeCRMEvents();
-
-    $("#labelAses").show();
-
     let id = $("#gerente").val();
     getCoordinators(id);
     $("#coordinador").empty().selectpicker('refresh');
@@ -92,7 +88,6 @@
       }
     });
   }
-
   
   function getEventos(ids){
     removeCRMEvents();

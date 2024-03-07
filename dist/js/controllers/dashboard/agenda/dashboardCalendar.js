@@ -5,12 +5,11 @@ let eventsTable;
 let arrayEvents = [];
 
 function readyAgenda(){
-  if (!getGoogleTokenStorage()) {
-    $('#signInGoogleModal').modal('toggle');
-  }
+  // if (!getGoogleTokenStorage()) {
+  //   $('#signInGoogleModal').modal('toggle');
+  // }
 
   createGoogleCalendar();
-
   getUsersAndEvents(id_rol_general, id_usuario_general, true);
 }
 
@@ -94,8 +93,6 @@ async function listUpcomingEvents(tokenGoogleCalendar) {
     $('#confirmSignInGoogleModal').modal();
     return;
   }
-
-  arrayEvents = [];
 
   $.ajax({
     url: 'https://www.googleapis.com/calendar/v3/calendars/primary/events',
@@ -296,7 +293,6 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
 
   const formValues = Object.fromEntries(new FormData(e.target));
 
-  // Pasar esta funcion al servidor
   const data = buildEventGoogle(formValues);
 
   const rangeOfDates = validateDates(formValues);
@@ -312,12 +308,9 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     return;
   }
 
-
-// Quiotar e4sto
   if (getGoogleTokenStorage() !== null) {
     formValues['idGoogle'] = await insertEventGoogle(data);
   }
-  //Parta agregar esa funciuonalidad en el backend
 
   formValues['estatus_particular'] = $('#estatus_particular').val();
   formValues['id_prospecto_estatus_particular'] = $("#prospecto").val();
@@ -349,10 +342,7 @@ document.querySelector('#insert_appointment_form').addEventListener('submit',asy
     complete: function () {
       $('#spiner-loader').addClass('hide');
     }
-  });}
-  // Hasta aqui
-
-
+  });
 });
 
 $(document).on('submit', '#edit_appointment_form', function(e) {

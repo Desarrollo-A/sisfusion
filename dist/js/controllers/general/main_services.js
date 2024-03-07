@@ -84,6 +84,7 @@ $(document).on("click", "#condominios", function (e) { // MJ: SE OBTIENE EL CHAN
 
 function getLotes(idCondominio) {
     $('#spiner-loader').removeClass('hide');
+
     $("#lotes").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url + 'General/getLotesList',
@@ -197,7 +198,7 @@ function getRejectionReasons(tipo_proceso) {
 function getCatalogOptions(id_catalogo) {
     $("#documentos").empty().selectpicker('refresh');
     $.ajax({
-        url: url + 'General/getCatalogOptions',
+        url: general_base_url + 'General/getCatalogOptions',
         type: 'post',
         dataType: 'json',
         data: {"id_catalogo": id_catalogo},
@@ -228,10 +229,12 @@ function getAsesoresList() {
 }
 
 function formatMoney( n ) {
-    const formatter = new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        maximumFractionDigits: 4,
-        currency: 'MXN'
-    });
-    return formatter.format(n);
+    var c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 }
+

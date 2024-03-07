@@ -1,4 +1,6 @@
 let array_data = [];
+var lotesDragon;
+var lotesDragonCli;
 
 $(document).ready(function () {
 	$.post(general_base_url + "Contraloria/get_sede", function (data) {
@@ -13,11 +15,54 @@ $(document).ready(function () {
 		$("#sedeC").selectpicker('refresh');
 	}, 'json');
 	setIniDatesXMonth();
-    $('.datepicker').datetimepicker({locale: 'es'});
+    $('.datepicker').datetimepicker({locale: 'es', format: 'l'});
     setIniDatesXMonth("#beginDate", "#endDate");
 	setIniDatesXMonth("#beginDateC", "#endDateC");
+	$("#dragonInput").removeClass('hide');
+	$("#dragonInputg").removeClass('hide');
+	lotesDragon = $("#dragonId").val();
+	lotesDragonCli = $("#dragonIdg").val();
 });
 
+$('#dragonId').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#dragonInput").removeClass('hide');
+		$("#salesforceInput").addClass('hide');
+		$("#idSales").val('');
+		lotesDragon = $("#dragonId").val();
+	}
+});
+
+$('#loteM').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#salesforceInput").removeClass('hide');
+		$("#dragonInput").addClass('hide');
+		$("#idDragon").val('');
+		lotesDragon = $("#loteM").val();
+	}
+});
+
+$('#dragonIdg').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#dragonInputg").removeClass('hide');
+		$("#salesforceInputg").addClass('hide');
+		$("#idSalesF").val('');
+		lotesDragonCli = $("#dragonIdg").val();
+	}
+});
+
+$('#loteMg').change(function(){
+	var check = $(this).prop("checked");
+	if(check){
+		$("#salesforceInputg").removeClass('hide');
+		$("#dragonInputg").addClass('hide');
+		$("#idDragonC").val('');
+		lotesDragonCli = $("#loteMg").val();
+	}
+});
 
 /** BOTÓN BUSCAR TABLA PROSPECTOS  */
 $('#searchButton').click(()=>{
@@ -38,6 +83,7 @@ $('#searchButton').click(()=>{
 	fecha_init = (fecha_init!='') ? fecha_init : '';
 	fecha_end = (fecha_end!='') ? fecha_end : '';
 
+
 	if(name!='' || mail!='' || telephone!='' || sede!='' || id_dragon!='' || id_salesforce!=''){
 		$('#tabla_prospectos').removeClass('hide');
 		array_data['idLote'] = '';
@@ -49,6 +95,8 @@ $('#searchButton').click(()=>{
 		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
+		array_data['lotesDragon'] =lotesDragon;
+
 		fillTable(array_data);
 	}else{
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
@@ -88,6 +136,7 @@ $('#searchButtonC').click(()=>{
 		array_data['id_salesforce'] = id_salesforce;
 		array_data['fecha_init'] = fecha_init;
 		array_data['fecha_end'] = fecha_end;
+		array_data['lotesDragon'] =lotesDragonCli;
 		fillTableClientes(array_data);
 	} else {
 		alerts.showNotification('top', 'right', 'Ingresa al menos un parámetro de búsqueda', 'warning')
@@ -285,7 +334,8 @@ function fillTable(data_search) {
 				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
-				"TB": 2
+				"TB": 2,
+				"lotesDragon" : data_search['lotesDragon']
 			},
 			cache: false
 		},
@@ -481,7 +531,8 @@ function fillTableClientes(data_search) {
 				"id_salesforce": data_search['id_salesforce'],
 				"fecha_init" : data_search['fecha_init'],
 				"fecha_end" : data_search['fecha_end'],
-				"TB": 1
+				"TB": 1,
+				"lotesDragon": data_search['lotesDragon']
 			},
 			cache: false
 		},
@@ -600,10 +651,8 @@ function changeSede(){
 	let sedes = $('#sede').val();
 	if(sedes.length>0){
 		$('#fechasFiltro').removeClass('hide');
-		$('#inside').addClass('col-md-offset-8 col-lg-offset-8');
 	}else{
 		$('#fechasFiltro').addClass('hide');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 	}
 }
 
@@ -611,10 +660,8 @@ function changeSedeC(){
 	let sedes = $('#sedeC').val();
 	if(sedes.length>0){
 		$('#fechasFiltroC').removeClass('hide');
-		$('#insideC').addClass('col-md-offset-7 col-lg-offset-7');
 		}else{
 		$('#fechasFiltroC').addClass('hide');
-		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
 	}
 }
 
@@ -630,10 +677,8 @@ function cleanFilters(){
 		$("#sede").val('default');
 		$("#sede").selectpicker("refresh");
 		$('#fechasFiltro').addClass('hide');
-		$('#beginDate').val('');
-		$('#endDate').val('');
+		setIniDatesXMonth("#beginDate", "#endDate");
 		$('#inside').addClass('col-md-4 col-lg-4');
-		$('#inside').removeClass('col-md-offset-8 col-lg-offset-8');
 		tabla_valores_prospectos.clear().draw();
 		tabla_valores_prospectos.destroy();
 	}
@@ -654,10 +699,8 @@ function cleanFiltersC(){
 		$("#sedeC").val('default');
 		$("#sedeC").selectpicker("refresh");
 		$('#fechasFiltroC').addClass('hide');
-		$('#beginDateC').val('');
-		$('#endDateC').val('');
-		$('#insideC').addClass('col-md-5 col-lg-5');
-		$('#insideC').removeClass('col-md-offset-7 col-lg-offset-7');
+		setIniDatesXMonth("#beginDateC", "#endDateC");
+		$('#insideC').addClass('col-md-4 col-lg-4');
 		tabla_valores_cliente.clear().draw();
 		tabla_valores_cliente.destroy();
 	}

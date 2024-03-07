@@ -494,11 +494,9 @@ class Reestructura extends CI_Controller{
             $lotesString = implode(",", $idLotes);
             $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
 
-
-
             foreach ($dataLoteDis as $index => $dataLote) {
                 if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22)){
-                    //Reubicación en el mismo norte
+                    //Reubicación en los mismos proyectos
                     $statusLote = 20;
                 }
                 else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22) ){
@@ -2381,7 +2379,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : $lote['tipo_estatus_regreso'] == 2 ? 21 : 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
@@ -2953,6 +2951,8 @@ class Reestructura extends CI_Controller{
     public function getReporteEstatus() {
         $registros = $this->Reestructura_model->getReporteEstatus();
         for ($i = 0; $i < count($registros); $i ++) {
+            $registros[$i]['nombreResidencialOrigen'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialOrigen'])));
+            $registros[$i]['nombreCondominioOrigen'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioOrigen'])));
             $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
             $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
             $registros[$i]['estatusProceso'] = implode(', ', array_unique(explode(', ', $registros[$i]['estatusProceso'])));

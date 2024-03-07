@@ -9,6 +9,13 @@ var tabla_asimilados2 ;
 var totaPen = 0;
 let titulos = [];
 
+function cleanCommentsAsimilados() {
+    var myCommentsList = document.getElementById('comments-list-asimilados');
+    var myCommentsLote = document.getElementById('nameLote');
+    myCommentsList.innerHTML = '';
+    myCommentsLote.innerHTML = '';
+}
+
 $(document).ready(function() {
     $("#tabla_asimilados").prop("hidden", true);
     $("#spiner-loader").removeClass('hide');
@@ -18,17 +25,17 @@ $(document).ready(function() {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
             var catalog = data[i]['id_catalogo'];
-            $("#comisiones_nuevas").append($('<option>').val(id).attr('data-catalogo', catalog).text(name.toUpperCase()));
+            $("#id_rol_hn").append($('<option>').val(id).attr('data-catalogo', catalog).text(name.toUpperCase()));
         }
-        $("#comisiones_nuevas").selectpicker('refresh');
+        $("#id_rol_hn").selectpicker('refresh');
         $("#spiner-loader").addClass('hide');
     }, 'json');
 });
 
-$('#comisiones_nuevas').change(function(ruta){
-    id_rol = $('#comisiones_nuevas').val();
-    id_catalogo = $('#comisiones_nuevas>option:selected').attr("data-catalogo");
-    $("#usuario_nuevas").empty().selectpicker('refresh');
+$('#id_rol_hn').change(function(ruta){
+    id_rol = $('#id_rol_hn').val();
+    id_catalogo = $('#id_rol_hn>option:selected').attr("data-catalogo");
+    $("#id_usuario_hn").empty().selectpicker('refresh');
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: `${general_base_url}Comisiones/usuarios_nuevas`,
@@ -40,20 +47,20 @@ $('#comisiones_nuevas').change(function(ruta){
             for( var i = 0; i<len; i++){
                 var id = response[i]['id_usuario'];
                 var name = response[i]['nombre'];
-                $("#usuario_nuevas").append($('<option>').val(id).text(name));
+                $("#id_usuario_hn").append($('<option>').val(id).text(name));
             }
-            $("#usuario_nuevas").selectpicker('refresh');
+            $("#id_usuario_hn").selectpicker('refresh');
             $("#spiner-loader").addClass('hide');
         }
     });
 });
 
-$('#usuario_nuevas').change(function(ruta){
+$('#id_usuario_hn').change(function(ruta){
     $("#spiner-loader").removeClass('hide');
-    id_rol = $('#comisiones_nuevas').val();
-    id_usuario = $('#usuario_nuevas').val();
+    id_rol = $('#id_rol_hn').val();
+    id_usuario = $('#id_usuario_hn').val();
     if(id_usuario == '' || id_usuario == null || id_usuario == undefined)
-        id_usuario = 0;
+    id_usuario = 0;
     fillTable(id_rol, id_usuario);
 });
 
@@ -70,7 +77,7 @@ $('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
             $.each(data, function(i, v) {
                 total += parseFloat(v.pago_cliente);
             });
-            document.getElementById("pagar_asimilados").textContent = formatMoney(total);
+            document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
         }
     });
 });
@@ -83,7 +90,7 @@ function fillTable(id_rol, id_usuario){
             total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
-        document.getElementById("pagar_asimilados").textContent = to;
+        document.getElementById("totpagarAsimilados").textContent = to;
     });
 
     $("#tabla_asimilados").prop("hidden", false);
@@ -270,7 +277,9 @@ function fillTable(id_rol, id_usuario){
     });
 
     $('#tabla_asimilados').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
+        $('[data-toggle="tooltip"]').tooltip({
+            trigger: "hover"
+        });
     });
 
     $("#tabla_asimilados tbody").on("click", ".consultarDetalleDelPago", function(e){
@@ -278,40 +287,15 @@ function fillTable(id_rol, id_usuario){
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
-        changeSizeModal("modal-md");
-        appendBodyModal(`<div class="modal-body">
-            <div role="tabpanel">
-                <ul class="nav" role="tablist">
-                    <div id="nombreLote"></div>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="comentariosAsimilados"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-        </div>`);
-        showModal();
-
-        $("#nombreLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $("#seeInformationModalAsimilados").modal();
+        $("#nameLote").append('<p><h5>HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
         $.getJSON("getComments/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
-                $("#comentariosAsimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
+                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"><a><b>' + v.nombre_usuario + '</b></a><br></div> <div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><b> ' + v.comentario + '</b></p></div></div></div></li>');
             });
         });
     });
+
 }
 
 $(window).resize(function(){

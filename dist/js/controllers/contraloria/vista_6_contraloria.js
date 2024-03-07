@@ -34,34 +34,6 @@ $(document).ready(function () {
 });
 
 $("#tabla_ingresar_6").ready(function () {
-  let titulos = [];
-  $("#tabla_ingresar_6 thead tr:eq(0) th").each(function (i) {
-    if (i != 0) {
-      var title = $(this).text();
-      titulos.push(title);
-    }
-  });
-
-  $(document).ready(function () {
-    $('[data-toggle="tooltip"]').tooltip();
-    code = "";
-    $.getJSON("get_enganches").done(function (data) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i]["id_catalogo"] == 104) {
-          $("#tipo_enganche").append(
-            $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
-          );
-        }
-        if (data[i]["id_catalogo"] == 103)
-          $("#estatus_enganche").append(
-            $("<option>").val(data[i]["id_opcion"]).text(data[i]["nombre"])
-          );
-      }
-      $("#tipo_enganche").selectpicker("refresh");
-      $("#estatus_enganche").selectpicker("refresh");
-    });
-  });
-
   tabla_6 = $("#tabla_ingresar_6").DataTable({
     dom:
       "Brt" +
@@ -413,10 +385,7 @@ function preguntaRegCorr() {
   var comentario = $("#comentarioregCor").val();
   var enganche = $("#enganche").val();
   var totalNeto = $("#totalNeto").val();
-  var tipo_enganche = $("#tipo_enganche").val();
-  var estatus_enganche = $("#estatus_enganche").val();
   var banderaFusion = $("#banderaFusion").val();
-  var idLotePivote = $("#idLotePivote").val();
   var parametros = {
     idLote: idLote,
     idCondominio: idCondominio,
@@ -426,10 +395,7 @@ function preguntaRegCorr() {
     fechaVenc: fechaVenc,
     comentario: comentario,
     totalNeto: totalNeto,
-    tipo_enganche: tipo_enganche,
-    estatus_enganche: estatus_enganche,
-    banderaFusion: banderaFusion,
-    idLotePivote: idLotePivote
+    banderaFusion: banderaFusion
   };
 
   if (comentario.length <= 0 || $("#totalNeto").val().length == 0)

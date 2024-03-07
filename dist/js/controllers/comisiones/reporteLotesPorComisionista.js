@@ -1,5 +1,9 @@
 $(document).ready(function () {
-    $.post('getOpcionesParaReporteComisionistas', function (data) {
+    let seeAll = 0;
+    if (id_rol_general == 1 || id_rol_general == 4 || id_rol_general == 18 || id_rol_general == 63)
+        seeAll = 1;
+
+    $.post('getOpcionesParaReporteComisionistas', { seeAll: seeAll }, function (data) {
         for (let i = 0; i < data.length; i++) {
             if (data[i]['id_catalogo'] == 1) // COMISIONISTAS SELECT
                 $("#comisionista").append($('<option>').val(data[i]['id_opcion']).attr({ 'data-estatus': data[i]['atributo_extra'], 'data-rol': data[i]['atributo_extra2'] }).text(data[i]['nombre']));
@@ -227,22 +231,22 @@ function fillTable(beginDate, endDate, comisionista, tipoUsuario) {
                     if (d.rec == 8 && d.comisionTotal == '0.0')
                         return '-';
                     else
-                        return formatMoney(d.pagoCliente);
+                        return '$' + formatMoney(d.pagoCliente);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.comisionTotal);
+                    return '$' + formatMoney(d.comisionTotal);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.abonoDispersado);
+                    return '$' + formatMoney(d.abonoDispersado);
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.abonoPagado);
+                    return '$' + formatMoney(d.abonoPagado);
                 }
             },
             { data: 'lugar_prospeccion' }
@@ -321,7 +325,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
                 }
             }
         }
-        
+
         for (let i = 0; i < orderedArray.length; i++) {
             let htmlRol = '';
             for (let j = 0; j < orderedArray[i].datos.length; j++) {
@@ -347,7 +351,7 @@ $(document).on("click", "#detailComisionistaBtn", function () {
 });
 
 function colocarValoresTotales(total, totalAbonado, totalPagado) {
-    document.getElementById("txt_totalComision").textContent = formatMoney(total);
-    document.getElementById("txt_totalAbonado").textContent = formatMoney(totalAbonado);
-    document.getElementById("txt_totalPagado").textContent = formatMoney(totalPagado);
+    document.getElementById("txt_totalComision").textContent = '$' + formatMoney(total);
+    document.getElementById("txt_totalAbonado").textContent = '$' + formatMoney(totalAbonado);
+    document.getElementById("txt_totalPagado").textContent = '$' + formatMoney(totalPagado);
 }

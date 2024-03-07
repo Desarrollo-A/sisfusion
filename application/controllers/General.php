@@ -34,8 +34,7 @@ class General extends CI_Controller
 
     function getCondominiosList()
     {
-        $idResidencial = $this->input->post("idResidencial");
-        $data = $this->General_model->getCondominiosList($idResidencial);
+        $data = $this->General_model->getCondominiosList($this->input->post("idResidencial"));
         if ($data != null)
             echo json_encode($data);
         else
@@ -59,8 +58,8 @@ class General extends CI_Controller
             echo json_encode(array());
     }
 
-    public function multirol(){
-        $usuario = ($this->session->userdata('id_rol') == 5 || $this->session->userdata('id_rol') == 4 ) ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
+    public function multirol(){ //chriscrosspapas
+        $usuario = $this->session->userdata('id_usuario');
         $data = $this->General_model->getMultirol($usuario)->result_array();
         if ($data != null)
             echo json_encode($data,  JSON_NUMERIC_CHECK);
@@ -79,7 +78,7 @@ class General extends CI_Controller
     }
 
     public function getCatalogOptions(){
-        if ($this->input->post("id_catalogo") == '')
+        if ($this->input->post("id_catalogo") == '' || $this->input->post("id_catalogo") == undefined)
             echo json_encode(array("status" => 400, "error" => "Algún parámetro no tiene un valor especificado o no viene informado."));
         else
             echo json_encode($this->General_model->getCatalogOptions($this->input->post("id_catalogo"))->result_array());
@@ -93,10 +92,7 @@ class General extends CI_Controller
         else
             echo json_encode(array());
     }
-    public function borrarFlashdata()
-    {
-        $this->session->set_flashdata('error_usuario', '');
-    }
+
     public function getOfficeAddressesAll(){
         $data = $this->General_model->getOfficeAddressesAll()->result_array();
 
@@ -110,8 +106,13 @@ class General extends CI_Controller
     public function listSedes(){
         echo json_encode($this->General_model->listSedes()->result_array());
     }
+    public function borrarFlashdata()
+    {
+        $this->session->set_flashdata('error_usuario', '');
+    }
 
     public function getOpcionesPorCatalogo($id_catalogo) {
         echo json_encode($this->General_model->getOpcionesPorCatalogo($id_catalogo));
     }
+    
 }

@@ -417,11 +417,8 @@ function setDataTableDescuentos(beginDate, endDate){
                         </button>`;
                 }
 
-                if ((d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28)  ) {
-                    if((d.estatus == 2  && d.total_pagado == null )){
-                        
-                    }else{
-                        botonesModal += `
+                if (d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28 ) {
+                    botonesModal += `
                         <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
                             data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
                             data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
@@ -429,8 +426,6 @@ function setDataTableDescuentos(beginDate, endDate){
                             <i class="fas fa-pen-nib">
                             </i>
                         </button>`;
-                    }
-
                 }
                 if(d.relacion_evidencia != '' ){
                     if(d.relacion_evidencia != 'true' ){
@@ -461,12 +456,7 @@ function setDataTableDescuentos(beginDate, endDate){
                             <i class="fas fa-info">
                             </i>
                         </button>`;
-                        botonesModal += d.estatus == 1 ? `
-                        <button href="#" value="${d.id_prestamo}" 
-                            class="btn-data btn-warning toparPrestamo" title="Topar préstamo">
-                            <i class="fas fa-ban">
-                            </i>
-                        </button>` : '';
+                        
                 }
                 return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
@@ -1064,7 +1054,7 @@ function mostrar(id){
 
             Modalheader.append(`
                 <input type="hidden" value="EDITAR" name="idPrestamo" id="idPrestamo"> 
-                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR 
+                    <h4>¿Ésta seguro que desea borrar el préstamo de VAMOS A EDITAR?
                     </h4>
             `);
             dataModal += ``; 
@@ -1105,17 +1095,17 @@ function mostrar(id){
                                         data-motivo="${idx.id_motivo}" 
                                         title="Subir nuevo archivo">
                                         <i class="fas fa-plus-square "></i>
-                                    </button>
+                                    </button>`;
 
-                                    <button href="#"  id="ActualizarMotivo" name="ActualizarMotivo"
+                            dataModal += idx.id_opcion !== 17 ? `<button href="#"  id="ActualizarMotivo" name="ActualizarMotivo"
                                         class="btn-data btn-warning 
                                         data-opcX="${idx.id_opcion}"
                                         data-opc="${idx.id_opcion}"  
                                         data-motivo="${idx.id_motivo}"  
                                         baja-motivo" title="Eliminar">
                                         <i class="fas fa-trash "></i>
-                                    </button>
-                                </div>
+                                    </button>` : '';
+                            dataModal += `</div>
                             </div>
                             <div class="col-md-12 hide" id="mensajeNuevadiv_${idx.id_motivo}" name="mensajeNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
                             <span class="small text-gray textDescripcion" style="font-style: italic;" id="mensajeNuevadiv_" name="mensajeNuevadiv_">

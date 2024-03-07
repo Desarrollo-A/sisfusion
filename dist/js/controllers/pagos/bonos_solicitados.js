@@ -3,7 +3,6 @@ var tr;
 let estatus = '';
 let texto = '';
 let mensaje = '';
-
 if(id_rol_general == 18){
     texto = 'ENVIAR A CONTRALORÍA';
     mensaje = 'BONOS ENVIADOS A CONTRALORÍA CORRECTAMENTE.';
@@ -14,8 +13,8 @@ else{
     texto ='ENVIAR A INTERNOMEX';
     mensaje ='BONOS ENVIADOS A INTERNOMEX CORRECTAMENTE.';
 }
-
 let titulos = [];
+
 $("#tabla_bono_revision").ready(function() {
     $('#tabla_bono_revision thead tr:eq(0) th').each( function (i) {
         if( i != 0){
@@ -33,6 +32,7 @@ $("#tabla_bono_revision").ready(function() {
                     });
                     var to1 = formatMoney(total);
                     document.getElementById("totalp").textContent =  to1;
+                    console.log('fsdf'+total);
                 }
             });
         }
@@ -55,7 +55,7 @@ $("#tabla_bono_revision").ready(function() {
         width: "100%",
         scrollX: true,
         bAutoWidth:true,
-        buttons: [{
+        buttons: [ {
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
@@ -76,8 +76,19 @@ $("#tabla_bono_revision").ready(function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0 ) {
                     var idbono = $(tabla_nuevas.$('input[name="idTQ[]"]:checked')).map(function () { return this.value; }).get();
                     $.get(general_base_url+"Comisiones/enviarBonosMex/"+idbono).done(function () {
+                        $("#myModalEnviadas").modal('toggle');
                         tabla_nuevas.ajax.reload();
-                        modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
+                        $("#myModalEnviadas .modal-body").html("");
+                        $("#myModalEnviadas").modal();
+                        $("#myModalEnviadas .modal-body").append(`
+                            <center>
+                                <img style='width: 25%; height: 25%;' src="${general_base_url}dist/img/mktd.png"> 
+                                    <br><br>
+                                    <b>
+                                    <P style="color:#BCBCBC;"> ${mensaje} 
+                                    </P></P>
+                                    </b>
+                            </center>`);
                     });
                 }else{
                     alerts.showNotification("top", "right", "Favor de seleccionar un bono activo .", "warning");
@@ -202,7 +213,7 @@ $("#tabla_bono_revision").ready(function() {
         {
             "orderable": false,
             data: function(d) {
-                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + '" data-toggle="tooltip" data-placement="top" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
+                return '<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas consulta_abonos" value="' + d.id_pago_bono + '" title="HISTORIAL"><i class="fas fa-info"></i></button></div>';
             } 
         }],
         columnDefs: [{
@@ -231,10 +242,6 @@ $("#tabla_bono_revision").ready(function() {
             data: function(d) {
             }
         },
-    });
-
-    $('#tabla_bono_revision').on('draw.dt', function() {
-        $('[data-toggle="tooltip"]').tooltip({ trigger: "hover" });
     });
 
     $('#tabla_bono_revision').on('click', 'input', function() {
@@ -273,29 +280,7 @@ $("#tabla_bono_revision").ready(function() {
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-
-        changeSizeModal('modal-md');
-            appendBodyModal(`<div class="modal-body">
-                    <div role="tabpanel">
-                        <div id="nameLote"></div>
-                        <div class="tab-content">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card card-plain">
-                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
-                </div>`);
-        showModal();
-
+        $("#modal_bonos").modal();
         $("#nameLote").append('<p><h4 class="text-center"><b>HISTORIAL DE BONO</b></h4></p>');
         $.getJSON(general_base_url +"Comisiones/getHistorialAbono2/"+id_pago).done( function( data ){
             $.each( data, function(i, v){
@@ -327,6 +312,7 @@ function closeModalEng(){
     a = document.getElementById('inputhidden');
     padre = a.parentNode;
     padre.removeChild(a);
+
     $("#modal_abono").modal('toggle');
 }
 
@@ -341,13 +327,14 @@ $("#form_abono").on('submit', function(e){
         processData: false,
         contentType: false,
         success: function(data) {
-
+            console.log(data);
             if (data == 1) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 closeModalEng();
                 $('#modal_abono').modal('hide');
                 alerts.showNotification("top", "right", "Abono registrado con exito.", "success");
                 document.getElementById("form_abono").reset();
+            
             } else if(data == 2) {
                 $('#tabla_prestamos').DataTable().ajax.reload(null, false);
                 closeModalEng();
@@ -374,6 +361,7 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
+// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {
@@ -383,16 +371,17 @@ $(document).on("click", ".individualCheck", function() {
             tr = this.closest('tr');
             row = tabla_nuevas.row(tr).data();
             totaPen += parseFloat(row.pago); 
-        }
 
+        }
+        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false);
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
     });
     $("#totpagarPen").html(formatMoney(numberTwoDecimal(totaPen)));
 });
-
+    // Función de selección total
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -415,3 +404,11 @@ function selectAll(e) {
         $("#totpagarPen").html(formatMoney(0));
     }
 }
+
+$('body').tooltip({
+    selector: '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])',
+    trigger: 'hover',
+    container: 'body'
+}).on('click mousedown mouseup', '[data-toggle="tooltip"], [title]:not([data-toggle="popover"])', function () {
+    $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
+});

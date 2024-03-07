@@ -9,6 +9,8 @@ class Api_model extends CI_Model
     function __construct()
     {
         parent::__construct();
+        $this->load->model(array('Comisiones_model'));
+        
     }
 
     function verifyUser($username, $password)
@@ -17,7 +19,7 @@ class Api_model extends CI_Model
         if($query->num_rows() > 0)
             return $query->row();
         else
-            return false;
+            return "User not found!";
     }
 
     function getAdviserLeaderInformation($id_asesor) {
@@ -36,6 +38,20 @@ class Api_model extends CI_Model
                     LEFT JOIN usuarios rg ON rg.id_usuario = sb.id_lider
             WHERE u.id_usuario = $id_asesor
         ")->row();
+    }
+
+    public function addRecord($table, $data) // MJ: AGREGA UN REGISTRO A UNA TABLA EN PARTICULAR, RECIBE 2 PARÁMETROS. LA TABLA Y LA DATA A INSERTAR
+    {
+        if ($data != '' && $data != null) {
+            $response = $this->db->insert($table, $data);
+            if (!$response) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
+        }
     }
 
     function generateFilename($idLote, $idDocumento)
@@ -73,106 +89,45 @@ class Api_model extends CI_Model
         }
     }
 
-
     public function login_user($username,$password)
 	{
 		$new_pass = encriptar($password);
  
-			$query = $this->db->query("SELECT u.id_usuario, u.id_lider, u.estatus,(CASE u.id_lider WHEN 832 THEN 832 ELSE us.id_lider END) id_lider_2, ge.id_usuario id_lider_3, sb.id_usuario id_lider_4, u.id_rol, u.id_sede, u.nombre, u.apellido_paterno, u.apellido_materno,
+			$query = $this->db->query("SELECT u.id_usuario, u.id_lider, (CASE u.id_lider WHEN 832 THEN 832 ELSE us.id_lider END) id_lider_2, ge.id_usuario id_lider_3, sb.id_usuario id_lider_4, u.id_rol, u.id_sede, u.nombre, u.apellido_paterno, u.apellido_materno,
             u.correo, u.usuario, u.contrasena, u.telefono, u.tiene_hijos, u.estatus, u.sesion_activa, u.imagen_perfil, u.fecha_creacion, u.creado_por, u.modificado_por, u.forma_pago, u.jerarquia_user
             FROM usuarios u
             LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
             LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
             LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
-            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in (0,1,3)");
+            WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus in(0,1,3)");
             return $query->result_array();
 	}
 
-    function getClientsInformation()
+    function getNacionalidades()
     {
-        return $this->db->query("SELECT * FROM sisfusion_pruebas.dbo.lotes LCRM 
-        INNER JOIN sisfusion_pruebas.dbo.clientes as CLCRM ON LCRM.idLote = CLCRM.idLote AND CLCRM.status = 1
-        INNER JOIN sisfusion_pruebas.dbo.tipo_venta TVCRM ON TVCRM.id_tventa = LCRM.tipo_venta
-        INNER JOIN sisfusion_pruebas.dbo.statusLote SLCRM ON SLCRM.idStatusLote = LCRM.idStatusLote
-        INNER JOIN sisfusion_pruebas.dbo.usuarios ACRM ON ACRM.id_usuario = CLCRM.id_asesor AND ACRM.estatus = 1
-        LEFT JOIN sisfusion_pruebas.dbo.usuarios COORDCRM ON COORDCRM.id_usuario = CLCRM.id_coordinador AND COORDCRM.estatus = 1
-        LEFT JOIN sisfusion_pruebas.dbo.usuarios GERCRM ON GERCRM.id_usuario = CLCRM.id_gerente AND GERCRM.estatus = 1
-        INNER JOIN sisfusion_pruebas.dbo.sedes AS SEDECRMAS ON CAST(SEDECRMAS.id_sede AS VARCHAR(45)) = CAST(ACRM.id_sede AS VARCHAR(45))
-        INNER JOIN sisfusion_pruebas.dbo.condominios CCRM ON CCRM.idCondominio = LCRM.idCondominio
-        INNER JOIN sisfusion_pruebas.dbo.residenciales RCRM ON RCRM.idResidencial = CCRM.idResidencial
-        WHERE LCRM.idStatusContratacion >= 15 AND LCRM.status = 1")->result_array();
+       $FormasPago =  $this->db->query("SELECT id_opcion as id_forma_pago,nombre as forma_pago FROM opcs_x_cats WHERE id_catalogo=16")->result_array();
+       $ArrayMex = $FormasPago;
+       $contadorMex=0;
+       $contadorExt=0;
+        unset($ArrayMex[4]);
+        $ArrayExt =  array_pop($FormasPago);
+        $Nacionalidades =  $this->db->query("SELECT id_opcion as id_nacionalidad,nombre as nacionalidad,
+        CASE WHEN id_opcion=0 THEN 0 ELSE 1 END as tipo_contrato
+         FROM opcs_x_cats WHERE id_catalogo=11 and id_opcion in(0,1,14,17)")->result_array();
+        for ($m=0; $m <count($Nacionalidades) ; $m++) { 
+                if($m == 0){
+                    $Nacionalidades[$m]['tipo_pago'] = $ArrayMex; 
+                }else{           
+                    $Nacionalidades[$m]['tipo_pago'] = $ArrayExt;
+                }
+        }
+        return $Nacionalidades;
     }
 
     function getInformationOfficesAndResidences(){
         $query["sedes"] = $this->db->query("SELECT id_sede, nombre, abreviacion FROM sedes WHERE estatus = 1")->result_array();
         $query["residenciales"] = $this->db->query("SELECT idResidencial as id_residencial, descripcion AS nombre, nombreResidencial AS abreviacion FROM residenciales WHERE status = 1")->result_array();
         return $query;
-    }
-
-    public function getAsesoresList($fecha) {
-        $validacionFecha = $fecha != '' ? "AND u0.fecha_creacion >= '$fecha 00:00:00.000'" : "";
-        return $this->db->query("SELECT u0.id_usuario, u0.usuario, u0.fecha_creacion, oxc0.nombre estatusAsesor,
-        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor
-        FROM usuarios u0
-        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.estatus AND oxc0.id_catalogo = 3
-        WHERE u0.id_rol = 7 AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%'
-        AND id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607, 13151, 12845)
-        $validacionFecha")->result_array(); 
-    }
-
-    public function getInformacionProspectos(int $year, int $month){
-        $month1 = $month;
-        $month2 = $month;
-        
-        if(!isset($month) || $month <= 0){
-            $month1 = 1;
-            $month2 = 12;
-        }
-        
-        $query = $this->db->query("SELECT 
-                            pr.id_prospecto, 
-                            pr.nombre,
-                            pr.apellido_paterno,
-                            pr.apellido_materno,
-                            opx.nombre personalidad_juridica,
-                            COALESCE(pr.rfc, '') AS rfc,
-                            COALESCE(pr.correo, '') AS correo,
-                            pr.telefono,
-                            COALESCE(pr.telefono_2, '') AS telefono_2,
-                            opx2.nombre tipo,
-                            opx1.nombre lugar_prospeccion,
-                            pr.fecha_creacion,
-                            pr.id_asesor,
-                            UPPER(CONCAT(us.nombre, ' ' , us.apellido_paterno, ' ', us.apellido_materno)) AS nombre_asesor
-                            FROM prospectos pr
-                            INNER JOIN opcs_x_cats opx ON opx.id_opcion = pr.personalidad_juridica AND opx.id_catalogo = 10
-                            INNER JOIN opcs_x_cats opx1 ON opx1.id_opcion = pr.lugar_prospeccion AND opx1.id_catalogo = 9
-                            INNER JOIN opcs_x_cats opx2 ON opx2.id_opcion = pr.tipo AND opx2.id_catalogo = 8
-                            INNER JOIN usuarios us ON us.id_usuario = pr.id_asesor
-                            WHERE YEAR(pr.fecha_creacion) = ? AND MONTH(pr.fecha_creacion) BETWEEN ? AND ?",
-                            array( $year, $month1, $month2 ));
-        return $query->result_array();
-    }
-
-    public function getCatalogos() {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 16 AND estatus = 1
-        UNION ALL
-        SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = 1 AND estatus = 1 AND id_opcion IN (1, 2, 3, 7, 9)
-        UNION ALL
-        SELECT 0 id_catalogo, id_sede id_opcion, nombre FROM sedes WHERE estatus = 1")->result_array();
-    }
-
-    public function verificarExistenciaUsuario($usuario) {
-        return $this->db->query("SELECT * FROM usuarios WHERE usuario = '$usuario'")->result_array();
-    }
-
-    public function agregarUsuarioOoam($data) {
-        $this->db->insert('usuarios', $data);
-        return $this->db->query("SELECT IDENT_CURRENT('usuarios') id_usuario")->result_array();
-    }
-
-    public function validarCorreoTelefono($telefono, $email) {
-        return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
     public function getInventarioVirtual($idResidencial)
@@ -198,15 +153,11 @@ class Api_model extends CI_Model
         return $query->result_array();
     }
 
-    public function getListaResidenciales() {
-        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25)")->result_array();
+    public function getListaResidenciales()
+    {
+        return $this->db->query("SELECT idResidencial, (descripcion) nombre FROM residenciales WHERE status = 1 AND idResidencial NOT IN (21,22,14,25)")->result_array();
     }
-
-    public function validacionIdSalesforce($id_salesforce) {
-        return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
-    }
-
-    public function aplicaLiberacion($datos){
+    public function aplicaLiberacion($datos) {
         $modificado_por = 1;
         $comentarioLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : $datos['obsLiberacion']));
         $observacionLiberacion = $datos['tipoLiberacion'] == 7 ? 'LIBERADO POR REUBICACIÓN' : ( $datos['tipoLiberacion'] == 9 ? 'LIBERACIÓN JURÍDICA' : ($datos['tipoLiberacion'] == 8 ? 'LIBERADO POR REESTRUCTURA' : 'CANCELACIÓN DE CONTRATO') );
@@ -229,37 +180,41 @@ class Api_model extends CI_Model
         $sqlIdClienteAnt = isset($datos["idClienteAnterior"]) ? 'AND idCliente = '.$datos["idClienteAnterior"] : '';
         $this->db->trans_begin();
         if($row[0]['idStatusLote'] == 8 || $row[0]['idCliente'] == NULL){
-                $arregloLote = array();
-                $arregloLote = array(
-                    "idStatusLote" => 15,
-                    "fecha_modst" => date("Y-m-d H:i:s"),
-                    "userstatus" => $datos["userLiberacion"],
-                    "usuario" => $datos["userLiberacion"],
-                    "liberaBandera" => 1,
-                    "tipo_estatus_regreso" => 1
-                );
-                $this->General_model->updateRecord('lotes',$arregloLote , 'idLote',$datos['idLote']);
-                if ($this->db->trans_status() === FALSE){
-                    $this->db->trans_rollback();
-                    return false;
-                } else {
-                    $this->db->trans_commit();
-                    return true;
-                }
-                exit;
+            $arregloLote = array();
+            $arregloLote = array(
+                "idStatusLote" => 15,
+                "fecha_modst" => date("Y-m-d H:i:s"),
+                "userstatus" => $datos["userLiberacion"],
+                "usuario" => $datos["userLiberacion"],
+                "liberaBandera" => 1,
+                "tipo_estatus_regreso" => 1
+            );
+            $this->General_model->updateRecord('lotes',$arregloLote , 'idLote',$datos['idLote']);
+            if ($this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                return false;
+            } else {
+                $this->db->trans_commit();
+                return true;
+            }
+            exit;
         }
-        
+
         $banderaComisionCl = (in_array($datos['tipo'],array(7,8,9))) ? ' ,banderaComisionCl ='.$row[0]['registro_comision'] : '';
         $id_cliente = $this->db->query("SELECT id_cliente,plan_comision FROM clientes WHERE status = 1 AND idLote IN (" . $row[0]['idLote'] . ") ")->result_array();
+        $tipoCancelacion = isset($datos['tipoCancelacion']) ? $datos['tipoCancelacion'] : 0;
+        $tipoCancelacionNombre = $tipoCancelacion == 0 ? '' : $datos['tipoCancelacionNombre'];
         $this->db->query("UPDATE historial_documento SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
         $this->db->query("UPDATE prospectos SET tipo = 0, estatus_particular = 4, modificado_por = 1, fecha_modificacion = GETDATE() WHERE id_prospecto IN (SELECT id_prospecto FROM clientes WHERE status = 1 AND idLote = ".$row[0]['idLote'].")");
-        $this->db->query("UPDATE clientes SET status = 0,modificado_por='".$modificado_por."', tipoLiberacion= ".$datos['tipo'].",totalNeto2Cl=".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
+        $this->db->query("UPDATE clientes SET status = 0, fecha_modificacion = GETDATE(), tipoCancelacion = $tipoCancelacion, modificado_por = '$modificado_por', tipoLiberacion = ".$datos['tipo'].", totalNeto2Cl = ".$row[0]['totalNeto2']." $banderaComisionCl WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdCliente ");
         $this->db->query("UPDATE historial_enganche SET status = 0, comentarioCancelacion = 'LOTE LIBERADO' WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") $sqlIdClienteAnt");
         $this->db->query("UPDATE historial_lotes SET status = 0 WHERE status = 1 AND idLote IN (".$row[0]['idLote'].") ");
 
         $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
         //$arrayRegistroComision = [0,8,9];
         if(!in_array($row[0]['registro_comision'],array(7))){
+            //echo 13;
+
             $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
 
@@ -295,13 +250,15 @@ class Api_model extends CI_Model
             }
             $this->db->query("UPDATE pago_comision SET bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0,modificado_por='".$modificado_por."'  WHERE id_lote=".$row[0]['idLote']." ");
         }
+
+
         
         if($row[0]['tipo_venta'] == 1){
             if($datos['tipo'] == 7 || $datos['tipo'] == 8){
                 if( $datos['tipo'] == 7 && $datos['banderaFusion'] == 0){
                     $clausula = $this->db->query("SELECT TOP 1 id_clausula,nombre FROM clausulas WHERE id_lote = ".$datos['idLote']." ORDER BY id_clausula DESC")->result_array();
                     $this->db->query("INSERT INTO clausulas VALUES(".$datos['idLoteNuevo'].",'".$clausula['nombre']."',1,GETDATE(),'".$datos['userLiberacion']."');");
-                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
+                                                    $this->db->query("UPDATE clausulas SET estatus = 0 WHERE id_lote=".$datos['idLote']." AND estatus = 1");
                 }
             }
         }
@@ -360,20 +317,21 @@ class Api_model extends CI_Model
                     asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
-                    /*if(!in_array($datos["tipo"],array(7,8,9))) {
+                    if(!in_array($datos["tipo"],array(7, 8, 9))) {
                         $this->email
                             ->initialize()
                             ->from('Ciudad Maderas')
-                            ->to('programador.analista24@ciudadmaderas.com')
+                            ->to('postventa@ciudadmaderas.com')
                             ->subject('Notificación de liberación')
                             ->view($this->load->view('mail/reestructura/mailLiberacion', [
                                 'lote' => $row[0]['nombreLote'],
                                 'fechaApartado' => $datos['fechaLiberacion'],
-                                'Observaciones' => $datos['obsLiberacion']
+                                'Observaciones' => $datos['obsLiberacion'],
+                                'tipoCancelacion' => $tipoCancelacionNombre
                             ], true));
                 
                         $this->email->send();
-                    }*/
+                    }
 
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
@@ -384,4 +342,24 @@ class Api_model extends CI_Model
         }
 
     }
+
+    public function validacionIdSalesforce($id_salesforce) {
+        return $this->db->query("SELECT * FROM prospectos WHERE id_salesforce = '$id_salesforce'")->result_array();
+    }
+
+    public function validarCorreoTelefono($telefono, $email) {
+        return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
+    }
+
+    public function getAsesoresList($fecha) {
+        $validacionFecha = $fecha != '' ? "AND u0.fecha_creacion >= '$fecha 00:00:00.000'" : "";
+        return $this->db->query("SELECT u0.id_usuario, u0.usuario, u0.fecha_creacion, oxc0.nombre estatusAsesor,
+        UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) nombreAsesor
+        FROM usuarios u0
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = u0.estatus AND oxc0.id_catalogo = 3
+        WHERE u0.id_rol = 7 AND rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%' AND ISNULL(correo, '' ) NOT LIKE '%ooam%'
+        AND id_usuario NOT IN (821, 1366, 1923, 4340, 4062, 4064, 4065, 4067, 4068, 4069, 6578, 712 , 9942, 4415, 3, 607, 13151, 12845)
+        $validacionFecha")->result_array(); 
+    }
+
 }

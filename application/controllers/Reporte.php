@@ -12,9 +12,9 @@ class Reporte extends CI_Controller {
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
-    }
+        $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+	}
 
     public function validateSession(){
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
@@ -43,7 +43,7 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
             $typeSale = $this->input->post("filters")[0]["typeSale"];
             $typeLote = $this->input->post("filters")[0]["typeLote"];
-            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
+            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"]; 
             $estatus = $this->input->post("filters")[0]["estatus"]; 
             /* Filtros grales*/
 
@@ -145,8 +145,8 @@ class Reporte extends CI_Controller {
         $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
         $typeSale = $this->input->post("filters")[0]["typeSale"];
         $typeLote = $this->input->post("filters")[0]["typeLote"];
-        $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
-        $estatus = $this->input->post("filters")[0]["estatus"]; 
+        $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"]; 
+        $estatus = $this->input->post("filters")[0]["estatus"];
         /*Filtros grales */
         $id_usuario = $this->input->post("id_usuario");
         $rol = $this->input->post("rol");
@@ -174,8 +174,8 @@ class Reporte extends CI_Controller {
             $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("filters")[0]["end"] )));
             $typeSale = $this->input->post("filters")[0]["typeSale"];
             $typeLote = $this->input->post("filters")[0]["typeLote"];
-            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
-            $estatus = $this->input->post("filters")[0]["estatus"]; 
+            $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"]; 
+            $estatus = $this->input->post("filters")[0]["estatus"];
             /*Filtros grales */
             $id_usuario = $this->input->post("user");
             $rol = $this->input->post("rol");
@@ -195,8 +195,8 @@ class Reporte extends CI_Controller {
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
                 $fechaStatus9 = $data['data'][$x]['fechaStatus9'];
 
-                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);    
-
+                $diasUltimoStatus = $this->formatter->validarDiasHabiles($fechaApartado, $fechaUltimoStatus);
+                
                 if ( $fechaStatus9 != null){
                     $diasStatus9 = $this->formatter->validarDiasHabiles($fechaApartado, $fechaStatus9);
                 }
@@ -278,27 +278,12 @@ class Reporte extends CI_Controller {
         $data = $this->Reporte_model->getEstatusContratacionList()->result_array();
         echo json_encode($data);
     }
-
+    
     public function lotesXStatus(){        
 		$this->load->view('template/header');
 		$this->load->view("reportes/lotesXStatus_view");
     }
 
-    public function lotesContrato(){
-        $this->load->view('template/header');
-        $this->load->view("reportes/reporteLotesContrato");
-    }
-    public function getLotesContrato(){
-        $beginDate = $this->input->post("beginDate");
-        $endDate = $this->input->post("endDate");
-        $data = $this->Reporte_model->getLotesContrato($beginDate, $endDate);
-        foreach ($data as $index=>$elemento){$data[$index]['nombreSede'] = ($elemento['nombreSede']=='')?'NA':$elemento['nombreSede'];}
-        if($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
-        }
-    }
 
     public function ventasPorUsuario(){
         $this->load->view('template/header');
@@ -312,5 +297,4 @@ class Reporte extends CI_Controller {
         $result['data'] = $this->Reporte_model->getListadoDeVentas($beginDate, $endDate);
         echo json_encode($result, JSON_NUMERIC_CHECK);
     }
-
 }

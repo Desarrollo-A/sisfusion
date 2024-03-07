@@ -4,6 +4,7 @@ const excluir_column = ['MÁS', ''];
 let titulos_encabezado = [];
 let num_colum_encabezado = [];
 
+// Selección de CheckBox
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
     tabla_nuevas.$('input[type="checkbox"]').each(function () {
@@ -14,14 +15,15 @@ $(document).on("click", ".individualCheck", function() {
             row = tabla_nuevas.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
+        // Al marcar todos los CheckBox Marca CB total
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
-            $("#all").prop("checked", false);
+            $("#all").prop("checked", false); // si se desmarca un CB se desmarca CB total
     });
-    $("#totpagarPen").html(formatMoney(totaPen));
+    $("#totpagarPen").html('$ ' + formatMoney(totaPen));
 });
-
+    // Función de selección total
 function selectAll(e) {
     tota2 = 0;
     if(e.checked == true){
@@ -32,8 +34,8 @@ function selectAll(e) {
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
-        }); 
-        $("#totpagarPen").html(formatMoney(tota2));
+        });
+        $("#totpagarPen").html('$ ' + formatMoney(tota2));
     }
     if(e.checked == false){
         $(tabla_nuevas.$('input[type="checkbox"]')).each(function (i, v) {
@@ -41,7 +43,7 @@ function selectAll(e) {
                 $(v).prop("checked", false);
             }
         }); 
-        $("#totpagarPen").html(formatMoney(0));
+        $("#totpagarPen").html('$ ' + formatMoney(0));
     }
 }
 
@@ -63,7 +65,7 @@ $(document).on("click", ".subir-archivo", function (e) {
         dataType: 'JSON',
         success: function (data) {
             $('#total-comision').html("");
-            $('#total-comision').append(`Total: ${formatMoney(data.total)}`);
+            $('#total-comision').append(`Total: $${formatMoney(data.total)}`);
             $('#addFileExtranjero').modal('show');
         }
     });
@@ -141,37 +143,9 @@ $("#deleteDocumentoExtranjero").one('submit', function (e) {
     });
 });
 
-function modalHistorial(){
-    changeSizeModal("modal-md");
-    appendBodyModal(`<div class="modal-body">
-            <div role="tabpanel">
-                <ul class="nav" role="tablist">
-                    <div id="nameLote"></div>
-                </ul>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card card-plain">
-                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3" id="comments-list-asimilados"></ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-        </div>`);
-    showModal();
-}
-
 $("#tabla_nuevas_comisiones").ready(function () {
     $('#tabla_nuevas_comisiones thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
+            var title = $(this).text();  
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length);
@@ -183,12 +157,15 @@ $("#tabla_nuevas_comisiones").ready(function () {
                 if (tabla_nuevas.column(i).search() !== this.value) {
                     tabla_nuevas.column(i).search(this.value).draw();
                     var total = 0;
-                    var index = tabla_nuevas.rows({ selected: true, search: 'applied' }).indexes();
+                    var index = tabla_nuevas.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
                     var data = tabla_nuevas.rows(index).data();
                     $.each(data, function (i, v) {
                         total += parseFloat(v.total_comision);
                     });
-                    document.getElementById("myText_nuevas").textContent = formatMoney(total);
+                    document.getElementById("myText_nuevas").textContent = '$' + formatMoney(total);
                 }
             });
         }
@@ -203,7 +180,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_nuevas").textContent = to;
+        document.getElementById("myText_nuevas").textContent = '$' + to;
     });
 
     tabla_nuevas = $("#tabla_nuevas_comisiones").DataTable({
@@ -211,82 +188,83 @@ $("#tabla_nuevas_comisiones").ready(function () {
         width: '100%',
         scrollX: true,
         buttons: [{
-            text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
+                text: '<i class="fa fa-paper-plane"></i> SOLICITAR PAGO',
             action: function () {
                 if (noDia == 1 || (noDia == 2 && hora <= 14)) {
                     if ($('input[name="idT[]"]:checked').length > 0) {
-                        $('#spiner-loader').removeClass('hide');
-                        var idcomision = $('#tabla_nuevas_comisiones input[name="idT[]"]:checked').map(function () {
-                            return this.value;
-                        }).get();
-                        var com2 = new FormData();
-                        com2.append("idcomision", idcomision);
-                        $.ajax({
-                            url: general_base_url + 'Suma/acepto_comisiones_user/',
-                            data: com2,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            type: 'POST',
-                            success: function (data) {
-                                response = JSON.parse(data);
-                                if (data == 1) {
-                                    $('#spiner-loader').addClass('hide');
-                                    $("#totpagarPen").html(formatMoney(0));
-                                    $("#all").prop('checked', false);
-                                    alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
-                                    tabla_nuevas.ajax.reload();
-                                    tabla_revision.ajax.reload();
-                                } 
-                                else if (data == 2){
-                                    $('#spiner-loader').addClass('hide');
-                                    alerts.showNotification("top", "right", "No ha agregado un documento fiscal antes de solicitar su pago", "warning");
+                            $('#spiner-loader').removeClass('hide');
+                            var idcomision = $('#tabla_nuevas_comisiones input[name="idT[]"]:checked').map(function () {
+                                return this.value;
+                            }).get();
+                            var com2 = new FormData();
+                            com2.append("idcomision", idcomision); 
+                            $.ajax({
+                                url: general_base_url + 'Suma/acepto_comisiones_user/',
+                                data: com2,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                type: 'POST', 
+                                success: function (data) {
+                                    response = JSON.parse(data);
+                                    if (data == 1) {
+                                        $('#spiner-loader').addClass('hide');
+                                        $("#totpagarPen").html(formatMoney(0));
+                                        $("#all").prop('checked', false);
+                                        alerts.showNotification("top", "right", "Las comisiones se han enviado exitosamente a revisión.", "success");
+                                        tabla_nuevas.ajax.reload();
+                                        tabla_revision.ajax.reload();
+                                    } 
+                                    else if (data == 2){
+                                        $('#spiner-loader').addClass('hide');
+                                        alerts.showNotification("top", "right", "No ha agregado un documento fiscal antes de solicitar su pago", "warning");
+                                    }
+                                    else{
+                                        $('#spiner-loader').addClass('hide');
+                                        alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
+                                    }
+                                },
+                                error: function (data) {
+                                        $('#spiner-loader').addClass('hide');
+                                        alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
                                 }
-                                else{
-                                    $('#spiner-loader').addClass('hide');
-                                    alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
-                                }
-                            },
-                            error: function (data) {
-                                $('#spiner-loader').addClass('hide');
-                                alerts.showNotification("top", "right", "Error al enviar comisiones, intentalo más tarde", "danger");
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-                else {
-                    $('#spiner-loader').addClass('hide');
-                    alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");
-                }
-            },
-            attr: {
-                class: 'btn btn-azure',
-                style: `${(forma_pago != '2') ? 'position:relative; float:right' : 'display:none'}`
-            }
-        },
-        {
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title: 'REPORTE COMISIONES SUMA NUEVAS',
-            exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_encabezado[columnIdx  -1] + ' ';
+                    else {
+                        $('#spiner-loader').addClass('hide');
+                        alerts.showNotification("top", "right", "No se pueden enviar comisiones, esperar al siguiente corte", "warning");      
                     }
+                },
+                attr: {
+                    class: 'btn btn-azure',
+                    style: `${(forma_pago != '2') ? 'position:relative; float:right' : 'display:none'}`
                 }
+            }, 
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Descargar archivo de Excel',
+                title: 'REPORTE COMISIONES SUMA NUEVAS',
+                exportOptions: {
+                    columns: [1,2,3,4,5,6,7,8,9],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos_encabezado[columnIdx  -1] + ' ';
+                        }
+                    }
+                },
             },
-        },
-        {
-            text: '<i class="fas fa-play"></i>',
-            className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
-            action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+            {
+                text: '<i class="fas fa-play"></i>',
+                className: `btn btn-dt-youtube buttons-youtube`,
+                titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
+                action: function (e, dt, button, config) {
+                    window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
+                }
             }
-        }],
+        ],
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
@@ -327,12 +305,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -343,20 +321,20 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': 
-                    case 1: 
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2':
-                    case 2: 
+                    case '2': //FACTURA
+                    case 2: //FACTURA
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3':
-                    case 3: 
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': 
-                    case 4:
+                    case '4': //RD
+                    case 4: //RD
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST.</span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -374,7 +352,15 @@ $("#tabla_nuevas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_nuevas" data-placement="top"><i class="fas fa-info"></i></button>`;
+                return `<button href="#"
+                                value="${data.id_pago_suma}"
+                                data-referencia="${data.referencia}"
+                                class="btn-data btn-blueMaderas consultar_history m-auto"
+                                title="DETALLES"
+                                data-toggle="tooltip_nuevas" 
+                                data-placement="top">
+                            <i class="fas fa-info"></i>
+                        </button>`;
             }
         }],
         columnDefs: [{
@@ -386,12 +372,12 @@ $("#tabla_nuevas_comisiones").ready(function () {
             render: function (d, type, full, meta) {
                 if (noDia == 1 || (noDia == 2 && hora <= 14)) {
                     switch (full.id_forma_pago) {
-                        case '1':
-                        case 1:
-                        case '2':
-                        case 2: 
+                        case '1': //SIN DEFINIR
+                        case 1: //SIN DEFINIR
+                        case '2': //FACTURA
+                        case 2: //FACTURA
                             return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-                            break;
+                        break;
 
                         case '5':
                         case 5:
@@ -404,18 +390,18 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             }
                             return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
 
-                        case '3': 
-                        case 3: 
-                        case '4': 
-                        case 4: 
+                        case '3': //ASIMILADOS
+                        case 3: //ASIMILADOS
+                        case '4': //RD
+                        case 4: //RD
                         default:
-
                             if (full.id_usuario == 5028 || full.id_usuario == 4773 || full.id_usuario == 5381) {
-                                return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
-                            } else {
-                                return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
-                            }
-                            break;
+                            return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
+
+                        } else {
+                            return '<input type="checkbox" name="idT[]" class="individualCheck" style="width:20px;height:20px;"  value="' + full.id_pago_suma + '">';
+                        }
+                        break;
                     }
                 } else {
                     return '<span class="material-icons" style="color: #DCDCDC;">block</span>';
@@ -441,23 +427,24 @@ $("#tabla_nuevas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        modalHistorial();
+        $("#seeInformationModalAsimilados").modal();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b style=" text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
             });
         });
     });
 });
 
+/* Table revisión */
 $("#tabla_revision_comisiones").ready(function () {
     titulos_encabezado.length = 0;
     num_colum_encabezado.length = 0;
     $('#tabla_revision_comisiones thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
+            var title = $(this).text();  
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length - 1);
@@ -466,19 +453,22 @@ $("#tabla_revision_comisiones").ready(function () {
         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip_revision"  data-placement="top" title="${title}" placeholder="${title}" ${readOnly}/>`);
 
         $('input', this).on('keyup change', function () {
-            if (tabla_revision.column(i).search() !== this.value) {
-                tabla_revision.column(i).search(this.value).draw();
+                if (tabla_revision.column(i).search() !== this.value) {
+                    tabla_revision.column(i).search(this.value).draw();
 
-                var total = 0;
-                var index = tabla_revision.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_revision.rows(index).data();
+                    var total = 0;
+                    var index = tabla_revision.rows({
+                        selected: true,
+                        search: 'applied'
+                    }).indexes();
+                    var data = tabla_revision.rows(index).data();
 
-                $.each(data, function (i, v) {
-                    total += parseFloat(v.total_comision);
-                });
-                document.getElementById("myText_revision").textContent = formatMoney(total);
-            }
-        });
+                    $.each(data, function (i, v) {
+                        total += parseFloat(v.total_comision);
+                    });
+                    document.getElementById("myText_revision").textContent = '$' + formatMoney(total);
+                }
+            });
     });
 
     $('#tabla_revision_comisiones').on('xhr.dt', function (e, settings, json, xhr) {
@@ -487,7 +477,7 @@ $("#tabla_revision_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_revision").textContent = to;
+        document.getElementById("myText_revision").textContent = '$' + to;
     });
 
     tabla_revision = $("#tabla_revision_comisiones").DataTable({
@@ -514,7 +504,7 @@ $("#tabla_revision_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -555,12 +545,12 @@ $("#tabla_revision_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0"> ' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">$ ' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -571,19 +561,19 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': 
-                    case 1: 
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': 
-                    case 2:
+                    case '2': //FACTURA
+                    case 2: //FACTURA
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': 
-                    case 3: 
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
-                    case '4': 
-                    case 4:
+                    case '4': //RD
+                    case 4: //RD
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
@@ -600,7 +590,16 @@ $("#tabla_revision_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_revision" data-placement="top"><i class="fas fa-info"></i></button>`;
+                return `<button href="#"
+                                value="${data.id_pago_suma}"
+                                data-referencia="${data.referencia}"
+                                class="btn-data btn-blueMaderas consultar_history m-auto"
+                                title="DETALLES"
+                                data-toggle="tooltip_revision" 
+                                data-placement="top">
+                            <i class="fas fa-info"></i>
+                        </button>`;
+
             }
         }],
         ajax: {
@@ -621,23 +620,25 @@ $("#tabla_revision_comisiones").ready(function () {
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
-        modalHistorial();
+
+        $("#seeInformationModalAsimilados").modal();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
             });
         });
     });
 });
 
+// /* Table pagadas */
 $("#tabla_pagadas_comisiones").ready(function () {
     titulos_encabezado.length = 0;
     num_colum_encabezado.length = 0;
     $('#tabla_pagadas_comisiones thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
+        var title = $(this).text();  
         var title = $(this).text();
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
@@ -650,13 +651,16 @@ $("#tabla_pagadas_comisiones").ready(function () {
                 tabla_pagadas.column(i).search(this.value).draw();
 
                 var total = 0;
-                var index = tabla_pagadas.rows({ selected: true, search: 'applied' }).indexes();
+                var index = tabla_pagadas.rows({
+                    selected: true,
+                    search: 'applied'
+                }).indexes();
                 var data = tabla_pagadas.rows(index).data();
 
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                document.getElementById("myText_pagadas").textContent = formatMoney(total);
+                document.getElementById("myText_pagadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -667,7 +671,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pagadas").textContent = to;
+        document.getElementById("myText_pagadas").textContent = '$' + to;
     });
 
     tabla_pagadas = $("#tabla_pagadas_comisiones").DataTable({
@@ -694,7 +698,7 @@ $("#tabla_pagadas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -735,12 +739,12 @@ $("#tabla_pagadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -751,25 +755,28 @@ $("#tabla_pagadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1': 
-                    case 1: 
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': 
-                    case 2: 
+                    case '2': //FACTURA
+                    case 2: //FACTURA
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': 
-                    case 3:
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4':
-                    case 4: 
+                    case '4': //RD
+                    case 4: //RD
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>
+                        return `
+                            <p class="mb-1">
+                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                            </p>
                         `;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
@@ -779,7 +786,15 @@ $("#tabla_pagadas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_pagadas" data-placement="top"><i class="fas fa-info"></i></button>`;
+                return `<button href="#"
+                                value="${data.id_pago_suma}"
+                                data-referencia="${data.referencia}"
+                                class="btn-data btn-blueMaderas consultar_history m-auto"
+                                title="DETALLES"
+                                data-toggle="tooltip_pagadas" 
+                                data-placement="top">
+                            <i class="fas fa-info"></i>
+                        </button>`;
             }
         }],
         ajax: {
@@ -801,25 +816,25 @@ $("#tabla_pagadas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        modalHistorial();
+        $("#seeInformationModalAsimilados").modal();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
             });
         });
     });
 });
+/* END pagadas */
 
 $("#tabla_pausadas_comisiones").ready(function () {
     titulos_encabezado.length = 0;
     num_colum_encabezado.length = 0;
     $('#tabla_pausadas_comisiones thead tr:eq(0) th').each(function (i) {
+            var title = $(this).text();  
         var title = $(this).text();
-        var title = $(this).text();
-
         if (!excluir_column.includes(title)) {
             titulos_encabezado.push(title);
             num_colum_encabezado.push(titulos_encabezado.length - 1);
@@ -830,13 +845,19 @@ $("#tabla_pausadas_comisiones").ready(function () {
             if (tabla_pausadas.column(i).search() !== this.value) {
                 tabla_pausadas.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_pausadas.rows({ selected: true, search: 'applied' }).indexes();
+
+                var index = tabla_pausadas.rows({
+                    selected: true,
+                    search: 'applied'
+                }).indexes();
+
                 var data = tabla_pausadas.rows(index).data();
 
                 $.each(data, function (i, v) {
                     total += parseFloat(v.total_comision);
                 });
-                document.getElementById("myText_pausadas").textContent = formatMoney(total);
+                
+                document.getElementById("myText_pausadas").textContent = '$' + formatMoney(total);
             }
         });
     });
@@ -847,7 +868,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             total += parseFloat(v.total_comision);
         });
         var to = formatMoney(total);
-        document.getElementById("myText_pausadas").textContent = to;
+        document.getElementById("myText_pausadas").textContent = '$' + to;
     });
 
     tabla_pausadas = $("#tabla_pausadas_comisiones").DataTable({
@@ -874,7 +895,7 @@ $("#tabla_pausadas_comisiones").ready(function () {
             className: `btn btn-dt-youtube buttons-youtube`,
             titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Solicitudes SUMA podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
-                window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
+                window.open('https://youtu.be/6tDiInpg2Ao', '_blank');
             }
         }],
         pagingType: "full_numbers",
@@ -915,12 +936,12 @@ $("#tabla_pausadas_comisiones").ready(function () {
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.total_comision) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.total_comision) + '</p>';
             }
         },
         {
             "data": function (d) {
-                return '<p class="m-0">' + formatMoney(d.impuesto) + '</p>';
+                return '<p class="m-0">$' + formatMoney(d.impuesto) + '</p>';
             }
         },
         {
@@ -931,25 +952,29 @@ $("#tabla_pausadas_comisiones").ready(function () {
         {
             "data": function (d) {
                 switch (d.id_forma_pago) {
-                    case '1':
-                    case 1: 
+                    case '1': //SIN DEFINIR
+                    case 1: //SIN DEFINIr
                         return '<p class="mb-1"><span class="label lbl-dark-blue">SIN DEFINIR FORMA DE PAGO </span><br><span class="label lbl-dark-cyan">REVISAR CON RH</span></p>';
 
-                    case '2': 
-                    case 2: 
+                    case '2': //FACTURA
+                    case 2: //FACTURA
                         return '<p class="mb-1"><span class="label lbl-dark-blue">FACTURA </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">SUBIR XML</span></p>';
 
-                    case '3': 
-                    case 3: 
+                    case '3': //ASIMILADOS
+                    case 3: //ASIMILADOS
                         return '<p class="mb-1"><span class="label lbl-dark-blue">ASIMILADOS </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
-                    case '4': 
-                    case 4:
+                    case '4': //RD
+                    case 4: //RD
                         return '<p class="mb-1"><span class="label lbl-dark-blue">REMANENTE DIST. </span></p><p style="font-size: .5em"><span class="label lbl-dark-cyan">LISTA PARA APROBAR</span></p>';
 
                     case '5':
                     case 5:
-                        return `<p class="mb-1"><span class="label lbl-dark-blue">FACTURA EXTRANJERO</span></p>`;
+                        return `
+                            <p class="mb-1">
+                                <span class="label lbl-dark-blue">FACTURA EXTRANJERO</span>
+                            </p>
+                        `;
                     default:
                         return '<p class="mb-1"><span class="label lbl-dark-blue">DOCUMENTACIÓN FALTANTE </span><br><span class="label lbl-dark-blue">REVISAR CON RH</span></p>';
                 }
@@ -958,7 +983,15 @@ $("#tabla_pausadas_comisiones").ready(function () {
         {
             "orderable": false,
             "data": function (data) {
-                return `<button href="#" value="${data.id_pago_suma}" data-referencia="${data.referencia}" class="btn-data btn-blueMaderas consultar_history m-auto" title="DETALLES" data-toggle="tooltip_pausadas" data-placement="top"><i class="fas fa-info"></i></button>`;
+                return `<button href="#"
+                                value="${data.id_pago_suma}"
+                                data-referencia="${data.referencia}"
+                                class="btn-data btn-blueMaderas consultar_history m-auto"
+                                title="DETALLES"
+                                data-toggle="tooltip_pausadas" 
+                                data-placement="top">
+                            <i class="fas fa-info"></i>
+                        </button>`;
             }
         }],
         ajax: {
@@ -980,17 +1013,18 @@ $("#tabla_pausadas_comisiones").ready(function () {
         id_pago = $(this).val();
         referencia = $(this).attr("data-referencia");
 
-        modalHistorial();
+        $("#seeInformationModalAsimilados").modal();
         $("#nameLote").html("");
         $("#comments-list-asimilados").html("");
-        $("#nameLote").append('<p><h5>HISTORIAL DE PAGO DE LA REFERENCIA <b>' + referencia + '</b></h5></p>');
+        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DE PAGO DE LA REFERENCIA <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;">' + referencia + '</b></h5></p>');
         $.getJSON("getHistorial/" + id_pago).done(function (data) {
             $.each(data, function (i, v) {
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>MODIFICADO POR: </small><b>'+v.modificado_por+' </b></a><br></div><div class="float-end text-right"><a> '+v.fecha_movimiento+' </a></div><div class="col-md-12"><p class="m-0"><small>COMENTARIOS: </small><b>'+v.comentario+'</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<div class="col-lg-12"><p><i style="color:39A1C0;">' + v.comentario + '</i><br><b style="color:#39A1C0">' + v.fecha_movimiento + '</b><b style="color:gray;"> - ' + v.modificado_por + '</b></p></div>');
             });
         });
     });
 });
+/* End table pausadas */ 
 
 function mandarFacturas() {
     document.getElementById('btng').disabled = true;
@@ -1005,7 +1039,7 @@ function todos() {
     } else if ($(".checkdata1:checked").length < $(".checkdata1").length) {
         $(".checkdata1").prop("checked", true);
         sumCheck();
-
+    
     } else if ($(".checkdata1:checked").length == $(".checkdata1").length) {
         $(".checkdata1").prop("checked", false);
         sumCheck();
@@ -1014,7 +1048,7 @@ function todos() {
 
 $(document).on("click", ".subir_factura_multiple", function () {
     if (noDia == 1 || (noDia == 2 && hora <= 14)) {
-
+        
         $.ajax({
             type: 'POST',
             url: `${general_base_url}Suma/validateWeek`,
@@ -1039,36 +1073,49 @@ $(document).on("click", ".subir_factura_multiple", function () {
                             else {
                                 $("#modal_multiples .modal-body").html("");
                                 $("#modal_multiples .modal-header").html("");
-                                $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12 text-right"><button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size:40px;">&times;</span></button></div></div>`);
+
+                                $("#modal_multiples .modal-header").append(`<div class="row">
+                                    <div class="col-md-12 text-right">
+                                        <button type="button" class="close close_modal_xml" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-size:40px;">&times;</span>
+                                        </button>
+                                    </div>
+                                </div>`);
+                                
                                 c = 0;
                                 if (data.length > 0) {
-                                    $("#modal_multiples .modal-body").append(`<div class="row"><div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);
+                                    $("#modal_multiples .modal-body").append(`<div class="row">
+                                    <div class="col-md-1"><input type="checkbox" class="form-control" onclick="todos();" id="btn_all"></div><div class="col-md-10 text-left"><b>MARCAR / DESMARCAR TODO</b></div>`);                    
                                 }
                                 $.each(data, function (i, v) {
                                     c++;
-
+            
                                     abono_asesor = (v.total_comision);
-                                    $("#modal_multiples .modal-body").append('<div class="row">' + '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
+                                    $("#modal_multiples .modal-body").append('<div class="row">' +
+                                    '<div class="col-md-1"><input type="checkbox" class="form-control ng-invalid ng-invalid-required data1 checkdata1" onclick="sumCheck()" id="comisiones_facura_mult' + i + '" name="comisiones_facura_mult"></div><div class="col-md-4"><input id="data1' + i + '" name="data1' + i + '" value="' + v.referencia + '" class="form-control data1 ng-invalid ng-invalid-required" required placeholder="%"></div><div class="col-md-4"><input type="hidden" id="idpago-' + i + '" name="idpago-' + i + '" value="' + v.id_pago_suma + '"><input id="data2' + i + '" name="data2' + i + '" value="' + "" + parseFloat(abono_asesor).toFixed(2) + '" class="form-control data1 ng-invalid ng-invalid-required" readonly="" required placeholder="%"></div></div>');
                                 });
-
+            
                                 $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12 text-left"><b style="color:green;" class="text-left" id="sumacheck"> Suma seleccionada: 0</b></div><div class="col-lg-5"><div class="fileinput fileinput-new text-center" data-provides="fileinput"><div><br><span class="fileinput-new">Selecciona archivo</span><input type="file" name="xmlfile2" id="xmlfile2" accept="application/xml"></div></div></div><div class="col-lg-7"><center><button class="btn btn-warning" type="button" onclick="xml2()" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center></div></div>');
-
+            
                                 $("#modal_multiples .modal-body").append('<p id="cantidadSeleccionada"></p>');
                                 $("#modal_multiples .modal-body").append('<b id="cantidadSeleccionadaMal"></b>');
                                 $("#modal_multiples .modal-body").append('<form id="frmnewsol2" method="post">' +
-                                    '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
-                                    '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
-                                    '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
-                                    ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
+                                '<div class="row"><div class="col-lg-3 form-group"><label for="emisor">Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div><div class="col-lg-3 form-group"><label for="receptor">Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label><input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label><input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="total">Monto:<span class="text-danger">*</span></label><input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>' +
+                                '<div class="col-lg-3 form-group"><label for="formaPago">Forma Pago:</label><input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>' +
+                                '<div class="col-lg-3 form-group"><label for="cfdi">Uso del CFDI:</label><input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>' +
+                                '<div class="col-lg-3 form-group"><label for="metodopago">Método de Pago:</label><input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly></div><div class="col-lg-3 form-group"><label for="unidad">Unidad:</label><input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>' +
+                                '<div class="col-lg-3 form-group"> <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required> </div> </div>' +
+                                ' <div class="row"> <div class="col-lg-12 form-group"> <label for="obse">OBSERVACIONES FACTURA <i class="fa fa-question-circle faq" tabindex="0" data-container="body" data-trigger="focus" data-toggle="popover" title="Observaciones de la factura" data-content="En este campo pueden ser ingresados datos opcionales como descuentos, observaciones, descripción de la operación, etc." data-placement="right"></i></label><br><textarea class="form-control" rows="1" data-min-rows="1" id="obse" name="obse" placeholder="Observaciones"></textarea> </div> </div><div class="row">  <div class="col-md-4"><button type="button" id="btng" onclick="mandarFacturas();" disabled class="btn btn-primary btn-block">GUARDAR</button></div><div class="col-md-4"></div><div class="col-md-4"> <button type="button" data-dismiss="modal"  class="btn btn-danger btn-block close_modal_xml">CANCELAR</button></div></div></form>');
                             }
                             $('#spiner-loader').addClass('hide');
-                            $("#modal_multiples").modal({ backdrop: 'static', keyboard: false });
+                            $("#modal_multiples").modal({
+                                backdrop: 'static',
+                                keyboard: false
+                            });
                         },
                         error: function () {
                             $('#spiner-loader').addClass('hide');
@@ -1092,6 +1139,7 @@ $(document).on("click", ".subir_factura_multiple", function () {
     }
 });
 
+//FUNCION PARA LIMPIAR EL FORMULARIO CON DE PAGOS A PROVEEDOR.
 function resear_formulario() {
     $("#modal_formulario_solicitud input.form-control").prop("readonly", false).val("");
     $("#modal_formulario_solicitud textarea").html('');
@@ -1127,14 +1175,14 @@ function subir_xml(input) {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST', 
+        type: 'POST', // For jQuery < 1.9
         success: function (data) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
                 var informacion_factura = data.datos_xml;
                 cargar_info_xml(informacion_factura);
                 $("#solobs").val(justificacion_globla);
-            }
+            } 
             else {
                 input.val('');
                 alert(data.respuesta[1]);
@@ -1162,7 +1210,7 @@ function subir_xml2(input) {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST',
+        type: 'POST', // For jQuery < 1.9
         success: function (data) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
@@ -1170,7 +1218,7 @@ function subir_xml2(input) {
 
                 cargar_info_xml2(informacion_factura);
                 $("#solobs").val(justificacion_globla);
-            }
+            } 
             else {
                 input.val('');
                 alert(data.respuesta[1]);
@@ -1196,13 +1244,13 @@ $("#eliminar_factura").submit(function (e) {
             processData: false,
             dataType: 'json',
             method: 'POST',
-            type: 'POST',
+            type: 'POST', // For jQuery < 1.9
             success: function (data) {
                 if (true) {
                     $("#modalQuitarFactura").modal('toggle');
                     tabla_nuevas.ajax.reload();
                     alert("SE ELIMINÓ EL ARCHIVO");
-                }
+                } 
                 else {
                     alert("NO SE HA PODIDO COMPLETAR LA SOLICITUD");
                 }
@@ -1230,7 +1278,7 @@ function cargar_info_xml(informacion_factura) {
     let pago_cliente = $('#pago_cliente').val();
     let pago1 = parseFloat(pago_cliente) + .05;
     let pago2 = parseFloat(pago_cliente) - .05;
-
+    
     if (parseFloat(pago1).toFixed(2) >= cantidadXml.toFixed(2) && cantidadXml.toFixed(2) >= parseFloat(pago2).toFixed(2)) {
         alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
         document.getElementById('btnIndi').disabled = false;
@@ -1244,18 +1292,26 @@ function cargar_info_xml(informacion_factura) {
         document.getElementById('btnIndi').disabled = true;
         alerts.showNotification("top", "right", "Cantidad incorrecta.", "warning");
     }
-
+    
     $("#emisor").val((informacion_factura.nameEmisor ? informacion_factura.nameEmisor[0] : '')).attr('readonly', true);
     $("#rfcemisor").val((informacion_factura.rfcemisor ? informacion_factura.rfcemisor[0] : '')).attr('readonly', true);
+
     $("#receptor").val((informacion_factura.namereceptor ? informacion_factura.namereceptor[0] : '')).attr('readonly', true);
     $("#rfcreceptor").val((informacion_factura.rfcreceptor ? informacion_factura.rfcreceptor[0] : '')).attr('readonly', true);
+
     $("#regimenFiscal").val((informacion_factura.regimenFiscal ? informacion_factura.regimenFiscal[0] : '')).attr('readonly', true);
+
     $("#formaPago").val((informacion_factura.formaPago ? informacion_factura.formaPago[0] : '')).attr('readonly', true);
     $("#total").val(('$ ' + informacion_factura.total ? '$ ' + informacion_factura.total[0] : '')).attr('readonly', true);
+
     $("#cfdi").val((informacion_factura.usocfdi ? informacion_factura.usocfdi[0] : '')).attr('readonly', true);
+
     $("#metodopago").val((informacion_factura.metodoPago ? informacion_factura.metodoPago[0] : '')).attr('readonly', true);
+
     $("#unidad").val((informacion_factura.claveUnidad ? informacion_factura.claveUnidad[0] : '')).attr('readonly', true);
+
     $("#clave").val((informacion_factura.claveProdServ ? informacion_factura.claveProdServ[0] : '')).attr('readonly', true);
+
     $("#obse").val((informacion_factura.descripcion ? informacion_factura.descripcion[0] : '')).attr('readonly', true);
 }
 
@@ -1284,7 +1340,7 @@ function cargar_info_xml2(informacion_factura) {
         alerts.showNotification("top", "right", "Cantidad correcta.", "success abc");
         document.getElementById('btng').disabled = false;
         disabled();
-    }
+    } 
     else {
         var elemento = document.querySelector('#total');
         elemento.setAttribute('color', 'red');
@@ -1318,11 +1374,12 @@ function sumCheck() {
             pagos[index] = $("#idpago-" + index).val();
             cantidad = Number.parseFloat($("#data2" + index).val());
             suma += cantidad;
+
         }
     }
     var myCommentsList = document.getElementById('sumacheck');
-    myCommentsList.innerHTML = 'Suma seleccionada: ' + formatMoney(suma.toFixed(3));
-}
+    myCommentsList.innerHTML = 'Suma seleccionada: $ ' + formatMoney(suma.toFixed(3));
+} 
 
 function disabled() {
     for (let index = 0; index < c; index++) {
@@ -1331,7 +1388,7 @@ function disabled() {
             document.getElementById("btn_all").disabled = true;
         }
     }
-}
+} 
 
 function guardarSolicitud() {
     let formData = new FormData(document.getElementById("frmnewsol2"));
@@ -1351,7 +1408,7 @@ function guardarSolicitud() {
         processData: false,
         dataType: 'json',
         method: 'POST',
-        type: 'POST',
+        type: 'POST', // For jQuery < 1.9
         success: function (data) {
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
@@ -1393,5 +1450,6 @@ function guardarSolicitud() {
 }
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    $($.fn.dataTable.tables(true)).DataTable()
+        .columns.adjust();
 });

@@ -331,7 +331,6 @@ demo = {
               var $total = navigation.find('li').length;
               $width = 100/$total;
               var $wizard = navigation.closest('.wizard-card');
-              //var $wizard = navigation.closest('#wiz-nav');
               $display_width = $(document).width();
               
               if($display_width < 600 && $total > 3){
@@ -451,7 +450,7 @@ demo = {
             move_distance = $wizard.width() / total_steps;
             step_width = move_distance;
             move_distance *= index;
-            
+
             $current = index + 1;
 
             if($current == 1){

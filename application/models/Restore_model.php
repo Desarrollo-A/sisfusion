@@ -6,7 +6,7 @@ class Restore_model extends CI_Model {
     {
         parent::__construct();
     }
-
+    
     public function updateLote($datos){
         $this->db->trans_begin();
         $replace = ["$", ","];
@@ -38,7 +38,7 @@ class Restore_model extends CI_Model {
             $this->db->trans_commit();
             return true;
         }
-    } 
+    }
 
     public function return_status_uno($datos){
         $replace = ["$", ","];
@@ -51,7 +51,7 @@ class Restore_model extends CI_Model {
         $totalNeto2Post = !isset($datos['totalNeto2']) ? "N/A" : $datos['totalNeto2'] ;
         $totalNetoPost = !isset($datos['totalNeto']) ? "N/A" : $datos['totalNeto'] ;
 
-        $query4 = $this->db->query("SELECT idStatusContratacion, idMovimiento, perfil, comentario, usuario,tipo_venta,
+        $query4 = $this->db->query("SELECT idStatusContratacion, idMovimiento, perfil, comentario, usuario,
 		                            modificado, fechaVenc,
 									idLote FROM historial_lotes WHERE idHistorialLote = (SELECT max(idHistorialLote) FROM historial_lotes WHERE idCliente = '$idCliente');");
         $row = $query4->result();
@@ -67,7 +67,6 @@ class Restore_model extends CI_Model {
         $usuario = $row[0]->usuario;
         $modificado = $row[0]->modificado;
         $fechaVenc = $row[0]->fechaVenc;
-        $tipoVentaLote = $row[0]->tipo_venta;
         $query9 = $this->db->query("UPDATE historial_enganche SET status=0 WHERE idLote='$idlote';");
         $query = $this->db->query("UPDATE historial_enganche SET status=1 WHERE idCliente='$idCliente' AND idLote='$idlote';");
         $query2 = $this->db->query("UPDATE historial_documento SET status=0 WHERE idLote='$idlote';");
@@ -98,7 +97,6 @@ class Restore_model extends CI_Model {
                 if($row['col_afect'] == 'tipo_venta'){
                     $param = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
                     $tipoVenta = $tipo_venta == 'N/A' ?  $row['anterior'] : $tipo_venta;
-                    $param = $tipoVentaLote == 1 ? 1 : $param;
                     $AND .= ", tipo_venta =  $param";
                 }elseif($row['col_afect'] == 'registro_comision'){
                     $param = $row['anterior'];
@@ -131,7 +129,7 @@ class Restore_model extends CI_Model {
         }
 
         if($idstatus < 5){
-            $cadenaTipoVenta = $tipoVentaLote == 1 ? 1 : 0;
+            $cadenaTipoVenta = $tipoVenta == 1 ? 1 : 0;
             $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,ubicacion=0,status8Flag=0,validacionEnganche=NULL,tipo_venta=".$cadenaTipoVenta;
         }/*else if(in_array($idstatus, array(5,6,7))){
             $AND = ",totalValidado=NULL,totalNeto2=NULL,totalNeto=NULL,status8Flag=0,validacionEnganche=NULL ";
@@ -157,24 +155,23 @@ class Restore_model extends CI_Model {
             return true;
         }
     }
-
     public function RecarcalcularComisiones($idLote,$idCliente,$totalNeto2,$modificado_por,$registroComision){
-                /*---------REGRESAR COMISIONES EN CASO DE TENER---------- */
-                $queryComisiones = $this->db->query("SELECT SUM(pci.abono_neodata) pagado,pc.porcentaje_abono as porcentaje_abono FROM comisiones c
-                INNER JOIN pago_comision_ind pci ON pci.id_comision=c.id_comision
-                INNER JOIN pago_comision pc ON pc.id_lote=c.id_lote 
-                WHERE c.id_lote=$idLote AND c.idCliente=$idCliente
-                GROUP BY c.id_lote,pc.porcentaje_abono")->result_array();
-    
-            if(count($queryComisiones) > 0){
-                $sumaTotalComision= ($queryComisiones[0]['porcentaje_abono'] / 100) * $totalNeto2;
-                //SI HAY COMISIONES SE REGRESAN LAS COMISIONES
-                $this->db->query("UPDATE comisiones set comision_total=((porcentaje_decimal / 100) * $totalNeto2),estatus=1,modificado_por=$modificado_por WHERE id_lote = $idLote AND idCliente = $idCliente;");
-                    $pendiente = $sumaTotalComision - $queryComisiones[0]['pagado'];
-                    $this->db->query("UPDATE pago_comision SET 
-                                total_comision=$sumaTotalComision,abonado=".$queryComisiones[0]['pagado'].",bandera=$registroComision,modificado_por='$modificado_por',pendiente=$pendiente 
-                                WHERE id_lote=$idLote;");
-            }
-            /**-------FIN COMISIONES-------- */
+        /*---------REGRESAR COMISIONES EN CASO DE TENER---------- */
+        $queryComisiones = $this->db->query("SELECT SUM(pci.abono_neodata) pagado,pc.porcentaje_abono as porcentaje_abono FROM comisiones c
+        INNER JOIN pago_comision_ind pci ON pci.id_comision=c.id_comision
+        INNER JOIN pago_comision pc ON pc.id_lote=c.id_lote 
+        WHERE c.id_lote=$idLote AND c.idCliente=$idCliente
+        GROUP BY c.id_lote,pc.porcentaje_abono")->result_array();
+
+    if(count($queryComisiones) > 0){
+        $sumaTotalComision= ($queryComisiones[0]['porcentaje_abono'] / 100) * $totalNeto2;
+        //SI HAY COMISIONES SE REGRESAN LAS COMISIONES
+        $this->db->query("UPDATE comisiones set comision_total=((porcentaje_decimal / 100) * $totalNeto2),estatus=1,modificado_por=$modificado_por WHERE id_lote = $idLote AND idCliente = $idCliente;");
+            $pendiente = $sumaTotalComision - $queryComisiones[0]['pagado'];
+            $this->db->query("UPDATE pago_comision SET 
+                        total_comision=$sumaTotalComision,abonado=".$queryComisiones[0]['pagado'].",bandera=$registroComision,modificado_por='$modificado_por',pendiente=$pendiente 
+                        WHERE id_lote=$idLote;");
     }
+    /**-------FIN COMISIONES-------- */
+}
 }

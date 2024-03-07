@@ -234,7 +234,7 @@ function getRankings(general = false, typeRanking = null){
         dataType: 'json',
         cache: false,
         beforeSend: function() {
-            $('#spiner-loader').removeClass('hide');
+          $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
             
@@ -246,8 +246,8 @@ function getRankings(general = false, typeRanking = null){
             $('#spiner-loader').addClass('hide');
         },
         error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
@@ -744,8 +744,8 @@ function getDates(typeRanking){
     let beginDate, endDate;
     switch (typeRanking) {
         case 'general':
-            beginDate = null;
-            endDate = null;
+           beginDate = null;
+           endDate = null;
             break;
         case 'Apartados':
             beginDate = $('#beginDateApartados').val();
@@ -777,14 +777,14 @@ function getSedesRanking(){
         dataType: 'json',
         cache: false,
         beforeSend: function() {
-            $('#spiner-loader').removeClass('hide');
+          $('#spiner-loader').removeClass('hide');
         },
         success: function(data) {
             // response = data;
         },
         error: function() {
-            $('#spiner-loader').addClass('hide');
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+          $('#spiner-loader').addClass('hide');
+          alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
 }
@@ -867,24 +867,24 @@ function formatDate(date) {
 
 function getCacheOptions(){
     let obj = 
-        {
+       {
             seriesA: chartApartados.w.config.series,
             categoriesA: chartApartados.w.config.xaxis.categories,
-
+           
             seriesC: chartContratados.w.config.series,
             categoriesC: chartContratados.w.config.xaxis.categories,
-
+          
             seriesE: chartEnganche.w.config.series,
             categoriesE: chartEnganche.w.config.xaxis.categories,
-
+           
             seriesS: chartSinenganche.w.config.series,
             categoriesS: chartSinenganche.w.config.xaxis.categories,
-        }
+    }
     return obj;
 }
 
 function getCacheDates(){
-    let obj ={ 
+   let obj ={ 
         beginDateApartados : $('#beginDateApartados').val(),
         endDateApartados : $('#endDateApartados').val(),
 
@@ -917,24 +917,24 @@ function buildDatePikcer(dates){
         }
     });
 
-    $('#beginDateApartados').val(dates.beginDateApartados),
-    $('#endDateApartados').val(dates.endDateApartados),
+     $('#beginDateApartados').val(dates.beginDateApartados),
+     $('#endDateApartados').val(dates.endDateApartados),
 
-    $('#beginDateContratados').val(dates.beginDateContratados),
-    $('#endDateContratados').val(dates.endDateContratados),
+     $('#beginDateContratados').val(dates.beginDateContratados),
+     $('#endDateContratados').val(dates.endDateContratados),
 
-    $('#beginDateConEnganche').val(dates.beginDateConEnganche),
-    $('#endDateConEnganche').val(dates.endDateConEnganche),
+     $('#beginDateConEnganche').val(dates.beginDateConEnganche),
+     $('#endDateConEnganche').val(dates.endDateConEnganche),
 
-    $('#beginDateSinEnganche').val(dates.beginDateSinEnganche),
-    $('#endDateSinEnganche').val(dates.endDateSinEnganche)
+     $('#beginDateSinEnganche').val(dates.beginDateSinEnganche),
+     $('#endDateSinEnganche').val(dates.endDateSinEnganche)
 }
 
 function getSede(typeRanking){
     let sede;
     switch (typeRanking) {
         case 'general':
-            sede = 2;
+           sede = 2;
             break;
         case 'Apartados':
             sede = $('#sedes1').val();

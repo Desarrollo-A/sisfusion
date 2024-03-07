@@ -942,30 +942,6 @@ $(document).on("change", "#loteAOcupar", function(e){
     if (numberLotes > numeroMaximoLotes) {
         alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
             return;
-    }else{
-        let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
-        if(conteoRepeticiones>=2 && idProyectoCO==21){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones2 = contarRepeticiones('14', idProyectoConteo);
-        if(conteoRepeticiones2>=2 && idProyectoCO==14){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Montaña San Luis ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones3 = contarRepeticiones('22', idProyectoConteo);
-        if(conteoRepeticiones3>=2 && idProyectoCO==22){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Cañada León ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones4 = contarRepeticiones('25', idProyectoConteo);
-        if(conteoRepeticiones4>=2 && idProyectoCO==25){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de Privada Península ", "danger");
-            return;
-        }
     }
 
     if (statusPreproceso != 1) {
@@ -2061,13 +2037,3 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
     });
 
 });
-
-function contarRepeticiones(numero, array) {
-    // Usamos el método filter para crear un nuevo array con solo las ocurrencias del número
-    var ocurrencias = array.filter(function(elemento) {
-        return elemento === numero;
-    });
-
-    // Devolvemos la longitud del nuevo array, que representa la cantidad de repeticiones
-    return ocurrencias.length;
-}

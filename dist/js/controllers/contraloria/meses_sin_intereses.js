@@ -3,14 +3,14 @@ var tablaAut;
 var tablaMsiVisualizar;
 var dataUpdateGeneral=[];
 var flagTipoUploadMeses;
-let titulos_intxt = [];
-
 $(document).ready (function() {
-    flagTipoUploadMeses = 1; 
+
+    flagTipoUploadMeses = 1; //cada que se cargue la página se cargara la variable pordefecto
     let button_excel = '';
 
     if(id_rol_general==17 || id_rol_general==70){
-        button_excel = [{
+        button_excel = [
+            {
                 className: 'btn buttons-excel color-letter',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 extend: 'csvHtml5',
@@ -31,12 +31,15 @@ $(document).ready (function() {
                             }else if(columnIdx == 4){
                                 return '';
                             }
+
                         }
                     }
                 }
             }]
-    }else{
-        button_excel = [{
+    }
+    else{
+        button_excel = [
+            {
                 className: 'btn buttons-excel color-letter',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 extend: 'csvHtml5',
@@ -46,10 +49,22 @@ $(document).ready (function() {
                 exportOptions: {
                     format: {
                         header:  function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                            if(columnIdx == 0){
+                                return 'ID';
+                            }else if(columnIdx == 1){
+                                return 'COMENTARIO';
+                            }else if(columnIdx == 2){
+                                return 'ESTATUS AUT';
+                            }else if(columnIdx == 3){
+                                return 'MODIFICADO';
+                            }else if(columnIdx == 4){
+                                return '';
+                            }
+
                         }
                     }
                 }
+
             },
             {
                 className: 'btn btn-azure subir-msi',
@@ -106,6 +121,7 @@ $(document).ready (function() {
                             color_estatus='background: #c377121c;color: #ff6e00;';
                             break;
                     }
+
                     estatus_label = '<span class="label" style="'+color_estatus+'">'+data.estatus_autorizacion+'</span>';
                     return estatus_label;
                 }
@@ -130,6 +146,7 @@ $(document).ready (function() {
                             }
                             break;
                         case 17:
+
                             if (d.estatus_id == 2) {
                                 botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
@@ -138,6 +155,7 @@ $(document).ready (function() {
                             }
                             break;
                         case 70:
+
                             if (d.estatus_id == 2) {
                                 botones += botonesPermisoMSI(1, 0, 1, 1, d.id_autorizacion, d.estatus, d.lote);
                             }
@@ -177,6 +195,7 @@ $(document).ready (function() {
     $('input[type=radio][name=modoSubida]').change(function(e) {
         if (this.value == 1) {
             flagTipoUploadMeses=1;
+            //se debe mostrar el proyecto nomás
             $('#contenedor-condominio').addClass('hide');
             $('#filtro3').attr('onChange', 'changeCondominio()');
             $('#filtro3').val('default').selectpicker('deselectAll');
@@ -191,6 +210,7 @@ $(document).ready (function() {
         else if (this.value == 0) {
             flagTipoUploadMeses=0;
 
+            //se debe mostrar el proyecto y condominio nomás
             $('#contenedor-condominio').removeClass('hide');
             $('#filtro3').attr('onChange', 'changeLote()');
             $('#filtro3').val('default').selectpicker('deselectAll');
@@ -248,7 +268,7 @@ function validateExtension(extension, allowedExtensions) {
 
 $('#tabla_msni thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
-    if(i == 0){
+    if(i == 0){//para cambiar el nombre dinamicamente del header de ID
         let attributo_input;
         switch (i) {
             case 0:
@@ -272,7 +292,10 @@ $('#tabla_msni thead tr:eq(0) th').each( function (i) {
     }
     $( 'input', this ).on('keyup change', function () {
         if ($('#tabla_msni').DataTable().column(i).search() !== this.value ){
-            $('#tabla_msni').DataTable().column(i).search(this.value).draw();
+            $('#tabla_msni').DataTable()
+                .column(i)
+                .search(this.value)
+                .draw();
         }
     });
 });
@@ -282,6 +305,7 @@ function lettersOnly()
     var charCode = event.keyCode;
 
     if ((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123) || charCode == 8)
+
         return true;
     else
         return false;
@@ -312,17 +336,20 @@ $('#tabla_aut thead tr:eq(0) th').each( function (i) {
         }else{
             title = $(this)[0].textContent;
         }
-        // spanText = '<span type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '">'+title+'</span>';
-        titulos_intxt.push(title);
-        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '" onkeypress="'+attributo_input+'" /> ');
+        spanText = '<span class="textoshead hide"  placeholder="'+title+'">'+title+'</span>';
+
+        $(this).html('<input type="text" class="textoshead " placeholder="'+title+'" onkeypress="'+attributo_input+'" /> ' + spanText );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_aut').DataTable().column(i).search() !== this.value ){
-                $('#tabla_aut').DataTable().column(i).search(this.value).draw();
+                $('#tabla_aut').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
             }
         });
     }else{
         let title = $(this).text();
-        $(this).html('<span type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '">'+title+'</span>' );
+        $(this).html('<span class="textoshead" placeholder="'+title+'">'+title+'</span>' );
     }
 
 });
@@ -357,12 +384,14 @@ $(document).on("click", "#loadFile", function(e){
 $(document).on('click', '#sendFile', function(e) {
     var idResidencial = getInfo3[0];
     var idCondominio = getInfo3[1];
+
     var file_msni = $("#file_msni")[0].files[0];
     fileElm = document.getElementById("file_msni");
     file = fileElm.value;
 
     var validaFile = (file_msni == undefined) ? 0 : 1;
     var dataFile = new FormData();
+
     if (validaFile == 0 && (idCondominio=='' || idCondominio==0)) {
         if(validaFile == 0){
             alerts.showNotification('top', 'right', 'Debes seleccionar un archivo', 'danger');
@@ -416,9 +445,10 @@ $(document).on('click', '#sendFile', function(e) {
 function changeCondominio(){
     var idProyecto = $('#filtro3').val();
     var data = new Array();
-    var nombreProyecto = $('#filtro3 option:selected').attr('data-nombre')
+    var nombreProyecto = $('#filtro3 option:selected').attr('data-nombre');
+    //1: busqueda por proyecto
+    //2: busqueda por lote
     let typeBusqueda = 1;
-
     data["tb"] = 1;
     data["url"] = general_base_url+'Contraloria/getMsni/'+typeBusqueda+'/'+idProyecto;
     data["tituloArchivo"] = 'Plantilla del residencial-'+nombreProyecto;
@@ -447,6 +477,8 @@ function changeLote(){
 function loadLotes(){
     var idCondominio = $('#filtro4').val();
     var data = new Array();
+    //1: busqueda por proyecto
+    //2: busqueda por lote
     var nombreCondominio = $('#filtro4 option:selected').attr('data-nombre');
     let typeBusqueda = 2;
     data["tb"] = 2;
@@ -468,6 +500,7 @@ function loadTable(dataVariable){
                 columns: [0, 1, 2],
                 format: {
                     header:  function (d, columnIdx) {
+
                         if(dataVariable['tb']==1){
                             if(columnIdx == 0) {
                                 return 'ID';
@@ -485,6 +518,7 @@ function loadTable(dataVariable){
                                 return 'MSNI';
                             }
                         }
+
                     }
                 }
             },
@@ -532,6 +566,12 @@ jQuery(document).ready(function(){
 
 function botonesPermisoMSI(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus, lote){
     let botones = '';
+    /**Permisos - FUNCIÓN PARA OBTENER LOS BOTONES POR PERMISOS DE LA DATATABLE
+     * 1.- vista
+     * 2.- Editar
+     * 3.- Avanzar
+     * 4.- Rechazar
+     **/
     let autTipo = isNum(lote);
     let valor = (autTipo) ? 2 : 1;
     if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-accion="${valor}"  class="btn-data btn-sky btnVerMA" data-toggle="tooltip" data-placement="top" title="Ver"><i class="fas fa-eye"></i></button>`;   }
@@ -551,6 +591,7 @@ $(document).on('click', '.btnVerMA', function(e){
     let accion = $(this).attr('data-accion');
     let arr = id_aut.split(' ');
 
+
     if(accion == 1){
         let id = parseInt(id_aut);
         console.log('id', id);
@@ -558,6 +599,7 @@ $(document).on('click', '.btnVerMA', function(e){
         data['edit'] = 0;
         $('.anclaClass2').attr('placeholder', 'ID LOTE');
     }else if(accion == 2){
+        // let id = 'residencial';
         console.log('id_aut', id_aut);
 
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
@@ -565,6 +607,8 @@ $(document).on('click', '.btnVerMA', function(e){
         $('.anclaClass2').attr('placeholder', 'ID CONDOMINIO');
     }
 
+    // data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut; //ORIGINAL
+    // data['edit'] = 0;                                                //ORIGINAL
     loadTableVAUT(data);
     $('#cambiosGuardaMSI').removeClass('hide');
     $('#cambiosGuardaMSI').addClass('hide');
@@ -591,6 +635,7 @@ function loadTableVAUT(data){
                 columns: [0, 1, 2],
                 format: {
                     header:  function (d, columnIdx) {
+
                         if(data['tb']==1){
                             if(columnIdx == 0) {
                                 return 'ID';
@@ -608,10 +653,12 @@ function loadTableVAUT(data){
                                 return 'MSI';
                             }
                         }
+
                     }
                 }
             },
         }];
+
     }
 
     tablaMsiVisualizar = $('#tabla_msni_visualizacion').DataTable({
@@ -633,27 +680,31 @@ function loadTableVAUT(data){
         },
         destroy: true,
         ordering: false,
-        columns: [{
-            data: function(d){
-                return d.idLote+'<input class="d-none" type="text" name="id_lote" value="'+d.idLote+'"/>';
-            }
-        },
-        {
-            data: function(d){
-                return d.nombre+'<input class="d-none" type="text" name="nombre_lote" value="'+d.nombre+'"/>';
-            }
-        },
-        {
-            data: function(d){
-                let action_return = '';
-                if(id_rol_general==5 && data['edit'] == 1){
-                    action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
-                }else{
-                    action_return = d.msi;
+        columns: [
+            {
+                // data: 'idLote'
+                data: function(d){
+                    return d.idLote+'<input class="d-none" type="text" name="id_lote" value="'+d.idLote+'"/>';
                 }
-                return action_return;
+            },
+            {
+                data: function(d){
+                    return d.nombre+'<input class="d-none" type="text" name="nombre_lote" value="'+d.nombre+'"/>';
+                }
+            },
+            {
+                // data: 'msi'
+                data: function(d){
+                    let action_return = '';
+                    if(id_rol_general==5 && data['edit'] == 1){
+                        action_return = '<input type="text" class="form-control"  name="msi" onkeypress="return event.charCode >= 48 && event.charCode <= 57" value="'+d.msi+'">';
+                    }else{
+                        action_return = d.msi;
+                    }
+                    return action_return;
+                }
             }
-        }]
+        ]
     })
 }
 
@@ -678,7 +729,10 @@ $('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
         $(this).html('<input type="text" class="textoshead '+classTogle+'" '+attributo_input+' placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_msni_visualizacion').DataTable().column(i).search() !== this.value ){
-                $('#tabla_msni_visualizacion').DataTable().column(i).search(this.value).draw();
+                $('#tabla_msni_visualizacion').DataTable()
+                    .column(i)
+                    .search(this.value)
+                    .draw();
             }
         });
     }else{
@@ -691,9 +745,12 @@ $('#tabla_msni_visualizacion thead tr:eq(0) th').each( function (i) {
 $(document).on('click', '.btnHistorial', function () {
     let idAutorizacion = $(this).attr('data-idautorizacion');
     document.getElementById('historialAutAM').innerHTML = '';
+    //neuvo
     let id_aut = $(this).attr('data-idautorizacion');
     let accion = $(this).attr('data-accion');
+
     let arr = id_aut.split(' ');
+
 
     if(accion == 1){
         let url_action = general_base_url+'Contraloria/getHistorialAutorizacionMSI';
@@ -718,18 +775,18 @@ $(document).on('click', '.btnHistorial', function () {
                     bg_color = '#c0131318';
                 }
                 $('#historialAutAM').append(`
-                    <div class="d-flex mb-2">
-                        <div class="w-10 d-flex justify-center align-center">
-                            <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: `+bg_color+`">
-                                <i class="fas `+icono_show+` fs-2" style="color: `+color_icono+` "></i>
-                            </span>
-                        </div>
-                        <div class="w-90">
-                            <b>${data[i]['creadoPor']}</b>
-                            ${estatus == 1 && comentario=='' ? '' : '<p class="m-0" style="font-size:12px">'+comentario+'</p>' }
-                            <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(data[i]['fecha_movimiento'].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
-                        </div>
-                    </div>`)
+                        <div class="d-flex mb-2">
+                            <div class="w-10 d-flex justify-center align-center">
+                                <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: `+bg_color+`">
+                                    <i class="fas `+icono_show+` fs-2" style="color: `+color_icono+` "></i>
+                                </span>
+                            </div>
+                            <div class="w-90">
+                                <b>${data[i]['creadoPor']}</b>
+                                ${estatus == 1 && comentario=='' ? '' : '<p class="m-0" style="font-size:12px">'+comentario+'</p>' }
+                                <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(data[i]['fecha_movimiento'].split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
+                            </div>
+                        </div>`)
             }
         }, 'json');
     }
@@ -758,13 +815,15 @@ $(document).on('click', '.btnHistorial', function () {
 
 
                 contenido_acordeon += `
-                                <div class=" mt-1 p-1 d-flex align-center justify-between">
-                                    <h3 class="panel-title">
-                                        `+nombreCondominio+`
-                                    </h3>
+                                <div class="panel-heading">
+                                <h4 class="panel-title">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#historial`+idHistorial+`">
+                                    <h5>`+nombreCondominio+`</h5>
+                                </a>
+                                </h4>
                                 </div>
-                                    <a class="accordion-toggle testing" data-toggle="collapse" data-parent="#accordion" href="#historial`+idHistorial+`"><i class="animacion fas fa-chevron-down fa-lg"></i></a>
-                                <div id="historial`+idHistorial+`" class="panel-collapse collapse ">`;
+                                <div id="historial`+idHistorial+`" class="panel-collapse collapse ">
+`;
 
                 data_historial.map((element, index)=>{
                     if(element.estatus_autorizacion==1 || element.estatus_autorizacion==2 || element.estatus_autorizacion==3 || element.estatus_autorizacion==5){
@@ -777,24 +836,23 @@ $(document).on('click', '.btnHistorial', function () {
                         bg_color = '#c0131318';
                     }
                     contenido_acordeon += `
-                                
-                                <div class="panel-body">
-                                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <div class="col col-xs-12 col-md-2 col-lg-2"> 
-                                            <div class="w-50 d-flex justify-center align-center">
-                                                <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: `+bg_color+`">
-                                                    <i class="fas `+icono_show+` fs-2" style="color: `+color_icono+` "></i>
-                                                </span>
-                                            </div>
+                                   
+                                        <div class="panel-body">
+                                           <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <div class="col col-xs-12 col-md-3 col-lg-3"> 
+                                                    <div class="w-50 d-flex justify-center align-center">
+                                                        <span style="width:40px; height:40px; display:flex; justify-content:center; align-items:center; border-radius:27px; background-color: `+bg_color+`">
+                                                            <i class="fas `+icono_show+` fs-2" style="color: `+color_icono+` "></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-xs-12 col-md-7 col-lg-7"> 
+                                                    <b>${element.creadoPor}</b>
+                                                    ${element.estatus == 1 && element.comentario == '' ? '' : '<p class="m-0" style="font-size:12px">' + element.comentario + '</p>'}
+                                                    <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(element.fecha_movimiento.split('.')[0], 'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
+                                                </div>
+                                           </div>
                                         </div>
-                                        <div class="col col-xs-12 col-md-10 col-lg-10"> 
-                                            <b>${element.creadoPor}</b>
-                                            ${element.estatus == 1 && element.comentario == '' ? '' : '<p class="m-0" style="font-size:12px">' + element.comentario + '</p>'}
-                                            <p class="m-0" style="font-size:10px; line-height:12px; color:#999">${moment(element.fecha_movimiento.split('.')[0], 'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
                                 
                     `;
                 });
@@ -804,21 +862,25 @@ $(document).on('click', '.btnHistorial', function () {
                             </div>
                         </div>
                     </div>`;
+
             $('#historialAutAM').append(contenido_acordeon);
         }, 'json');
     }
+    //neuvo
+
+
+
+
+
+
     $("#modalHistorialAM").modal();
-});
-
-
-$(".testing").on( "click", function() {
-    console.log("perro");
 });
 
 
 $(document).on('submit', '#cambiosMSIF', function(e) {
     e.preventDefault();
     var params = tablaMsiVisualizar.$('input').serialize();
+
     let array = createArrayEvents(params);
     if (array.length === 0)
         alerts.showNotification("top", "right", "No hay ningún registro que modificar.", "warning");
@@ -855,6 +917,7 @@ $(document).on('submit', '#cambiosMSIF', function(e) {
             }
         });
     }
+
 });
 
 $(document).on('click', '.btnEditarMA', function(e){
@@ -862,18 +925,20 @@ $(document).on('click', '.btnEditarMA', function(e){
     let accion = $(this).attr('data-accion');
     let data = [];
     let arr = id_aut.split(' ');
+
     if(accion == 1){
         let id = parseInt(id_aut);
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id+'/1';
         data['edit'] = 1;
         dataUpdateGeneral[0] = id_aut;
-        dataUpdateGeneral[1] = 1;
+        dataUpdateGeneral[1] = 1;//tipo_update
     }else if(accion == 2){
         data["url"] = general_base_url+'Contraloria/getAutVis/'+id_aut+'/2';
         data['edit'] = 1;
         dataUpdateGeneral[0] = id_aut;
-        dataUpdateGeneral[1] = 2;
-    }                                    
+        dataUpdateGeneral[1] = 2;//tipo_update
+
+    }                                           //ORIGINAL
     $('#cambiosGuardaMSI').removeClass('hide');
     loadTableVAUT(data);
     $('#verAut').modal('show');
@@ -885,6 +950,7 @@ function createArrayEvents(params){
     let flagJump = 3;
     let tempArray= [];
     for(i=0; i<nameWithValue.length; i++){
+
         var objAttr = nameWithValue[i].split('=');
         if(flagJump == 3) {
             obj.ID = objAttr[1];
@@ -896,7 +962,9 @@ function createArrayEvents(params){
         flagJump = flagJump-1;
         if(flagJump == 0){
             flagJump = 3;
+            // if(objAttr[1]!=0){
             array.push(obj);
+            // }
             tempArray = [];
             obj = {};
         }
@@ -905,25 +973,28 @@ function createArrayEvents(params){
 }
 
 $(document).on('click', '.btnAvanzarAM', function(){
+    //$modo 1: LOTE 2:CONDOMINIO
     let id_aut = $(this).attr('data-idautorizacion');
-    document.getElementById('comentarioAvanceAM').value='';
+    document.getElementById('comentarioAvanceAM').value=''; //limpiar campo texto
     let arr = id_aut.split(' ');
     if(arr.length <= 1){
-        dataUpdateGeneral[2] = 1;
+        dataUpdateGeneral[2] = 1; //modo al cual de va avanzar
     }
     else if(arr.length > 1){
-        dataUpdateGeneral[2] = 2;
+        dataUpdateGeneral[2] = 2; //modo al cual de va avanzar
     }
 
     dataUpdateGeneral[0] = id_aut;
-    if(id_rol_general==17 || id_rol_general==70){
-        dataUpdateGeneral[1] = 5;
+    if(id_rol_general==17 || id_rol_general==70){//revisar si es contraloria
+        dataUpdateGeneral[1] = 5; //estatus de autorizacion a actualizar
         $('#tittleModalAM').text('¿Deseas autorizar los meses sin intereses?');
         $('#leyendaAdvAM').text('Al aceptar se aprobarán los MSI, y se actualizarán en el próximo corte de actualización');
+
     }else{
-        dataUpdateGeneral[1] = 2;
+        dataUpdateGeneral[1] = 2; //estatus de autorizacion a actualizar
         $('#tittleModalAM').text('Avanzar autorización');
     }
+
     $('#avanzarAutAM').modal('show');
 });
 
@@ -941,6 +1012,7 @@ $(document).on('click', '#enviarAutBtnAM', ()=>{
         data.append("comentario", comentario);
         data.append("estatus_autorizacion", estatus_autorizacion);
         data.append("modo", modo);
+
         $.ajax({
             type: 'POST',
             url: general_base_url+'Contraloria/actualizaAutMSI',
@@ -973,9 +1045,11 @@ $(document).on('click', '#enviarAutBtnAM', ()=>{
     }
 });
 
+/*Rechazar autorizacion CN*/
 $(document).on('click', '.btnRechazarAM', function(){
     let id_aut = $(this).attr('data-idautorizacion');
-    document.getElementById('comentarioAvanceAM').value=''; 
+    document.getElementById('comentarioAvanceAM').value=''; //limpiar campo texto
+
     let arr = id_aut.split(' ');
     if(arr.length <= 1){
         dataUpdateGeneral[2] = 1; //modo al cual se va a rechazar
@@ -983,13 +1057,16 @@ $(document).on('click', '.btnRechazarAM', function(){
     else if(arr.length > 1){
         dataUpdateGeneral[2] = 2; //modo al cual se va a rechazar
     }
+
     dataUpdateGeneral[0] = id_aut;
     dataUpdateGeneral[1] = 4; //estatus de autorizacion a actualizar
+
     $('#tittleModalAM').text('Rechazar autorización');
     $('#leyendaAdvAM').text('');
     $('#avanzarAutAM').modal('show');
 });
 
+//AA: Función para reajustar los headers de la datatable (casos en donde se nage entre tabs)
 var observer = window.ResizeObserver ? new ResizeObserver(function (entries) {
     entries.forEach(function (entry) {
         $(entry.target).DataTable().columns.adjust();

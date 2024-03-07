@@ -11,13 +11,13 @@ class PaquetesCorrida extends CI_Controller
       $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
       $this->load->helper(array('url', 'form'));
       $this->load->database('default');
-//      $this->programacion = $this->load->database('default', TRUE);
+      $this->programacion = $this->load->database('default', TRUE);
       $this->id_rol = $this->session->userdata('id_rol');
 
       $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
       $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-      $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-      $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+      $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+      $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu')); 
     }
 
 
@@ -258,19 +258,16 @@ class PaquetesCorrida extends CI_Controller
     }
     
     $row = $this->PaquetesCorrida_model->ValidarDescuento($id_condicion, $descuento)->result_array();
-    if (count($row) > 1){    
-      echo(json_encode(array("status" => 403, "mensaje" => "Porcentaje existente duplicado, no se puede agregar otro.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
+    if (count($row) > 0) {
+      echo(json_encode(array("status" => 403, "mensaje" => "El descuento ingresado, ya existe.", "color" => "warning"), JSON_UNESCAPED_UNICODE));
     } 
-    else{
+    else {
       $response = $this->PaquetesCorrida_model->SaveNewDescuento($id_condicion, $descuento);
       $lastRecords = $this->PaquetesCorrida_model->getDescuentosYCondiciones($id_condicion);
-      $mensaje = count($row) == 1 ? "Segundo descuento almacenado correctamente." : "Primer descuento almacenado correctamente." ;
       
-        echo(json_encode(array("status" => 402, "mensaje" => $mensaje, "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
-
+      echo(json_encode(array("status" => 402, "mensaje" => "Descuento almacenado correctamente", "detalle" => $lastRecords, "color" => "success"), JSON_UNESCAPED_UNICODE));
     }
   }
-   
 
   public function getPaquetes()
   {

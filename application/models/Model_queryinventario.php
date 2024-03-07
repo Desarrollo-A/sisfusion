@@ -1,4 +1,8 @@
-<?php class Model_queryinventario extends CI_Model {
+<?php 
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
+class Model_queryinventario extends CI_Model {
 
     public function __construct()
     {
@@ -67,16 +71,6 @@
 	}
 
 	/*ALL LOTES*/
-    public function getLoteToEdit($lote){
-        $this->db->select('idLote,nombreLote, total, sup');
-        $this->db->where('idLote', $lote);
-        //$this->db->where('lotes.status','1');
-        $query = $this->db->get('lotes');
-        if($query){
-            $query = $query->result_array();
-            return $query;
-        }
-    }
     public function getLotesDisCorridaAll($condominio) {
 
         // $this->db->select('idLote,nombreLote, total, sup');
@@ -102,14 +96,14 @@
             $statuslt = ' lo.status = 1 AND ';
 
 
-        }else if( $this->session->userdata('id_rol')==33) {
+        }else if( $this->session->userdata('id_rol')==33 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {
             $statusLoteVar = '2, 3';
             $idAsesor = "";
             $statuscl = '';
             $statuslt = 'lo.status IN (0,1,2,3) AND';
 
 
-        }else if($this->session->userdata('id_rol')==11 || $this->session->userdata('id_usuario') == 2755 || $this->session->userdata('id_rol') == 32 || $this->session->userdata('id_rol') == 17){
+        } else if($this->session->userdata('id_rol')==11 || $this->session->userdata('id_usuario') == 2755 || $this->session->userdata('id_rol') == 32){
             $statusLoteVar = '1, 2, 3';
             $idAsesor = "";
             $statuscl = '';
@@ -162,7 +156,7 @@
 
 		$this->db->select('idLote,nombreLote, total, sup, precio, porcentaje, enganche, condominios.msni, descSup1, descSup2, referencia, datosbancarios.banco, datosbancarios.cuenta, datosbancarios.empresa, datosbancarios.clabe');
 		$this->db->join('condominios', 'lotes.idCondominio = condominios.idCondominio', 'left');
-		$this->db->join('residenciales', 'condominios.idResidencial = residenciales.idResidencial', 'left');
+		$this->db->join('residencial', 'condominios.idResidencial = residencial.idResidencial', 'left');
 		$this->db->join('datosbancarios', 'condominios.idDBanco = datosbancarios.idDBanco', 'left');
 
 
@@ -369,7 +363,13 @@
 
 
 			$mail = $this->phpmailer_lib->load();
-	
+			// $mail->isSMTP();
+			// $mail->Host     = 'smtp.gmail.com';
+			// $mail->SMTPAuth = true;
+			// $mail->Username = 'noreply@ciudadmaderas.com';
+			// $mail->Password = 'Marzo2019@';
+			// $mail->SMTPSecure = 'ssl';
+			// $mail->Port     = 465;
 			$mail->setFrom('noreply@ciudadmaderas.com', 'Ciudad Maderas');
 			$mail->addAddress("programador.analista2@ciudadmaderas.com");
 			$mail->Subject = utf8_decode('Apartado desde la página Ciudad Maderas');
@@ -556,6 +556,18 @@
 		return $query->result_array();
 
 	}
+
+		/*ALL LOTES*/
+    public function getLoteToEdit($lote){
+        $this->db->select('idLote,nombreLote, total, sup');
+        $this->db->where('idLote', $lote);
+        //$this->db->where('lotes.status','1');
+        $query = $this->db->get('lotes');
+        if($query){
+            $query = $query->result_array();
+            return $query;
+        }
+    }
 
 
 }

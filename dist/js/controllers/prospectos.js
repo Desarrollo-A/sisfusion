@@ -82,7 +82,7 @@ function validateFile() {
     }else{
         exito_confirmar = false;
     }
-    
+
     if (!exito_confirmar) {
         alerts.showNotification('top', 'right', 'Debes ingresar los campos requeridos', 'danger');
     } else {

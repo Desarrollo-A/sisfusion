@@ -5,19 +5,23 @@ class MKT extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		if( !$this->session->userdata("id_usuario") )
-			redirect("Login", "refresh");
-		else
-			// $this->load->model('Model_Estadisticas');
+		
 		$this->load->model(array('Ventas_modelo', 'Statistics_model', 'registrolote_modelo', 'asesor/Asesor_model', 'Model_Estadisticas'));
-				$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
-				  //LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
-				  $this->load->library(array('session','form_validation', 'get_menu','permisos_sidebar'));
-
-        $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+		$this->load->model('asesor/Asesor_model'); //EN ESTE MODELO SE ENCUENTRAN LAS CONSULTAS DEL MENU
+		//LIBRERIA PARA LLAMAR OBTENER LAS CONSULTAS DE LAS  DEL MENÚ
+		$this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
+		$this->jwt_actions->authorize('2892', $_SERVER['HTTP_HOST']);
+		$this->validateSession();
+		$val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		$rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+	}
+
+	public function validateSession(){
+        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
+            redirect(base_url() . "index.php/login");
+        }
     }
 
 	public function index(){
@@ -36,6 +40,8 @@ class MKT extends CI_Controller {
 			$this->load->view('template/header');;
 			$this->load->view("clientes/vista_estadisticas_mkt", $datos);
 		} else if($this->session->userdata("inicio_sesion")["id_rol"] == '12'){
+			// $this->load->view("vista_estadisticas_mkt");]
+			//$this->load->view("v_ClientesMktd");
 			$this->load->view("v_Clientes_SM");
 		}
 
@@ -167,9 +173,6 @@ class MKT extends CI_Controller {
 
 	public function inventario()
 	{
-		ini_set('max_execution_time', 900);
-		set_time_limit(900);
-		ini_set('memory_limit','2048M');
 		$datos["registrosLoteContratacion"] = $this->registrolote_modelo->registroLote();
 		$datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
 		$this->load->view('template/header');
@@ -180,13 +183,9 @@ class MKT extends CI_Controller {
 
 	public function documentsByLote()
 	{
-        $datos = [
-            'residencial' => $this->registrolote_modelo->getResidencialQro(),
-            'tieneAcciones' => 0,
-            'tipoFiltro' => 2
-        ];
-        $this->load->view('template/header');
-        $this->load->view("documentacion/documentacion_view", $datos);
+		$datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+		$this->load->view('template/header');
+		$this->load->view("contratacion/documentsByLote", $datos);
 	}
 
 

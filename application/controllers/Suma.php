@@ -4,16 +4,16 @@ class Suma extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model', 'Usuarios_modelo', 'Pagos_model'));
+        $this->load->model(array('Suma_model', 'General_model', 'Comisiones_model', 'PagoInvoice_model', 'Usuarios_modelo'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
         // $this->jwt_actions->authorize_externals('3450', apache_request_headers()["Authorization"]);
-
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-        $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		$rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
+        
     }
     public function index() {}
     public function validateUserAccess() {
@@ -266,63 +266,63 @@ class Suma extends CI_Controller
         $hora = date('H');
         if( $numDia == '1' || ( $numDia == '2' && $hora <= '14' ) ){
             if($usuario != ''){
-                $usuarioid = $usuario;
+              $usuarioid = $usuario;
             }
             else{
-                $usuarioid =$this->session->userdata('id_usuario');
+              $usuarioid =$this->session->userdata('id_usuario');
             }
             $datos = explode(",",$this->input->post('pagos'));
             $resultado = array("resultado" => TRUE);
             if( (isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
-                $this->db->trans_begin();
-                $responsable = $this->session->userdata('id_usuario');
-                $resultado = TRUE;
-                if( isset( $_FILES ) && !empty($_FILES) ){
-                    $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
-                    $config['allowed_types'] = 'xml';
-                    $this->load->library('upload', $config);
-                    $resultado = $this->upload->do_upload("xmlfile");
-                    if( $resultado ){
-                        $xml_subido = $this->upload->data();
-                        $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-                        $total = (float)$this->input->post('total');
-                        $totalXml = (float)$datos_xml['total'];
-                        if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
-                            $nuevo_nombre = date("my")."_";
-                            $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-                            $nuevo_nombre .= date("Hms")."_";
-                            $nuevo_nombre .= rand(4, 100)."_";
-                            $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-                            rename( $xml_subido['full_path'], "./UPLOADS/XMLS_SUMA/".$nuevo_nombre );
-                            $datos_xml['nombre_xml'] = $nuevo_nombre;
-                            ini_set('max_execution_time', 0);
-                            for ($i=0; $i <count($datos) ; $i++) { 
-                                if(!empty($datos[$i])){
-                                    $id_com =  $datos[$i];
-                                    $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
-                                    $this->Suma_model->update_acepta_solicitante($id_com);
-                                    $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A DTO. SUMA')");
-                                }
-                            }
-                        } 
-                        else {
-                            $this->db->trans_rollback();
-                            echo json_encode(4);
-                            return;
-                        }
+              $this->db->trans_begin();
+              $responsable = $this->session->userdata('id_usuario');
+              $resultado = TRUE;
+              if( isset( $_FILES ) && !empty($_FILES) ){
+                $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
+                $config['allowed_types'] = 'xml';
+                $this->load->library('upload', $config);
+                $resultado = $this->upload->do_upload("xmlfile");
+                if( $resultado ){
+                  $xml_subido = $this->upload->data();
+                  $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+                  $total = (float)$this->input->post('total');
+                  $totalXml = (float)$datos_xml['total'];
+                  if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+                    $nuevo_nombre = date("my")."_";
+                    $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                    $nuevo_nombre .= date("Hms")."_";
+                    $nuevo_nombre .= rand(4, 100)."_";
+                    $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+                    rename( $xml_subido['full_path'], "./UPLOADS/XMLS_SUMA/".$nuevo_nombre );
+                    $datos_xml['nombre_xml'] = $nuevo_nombre;
+                    ini_set('max_execution_time', 0);
+                    for ($i=0; $i <count($datos) ; $i++) { 
+                      if(!empty($datos[$i])){
+                        $id_com =  $datos[$i];
+                        $this->Suma_model->insertar_factura($id_com, $datos_xml,$usuarioid, $week);
+                        $this->Suma_model->update_acepta_solicitante($id_com);
+                        $this->db->query("INSERT INTO historial_suma VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A DTO. SUMA')");
+                      }
                     }
-                    else {
-                        $resultado["mensaje"] = $this->upload->display_errors();
-                    }
-                }
-                if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
+                  } 
+                  else {
                     $this->db->trans_rollback();
-                    $resultado = array("resultado" => FALSE);
+                    echo json_encode(4);
+                    return;
+                  }
                 }
-                else{
-                    $this->db->trans_commit();
-                    $resultado = array("resultado" => TRUE);
+                else {
+                  $resultado["mensaje"] = $this->upload->display_errors();
                 }
+              }
+              if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
+                $this->db->trans_rollback();
+                $resultado = array("resultado" => FALSE);
+              }
+              else{
+                $this->db->trans_commit();
+                $resultado = array("resultado" => TRUE);
+              }
             }
             $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
             echo json_encode( $resultado );
@@ -359,27 +359,27 @@ class Suma extends CI_Controller
 
     public function revision_asimilados_intmex(){
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXasimilados_suma");
+        $this->load->view("ventas/revision_INTMEXasimilados_suma");  
     }
 
     public function revision_remanentes_intmex(){
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXremanente_suma");
+        $this->load->view("ventas/revision_INTMEXremanente_suma");  
     }
 
     public function revision_factura_intmex(){
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXfactura_suma");
+        $this->load->view("ventas/revision_INTMEXfactura_suma");  
     }
 
     public function revision_extranjeros_intmex(){
         $this->load->view('template/header');
-        $this->load->view("ventas/revision_INTMEXextranjero_suma");
+        $this->load->view("ventas/revision_INTMEXextranjero_suma");  
     }
 
     public function historial_comisiones(){
         $this->load->view('template/header');
-        $this->load->view("ventas/historial_comisiones_suma");
+        $this->load->view("ventas/historial_comisiones_suma");  
     }
 
     public function getRevisionIntMex(){
@@ -397,7 +397,7 @@ class Suma extends CI_Controller
     public function getFacturaRevision(){
         echo json_encode($this->Suma_model->getFacturaRevision()->result_array());
     }
-
+    
     public function getFacturaExtranjeroRevision(){
         echo json_encode($this->Suma_model->getFacturaExtranjeroRevision()->result_array());
     }
@@ -462,15 +462,15 @@ class Suma extends CI_Controller
 
     public function getDatosNuevasXSuma(){
     $datos =  $this->Suma_model->getDatosNuevasXSuma()->result_array();
-    echo json_encode( array( "data" => $datos));
+       echo json_encode( array( "data" => $datos));
     }
 
     public function lista_roles(){
-    echo json_encode($this->Suma_model->get_lista_roles()->result_array());
+      echo json_encode($this->Suma_model->get_lista_roles()->result_array());
     }
-    
+
     public function lista_usuarios($rol,$forma_pago){
-    echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
+      echo json_encode($this->Suma_model->get_lista_usuarios($rol, $forma_pago)->result_array());
     }
 
     public function carga_listado_factura(){
@@ -479,8 +479,8 @@ class Suma extends CI_Controller
 
     public function getDatosFactura($uuid, $id_res){
         if($uuid){
-            $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
-            if (!empty($consulta_sol)) {
+             $consulta_sol = $this->Suma_model->factura_comision($uuid, $id_res)->row();
+             if (!empty($consulta_sol)) {
                 $datos['datos_solicitud'] = $this->Suma_model->factura_comision($uuid, $id_res)->row(); 
             }
             else {
@@ -491,7 +491,7 @@ class Suma extends CI_Controller
             $datos['datos_solicitud'] = array('0', FALSE);
         }
         echo json_encode( $datos );
-    }
+      }
 
     public function GetDescripcionXML($xml){
         error_reporting(0);
@@ -503,12 +503,12 @@ class Suma extends CI_Controller
         $fecha = $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'];
         $folio = $xml -> xpath('//cfdi:Comprobante')[0]['Folio'];
         if($folio[0] == null){
-        $folio = '*';
+          $folio = '*';
         }
         $total = $xml -> xpath('//cfdi:Comprobante')[0]['Total'];
         $cadena = '';
         for($i=0;$i< $cuantos; $i++ ){
-        $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
+          $cadena = $cadena .' '. $xml -> xpath('//cfdi:Concepto')[$i]['Descripcion']; 
         }
         $arr[0]= $UUID[0];
         $arr[1]=  $fecha[0];
@@ -524,7 +524,7 @@ class Suma extends CI_Controller
             echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado."), JSON_UNESCAPED_UNICODE);
         else {
             if ($data->nombre_cliente=="")
-                echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
+                   echo json_encode(array("status" => 400, "message" => "Algún parámetro no tiene un valor especificado o no viene informado..."), JSON_UNESCAPED_UNICODE);
             else {
                 $updateData = array(
                     "id_cliente" => $data->id_cliente,
@@ -557,93 +557,93 @@ class Suma extends CI_Controller
     public function cargaxml2($id_user = ''){
         $user =   $usuarioid =$this->session->userdata('id_usuario');
         $this->load->model('Usuarios_modelo');
-        if(empty($id_user)){
-        $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+              if(empty($id_user)){
+          $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
         }
         else{
-        $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+          $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
         }
-        $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
-        if( isset( $_FILES ) && !empty($_FILES) ){
-            $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
-            $config['allowed_types'] = 'xml';
-            //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
-            $this->load->library('upload', $config);
-            if( $this->upload->do_upload("xmlfile") ){
-                $xml_subido = $this->upload->data()['full_path'];
-                $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
-                if( $datos_xml['version'] >= 3.3){
-                    $responsable_factura = $this->Suma_model->verificar_uuid( $datos_xml['uuidV'] );
-                    if($responsable_factura->num_rows()>=1){
-                        $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
-                    }
-                    else{
-                        if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
-                            if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
-                                $diasxmes = date('t');
-                                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
-                                $fecha2 = date('Y-m-').$diasxmes;
-                                if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
-                                    if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
-                                        if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
-                                            if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
-                                                if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
-                                                    if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
-                                                        if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
-                                                            $respuesta['respuesta'] = array( TRUE );
-                                                            $respuesta['datos_xml'] = $datos_xml;
-                                                        }
-                                                        else{
-                                                            $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
-                                                        }//FINAL DE UNIDAD
-                                                    }
-                                                    else{
-                                                        $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
-                                                    }//FINAL DE METODO DE PAGO
-                                                }
-                                                else{
-                                                    $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
-                                                }//FINAL DE USO DEL CFDI
-                                            }
-                                            else{
-                                                $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
-                                            }//FINAL DE FORMA DE PAGO
-                                        }
-                                        else{
-                                            $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
-                                        }//FINAL DE REGIMEN FISCAL
-                                    }
-                                    else{
-                                    $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
-                                    }//FINAL DE RFC VALIDO
-                                }
-                                else{
-                                $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
-                                }          
-                            }
-                            else{
-                                $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
-                            }
-                        }
-                        else{
-                            $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
-                        }
-                    }
+      $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+      if( isset( $_FILES ) && !empty($_FILES) ){
+          $config['upload_path'] = './UPLOADS/XMLS_SUMA/';
+          $config['allowed_types'] = 'xml';
+          //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+          $this->load->library('upload', $config);
+          if( $this->upload->do_upload("xmlfile") ){
+              $xml_subido = $this->upload->data()['full_path'];
+              $datos_xml = $this->Comisiones_model->leerxml( $xml_subido, TRUE );
+              if( $datos_xml['version'] >= 3.3){
+                $responsable_factura = $this->Suma_model->verificar_uuid( $datos_xml['uuidV'] );
+                if($responsable_factura->num_rows()>=1){
+                  $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
                 }
                 else{
-                    $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+                  if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+                  if($datos_xml['claveProdServ'][0]=='80131600' || ($user == 6578 && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+                    $diasxmes = date('t');
+                     $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+                     $fecha2 = date('Y-m-').$diasxmes;
+                    if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+                  if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+                  if($datos_xml['regimenFiscal'][0]=='612' || ($user == 6578 && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+                  if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+                  if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+                  if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+                  if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+                    $respuesta['respuesta'] = array( TRUE );
+                    $respuesta['datos_xml'] = $datos_xml;
+                  }
+                  else{
+                    $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+                  }//FINAL DE UNIDAD
+                  }
+                  else{
+                    $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+                  }//FINAL DE METODO DE PAGO
+                  }
+                  else{
+                    $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+                  }//FINAL DE USO DEL CFDI
+                  }
+                  else{
+                    $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+                  }//FINAL DE FORMA DE PAGO
+                  }
+                  else{
+                    $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+                  }//FINAL DE REGIMEN FISCAL
+                  }
+                  else{
+                  $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+                  }//FINAL DE RFC VALIDO
                 }
-                unlink( $xml_subido );
+                else{
+                  $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+                }          
+                  }
+                  else{
+                  $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+                }
+                }
+                else{
+                  $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+                }
+              }
+              }
+              else{
+                $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+              }
+              unlink( $xml_subido );
             }
             else{
-            $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+              $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
             }
+          }
+          echo json_encode( $respuesta );
         }
-        echo json_encode( $respuesta );
-    }
-    
-    public function SubirPDFExtranjero($id = '')
-    {
+
+        public function SubirPDFExtranjero($id = '')
+        {
         $id_usuario = $this->session->userdata('id_usuario');
         $nombre = $this->session->userdata('nombre');
         $opc = 0;
@@ -665,15 +665,4 @@ class Suma extends CI_Controller
         $response = $this->Usuarios_modelo->SaveCumplimiento($id_usuario, $newFileName, $opc, 'SUMA');
         echo json_encode($response);
     }
-
-    public function getDesarrolloSelectINTMEX(){
-
-        $value = $this->input->post("desarrollo");
-        if($value == ''){
-            echo json_encode($this->Pagos_model->getDesarrolloSelectINTMEX()->result_array());
-        }else{
-            echo json_encode($this->Pagos_model->getDesarrolloSelectINTMEX($value)->result_array());
-        }
-    }
-    
 }

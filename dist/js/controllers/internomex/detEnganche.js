@@ -187,7 +187,7 @@ function fillTable(index_proyecto, index_condominio) {
                     return `<span class='label lbl-violetBoots'>${ubicacion}</span>`;
                 }
             },
-            {
+                        {
                 data: function (d) {
                     let engancheContraloria = (d.engancheContraloria == null || d.engancheContraloria == "  ") ? 'SIN ESPECIFICAR' : d.engancheContraloria;
                     return `${engancheContraloria}`;
@@ -246,7 +246,7 @@ $(document).on('click', '.cop', function (e) {
     var id_enganche = $itself.attr('data-idEnganche');
     var id_cliente= $itself.attr('data-idCliente');
     id_lote_global = id_lote;
-    $('#verDetalles').modal('show');
+$('#verDetalles').modal('show');
     $.ajax({
         type: "POST",
         url: `${general_base_url}Internomex/catalogosEnganche`,
@@ -309,7 +309,7 @@ function generarInputCatalogos(dto) {
         if (catalogoOpciones.id_catalogo == 112) // MONEDA O DIVISA
             $("#cmbMonedaDiv").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
     });
-
+    
 
     if(dto.dtoEnganches.length>0){
         $("#cmbMonedaDiv").val(dto.dtoEnganches[0].monedaDivisa);
@@ -354,10 +354,10 @@ function agregarEngancheT(enganche) {
             $("agregarEnganche").removeClass("btn-primary");
             $("agregarEnganche").addClass("btn-blueMaderas");
         } else {
-            enganche.forEach((eng) => {
+                        enganche.forEach((eng) => {
                 cont_eng++;
-                var btnEliminar = `<button type="button" class="btn-data btn-blueMaderas ${cont_eng}" data-id="${cont_eng}" data-btnDetEnganche="${eng.id_det_enganche}"><i class="material-icons">edit</i></button>`;
-                var inputNombreInvitado = `<input type="hidden" id="idDetEnganche" name="idDetEnganche[]" value="${eng.id_det_enganche}" />`;
+                                var btnEliminar = `<button type="button" class="btn-data btn-blueMaderas ${cont_eng}" data-id="${cont_eng}" data-btnDetEnganche="${eng.id_det_enganche}"><i class="material-icons">edit</i></button>`;
+var inputNombreInvitado = `<input type="hidden" id="idDetEnganche" name="idDetEnganche[]" value="${eng.id_det_enganche}" />`;
                 //Con el metodo append un nuevo tr al tbody de la
                 //tabla #pila-carrito
                 var html_tr = '<tr id="tr-' + cont_eng + '">';
@@ -412,12 +412,12 @@ $(document).on("click", ".btn-blueMaderas", function (event) {
 
 function agregarNuevoEgnacheT() {
     var idLote = $("#txtIdLote").val();
-    var formaPago = $("#cmbFormaPago").val();
+        var formaPago = $("#cmbFormaPago").val();
     var instMonetario = $("#cmbInsMonetario").val();
     var monedaDiv = $("#cmbMonedaDiv").val();
     var fechaPago = $("#txtFechaPago").val();
     var cantEngancheT = (objEnganche.enganchesGuardados.length + objEnganche.nuevoEnganche.length);
-    $("#txtIdLote").attr("data-idDetEnganche", (cantEngancheT + 1));
+        $("#txtIdLote").attr("data-idDetEnganche", (cantEngancheT + 1));
     if (idLote !== '' && formaPago !== '' && instMonetario !== '' &&
         monedaDiv !== '' && fechaPago !== '') {
         agregarEngancheT([{ nuevoEnganche: { id_det_enganche: (cantEngancheT + 1), id_lote: idLote, forma_pago: formaPago, fecha_pago: fechaPago, instrumento_monetario: instMonetario, moneda_divisa: monedaDiv, id_det_enganche_temp: 0 } }]);
@@ -508,7 +508,7 @@ $(document).on("submit", "#formEnganches", function (e) {
         objEnganche.enganchesGuardados = [];
     else if (objEnganche.nuevoEnganche <= 0)
         objEnganche.nuevoEnganche = [];
-
+    
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Internomex/guardarEnganches`,
@@ -522,12 +522,12 @@ $(document).on("submit", "#formEnganches", function (e) {
         success:(dto)=>{
             if (dto != []) {
                 try {
-                    dto = JSON.parse(dto);
+dto = JSON.parse(dto);
                     console.log(dto);
                     if (dto.status == 1) {
                         cerrarModalDetEnganche();
                         alerts.showNotification("top", "right", dto.mensaje, "success");
-                        tabla_valores_cliente.ajax.reload();
+tabla_valores_cliente.ajax.reload();
                     }
                     else
                         alerts.showNotification("top", "right", dto.mensaje, "danger");
@@ -541,7 +541,7 @@ $(document).on("submit", "#formEnganches", function (e) {
                     }
                 }
             }
-            else
+            else 
                 alerts.showNotification("top", "right", "Oops, algo salió mal. inténtalo más tarde.", "danger");
             return dto;
         },

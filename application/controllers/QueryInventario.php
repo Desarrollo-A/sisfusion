@@ -5,14 +5,21 @@
 		parent::__construct();
 		header('Access-Control-Allow-Origin: *');
 		$this->load->model('model_queryinventario');
-        $this->load->model('asesor/Asesor_model');
-		$this->load->library(array('session','form_validation'));
+		$this->load->model('asesor/Asesor_model');
+		$this->load->library(array('session','form_validation', 'Jwt_actions'));
 		$this->load->library('phpmailer_lib');
 		$this->load->helper(array('url','form'));
 		$this->load->database('default');
 		date_default_timezone_set('America/Mexico_City');
-
+		$this->jwt_actions->authorize('8669', $_SERVER['HTTP_HOST']);
+		$this->validateSession();
 	}
+
+	public function validateSession(){
+        if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
+            redirect(base_url() . "index.php/login");
+        }
+    }
 
 	function getResidencialDisponible() {
 		$recidenciales = $this->model_queryinventario->getResidencialDis();
@@ -439,7 +446,36 @@
 		}
 	}
 
-    function getLotesToEdit()
+
+	function getLoteDisponibleA() {
+
+		$objDatos = json_decode(file_get_contents("php://input"));
+
+
+		$lotes = $this->model_queryinventario->getLotesDisCorridaAll($objDatos->condominio);
+	
+
+		if($lotes != null) {
+			echo json_encode($lotes);
+		} else {
+			echo json_encode(array());
+		}
+
+
+	}
+
+	function getinfoLoteDisponible() {
+		$objDatos = json_decode(file_get_contents("php://input"));
+		$data= $this->model_queryinventario->getLotesInfoCorrida($objDatos->lote);
+		if($data != null) {
+			echo json_encode($data);
+		} else {
+			echo json_encode(array());
+		}
+	}
+
+
+	function getLotesToEdit()
     {
         $objDatos = json_decode(file_get_contents("php://input"));
         /*print_r($objDatos);
@@ -479,7 +515,7 @@
                                 }
                             }
                     //        exit;
-
+                    
                     //        print_r($total_construccion);
                     //        exit;
         $total_nuevo = $total_construccion + $data[0]['total'];
@@ -502,33 +538,6 @@
             echo json_encode(array());
         }*/
     }
-
-	function getLoteDisponibleA() {
-
-		$objDatos = json_decode(file_get_contents("php://input"));
-
-
-		$lotes = $this->model_queryinventario->getLotesDisCorridaAll($objDatos->condominio);
-	
-
-		if($lotes != null) {
-			echo json_encode($lotes);
-		} else {
-			echo json_encode(array());
-		}
-
-
-	}
-
-	function getinfoLoteDisponible() {
-		$objDatos = json_decode(file_get_contents("php://input"));
-		$data= $this->model_queryinventario->getLotesInfoCorrida($objDatos->lote);
-		if($data != null) {
-			echo json_encode($data);
-		} else {
-			echo json_encode(array());
-		}
-	}
 
 
 
