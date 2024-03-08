@@ -178,7 +178,7 @@ $(document).ready(function () {
 
             if (
                 ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
+                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
                 ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
@@ -328,7 +328,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                         ) 
                         || (tipo_usuario == 1 && 
                             ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                            ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
+                            ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
                             ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                             ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
                             ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
@@ -645,7 +645,7 @@ $("#tabla_nuevas_comisiones").ready(function () {
                             ) 
                             || (tipo_usuario == 1 && 
                                 ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                                ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
+                                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
                                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
                                 ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
@@ -1635,7 +1635,7 @@ $(document).on("click", ".subir_factura_multiple", function() {
             ) 
             || (tipo_usuario == 1 && 
                 ((mes == 1 && dia == 8)  ||  (mes == 1 && dia == 9 && hora <= fin)) || // ENE 2024 VENTAS
-                ((mes == 2 && dia == 11)  ||  (mes == 2 && dia == 12 && hora <= fin)) || // FEB 2024 VENTAS
+                ((mes == 2 && dia == 12)  ||  (mes == 2 && dia == 13 && hora <= fin)) || // FEB 2024 VENTAS
                 ((mes == 3 && dia == 10)  ||  (mes == 3 && dia == 11 && hora <= fin)) || // MAR 2024 VENTAS
                 ((mes == 4 && dia == 7)  ||  (mes == 4 && dia == 8 && hora <= fin)) || // ABR 2024 VENTAS
                 ((mes == 5 && dia == 12)  ||  (mes == 5 && dia == 13 && hora <= fin)) || // MAY 2024 VENTAS
