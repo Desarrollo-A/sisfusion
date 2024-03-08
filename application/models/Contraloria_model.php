@@ -603,7 +603,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
 
-    public function getAllDsByLote($idLote) {
+    public function getAllDsByLote($typeTransaction, $fechaInicio, $fechaFinal) {
+        if ($typeTransaction == 1 || $typeTransaction == 3) {  // FIRST LOAD || SEARCH BY DATE RANGE
+            $filter = " AND ds.fechaCrate BETWEEN '$fechaInicio 00:00:00' AND '$fechaFinal 23:59:59'";
+        }
+
         $query = $this->db->query("	SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente, cl.id_sede, cl.nombre, cl.apellido_paterno,
 			cl.apellido_materno, cl.status, cl.idLote, fechaApartado, cl.fechaVencimiento, cl.usuario, cond.idCondominio, cl.fecha_creacion,
 			cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
@@ -613,7 +617,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
 			LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
 			LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
-			WHERE idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND cl.status = 1 AND cl.idLote = $idLote
+			WHERE idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND cl.status = 1 
+			$filter
 			ORDER BY cl.id_Cliente ASC");
         return $query->result_array();
     }

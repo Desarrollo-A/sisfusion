@@ -289,14 +289,20 @@ class Contraloria extends CI_Controller {
         }
     }
 
-    public function getAllDsByLote($idLote) {
-        $dato = $this->Contraloria_model->getAllDsByLote($idLote);
-        if($dato != null) {
-            echo json_encode($dato);
-        }
-        else
-        {
-            echo json_encode(array());
+    public function getAllDsByLote() {
+
+
+        if (isset($_POST) && !empty($_POST)) {
+            $fechaInicio = explode('/', $this->input->post("beginDate"));
+            $fechaFin = explode('/', $this->input->post("endDate"));
+            $typeTransaction = $this->input->post("typeTransaction");
+            $beginDate = date("Y-m-d", strtotime("{$fechaInicio[2]}-{$fechaInicio[1]}-{$fechaInicio[0]}"));
+            $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
+
+            $data['data'] =  $dato = $this->Contraloria_model->getAllDsByLote($typeTransaction, $beginDate, $endDate);
+            echo json_encode($data);
+        } else {
+            json_encode(array());
         }
     }
 
