@@ -239,7 +239,7 @@
                 'id_cliente' => (count($id_cliente)>=1 ) ? $id_cliente[0]['id_cliente'] : 0
             );
             $this->db->insert('historial_liberacion',$data_l);
-            $tventa = ($row['tipo_venta'] == 1) ? 1 : $datos['activeLP'] == 1 ? 1 : 0;
+            $tventa = ($row['tipo_venta'] == 1) ? 1 : ($datos['activeLP'] == 1 ? 1 : 0);
             if ($datos['activeLE'] == 0) {
                 $st = ($datos['activeLP'] == 1) ? 1 : 1;
                 $tv = ($datos['activeLP'] == 1) ? 1 : 0;

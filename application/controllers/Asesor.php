@@ -3375,7 +3375,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : (($dcv->personalidad_juridica==2) ? 29 : 0));
 
                         if(count($revisar_registro) == 0){
                             //validar la opcion de domicilio empresa
@@ -3465,7 +3465,7 @@ $pdf->Output(utf8_decode($namePDF), 'I');
                     if($arreglo_cliente['tipo_comprobanteD'] == 1){
                         //checar si ya se ha añadido el registro anteriormente
                         $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : ($dcv->personalidad_juridica==2) ? 29 : 0);
+                        $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente, ($dcv->personalidad_juridica==1) ? 26 : (($dcv->personalidad_juridica==2) ? 29 : 0));
 
                         if(count($revisar_registro) == 0){
                         //validar la opcion de domicilio empresa
