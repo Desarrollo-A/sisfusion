@@ -32,7 +32,7 @@ $(document).ready(function () {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte Comisiones Especiales',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -115,6 +115,18 @@ $(document).ready(function () {
                     labelEstatus =`<span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span>`;
                 }
                 return labelEstatus;
+            }},
+            { data: function (d) {
+                return formatMoney(d.Precio_Total);
+            }},
+            { data: function (d) {
+                return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_Pagadas);
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_pendientes);
             }},
             { data: function (d) {
                 var fechaSistema;

@@ -37,9 +37,8 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN CONCAT(l.nombreLote,'</b> <i>(',lf.nombreLotes,')</i><b>') ELSE CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') END) AS nombreLoteReub, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro, 
-
         (CASE WHEN ooam.total > 1 THEN 1 ELSE 0 END) ooam, 
-        (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) ventas
+        (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) ventas, l.totalNeto2 as Precio_Total, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -213,7 +212,7 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         lor.sup AS supAnt, l.sup AS supAct, 
-        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion
+        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion,l.totalNeto2 as Precio_Total, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -1103,7 +1102,8 @@ class Comisiones_model extends CI_Model {
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro, 
         abono_comisiones, pc.abonado,  (CASE WHEN ((abono_comisiones-pc.abonado) BETWEEN -1 AND 1) OR (abono_comisiones-pc.abonado) IS NULL THEN 0 ELSE (abono_comisiones-pc.abonado)END) pendiente, pcm.porcentaje_comisiones,
         (CASE WHEN ooam.total > 1 THEN 1 ELSE 0 END) ooam, 
-        (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) ventas
+        (CASE WHEN ventas.total > 1 THEN 1 ELSE 0 END) ventas, 
+        l.totalNeto2 as Precio_Total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -1126,7 +1126,7 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN plan_comision plr ON plr.id_plan = clr.plan_comision
         LEFT JOIN lotes lor ON lor.idLote = clr.idLote
         LEFT JOIN (SELECT idLotePvOrigen, nombreLotes FROM lotesFusion WHERE destino = 1 GROUP BY idLotePvOrigen, nombreLotes) AS lf ON lf.idLotePvOrigen = clr.idLote
-        LEFT JOIN (SELECT COUNT(*) liquidada, id_lote FROM cofisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
+        LEFT JOIN (SELECT COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
@@ -3025,7 +3025,7 @@ class Comisiones_model extends CI_Model {
         CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, 
         (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
         CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, 
-        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion 
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion, l.totalNeto2 as Precio_Total, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
