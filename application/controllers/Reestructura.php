@@ -2379,7 +2379,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : $lote['tipo_estatus_regreso'] == 2 ? 21 : 1,
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
