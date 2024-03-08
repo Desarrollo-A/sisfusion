@@ -17,7 +17,7 @@
 								<div class="card card-plain">
 									<div class="card-content">
 										<form method="post" id="form_rl">
-    										<div class="row">
+    										<div class="row" id="opcionesRow">
         										<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             										<div class="form-group overflow-hidden">
                 										<label class="control-label">OPCIÓN</label>
@@ -25,21 +25,21 @@
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row rowHide">
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 													<div class="form-group overflow-hidden">
 														<select name="representante" id="representante" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row rowHide">
 												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 													<div class="form-group overflow-hidden">
 														<select name="tipoVenta" id="tipoVenta" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
 													</div>
 												</div>
 											</div>
-											<div class="row">
+											<div class="row rowHide">
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
 														<select name="sedes" id="sedes" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
@@ -52,7 +52,7 @@
 												</div>
 											</div>
 											<!-- rep = Representante Legal CRUD-->
-											<div class="row">
+											<div class="row rowHide">
 												<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 													<div class="form-group overflow-hidden">
 														<select name="repData" id="repData" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" ></select>
@@ -68,7 +68,7 @@
 												</div>
 											</div>
 											
-											<div class="row">
+											<div class="row rowHide">
 												<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
 													<div class="form-group overflow-hidden">
 														<input class="form-control input-gral m-0" placeholder="Ingrese el nombre"  value=''  id="nombre_rep" type="text" name="nombre_rep">
@@ -85,7 +85,17 @@
 													</div>
 												</div>
 											</div>
-											<div class="row" id="rowArchivo"></div>
+											<div class="row rowHide" id="rowArchivo"></div>
+											<div class="row rowHide" id="rowComentario">
+												<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+													<!--<select name="comentarioStatus" id="comentarioStatus" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" title="SELECCIONA EL ESTATUS" data-size="7" data-live-search="true" data-container="body">
+														<option value="9">ESTATUS 9</option>
+														<option value="9">ESTATUS 15</option>
+													</select>-->
+													<textarea class="text-modal" rows="3" placeHolder="Ingrese el comentario." id="comentarioLote" name="comentarioLote"></textarea>
+												</div>
+											</div>
+											<div class="row rowHide"></div>
 										
 											<input type="hidden" name="idCliente" id="idCliente" value="">
                             				<input type="hidden" name="idLoteValue" id="idLoteValue" value="">
@@ -115,18 +125,18 @@
 								<h3 class="card-title center-align">Inventario de lotes</h3>
 								<div class="toolbar">
 									<div class="row">
-										<div class="col-6 col-sm-6 col-md-4 col-lg-4">
+										<div class="col-6 col-sm-4 col-md-4 col-lg-4">
 											<div class="form-group">
 												<label class="control-label label-gral">Lote</label>
 												<input id="inp_lote" name="inp_lote" class="form-control input-gral" type="number">
 											</div>
 										</div>
-										<div class="col-6 col-sm-6 col-md-4 col-lg-4 mt-3">
+										<div class="col-6 col-sm-4 col-md-4 col-lg-4 mt-3">
 											<div class="form-group">
 												<button type="button" class="btn-gral-data find_doc"> Buscar </button>
 											</div>
 										</div>
-										<div class="col-6 col-sm-6 col-md-4 col-lg-4 mt-3">
+										<div class="col-6 col-sm-4 col-md-4 col-lg-4 mt-3">
 											<div class="form-group">
 												<button class="btn-rounded btn-s-greenLight apply-action" id="moreOptions" name="moreOptions" title="Más opciones"><i class="fas fa-plus"></i></button>
 											</div>
@@ -178,6 +188,5 @@
 	<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 	<script src="<?= base_url() ?>dist/js/controllers/administracion/master_view.js"></script>
-	<!--<script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js?=1.1.2"></script>-->
 	<script src="<?= base_url() ?>dist/js/controllers/documentacion/documentacion.js"></script>
 </body>

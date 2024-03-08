@@ -550,21 +550,7 @@ class Administracion extends CI_Controller{
 		$this->load->view('administracion/master_view.php');
 	}
 	public function getDatosLotes($idLote) {
-		//$data = $this->Administracion_model->getDatosLotes($idLote);
 		$data = $this->Administracion_model->getDatosLotes($idLote);
-		/*$data = array_merge(
-			$query, 
-		//	$this->registrolote_modelo->getExpedienteAll($idLote)
-		);*/
-		//$documents = $this->registrolote_modelo->getExpedienteAll
-		if($data != null) {
-			echo json_encode($data);
-		}else {
-			json_encode(array());
-		}
-	}
-	public function getSedes() {
-		$data = $this->General_model->listSedes()->result_array();
 		if($data != null) {
 			echo json_encode($data);
 		}else {
@@ -594,6 +580,7 @@ class Administracion extends CI_Controller{
 		$materno = $data['materno_rep'];
 		$estatus =  $data['repEstatus'];
 		$idRepresentante = $data['repData'];
+		$comentario = $data['comentarioLote'];
 		//ACTUALIZAR RL
 		if($accion == 1 && !$this->anyEmpty($representante, $idCliente)){
 			$response = $this->General_model->updateRecord('clientes', array('rl' => $representante), 'id_cliente', $idCliente);
@@ -622,8 +609,12 @@ class Administracion extends CI_Controller{
 			echo json_encode(array("status"=> $response, "reload" => true));
 		}
 		else if($accion == 5 && !$this->anyEmpty($estatus, $idRepresentante)) {
-			$response = $this->Administracion_model->updateRepresentante('opcs_x_cats', array('id_catalogo' => 77, 'id_opcion' => $idRepresentante), array('estatus' => $estatus));
+			$response = $this->Administracion_model->updateMultiple('opcs_x_cats', array('id_catalogo' => 77, 'id_opcion' => $idRepresentante), array('estatus' => $estatus));
 			echo json_encode(array("status" => $response, "reload" => true));
+		}
+		else if($accion == 7 && !$this->anyEmpty($idLote, $comentario, $idCliente)) {
+			$response = $this->Administracion_model->updateMultiple('historial_lotes', array('idCliente' => $idCliente, 'idLote' => $idLote, 'idStatusContratacion' => 9), array('comentario' => $comentario));
+			echo json_encode(array("status" => $response, "tabla" => true));
 		}
 		else {
 			echo json_encode(array("status" => false));
@@ -636,20 +627,7 @@ class Administracion extends CI_Controller{
 		}else {
 			json_encode(array());
 		}
-	}
-
-	public function getDocumentos($idLote) {
-		$data = $_POST;
-		//echo "idLote:  ".$idLote;
-		//$response = $this->registrolote_modelo->getExpedienteAll($idLote);
-		$response = $this->registrolote_modelo->expedientesWS($idLote);
-		if($response != null) {
-			echo json_encode($response);
-		}else {
-			json_encode(array());
-		}
-	}
-	
+	}	
 }
 
 

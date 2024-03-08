@@ -227,7 +227,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, idarr = null){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888))
@@ -424,7 +424,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-idarr="${[d.apt_arr, d.cont_arr, d.canapar_arr, d.cancon_arr]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
                 },
             },
         ],
@@ -450,6 +450,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
                 "filters" : filters
+                ,"idarr": idarr
             },
         },
         initComplete: function() {
@@ -531,8 +532,12 @@ $(document).on('click', '.update-dataTable', function (e) {
     const subdirector = $(this).attr("data-su");
     const regional = $(this).attr("data-dr");
     const type = $(this).attr("data-type");
+    console.log("type: ", type);
     const render = $(this).data("render");
+    console.log("render: ",render);
     const transaction = $(this).data("transaction");
+    console.log("transaction: ", transaction);
+    const idarr = $(this).attr("data-idarr");
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
@@ -542,37 +547,37 @@ $(document).on('click', '.update-dataTable', function (e) {
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); 
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
@@ -582,11 +587,11 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if(idUser == 28 || idUser == 30 || idUser == 4888){
                 const table = "gerente";
-                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
-                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS COORDINADORES
             }
         } 
     }
