@@ -1444,6 +1444,7 @@ class Reestructura extends CI_Controller{
         $modificado = date('Y-m-d H:i:s');
         $documentosSinPasar = (is_null($docInfo)) ? [7, 8, '7', '8'] : [];
 
+        /*
         $ubicacionFolder = "static/documentos/contratacion-reubicacion/$loteNuevoInfo->nombreLote/";
 
         if (!file_exists($ubicacionFolder)) {
@@ -1452,6 +1453,7 @@ class Reestructura extends CI_Controller{
                 return false;
             }
         }
+        */
 
         // Ciclo para vaciar ramas del expediente anterior
         foreach ($docAnterior as $doc) {
@@ -1468,39 +1470,40 @@ class Reestructura extends CI_Controller{
                 $carpeta = '';
 
                 if ($doc['tipo_doc'] == 7) {
-                    $carpeta = 'CORRIDA/';
+                    //$carpeta = 'CORRIDA/';
                     $expedienteAnterior = $expReubicacion->corrida;
                 } else if ($doc['tipo_doc'] == 8) {
-                    $carpeta = 'CONTRATO/';
+                    //$carpeta = 'CONTRATO/';
                     $expedienteAnterior = $expReubicacion->contrato;
                 }
 
+                /*
                 if (!is_null($expedienteAnterior)) {
-                    $a = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior";
-                    $b =  $ubicacionFolder.$expedienteAnterior;
+                    //$a = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior";
+                    //$b =  $ubicacionFolder.$expedienteAnterior;
                     copy(
                         "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior",
                         $ubicacionFolder.$expedienteAnterior
                     );
                 }
+                */
             }
-                $documentacion[] = array(
-                    'movimiento' => $doc['movimiento'],
-                    'expediente' => $expedienteAnterior,
-                    'modificado' => $modificado,
-                    'status' => 1,
-                    'idCliente' => $idClienteNuevo,
-                    'idCondominio' => $loteNuevoInfo->idCondominio,
-                    'idLote' => $idLoteNuevo,
-                    'idUser' => NULL,
-                    'tipo_documento' => 0,
-                    'id_autorizacion' => 0,
-                    'tipo_doc' => $doc['tipo_doc'],
-                    'estatus_validacion' => 0
-                );
 
-
-
+            $documentacion[] = array(
+                'movimiento' => $doc['movimiento'],
+                'expediente' => $expedienteAnterior,
+                'modificado' => $modificado,
+                'status' => 1,
+                'idCliente' => $idClienteNuevo,
+                'idCondominio' => $loteNuevoInfo->idCondominio,
+                'idLote' => $idLoteNuevo,
+                'idUser' => NULL,
+                'tipo_documento' => 0,
+                'id_autorizacion' => 0,
+                'tipo_doc' => $doc['tipo_doc'],
+                'estatus_validacion' => 0,
+                'bucket' => 1,
+            );
         }
 
         // Crear las ramas extras que no se tengan en el expediente anterior
@@ -1523,7 +1526,8 @@ class Reestructura extends CI_Controller{
                 'tipo_documento' => 0,
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['id_opcion'],
-                'estatus_validacion' => 0
+                'estatus_validacion' => 0,
+                'bucket' => 1,
             );
         }
 
@@ -1540,6 +1544,7 @@ class Reestructura extends CI_Controller{
                                 if($elemento['origen'] == 1 && $banderainterna <= $dataLote['originales']
                                     && ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 35)){ //dentro del primer destino inserta las ramas para resicion de contrato dependiendo los lotes de origen
 
+                                        /*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
                                         if($doc['id_opcion'] == 33){
                                             $nombreLoteOrigen = $elemento['nombreLotes'];
                                             $nombreResLoteOrigen = $elemento['rescision'];
@@ -1548,6 +1553,7 @@ class Reestructura extends CI_Controller{
                                                 $ubicacionFolder.$nombreResLoteOrigen
                                             );
                                         }
+                                        */
 
                                         $documentacion[] = array(
                                             'movimiento' => $doc['nombre'],
@@ -1561,7 +1567,8 @@ class Reestructura extends CI_Controller{
                                             'tipo_documento' => 0,
                                             'id_autorizacion' => 0,
                                             'tipo_doc' => $doc['id_opcion'],
-                                            'estatus_validacion' => 0
+                                            'estatus_validacion' => 0,
+                                            'bucket' => 1,
                                         );
                                 }
                                 $banderainterna = $banderainterna + 1;
@@ -1569,10 +1576,14 @@ class Reestructura extends CI_Controller{
                             continue;//continua con las ramas de los demás lotes de propuesta y que no se les insertara nada de fusion
                                 $nombreLoteOrigen = $dataLote['nombreLotes'];
                                 $nombreResLoteOrigen = $dataLote['rescision'];
+                                
+                                /*
                                 copy(
                                     "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
                                     $ubicacionFolder.$expedienteAnterior
                                 );
+                                */
+
                                 $documentacion[] = array(
                                     'movimiento' => $doc['nombre'],
                                     'expediente' => $expedienteAnterior,
@@ -1585,7 +1596,8 @@ class Reestructura extends CI_Controller{
                                     'tipo_documento' => 0,
                                     'id_autorizacion' => 0,
                                     'tipo_doc' => $doc['id_opcion'],
-                                    'estatus_validacion' => 0
+                                    'estatus_validacion' => 0,
+                                    'bucket' => 1,
                                 );
                                 continue;
 
@@ -1595,10 +1607,12 @@ class Reestructura extends CI_Controller{
                 else{
                     $expRescision = $this->Reestructura_model->obtenerDatosClienteReubicacion($idLoteAnterior);
 
+                    /*
                     copy(
                         "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision",
                         $ubicacionFolder.$expRescision->rescision
                     );
+                    */
     
                     $documentacion[] = array(
                         'movimiento' => $doc['nombre'],
@@ -1612,7 +1626,8 @@ class Reestructura extends CI_Controller{
                         'tipo_documento' => 0,
                         'id_autorizacion' => 0,
                         'tipo_doc' => $doc['id_opcion'],
-                        'estatus_validacion' => 0
+                        'estatus_validacion' => 0,
+                        'bucket' => 1,
                     );
     
                     continue;
@@ -1642,7 +1657,8 @@ class Reestructura extends CI_Controller{
                     'tipo_documento' => 0,
                     'id_autorizacion' => 0,
                     'tipo_doc' => $doc['id_opcion'],
-                    'estatus_validacion' => 0
+                    'estatus_validacion' => 0,
+                    'bucket' => 1,
                 );
 
                 continue;
@@ -1669,7 +1685,8 @@ class Reestructura extends CI_Controller{
                         'tipo_documento' => 0,
                         'id_autorizacion' => 0,
                         'tipo_doc' => $doc['id_opcion'],
-                        'estatus_validacion' => 0
+                        'estatus_validacion' => 0,
+                        'bucket' => 1,
                     );
                 }
             }
@@ -2107,7 +2124,7 @@ class Reestructura extends CI_Controller{
                 }
             }
             if($flagAction == 2 && $id_rol == 15){
-                if($_POST['flagEditarRescision_'.$j] == 1){
+                if(isset($_FILES["archivoResicion_".$j])){
 
                     $pre = 'RESCISION';
 
@@ -2520,7 +2537,8 @@ class Reestructura extends CI_Controller{
 
                         $file = $_FILES["contratoFirmado".$i];
 
-                        $filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
+                        $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                        //$filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
 
                         $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento[$i]);
 
@@ -2568,7 +2586,8 @@ class Reestructura extends CI_Controller{
 
                     $file = $_FILES["contratoFirmado"];
 
-                    $filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
+                    $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                    //$filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
 
                     $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento);
 
@@ -2615,7 +2634,8 @@ class Reestructura extends CI_Controller{
 
                             $file = $_FILES["contratoFirmado".$i];
 
-                            $filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
+                            $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                            //$filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
 
                             $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento[$i]);
 
@@ -2648,7 +2668,8 @@ class Reestructura extends CI_Controller{
             else{
                 $file = $_FILES["contratoFirmado"];
 
-                $filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
+                $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                //$filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
 
                 $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento);
 

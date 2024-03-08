@@ -189,7 +189,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 let disabledBtn = flagProcesoContraloria == 0 ? 'disabled' : '';
                 contenidoHTML += '          <div class="col col-xs-12 col-sm-12 col-md-1     col-lg-1 mt-4">\n' +
                     '                           <div class="d-flex justify-center">' +
-                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-placement="top" title="'+tooltip+'" ' +
+                    '                               <button data-toggle="tooltip" '+disabledBtn+' data-bucket="'+ elemento.bucket +'" data-placement="top" title="'+tooltip+'" ' +
                     '                               class="btn-data btn-green-excel ver-archivo" data-idPxl="' + elemento.id_pxl + '" ' +
                     '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                     '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
@@ -266,7 +266,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
                 '                               data-nomArchivo="' + nombreArchivo + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0"><i class="fas fa-eye"></i></button>' +
                 '                               <button data-toggle="tooltip" data-placement="top" title="Descargar excel" ' +
-                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-idPxl="' + elemento.id_pxl + '" ' +
+                '                               class="btn-data btn-green-excel ver-archivo ' + hideButton + '" data-bucket="'+ elemento.bucket +'" data-idPxl="' + elemento.id_pxl + '" ' +
                 '                               data-nomArchivo="' + elemento.corrida + '" data-nombreOriginalLote="' + nombreLote + '"' +
                 '                               data-rescision="0" data-excel="1"><i class="fas fa-file-excel-o"></i></button>' +
                 '                           </div>' +
@@ -448,6 +448,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
             data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
             data.append('archivoEliminar' + index, archivosAborrar[index]);
         });
+        console.log(flagProceso, flagProcesoJuridicoGlobal, id_rol_general)
         if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
             for (let m = 0; m < idsArchivos.length; m++) {
                 data.append("archivoResicion_"+m, $(`#Resicion_${idsArchivos[m]}`)[0].files[0]);
@@ -535,6 +536,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
                     data.append("nombreLote" + index, $("#nombreLote" + idLotePR).val());
                     data.append('archivoEliminar' + index, archivosAborrar[index]);
                 });
+                console.log(flagProceso, flagProcesoJuridicoGlobal, id_rol_general)
                 if (flagProceso == 2 && flagProcesoJuridicoGlobal == 0 && id_rol_general == 15  ) {
                     for (let m = 0; m < idsArchivos.length; m++) {
                         data.append("archivoResicion_"+m, $(`#Resicion_${idsArchivos[m]}`)[0].files[0]);
@@ -670,7 +672,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
                 dataFusionDes.data.map((elemento, index)=>{
                     contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
                         '                            <h6 class="text-left"><b>Subir: </b>' + elemento.nombreLotes + '<span class="text-red">*</span></h6>\n' +
-                        '                            <div class="" id="selectFileSectionResicioncf'+index+'">\n' +
+                        '                            <div class="file-selector" id="selectFileSectionResicioncf'+index+'">\n' +
                         '                                <div class="file-gph">' +
                         '                                    <input type="hidden" name="idLoteo'+elemento.idLote+'" id="idLote'+elemento.idLote+'" value="'+elemento.idLote+'">   '+
                         '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado'+index+'">\n' +
@@ -687,7 +689,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
             document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';
             document.getElementById('dialoSection').classList.remove('modal-lg');
             contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">\n' +
-                '                            <div class="" id="selectFileSectionResicioncf">\n' +
+                '                            <div class="file-selector" id="selectFileSectionResicioncf">\n' +
                 '                                <div class="file-gph">\n' +
                 '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
                 '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
@@ -732,7 +734,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
 
                 if(estatusProceso==2){
                     contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-4 mt-4">\n' +
-                        '                            <div class="" id="selectFileSectionResicioncf'+index+'">\n' +
+                        '                            <div class="file-selector" id="selectFileSectionResicioncf'+index+'">\n' +
                         '                                <div class="file-gph">' +
                         '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado'+index+'">' +
                         '                                    <input class="file-name" id="contratoFirmado-name'+index+'" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
@@ -755,7 +757,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
 
             if(estatusProceso==2 && (id_rol_general==17 || id_rol_general == 70)){
                 contenidoHTMLCF += ' <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2 mt-4">\n' +
-                    '                            <div class="" id="selectFileSectionResicioncf">\n' +
+                    '                            <div class="file-selector" id="selectFileSectionResicioncf">\n' +
                     '                                <div class="file-gph">\n' +
                     '                                    <input class="d-none" type="file" required accept="application/pdf" id="contratoFirmado">\n' +
                     '                                    <input class="file-name" id="contratoFirmado-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
