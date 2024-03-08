@@ -1105,68 +1105,70 @@ if( isset( $_FILES ) && !empty($_FILES) ){
     echo json_encode( $respuesta );
   }
 
-  public function guardar_solicitud2($usuario = ''){
-    $usuario = $this->session->userdata('id_usuario');
-    $validar_sede =$this->session->userdata('id_sede');
-    $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
-    $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 2 ELSE 1 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
-    $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+  //  13511
+  // public function guardar_solicitud2($usuario = ''){
+  //   $usuario = $this->session->userdata('id_usuario');
+  //   $validar_sede =$this->session->userdata('id_sede');
+  //   $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
 
-    $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
-    $fecha_actual = strtotime($obtenerFechaSql);
-    $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
-    $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+  //   $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 2 ELSE 1 END) tipo FROM usuarios WHERE id_usuario IN (".$usuario.")")->result_array();
+  //   $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+
+  //   $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
+  //   $fecha_actual = strtotime($obtenerFechaSql);
+  //   $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+  //   $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
     
-    if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
-      if($usuario != ''){
-        $usuarioid = $usuario;
-      }else{
-        $usuarioid = $this->session->userdata('id_usuario');
-      }
+  //   if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
+  //     if($usuario != ''){
+  //       $usuarioid = $usuario;
+  //     }else{
+  //       $usuarioid = $this->session->userdata('id_usuario');
+  //     }
 
-      $datos = explode(",",$this->input->post('pagos'));
-      $resultado = array("resultado" => TRUE);
-      if((isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
-        $this->db->trans_begin();
-        $resultado = TRUE;
+  //     $datos = explode(",",$this->input->post('pagos'));
+  //     $resultado = array("resultado" => TRUE);
+  //     if((isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
+  //       $this->db->trans_begin();
+  //       $resultado = TRUE;
         
-        if( isset( $_FILES ) && !empty($_FILES) ){
-          $config['upload_path'] = './UPLOADS/XMLS/';
-          $config['allowed_types'] = 'xml';
-          $this->load->library('upload', $config);
-          $resultado = $this->upload->do_upload("xmlfile");
+  //       if( isset( $_FILES ) && !empty($_FILES) ){
+  //         $config['upload_path'] = './UPLOADS/XMLS/';
+  //         $config['allowed_types'] = 'xml';
+  //         $this->load->library('upload', $config);
+  //         $resultado = $this->upload->do_upload("xmlfile");
           
-          if( $resultado ){
-            $xml_subido = $this->upload->data();
-            $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
-            $total = (float)$this->input->post('total');
-            $totalXml = (float)$datos_xml['total'];
+  //         if( $resultado ){
+  //           $xml_subido = $this->upload->data();
+  //           $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+  //           $total = (float)$this->input->post('total');
+  //           $totalXml = (float)$datos_xml['total'];
             
-            if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
-              $nuevo_nombre = date("my")."_";
-              $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
-              $nuevo_nombre .= date("Hms")."_";
-              $nuevo_nombre .= rand(4, 100)."_";
-              $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-              rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
-              $datos_xml['nombre_xml'] = $nuevo_nombre;
-              $id_com = $id_comision;
-              $this->Comisiones_model->insertar_factura($id_com, $datos_xml);
-            }else{
-              $resultado["mensaje"] = $this->upload->display_errors();
-            }
-          }
-          if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
-                $this->db->trans_rollback();
-                $resultado = array("resultado" => FALSE);
-            }else{
-                $this->db->trans_commit();
-                $resultado = array("resultado" => TRUE);
-            }
-        }
-        echo json_encode( $resultado );
-    }
+  //           if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+  //             $nuevo_nombre = date("my")."_";
+  //             $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+  //             $nuevo_nombre .= date("Hms")."_";
+  //             $nuevo_nombre .= rand(4, 100)."_";
+  //             $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+  //             rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+  //             $datos_xml['nombre_xml'] = $nuevo_nombre;
+  //             $id_com = $id_comision;
+  //             $this->Comisiones_model->insertar_factura($id_com, $datos_xml);
+  //           }else{
+  //             $resultado["mensaje"] = $this->upload->display_errors();
+  //           }
+  //         }
+  //         if ( $resultado === FALSE || $this->db->trans_status() === FALSE){
+  //               $this->db->trans_rollback();
+  //               $resultado = array("resultado" => FALSE);
+  //           }else{
+  //               $this->db->trans_commit();
+  //               $resultado = array("resultado" => TRUE);
+  //           }
+  //       }
+  //       echo json_encode( $resultado );
+  //   }
 
 
     public function guardar_solicitud2($usuario = ''){
@@ -5695,5 +5697,16 @@ public function descuentosCapitalHumano(){
     $usuario = $this->input->post('usuario');
     echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
   }
+
+
+  // Vistas empezar a organizar
+
+    public function Asistentes_Gerencia()
+    {
+        $this->load->view('template/header');
+        $this->load->view("comisiones/reportes/asistente_gerencia_view");
+    }
+
+  // 
 
 }
