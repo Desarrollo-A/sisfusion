@@ -9,7 +9,7 @@ class Comisiones_model extends CI_Model {
 
     public function getDataActivasPago($val = '') {
         $this->db->query("SET LANGUAGE Español;");
-        ini_set('memory_limit', -1);
+        ini_set('memory_limit', -1);    
 
         $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote,
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta,
@@ -5462,28 +5462,33 @@ public function CancelarDescuento($id_pago,$motivo)
 
     public function getVentasCanceladas()
     {
-        $query = $this->db->query("(SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, re.nombreResidencial, l.referencia
+        $query = $this->db->query("SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END)  AS plan_descripcion, 0 AS idCliente, re.nombreResidencial, l.referencia,
+        l.totalNeto2 as Precio_Total, pc.porcentaje_abono as pp, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM comisiones c
         LEFT JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         JOIN lotes l ON l.idLote = c.id_lote
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera IN (1, 5, 55, 110, 150)
         INNER JOIN condominios cd on cd.idCondominio=l.idCondominio
         INNER JOIN residenciales re on re.idResidencial=cd.idResidencial
         WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NULL
-        GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente
+        GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente, l.totalNeto2,pc.porcentaje_abono,pc.ultimo_pago,pc.pendiente
         UNION
-        SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, c.idCliente, re.nombreResidencial,l.referencia
+        SELECT l.idLote, l.nombreLote, SUM(c.comision_total) AS comision_total, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, c.idCliente, re.nombreResidencial,l.referencia, l.totalNeto2 as Precio_Total, pc.porcentaje_abono as pp, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
         FROM comisiones c
         JOIN clientes cl ON cl.id_cliente = c.idCliente
         LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
         JOIN lotes l ON l.idLote = c.id_lote
+        LEFT JOIN pago_comision pc ON pc.id_lote = l.idLote AND pc.bandera IN (1, 5, 55, 110, 150)
         INNER JOIN condominios cd on cd.idCondominio=l.idCondominio
         INNER JOIN residenciales re on re.idResidencial= cd.idResidencial
         WHERE l.status = 1 AND c.estatus IN (8) AND c.id_usuario NOT IN (0) AND c.idCliente IS NOT NULL
-        GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente)
-        ORDER BY l.idLote ASC");
+        GROUP BY l.idLote, l.nombreLote, cl.nombre, cl.apellido_paterno, cl.apellido_materno, cl.plan_comision, pl.descripcion,  re.nombreResidencial,l.referencia, c.idCliente, l.totalNeto2, pc.porcentaje_abono,pc.ultimo_pago,pc.pendiente
+        ORDER BY l.idLote ASC;
+        ");
         return $query->result_array();
     }
+    
 
     public function getVentCanceladaSuma($idLote, $idCliente)
     {
