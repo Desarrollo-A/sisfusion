@@ -1401,7 +1401,8 @@
 		CASE 
 		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 7092) THEN 3
 		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 3) THEN 7092
-		ELSE 0 END id_regional_2
+		ELSE 0 END id_regional_2,
+        us.id_sede
         FROM usuarios us
         LEFT JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
