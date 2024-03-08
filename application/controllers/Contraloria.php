@@ -834,6 +834,15 @@ class Contraloria extends CI_Controller {
 //        if (intval($infoCliente->id_gerente) === 113) {
 //            array_push($correosEntregar, 'asistente.cdmx19@ciudadmaderas.com');
 //        }
+        // SEGUIMIENTO EN TICKET #71973
+        /*if (intval($infoCliente->id_gerente) === 455) // ASISTENTE ARIADNA RECIBE NOTIFICACIÓN TAMBIÉN DE EDSON PADILLA
+        array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL3@CIUDADMADERAS.COM');
+        if (intval($infoCliente->id_gerente) === 5604) // ASISTENTE MARIA FERNANDA RECIBE NOTIFICACIÓN TAMBIÉN DE EDGAR GONZÁLEZ
+        array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL2@CIUDADMADERAS.COM');
+        if (intval($infoCliente->id_gerente) === 12688) // ASISTENTE ALMA GALICIA RECIBE NOTIFICACIÓN TAMBIÉN DE NOEMI MARTIN
+        array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL1@CIUDADMADERAS.COM');
+        if (intval($infoCliente->id_gerente) === 471) // ASISTENTE DANYA YOALY RECIBE NOTIFICACIÓN TAMBIÉN DE ALEJANDRA TORRE BLANCA
+        array_push($correosEntregar, 'ASISTENTE.GERENCIAGDL4@CIUDADMADERAS.COM');*/
 
         $infoLote = (array)$this->Contraloria_model->getNameLote($idLote);
 
@@ -1040,14 +1049,14 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCliente"] = $idCliente;
 
         $cliente = $this->Reestructura_model->obtenerClientePorId($idCliente);
-        if (in_array($cliente->proceso, [2, 4, 3, 5, 6])) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
+        if ($cliente->proceso > 1) { // SON REESTRUCTURA O REUBICACIONES: HARÁN EL SALTO DE ETATUS
             $arreglo["idStatusContratacion"] = 8;
             $arreglo["idMovimiento"] = 38;
             $arreglo["status8Flag"] = 1;
         }
 
         $assigned_location = null;
-        if ($cliente->proceso !== 2 && $cliente->proceso !== 4 && $cliente->proceso !== 3 && $cliente->proceso !== 5 && $cliente->proceso !== 6) {
+        if ($cliente->proceso <= 1) {
         $ub_jur = $this->Contraloria_model->val_ub($idLote);
         $id_sede_jur = '';
         $assigned_location = $ub_jur[0]['ubicacion'];
@@ -1135,7 +1144,7 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
     }
 
-    if (!in_array($cliente->proceso, [2,4,5,6])) {
+    if ($cliente->proceso <= 1) {
         $data['message'] = 'OK';
         echo json_encode($data);
         return;
@@ -1184,6 +1193,7 @@ class Contraloria extends CI_Controller {
     }
 
     $numContrato = $this->generarNumContrato($idLote);
+
 
     if (!$this->General_model->updateRecord('lotes', ['status8Flag' => 1, 'numContrato' => $numContrato], 'idLote', $idLote)) {
         $data['message'] = 'ERROR';
@@ -1685,7 +1695,6 @@ class Contraloria extends CI_Controller {
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-                //if (TRUE) {
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
                         "propiedadRelacionada" => $idLote,
@@ -2030,68 +2039,70 @@ class Contraloria extends CI_Controller {
     }
 
     public function editar_registro_lote_contraloria_proceceso15() {
-        $idLote = $this->input->post('idLote');
-        $idCondominio = $this->input->post('idCondominio');
-        $nombreLote = $this->input->post('nombreLote');
-        $idCliente = $this->input->post('idCliente');
-        $comentario  =$this->input->post('comentario');
-        $modificado = date('Y-m-d H:i:s');
-        $fechaVenc = $this->input->post('fechaVenc');
+		$idLote = $this->input->post('idLote');
+		$idCondominio = $this->input->post('idCondominio');
+		$nombreLote = $this->input->post('nombreLote');
+		$idCliente = $this->input->post('idCliente');
+		$comentario = $this->input->post('comentario');
+		$modificado = date('Y-m-d H:i:s');
+		$fechaVenc = $this->input->post('fechaVenc');
+		$idResidencial = $this->input->post('idResidencial');
 
-        $arreglo=array();
-        $arreglo["idStatusContratacion"] = 15;
-        $arreglo["idMovimiento"] = 45;
-        $arreglo["comentario"] = $comentario;
-        $arreglo["idStatusLote"] = 2;
-        $arreglo["usuario"] = $this->session->userdata('id_usuario');
-        $arreglo["perfil"] = $this->session->userdata('id_rol');
-        $arreglo["modificado"] = date("Y-m-d H:i:s");
-        $arreglo["fechaVenc"] = $modificado;
+		$arreglo=array();
+		$arreglo["idStatusContratacion"] = 15;
+		$arreglo["idMovimiento"] = 45;
+		$arreglo["comentario"] = $comentario;
+		$arreglo["idStatusLote"] = 2;
+		$arreglo["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo["perfil"] = $this->session->userdata('id_rol');
+		$arreglo["modificado"] = date("Y-m-d H:i:s");
+		$arreglo["fechaVenc"] = $modificado;
 
-
-        $arreglo2=array();
-        $arreglo2["idStatusContratacion"] = 15;
-        $arreglo2["idMovimiento"] = 45;
-        $arreglo2["nombreLote"] = $nombreLote;
-        $arreglo2["comentario"] = $comentario;
-        $arreglo2["usuario"] = $this->session->userdata('id_usuario');
-        $arreglo2["perfil"] = $this->session->userdata('id_rol');
-        $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $fechaVenc;
-        $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $idCondominio;
-        $arreglo2["idCliente"] = $idCliente;
-
-
-        $validate = $this->Contraloria_model->validateSt15($idLote);
-        if ($validate == 1) {
-            if ($this->Contraloria_model->updateSt($idLote,$arreglo,$arreglo2) == TRUE) {
-                $insertToData = array(
-                    "movimiento" => 'CONTRATO FIRMADO',
-                    "expediente" => '',
-                    "modificado" => date('Y-m-d H:i:s'),
-                    "status" => 1,
-                    "idCliente" => $idCliente,
-                    "idCondominio" => $idCondominio,
-                    "idLote" => $idLote,
-                    "idUser" => $this->session->userdata('id_usuario'),
-                    "tipo_documento" => 0,
-                    "id_autorizacion" => 0,
-                    "tipo_doc" => 30,
-                    "estatus_validacion" =>0
-                );
-                $this->General_model->addRecord('historial_documento', $insertToData);
-                $data['message'] = 'OK';
-                echo json_encode($data);
-            } else {
-                $data['message'] = 'ERROR';
-                echo json_encode($data);
-            }
-        } else {
-            $data['message'] = 'FALSE';
-            echo json_encode($data);
-        }
-    }
+		$arreglo2=array();
+		$arreglo2["idStatusContratacion"] = 15;
+		$arreglo2["idMovimiento"] = 45;
+		$arreglo2["nombreLote"] = $nombreLote;
+		$arreglo2["comentario"] = $comentario;
+		$arreglo2["usuario"] = $this->session->userdata('id_usuario');
+		$arreglo2["perfil"] = $this->session->userdata('id_rol');
+		$arreglo2["modificado"] = date("Y-m-d H:i:s");
+		$arreglo2["fechaVenc"] = $fechaVenc;
+		$arreglo2["idLote"] = $idLote;  
+		$arreglo2["idCondominio"] = $idCondominio;          
+		$arreglo2["idCliente"] = $idCliente;   
+		
+		$validate = $this->Contraloria_model->validateSt15($idLote);
+		if($validate == 1){
+			if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) { 
+				$validacionContratoFirmado = $this->Contraloria_model->getContratoFirmado($idLote);
+				if (COUNT($validacionContratoFirmado) == 0) { // NO EXISTE LA RAMA ACTIVA DE CONTRATO FIRMADO, SE LELVA A CABO LA INSERCIÓN
+					$insertToData = array(
+						"movimiento" => 'CONTRATO FIRMADO',
+						"expediente" => '',
+						"modificado" => date('Y-m-d H:i:s'),
+						"status" => 1,
+						"idCliente" => $idCliente,
+						"idCondominio" => $idCondominio,
+						"idLote" => $idLote,
+						"idUser" => $this->session->userdata('id_usuario'),
+						"tipo_documento" => 0,
+						"id_autorizacion" => 0,
+						"tipo_doc" => 30,
+						"estatus_validacion" =>0
+					);
+					$this->General_model->addRecord('historial_documento', $insertToData);
+				}
+				$data['message'] = 'OK';
+				echo json_encode($data);
+			} else {
+				$data['message'] = 'ERROR';
+				echo json_encode($data);
+			}
+		} else {
+			$data['message'] = 'FALSE';
+			echo json_encode($data);
+		}
+	}
 
     public function editar_registro_loteRechazo_contraloria_proceceso15() {
         $idLote=$this->input->post('idLote');
@@ -2819,6 +2830,7 @@ class Contraloria extends CI_Controller {
         $estatus_autorizacion = $this->input->post('estatus_autorizacion');
         $modo = $this->input->post('modo');
 
+
         $actualizar = array();
         $insert_historial = array();
         $update_lotes = array();
@@ -2829,7 +2841,8 @@ class Contraloria extends CI_Controller {
                 "estatus_autorizacion" => $estatus_autorizacion,
                 "comentario" => $comentario,
                 "fecha_modificacion" => $fecha_insercion,
-                "modificado_por" => $this->session->userdata('id_usuario')
+                "modificado_por" => $this->session->userdata('id_usuario'),
+                "modoActualizacion" => $modo
             );
 
             $data_historial = array(
@@ -2839,7 +2852,8 @@ class Contraloria extends CI_Controller {
                 "fecha_movimiento"      => $fecha_insercion,
                 "estatus"               => 1,
                 "comentario"            => $comentario,
-                "estatus_autorizacion"  => $estatus_autorizacion
+                "estatus_autorizacion"  => $estatus_autorizacion,
+                "modoActualizacion"     => $modo
             );
 
             $table = 'autorizaciones_msi';
@@ -2848,12 +2862,12 @@ class Contraloria extends CI_Controller {
             $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_autorizacion);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
             $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
-            if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
-                $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
-                $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
-            }else{
-                $update_lotes = true;
-            }
+            //if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
+            //    $array_update_lotes = $this->actualizaMSI($id_autorizacion, $modo);
+            //    $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
+            //}else{
+            //    $update_lotes = true;
+            //}
         }
         else if($modo == 2){
             $id_autorizacion = str_replace('%20','', $id_autorizacion);
@@ -2865,7 +2879,8 @@ class Contraloria extends CI_Controller {
                     "estatus_autorizacion" => $estatus_autorizacion,
                     "comentario" => $comentario,
                     "fecha_modificacion" => $fecha_insercion,
-                    "modificado_por" => $this->session->userdata('id_usuario')
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "modoActualizacion" => $modo
                 );
                 $data_historial = array(
                     "idAutorizacion"        => $id_aut,
@@ -2874,7 +2889,8 @@ class Contraloria extends CI_Controller {
                     "fecha_movimiento"      => $fecha_insercion,
                     "estatus"               => 1,
                     "comentario"            => $comentario,
-                    "estatus_autorizacion"  => $estatus_autorizacion
+                    "estatus_autorizacion"  => $estatus_autorizacion,
+                    "modoActualizacion" => $modo
                 );
 
                 $table = 'autorizaciones_msi';
@@ -2883,16 +2899,18 @@ class Contraloria extends CI_Controller {
                 $actualizar = $this->General_model->updateRecord($table, $data_actualizar, $key, $id_aut);// MJ: ACTUALIZA LA INFORMACIÓN DE UN REGISTRO EN PARTICULAR, RECIBE 4 PARÁMETROS. TABLA, DATA A ACTUALIZAR, LLAVE (WHERE) Y EL VALOR DE LA LLAVE
                 $insert_historial = $this->General_model->addRecord($table_historial, $data_historial);
 
-                if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
+
+                //este proceso se debe dejar para que lo ejecute el servidor
+                /*if($estatus_autorizacion==3){//cuando sea una aprobación se va hacer el update masivo de lotes de MSI
                     $array_update_lotes = $this->actualizaMSI($id_aut, $modo);
                     $update_lotes = $this->db->update_batch('lotes', $array_update_lotes, 'idLote');
                 }else{
                     $update_lotes = true;
-                }
+                }*/
             }
         }
 
-        if($actualizar && $insert_historial && $update_lotes){
+        if($actualizar && $insert_historial){//esta variable es para el update de lotes: && $update_lotes
             $data_response['message'] = 'OK';
         }else{
             $data_response['message'] = 'ERROR';
@@ -2900,6 +2918,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($data_response);
         //avanzar o rechazar autorizacion
     }
+
 
     function actualizaMSI($id_autorizacion, $modo) {//esta funcion obtiene los lotes con msi diferentes y los que no para -
         //mandarlos a actualizar definitivamente
@@ -2948,6 +2967,9 @@ class Contraloria extends CI_Controller {
             return $updateData;
         }
     }
+
+
+
 
     public function inventarioComisionistas() {
         $this->load->view('template/header');
@@ -3342,4 +3364,20 @@ class Contraloria extends CI_Controller {
         $response = $this->Clientes_model->updateClient($data, $this->input->post("id_cliente"));
         echo json_encode($response);
     }
+    
+    public function reporteDescuentos() {
+		$this->load->view('template/header');
+		$this->load->view("contraloria/reporteDescuentos_view");
+	}
+
+    public function reporteCoincidenciasCT(){
+		$this->load->view('template/header');
+        $this->load->view("contraloria/reporteCoincidencias_view");
+	}	
+
+    public function getReporteCoincidenciasCT() {
+        $registros = $this->Contraloria_model->getReporteCoincidenciasCT();
+        echo json_encode($registros, JSON_NUMERIC_CHECK);
+    }
+    
 }

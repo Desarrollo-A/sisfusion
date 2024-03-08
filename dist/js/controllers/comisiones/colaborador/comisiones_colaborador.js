@@ -1,5 +1,8 @@
 const excluir_column = ['MÁS', ''];
 
+
+
+
 // INICIO Restructura de codigo 
 var IdTablas ,
     Array_Datos_Consulta_COMPLETA= new Array, ///contiene toda la data de la bajada
@@ -14,11 +17,14 @@ var IdTablas ,
     recibidosOPN = new Array; //Contiene el estatus 8
 let contadorDentroFacturas = 0,
     columnas_datatable = {},
-    fin = userSede == 8 ? 16 : 13,
-    boton_sol_pago = (forma_pago != 2) ? '' : 'hidden',
+    
 
     pagos = []; //arreglo de pagos  
 
+//var arrayDeCadenas = userSede.split("");
+
+let fin = sede_usuario_general == 8 ? 16 : 13;
+let boton_sol_pago = (sede_usuario_general != 2) ? '' : 'hidden';
 
 function asignarValorColumnasDT(nombre_datatable) { 
     if(!columnas_datatable[`${nombre_datatable}`]) {
@@ -238,7 +244,7 @@ $(document).ready(function () {
             className: boton_sol_pago,
             action: function () {
                 let actual=13;
-                if(userSede == 8){
+                if(sede_usuario_general == 8){
                     actual=15;
                 }
                 var hoy = new Date(fechaServer);
@@ -515,7 +521,7 @@ $(document).ready(function () {
                     className: 'dt-body-center',
                     render: function (d, type, full, meta) {
                         let actual = 13;
-                        if(userSede == 8){
+                        if(sede_usuario_general == 8){
                             actual=15;
     
                         }
@@ -655,11 +661,12 @@ $(document).ready(function () {
        
 
     })
-    // $(document).on("click", ".preceso5", function () {
-    //     nombreTabla = 'tabla_comisiones_sin_pago';
-    //     llenadoTablaNuevas(nombreTabla,datos)
-    //     alert(5);
-    // })
+    $(document).on("click", ".preceso5", function () {
+        nombreTabla = 'tabla_comisiones_sin_pago';
+        // comisionesTableSinPago()
+        
+        
+    })
 
     $(document).on("click", ".consultar_logs_nuevas", function (e) {
         e.preventDefault();

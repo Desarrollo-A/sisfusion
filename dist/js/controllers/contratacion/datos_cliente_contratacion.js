@@ -110,46 +110,16 @@ function fillTable(index_proyecto, index_condominio) {
                                         <i class="animacion fas fa-chevron-down fa-lg"></i>
                                     </div>`
             },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.id_cliente + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.nombreResidencial + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.nombreCondominio + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.nombreLote + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.nombreCompleto + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + (d.noRecibo == null || d.noRecibo == '' ? 'SIN ESPECIFICAR' : d.noRecibo) + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + d.referencia + '</p>';
-                }
-            },
-            {
-                data: function (d) {
-                    return '<p class="m-0">' + myFunctions.validateEmptyField(d.tipo) + '</p>';
-                }
-            },
+            { data: 'id_cliente' },
+            { data: 'nombreResidencial' },
+            { data: 'nombreCondominio' },
+            { data: 'nombreLote' },
+            { data: 'nombreCompleto' },
+            { data: 'correo' },
+            { data: 'telefono1' },
+            { data: 'noRecibo' },
+            { data: 'referencia' },
+            { data: 'tipo' },
             {
                 data: function (d) {
                     return '<p class="m-0">' + (d.fechaApartado == null || d.fechaApartado == '' ? 'SIN ESPECIFICAR' : d.fechaApartado) + '</p>';
@@ -316,7 +286,7 @@ $('#tabla_clientes_detalles thead tr:eq(0) th').each(function (i) {
     var title = $(this).text();
     titulos_encabezado_detalle.push(title);
     num_colum_encabezado_detalle.push(i);
-    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);                       
+    $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $('input', this).on('keyup change', function () {
         if ($('#tabla_clientes_detalles').DataTable().column(i).search() !== this.value)
             $('#tabla_clientes_detalles').DataTable().column(i).search(this.value).draw();

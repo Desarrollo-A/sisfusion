@@ -28,11 +28,7 @@ let reubicacionClientes;
 let estadoCivilList = [];
 let copropietariosEliminar = [];
 let sumatoriaLS = 0; //
-
-
 let sedesList = [];
-
-
 
 const TIPO_LOTE = Object.freeze({
     HABITACIONAL: 0,
@@ -47,8 +43,8 @@ const TIPO_PROCESO = Object.freeze({
 const PROYECTO = Object.freeze({
     NORTE: 21,
     PRIVADAPENINSULA: 25,
-    CANADA: 22,
-    MONTANASLP:14
+    CANADA: 22, 
+    MONTANASANLUIS: 14
 });
 
 const STATUSLOTE = Object.freeze({
@@ -352,7 +348,7 @@ $(document).on('click', '.btn-asignar-propuestas-rees', function () {
 
 $(document).on('click', '.btn-asignar-propuestas', async function (){
     $("#spiner-loader").removeClass('hide');
-    idProyectoConteo = [];
+idProyectoConteo = [];
     sumatoriaLS = 0;
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
@@ -374,7 +370,9 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
             lotesFusionados = responseLotesFusionados.data;
             lotesFusionados.map((elemento, index)=>{
                 superficie = parseFloat(elemento.sup) + superficie;
-                nombreLote += elemento.nombreLotes+' ';
+                //nombreLote += elemento.nombreLotes+' ';
+                nombreLote += (elemento.nombreLotes==null)? elemento.nombreLoteDO+' ' : elemento.nombreLotes+' ';
+
             });
             superficie = (superficie).toFixed(2);
         }
@@ -397,9 +395,9 @@ $(document).on('click', '.btn-asignar-propuestas', async function (){
                     <h3 class="m-0">Reubicación</h3>
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <p class="m-0 text-center">Cliente. ${nombreCliente}</p>
-                    <p class="m-0 text-center">Lote. ${nombreLote}</p>
-                    <p class="m-0 text-center">Superficie. ${superficie}</p>
+                    <p class="m-0 text-center"><b>Cliente:</b> ${nombreCliente}</p>
+                    <p class="m-0 text-center"><b>Lote:</b> ${nombreLote}</p>
+                    <p class="m-0 text-center"><b>Superficie:</b> ${superficie}</p>
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
                     <label class="lbl-gral">Proyecto</label>
@@ -492,6 +490,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
     estadoCivilList = await obtenerEstadoCivilLista();
     sedesList = await obtenerSedesLista();
 
+
     $.getJSON(`${general_base_url}Reestructura/getCliente/${idCliente}/${idLote}`, function(cliente) {
         const nombreLote = cliente.nombre;
         const apePaterno = cliente.apellido_paterno;
@@ -512,19 +511,18 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
                     </div>	
                     <div class="modal-body p-0">
                         <div class="container-fluid">
-                            <div class="row pt-1 pb-1">
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                    <label class="m-0 check-style">
-                                    <br>
-                                        <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
-                                        <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
-                                    </label>
+                            <div class="row pt-1 pb-1 aligned-row">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                    <label class="control-label">Impreso en: (<small style="color: red;">*</small>)</label>
+                                    <select name="impresoEn" title="SELECCIONA UNA OPCIÓN" id="impresoEn" 
+                                    class="selectpicker m-0 select-gral" data-container="body" 
+                                    data-width="100%" required></select>
                                 </div>
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m.0">
-                                         <label class="control-label">Impreso en: (<small style="color: red;">*</small>)</label>
-                                         <select name="impresoEn" title="SELECCIONA UNA OPCIÓN" id="impresoEn" 
-                                         class="selectpicker m-0 select-gral" data-container="body" 
-                                         data-width="100%" required></select>
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 d-flex align-end">
+                                    <label class="m-0 check-style">
+                                    <input  type="checkbox" class="nombre" name="cmbProcesoUrgente" value="cmbProcesoUrgente" ${banderaProcesoUrgente == 1 ? 'checked' : ''}>
+                                    <span><i class="fas fa-clock fa-lg m-1"></i>Proceso urgente</span>
+                                </label>
                                 </div>
                             </div> 
                             <div class="row">
@@ -608,7 +606,6 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
             }
         });
         $("#estadoCli").selectpicker('refresh');
-
         sedesList.forEach((sedes)=>{
             const id = sedes.id_sede;
             const name = sedes.nombre;
@@ -622,9 +619,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
             }
         });
         $("#impresoEn").selectpicker('refresh');
-
-
-
+        
         showModal();
 
         $('[data-toggle="tooltip"]').tooltip();
@@ -663,6 +658,7 @@ $(document).on('click', '#guardarCliente', function (){
     const ineCLi = $('#ineCLi').val();
     const ocupacionCli = $('#ocupacionCli').val();
     const impresoEn = $('#impresoEn').val();
+
 
     if(impresoEn=='' || ineCLi == '' || telefonoCli == '' || telefonoCli == null || correoCli == '' || correoCli == null || domicilioCli == '' || domicilioCli == null || ocupacionCli == '' || ocupacionCli == null){
         alerts.showNotification("top", "right", "Asegúrate de llenar todos los campos requeridos (*).", "warning");
@@ -848,7 +844,7 @@ $(document).on("change", "#proyectoAOcupar", function(e){
     $("#loteAOcupar").html("").selectpicker('refresh');
 
     const idProyecto = $(this).val();
-    if(idProyecto==21){
+    if(idProyecto==21 || idProyecto==14 || idProyecto==22 || idProyecto==25){
         idProyectoRE = idProyecto;
     }
     idProyectoConteo.push($(this).val());
@@ -915,7 +911,7 @@ $(document).on("change", "#loteAOcupar", function(e){
     let mensajeMaxLotes = '';
     // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
 
-    if(idProyecto == 21 ){//si es norte limitamos a una sola propuesta
+    if(idProyecto == 21 || idProyecto==14 || idProyecto==22 || idProyecto==25){//si es norte limitamos a una sola propuesta
         arrayProyIdProp.push(idProyectoRE);
 
         numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
@@ -944,12 +940,30 @@ $(document).on("change", "#loteAOcupar", function(e){
     }
 
     if (numberLotes > numeroMaximoLotes) {
-            alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
+        alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
             return;
     }else{
         let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
         if(conteoRepeticiones > 2 && idProyectoCO==21){
             alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones2 = contarRepeticiones('14', idProyectoConteo);
+        if(conteoRepeticiones2>=2 && idProyectoCO==14){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Montaña San Luis ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones3 = contarRepeticiones('22', idProyectoConteo);
+        if(conteoRepeticiones3>=2 && idProyectoCO==22){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Cañada León ", "danger");
+            return;
+        }
+
+        let conteoRepeticiones4 = contarRepeticiones('25', idProyectoConteo);
+        if(conteoRepeticiones4>=2 && idProyectoCO==25){
+            alerts.showNotification("top", "right", "No puedes seleccionar más de Privada Península ", "danger");
             return;
         }
     }
@@ -1101,9 +1115,14 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
+<<<<<<< HEAD
                         <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">
                         
                         <span class="w-100 d-flex justify-between"> 
+=======
+                        <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">                        
+                        <span class="w-100 d-flex justify-between">
+>>>>>>> 1338f1e8f7d06b3f79fa391473daf769a3fd046f
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
                         </span>
                         <span class="w-100 d-flex justify-between">
@@ -1118,15 +1137,13 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
 
 $(document).on("submit", "#formReubicacion", function(e){
     e.preventDefault();
-    const flagFusion = $('#flagFusion').val()
-    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLotes');
-    //
-    // console.log('existeSeleccion', existeSeleccion);
+    // const flagFusion = $('#flagFusion').val()
+    // const existeSeleccion = $(this).serializeArray().find(obj => obj.name === 'idLote');
+
     // if (!existeSeleccion) {
     //     alerts.showNotification("top", "right", "Debe seleccionar un lote para la reubicación.", "warning");
     //     return;
     // }
-
     let data = new FormData($(this)[0]);
     $('#spiner-loader').removeClass('hide');
 
@@ -1184,11 +1201,11 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     let flagFusion= parseInt($('#flagFusion').val());
     let superficieFusion = parseFloat($('#superficie').val());
     let superficiePropuestas = sumatoriaLS;
-    if(flagFusion == 1){
-        if(!validarSuperficiesFusion(superficiePropuestas, superficieFusion)){
-            return;
-        }
-    }
+    // if(flagFusion == 1){
+    //     if(!validarSuperficiesFusion(superficiePropuestas, superficieFusion)){
+    //         return;
+    //     }
+    // }
 
     if (!validarLotesRequeridos($('#infoLotesSeleccionados .lotePropuesto').length)) {
         return;
@@ -1198,11 +1215,11 @@ $(document).on("submit", "#formAsignarPropuestas", function(e){
     let data = new FormData($(this)[0]);
 
     data.append("flagFusion", flagFusion);
-    if(idProyectoRE==21){
+    if(idProyectoRE==21 || idProyectoRE==14 || idProyectoRE==22 || idProyectoRE==25){
         data.append('idProyecto', idProyectoRE);
     }
     data.append("proceso", TIPO_PROCESO.REUBICACION);
-
+    
     $.ajax({
         url : 'asignarPropuestasLotes',
         data: data,
@@ -1290,7 +1307,7 @@ $(document).on('click', '.btn-avanzar', async function () {
                 return;
             }
             nombreLote = row.data().nombreLote;
-        }
+        }   
     }
 
 
@@ -1529,42 +1546,42 @@ const botonesAccionReubicacion = (d) => {
     }
 
     const BTN_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-asignar-propuestas"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
-                            data-idCliente="${d.idCliente}"
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${idEstatusPreproceso}"
-                            data-idEstatusMovimiento="${d.id_estatus_modificacion}"
-                            ${botonFusionadoEstatus}
-                            data-fusion="${flagFusion}"
-                            >
-                            <i class="fas fa-clipboard-list"></i>
-                    </button>`;
+        data-toggle="tooltip" 
+        data-placement="left"
+        title="${idEstatusPreproceso === 0 ? 'ASIGNAR PROPUESTAS' : 'ACTUALIZAR PROPUESTAS'}"
+        data-idCliente="${d.idCliente}"
+        data-idProyecto="${d.idProyecto}"
+        data-statusPreproceso="${idEstatusPreproceso}"
+        data-idEstatusMovimiento="${d.id_estatus_modificacion}"
+        ${botonFusionadoEstatus}
+        data-fusion="${flagFusion}"
+        >
+        <i class="fas fa-clipboard-list"></i>
+    </button>`;
     const BTN_PROPUESTAS_REES =  `<button class="btn-data btn-violetDeep btn-asignar-propuestas-rees"
-                            data-toggle="tooltip" 
-                            data-placement="left"
-                            title="${idEstatusPreproceso === 0 ? 'ASIGNAR REESTRUCTURA' : 'REGRESAR A ASIGNACIÓN DE REESTRUCTURA'}"
-                            data-idCliente="${d.idCliente}" 
-                            data-idProyecto="${d.idProyecto}"
-                            data-statusPreproceso="${idEstatusPreproceso}"
-                            data-idEstatusMovimiento="${d.id_estatus_modificacion}"
-                            data-tipoEstatusRegreso="${d.tipo_estatus_regreso}">
-                            ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
-                        </button>`;
+        data-toggle="tooltip" 
+        data-placement="left"
+        title="${idEstatusPreproceso === 0 ? 'ASIGNAR REESTRUCTURA' : 'REGRESAR A ASIGNACIÓN DE REESTRUCTURA'}"
+        data-idCliente="${d.idCliente}" 
+        data-idProyecto="${d.idProyecto}"
+        data-statusPreproceso="${idEstatusPreproceso}"
+        data-idEstatusMovimiento="${d.id_estatus_modificacion}"
+        data-tipoEstatusRegreso="${d.tipo_estatus_regreso}">
+        ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
+    </button>`;
 
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
-                    data-toggle="tooltip" 
-                    data-placement="left"
-                    title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
-                    data-idCliente="${d.idCliente}"
-                    data-tipoTransaccion="${idEstatusPreproceso}"
-                    data-idEstatusMovimiento="${d.id_estatus_modificacion}"
-                    data-fusion="${flagFusion}"
-                    data-numeroTotalPropuestas="${d.totalPropuestas}"
-                    ${botonFusionadoEstatus}>
-                    <i class="fas fa-thumbs-up"></i>
-                </button>`;
+        data-toggle="tooltip" 
+        data-placement="left"
+        title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
+        data-idCliente="${d.idCliente}"
+        data-tipoTransaccion="${idEstatusPreproceso}"
+        data-idEstatusMovimiento="${d.id_estatus_modificacion}"
+        data-fusion="${flagFusion}"
+        data-numeroTotalPropuestas="${d.totalPropuestas}"
+        ${botonFusionadoEstatus}>
+        <i class="fas fa-thumbs-up"></i>
+    </button>`;
 
     const BTN_RECHAZO =  `<button class="btn-data btn-warning btn-rechazar"
                     data-toggle="tooltip" 
@@ -1645,7 +1662,7 @@ const botonesAccionReubicacion = (d) => {
             data-idCliente="${d.idCliente}"
             data-idLote="${d.idLote}"
             data-nombreLote="${d.nombreLote}"
-            data-estatusLoteArchivo="${d.status}"   
+            data-estatusLoteArchivo="${d.status}"
             data-editar="${d.contratoFirmado == null ? 0 : 1}"   
             data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
@@ -1665,7 +1682,7 @@ const botonesAccionReubicacion = (d) => {
             data-idLote="${d.idLote}"
             data-idEjecutivoAsignado="${d.id_juridico_preproceso}">
             <i class="fas fa-user-alt"></i>
-        </button>`;    
+        </button>`;
 
     // BOTÓN QUE ABRIRÁ MODAL PARA QUE EL ASESOR PUEDA PRESELECCIONAR LAS PROPUESTAS
     const BTN_PRESELECCIONAR_PROPUESTAS =  `<button class="btn-data btn-blueMaderas btn-preseleccion-propuestas"
@@ -1677,14 +1694,14 @@ const botonesAccionReubicacion = (d) => {
         ${botonFusionadoEstatus}>
         <i class="fas fa-hand-pointer"></i>
     </button>`;
-    let BUTTONREGRESO = '';
+let BUTTONREGRESO = '';
 
     if(d.idStatusLote == 17)
         BUTTONREGRESO = BTN_DESHACER_PREPROCESO;
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASLP) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
+        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASANLUIS) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
@@ -1726,7 +1743,7 @@ const botonesAccionReubicacion = (d) => {
     if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
-    return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
+        return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
     if (idEstatusPreproceso === 6 && id_rol_general == 7) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_RECHAZO : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
@@ -1998,7 +2015,6 @@ const obtenerSedesLista = () =>{
 }
 
 
-
 $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
@@ -2042,7 +2058,8 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
 
 
-            $('#spiner-loader').addClass('hide');
+            $("#deshacerReestrucuraOK").prop("disabled", false);
+
         },
         error: function () {
             $("#deshacerReestrucuraOK").prop("disabled", false);

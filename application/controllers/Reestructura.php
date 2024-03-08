@@ -1,4 +1,5 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php ini_set('display_errors', 1);
+if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Reestructura extends CI_Controller{
 	public function __construct() {
@@ -8,12 +9,12 @@ class Reestructura extends CI_Controller{
 		$this->load->helper(array('url', 'form'));
 		$this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
-		$this->validateSession();
+		//$this->validateSession();
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession() {
@@ -108,28 +109,9 @@ class Reestructura extends CI_Controller{
     }
 
 	public function lista_catalogo_opciones(){
-        $id_catalogo = $_POST['id_catalogo'];
+		$id_catalogo = $_POST['id_catalogo'];
 		echo json_encode($this->Reestructura_model->get_catalogo_restructura($id_catalogo)->result_array());
 	}
-
-    public function inventarioLotes(){
-		$this->load->view('template/header');
-        $this->load->view("reestructura/inventarioLotes_view");
-    }
-
-    public function getEstatusLote(){
-        echo json_encode($this->Reestructura_model->EstatusLote()->result_array());
-    }
-
-    public function reestructuraLotes(){
-        $index_estatus = $this->input->post('index_estatus');
-        $dato = $this->Reestructura_model->reestructuraLotes($index_estatus);
-        if ($dato != null) {
-            echo json_encode($dato);
-        }else{
-            echo json_encode(array());
-        }
-    }
 
 	public function insertarOpcion(){
 		$idOpcion = $this->Reestructura_model->insertOpcion(100);
@@ -170,8 +152,8 @@ class Reestructura extends CI_Controller{
         $dataPost = $_POST;
         $datos["idLote"] = $dataPost['idLote'];
 		$datos["nombre"] = $dataPost['nombreCli'];
-		$datos["apellido_paterno"] = $dataPost['apellidopCli'];
-		$datos["apellido_materno"] = $dataPost['apellidomCli'];
+		$datos["apellido_paterno"] = str_replace("'","`", $dataPost['apellidopCli']);
+		$datos["apellido_materno"] = str_replace("'","`", $dataPost['apellidomCli']);
         $datos["telefono1"] = $dataPost['telefonoCli'];
         $datos["correo"] = $dataPost['correoCli'];
         $datos["domicilio_particular"] = $dataPost['domicilioCli'];
@@ -426,13 +408,13 @@ class Reestructura extends CI_Controller{
         $proceso = $this->input->post('proceso');
         $totalLotes = count($idLotes);
         $flagConteo = 0;
+        $statusLote=0;
         $arrayNoDisponible = '';
         $flagFusion = $this->input->post('flagFusion');
         $idProyecto = $this->input->post('idProyecto');
 
-
         $varibaleCiertoFalso = '';
-        if($idProyecto == 21){
+        if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 25){
             $varibaleCiertoFalso = true;
         }
         foreach ($idLotes as $elementoLote) { 
@@ -445,6 +427,7 @@ class Reestructura extends CI_Controller{
                 }
             }
         }
+
         if ($flagConteo == $totalLotes) { //si todos estan disponibles se avanza
             $arrayLotes = array();
             $arrayLotesApartado = array();
@@ -511,14 +494,29 @@ class Reestructura extends CI_Controller{
             $lotesString = implode(",", $idLotes);
             $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
 
+
+
             foreach ($dataLoteDis as $index => $dataLote) {
+                if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22)){
+                    //Reubicación en el mismo norte
+                    $statusLote = 20;
+                }
+                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22) ){
+                    //Reubicación normal
+                    $statusLote = 16;
+                }
+                else{
+                    //Reestructura
+                    $statusLote =  17;
+                }
                 $arrayLoteApartado = array(
                     'idLote' => $dataLote['idLote'],
                     //se valida que venga en reestrucura y que sea norte para colocar el nuevo statusLote
-                    'idStatusLote' => ($proceso == 2) ? ($dataLoteDis[$index]['idResidencial'] == 21) ? 20 : (($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) : (($dataLoteDis[$index]['idResidencial'] == 21) ? 17 :(($dataLoteDis[$index]['idResidencial'] != 21) ? 16 : 17) ),
+                    'idStatusLote' => $statusLote,
                     'usuario' => $this->session->userdata('id_usuario')
                 );
                 array_push($arrayLotesApartado, $arrayLoteApartado);
+                
             }
 
             if (!$this->General_model->updateBatch('lotes', $arrayLotesApartado, 'idLote')) {
@@ -1717,7 +1715,7 @@ class Reestructura extends CI_Controller{
         return $resultDs && $resultCop;
     }
 
-    // PARA EL MÓDULO DE ALEJANDRO
+	// PARA EL MÓDULO DE ALEJANDRO
     public function cancelarLotes() {
 		$this->load->view('template/header');
         $this->load->view("reestructura/cancelacion_view");
@@ -1844,27 +1842,27 @@ class Reestructura extends CI_Controller{
         $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : count(explode(',',$nombreLoteOriginal[0]));// $arrayLength ;
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
-            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
+            $numeroArchivos = in_array($id_rol, [17, 70, 71, 73]) ? count($arrayLotes) : $numeroArchivos; 
             $id_dxc = explode(',', $id_dxc[0]);
         }else{
             $arrayLotes = $nombreLoteOriginal;
         }   
             
-            for ($j=0; $j < $numeroArchivos ; $j++) {
+            for ($j=0; $j < $numeroArchivos ; $j++) { 
                 $nombreLoteOriginal = $arrayLotes[$j];
                 $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
                 if (!file_exists($micarpeta)) {
                     mkdir($micarpeta, 0777, true) or die("Error en la generación");
                 }
         
-                if($flagAction==2 && $id_rol == 17){
+                if($flagAction==2 && in_array($id_rol, [17, 70, 71, 73])){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
                     if (!file_exists($micarpeta)) {
                         mkdir($micarpeta, 0777, true);
                     }
                     $carpetaUbicacion = 'CORRIDA/';
                     $nameField = 'corrida';
-                    $acceptFiles = 'xlsx|csv|xls';
+                    $acceptFiles = 'xlsx|csv|xls|xlsb';
                 }elseif($flagAction==2 && $id_rol == 15){
                     $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
                     if (!file_exists($micarpeta)) {
@@ -1879,6 +1877,7 @@ class Reestructura extends CI_Controller{
                 $arrayData = array();
                 $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
                 $config['allowed_types'] = $acceptFiles;
+                $config['max_size']     = '0';
                 $this->load->library('upload', $config);
                 $flagInterno = 0;
                 for($i=0; $i<$arrayLength; $i++){
@@ -1947,7 +1946,7 @@ class Reestructura extends CI_Controller{
         if($flagInterno==$arrayLength){
             print_r( json_encode(array('code' => 200)));
         }else{
-            print_r(json_encode(array('code' => 500)));
+            print_r(json_encode(array('code' => 500, 'flagInterno' => $flagInterno, 'arrayLength' => $arrayLength)));
         }
 
     }
@@ -1978,12 +1977,11 @@ class Reestructura extends CI_Controller{
         $columnFecha = $banderaFusion != 0 ? 'fechaModificacion' : 'fecha_modificacion';
         $columnModificado = $banderaFusion != 0 ? 'modificadoPor' : 'modificado_por';
         $numeroArchivos = ($banderaFusion != 0 && $id_rol == 15) ? $_POST['countArchResi'] : count(explode(',',$nombreLoteOriginal[0]));// $arrayLength ;
-        $id_rol = $this->session->userdata('id_rol');
 
         if($numeroArchivos > 1){
             $arrayLotes = explode(',',$nombreLoteOriginal[0]);
             $id_dxc = explode(',', $id_dxc[0]);
-            $numeroArchivos = $id_rol == 17 ? count($arrayLotes) : $numeroArchivos; 
+            $numeroArchivos = in_array($id_rol, [17, 70, 71, 73]) ? count($arrayLotes) : $numeroArchivos; 
             $rescisionArchivo = $id_rol == 15 ? explode(',',$_POST['rescisionArchivo'][0]) : 0;
 
         }else{
@@ -1994,107 +1992,110 @@ class Reestructura extends CI_Controller{
         for ($j=0; $j < $numeroArchivos ; $j++) {
             $nombreLoteOriginal = $arrayLotes[$j];// ( $numeroArchivos > 1 && ($id_rol == 15 || $id_rol == 17 )) ? $arrayLotes[$j] // : //$this->input->post('nombreLote'.$j);
 
-            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
+        $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal;
+        if (!file_exists($micarpeta)) {
+            mkdir($micarpeta, 0777, true);
+        }
+
+        if($flagAction==2 && in_array($id_rol, [17, 70, 71, 73])){
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
             if (!file_exists($micarpeta)) {
                 mkdir($micarpeta, 0777, true);
             }
-
-            if($flagAction==2 && $id_rol == 17){
-                $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CORRIDA';
-                if (!file_exists($micarpeta)) {
-                    mkdir($micarpeta, 0777, true);
-                }
-                $carpetaUbicacion = 'CORRIDA/';
-                $nameField = 'corrida';
-                $acceptFiles = 'xlsx|csv|xls';
+            $carpetaUbicacion = 'CORRIDA/';
+            $nameField = 'corrida';
+            $acceptFiles = 'xlsx|csv|xls|xlsb';
+        }
+        elseif($flagAction==2 && $id_rol == 15){
+            $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
+            if (!file_exists($micarpeta)) {
+                mkdir($micarpeta, 0777, true);
             }
-            elseif($flagAction==2 && $id_rol == 15){
-                $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/CONTRATO';
-                if (!file_exists($micarpeta)) {
-                    mkdir($micarpeta, 0777, true);
-                }
-                $carpetaUbicacion = 'CONTRATO/';
-                $nameField = 'contrato';
-                $acceptFiles = 'pdf';
-            }
+            $carpetaUbicacion = 'CONTRATO/';
+            $nameField = 'contrato';
+            $acceptFiles = 'pdf';
+        }
 
 
-            $arrayData = array();
-            $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
-            $config['allowed_types'] = $acceptFiles;
-            $this->load->library('upload', $config);
-            $flagInterno = 0;
-            for($i=0; $i<$arrayLength; $i++){
-                if($_POST['flagEditado'.$i] == 0){
-                    $flagInterno = $flagInterno + 1;
-                }else{
-                    $resultado = $this->upload->do_upload('archivo'.$i);
-                    if($resultado){
-                        $archivoSubido = $this->upload->data();
-                        $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
-                        $fileExtension = strtolower(end($fileNameCmps));
-                        $fechaActual = date_create(date('Y-m-d H:i:s'));
-                        $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension;
-                        rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
-                        $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
-                        $idpxl = $this->input->post('idLoteArchivo'.$i);
+        $arrayData = array();
+        $config['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/'.$carpetaUbicacion;
+        $config['allowed_types'] = $acceptFiles;
+        $this->load->library('upload', $config);
+        $flagInterno = 0;
+        for($i=0; $i<$arrayLength; $i++){
+            if($_POST['flagEditado'.$i] == 0){
+                $flagInterno = $flagInterno + 1;
+            }else{
+                $resultado = $this->upload->do_upload('archivo'.$i);
+                if($resultado){
+                    $archivoSubido = $this->upload->data();
+                    $fileNameCmps = explode(".", $_FILES['archivo'.$i]['name']);
+                    $fileExtension = strtolower(end($fileNameCmps));
+                    $fechaActual = date_create(date('Y-m-d H:i:s'));
+                    $nuevoNombre = $this->input->post('nombreLote'.$i).'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension;
+                    rename( $archivoSubido['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$nuevoNombre );
+                    $idArchivoActualizar = $this->input->post('idLoteArchivo'.$i);
+                    $idpxl = $this->input->post('idLoteArchivo'.$i);
 
-                        $updateDocumentData = array(
-                            $nameField => $nuevoNombre,
-                            $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
-                            $columnModificado => $this->session->userdata('id_usuario')
-                        );
-                        $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
-                        $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_pxl';
-                        $result = $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $idpxl);
-                        if($result){
-                            $flagInterno = $flagInterno + 1;
-                            if($editar==1){
-                                $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
+                    $updateDocumentData = array(
+                        $nameField => $nuevoNombre,
+                        $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
+                        $columnModificado => $this->session->userdata('id_usuario')
+                    );
+                    $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'propuestas_x_lote';
+                    $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_pxl';
+                    $result = $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $idpxl);
+                    if($result){
+                        $flagInterno = $flagInterno + 1;
+                        if($editar==1){
+                            $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal.'/'.$carpetaUbicacion.$_POST['archivoEliminar'.$i];
+                            if (!file_exists($urlEliminar)) {
                                 $this->eliminaArchivoServer($urlEliminar);
                             }
+                            
                         }
                     }
                 }
-
             }
-            if($flagAction == 2 && $id_rol == 15){
-                if($_POST['flagEditarRescision_'.$j] == 1){
-                    $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
-                    if (!file_exists($micarpeta)) {
-                        mkdir($micarpeta, 0777, true);
-                    }
-                    $config2['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
-                    $config2['allowed_types'] = 'pdf';
-                    $this->load->library('upload', $config2);
-                    $resultado2 = $this->upload->do_upload('archivoResicion_'.$j);
-                    if($resultado2){
-                        $archivoSubido2 = $this->upload->data();
-                        $fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
-                        $fileExtension2 = strtolower(end($fileNameCmps2));
-                        $fechaActual = date_create(date('Y-m-d H:i:s'));
-                        $nuevoNombre2 = $nombreLoteOriginal.'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension2;
-                        rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
 
-                        $updateDocumentData = array(
-                            "rescision" => $nuevoNombre2,
-                            $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
-                            $columnModificado => $this->session->userdata('id_usuario')
-                        );
-
-                            $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'datos_x_cliente';
-                            $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_dxc';
-                            $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $id_dxc[$j]);
-                        if($editar==1){
-                            $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$rescisionArchivo[$j];
-                            $this->eliminaArchivoServer($urlEliminar);
-                        }
-
-                    }
-                }
-
-            }
         }
+        if($flagAction == 2 && $id_rol == 15){
+            if($_POST['flagEditarRescision_'.$j] == 1){
+                $micarpeta = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES';
+                if (!file_exists($micarpeta)) {
+                    mkdir($micarpeta, 0777, true);
+                }
+                $config2['upload_path'] = 'static/documentos/contratacion-reubicacion-temp/'.$nombreLoteOriginal.'/RESCISIONES/';
+                $config2['allowed_types'] = 'pdf';
+                $this->load->library('upload', $config2);
+                $resultado2 = $this->upload->do_upload('archivoResicion_'.$j);
+                if($resultado2){
+                    $archivoSubido2 = $this->upload->data();
+                    $fileNameCmps2 = explode(".", $_FILES['archivoResicion_'.$j]['name']);
+                    $fileExtension2 = strtolower(end($fileNameCmps2));
+                    $fechaActual = date_create(date('Y-m-d H:i:s'));
+                    $nuevoNombre2 = $nombreLoteOriginal.'-'.date_format($fechaActual,"YmdHis").'.'.$fileExtension2;
+                    rename( $archivoSubido2['full_path'], "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$nuevoNombre2 );
+
+                    $updateDocumentData = array(
+                        "rescision" => $nuevoNombre2,
+                        $columnFecha => date_format($fechaActual,"Y-m-d H:i:s"),
+                        $columnModificado => $this->session->userdata('id_usuario')
+                    );
+
+                        $tablaUpdate = $banderaFusion != 0 ? 'lotesFusion' : 'datos_x_cliente';
+                        $columnUpdate =  $banderaFusion != 0 ? 'idFusion' : 'id_dxc';
+                        $this->General_model->updateRecord($tablaUpdate, $updateDocumentData, $columnUpdate, $id_dxc[$j]);
+                    if($editar==1){
+                        $urlEliminar = "static/documentos/contratacion-reubicacion-temp/".$nombreLoteOriginal."/RESCISIONES/".$rescisionArchivo[$j];
+                        $this->eliminaArchivoServer($urlEliminar);
+                    }
+
+                }
+            }
+
+        }
+    }
 
         if($flagInterno==$arrayLength){
             print_r( json_encode(array('code' => 200)));
@@ -2409,186 +2410,80 @@ class Reestructura extends CI_Controller{
     }
 
     public function contratoFirmadoR(){
-
-        $flagFusion = $this->input->post('flagFusion');
-        $editarFile = $this->input->post('editarFile');
-
-
-        //data del formumlario
-        $idLote = $this->input->post('idLote');
-        $nombreLote = $this->input->post('nombreLoteOriginal');
-        $idDocumento = $this->input->post('idDocumento');
-        $idCliente = $this->input->post('idCliente');
-        $idCondominio = $this->input->post('idCondominio');
+	    $idLote = $this->input->post('idLote');
+	    $nombreLote = $this->input->post('nombreLoteOriginal');
+	    $idDocumento = $this->input->post('idDocumento');
+	    $editarFile = $this->input->post('editarFile');
+	    $idCliente = $this->input->post('idCliente');
+	    $idCondominio = $this->input->post('idCondominio');
         $idUsuario = $this->session->userdata('id_usuario');
         $nombreResidencial = $this->input->post('nombreResidencial');
         $nombreCondominio = $this->input->post('nombreCondominio');
         $nombreDocumento = $this->input->post('nombreDocumento');
 
-        //configuracion DEL LOS ARCHIVOS PDF
+	    $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote, $idCliente);
+	    $flagExisteRama = count($dataConsultaCF);
         $configCF['upload_path'] = 'static/documentos/cliente/contratoFirmado/';
         $configCF['allowed_types'] = 'pdf';
         $this->load->library('upload', $configCF);
 
 	    if($editarFile == 0){
 
-	        if($flagFusion==1){
-	                  $totalContratos = $this->input->post('totalContratos');
-	                  $flagInternoConteo = 0;
-                	  for($i = 0; $i < $totalContratos; $i++){
-                         $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote[$i], $idCliente[$i]);
-                          $flagExisteRama = count($dataConsultaCF);
+            if($flagExisteRama == 0){//no existe la rama se debe crear
+                $contratoSubido = $this->upload->do_upload('contratoFirmado');
 
-                          $this->load->library('upload', $configCF);
-                          if($flagExisteRama == 0){//no existe la rama se debe crear
+                if($contratoSubido){
+                    $archivoSubido = $this->upload->data();
+                    $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
+                    rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
-                              $contratoSubido = $this->upload->do_upload('contratoFirmado'.$i);
-
-                              if($contratoSubido){
-                                  $archivoSubido = $this->upload->data();
-                                  $nombreExpediente = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i],  $_FILES["contratoFirmado".$i]["name"]);
-                                  rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
-
-                                  $dataInsert = array(
-                                      'movimiento' => "CONTRATO FIRMADO",
-                                      'expediente' => $nombreExpediente,
-                                      'modificado' => date('Y-m-d H:i:s'),
-                                      'status' => 1,
-                                      'idCliente' => $idCliente[$i],
-                                      'idCondominio' => $idCondominio[$i],
-                                      'idLote' => $idLote[$i],
-                                      'idUser' => $idUsuario,
-                                      'tipo_documento' => 0,
-                                      'id_autorizacion' => 0,
-                                      'tipo_doc' => 30,
-                                      'estatus_validacion' => 0,
-                                  );
-                                  $insert = $this->General_model->addRecord('historial_documento', $dataInsert);
-                                  if($insert){
-                                      $flagInternoConteo = $flagInternoConteo + 1;
-                                  }
-                              }else{//no se pudo subir el archivo
-                                  print_r( json_encode(array('code' => 500)));
-                              }
-
-                          }
-                      }
-
-                	  if($flagInternoConteo == $totalContratos){//el contador de la bandera cuando se inserto corr4ectamente debe
-                	      //de coinidir con el total de lotes fusionados
-                          print_r( json_encode(array('code' => 200)));
-                      }else{
-                          print_r( json_encode(array('code' => 400)));
-
-                      }
-            }
-	        else{//proceso normal SIN FUSION SÓLO UN ARCHIVO
-
-                $dataConsultaCF = $this->Reestructura_model->revisarCFDocumentos($idLote, $idCliente);
-                $flagExisteRama = count($dataConsultaCF);
-                if($flagExisteRama == 0){//no existe la rama se debe crear
-
-
-                    $contratoSubido = $this->upload->do_upload('contratoFirmado');
-
-                    if($contratoSubido){
-                        $archivoSubido = $this->upload->data();
-                        $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente,  $_FILES["contratoFirmado"]["name"]);
-                        rename( $archivoSubido['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
-
-                        $dataInsert = array(
-                            'movimiento' => "CONTRATO FIRMADO",
-                            'expediente' => $nombreExpediente,
-                            'modificado' => date('Y-m-d H:i:s'),
-                            'status' => 1,
-                            'idCliente' => $idCliente,
-                            'idCondominio' => $idCondominio,
-                            'idLote' => $idLote,
-                            'idUser' => $idUsuario,
-                            'tipo_documento' => 0,
-                            'id_autorizacion' => 0,
-                            'tipo_doc' => 30,
-                            'estatus_validacion' => 0,
-                        );
-                        $insert = $this->General_model->addRecord('historial_documento', $dataInsert);
-                        if($insert){
-                            print_r( json_encode(array('code' => 200)));
-                        }else{
-                            print_r( json_encode(array('code' => 400)));
-                        }
+                    $dataInsert = array(
+                        'movimiento' => "CONTRATO FIRMADO",
+                        'expediente' => $nombreExpediente,
+                        'modificado' => date('Y-m-d H:i:s'),
+                        'status' => 1,
+                        'idCliente' => $idCliente,
+                        'idCondominio' => $idCondominio,
+                        'idLote' => $idLote,
+                        'idUser' => $idUsuario,
+                        'tipo_documento' => 0,
+                        'id_autorizacion' => 0,
+                        'tipo_doc' => 30,
+                        'estatus_validacion' => 0,
+                    );
+                    $insert = $this->General_model->addRecord('historial_documento', $dataInsert);
+                    if($insert){
+                        print_r( json_encode(array('code' => 200)));
                     }else{
-                        print_r( json_encode(array('code' => 500)));
+                        print_r( json_encode(array('code' => 400)));
                     }
-
+                }else{
+                    print_r( json_encode(array('code' => 500)));
                 }
+
             }
         }
         elseif($editarFile == 1){
-            if($flagFusion == 1){
-                    $totalContratos = $this->input->post('totalContratos');
-                    $archivoEditado = $this->input->post('archivoEditado');
-                    $flagInternoConteo = 0;
-                    $flagEditados = 0;
+            $contratoCF = $this->upload->do_upload('contratoFirmado');
+            if($contratoCF){
+                $contratoCFUP = $this->upload->data();
+                $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
+                rename( $contratoCFUP['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
 
-                    for($i=0; $i<$totalContratos; $i++){//recorremos el numero de fusiones
-                        if($archivoEditado[$i]==1){ //revisamos que venga uno con edición
-                            //hacer la lógica de la actualización
-                            $flagEditados = $flagEditados + 1;
-                            $contratoCF = $this->upload->do_upload('contratoFirmado'.$i);
-                            if($contratoCF){
-                                $contratoCFUP = $this->upload->data();
-                                $nombreExpediente = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
-                                rename( $contratoCFUP['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
-
-                                $data_actualizar = array(
-                                    'modificado' => date('Y-m-d H:i:s'),
-                                    'idUser'     => $this->session->userdata('id_usuario'),
-                                    'expediente' => $nombreExpediente
-                                );
-                                $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento[$i]);
-                                if($update){
-                                    $flagInternoConteo = $flagInternoConteo + 1;
-                                    $validacionDocumentoVacio = $nombreDocumento === 'null' ? 0 : 1;
-                                    if ($validacionDocumentoVacio == 1) { // SI EXISTE UN NOMBRE DE ARCHIVO
-                                        unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento[$i]);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if($flagInternoConteo == $flagEditados){
-                        print_r( json_encode(array('code' => 200)));
-                    }else{
-                        print_r( json_encode(array('code' => 500)));
-
-                    }
-
-                exit;
-            }
-            else{
-                $contratoCF = $this->upload->do_upload('contratoFirmado');
-                if($contratoCF){
-                    $contratoCFUP = $this->upload->data();
-                    $nombreExpediente = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
-                    rename( $contratoCFUP['full_path'], "static/documentos/cliente/contratoFirmado/".$nombreExpediente );
-
-                    $data_actualizar = array(
-                        'modificado' => date('Y-m-d H:i:s'),
-                        'idUser'     => $this->session->userdata('id_usuario'),
-                        'expediente' => $nombreExpediente
-                    );
-                    $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento);
-                    if($update){
-                        print_r( json_encode(array('code' => 200)));
-                        $validacionDocumentoVacio = $nombreDocumento === 'null' ? 0 : 1;
-                        if ($validacionDocumentoVacio == 1) { // SI EXISTE UN NOMBRE DE ARCHIVO
-                            unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
-                        }
+                $data_actualizar = array(
+                    'modificado' => date('Y-m-d H:i:s'),
+                    'idUser'     => $this->session->userdata('id_usuario'),
+                    'expediente' => $nombreExpediente
+                );
+                $update = $this->General_model->updateRecord('historial_documento', $data_actualizar, 'idDocumento', $idDocumento);
+                if($update){
+                    print_r( json_encode(array('code' => 200)));
+                    $validacionDocumentoVacio = $nombreDocumento === 'null' ? 0 : 1;
+                    if ($validacionDocumentoVacio == 1) { // SI EXISTE UN NOMBRE DE ARCHIVO
+                        unlink('static/documentos/cliente/contratoFirmado/'.$nombreDocumento);
                     }
                 }
             }
-
         }
 	    exit;
     }
@@ -2812,7 +2707,7 @@ class Reestructura extends CI_Controller{
     }
 
     public function borarArchivo(){
-        $archivoNombre = 'static/documentos/contratacion-reubicacion-temp/CMMSLP-PATH-001/RESCISIONES/CMMSLP-PATH-001-20231017225640.pdf';
+        $archivoNombre = 'static/documentos/contratacion-reubicacion-temp/CMMSLP-ASPH-044/CORRIDA/CMSSLP-IRAI-48-20231221161742.xlsx';
         unlink($archivoNombre);
     }
 
@@ -3078,6 +2973,41 @@ class Reestructura extends CI_Controller{
             }
         }
         echo json_encode($result);
+    }
+
+    public function renameFile(){
+        $archivoViejo = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CPPYUC-PCPH-051/CORRIDA/CMPYUC-MALH-012-20240228152528.xlsx';
+        $archivoNuevo = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CPPYUC-PCPH-051/CORRIDA/CMPYUC-MALH-012-20240228152529.xlsx';
+        rename($archivoViejo, $archivoNuevo);
+    }
+
+    public function eliminaArchivo(){
+        //eliminar archivo
+        /*unlink('/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMNQRO-CONH-080/RESCISIONES/CMNQRO-CONH-080-20240222110416.pdf');*/
+
+        //eliminar carpeta
+        //rmdir('/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMNQRO-CONH-080/');
+    }
+
+
+    public function moverArchivo(){
+        $currentLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/YUCA-27 CMLJAL.xlsx';
+        $newLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion-temp/CMCJAL-UCAH-017/CORRIDA/CMLJAL-YUCH-027-20240119154209.xlsx';
+        if(is_file($currentLocation))
+        {
+            $moved = rename($currentLocation, $newLocation);
+        }
+        if($moved)
+        {
+            echo "File moved successfully";
+        }
+    }
+
+    public function copy(){
+        $currentLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion/CDMSLP-ALTH-107/CDMSLP_CDMS_45794_142892_TDOC35RESC_1-3-2024.pdf';
+        $newLocation = '/mnt/data/aplicaciones/maderascrm/static/documentos/contratacion-reubicacion/CDMSLP-ALTH-107/CDMSLP_CDMS_45794_142892_TDOC41CONT_1-3-2024.pdf';
+
+        copy($currentLocation, $newLocation);
     }
 
     // PARA EL MÓDULO DE PATRICIA MAYA

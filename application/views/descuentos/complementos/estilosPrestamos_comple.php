@@ -150,5 +150,8 @@
         background-color: $green;
         transform: translate(80%, -50%);
       } */
-
+	  #modal_config_motivo{
+                z-index: 99!important;
+            }
+            
 </style>

@@ -50,8 +50,7 @@ class Contratacion_model extends CI_Model {
    }
 
    function getInventarioData($estatus, $condominio, $proyecto) {
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : $this->session->userdata('id_rol') == 40 ? "AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : "";
-      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
+      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : ( $this->session->userdata('id_rol') == 40 ? "AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "");      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
       $filtroProyecto = "";
       $filtroCondominio = "";
       $filtroEstatus = "";
@@ -107,7 +106,7 @@ class Contratacion_model extends CI_Model {
       FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
       LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = cl.tipo_casa AND oxc2.id_catalogo = 35
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
-      LEFT JOIN comentarios_administracion ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
