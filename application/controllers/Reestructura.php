@@ -1477,16 +1477,26 @@ class Reestructura extends CI_Controller{
                     $expedienteAnterior = $expReubicacion->contrato;
                 }
 
-                /*
                 if (!is_null($expedienteAnterior)) {
-                    //$a = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior";
-                    //$b =  $ubicacionFolder.$expedienteAnterior;
-                    copy(
-                        "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior",
-                        $ubicacionFolder.$expedienteAnterior
-                    );
+                    // $a = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior";
+                    // $b =  $ubicacionFolder.$expedienteAnterior;
+                    // copy(
+                    //     "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior",
+                    //     $ubicacionFolder.$expedienteAnterior
+                    // );
+
+                    $path = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/$carpeta$expedienteAnterior";
+
+                    $exist = file_exists($path);
+
+                    $file = [
+                        "tmp_name" => $path,
+                    ];
+
+                    if($exist){
+                        $this->uploadFileToBucket($file, $expedienteAnterior);
+                    }
                 }
-                */
             }
 
             $documentacion[] = array(
@@ -1527,7 +1537,7 @@ class Reestructura extends CI_Controller{
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['id_opcion'],
                 'estatus_validacion' => 0,
-                'bucket' => 1,
+                'bucket' => 0,
             );
         }
 
@@ -1544,16 +1554,27 @@ class Reestructura extends CI_Controller{
                                 if($elemento['origen'] == 1 && $banderainterna <= $dataLote['originales']
                                     && ($doc['id_opcion'] == 33 || $doc['id_opcion'] == 35)){ //dentro del primer destino inserta las ramas para resicion de contrato dependiendo los lotes de origen
 
-                                        /*                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
                                         if($doc['id_opcion'] == 33){
                                             $nombreLoteOrigen = $elemento['nombreLotes'];
                                             $nombreResLoteOrigen = $elemento['rescision'];
-                                            copy(
-                                                "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
-                                                $ubicacionFolder.$nombreResLoteOrigen
-                                            );
+
+                                            // copy(
+                                            //     "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen",
+                                            //     $ubicacionFolder.$nombreResLoteOrigen
+                                            // );
+
+                                            $path = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen";
+
+                                            $exist = file_exists($path);
+
+                                            $file = [
+                                                "tmp_name" => $path,
+                                            ];
+
+                                            if($exist){
+                                                $this->uploadFileToBucket($file, $nombreResLoteOrigen);
+                                            }
                                         }
-                                        */
 
                                         $documentacion[] = array(
                                             'movimiento' => $doc['nombre'],
@@ -1584,6 +1605,18 @@ class Reestructura extends CI_Controller{
                                 );
                                 */
 
+                                $path = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/RESCISIONES/$nombreResLoteOrigen";
+
+                                $exist = file_exists($path);
+
+                                $file = [
+                                    "tmp_name" => $path,
+                                ];
+
+                                if($exist){
+                                    $this->uploadFileToBucket($file, $nombreResLoteOrigen);
+                                }
+
                                 $documentacion[] = array(
                                     'movimiento' => $doc['nombre'],
                                     'expediente' => $expedienteAnterior,
@@ -1613,6 +1646,18 @@ class Reestructura extends CI_Controller{
                         $ubicacionFolder.$expRescision->rescision
                     );
                     */
+
+                    $path = "static/documentos/contratacion-reubicacion-temp/$loteAnteriorInfo->nombreLote/RESCISIONES/$expRescision->rescision";
+
+                    $exist = file_exists($path);
+
+                    $file = [
+                        "tmp_name" => $path,
+                    ];
+
+                    if($exist){
+                        $this->uploadFileToBucket($file, $expRescision->rescision);
+                    }
     
                     $documentacion[] = array(
                         'movimiento' => $doc['nombre'],
@@ -1686,8 +1731,26 @@ class Reestructura extends CI_Controller{
                         'id_autorizacion' => 0,
                         'tipo_doc' => $doc['id_opcion'],
                         'estatus_validacion' => 0,
-                        'bucket' => 1,
+                        'bucket' => 0,
                     );
+                }
+            }
+        }
+
+        foreach ($documentacion as $key => $documento) {
+            $documento = (object) $documento;
+            if($documento->expediente){
+                //$docAnterior[$index]['expediente'];
+                $path = "static/documentos/cliente/expediente/" . $documento->expediente;
+
+                $exist = file_exists($path);
+
+                $file = [
+                    "tmp_name" => $path,
+                ];
+
+                if($exist){
+                    $this->uploadFileToBucket($file, $documento->expediente);
                 }
             }
         }
@@ -2537,7 +2600,7 @@ class Reestructura extends CI_Controller{
 
                         $file = $_FILES["contratoFirmado".$i];
 
-                        $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                        $filename = 'CONTRATO_FIRM_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                         //$filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
 
                         $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento[$i]);
@@ -2586,7 +2649,7 @@ class Reestructura extends CI_Controller{
 
                     $file = $_FILES["contratoFirmado"];
 
-                    $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $filename = 'CONTRATO_FIRM_' . $nombreLote . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                     //$filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
 
                     $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento);
@@ -2634,7 +2697,7 @@ class Reestructura extends CI_Controller{
 
                             $file = $_FILES["contratoFirmado".$i];
 
-                            $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                            $filename = 'CONTRATO_FIRM_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                             //$filename = $this->generarNombreFile($nombreResidencial[$i], $nombreCondominio[$i], $nombreLote[$i], $idCliente[$i], $_FILES["contratoFirmado".$i]["name"]);
 
                             $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento[$i]);
@@ -2668,7 +2731,7 @@ class Reestructura extends CI_Controller{
             else{
                 $file = $_FILES["contratoFirmado"];
 
-                $filename = 'CONTRATO_' . $nombreLote[$i] . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
+                $filename = 'CONTRATO_FIRM_' . $nombreLote . '_' . date('dmY') . '.' . pathinfo($file['name'], PATHINFO_EXTENSION);
                 //$filename = $this->generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $_FILES["contratoFirmado"]["name"]);
 
                 $uploaded = $this->uploadFileToBucket($file, $filename, $nombreDocumento);
