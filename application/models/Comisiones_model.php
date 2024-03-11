@@ -2040,7 +2040,7 @@ class Comisiones_model extends CI_Model {
         WHERE com.id_lote = $lote /*AND com.id_usuario = 2*/ AND com.estatus = 1 AND com.fecha_creacion <= GETDATE() GROUP BY pc.bandera");
     }
 
-    function getDatosNuevasAContraloria($proyecto, $condominio){
+    function getDatosNuevasAsimiladosContraloria($proyecto, $condominio){
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $where = "";
@@ -2087,7 +2087,7 @@ class Comisiones_model extends CI_Model {
             GROUP BY pci1.id_comision,com.ooam, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, cp1.codigo_postal, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia,sed.impuesto, u.rfc, oprol2.nombre, cl.estructura)");                
     }
 
-    function getDatosNuevasRContraloria($proyecto,$condominio){
+    function getDatosNuevasRemanenteContraloria($proyecto,$condominio){
         if($this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = " pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $where = "";

@@ -2527,8 +2527,8 @@ public function getDatosNuevasXContraloria($proyecto,$condominio){
  echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosNuevasAContraloria($proyecto,$condominio){
-  $dat =  $this->Comisiones_model->getDatosNuevasAContraloria($proyecto,$condominio)->result_array();
+public function getDatosNuevasAsimiladosContraloria($proyecto,$condominio){
+  $dat =  $this->Comisiones_model->getDatosNuevasAsimiladosContraloria($proyecto,$condominio)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
@@ -2883,8 +2883,8 @@ public function LiquidarLote(){
     }
     
  
-    public function getDatosNuevasRContraloria($proyecto,$condominio){
-      $dat =  $this->Comisiones_model->getDatosNuevasRContraloria($proyecto,$condominio)->result_array();
+    public function getDatosNuevasRemanenteContraloria($proyecto,$condominio){
+      $dat =  $this->Comisiones_model->getDatosNuevasRemanenteContraloria($proyecto,$condominio)->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
       }
