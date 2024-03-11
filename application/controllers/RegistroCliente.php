@@ -4597,7 +4597,7 @@ class RegistroCliente extends CI_Controller {
 					initComplete: function () {
 						this.api().columns().every( function () {
 							var column = this;
-							var select = $('><option value=""></option></select>')
+							var select = $('<select><option value=""></option></select>')
 								.appendTo( $(column.footer()).empty() )
 								.on( 'change', function () {
 									var val = $.fn.dataTable.util.escapeRegex(
@@ -6042,9 +6042,6 @@ class RegistroCliente extends CI_Controller {
 		$expediente_file= preg_replace('[^A-Za-z0-9]', '',$_FILES["expediente"]["name"]);
 		$tipodoc=$this->input->post('tipodoc');
 		$idDocumento=$this->input->post('idDocumento');
-
-
-
 
         $data = $this->Asesor_model->revisaOU($idLote);
         if(count($data)>=1){

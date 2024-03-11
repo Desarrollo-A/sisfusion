@@ -9095,8 +9095,6 @@ class RegistroLote extends CI_Controller
 			echo json_encode(array());
 		}
 	}
-
-
     public function getAutorizacionesClientePorLote($idLote)
     {
         $data = $this->registrolote_modelo->getAutorizacionesClientePorLote($idLote);

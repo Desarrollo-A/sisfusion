@@ -341,23 +341,23 @@ function fillDataTable(idCondominio) {
                 }
             }
         },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-                className: 'btn buttons-pdf',
-                titleAttr: 'Tus ventas',
-                title:"Tus ventas",
-                orientation: 'landscape',
-                pageSize: 'LEGAL',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos_intxt[columnIdx] + ' ';
-                        }
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Tus ventas',
+            title:"Tus ventas",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulos_intxt[columnIdx] + ' ';
                     }
                 }
-            }],
+            }
+        }],
         columnDefs: [{
             defaultContent: "",
             targets: "_all",
@@ -1282,9 +1282,11 @@ $(document).on("click", ".enviar_nuevamente_estatus3", function (e) {
 });
 
 $(document).on('click', '.btn-autorizacion', function () {
+    $('#spiner-loader').removeClass('hide');
     const $itself = $(this);
     const idCliente = $itself.attr('data-idCliente');
     $.get(`${general_base_url}Asesor/clienteAutorizacion/${idCliente}`, function (data) {
+        $('#spiner-loader').addClass('hide');
         cliente = JSON.parse(data);
         if (cliente.autorizacion_correo != null) {
             $('#chk-correo-aut-div').hide();

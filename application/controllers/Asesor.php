@@ -9,7 +9,7 @@ class Asesor extends CI_Controller {
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
         ]);
-        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar'));
+        $this->load->library(array('session','form_validation', 'get_menu', 'Jwt_actions', 'Pdf', 'email', 'permisos_sidebar', 'Arcus'));
         $this->load->helper(array('url','form'));
         $this->load->database('default');
         date_default_timezone_set('America/Mexico_City');
@@ -723,7 +723,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    public function getCondominioDesc($residenciales){
+    public function getCondominioDesc($residenciales) {
         $data = $this->Asesor_model->getCondominioDesc($residenciales);
         if ($data != null) {
             echo json_encode($data);
@@ -732,7 +732,6 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    
     public function getCondominioDescTodos() {
         $data = $this->Asesor_model->getCondominioDescTodos();
         if ($data != null) {
@@ -837,7 +836,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    
+
     public function getMesesResidencial($residencial, $meses){
         $data = $this->Asesor_model->getMesesResidencial($residencial, $meses);
         if($data != null) {
@@ -881,7 +880,7 @@ class Asesor extends CI_Controller {
         }
         exit;
     }
-    
+
     public function tableClienteDS(){
         $dato = $this->Asesor_model->registroClienteDS($this->input->post('idCondominio'));
         $data = array();
@@ -959,8 +958,7 @@ class Asesor extends CI_Controller {
             echo json_encode(array());
         }
     }
-    public function prospecto_a_cliente()
-    {
+    public function prospecto_a_cliente() {
         $id_prospecto = $this->input->post('id_prospecto');
         $id_cliente = $this->input->post('id_cliente');
         $data_prospecto = $this->Asesor_model->getProspectInfoById($id_prospecto);
@@ -1000,9 +998,7 @@ class Asesor extends CI_Controller {
                 'becameClient' => date('Y-m-d H:i:s'),
                 'estatus_particular' => 7
             );
-
             if (intval($data_prospecto[0]->lugar_prospeccion) == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
-            //if (TRUE) {
                 $arcusData = array(
                     "propiedadRelacionada" => $this->input->post('idLote'),
                     "uid" => $data_prospecto[0]->id_arcus,
@@ -1010,7 +1006,6 @@ class Asesor extends CI_Controller {
                 );
                 $response = $this->arcus->sendLeadInfoRecord($arcusData);
             }
-
             if ($this->caja_model_outside->updateProspecto($id_prospecto, $dataActualizaProspecto) > 0) {
                 $data_response['prospecto_update'] = 'OK';
             } else {
@@ -1021,13 +1016,17 @@ class Asesor extends CI_Controller {
         }
         echo json_encode($data_response);
     }
-    /*********************************/
+
+    public function getInfoTest($id_cliente)
+    {
+        $datos["cliente"]= $this->Asesor_model->selectDS($id_cliente);
+        print_r(json_encode($datos));
+    }
 
     public function deposito_seriedad($id_cliente, $onlyView) {
         $datos["cliente"] = $this->Asesor_model->selectDS($id_cliente);
-        $datos["cliente"][0]->tipo_nc = ( is_null($datos["cliente"][0]->tipo_nc) || $datos["cliente"][0]->tipo_nc === '' )
-            ? 3
-            : $datos["cliente"][0]->tipo_nc;
+          $datos["cliente"][0]->tipo_nc = ( $datos["cliente"][0]->tipo_nc === null || $datos["cliente"][0]->tipo_nc === '' ) ? 3 : $datos["cliente"][0]->tipo_nc;
+          $datos["cliente"][0]->printPagare = $datos["cliente"][0]->printPagare==''?3:(int)$datos["cliente"][0]->printPagare;
         $datos["referencias"] = $this->Asesor_model->selectDSR($id_cliente);
         if (count($datos["referencias"]) < 1) {
             $emptyReferencias = [
@@ -1095,11 +1094,7 @@ class Asesor extends CI_Controller {
             ? $this->Asesor_model->getDescsByCF($datos['corrida_financiera']->id_corrida)
             : [];
 
-        //prueba
-        //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
         $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
-        //print_r($datos["cliente"][0]->tipo_venta);
-        //exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -3226,11 +3221,11 @@ class Asesor extends CI_Controller {
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ) {
-            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 1;
-                $idMovimiento = 89;
-            } 
+        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1){
+            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108){
+                $statusContratacion = 2;
+                $idMovimiento = 105;
+            }
             elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
                 $statusContratacion = 7;
                 $idMovimiento = 83;
@@ -3249,21 +3244,28 @@ class Asesor extends CI_Controller {
                 $statusContratacion = 3;
                 $idMovimiento = 98;
             }
-        } 
-        else {
+        } else {
             $statusContratacion = 2;
             $idMovimiento = 84;
         }
-        
-
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $statusContratacion;
         $arreglo["idMovimiento"] = $idMovimiento;
-        $arreglo["comentario"] = $comentario;
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
+        $arreglo["comentario"] = $this->input->post('comentario');
+        $data = $this->Asesor_model->revisaOU($idLote);
 
+        if(count($data) >= 1) {
+            $data['message'] = 'OBSERVACION_CONTRATO';
+            echo json_encode($data);
+            return;
+        }
+
+        if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente)) {
+            return;
+        }
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3380,15 +3382,14 @@ class Asesor extends CI_Controller {
         $arreglo2["idStatusContratacion"] = $statusContratacion;
         $arreglo2["idMovimiento"] = $idMovimiento;
         $arreglo2["nombreLote"] = $nombreLote;
-        $arreglo2["comentario"] = $comentario;
         $arreglo2["usuario"] = $this->session->userdata('id_usuario');
         $arreglo2["perfil"] = $this->session->userdata('id_rol');
         $arreglo2["modificado"] = date("Y-m-d H:i:s");
-        $arreglo2["fechaVenc"] = $fechaVenc;
+        $arreglo2["fechaVenc"] = $this->input->post('fechaVenc');
         $arreglo2["idLote"] = $idLote;
-        $arreglo2["idCondominio"] = $idCondominio;
-        $arreglo2["idCliente"] = $idCliente;
-
+        $arreglo2["idCondominio"] = $this->input->post('idCondominio');
+        $arreglo2["idCliente"] = $this->input->post('idCliente');
+        $arreglo2["comentario"] = $this->input->post('comentario');
         $validate = $this->Asesor_model->validateSt2($idLote);
 
         if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
@@ -3417,7 +3418,7 @@ class Asesor extends CI_Controller {
                 'comentario' => $comentario
             ], true));
         }
-    
+
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5
@@ -3427,126 +3428,15 @@ class Asesor extends CI_Controller {
                         $data['message_email'] = $this->email->print_debugger(); // Se obtiene información del error
                 }
                 $data['message'] = 'OK';
+                echo json_encode($data);
             } else {
-                $data['status'] = false;
-                $data['message'] = 'Error al enviar la solicitud.';
+                $data['message'] = 'ERROR';
+                echo json_encode($data);
             }
         } else {
-            $data['status'] = false;
-            $data['message'] = 'El estatus ya fue registrado.';
-        }
-
-        echo json_encode($data);
-    }
-
-    public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
-    {
-        $comprobante_domicilio = ", 3"; // COMPROBANTE DE DOMICILIO
-        $comprobante_domicilio_label = ", COMPROBANTE DE DOMICILIO";
-        $documentosExtra = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
-        $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
-        $error_message = "";
-        $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
-        $leyendaResiciones = '';
-        $leyendaResicionesFirmada = '';
-        //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
-
-        if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
-            $documentsNumber = 3;
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
-        } else { // ES COMERCIALIZACIÓN
-            $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
-
-            $leyendaMsgValidacion = '';
-            foreach($documentosContrato as $documento){
-                if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
-                    $leyendaMsgValidacion .= ', CONTRATO 1 CANCELADO ';
-                }else if($documento['movimiento']=='CONTRATO 2 CANCELADO' AND $documento['expediente']==NULL){
-                    $leyendaMsgValidacion .= ', CONTRATO 2 CANCELADO ';
-                }
-            }
-
-
-            if($tipo_comprobante == 1) {
-                $comprobante_domicilio = "";
-                $comprobante_domicilio_label = "";
-                $documentsNumber = 3;
-            }
-            else
-                $documentsNumber = 4;
-
-
-
-            $totalResiciones = 0;
-            $totalResicionesFirmadas = 0;
-            foreach ($documentosContrato as $documento){
-                if($documento['tipo_doc'] == 33 && ($documento['expediente'] === null || $documento['expediente'] == '')){
-                    $totalResiciones += 1;
-                }
-                if($documento['tipo_doc'] == 35 && ($documento['expediente'] === null || $documento['expediente'] == '')){
-                    $totalResicionesFirmadas += 1;
-                }
-            }
-            $documentsNumber += ($totalResiciones + $totalResicionesFirmadas);
-            $leyendaResiciones = ($totalResiciones >= 1) ? ', RESICIONES DE CONTRATO ('.$totalResiciones.')' : '' ;
-            $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
-
-
-            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
-                if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
-                        : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
-                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
-                        : "";
-                }
-                else { // SI ES PF SÓLO PEDIMOS LA CARTA
-
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
-                    $documentsNumber += 2; // 4
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
-                }
-            }
-            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
-            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
-
-
-
-
-        }
-
-        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
-        $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
-        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
-
-        if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
-            $data['status'] = false;
-            $data['message'] = $error_message;
-            $data['error_message'] = $error_message;
+            $data['message'] = 'FALSE';
             echo json_encode($data);
-            return false;
         }
-
-        if($validacion) {
-            $data['status'] = false;
-            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
-            echo json_encode($data);
-            return false;
-        }
-
-        if(count($validacionIM) > 0) {
-            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
-                $data['status'] = false;
-                $data['message'] = 'Autorización de mensualidad pendiente.';
-                echo json_encode($data);
-                return false;
-            }
-        }
-
-
-        return true;
     }
 
     public function validarDocumentacion($idLote, $idCliente, $documentOptions, $documentsNumber, $errorMessage): bool
@@ -3733,13 +3623,13 @@ class Asesor extends CI_Controller {
                 $data['message'] = 'ERROR';
                 echo json_encode($data);
             }
-            
+
         } else {
             $data['message'] = 'FALSE';
             echo json_encode($data);
         }
     }
-    
+
     public function editar_registro_loteRevision_asistentesAContraloria_proceceso2() {
 
         $idLote = $this->input->post('idLote');
@@ -4943,162 +4833,6 @@ class Asesor extends CI_Controller {
         return $folder;
     }
 
-    public function enviarAutorizaciones()
-    {
-        $correoCliente = $this->input->post('correo');
-        $telefonoCliente = $this->input->post('telefono');
-        $lada = $this->input->post('lada');
-        $idCliente = $this->input->post('idCliente');
-
-        if (!isset($idCliente)) {
-            echo json_encode(['code' => 400, 'message' => 'Cliente requerido.']);
-            return;
-        }
-
-        if (!isset($correoCliente) && !isset($telefonoCliente)) {
-            echo json_encode(['code' => 400, 'message' => 'Correo y/o teléfono requerido.']);
-            return;
-        }
-
-        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
-
-        if (isset($correoCliente)) {
-            $resultadoCorreo = $this->enviarCorreoAut($idCliente, $correoCliente, $cliente);
-            if (!$resultadoCorreo) {
-                return;
-            }
-        }
-
-        if (isset($telefonoCliente)) {
-            $resultadoSms = $this->enviarSmsAut($idCliente, $telefonoCliente, $lada, $cliente);
-            if (!$resultadoSms) {
-                return;
-            }
-        }
-
-        echo json_encode(['code' => 200]);
-    }
-
-    public function enviarCorreoAut(string $idCliente, string $correoCliente, $cliente): bool
-    {
-        if (!isset($correoCliente) || !isset($idCliente)) {
-            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
-            return false;
-        }
-
-        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
-
-        if (!isset($lote)) {
-            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
-            return false;
-        }
-
-        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
-            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
-            return false;
-        }
-
-        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::ENVIADO) {
-            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue enviado anteriormente.']);
-            return false;
-        }
-
-        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::VALIDADO) {
-            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue validado anteriormente.']);
-            return false;
-        }
-
-        if (intval($cliente->total_sol_correo_pend) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
-            return false;
-        }
-
-        $codigo = md5(microtime());
-        $codigoCorreoData = [
-            'id_cliente' => $idCliente,
-            'codigo' => $codigo,
-            'tipo' => TipoAutorizacionClienteOpcs::CORREO
-        ];
-        $this->General_model->addRecord('codigo_autorizaciones', $codigoCorreoData);
-
-        $banderaCorreoData = [
-            'correo' => $correoCliente,
-            'autorizacion_correo' => AutorizacionClienteOpcs::ENVIADO
-        ];
-        $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
-
-        $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
-        $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
-        $this->correoAut($url, $correoCliente, $nombreCliente);
-
-        return true;
-    }
-
-    public function enviarSmsAut(string $idCliente, string $telefonoCliente, string $lada, $cliente): bool
-    {
-        if (!isset($telefonoCliente) || !isset($idCliente) || !isset($lada)) {
-            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
-            return false;
-        }
-
-        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
-
-        if (!isset($lote)) {
-            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
-            return false;
-        }
-
-        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
-            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
-            return false;
-        }
-
-        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::ENVIADO) {
-            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue enviado anteriormente.']);
-            return false;
-        }
-
-        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
-            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue validado anteriormente.']);
-            return false;
-        }
-
-        if (intval($cliente->total_sol_sms_pend) > 0) {
-            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
-            return false;
-        }
-
-        $codigo = $this->getCodigoVerificacion(6);
-        $url = base_url()."Api/autorizacionSms/$idCliente?cod=$codigo";
-        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
-
-        if (!$resultadoSms) {
-            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
-            return false;
-        }
-
-        $codigoSmsData = [
-            'id_cliente' => $idCliente,
-            'codigo' => $codigo,
-            'tipo' => TipoAutorizacionClienteOpcs::SMS
-        ];
-        $this->General_model->addRecord('codigo_autorizaciones', $codigoSmsData, $this->session->userdata('id_usuario'));
-
-        $banderaSmsData = [
-            'telefono2' => $telefonoCliente,
-            'lada_tel' => $lada,
-            'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
-        ];
-        $this->General_model->updateRecord('clientes', $banderaSmsData, 'id_cliente', $idCliente);
-
-        return true;
-    }
-
-    public function clienteAutorizacion($idCliente)
-    {
-        echo json_encode($this->Clientes_model->clienteAutorizacion($idCliente));
-    }
-
     public function getSubdirectores()
     {
         echo json_encode($this->Asesor_model->getSubdirs());
@@ -5326,5 +5060,270 @@ class Asesor extends CI_Controller {
         else
             echo json_encode(array());
     }
+
+    public function validarDocumentosEstatus2($idLote, $tipo_comprobante, $id_cliente): bool
+    {
+        $comprobante_domicilio = ", 3"; // COMPROBANTE DE DOMICILIO
+        $comprobante_domicilio_label = ", COMPROBANTE DE DOMICILIO";
+        $documentosExtra = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
+        $documentosExtra_label = ""; // DOCUMENTOS EXTRA PARA LA REESTRUCTURA Y PARA LAS REUBICACIONES
+        $error_message = "";
+        $dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+        $leyendaResiciones = '';
+        $leyendaResicionesFirmada = '';
+        //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
+
+        if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
+            $documentsNumber = 3;
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
+        } else { // ES COMERCIALIZACIÓN
+            $documentosContrato = $this->Asesor_model->obtenerDocumentacionByIdloteCL($idLote, $id_cliente);
+
+            $leyendaMsgValidacion = '';
+            foreach($documentosContrato as $documento){
+                if($documento['movimiento']=='CONTRATO 1 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 1 CANCELADO ';
+                }else if($documento['movimiento']=='CONTRATO 2 CANCELADO' AND $documento['expediente']==NULL){
+                    $leyendaMsgValidacion .= ', CONTRATO 2 CANCELADO ';
+                }
+            }
+
+
+            if($tipo_comprobante == 1) {
+                $comprobante_domicilio = "";
+                $comprobante_domicilio_label = "";
+                $documentsNumber = 3;
+            }
+            else
+                $documentsNumber = 4;
+
+
+
+            $totalResiciones = 0;
+            $totalResicionesFirmadas = 0;
+            foreach ($documentosContrato as $documento){
+                if($documento['tipo_doc'] == 33 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResiciones += 1;
+                }
+                if($documento['tipo_doc'] == 35 && ($documento['expediente'] === null || $documento['expediente'] == '')){
+                    $totalResicionesFirmadas += 1;
+                }
+            }
+            $documentsNumber += ($totalResiciones + $totalResicionesFirmadas);
+            $leyendaResiciones = ($totalResiciones >= 1) ? ', RESICIONES DE CONTRATO ('.$totalResiciones.')' : '' ;
+            $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
+
+
+            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
+                if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
+                        : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
+                        : "";
+                }
+                else { // SI ES PF SÓLO PEDIMOS LA CARTA
+
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
+                    $documentsNumber += 2; // 4
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
+                }
+            }
+            $error_message = "Asegúrate de incluir los documentos: IDENTIFICACIÓN OFICIAL$comprobante_domicilio_label $documentosExtra_label $leyendaResiciones $leyendaResicionesFirmada, RECIBOS DE APARTADO Y ENGANCHE Y DEPÓSITO DE SERIEDAD antes de llevar a cabo el avance.";
+            $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio , 4 $documentosExtra" : "2 $comprobante_domicilio, 4, 10, 11, 12 $documentosExtra";
+
+
+
+
+        }
+
+        $documentsValidation = $this->Asesor_model->validateDocumentation($idLote, $documentOptions);
+        $validacion = $this->Asesor_model->getAutorizaciones($idLote, $id_cliente);
+        $validacionIM = $this->Asesor_model->getInicioMensualidadAut($idLote, $id_cliente); //validacion para verificar si tiene inicio de autorizacion de mensualidad pendiente
+
+        if(COUNT($documentsValidation) != $documentsNumber && COUNT($documentsValidation) < $documentsNumber) {
+            $data['status'] = false;
+            $data['message'] = $error_message;
+            $data['error_message'] = $error_message;
+            echo json_encode($data);
+            return false;
+        }
+
+        if($validacion) {
+            $data['status'] = false;
+            $data['message'] = 'EN PROCESO DE AUTORIZACIÓN. Hasta que la autorización no haya sido aceptada o rechazada, no podrás avanzar la solicitud.';
+            echo json_encode($data);
+            return false;
+        }
+
+        if(count($validacionIM) > 0) {
+            if($validacionIM[0]['tipoPM']==3 AND $validacionIM[0]['expediente'] == ''){
+                $data['status'] = false;
+                $data['message'] = 'Autorización de mensualidad pendiente.';
+                echo json_encode($data);
+                return false;
+            }
+        }
+
+
+        return true;
+    }
+
+    public function enviarAutorizaciones()
+    {
+        $correoCliente = $this->input->post('correo');
+        $telefonoCliente = $this->input->post('telefono');
+        $lada = $this->input->post('lada');
+        $idCliente = $this->input->post('idCliente');
+
+        if (!isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Cliente requerido.']);
+            return;
+        }
+
+        if (!isset($correoCliente) && !isset($telefonoCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Correo y/o teléfono requerido.']);
+            return;
+        }
+
+        $cliente = $this->Clientes_model->clienteAutorizacion($idCliente);
+
+        if (isset($correoCliente)) {
+            $resultadoCorreo = $this->enviarCorreoAut($idCliente, $correoCliente, $cliente);
+            if (!$resultadoCorreo) {
+                return;
+            }
+        }
+
+        if (isset($telefonoCliente)) {
+            $resultadoSms = $this->enviarSmsAut($idCliente, $telefonoCliente, $lada, $cliente);
+            if (!$resultadoSms) {
+                return;
+            }
+        }
+
+        echo json_encode(['code' => 200]);
+    }
+
+    public function enviarCorreoAut(string $idCliente, string $correoCliente, $cliente): bool
+    {
+        if (!isset($correoCliente) || !isset($idCliente)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return false;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return false;
+        }
+
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return false;
+        }
+
+        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::ENVIADO) {
+            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue enviado anteriormente.']);
+            return false;
+        }
+
+        if (intval($cliente->autorizacion_correo) === AutorizacionClienteOpcs::VALIDADO) {
+            echo json_encode(['code' => 400, 'message' => 'El correo de autorización ya fue validado anteriormente.']);
+            return false;
+        }
+
+        if (intval($cliente->total_sol_correo_pend) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de correo en transcurso.']);
+            return false;
+        }
+
+        $codigo = md5(microtime());
+        $codigoCorreoData = [
+            'id_cliente' => $idCliente,
+            'codigo' => $codigo,
+            'tipo' => TipoAutorizacionClienteOpcs::CORREO
+        ];
+        $this->General_model->addRecord('codigo_autorizaciones', $codigoCorreoData);
+
+        $banderaCorreoData = [
+            'correo' => $correoCliente,
+            'autorizacion_correo' => AutorizacionClienteOpcs::ENVIADO
+        ];
+        $this->General_model->updateRecord('clientes', $banderaCorreoData, 'id_cliente', $idCliente);
+
+        $url = base_url()."Api/validarAutorizacionCorreo/$idCliente?codigo=$codigo";
+        $nombreCliente = "$cliente->nombre $cliente->apellido_paterno $cliente->apellido_materno";
+        $this->correoAut($url, $correoCliente, $nombreCliente);
+
+        return true;
+    }
+
+    public function enviarSmsAut(string $idCliente, string $telefonoCliente, string $lada, $cliente): bool
+    {
+        if (!isset($telefonoCliente) || !isset($idCliente) || !isset($lada)) {
+            echo json_encode(['code' => 400, 'message' => 'Información requerida.']);
+            return false;
+        }
+
+        $lote = $this->registrolote_modelo->buscarLotePorIdCliente($idCliente);
+
+        if (!isset($lote)) {
+            echo json_encode(['code' => 404, 'message' => 'No existe el registro de lote.']);
+            return false;
+        }
+
+        if ($lote->idStatusContratacion != 1 || $lote->idMovimiento != 31) {
+            echo json_encode(['code' => 400, 'message' => 'El lote no está en el estatus correspondiente.']);
+            return false;
+        }
+
+        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::ENVIADO) {
+            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue enviado anteriormente.']);
+            return false;
+        }
+
+        if ($cliente->autorizacion_sms === AutorizacionClienteOpcs::VALIDADO) {
+            echo json_encode(['code' => 400, 'message' => 'El SMS de autorización ya fue validado anteriormente.']);
+            return false;
+        }
+
+        if (intval($cliente->total_sol_sms_pend) > 0) {
+            echo json_encode(['code' => 400, 'message' => 'Hay una solicitud de sms en transcurso.']);
+            return false;
+        }
+
+        $codigo = $this->getCodigoVerificacion(6);
+        $url = base_url()."Api/autorizacionSms/$idCliente?cod=$codigo";
+        $resultadoSms = $this->smsAut($url, "00$lada$telefonoCliente");
+
+        if (!$resultadoSms) {
+            echo json_encode(['code' => 400, 'message' => 'Ocurrió un error al enviar el SMS. Favor de intentarlo más tarde.']);
+            return false;
+        }
+
+        $codigoSmsData = [
+            'id_cliente' => $idCliente,
+            'codigo' => $codigo,
+            'tipo' => TipoAutorizacionClienteOpcs::SMS
+        ];
+        $this->General_model->addRecord('codigo_autorizaciones', $codigoSmsData, $this->session->userdata('id_usuario'));
+
+        $banderaSmsData = [
+            'telefono2' => $telefonoCliente,
+            'lada_tel' => $lada,
+            'autorizacion_sms' => AutorizacionClienteOpcs::ENVIADO
+        ];
+        $this->General_model->updateRecord('clientes', $banderaSmsData, 'id_cliente', $idCliente);
+
+        return true;
+    }
+
+    public function clienteAutorizacion($idCliente)
+    {
+        echo json_encode($this->Clientes_model->clienteAutorizacion($idCliente));
+    }
 }
-?>
