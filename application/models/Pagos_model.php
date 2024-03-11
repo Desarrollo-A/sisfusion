@@ -388,7 +388,7 @@ class Pagos_model extends CI_Model {
         WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
     }
     
-    function getDatosNuevasFContraloria($proyecto,$condominio,$modoSubida){
+    function getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida){
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";

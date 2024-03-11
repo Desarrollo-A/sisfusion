@@ -2160,7 +2160,7 @@ class Comisiones_model extends CI_Model {
         GROUP BY pci1.id_comision,com.ooam, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc)");
     }
  
-    function getDatosNuevasFContraloria($proyecto,$condominio) {
+    function getDatosNuevasFacturasContraloria($proyecto,$condominio) {
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $where = "";

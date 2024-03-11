@@ -2535,8 +2535,8 @@ public function getDatosNuevasAsimiladosContraloria($proyecto,$condominio){
  echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosNuevasFContraloria($proyecto,$condominio){
-  $dat =  $this->Comisiones_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
+public function getDatosNuevasFacturasContraloria($proyecto,$condominio){
+  $dat =  $this->Comisiones_model->getDatosNuevasFacturasContraloria($proyecto,$condominio)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
