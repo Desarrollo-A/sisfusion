@@ -1634,9 +1634,11 @@ const botonesAccionReubicacion = (d) => {
     const BTN_DESHACER_PREPROCESO = `<button class="btn-data btn-warning deshacer-preproceso"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="DESHACER LA REESTRUCTURA"
+                    title="DESHACER PREPROCESO"
                     data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}">
+                    data-idLote="${d.idLote}"
+                    data-flagFusion='${flagFusion}'
+                    >
                     <i class="fa fa-reply"></i>
                 </button>`;
     const BTN_REUBICACION = `
@@ -2019,21 +2021,26 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
     let id_lote = $(this).attr('data-idlote');
+    let flag_fusion = $(this).attr('data-flagFusion');
+
     let arrayManejo = [];
     arrayManejo['id_lote'] = id_lote;
     arrayManejo['id_cliente'] = id_cliente;
+    arrayManejo['flag_fusion'] = flag_fusion;
     arrayDeshacerRees.push(arrayManejo);
-    $('#tituloDeshacer').text('¿Desea deshacer la reestructura del lote '+ id_lote + ' ?' );
-    $('#textDeshacer').text('Se revertiran los cambios al hacer este lote como reestrucura');
-    $('#deshacerReestrucura').modal('toggle');
+    
+    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ id_lote + ' ?' );
+    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borraran propuestas o fusiones realizadas');
+    $('#deshacerPreproceso').modal('toggle');
 });
 
-$(document).on('click', '#deshacerReestrucuraOK', function () {
-    $('#deshacerReestrucura').modal('toggle');
+$(document).on('click', '#deshacerPreprocesoOK', function () {
+    $('#deshacerPreproceso').modal('toggle');
 
     let data = new FormData();
     data.append('id_cliente', arrayDeshacerRees[0]['id_cliente']);
     data.append('id_lote', arrayDeshacerRees[0]['id_lote']);
+    data.append('flag_fusion', arrayDeshacerRees[0]['flag_fusion']);
 
     $.ajax({
         url: `${general_base_url}Reestructura/deshacerReestrucura`,
@@ -2048,21 +2055,22 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
         success: function (response) {
             response = JSON.parse(response);
 
-            $("#deshacerReestrucuraOK").prop("disabled", false);
+            $("#deshacerPreprocesoOK").prop("disabled", false);
             if (response.resultado) {
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#reubicacionClientes').DataTable().ajax.reload(null, false);
                 $("#deshacerReestrucura").modal("hide");
+                $("#spiner-loader").addClass('hide');
             }
             else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
 
 
-            $("#deshacerReestrucuraOK").prop("disabled", false);
+            $("#deshacerPreprocesoOK").prop("disabled", false);
 
         },
         error: function () {
-            $("#deshacerReestrucuraOK").prop("disabled", false);
+            $("#deshacerPreprocesoOK").prop("disabled", false);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });

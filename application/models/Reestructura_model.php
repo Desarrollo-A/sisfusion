@@ -1352,4 +1352,36 @@ class Reestructura_model extends CI_Model
             return true;
         }
     }
+
+    public function checkReubicacion($id_lote){
+        $query = $this->db->query('SELECT *FROM propuestas_x_lote WHERE id_lotep != '.$id_lote.' AND idLote ='.$id_lote);
+        return $query;
+    }
+
+    public function checkFusion($id_lote){
+        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ?', array($id_lote));
+        return $query;
+    }
+
+    public function checkReestructura($id_lote){
+        $query = $this->db->query('SELECT *FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote ='.$id_lote);
+        return $query;
+    }
+
+    public function deletePropuestas($id_lote){
+        $query = $this->db->query('DELETE FROM propuestas_x_lote WHERE idLote = ?', array($id_lote));
+        
+        return $query;
+    }
+
+    public function deleteFusion($id_lote){
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', array($id_lote));
+        
+        return $query;
+    }
+
+    public function updateLotesDestino($idLotes, $idStatusLote){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, 1));
+        return $query;
+    }
 }

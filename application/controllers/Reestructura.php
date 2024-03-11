@@ -610,27 +610,120 @@ class Reestructura extends CI_Controller{
     }
 
     public function deshacerReestrucura(){
-        $this->db->trans_begin();
+        
         $id_cliente = $this->input->post('id_cliente');
         $id_lote    = $this->input->post('id_lote');
-        $banderaInterna = 2;
+        $flag_fusion = $this->input->post('flag_fusion');
+        $proceso = 0; // 2 - reubicacion, 3 - restructura, 4 - reubicacion excedente, 5 - fusion reubicacion, 6 - fusion excedente
+        $data = 0; // aqui se guardar el result de cada query 
+        $idLotesDestino = array();
+
+        if($flag_fusion == 1){ // if para saber que proceso se es
+            $checkFusion = $this->Reestructura_model->checkFusion($id_lote);
+            if($checkFusion->num_rows() > 0){
+                $proceso = 5;
+                $data = $checkFusion->result();
+            }
+            // hacer query de lotes fusion poara obtener data ?
+        }
+        else{
+            $checkReubicacion = $this->Reestructura_model->checkReubicacion($id_lote);
+
+            if($checkReubicacion->num_rows() > 0){
+                $proceso = 2;
+                $data = $checkReubicacion->result();
+            }
+            else{
+                $checkReestructura = $this->Reestructura_model->checkReestructura($id_lote);
+                $proceso = 4;
+                $data = $checkReestructura->result();
+            }
+        }
+
+        switch($proceso){ // checar si este swicth puede usase para algo mas
+            case 2:
+                $idStatusLote = 15; // valor para lotes de destino            
+                $estatus_preproceso = 0; // valor para lote de origen
+                foreach($data as $d){
+                    $idLotesDestino[] = $d->id_lotep;
+                }
+                break;
+
+            case 4:
+                $idStatusLote = 2; // valor para lotes de destino            
+                $estatus_preproceso = 0; // valor para lote de origen
+                foreach($data as $d){
+                    $idLotesDestino[] = $d->id_lotep;
+                }
+                break;
+            
+            case 5:
+                $idStatusLote = 15; // valor para lotes de destino            
+                $estatus_preproceso = 0; // valor para lote de origen
+                foreach($data as $d){
+                    $idLotesDestino[] = $d->idLote;
+                }
+                break;
+        }
+
+
+        $this->db->trans_begin();
+
+        $banderaInterna = 3;
         $banderaActualizar = 0;
-        //1: eliminar la propuesta por ote de este lote
-        $deletePXL = $this->Reestructura_model->borrarPXL($id_lote); //devuelte el numero de rows affectados
-        if ($deletePXL <= 0) {
-            $this->db->trans_rollback();
-            echo json_encode(array(
-                'titulo' => 'ERROR',
-                'resultado' => FALSE,
-                'message' => 'Error al borrar las propuestas por lote del lote: '.$id_lote,
-                'color' => 'danger'
-            ));
-            return;
-        }else{
+
+        // 1: eliminar la propuesta por lote de este lote
+        if ($proceso != 0) {
+            if ($proceso == 5) {
+                $delete = $this->Reestructura_model->deleteFusion($id_lote); // devuelve el numero de rows affectados
+            } else {
+                $delete = $this->Reestructura_model->deletePropuestas($id_lote); // devuelve el numero de rows affectados
+            }
+
+            if ($delete <= 0) {
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => $proceso == 5 ? 'Error al borrar la fusión del lote: ' . $id_lote : 'Error al borrar las propuestas del lote: ' . $id_lote,
+                    'color' => 'danger'
+                ));
+                return;
+            } else {
+                $banderaActualizar = $banderaActualizar + 1;
+            }
+        }
+        else{
             $banderaActualizar = $banderaActualizar + 1;
         }
 
 
+
+        // 2: se deben regresar los lotes a su estatus de origen
+        if($proceso != 0){
+            $ids = implode(',', $idLotesDestino); 
+
+            $updateLotesDestino = $this->Reestructura_model->updateLotesDestino($ids, $idStatusLote);
+
+            if($updateLotesDestino){
+                $banderaActualizar = $banderaActualizar + 1;
+            } else {
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar los lotes de destino: ' . $id_lote,
+                    'color' => 'danger'
+                ));
+                return;
+            }
+        }
+        else{
+            $banderaActualizar = $banderaActualizar + 1;
+        }
+
+
+        // 3: regresar el estatus lote a su origen
         $dataRegresoLote = array(
             "idStatusLote" => 2,
             "estatus_preproceso" => 0,
@@ -655,10 +748,10 @@ class Reestructura extends CI_Controller{
             echo json_encode(array(
                 'titulo' => 'OK',
                 'resultado' => TRUE,
-                'message' => 'Se ha revertido la reestructura correctamente del lote <b>'.$id_lote.'</b>',
+                'message' => 'Se ha revertido el proproceso del lote: <b>'.$id_lote.'</b>',
                 'color' => 'success'
             ));
-             //se ejecuta el rollback porque es prueba y no se debe ejecutar nada
+             // se ejecuta el rollback porque es prueba y no se debe ejecutar nada
         }else{
             $this->db->trans_rollback();
             echo json_encode(array(
