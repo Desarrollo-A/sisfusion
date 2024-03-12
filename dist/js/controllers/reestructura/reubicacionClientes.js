@@ -2048,15 +2048,13 @@ $(document).on('click', '#deshacerPreprocesoOK', function () {
         cache: false,
         contentType: false,
         processData: false,
-        type: "POST",
+        method: "POST",
         beforeSend:function(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            response = JSON.parse(response);
-
             $("#deshacerPreprocesoOK").prop("disabled", false);
-            if (response.resultado) {
+            if (response.result) {
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#reubicacionClientes').DataTable().ajax.reload(null, false);
                 $("#deshacerReestrucura").modal("hide");

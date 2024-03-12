@@ -1359,7 +1359,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function checkFusion($id_lote){
-        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ?', array($id_lote));
+        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ? AND destino = ?', array($id_lote, 1));
         return $query;
     }
 
@@ -1382,6 +1382,18 @@ class Reestructura_model extends CI_Model
 
     public function updateLotesDestino($idLotes, $idStatusLote){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, 1));
+        return $query;
+    }
+
+    public function checkLotesFusion($idLotes){
+        $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
+
+        return $query;
+    }
+
+    public function updateLotesFusion($idLote, $idStatusLote){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, 1, $idLote));
+
         return $query;
     }
 }
