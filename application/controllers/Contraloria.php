@@ -2156,9 +2156,14 @@ class Contraloria extends CI_Controller {
     }
 
     public function liberacion_contraloria() {
+
         $this->load->view('template/header');
         $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
         $this->load->view("contraloria/vista_liberacion_contraloria", $datos);
+        /*
+        $this->load->view('template/header');
+        $datos["residencial"]= $this->registrolote_modelo->getResidencialQro();
+        $this->load->view("contraloria/vista_liberacion_contraloria", $datos);*/
     }
 
     public function app_lib() {
@@ -2560,6 +2565,34 @@ class Contraloria extends CI_Controller {
                 array_push($insertArrayData, $commonData2);
                 array_push($updateArrayData, $commonData); 
             }
+        $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
+        $this->db->insert_batch('auditoria',$insertArrayData);
+        echo json_encode($response);
+    }
+
+    public function setDataQM(){
+        $json = json_decode($this->input->post("jsonInfo"));
+        $insertArrayData = array();
+        $updateArrayData = array();
+        $updateArrayData = array();
+
+        for ($i = 0; $i < count($json); $i++) { // MJ: SE ARMAN ARRAYS PARA INSERTAR | ACTUALIZAR SEGÚN SEA EL CASO
+            $commonData = array();
+            $commonData2 = array();
+            $commonData +=  array("idLote" => $json[$i]->ID_LOTE);
+            $commonData +=  array("observacionContratoUrgente" => NULL);
+            $commonData +=  array("usuario" => $this->session->userdata('id_usuario'));
+            $commonData2 +=  array("id_parametro" => $json[$i]->ID_LOTE);
+            $commonData2 +=  array("tipo" => 'update');
+            $commonData2 +=  array("anterior" => 1);
+            $commonData2 +=  array("nuevo" => null);
+            $commonData2 +=  array("col_afect" => 'observacionContratoUrgente');
+            $commonData2 +=  array("tabla" => 'lotes');
+            $commonData2 +=  array("creado_por" => $this->session->userdata('id_usuario'));
+            array_push($insertArrayData, $commonData2);
+            array_push($updateArrayData, $commonData);
+        }
+
         $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
         $this->db->insert_batch('auditoria',$insertArrayData);
         echo json_encode($response);
