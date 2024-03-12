@@ -257,18 +257,21 @@ class Administracion_model extends CI_Model {
 		ORDER BY cl.id_cliente DESC")->result();
     }
     public function getDatosLotes($idLote){
-        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN CLIENTE')) AS nombreCliente, cl.id_cliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'NA') AS fechaApartado, 
-        UPPER(co.nombre_condominio) nombreCondominio, re.nombreResidencial,UPPER(COALESCE(opx.nombre, 'SIN ESPECIFICAR')) representante,
-        COALESCE(tip.tipo_venta, 'NA') tipo_venta, CASE WHEN CAST(hl.comentario AS VARCHAR(MAX))='' THEN 'SIN COMENTARIO' ELSE hl.comentario END AS comentario--comentario9
-        --,CASE WHEN CAST(hl2.comentario AS VARCHAR(MAX))='' THEN 'SIN COMENTARIO' ELSE hl2.comentario END AS comentario15
+        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN ESPECIFICAR')) AS nombreCliente, cl.id_cliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'NA') AS fechaApartado, 
+        UPPER(co.nombre) nombreCondominio, re.nombreResidencial,UPPER(COALESCE(opx.nombre, 'SIN ESPECIFICAR')) representante,
+        COALESCE(UPPER(tip.tipo_venta), 'SIN ESPECIFICAR') tipoVenta, 
+        CASE WHEN lo.idStatuslote = 6 THEN 1 ELSE 0 END cambioDisponible, lo.idStatusContratacion, lo.idMovimiento, lo.idStatusLote,
+        UPPER(sta.nombre) as 'estatusLote', UPPER(mov.descripcion) as 'movimientoEstatus', UPPER(sta.nombre) as 'estatusContratacion',
+        CASE WHEN (lo.idMovimiento IN (39,45)) THEN comentario ELSE '' END AS comentario
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN movimientos mov ON mov.idMovimiento = lo.idMovimiento
+        INNER JOIN statuslote sta ON sta.idStatusLote = lo.idStatusLote
+        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
         LEFT JOIN opcs_x_cats opx ON opx.id_opcion = cl.rl AND opx.id_catalogo = 77
         LEFT JOIN tipo_venta tip ON tip.id_tventa = lo.tipo_venta
-        LEFT JOIN historial_lotes hl ON hl.idLote = lo.idLote AND hl.idStatusContratacion = 9 AND hl.status = 1
-        --LEFT JOIN historial_lotes hl2 ON hl2.idLote = lo.idLote AND hl2.idStatusContratacion = 15 AND hl2.status = 1
         WHERE lo.idLote = $idLote ");
         return $query->result_array();
     }
@@ -279,7 +282,6 @@ class Administracion_model extends CI_Model {
         FROM opcs_x_cats WHERE id_catalogo IN (120,77) AND estatus = 1
         UNION ALL SELECT 'venta_tipo' id_catalogo, id_tventa id_opcion, tipo_venta nombre, NULL estatus FROM tipo_venta
         UNION ALL SELECT 'sedes' id_catalogo, id_sede id_opcion, nombre, impuesto from sedes WHERE estatus = 1)t1 ORDER BY id_catalogo, nombre");
-        return $query->result_array();
     }
     //Function to retrieve the lastId
     public function getLastId($table, $where, $select) {
@@ -297,5 +299,10 @@ class Administracion_model extends CI_Model {
         $this->db->where($where);
         $response = $this->db->update($table, $data);
         return $response; 
+    }
+    public function getResultados($idLote, $idCliente) {
+        $filter = $idCliente == '' ? '' : " AND idCliente = $idCliente";
+        $query = $this->db->query("SELECT * FROM historial_lotes WHERE idLote = $idLote $filter ORDER BY idHistorialLote DESC");
+        return $query->result_array();
     }
 }

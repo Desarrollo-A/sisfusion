@@ -16,7 +16,7 @@ $('#tableDoct thead tr:eq(0) th').each(function (i) {
     });
 });
 
-$(".find_doc").click( function() {
+$(".find_doc").click(function() {
     $("#tableDoct").removeClass('hide');
     var idLote = $('#inp_lote').val();
     documentacionLoteTabla = $("#tableDoct").DataTable({
@@ -58,20 +58,45 @@ $(".find_doc").click( function() {
         columns: [
             {data: 'nombreResidencial'},
             {data: 'nombreCondominio'},
-            {data: 'idLote'},
-            {data: 'nombreLote'},
             {data: 'nombreCliente'},
             {data: 'fechaApartado'},
             {data: 'representante'},
+            {data: 'tipoVenta'},
+            {data: 'nombreLote'},
+            {data: 'idLote'},
+            {data: 'estatusContratacion'},
+            {data: 'movimientoEstatus'},
+            {data: 'estatusLote'},
             {
                 "data": function(d) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky btn_accion" data-toggle="tooltip" data-placement="top" title="ACCIONES" value="' + d.idLote + '" data-nomLote="'+ d.nombreLote+'" data-idCliente="'+ d.id_cliente+'" data-Comentario="'+d.comentario+'" data-tipoVenta="'+ d.tipo_venta+'"><i class="fas fa-history"></i></button></div>';
+                    return `<div class="d-flex justify-center">
+                                <button class="btn-data btn-sky btn_accion" 
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="ACCIONES" 
+                                        value="${d.idLote}" 
+                                        data-nomLote="${d.nombreLote}" 
+                                        data-idCliente="${d.id_cliente}" 
+                                        data-Comentario="${d.comentario}" 
+                                        data-tipoVenta="${d.tipoVenta}"
+                                        data-cambioEstatus="${d.cambioDisponible}" 
+                                        data-estatus11="[${d.idStatusContratacion}, ${d.idMovimiento}]" 
+                                        data-representante="${d.representante}"
+                                        data-comentario="${d.comentario}">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </div>`;
                 }
             }
         ],
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        }
     });
     $(window).resize(function(){
-        tabla_inventario.columns.adjust();
+        documentacionLoteTabla.columns.adjust();
     });
 });
 $('#addDeleteFileModal').on('show.bs.modal', function () {
@@ -81,7 +106,6 @@ $('#addDeleteFileModal').on('show.bs.modal', function () {
 
 $(document).on("click", ".btn_accion", function() {
     verificarRol(id_rol_general, 2);
-    //hideOption("opciones", [3,4,5]);
     var idLote = $("#inp_lote").val();
     let buttonMain = '';
     let buttonDelete = '';
@@ -112,9 +136,17 @@ $(document).on("click", ".btn_accion", function() {
     });
     $("#seeInformationModal").modal();
 });
+
+$('#seeInformationModal').on('shown.bs.modal', function() {
+    $("#opciones").val('');
+    $("#opciones").selectpicker('refresh');
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: "hover"
+    });
+    console.log("Modal called");
+});
 $(document).on("click", "#moreOptions", function(){
     $("#seeInformationModal").modal();
-    //hideOption("opciones", [1,2,6,7]);
     verificarRol(id_rol_general, 1);
 });
 
@@ -134,10 +166,11 @@ $('#seeInformationModal').on('hide.bs.modal', function () {
 
 $("#opciones").change(function(){
     $(".rowHide").hide();
+    $("#btn_upt").show();
     let accion = $("#opciones").val();
     //1 RL
     if(accion == 1) {
-        let representante = $(".btn_accion").closest('tr').find('td:eq(6)').text().trim(); 
+        let representante = $(".btn_accion").closest('tr').find('td:eq(4)').text().trim(); 
         selectOptionText("representante", representante);
         $("#representante").closest('.row').show();  
     }
@@ -168,14 +201,44 @@ $("#opciones").change(function(){
     else if(accion == 7) {
         $("#rowComentario").show();
         $("#comentarioLote").val($(".btn_accion").data('comentario'));
+        if($(".btn_accion").data('comentario') === '') {
+            $("#comentarioLote").prop('disabled', true);
+        }else {
+            $("#comentarioLote").prop('disabled', false);
+        }
     }
-    else if(accion == 8) {
-        //$("#")
+    else if (accion == 8) {
+        $("#rowCheck").show();
+        let cambioDisponible = $(".btn_accion").data('cambioestatus');
+        if(cambioDisponible == 1) {
+            handleCheckboxButton(false, 'Cambiar status lote intercambio a contratado', 'pointer');
+        }else {
+            handleCheckboxButton(true, 'Cambiar status lote intercambio a contratado', 'not-allowed');
+        }   
+    }
+    else if(accion == 9) {
+        $("#rowCheck").show();
+        let cambioDisponible = $(".btn_accion ").data('estatus11');
+        if(cambioDisponible == '6,76' || cambioDisponible == '7,77' || cambioDisponible == '8,38'
+          || cambioDisponible == '11,41' || cambioDisponible == '7,37'){
+            handleCheckboxButton(false, 'Regresar lote al estatus 11', 'pointer');
+        }
+        else {
+            handleCheckboxButton(true,'Regresar lote al estatus 11', 'not-allowed');
+        }
     }
 });
 
 $("#btn_upt").on('click', function(){
     $("#myModalUpdate").modal();
+});
+$("#switchCheckbox").on("change", function(){
+    if ($(this).is(":checked")) {
+        $("#myModalUpdate").modal();
+        $("#myModalUpdate #cancelar").click(function(){
+            $("#switchCheckbox").prop("checked", false);
+        })
+    }
 });
 
 $(document).on('click', "#actualizarBtn", function(e){
@@ -241,12 +304,11 @@ function setValorExterno(sourceId, targetId, attr) {
 } 
 
 function loadData() {
-    $("#representante, #tipoVenta, #sedes, #nombre_rep, #repData, #rowArchivo, #rowComentario").closest('.row').hide();
-    let selectsVacios = ["#opciones", "#representante", "#tipoVenta", "#repData", "#sedes"];
+    $("#representante, #tipoVenta, #sedes, #nombre_rep, #repData, #rowArchivo, #rowComentario, #rowCheck").closest('.row').hide();
+    /*let selectsVacios = ["#opciones", "#representante", "#tipoVenta", "#repData", "#sedes"];
     selectsVacios.forEach(function(element) {
         $(element).empty().selectpicker('refresh');
-    });
-
+    });*/
     $.post(`${general_base_url}Administracion/getCatalogoMaster`, function(data) {
         for(let i = 0; i < data.length; i++) {
             if(data[i]['id_catalogo'] == 120) {
@@ -269,27 +331,34 @@ function loadData() {
         $("#repData").selectpicker('refresh');
         $("#sedes").selectpicker('refresh');
     }, 'json'); 
-}
+}   
 function verificarRol(idRol, type) {
     if(idRol == 11 && type == 1) {
-        hideOption("opciones", [1,2,3,4,5,6,7,8]);   
+        hideOption("opciones", [1,2,3,4,5,6,7,8,9]);   
     }
     else if(idRol == 11 && type == 2){
-        hideOption("opciones", [1,2,3,4,5,6,7]);   
+        hideOption("opciones", [1,2,3,4,5,6,7,8]);   
     }
     else if(idRol == 17 && type == 1) {
-        hideOption("opciones" ,[1,2,6,7,8]);
+        hideOption("opciones" ,[1,2,6,7,8,9]);
     }
     else if(idRol == 17 && type == 2) {
-        hideOption("opciones", [3,4,5, 8]);   
+        hideOption("opciones", [3,4,5,9]);   
     }
 }
-
+function handleCheckboxButton(disabled, title, cursor) {
+    $("#switchCheckbox").prop('disabled', disabled);
+    $("#divSwitch").attr('title', title);
+    $("#divSwitch").tooltip();
+    $("#divSwitch").css('cursor', cursor);
+    $("#switchCheckbox").css('cursor', cursor);
+    $("#btn_upt").toggle(!disabled);
+    $("#lblSwitch").text(title.toUpperCase());
+}
 $(document).on('hidden.bs.modal', "#seeInformationModal", function(){
     $(".rowHide").hide();
     $("#opciones option").css('display', 'block');
-    $("#opciones, #tipoVenta, #representante, #sedes, #impuesto, #repEstatus, #repData").val('').selectpicker('refresh');
+    $("#btn_upt").show();
+    //$("#opciones, #tipoVenta, #representante, #sedes, #impuesto, #repEstatus, #repData").val('').selectpicker('refresh');
+    $("#tipoVenta, #representante, #sedes, #impuesto, #repEstatus, #repData").val('').selectpicker('refresh');
 });
-console.log("id_rol: ", id_rol_general);
-
-

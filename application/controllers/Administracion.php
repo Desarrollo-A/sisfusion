@@ -581,6 +581,7 @@ class Administracion extends CI_Controller{
 		$estatus =  $data['repEstatus'];
 		$idRepresentante = $data['repData'];
 		$comentario = $data['comentarioLote'];
+		$switchCheckbox = isset($data['switchCheckbox']) && $data['switchCheckbox'] !== '' ? $data['switchCheckbox'] : '';
 		//ACTUALIZAR RL
 		if($accion == 1 && !$this->anyEmpty($representante, $idCliente)){
 			$response = $this->General_model->updateRecord('clientes', array('rl' => $representante), 'id_cliente', $idCliente);
@@ -613,8 +614,34 @@ class Administracion extends CI_Controller{
 			echo json_encode(array("status" => $response, "reload" => true));
 		}
 		else if($accion == 7 && !$this->anyEmpty($idLote, $comentario, $idCliente)) {
-			$response = $this->Administracion_model->updateMultiple('historial_lotes', array('idCliente' => $idCliente, 'idLote' => $idLote, 'idStatusContratacion' => 9), array('comentario' => $comentario));
+			//$response = $this->Administracion_model->updateMultiple('historial_lotes', array('idCliente' => $idCliente, 'idLote' => $idLote, 'idStatusContratacion' => 9), array('comentario' => $comentario));
+			$response = $this->General_model->updateRecord('lotes', array('comentario' => $comentario), 'idLote', $idLote);
 			echo json_encode(array("status" => $response, "tabla" => true));
+		}
+		else if($accion == 8 && !$this->anyEmpty($idLote, $switchCheckbox)) {
+			$switchCheckbox = $data['switchCheckbox'] = 'on' ? '9' : '6';
+			$response = $this->General_model->updateRecord('lotes', array('idStatusLote' => $switchCheckbox), 'idLote', $idLote);
+			echo json_encode(array("status"=>$response, "tabla" => true));
+		}
+		else if($accion == 9) {
+			
+			$result = $this->Administracion_model->getResultados($idLote, $idCliente);
+			
+			$idMovimiento = $result[0]['idMovimiento'];
+			$idStatus = $result[0]['idStatusContratacion'];
+
+			$idMovimiento2 = $result[1]['idMovimiento'];
+			$idStatus2 = $result[1]['idStatusContratacion'];
+			$statusContratacion1 = array("7", "6");
+			
+			if(($idStatus == 7 || $idStatus == 6) && ($idMovimiento == 77 || $idMovimiento == 76)) {
+				$response = $this->General_model->updateRecord('lotes', array('idMovimiento' => $idMovimiento2, 'idStatusContratacion' => $idStatus2), 'idLote', $idLote);
+				echo json_encode(array("status" => $response, "tabla" => true));
+			}
+			else if(($idStatus == 11 || $idStatus == 7 || $idStatus == 8) && ($idMovimiento == 41 || $idMovimiento == 37 || $idMovimiento == 38)) {
+				$response = $this->General_model->updateRecord('lotes', array('idMovimiento'=>$idMovimiento2, 'idStatusContratacion'=> $idStatus2,'totalValidado' => '0.00', 'validacionEnganche' => NULL), 'idLote', $idLote);
+				echo json_encode(array("status" => $response, "tabla"=>true));
+			}
 		}
 		else {
 			echo json_encode(array("status" => false));
