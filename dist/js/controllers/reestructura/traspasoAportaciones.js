@@ -84,7 +84,13 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
             data: function (d) {
                 let nombreLote = d.nombreLoteDestino;
                 let baseCarpeta = 'static/documentos/contratacion-reubicacion';
+
                 let linkCorrida = general_base_url+baseCarpeta+'/'+nombreLote+'/'+d.corrida;
+                
+                if(d.bucket == 1){
+                    linkCorrida = `${general_base_url}documentacion/archivo/${d.corrida}`
+                }
+
                 let corridaButton = '<a class="btn-data btn-green" href="'+linkCorrida+'" target="_blank"><i class="fas fa-file-excel-o"></i></a>';
 
 

@@ -984,7 +984,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, dxc.id_dxc, cl.proceso, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, dxc.cantidadTraspaso, dxc.comentario comentarioTraspaso,
         re2.nombreResidencial nombreResidencialDestino, co2.nombre nombreCondominioDestino, lo2.nombreLote nombreLoteDestino, lo2.referencia referenciaDestino, lo2.idLote idLoteDestino,
-        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 1 tipo, pxl.corrida
+        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 1 tipo, pxl.corrida, pxl.bucket
         FROM propuestas_x_lote pxl
         INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.status = 1 
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -1012,7 +1012,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.proceso, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, lf2.cantidadTraspaso, lf2.comentario comentarioTraspaso,
         re2.nombreResidencial nombreResidencialDestino, co2.nombre nombreCondominioDestino, lo2.nombreLote nombreLoteDestino, lo2.referencia referenciaDestino, lo2.idLote idLoteDestino,
-        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 2 tipo, lf2.corrida
+        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 2 tipo, lf2.corrida, lf2.bucket
         FROM (
         SELECT lf1.idLotePvOrigen, STRING_AGG (re.nombreResidencial, ', ') nombreResidencialOrigen, STRING_AGG(co.nombre, ', ') nombreCondominioOrigen, STRING_AGG(lo.nombreLote, ', ') nombreLoteOrigen, 
         STRING_AGG(lo.referencia, ', ') referenciaOrigen, STRING_AGG(lo.idLote, ', ') idLoteOrigen
