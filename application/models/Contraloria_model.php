@@ -278,19 +278,23 @@ class Contraloria_model extends CI_Model {
                 LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto 
                 LEFT JOIN historial_documento hd ON hd.idLote = l.idLote AND hd.idCliente = cl.id_cliente AND hd.tipo_doc IN (41, 46) AND hd.status = 1
             WHERE 
-                l.status = 1 
-                AND l.idStatusContratacion IN (8, 11) 
-                AND l.idMovimiento IN (38, 65, 41) 
-                AND l.status8Flag = 1 
-                AND l.validacionEnganche != 'NULL' 
-                AND l.validacionEnganche IS NOT NULL 
-                AND (
-                l.totalNeto2 = 0.00 
-                OR l.totalNeto2 = '0.00' 
-                OR l.totalNeto2 <= 0.00 
-                OR l.totalNeto2 IS NULL
+                (
+                    l.status = 1 
+                    AND l.idStatusContratacion IN (8, 11) 
+                    AND l.idMovimiento IN (38, 65, 41) 
+                    AND l.status8Flag = 1 
+                    AND l.validacionEnganche != 'NULL' 
+                    AND l.validacionEnganche IS NOT NULL 
+                    AND (l.totalNeto2 = 0.00 OR l.totalNeto2 = '0.00' OR l.totalNeto2 <= 0.00 OR l.totalNeto2 IS NULL) 
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) IN (0, 1) $filtroSede 
                 ) 
-                AND cl.status = 1 $filtroSede 
+                OR
+                (
+                    l.status = 1 
+                    AND l.idMovimiento IN (36, 41) 
+                    AND ISNULL(l.totalNeto, 0.00) > 0.00
+                    AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 $filtroSede 
+                )
             GROUP BY 
                 l.idLote, 
                 cl.id_cliente, 
@@ -830,13 +834,13 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         return true;
     }
 
-    public function get_lp($idLote){
+    /*public function get_lp($idLote){
         $query = $this->db-> query("SELECT cl.lugar_prospeccion
         FROM clientes cl 
         INNER JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto AND pr.fecha_creacion <= '2022-01-20 00:00:00.000'
         WHERE cl.lugar_prospeccion = 6 AND cl.idLote = $idLote AND cl.status = 1");
         return $query->row();
-    }
+    }*/
 
     public function getLotesAllAssistant($idCondominio) {
         $id_lider = $this->session->userdata('id_lider');
@@ -1325,10 +1329,10 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
                 $estatus_permitido='1, 3, 4';
                 break;
             case 17:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
                 break;
             case 70:
-                $estatus_permitido='2,3';
+                $estatus_permitido='2,3,5';
 
         }
         $query = $this->db->query("SELECT STRING_AGG(au.id_autorizacion, ', ') id_autorizacion, au.idResidencial, STRING_AGG(au.idCondominio, ', ') idCondominio, ISNULL(CAST(au.lote AS VARCHAR(MAX)), '0') lote, 
@@ -1916,5 +1920,52 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
     public function getFilename($idDocumento) {
         return $this->db->query("SELECT * FROM historial_documento WHERE idDocumento = $idDocumento");
+    }
+
+    public function getContratoFirmado($idLote) {
+		return $this->db->query("SELECT * FROM historial_documento WHERE idLote = $idLote AND tipo_doc = 30 AND status = 1")->result_array();
+	}
+
+    public function getReporteCoincidenciasCT() {
+        return $this->db->query(
+			"SELECT 
+				re.nombreResidencial,
+				co.nombre nombreCondominio,
+				lo.nombreLote,
+				lo.idLote,
+				UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+				cl.fechaApartado,
+				CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+				CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+				CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+				CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+				CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+				CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+				cl.correo corretoCliente,
+				cl.telefono1 telefonoCliente,
+				u0.correo correoAsesor,
+				u0.telefono telefonoAsesor
+			FROM lotes lo
+			INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado > '2024-01-31 23:59:59.999'
+			INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+			INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+			INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+			LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+			LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+			LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+			LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+			LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+			WHERE 
+				lo.status = 1 
+				AND (u0.correo = cl.correo OR u0.telefono = cl.telefono1)
+			ORDER BY
+				cl.fechaApartado
+			"
+		)->result_array();
+    }
+    
+    public function autsAceptadasMSI(){
+        $query = $this->db->query("SELECT * FROM autorizaciones_msi WHERE estatus_autorizacion=5");
+        return $query->result_array();
     }
 }

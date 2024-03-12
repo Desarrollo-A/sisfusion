@@ -1092,8 +1092,8 @@ class Asesor extends CI_Controller {
         //prueba
         //$tipo_venta_result = $this->Asesor_model->getTipo_Venta();
         $datos['tipo_venta'] = $datos["cliente"][0]->tipo_venta;
-        //print_r($datos["cliente"][0]->tipo_venta);
-        //exit;
+//        print_r($datos["cliente"][0]);
+//        exit;
 
         $this->load->view('template/header');
         $this->load->view('asesor/deposito_formato', $datos);
@@ -1584,13 +1584,15 @@ class Asesor extends CI_Controller {
 
         if ($informacion_copropietarios->num_rows() > 0) {
             foreach ($informacion_copropietarios->result() as $row) {
+                $ladaTel = ($row->ladaTel != 0) ? '(+'.$row->ladaTel.') ' : '';
+                $ladaCel = ($row->ladaCel != 0) ? '(+'.$row->ladaCel.') ' : '';
                 $html .= '<tr style="background-color:#BECFDC;">
                     <td width="22%"><b>NOMBRE: </b>' . $row->nombre_cop . ' ' . $row->apellido_paterno . ' ' . $row->apellido_materno . '</td>
                     <td width="26%"><b>PERSONALIDAD JURÍDICA: </b>' . $row->personalidad_juridica . '</td>
                     <td width="12%"><b>RFC: </b>' . $row->rfc . '</td>
                     <td width="16%"><b>CORREO: </b>' . $row->correo . '</td>
-                    <td width="12%"><b>TEL: </b>' . $row->telefono . '</td>
-                    <td width="12%"><b>TEL 2: </b>' . $row->telefono_2 . '</td>
+                    <td width="12%"><b>TEL: </b>'.$ladaTel.$row->telefono.'</td>
+                    <td width="12%"><b>TEL 2: </b>'.$ladaCel.$row->telefono_2.'</td>
                     </tr>
                     <tr style="background-color:#BECFDC;">
                     <td width="22%"><b>FECHA NACIMIENTO: </b>' . $row->fecha_nacimiento . '</td>
@@ -1909,6 +1911,9 @@ class Asesor extends CI_Controller {
         $emailCopArray = $this->input->post("email_cop[]");
         $telefono1CopArray = $this->input->post("telefono1_cop[]");
         $telefono2CopArray = $this->input->post("telefono2_cop[]");
+        $ladaTelCop1 = $this->input->post("ladaTelCop[]");
+        $ladaCelCop2 = $this->input->post("ladaCelCop[]");
+
         $fNacimientoCopArray = $this->input->post("fnacimiento_cop[]");
         $nacionalidadCopArray = $this->input->post("nacionalidad_cop[]");
         $originarioCopArray = $this->input->post("originario_cop[]");
@@ -2015,8 +2020,13 @@ class Asesor extends CI_Controller {
         $nombre = $this->input->post('nombre');
         $apellido_paterno = $this->input->post('apellido_paterno');
         $apellido_materno = $this->input->post('apellido_materno');
+
+        $lada1 = $this->input->post('ladaTel1');//lada pais casa
+        $lada2 = $this->input->post('ladaTel2');//lada pais cel
         $telefono1 = $this->input->post('telefono1');//telefono casa
         $telefono2 = $this->input->post('telefono2');//telefono celular
+
+
         $correo = $this->input->post('correo');
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
@@ -2040,7 +2050,14 @@ class Asesor extends CI_Controller {
         $costoM2 = str_replace('$','', $costoM2);
         $costom2f = str_replace(',','',$this->input->post('costom2f'));
         $costom2f = str_replace('$','', $costom2f);
+        $tipo_venta = $this->input->post('tipo_venta');
+        $proceso= $this->input->post('proceso');
 
+        $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso);
+        if(!$validacionM2) {//si es diferente a true
+            echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
+            exit;
+        }
 
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
@@ -2147,8 +2164,12 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["nombre"] = $nombre;
         $arreglo_cliente["apellido_paterno"] = $apellido_paterno;
         $arreglo_cliente["apellido_materno"] = $apellido_materno;
+
+        $arreglo_cliente["ladaTel1"] = $lada1;
         $arreglo_cliente["telefono1"] = $telefono1;
+        $arreglo_cliente["ladaTel2"] = $lada2;
         $arreglo_cliente["telefono2"] = $telefono2;
+
         $arreglo_cliente["correo"] = $correo;
         $arreglo_cliente["rfc"] = $rfc;
         $arreglo_cliente["fecha_nacimiento"] = $fecha_nacimiento;
@@ -2925,6 +2946,7 @@ class Asesor extends CI_Controller {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
                         $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
+                                                            ladaTel = '" . $ladatelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
                                                             telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
                                                             nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
                                                             domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',
@@ -2974,7 +2996,7 @@ class Asesor extends CI_Controller {
             } else {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
-                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                        $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', ladaTel='".$ladaTelCop1[$i]."', ladaCel='".$ladaCelCop2[$i]."', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
                                 rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
                             WHERE id_copropietario = " . $idCopArray[$i]);
                     }
@@ -3057,7 +3079,7 @@ class Asesor extends CI_Controller {
                     }
                     if (count($idCopArray) > 0) {
                         for ($i = 0; $i < sizeof($idCopArray); $i++) {
-                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
+                            $updCoprop = $this->db->query("UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', ladaTel='".$ladaTelCop1[$i]."', telefono_2 = '" . $telefono2CopArray[$i] . "', ladaCel='".$ladaCelCop2[$i]."', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "', nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "', domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "', conyuge = '" . $conyugeCopArray[$i] . "', regimen_matrimonial = '" . $rMatrimonialCopArray[$i] . "', ocupacion = '" . $ocupacionCopArray[$i] . "', posicion = '" . $puestoCopArray[$i] . "', empresa = '" . $empresaCopArray[$i] . "', antiguedad = '" . $antiguedadCopArray[$i] . "', edadFirma = '" . $edadFirmaCopArray[$i] . "', direccion = '" . $domEmpCopArray[$i] . "',
                                 rfc='" . $rfcCopArray[$i] . "',  tipo_vivienda=" . $tipoViviendaCopArray[$i] . "
                             WHERE id_copropietario = " . $idCopArray[$i]);
                         }
@@ -3096,6 +3118,45 @@ class Asesor extends CI_Controller {
                 }
             }
         }
+    }
+
+    function validarCostos($costoListaM2, $costoFinalM2, $tipoVenta, $proceso){
+        $tipoVenta = (int) $tipoVenta;
+        $array = array(
+            '$costoListaM2' => $costoListaM2,
+            '$costoFinalM2' => $costoFinalM2,
+            '$tipoVenta' => $tipoVenta
+        );
+        $estatusTransaccion = false;
+
+
+        if($tipoVenta==1){
+            if ($costoFinalM2 > $costoListaM2 || $costoFinalM2 < 0) {
+                $estatusTransaccion = false;
+            } else {
+                $estatusTransaccion = true;
+            }
+        }else{
+             $descuentoCostoListaM2 = $costoListaM2 * 0.80; // Aplicar el descuento del 20%
+            $estatusProceso = array(2, 3, 4);
+            if(!in_array($proceso, $estatusProceso)){
+               if($costoFinalM2 > $costoListaM2 || $costoFinalM2 < $descuentoCostoListaM2 || $costoFinalM2 < 0){
+                   return false;
+               } else{
+                   return true;
+               }
+            }
+            else {
+                if ($costoListaM2 > 0 && $costoFinalM2 <= $costoListaM2 && $costoFinalM2 >= 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+
+        }
+        return $estatusTransaccion;
     }
 
     public function autorizaciones()
@@ -3225,7 +3286,7 @@ class Asesor extends CI_Controller {
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 ) {
+        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
             if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
                 $statusContratacion = 1;
                 $idMovimiento = 89;
@@ -3453,6 +3514,7 @@ class Asesor extends CI_Controller {
         $leyendaResicionesFirmada = '';
         //$dataClient = $this->Asesor_model->getLegalPersonalityByLote($idLote);
 
+
         if (in_array($this->session->userdata('id_rol'), [17, 70])) { // ES CONTRALORÍA
             $documentsNumber = 3;
             $documentOptions = $dataClient[0]['personalidad_juridica'] == 2 ? "2 $comprobante_domicilio $documentosExtra" : "2 $comprobante_domicilio 4, 10, 11 $documentosExtra";
@@ -3494,24 +3556,30 @@ class Asesor extends CI_Controller {
             $leyendaResicionesFirmada = ($totalResicionesFirmadas >= 1) ? ', RESICIONES DE CONTRATO FIRMADAS ('.$totalResicionesFirmadas.')' : '' ;
 
 
-            if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
+            /*if (in_array($dataClient[0]['proceso'], [2, 3, 4])) {
                 if ($dataClient[0]['personalidad_juridica'] == 1) { // PARA PM TAMBIÉN PEDIMOS LA CARTA PODER
-                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4]) ? ", 34, 35" : "";
-                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 2 : 0; // 5
-                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4]) ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA $leyendaMsgValidacion" : "";
+                    $documentosExtra = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", 34, 35, 41" //", 34, 35, 41, 42, 43"
+                        : "";
+                    $documentsNumber += in_array($dataClient[0]['proceso'], [2, 4]) ? 3 : 0; // 5
+                    $documentosExtra_label = in_array($dataClient[0]['proceso'], [2, 4])
+                        ? ", CARTA PODER, RESCISIÓN DE CONTRATO FIRMADA, CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion
+                        : "";
                 }
                 else { // SI ES PF SÓLO PEDIMOS LA CARTA
-
-                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? "" : ", 35";
-                    $documentsNumber += $dataClient[0]['proceso'] == 3 = 0 : 1;
-                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "" : $leyendaMsgValidacion;
+                    $documentosExtra = $dataClient[0]['proceso'] == 3 ? ", 46, 47" : ", 35, 41"; // ", 35, 41, 42, 43"
+                    $documentsNumber += 2; // 4
+                    $documentosExtra_label = $dataClient[0]['proceso'] == 3 ? "NUEVO CONTRATO REESTRUCTURA FIRMA CLIENTE, DOCUMENTO REESTRUCTURA FIRMA CLIENTE" : ", CONTRATO ELEGIDO FIRMA CLIENTE".$leyendaMsgValidacion;;
                 }
-            }
+            }*/
             #prueba
-            $validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
-            $validacionAceptados = array(3, 13, 22, 31);
+            #$validacionRes =  $this->Asesor_model->residencialParaValidacion($idLote);//valida que el lote este en algun proyecto de león para pedir la corrida al inicio
+            #$validacionAceptados = array(3, 13, 22, 31);
+            $validacionRes =  $this->session->userdata('id_sede');//valida que el asesor es de león para pedirle la corrida financiera
+            $validacionAceptados = array(5);
+
             #prueba cf
-            if(in_array($validacionRes->idResidencial, $validacionAceptados)){
+            if(in_array($validacionRes, $validacionAceptados)){
                 //si está en algun proyecto de león
                 $documentsNumber += 1; //añadir otro documento a la validación
                 $labelCorridaFinanciera = ', CORRIDA FINANCIERA';

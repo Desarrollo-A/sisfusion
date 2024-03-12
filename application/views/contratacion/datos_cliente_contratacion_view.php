@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="modal fade" id="verDetalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -54,11 +54,11 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-user-friends fa-2x"></i>
@@ -84,24 +84,27 @@
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <table class="table-striped table-hover hide" id="tabla_clientes" name="tabla_clientes">
-                                            <thead>
-                                                <tr>
-                                                    <th>MÁS</th>
-                                                    <th>ID CLIENTE</th>
-                                                    <th>PROYECTO</th>
-                                                    <th>CONDOMINIO</th>
-                                                    <th>LOTE</th>
-                                                    <th>CLIENTE</th>
-                                                    <th>NÚMERO DE RECIBO</th>
-                                                    <th>REFERENCIA</th>
-                                                    <th>TIPO DE PAGO</th>
-                                                    <th>FECHA DE APARTADO</th>
-                                                    <th>ENGANCHE</th>
-                                                    <th>FECHA DE ENGANCHE</th>
-                                                    <th>ACCIONES</th>
-                                                </tr>
-                                            </thead>
-                                        </table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>MÁS</th>
+                                                        <th>ID CLIENTE</th>
+                                                        <th>PROYECTO</th>
+                                                        <th>CONDOMINIO</th>
+                                                        <th>LOTE</th>
+                                                        <th>CLIENTE</th>
+                                                        <th>CORREO</th>
+                                                        <th>TELÉFONO</th>
+                                                        <th>NÚMERO DE RECIBO</th>
+                                                        <th>REFERENCIA</th>
+                                                        <th>TIPO DE PAGO</th>
+                                                        <th>FECHA DE APARTADO</th>
+                                                        <th>ENGANCHE</th>
+                                                        <th>FECHA DE ENGANCHE</th>
+                                                        <th>ACCIONES</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -109,9 +112,8 @@
                     </div>
                 </div>
             </div>
+            <?php $this->load->view('template/footer_legend'); ?>
         </div>
-        <?php $this->load->view('template/footer_legend'); ?>
-    </div>
-    <?php $this->load->view('template/footer'); ?>
+        <?php $this->load->view('template/footer'); ?>
     <script src="<?=base_url()?>dist/js/controllers/contratacion/datos_cliente_contratacion.js"></script>
 </body>

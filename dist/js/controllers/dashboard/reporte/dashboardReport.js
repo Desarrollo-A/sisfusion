@@ -19,7 +19,7 @@ function asDirector(userType){
         idUserOnReport = '2';
     }
     //  5: Asistente subdirector especificamente para los usuarios diferentes de 28 y 30
-    else if( userType == '5' && (idUser == '28' || idUser == '30' || idUser == '4888')){
+    else if( userType == '5' && (idUser == '28' || idUser == '30' || idUser == '4888' || idUser == '29' || idUser == '7401')){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -131,11 +131,11 @@ async function initReport(){
     let rolString;
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888')))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401')))
         rolString = 'gerente';
     else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888')))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport != '7401')))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
@@ -230,7 +230,7 @@ function createAccordions(option, render, rol){
 function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, idarr = null){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
-    else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888))
+    else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888 && idUser != 29 && idUser != 7401))
         rolEspecial = 2;
     else if( rol == 6 )
         rolEspecial = 3;
@@ -483,14 +483,14 @@ function getLeadersLine (leadersList, id_usuario, id_lider) {
     else if (leadersList[0] == 7){ // 5 NIVEL: TENEMOS EL ID COORDINADOR
         leadersList[1] = id_usuario;
     }
-    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30 || idUser == 4888)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
+    else if (leadersList[0] == 0 && (leadersList[6] == 59 || (leadersList[6] == 5 && (idUser == 28 || idUser == 30 || idUser == 4888 || idUser == 29 || idUser == 7401)))) { // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
         if(id_usuario == 3 || id_usuario == 607)
             leadersList[5] = 0;
         else
             leadersList[5] = leadersList[6] == 59 ? id_lider : idLider;
         leadersList[4] = id_usuario;
     }
-    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30 || idUser != 4888)) { 
+    else if (leadersList[6] == 5 && (idUser != 28 || idUser != 30 || idUser != 4888 || idUser != 29 || idUser != 7401)) { 
         // PRIMER NIVEL: TENEMOS ID REGIONAL Y ID SUBDIRECTOR
         if( idLider == 7092 )
             leadersList[5] = 3;
@@ -585,7 +585,7 @@ $(document).on('click', '.update-dataTable', function (e) {
     }
     else if (type == 5) { // MJ: #subdirector
         if (render == 1) {
-            if(idUser == 28 || idUser == 30 || idUser == 4888){
+            if(idUser == 28 || idUser == 30 || idUser == 4888 || idUser == 29 || idUser == 7401){
                 const table = "gerente";
                 fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
@@ -732,11 +732,11 @@ $(document).on('click', '#filterAction', async function (e) {
     let rolString;
     if ( rolOnReport == '1' )
         rolString = 'director_regional';
-    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888')))
+    else if ( rolOnReport == '2' || (rolOnReport == '5' && (idUserOnReport != '28' || idUserOnReport != '30' || idUserOnReport != '4888' || idUserOnReport != '29' || idUserOnReport != '7401')))
         rolString = 'gerente';
     else if ( rolOnReport == '3' || rolOnReport == '6' )
         rolString = 'coordinador';
-    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888')))
+    else if ( rolOnReport == '59' || (rolOnReport == '5' && (idUserOnReport == '28' || idUserOnReport == '30' || idUserOnReport == '4888' || idUserOnReport == '29' || idUserOnReport == '7401')))
         rolString = 'subdirector';
     else 
         rolString = 'asesor';
@@ -909,7 +909,7 @@ function loaderCharts(){
     $('.boxMiniCharts').html('');
     let cargador = '<div class="loadChartMini w-100 h-100">'+
                         '<img src="'+base_url+'dist/img/miniChartLoading.gif" alt="Icono gráfica" class="h-100 w-auto">'+
-                    '</div>';
+                     '</div>';
     $('.boxMiniCharts').append('<div class="col-xs-12 pdt-20"><center><span class="loader center-align"></span></center></div>');
     $('.boxMiniCharts').append(cargador);
 
@@ -1026,8 +1026,8 @@ function getTitle(option){
     var title;
     switch (option) {
         case 'director_regional':
-            title = 'Reporte de ventas por dirección regional';
-            break;
+          title = 'Reporte de ventas por dirección regional';
+          break;
         case 'gerente':
             title = 'Reporte de ventas por gerencia';
             break;
@@ -1524,12 +1524,16 @@ function fillTableReport(dataObject) {
         });
     } else{
 
-        $('#lotesInformationTableCancelados thead tr:eq(0) th').each( function (i) {
-            var title = $(this).text();
-            $(this).html(`<input   data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-            $( 'input', this ).on('keyup change', function () {
-                if ($('#lotesInformationTableCancelados').DataTable().column(i).search() !== this.value ) {
-                    $('#lotesInformationTableCancelados').DataTable().column(i).search(this.value).draw();
+        $('#lotesInformationTableCancelados thead tr:eq(0) th').each(function (i) {
+            const title = $(this).text();
+            $(this).html('<input type="text" class="textoshead" placeholder="' + title + '" data-toggle="tooltip" data-placement="top" title="' + title + '"/>');
+
+            $('input', this).on('keyup change', function () {
+                if(i != 0){
+                    if ($("#lotesInformationTableCancelados").DataTable().column(i).search() !== this.value) {
+                        $("#lotesInformationTableCancelados").DataTable().column(i)
+                            .search(this.value).draw();
+                    }
                 }
             });
             $('[data-toggle="tooltip"]').tooltip();
@@ -1544,7 +1548,6 @@ function fillTableReport(dataObject) {
                     text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
-                    title:'Desglose de lotes cancelados',
                     exportOptions: {
                         columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         format: {

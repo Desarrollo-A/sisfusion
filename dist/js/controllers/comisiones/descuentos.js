@@ -1,31 +1,35 @@
 var totaPen = 0;
 var tr;
-let ObjRoles = new Object();
-
-$(document).ready(function() {    
-    $.post(general_base_url+"Comisiones/getRolesIn",{ catalogo:1, roles:"1,2,3,7,9,38 "}, function (data) {
-        var len = data.length;
-        $("#roles").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
-        $("#roles2").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
+var puestosGlobal = [], usuariosGlobal = [];
+$(document).ready(function() {     
+    $.post(general_base_url+"Descuentos/getDatosView", function (data) {
+        var len = data.puestos.length;
+        puestosGlobal = data.puestos;
+        usuariosGlobal = data.usuarios;
+        $(".selectpicker.rolesGlobal").append($('<option disabled selected>').val("").text("SELECCIONA UNA OPCIÓN"));
         for (var i = 0; i < len; i++) {
-            var id = data[i]['id_opcion'];
-            var name = data[i]['nombre'];
-            ObjRoles = {
-                "id":data[i]['id_opcion'],
-                "rol":data[i]['nombre']
-            }
-            $("#roles").append($('<option>').val(id).text(name.toUpperCase()));
-            $("#roles2").append($('<option>').val(id).text(name.toUpperCase()));
+            var id = puestosGlobal[i]['id_opcion'];
+            var name = puestosGlobal[i]['nombre'];
+            $(".selectpicker.rolesGlobal").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        for (var i = 0; i < data.tipoDescuento.length; i++) {
+            var id = data.tipoDescuento[i]['id_opcion'];
+            var name = data.tipoDescuento[i]['nombre'];
+            $("#tipo").append($('<option>').val(id).text(name.toUpperCase()));
         }
         if(len<=0){
-            $("#roles").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
-            $("#roles2").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
+            $(".selectpicker.rolesGlobal").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>');
         }
-        $("#roles").selectpicker('refresh');
-        $("#roles2").selectpicker('refresh');
+        data.tipoDescuento.length <= 0 ? $("#tipo").append('<option selected="selected" disabled>NO SE HAN ENCONTRADOS REGISTROS</option>') : '';
+        $(".selectpicker.rolesGlobal").selectpicker('refresh');
+        $("#tipo").selectpicker('refresh');
     }, 'json');       
 });
-
+function changeName(e){
+    const fileName = e.files[0].name;
+    let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+    relatedTarget[0].value = fileName;
+}
 $("#form_descuentos").on('submit', function(e){
     $("#idloteorigen").prop("disabled", false);
     e.preventDefault();
@@ -410,26 +414,25 @@ $(window).resize(function(){
 });
 
 $("#roles").change(function() {
-    var parent = $(this).val();
+    var idPuesto = $(this).val();
+    let getUsers = usuariosGlobal.filter(users => users.id_rol == idPuesto);
     document.getElementById('monto').value = ''; 
     document.getElementById('idmontodisponible').value = ''; 
     document.getElementById('comentario').value = '';
     document.getElementById('sumaReal').innerHTML = '';
     $('#idloteorigen option').remove();
     $('#usuarioid option').remove();
-    $.post('getUsuariosRol/'+parent+"/"+1, function(data) {
-        var len = data.length;
+        var len = getUsers.length;
         $("#users").removeClass('hide');
         for( var i = 0; i<len; i++){
-            var id = data[i]['id_usuario'];
-            var name =data[i]['id_usuario']+' - '+data[i]['name_user'];
+            var id = getUsers[i]['id_usuario'];
+            var name =getUsers[i]['id_usuario']+' - '+getUsers[i]['nombre'];
             $("#usuarioid").append($('<option>').val(id).attr('data-value', id).text(name));
         }
         if(len<=0){
             $("#usuarioid").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
         $("#usuarioid").selectpicker('refresh');
-    }, 'json'); 
 });
 
 $("#roles2").change(function() {
@@ -711,7 +714,36 @@ function verificar(){
         }       
     }      
 }
+function verificarMontos(){
+    
+    let disponible = remplazarCaracter($('#valor_comision').val(), '$', '');
+    disponible = remplazarCaracter(disponible, ',', '');
+    let monto = remplazarCaracter($('#monto').val(), ',', '');
+    let cuantos = $('#idloteorigen').val().length;
+    if(parseFloat(monto) <= parseFloat(disponible) ){
+        $("#idloteorigen").prop("disabled", true);
+        $("#btn_abonar").prop("disabled", false);    
+            let cantidad = parseFloat($('#numeroP').val());
+            resultado = monto /cantidad;
+            $('#pago').val(formatMoney(resultado));
+            document.getElementById('btn_abonar').disabled=false;
 
+          
+            let cadena = '';
+            var data = $('#idloteorigen').select2('data')
+            for (let index = 0; index < cuantos; index++) {
+                let datos = data[index].id;
+                let montoLote = datos.split(',');
+
+                cadena = cadena+' , '+data[index].text;
+                document.getElementById('msj2').innerHTML='';
+            }
+            $('#comentario').val('Lotes involucrados en el descuento: '+cadena+'. Por la cantidad de: $'+formatMoney(monto));
+        }
+        else if(parseFloat(monto) > parseFloat(disponible) ){
+                                 document.getElementById('btn_abonar').disabled=true; 
+        }
+}
 function verificarMontos2(){
     let disponible = remplazarCaracter($('#valor_comision2').val(), '$', '');
     disponible = remplazarCaracter(disponible, ',', '');

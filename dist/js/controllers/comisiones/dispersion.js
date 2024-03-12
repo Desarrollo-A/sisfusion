@@ -200,8 +200,9 @@ $(document).ready(function () {
                         }
                         
                         disparador = 0;
-                        d.totalNeto2Cl = (parseInt(d.plan_comision) == 65  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? d.totalNeto2Cl : d.totalNeto2;
-                        d.totalNeto2Cl = (parseInt(d.proceso) === 6 || parseInt(d.proceso) === 5) ? d.totalNeto2 : d.totalNeto2Cl; 
+                        d.totalNeto2Cl = (parseInt(d.plan_comision) == 65  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? d.totalNeto2Cl :(parseInt(d.plan_comision) != 65 ? d.totalNeto2Cl : d.totalNeto2 );
+                        d.totalNeto2Cl = (parseInt(d.proceso) === 6 || parseInt(d.proceso) === 5) ? d.totalNeto2 : d.totalNeto2Cl;
+                        
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
@@ -330,7 +331,7 @@ $(document).ready(function () {
 
                         if(disparador != 0){
                             // BtnStats += `${disparador}`; 
-                            
+                            d.abonadoAnterior = [2,3,4,7].includes(d.proceso) ? d.sumComisionesReu : d.abonadoAnterior;
                             BtnStats += `<button href="#" 
                             value = "${d.idLote}" 
                             data-totalNeto2 = "${totalLote}"
@@ -1097,7 +1098,16 @@ $("#form_NEODATA").submit( function(e) {
                     $("#modal_NEODATA").modal( 'hide' );
                     $('#dispersar').prop('disabled', false);
                     document.getElementById('dispersar').disabled = false;
-                }else{
+                }
+                else if (data == 4) {
+                    $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "Comisión dispersada anteriormente, puedes revisarla en el panel de activas", "warning");
+                    $('#tabla_dispersar_comisiones').DataTable().ajax.reload();
+                    $("#modal_NEODATA").modal( 'hide' );
+                    $('#dispersar').prop('disabled', false);
+                    document.getElementById('dispersar').disabled = false;
+                }
+                else{
                     $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "No se pudo completar tu solicitud", "danger");
                     $('#dispersar').prop('disabled', false);

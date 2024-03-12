@@ -3445,7 +3445,7 @@
 						'1' venta_compartida 
 					FROM 
 						lotes lo
-						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) AND cl.id_sede = $id_sede
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
 					WHERE 
 						lo.status = 1 
 						AND lo.idCondominio = $condominio 
@@ -3459,7 +3459,7 @@
 					FROM 
 						lotes lo
 						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) AND cl.id_sede = $id_sede
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) --AND cl.id_sede = $id_sede
 					WHERE 
 						vc.estatus = 1 
 						AND lo.status = 1 
@@ -3918,15 +3918,15 @@
         } else { // SE FILTRA POR CONDOMINIO
 			$where = "AND cond.idCondominio = $id_condominio";
         }
-
+		
 		return $this->db->query("SELECT cl.id_cliente, id_asesor, id_coordinador, id_gerente,
 		cl.id_sede, personalidad_juridica, cl.nacionalidad,
 		cl.rfc, curp, cl.correo, telefono1, us.rfc, telefono2,
 		telefono3, fecha_nacimiento, lugar_prospeccion, otro_lugar,
-		medio_publicitario, plaza_venta, tp.tipo, estado_civil,
+		medio_publicitario, plaza_venta, ISNULL(tp.tipo, 'SIN ESPECIFICAR')tipo, estado_civil,
 		regimen_matrimonial, nombre_conyuge, domicilio_particular,
 		tipo_vivienda, ocupacion, cl.empresa, puesto, edadFirma,
-		antiguedad, domicilio_empresa, telefono_empresa,  noRecibo,
+		antiguedad, domicilio_empresa, telefono_empresa,  ISNULL(noRecibo, 'SIN ESPECIFICAR') noRecibo,
 		engancheCliente, concepto, cl.idTipoPago, lotes.referencia,
 		expediente, cl.status, cl.idLote, cl.usuario,  nombreLote,
 		cl.fechaVencimiento, cond.idCondominio, cl.fecha_creacion,
@@ -3942,7 +3942,8 @@
 		WHERE cl.id_gerente=id_usuario ) AS gerente,
 		(SELECT UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno))
 		FROM usuarios
-		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status
+		WHERE cl.id_coordinador=id_usuario) AS coordinador, cl.status,
+		cl.correo, cl.telefono1
 		FROM clientes as cl
 		LEFT JOIN usuarios as us on cl.id_asesor=us.id_usuario
 		LEFT JOIN lotes as lotes on lotes.idLote=cl.idLote
@@ -3952,6 +3953,7 @@
 		WHERE cl.status = 1 $where
 		ORDER BY cl.id_cliente DESC")->result();
     }
+
 
     public function getLotesGralTwo($idCondominio, $residencial) {
 		$query = $this->db-> query("SELECT * FROM lotes lo

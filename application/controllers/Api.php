@@ -14,7 +14,7 @@ class Api extends CI_Controller
         date_default_timezone_set('America/Mexico_City');
         $this->load->helper(array('form'));
         $this->load->library(array('jwt_key', 'get_menu', 'jwt_actions'));
-        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Usuarios_modelo', 'Ooam_model','Seguro_model'));
+        $this->load->model(array('Api_model', 'General_model', 'Internomex_model', 'Clientes_model', 'Ooam_model','Seguro_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -416,7 +416,7 @@ class Api extends CI_Controller
                         $year = date('Y');
                         $month = date('n') == 1 ? 12 : date('n') - 1;
                         $year = date('n') == 1 ? $year -1 : $year;
-                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number,  $year, $month);//CAMBIAR A SUS VARIABLES
+                        $dbTransaction = $this->Internomex_model->getInformacionContratos($rows_number, $year, $month);
                         $data2 = array();
                         for ($i = 0; $i < COUNT($dbTransaction); $i++) {
                             $data2[$i]['cliente']['tipo_persona'] = $dbTransaction[$i]['tipo_persona'];
@@ -430,7 +430,7 @@ class Api extends CI_Controller
                             $data2[$i]['cliente']['nacionalidad'] = $dbTransaction[$i]['nacionalidad'];
                             $data2[$i]['cliente']['direccion'] = $dbTransaction[$i]['direccion'];
                             $data2[$i]['propiedad']['tipo_propiedad'] = $dbTransaction[$i]['tipo_propiedad'];
-                            $data2[$i]['propiedad']['nombrePropiedad'] = $dbTransaction[$i]['nombrePropiedad'];
+                            $data2[$i]['propiedad']['nombrePropiedad'] = $dbTransaction[$i]['nombre_propiedad'];
                             $data2[$i]['propiedad']['tamanio_terreno'] = $dbTransaction[$i]['tamanio_terreno'];
                             $data2[$i]['propiedad']['costo'] = $dbTransaction[$i]['costo'];
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
@@ -441,7 +441,9 @@ class Api extends CI_Controller
                             $data2[$i]['pagos']['forma_pago_enganche'] = $dbTransaction[$i]['forma_pago_enganche'];
                             $data2[$i]['pagos']['monto_enganche'] = $dbTransaction[$i]['monto_enganche'];
                             $data2[$i]['pagos']['fecha_pago_enganche'] = $dbTransaction[$i]['fecha_pago'];
-                            $data2[$i]['pagos']['total_pagos_enganche'] = $dbTransaction[$i]['total_pagos'];
+                            $data2[$i]['pagos']['total_pagos_enganche'] = 1;
+                            $data2[$i]['pagos']['concepto_pago'] = $dbTransaction[$i]['concepto_pago'];
+                            //$data2[$i]['pagos']['monto_pago'] = $dbTransaction[$i]['monto_pago'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago_comisionista'])));
@@ -1585,7 +1587,7 @@ class Api extends CI_Controller
                                             $dataComisiones['creado_por'] = 1;            
                                             
                                             if($dataReturn->comisionistas[$i]->rolGenerado == 7){
-                                                $dataLineaVenta['idAsesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                                $dataLineaVenta['id_asesor'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
                                                 $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
                                             }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){

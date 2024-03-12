@@ -267,7 +267,9 @@ class General_model extends CI_Model
     }
 
     public function getUsers($idRol,$idEstatus){
-        return $this->db->query("SELECT id_usuario,id_rol,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol IN($idRol) AND estatus IN($idEstatus) ");
+        return $this->db->query("SELECT id_usuario,
+        (CASE WHEN id_usuario IN(3,4,5,607,7092) THEN 59 ELSE id_rol END) id_rol,
+        CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol IN($idRol) AND estatus IN($idEstatus) ");
     }
     public function getOpcionesPorCatalogo($id_catalogo) {
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE estatus = 1 AND id_catalogo IN ($id_catalogo)")->result_array();

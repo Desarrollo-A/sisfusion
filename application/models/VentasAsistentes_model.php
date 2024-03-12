@@ -170,6 +170,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
+                } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
+                    $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
+                    $filtroSede = "";
                 }
                 $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
             }
@@ -386,6 +389,9 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
+                    $filtroSede = "";
+                } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
+                    $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
                     $filtroSede = "";
                 }
                 $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
