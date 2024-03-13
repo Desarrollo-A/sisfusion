@@ -357,7 +357,7 @@ function getDataAsimilados(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/" ,
             type: "POST",
             cache: false,
             data :{

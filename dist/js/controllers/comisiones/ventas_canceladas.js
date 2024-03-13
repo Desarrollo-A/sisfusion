@@ -78,6 +78,18 @@ $('#canceladas-tabla').ready(function () {
                 return `<p class="m-0">${formatMoney(d.comision_total)}</p>`;
             }
         },
+        { data: function (d) {
+            return formatMoney(d.Precio_Total);
+        }},
+        { data: function (d) {
+            return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
+        }},
+        { data: function (d) {
+            return formatMoney(d.Comisiones_Pagadas);
+        }},
+        { data: function (d) {
+            return formatMoney(d.Comisiones_pendientes);
+        }},
         {
             'data': function (d) {
                 return `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas" data-toggle="tooltip" data-placement="top" title="Detalle" onclick="detalleLote(${d.idLote}, ${d.idCliente})"><i class="fas fa-info"></i></button></div>`;

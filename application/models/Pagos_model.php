@@ -95,19 +95,23 @@ class Pagos_model extends CI_Model {
         return true;
     }
 
-    function getDatosNuevasAContraloria($proyecto, $condominio, $modoSubida){
+    function getDatosNuevasAsimiladosContraloria($proyecto, $condominio, $modoSubida=3){
 
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
+            
+            $ooam ='';
+            $tipo='';
+                
         }
         else { // CONTRALORÍA
 
-            if($modoSubida == 0){ //Reestructura
-                $ooam = "AND com.ooam IN (0)";
+            if($modoSubida != 0){ //Reestructura
+                //$ooam = "AND com.ooam IN (0)";
                 $tipo = "AND u.tipo = 2";
             }else{ //Comercialización
-                $ooam = "AND com.ooam NOT IN (0)";
+                //$ooam = "AND com.ooam NOT IN (0)";
                 $tipo = "AND u.tipo = 1";
             }
             
@@ -255,10 +259,14 @@ class Pagos_model extends CI_Model {
         return $query->result_array();
     }
     
-    function getDatosNuevasRemanenteContraloria($proyecto,$condominio,$modoSubida){
+    function getDatosNuevasRemanenteContraloria($proyecto,$condominio,$modoSubida=3){
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
+            
+            $ooam = '';
+            $tipo = '';
+            
         }
         else { // CONTRALORÍA
 
@@ -380,7 +388,7 @@ class Pagos_model extends CI_Model {
         WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
     }
     
-    function getDatosNuevasFContraloria($proyecto,$condominio,$modoSubida){
+    function getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida){
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";

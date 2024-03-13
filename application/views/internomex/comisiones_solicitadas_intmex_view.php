@@ -14,16 +14,18 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones solicitadeas</h3>
-                                    <p class="card-title pl-1">(Comisiones solicitadas para proceder a pago)</p>
+                                    <div class="text-center">
+                                        <h3 class="card-title center-align pt-3 pr-2">Comisiones solicitadas</h3>
+                                        <p class="card-title pr-2 ">(Comisiones solicitadas para proceder a pago)</p>
+                                    </div>
                                 </div>
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                 <div class="form-group d-flex justify-center align-center">
-                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                    <p class="input-tot pl-1" name="totalDisponible" id="totalDisponible">$0.00</p>
+                                                    <h4 class="title-tot text-center">Disponible:</h4>
+                                                    <p class="input-tot pl-4" name="totalDisponible" id="totalDisponible">$0.00</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -67,5 +69,5 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/ventas/general_Intmex.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/internomex/comisiones_solicitadas_Intmex.js"></script>
 </body>

@@ -392,12 +392,6 @@ class Comisiones extends CI_Controller
     $this->load->view("ventas/historialCapitalFechas");
   }
 
-  public function general_Intmex()
-  {
-    $this->load->view('template/header');
-    $this->load->view("ventas/general_Intmex");
-  }
-
   public function historial_estatus()
   {
     $this->load->view('template/header');
@@ -2499,16 +2493,16 @@ public function getDatosNuevasXContraloria($proyecto,$condominio){
  echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosNuevasAContraloria($proyecto,$condominio){
-  $dat =  $this->Comisiones_model->getDatosNuevasAContraloria($proyecto,$condominio)->result_array();
+public function getDatosNuevasAsimiladosContraloria($proyecto,$condominio){
+  $dat =  $this->Comisiones_model->getDatosNuevasAsimiladosContraloria($proyecto,$condominio)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
  echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosNuevasFContraloria($proyecto,$condominio){
-  $dat =  $this->Comisiones_model->getDatosNuevasFContraloria($proyecto,$condominio)->result_array();
+public function getDatosNuevasFacturasContraloria($proyecto,$condominio){
+  $dat =  $this->Comisiones_model->getDatosNuevasFacturasContraloria($proyecto,$condominio)->result_array();
  for( $i = 0; $i < count($dat); $i++ ){
      $dat[$i]['pa'] = 0;
  }
@@ -2855,8 +2849,8 @@ public function LiquidarLote(){
     }
     
  
-    public function getDatosNuevasRContraloria($proyecto,$condominio){
-      $dat =  $this->Comisiones_model->getDatosNuevasRContraloria($proyecto,$condominio)->result_array();
+    public function getDatosNuevasRemanenteContraloria($proyecto,$condominio){
+      $dat =  $this->Comisiones_model->getDatosNuevasRemanenteContraloria($proyecto,$condominio)->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
       }
@@ -4247,13 +4241,13 @@ public function getDesarrolloSelectINTMEX($a = ''){
 
 
 
-      public function getDatosGralInternomex(){
+  public function getDatosGralInternomex(){
       $dat =  $this->Comisiones_model->getDatosGralInternomex()->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
           $dat[$i]['pa'] = 0;
       }
       echo json_encode( array( "data" => $dat));
-    }
+  }
 
 
 

@@ -28,6 +28,12 @@
       $this->load->view('template/footer');
     }
 
+    public function general_Intmex()
+    {
+      $this->load->view('template/header');
+      $this->load->view("internomex/comisiones_solicitadas_intmex_view");
+    }
+
     public function nuevos(){
       $this->load->view('template/header');
       $this->load->view("internomex/nuevos");

@@ -27,11 +27,16 @@
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
                             </div>
-                            <div class="card-content">
-                                <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones nuevas <b>facturas</b></h3>
-                                    <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de factura)</p>
+                            <div class="card-content" style="justify-content: space-between">
+                                <div class="text-center">
+                                    <div class="encabezadoBox">
+                                        <h3 class="card-title center-align pt-3" >Comisiones nuevas <b>facturas</b></h3>
+                                    </div>
+                                    <div>
+                                        <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de factura)</p>
+                                    </div>
                                 </div>
+
                                 <div class="toolbar">
                                     <div class="container-fluid p-0">
                                         <div class="row">

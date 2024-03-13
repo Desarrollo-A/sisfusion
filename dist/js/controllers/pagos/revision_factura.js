@@ -354,7 +354,7 @@ function getDataFactura(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasFContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasFacturasContraloria/" ,
             type: "POST",
             cache: false,
             data :{
