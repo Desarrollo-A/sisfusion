@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align" >Comisiones solicitadas</h3>
+                                    <h3 class="card-title center-align" >Comisiones solicitadeas</h3>
                                     <p class="card-title pl-1">(Comisiones solicitadas para proceder a pago)</p>
                                 </div>
                                 <div class="toolbar">

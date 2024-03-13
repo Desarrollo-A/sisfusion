@@ -4,7 +4,7 @@ $("#tabla_bonos").prop("hidden", true);
         param = $('#param').val();
         $("#usuarios_bono").empty().selectpicker('refresh');
         $.ajax({
-        url: general_base_url + 'Comisiones/getUsuariosRolBonos/'+roles,
+        url: general_base_url + 'Bonos/getUsuariosRolBonos/'+roles,
         type: 'post',
         dataType: 'json',
         success:function(response){
@@ -105,31 +105,12 @@ function getBonusCommissions(roles, users){
     },
     destroy: true,
     ordering: false,
-    columns: [{
-        "data": function( d ){
-            return '<p class="m-0"><center>'+d.id_pago_bono+'</center></p>';
-        }
-    },  
-    {
-        "data": function( d ){
-            return '<p class="m-0"><center>'+d.id_bono+'</center></p>';
-        }
-    },
-    {
-        "data": function( d ){
-            return '<p class="m-0"><b>'+d.nombre+'</b></p>';
-        }
-    },
-        {
-        "data": function( d ){
-            return '<p class="m-0"><b>'+d.rfc+'</b></p>';
-        }
-    },
-    {
-        "data": function( d ){
-            return '<p class="m-0">'+d.id_rol+'</p>';
-        }
-    },
+    columns: [
+    {data:'id_pago_bono'},  
+    {data:'id_bono'},
+    {data:'nombre'},
+    {data:'rfc'},
+    {data:'id_rol'},
     {
         "data": function( d ){
         if(d.estatus == 2){
@@ -196,11 +177,7 @@ function getBonusCommissions(roles, users){
         }
         }
     },
-    {
-        "data": function( d ){
-            return '<p class="m-0"><center>'+d.fecha_abono+'</center></p>';
-        }
-    },
+    {data: 'fecha_abono'},
     {
         "data": function( d ){
         if(d.estado == 1){
@@ -239,7 +216,7 @@ function getBonusCommissions(roles, users){
         className: 'dt-body-center'
     }], 
     ajax: {
-        url: general_base_url + "Comisiones/getBonosAllUser/" + roles + "/" + users,
+        url: general_base_url + "Bonos/getBonosAllUser/" + roles + "/" + users,
         type: "POST",
         cache: false,
         data: function( d ){

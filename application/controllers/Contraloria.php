@@ -1661,9 +1661,21 @@ class Contraloria extends CI_Controller {
         $totalNeto2 = $this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
+
+        $mensualidades = $this->input->post('mensualidades');
+
         $charactersNoPermit = array('$',',');
         $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
         $id_usuario = $this->session->userdata('id_usuario');
+        
+        $arregloMensualidades = array();
+        $arregloMensualidades['id_lote'] = $idLote ;
+        $arregloMensualidades['mensualidad'] = $mensualidades;
+        $arregloMensualidades['estatus'] = 1;
+        $arregloMensualidades['fecha_modificado'] = date("Y-m-d H:i:s");
+        $arregloMensualidades['fecha_creacion'] = date("Y-m-d H:i:s");
+        $arregloMensualidades['modificado_por'] = $this->session->userdata('id_usuario');
+        $arregloMensualidades['creado_por'] = $this->session->userdata('id_usuario');
 
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 9;
@@ -1692,7 +1704,7 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->validate90Dias($idLote, $idCliente, $this->session->userdata('id_usuario'));
         
         if($validate == 1) {
-            if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
+            if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2, $arregloMensualidades) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
