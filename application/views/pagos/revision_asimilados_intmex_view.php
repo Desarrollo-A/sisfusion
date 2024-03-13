@@ -52,10 +52,15 @@
                         <div class="nav-tabs-custom">
                             <div class="tab-content p-2">
                                 <div class="tab-pane active" id="nuevas-1">
-                                    <div class="card-content">  
-                                        <div class="encabezadoBox">
-                                            <h3 class="card-title center-align" >Comisiones nuevas <b>asimiliados</b></h3>
-                                            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+                                    <div class="card-content" style="justify-content: space-between">  
+                                        <div class="text-center">
+                                            <div class="encabezadoBox">
+                                                <h3 class="card-title center-align">Comisiones nuevas <b>asimiliados</b></h3>
+                                
+                                            </div>
+                                            <div>
+                                                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+                                            </div>
                                         </div>
                                         <div class="toolbar">
                                             <div class="container-fluid p-0">

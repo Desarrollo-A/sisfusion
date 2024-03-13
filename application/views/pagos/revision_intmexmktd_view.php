@@ -51,8 +51,12 @@
                                 <div class="nav-tabs-custom">
                                     <div class="tab-content p-2">
                                         <div class="tab-pane active" id="nuevas-1">
-                                            <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Comisiones nuevas mktd</h3>
+                                            <div class="text-center">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align">Comisiones nuevas mktd</h3>
+                                                </div>
+                                            <div>
+                                            </div>
                                                 <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago para el área de MKTD)</p>
                                             </div>
                                             <div class="toolbar">
@@ -89,9 +93,13 @@
                                             </div>
                                         </div>
                                         <div class="tab-pane" id="proceso-1">
-                                            <div class="encabezadoBox">
-                                                <h3 class="card-title center-align">Listado lotes mktd</h3>
-                                                <p class="card-title pl-1">(Lotes correspondientes a comisiones solicitadas para pago por el área de MKTD)</p>
+                                            <div class="text-center">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align">Listado lotes mktd</h3>
+                                                </div>
+                                                <div>
+                                                    <p class="card-title pl-1">(Lotes correspondientes a comisiones solicitadas para pago por el área de MKTD)</p>
+                                                </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
