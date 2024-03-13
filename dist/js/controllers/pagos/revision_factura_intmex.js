@@ -362,7 +362,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasFContraloria/" ,
+            "url": general_base_url + "pagos/getDatosNuevasFacturasContraloria/" ,
             "type": "POST",
             data:{
                 proyecto : proyecto,
