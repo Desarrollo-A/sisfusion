@@ -64,7 +64,7 @@ function fillTable(transaction, beginDate, endDate, where) {
         },
         {
             data: function(d) {
-                elemento = `${d.nombre}<br><span class="label lbl-cerulean">${d.id_prospecto}</span>`;
+                elemento = `${d.nombre}<br><span class="label lbl-green">${d.id_prospecto}</span>`;
                 return elemento;
             }
         },
@@ -105,6 +105,8 @@ function fillTable(transaction, beginDate, endDate, where) {
                 }else{
                     if (d.nombre_lp == 'MKTD DRAGON')
                         id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_dragon +'</span>';
+                    else if (d.nombre_lp == 'MADERAS REWARDS')
+                        id_dragon = '<br><span class="label lbl-blueMaderas">'+ d.id_arcus +'</span>';
                     else
                         id_dragon = '';
                     return d.nombre_lp + id_dragon;
