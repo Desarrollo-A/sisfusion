@@ -1239,5 +1239,22 @@ class Reestructura_model extends CI_Model
 
         return $this->db->query($query)->row();
     }
+
+    public function getDocumentsToFix(){
+        $query = "SELECT * FROM propuestas_x_lote
+        WHERE
+        estatus=1
+        AND bucket=0
+        AND corrida IS NOT NULL
+        AND contrato IS NOT NULL";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function updateBucketInPXL($id_pxl){
+        $query = "UPDATE propuestas_x_lote SET bucket=1 WHERE id_pxl=$id_pxl";
+
+        return $this->db->query($query);
+    }
     
 }

@@ -10,7 +10,7 @@ class Documentacion extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('Documentacion_model', 'General_model', 'Registrolote_modelo'));
+        $this->load->model(array('Documentacion_model', 'General_model', 'Registrolote_modelo', 'Reestructura_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'email','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -510,5 +510,15 @@ class Documentacion extends CI_Controller {
         }else{
             print_r($archivo . " no exist\n");
         }
+    }
+
+    public function getDocumentsToFix(){
+        $query = "SELECT * FROM propuestas_x_lote
+        WHERE
+            fecha_modificacion BETWEEN '2024-03-08' AND '2024-03-12'
+        AND corrida IS NOT NULL
+        AND contrato IS NOT NULL";
+
+        return $this->db->query($query)->result();
     }
 }

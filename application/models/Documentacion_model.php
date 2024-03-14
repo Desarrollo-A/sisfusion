@@ -181,4 +181,6 @@ class Documentacion_model extends CI_Model {
 
         return $this->db->query($query);
     }
+
+    
 }

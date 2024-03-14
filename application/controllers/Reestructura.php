@@ -3326,87 +3326,81 @@ class Reestructura extends CI_Controller{
     }
 
     public function fix_documents(){
-        $lote = $this->input->get('lote');
+        $registros_normales = $this->Reestructura_model->getListaLotesPendienteTraspasoNormales();
+        $registros_fusion = $this->Reestructura_model->getListaLotesPendienteTraspasoFusion();
 
-        if($lote){
-            $registros_normales = $this->Reestructura_model->getListaLotesPendienteTraspasoNormales();
-            $registros_fusion = $this->Reestructura_model->getListaLotesPendienteTraspasoFusion();
+        //$registros = array_merge($registros_normales, $registros_fusion);
+        //print_r($registros_normales);
+        //exit;
 
-            //$registros = array_merge($registros_normales, $registros_fusion);
-            //print_r($registros_normales);
+        foreach ($registros_normales as $key => $registro) {
+            $registro = (object) $registro;
+
+            
+            $corrida = "static/documentos/contratacion-reubicacion-temp/$registro->nombreLoteOrigen/CORRIDA/$registro->corrida";
+
+            $exist = file_exists($corrida);
+
+            if($exist){
+                print_r($corrida . " exist \n");
+
+                $file = [
+                    "tmp_name" => $corrida,
+                ];
+
+                $uploaded = $this->uploadFileToBucket($file, $registro->corrida);
+
+                if($uploaded){
+                    print_r($corrida . " uploaded \n");
+
+                    $update = $this->Reestructura_model->fixDocumentNormal($registro->idLoteOrigen);
+
+                    if($update){
+                        print_r($corrida . " updated \n");
+                    }
+                }
+            }else{
+                print_r(" no exist \n");
+            }
+            
+
             //exit;
+        }
 
-            foreach ($registros_normales as $key => $registro) {
-                $registro = (object) $registro;
+        foreach ($registros_fusion as $key => $registro) {
+            $registro = (object) $registro;
 
-                if($registro->idLoteOrigen == $lote){
-                    $corrida = "static/documentos/contratacion-reubicacion-temp/$registro->nombreLoteOrigen/CORRIDA/$registro->corrida";
+            $nombreLoteOrigen = explode(",", $registro->nombreLoteOrigen)[0];
+            $idLoteOrigen = explode(",", $registro->idLoteOrigen)[0];
+            
+            $corrida = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/CORRIDA/$registro->corrida";
 
-                    $exist = file_exists($corrida);
+            $exist = file_exists($corrida);
 
-                    if($exist){
-                        print_r($corrida . " exist \n");
+            if($exist){
+                print_r($corrida . " exist \n");
 
-                        $file = [
-                            "tmp_name" => $corrida,
-                        ];
+                $file = [
+                    "tmp_name" => $corrida,
+                ];
 
-                        $uploaded = $this->uploadFileToBucket($file, $registro->corrida);
+                $uploaded = $this->uploadFileToBucket($file, $registro->corrida);
 
-                        if($uploaded){
-                            print_r($corrida . " uploaded \n");
+                if($uploaded){
+                    print_r($corrida . " uploaded \n");
 
-                            $update = $this->Reestructura_model->fixDocumentNormal($registro->idLoteOrigen);
+                    $update = $this->Reestructura_model->fixDocumentFusion($idLoteOrigen);
 
-                            if($update){
-                                print_r($corrida . " updated \n");
-                            }
-                        }
-                    }else{
-                        print_r(" no exist \n");
+                    if($update){
+                        print_r($corrida . " updated \n");
                     }
                 }
-
-                //exit;
+            }else{
+                print_r(" no exist \n");
             }
+            
 
-            foreach ($registros_fusion as $key => $registro) {
-                $registro = (object) $registro;
-
-                $nombreLoteOrigen = explode(",", $registro->nombreLoteOrigen)[0];
-                $idLoteOrigen = explode(",", $registro->idLoteOrigen)[0];
-                
-
-                if($idLoteOrigen == $lote){
-                    $corrida = "static/documentos/contratacion-reubicacion-temp/$nombreLoteOrigen/CORRIDA/$registro->corrida";
-
-                    $exist = file_exists($corrida);
-
-                    if($exist){
-                        print_r($corrida . " exist \n");
-
-                        $file = [
-                            "tmp_name" => $corrida,
-                        ];
-
-                        $uploaded = $this->uploadFileToBucket($file, $registro->corrida);
-
-                        if($uploaded){
-                            print_r($corrida . " uploaded \n");
-
-                            $update = $this->Reestructura_model->fixDocumentFusion($idLoteOrigen);
-
-                            if($update){
-                                print_r($corrida . " updated \n");
-                            }
-                        }
-                    }else{
-                        print_r(" no exist \n");
-                    }
-                }
-
-                //exit;
-            }
+            //exit;
         }
 
         //print_r($registros);
@@ -3461,6 +3455,70 @@ class Reestructura extends CI_Controller{
                     print_r($path . " uploaded \n");
                 }
             }
+        }
+    }
+
+    public function fix_contratos(){
+        $lotes = $this->Reestructura_model->getDocumentsToFix();
+
+        print_r("lotes: " . count($lotes). "\n");
+
+        foreach ($lotes as $key => $lote) {
+            $document = $this->Reestructura_model->getDocumentsFromLote($lote->idLote);
+
+            $contrato = "static/documentos/contratacion-reubicacion-temp/$document->carpeta/CONTRATO/$document->contrato";
+
+            $exist = file_exists($contrato);
+
+            if($exist){
+                print_r($contrato . " exist \n");
+
+                $file = [
+                    "tmp_name" => $contrato,
+                ];
+
+                $uploaded = $this->uploadFileToBucket($file, $document->contrato);
+
+                if($uploaded){
+                    print_r($contrato . " uploaded \n");
+                }else{
+                    print_r($contrato . " no uploaded \n");
+                }
+            }else{
+                print_r($contrato . " no exist \n");
+            }
+
+            $corrida = "static/documentos/contratacion-reubicacion-temp/$document->carpeta/CORRIDA/$document->corrida";
+
+            $exist = file_exists($corrida);
+
+            if($exist){
+                print_r($corrida . " exist \n");
+
+                $file = [
+                    "tmp_name" => $corrida,
+                ];
+
+                $uploaded = $this->uploadFileToBucket($file, $document->corrida);
+
+                if($uploaded){
+                    print_r($corrida . " uploaded \n");
+                }else{
+                    print_r($corrida . " no uploaded \n");
+                }
+            }else{
+                print_r($corrida . " no exist \n");
+            }
+
+            $updated = $this->Reestructura_model->updateBucketInPXL($lote->id_pxl);
+
+            if($updated){
+                print_r("ID PXL: " . $lote->id_pxl . " updated \n");
+            }else{
+                print_r("ID PXL: " . $lote->id_pxl . " no updated \n");
+            }
+
+            //exit;
         }
     }
     
