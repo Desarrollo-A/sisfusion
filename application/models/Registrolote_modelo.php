@@ -3530,6 +3530,9 @@
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 694, 674';
 					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
+					$id_lider = $id_lider . ', 3111';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
