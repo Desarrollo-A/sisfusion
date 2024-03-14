@@ -1152,9 +1152,8 @@ class Contraloria extends CI_Controller {
 
     $loteAnterior = $this->Reestructura_model->buscarLoteAnteriorPorIdClienteNuevo($idCliente);
     if (!$this->Reestructura_model->loteLiberadoPorReubicacion($loteAnterior->idLote)) {
-        if($banderaFusion != 0){
-            $lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
-
+        $lotesFusionOrigen = $this->Reestructura_model->getLotesFusion($loteAnterior->idLote);
+        if(count($lotesFusionOrigen) != 0){
             for ($x=0; $x < count($lotesFusionOrigen) ; $x++) { 
                 if($lotesFusionOrigen[$x]['origen'] == 1){
                     $data = [
