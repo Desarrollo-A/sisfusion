@@ -1560,8 +1560,63 @@ class Api extends CI_Controller
                     {
                         $dataReturn3 = json_decode(file_get_contents("php://input"));
                         $dataReturn = json_decode(file_get_contents("php://input"));
-                        // se valida que datos no sean isset 
-                        // echo($dataReturn);
+                        if (!isset($dataReturn->referencia) || !isset($dataReturn->empresa) || !isset($dataReturn->estatusContratacion) || !isset($dataReturn->totalLote) || !isset($dataReturn->idCliente) || !isset($dataReturn->nombreCliente))
+                            echo json_encode(array("status" => 375, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if (($dataReturn->referencia == '') || ($dataReturn->empresa == '') || ($dataReturn->estatusContratacion == '') || ($dataReturn->totalLote == '') || ($dataReturn->idCliente == '') ||($dataReturn->nombreCliente  == ''))
+                                echo json_encode(array("status" => 380, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $getLoteComision = $this->Seguro_model->validaLoteComision($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                if(count($getLoteComision) > 0 )
+                                    echo (json_encode(array("status" => 385, "message" => "El Lote ingresado ya se encuentra registrado.")));
+                                    else {
+                                        $consultarReferencia = $this->Seguro_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                        if(empty($consultarReferencia))
+                                        echo (json_encode(array("status" => 390, "message" => "Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.")));
+                                    
+                                    else { 
+                                        $datosComisionistas = count($dataReturn->comisionistas);
+                                        $totalLote = json_decode($dataReturn->totalLote);
+                                        $dataComisiones = array();
+                                        $generalComisiones = 0;
+                                        $porcentajesComisiones = 0;
+                                        $dataPago = array();
+                                        $getInfoLote = $this->Seguro_model->getInfoLote($dataReturn->referencia, $dataReturn->empresa, $dataReturn->nombreLote);
+                                        
+                                        for($i = 0; $i < $datosComisionistas; $i++ ){
+                                            $getPlanComision = $this->Seguro_model->getPlanComision($dataReturn->comisionistas[$i]->rolGenerado,1);
+                                            $porcentajeComision = json_decode($getPlanComision->porcentajeComision);
+                                            $comisionTotal = (($porcentajeComision/100)*$totalLote);
+                                            $generalComisiones =  $generalComisiones + $comisionTotal;
+                                            $porcentajesComisiones =  $porcentajesComisiones + $porcentajeComision;
+                                            $dataComisiones['id_lote'] = $getInfoLote->idLote;                            
+                                            $dataComisiones['id_usuario'] = $dataReturn->comisionistas[$i]->idUsuario;      
+                                            $dataComisiones['comision_total'] = $comisionTotal;                                  
+                                            $dataComisiones['estatus'] = 1; 
+                                            $dataComisiones['observaciones'] = "COMISION SEGURO";                                 
+                                            $dataComisiones['porcentaje_decimal'] = $porcentajeComision;                             
+                                            $dataComisiones['rol_generado'] = $dataReturn->comisionistas[$i]->rolGenerado;    
+                                            $dataComisiones['descuento'] = 0;                                              
+                                            $dataComisiones['idCliente'] = $dataReturn->idCliente;                          
+                                            $dataComisiones['modificado_por'] = 1;                                              
+                                            $dataComisiones['fecha_modificado'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_creacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['fecha_autorizacion'] = date("Y-m-d H:i:s");
+                                            $dataComisiones['creado_por'] = 1;            
+                                            
+                                            if($dataReturn->comisionistas[$i]->rolGenerado == 7){
+                                                $dataLineaVenta['id_asesor'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 9){
+                                                $dataLineaVenta['idCoordinador'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 3){
+                                                $dataLineaVenta['idGerente'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 2){
+                                                $dataLineaVenta['idSubdirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else if($dataReturn->comisionistas[$i]->rolGenerado == 1){
+                                                $dataLineaVenta['idDirector'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }else{
+                                                $dataLineaVenta['idOtro'] = $dataReturn->comisionistas[$i]->idUsuario;
+                                            }
 
                         // var_dump($dataReturn3->seguros);
                         //echo($dataReturn);
@@ -1722,5 +1777,47 @@ class Api extends CI_Controller
             echo json_encode(0);
         }
 	}
+
+    function getAsesoresSeguros() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
+                $valida_token = json_decode($this->validateToken($token, 5918));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $dbQueryResult = $this->Api_model->getAsesoresSeguros();
+                        if ($dbQueryResult) // SUCCESS TRANSACTION
+                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbQueryResult), JSON_UNESCAPED_UNICODE);
+                        else // ERROR TRANSACTION
+                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                    } 
+                    else{
+                        echo ($checkSingup);
+                    }
+                }
+            }
+        }
+    }
 
 }
