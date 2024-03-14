@@ -21,7 +21,9 @@ class Contraloria extends CI_Controller {
 
         // print_r($id);
 
-        $this->salesforce->sendLeadId($id);
+        $response = $this->salesforce->sendLeadId($id);
+
+        print_r($response);
     }
 
     public function index() {
@@ -1664,8 +1666,8 @@ class Contraloria extends CI_Controller {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_salesforce = $this->input->post('id_salesforce');
 
-        print_r($id_salesforce);
-        exit;
+        //print_r($id_salesforce);
+        //exit;
 
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 9;
@@ -1694,8 +1696,10 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->validate90Dias($idLote, $idCliente, $this->session->userdata('id_usuario'));
         
         if($validate == 1) {
+
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
+
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
@@ -1708,19 +1712,23 @@ class Contraloria extends CI_Controller {
                     $response = $this->arcus->sendLeadInfoRecord($arcusData);
                 }
                 if($this->input->post('lugar_prospeccion') == 52){ // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE SALESFORCE
-                    $response = $this->Salesforce->sendLeadId($id_salesforce);
+                    if($id_salesforce){
 
-                    $data = [
-                        "id_salesforce" => $id_salesforce,
-                        "response" => $response,
-                        "idLote" => $idLote,
-                        "idCliente" => $idCliente,
-                        "fecha_modificacion" => date("Y-m-d H:i:s"),
-                        "modificado_por" => $id_usuario,
-                    ];
+                        $response = $this->salesforce->sendLeadId($id_salesforce);
 
-                    $this->Salesforce->isertData($data);
+                        $data_to_insert = [
+                            "id_salesforce" => $id_salesforce,
+                            "response" => $response,
+                            "idLote" => $idLote,
+                            "idCliente" => $idCliente,
+                            "fecha_modificacion" => date("Y-m-d H:i:s"),
+                            "modificado_por" => $id_usuario,
+                        ];
+
+                        $this->General_model->addRecord("json_salesforce", $data_to_insert);
+                    }
                 }
+
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
