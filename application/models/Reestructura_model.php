@@ -1051,7 +1051,7 @@ class Reestructura_model extends CI_Model
     public function get_catalogo_restructura($id_catalogo){
         return $this->db->query("SELECT id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo = $id_catalogo AND estatus=1");
     }
-    public function removeLoteFusion($idFusion,$id_usuario){
+    public function quitarLoteFusion($idFusion,$id_usuario){
         return $this->db->query("UPDATE lotesFusion SET idLote=0,idCliente=0,idLotePvOrigen=0,modificadoPor=$id_usuario WHERE idFusion=$idFusion");
     }
     public function getListaLotesPendienteTraspasoFusion() {
@@ -1359,7 +1359,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function checkFusion($id_lote){
-        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ? AND destino = ?', array($id_lote, 1));
+        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
         return $query;
     }
 
@@ -1369,19 +1369,24 @@ class Reestructura_model extends CI_Model
     }
 
     public function deletePropuestas($id_lote){
-        $query = $this->db->query('DELETE FROM propuestas_x_lote WHERE idLote = ?', array($id_lote));
+        $query = $this->db->query('DELETE FROM propuestas_x_lote WHERE idLote = ?', $id_lote);
         
         return $query;
     }
 
     public function deleteFusion($id_lote){
-        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', array($id_lote));
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotes WHERE idLote = ? )', $id_lote);
         
         return $query;
     }
 
     public function updateLotesDestino($idLotes, $idStatusLote){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, 1));
+        return $query;
+    }
+
+    public function updateLotesOrigen($idLotes, $estatusPreproceso, $idStatusLote){
+        $query = $this->db->query('UPDATE lotes SET estatus_preproceso = ?, idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($estatusPreproceso, $idStatusLote, 1));
         return $query;
     }
 

@@ -98,6 +98,27 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modalQuitarFusion" data-backdrop="static" role="dialog">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+                    <form id="formQuitarFusion"> 
+                        <div class="modal-body">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                                <h4>Seleccione los lotes a eliminar de la fusión</h4>
+                            </div>
+                            <br>
+                            <div id="lotesFusiones2">
+
+                            </div><br>
+                        </div><br>
+                        <div class="modal-footer"><br><br><br>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                            <button type="submit"  class="btn btn-primary">Aceptar</button>
+                        </div>
+                    </form>
+				</div>
+			</div>
+		</div>
         <div class="modal fade" id="modalDropFusion" data-backdrop="static" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">

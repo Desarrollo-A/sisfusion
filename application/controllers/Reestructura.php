@@ -620,9 +620,11 @@ class Reestructura extends CI_Controller{
         $updateFusionFlag = false;
         $lotesFusion = array();
         $idRegresoFusion = 0;
+        $lotesOrigen = array();
 
-        if($flag_fusion == 1){ // if para saber que proceso se es
+        if($flag_fusion == 1){ // if par saber si reestructura, reubicacion o fusión
             $checkFusion = $this->Reestructura_model->checkFusion($id_lote);
+            
             if($checkFusion->num_rows() > 0){
                 $proceso = 5;
                 $data = $checkFusion->result();
@@ -635,7 +637,6 @@ class Reestructura extends CI_Controller{
                     $result["message"] = 'Error al deshcaer la fusión';
                 }
             }
-            // hacer query de lotes fusion para obtener data ?
         }
         else{
             $checkReubicacion = $this->Reestructura_model->checkReubicacion($id_lote);
@@ -646,37 +647,53 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $checkReestructura = $this->Reestructura_model->checkReestructura($id_lote);
-                $proceso = 4;
-                $data = $checkReestructura->result();
+
+                if($checkReestructura->num_rows() > 0){
+                    $proceso = 3;
+                    $data = $checkReestructura->result();
+                }
             }
         }
 
         switch($proceso){ // checar si este swicth puede usase para algo mas
             case 2:
+
                 $idStatusLote = 15; // valor para lotes de destino            
                 $estatus_preproceso = 0; // valor para lote de origen
                 foreach($data as $d){
                     $idLotesDestino[] = $d->id_lotep;
                 }
+
+                $lotesOrigen[] = $id_lote;
                 break;
 
-            case 4:
+            case 3:
                 $idStatusLote = 2; // valor para lotes de destino            
                 $estatus_preproceso = 0; // valor para lote de origen
                 foreach($data as $d){
                     $idLotesDestino[] = $d->id_lotep;
                 }
+
+                $lotesOrigen[] = $id_lote;
                 break;
             
             case 5:
                 $idStatusLote = 15; // valor para lotes de destino            
                 $estatus_preproceso = 0; // valor para lote de origen
                 foreach($data as $d){
-                    $idLotesDestino[] = $d->idLote;
+                    if($d->origen == 1){
+                        $lotesOrigen[] = $d->idLote;
+                    }
+                    else{
+                        $idLotesDestino[] = $d->idLote;
+                    }
                 }
                 break;
-        }
 
+            default:
+                $lotesOrigen[] = $id_lote;
+                break;
+        }
 
         $this->db->trans_begin();
 
@@ -684,14 +701,14 @@ class Reestructura extends CI_Controller{
         $banderaActualizar = 0;
 
         // 1: eliminar la propuesta por lote de este lote
-        if ($proceso != 0) {
+        if ($proceso != 0) { // diferente a 0 significa que si tiene lotesen su fusion o rebicacion, etc.
             if ($proceso == 5) {
-                $delete = $this->Reestructura_model->deleteFusion($id_lote); // devuelve el numero de rows affectados
+                $delete = $this->Reestructura_model->deleteFusion($id_lote);
             } else {
-                $delete = $this->Reestructura_model->deletePropuestas($id_lote); // devuelve el numero de rows affectados
+                $delete = $this->Reestructura_model->deletePropuestas($id_lote);
             }
 
-            if ($delete <= 0) {
+            if (!$delete) {
                 $this->db->trans_rollback();
 
                 $result["result"] = false;
@@ -732,7 +749,7 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $updateLotesDestino = $this->Reestructura_model->updateLotesDestino($ids, $idStatusLote);
-                if(!$updateLotesDestino){
+                if($updateLotesDestino){
                     $updateFusionFlag = true;
                 }
             }
@@ -751,14 +768,11 @@ class Reestructura extends CI_Controller{
         }
 
 
-        // 3: regresar el estatus lote a su origen
-        $dataRegresoLote = array(
-            "idStatusLote" => 2,
-            "estatus_preproceso" => 0,
-            'usuario' => $this->session->userdata('id_usuario'),
-            'modificado' => date('Y-m-d H:i:s')
-        );
-        if(!$this->General_model->updateRecord('lotes', $dataRegresoLote, 'idLote', $id_lote)){
+        $idsOrigen = implode(',', $lotesOrigen);
+        
+        $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2); // estatus preproceso en 0
+
+        if(!$update){
             $this->db->trans_rollback();
 
             $result["result"] = false;
@@ -771,7 +785,7 @@ class Reestructura extends CI_Controller{
             $this->db->trans_commit();
 
             $result["result"] = true;
-            $result["message"] = 'Se ha revertido el proproceso del lote: <b>'.$id_lote.'</b>';
+            $result["message"] = 'Se ha revertido el preproceso del lote: <b>'.$id_lote.'</b>';
              // se ejecuta el rollback porque es prueba y no se debe ejecutar nada
         }else{
             $this->db->trans_rollback();
@@ -3076,6 +3090,17 @@ class Reestructura extends CI_Controller{
     public function getHistorialPorLote($idLote) {
         echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote));
     }
+    
+    public function quitarLoteFusion(){
+        $datosPost = $_POST;
+        $result = false;
+        for ($i=0; $i < $datosPost['index'] ; $i++) { 
+            if(isset($datosPost['idFusion_'.$i])){
+                $result = $this->Reestructura_model->quitarLoteFusion($datosPost['idFusion_'.$i],$this->session->userdata('id_usuario'));
+            }
+        }
+        echo json_encode($result);
+    }
 
     public function removeLoteFusion()
     {
@@ -3084,6 +3109,7 @@ class Reestructura extends CI_Controller{
         $result = false;
         $data = array();
         $lotesDestino = array();
+        $lotesOrigen = array();
         $statusLoteDestino = array();
         $idRegreso = 0;
         $allUpdates = true;
@@ -3091,6 +3117,7 @@ class Reestructura extends CI_Controller{
         if (!empty($pvLote)) {
             // 1. checamos los lotes que estas involucrados en la fusion
             $checkFusion = $this->Reestructura_model->checkFusion($pvLote);
+            // $checkFusionOrigen = $this->Reestructura_model->checkFusionOrigen();
 
 
             $data = $checkFusion->result();
@@ -3099,7 +3126,13 @@ class Reestructura extends CI_Controller{
 
             // una vez que se comprueba que haya resultados de la consulta, se guardan los lotes en un arreglo
             foreach ($data as $d) {
-                $lotesDestino[] = $d->idLote;
+                if($d->origen == 1){
+                    $lotesOrigen[] = $d->idLote;
+                }
+                else if($d->origen == 0){
+                    $lotesDestino[] = $d->idLote;
+                }
+                
             }
 
             // 2. despues se eliminan los registros de la fusión
@@ -3108,7 +3141,7 @@ class Reestructura extends CI_Controller{
             if ($delete) {
                 $idLotes = implode(',', $lotesDestino);
 
-                if ($checkFusion->num_rows() > 0) {
+                if ($checkFusion->num_rows() > 0 && count($lotesDestino) > 0) {
                     $checkLotes = $this->Reestructura_model->checkLotesFusion($idLotes);
 
                     $data = $checkLotes->result();
@@ -3135,10 +3168,25 @@ class Reestructura extends CI_Controller{
                 }
 
                 if ($allUpdates) {
-                    $this->db->trans_commit();
 
-                    $result["result"] = true;
-                    $result["msg"] = "La fusión ha sido removida correctamente";
+                    $idsOrigen = implode(',', $lotesOrigen);
+                    
+                    // 4. se regresa el lotes de origen a su estatus de preproceso 0
+                    $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2); // estatus preproceso en 0
+
+                    if($update){
+                        $this->db->trans_commit();
+
+                        $result["result"] = true;
+                        $result["msg"] = "La fusión ha sido removida correctamente";
+                    }
+                    else {
+                        $this->db->trans_rollback();
+
+                        $result["result"] = false;
+                        $result["msg"] = "Error al actualizar los lotes de origen";
+                    }
+                    
                 } else {
                     $this->db->trans_rollback();
                     $result["result"] = false;
