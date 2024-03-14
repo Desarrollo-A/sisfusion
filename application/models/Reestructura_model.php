@@ -1216,5 +1216,28 @@ class Reestructura_model extends CI_Model
             ORDER BY lo.nombreLote"
             )->result_array();
     }
+
+    public function fixDocument($idLote){
+        $query = "UPDATE propuestas_x_lote SET bucket=1 WHERE idLote=$idLote";
+
+        return $this->db->query($query);
+    }
+
+    public function getDocumentsFromLote($idLote){
+        $query = "SELECT
+            l.nombreLote AS carpeta,
+            pxl.contrato AS contrato_pxl,
+            lf.contrato AS contrato_fusion,
+            pxl.corrida AS corrida_pxl,
+            lf.corrida AS corrida_fusion,
+            CASE WHEN lf.contrato IS NULL THEN pxl.contrato ELSE lf.contrato END AS contrato,
+            CASE WHEN lf.corrida IS NULL THEN pxl.corrida ELSE lf.corrida END AS corrida
+        FROM propuestas_x_lote pxl
+        LEFT JOIN lotes l ON l.idLote=pxl.idLote
+        LEFT JOIN lotesFusion lf ON lf.idLotePvOrigen=l.idLote AND destino=1
+        WHERE l.idLote=$idLote";
+
+        return $this->db->query($query)->row();
+    }
     
 }

@@ -35,6 +35,7 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip();
 
 });
+
 $(document).on('click', '.btn-abrir-modal', function () {
     let idLote = $(this).attr("data-idLote");
     let banderaFusion = $(this).attr("data-banderaFusion");
@@ -85,6 +86,7 @@ $(document).on('click', '.btn-abrir-modal', function () {
 
     $("#archivosReestructura").modal();
 });
+
 function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusion = 0,flagProcesoContraloria,flagProcesoJuridico) {
     archivosResicion = [];
     idsArchivos = [];
@@ -274,7 +276,7 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
         });
         if (flagProceso == 2 && flagProcesoJuridico == 0 && id_rol_general == 15  ) {
             //se esta subiendo contrato se debe pedir uno adicional
-            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"id_dxc" : id_dxc, "rescisionArchivo" : rescisionArchivo}] ;
+            let nuevosDatosOrigen = banderaFusion != 0 ? datos.filter(datosFusion => datosFusion.origen == 1) : [{"nombreLote" : nombreLote,"id_dxc" : id_dxc, "rescisionArchivo" : rescisionArchivo, bucket: bucket, rescisioncl: rescisioncl}] ;
             const archivoLbl = datos[0]['tipo_proceso'] != "3" ? 'la rescisión del contrato' : 'el documento de reestructura';
 
             nuevosDatosOrigen.map((elemento, index) => {
@@ -591,6 +593,7 @@ $(document).on("click", "#sendRequestButton", function (e) {
 
     }
 });
+
 $(document).on('click', '.ver-archivo', function () {
     let id_pxl = $(this).attr("data-idPxl");
     let nombreArchivo = $(this).attr("data-nomArchivo");
@@ -664,6 +667,7 @@ $(document).on('click', '.btn-abrir-contratoFirmado', async function(){
     let heightIframe = '400px';
     if(flagEditar == 0){//es primera ves no hay archivo
         if(flagFusion == 1){
+            console.log('aqui')
             const dataFusionDes = await totalSuperficieFusion(idLote, 1);
                 document.getElementById('txtTituloCF').innerHTML = 'Selecciona el archivo que desees asociar a <b>CONTRATO FIRMADO</b>';
                 document.getElementById('secondaryLabelDetail').innerHTML = 'El documento que hayas elegido se almacenará de manera automática una vez que des clic en <i>Guardar</i>.';

@@ -489,4 +489,26 @@ class Documentacion extends CI_Controller {
             http_response_code(404);
         }
     }
+
+    public function rename(){
+        $archivo = $this->input->get('archivo');
+
+        $input = ['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú', 'ä', 'ë', 'ï', 'ö', 'ü', 'Ä', 'Ë', 'Ï', 'Ö', 'Ü', 'â', 'ã', 'ä', 'å', 'ā', 'ă', 'ą', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Ā', 'Ă', 'Ą', 'è', 'é', 'é', 'ê', 'ë', 'ē', 'ĕ', 'ė', 'ę', 'ě', 'Ē', 'Ĕ', 'Ė', 'Ę', 'Ě', 'ì', 'í', 'î', 'ï', 'ì', 'ĩ', 'ī', 'ĭ', 'Ì', 'Í', 'Î', 'Ï', 'Ì', 'Ĩ', 'Ī', 'Ĭ', 'ó', 'ô', 'õ', 'ö', 'ō', 'ŏ', 'ő', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ō', 'Ŏ', 'Ő', 'ù', 'ú', 'û', 'ü', 'ũ', 'ū', 'ŭ', 'ů', 'Ù', 'Ú', 'Û', 'Ü', 'Ũ', 'Ū', 'Ŭ', 'Ů', '(', ')', ' '];
+        $output = '';
+        $new_name = str_replace($input, $output, $archivo);
+
+        $object = $this->bucket->object(urldecode($archivo));
+
+        if($object->exists()){
+            print_r($archivo . " exist\n");
+
+            $new_object = $object->rename($new_name);
+
+            if($new_object->exists()){
+                print_r($new_object->info());
+            }
+        }else{
+            print_r($archivo . " no exist\n");
+        }
+    }
 }
