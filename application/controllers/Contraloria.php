@@ -1160,7 +1160,7 @@ class Contraloria extends CI_Controller {
                         'tipoLiberacion' => 7,
                         'idLote' => $lotesFusionOrigen[$x]['idLote'],
                         'idLoteNuevo' => NULL,
-                        'banderaFusion' => $banderaFusion,
+                        'banderaFusion' => 1,
                     ];
 
                     if($x == count($lotesFusionOrigen) -1){

@@ -164,7 +164,10 @@ class Comisiones extends CI_Controller
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
-        $this->load->view("ventas/comisiones_colaborador", $datos);
+      if ($this->session->userdata('tipo') == 3) // SEGUROS
+        $this->load->view("ventas/comisionesColaboradorSeguros", $datos);
+      else
+      $this->load->view("ventas/comisiones_colaborador", $datos);
       break;
     }
   }
