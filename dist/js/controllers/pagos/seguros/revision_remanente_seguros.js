@@ -16,7 +16,7 @@ $(document).ready(function() {
     }, 'json');
 
     $('input[name="modoSubida"]').change(function() {
-        getDataRemanente(proyecto, condominio);
+        getDataRemanente_seguros(proyecto, condominio);
 
     });
 });
@@ -47,7 +47,7 @@ $('#proyectoRemanente_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataRemanente(proyecto, condominio);
+    getDataRemanente_seguros(proyecto, condominio);
 });
 
 $('#condominioRemanente_seguros').change(function(){
@@ -56,7 +56,7 @@ $('#condominioRemanente_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataRemanente(proyecto, condominio);
+    getDataRemanente_seguros(proyecto, condominio);
 });
 
 $('#tabla_remanente_seguros thead tr:eq(0) th').each(function (i) {
@@ -70,7 +70,7 @@ $('#tabla_remanente_seguros thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllRemanenteSeguros(this)"/>');
     }
 });
 
@@ -88,7 +88,7 @@ function obtenerModoSeleccionado() {
     return modoSeleccionado;
 }
 
-function getDataRemanente(proyecto, condominio){
+function getDataRemanente_seguros(proyecto, condominio){
     
     $('#tabla_remanente_seguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
@@ -529,7 +529,7 @@ $(document).on("click", ".checkPagosIndividual", function() {
     $("#autorizarRemanente_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
 });
     
-function selectAll(e) {
+function selectAllRemanenteSeguros(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_remanente_seguros.$('input[type="checkbox"]')).each(function (i, v) {

@@ -1,6 +1,6 @@
 var tr;
 var tabla_asimilados_seguros ;
-var totaPago = 0;
+var totaPago_asimilados_seguros = 0;
 let titulos_seguros = [];
 
 $(document).ready(function() {
@@ -16,7 +16,7 @@ $(document).ready(function() {
     }, 'json');
 
     $('input[name="modoSubida"]').change(function() {
-        getDataAsimilados(proyecto, condominio);
+        getDataAsimiladosSeguros(proyecto, condominio);
 
     });
 
@@ -48,7 +48,7 @@ $('#proyectoAsimilados_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataAsimilados(proyecto, condominio);
+    getDataAsimiladosSeguros(proyecto, condominio);
 });
 
 $('#condominioAsimilados_seguros').change(function(){
@@ -57,7 +57,7 @@ $('#condominioAsimilados_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataAsimilados(proyecto, condominio);
+    getDataAsimiladosSeguros(proyecto, condominio);
 });
 
 $('#tabla_asimilados_seguros thead tr:eq(0) th').each(function (i) {
@@ -71,7 +71,7 @@ $('#tabla_asimilados_seguros thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
     }
 });
 
@@ -89,7 +89,7 @@ function obtenerModoSeleccionado() {
     return modoSeleccionado;
 }
 
-function getDataAsimilados(proyecto, condominio){
+function getDataAsimiladosSeguros(proyecto, condominio){
     
     $('#tabla_asimilados_seguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
@@ -435,14 +435,14 @@ function getDataAsimilados(proyecto, condominio){
         var row = tabla_asimilados_seguros.row(tr2).data();
         if (row.monto == 0) {
             row.monto = row.impuesto;
-            totaPago += parseFloat(row.monto);
+            totaPago_asimilados_seguros += parseFloat(row.monto);
             tr2.children().eq(1).children('input[type="checkbox"]').prop("checked", true);
         } 
         else {
-            totaPago -= parseFloat(row.monto);
+            totaPago_asimilados_seguros -= parseFloat(row.monto);
             row.monto = 0;
         }
-        $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
+        $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago_asimilados_seguros)));
     });
 
     $("#tabla_asimilados_seguros tbody").on("click", ".cambiar_estatus", function(){
@@ -512,24 +512,24 @@ $("#formPausarAsimilados").submit( function(e) {
 });
 
 $(document).on("click", ".checkPagosIndividual", function() {
-    totaPago = 0;
+    totaPago_asimilados_seguros = 0;
     tabla_asimilados_seguros.$('input[type="checkbox"]').each(function () {
         let totalChecados = tabla_asimilados_seguros.$('input[type="checkbox"]:checked') ;
         let totalCheckbox = tabla_asimilados_seguros.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
             row = tabla_asimilados_seguros.row(tr).data();
-            totaPago += parseFloat(row.impuesto); 
+            totaPago_asimilados_seguros += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
             $("#all").prop("checked", true);
         else 
             $("#all").prop("checked", false);
     });
-    $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
+    $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago_asimilados_seguros)));
 });
     
-function selectAll(e) {
+function selectAllSeguros(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_asimilados_seguros.$('input[type="checkbox"]')).each(function (i, v) {

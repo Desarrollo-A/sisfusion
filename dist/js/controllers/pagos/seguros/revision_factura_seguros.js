@@ -16,7 +16,7 @@ $(document).ready(function() {
     }, 'json');
 
     $('input[name="modoSubida"]').change(function() {
-        getDataFactura(proyecto, condominio);
+        getDataFacturaSeguros(proyecto, condominio);
 
     });
 });
@@ -47,7 +47,7 @@ $('#proyectoFactura_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataFactura(proyecto, condominio);
+    getDataFacturaSeguros(proyecto, condominio);
 });
 
 $('#condominioFactura_seguros').change(function(){
@@ -56,7 +56,7 @@ $('#condominioFactura_seguros').change(function(){
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getDataFactura(proyecto, condominio);
+    getDataFacturaSeguros(proyecto, condominio);
 });
 
 $('#tabla_factura_seguros thead tr:eq(0) th').each(function (i) {
@@ -70,7 +70,7 @@ $('#tabla_factura_seguros thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllFacturas(this)"/>');
     }
 });
 
@@ -88,7 +88,7 @@ function obtenerModoSeleccionado() {
     return modoSeleccionado;
 }
 
-function getDataFactura(proyecto, condominio){
+function getDataFacturaSeguros(proyecto, condominio){
     
     $('#tabla_factura_seguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
@@ -526,7 +526,7 @@ $(document).on("click", ".checkPagosIndividual", function() {
     $("#autorizarFactura_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
 });
     
-function selectAll(e) {
+function selectAllFacturas(e) {
     tota2 = 0;
     if(e.checked == true){
         $(tabla_factura_seguros.$('input[type="checkbox"]')).each(function (i, v) {
