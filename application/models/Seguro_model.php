@@ -21,7 +21,7 @@ class Seguro_model extends CI_Model {
 
 
     function getInfoLote($referencia, $empresa, $nombreLote){
-        $query = $this->db->query("SELECT lo.idLote
+        $query = $this->db->query("SELECT lo.idLote , idCliente
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -67,21 +67,61 @@ class Seguro_model extends CI_Model {
             INNER JOIN usuarios u1 ON u1.id_usuario = up.idUsuario AND u1.id_usuario NOT IN (1980)
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
         )");
-            return $query->row();
+            return $query->result_array();
         }
 
 
-        function insertComisionSeguro($tabla, $data) {
+        function insertComisionSeguro($tabla, $data,$dataIndividual,$dataHistorialSeguros,$dataPagoSeguro) {
             if ($data != '' && $data != null){
                 $response = $this->db->insert($tabla, $data);
+                if($tabla = 'comisiones_seguro'){
+
+                $insertComision = $this->db->insert_id();
+                // $cdmInsertPagoComision = "INSERT INTO  historial_comisiones 
+                // VALUES ($insert_id_2, ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'DISPERSÓ CLUB MADERAS')";
+                $dataIndividual['id_comision'] = $insertComision;
+
+                $responsePago_seguro_ind = $this->db->insert('pago_seguro_ind', $dataIndividual);
+                $responsePago_seguro_ind_Id = $this->db->insert_id();
+                // $respuesta = $this->db->query("");             
+
+                $dataHistorialSeguros['id_pago_i'] = $responsePago_seguro_ind_Id;
+
+                $responsePago_seguro_ind = $this->db->insert('historial_seguro', $dataHistorialSeguros);
+
+                $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
+                
+                }
                 if (!$response) {
                     return 0;
                 } else {
                     return 1;
+                    // return 1;
                 }
             } else {
                 return 0;
             }
         }
-    
+
+
+        function poderVentas($idAsesor) {
+            $cmd = "select up.id_usuario as id_usuarioUp,    up.id_rol as id_rolUp,   
+            CONCAT(up.nombre,' ',up.apellido_paterno,' ',up.apellido_materno) AS nombreUP,
+            up2.id_usuario as id_usuarioUp2 ,  up2.id_rol as id_rolUp2, 
+            CONCAT(up2.nombre,' ',up2.apellido_paterno,' ',up2.apellido_materno) AS nombreUp2,
+            up3.id_usuario  as id_usuarioUp3,   up3.id_rol as id_rolUp3, 
+            CONCAT(up3.nombre,' ',up3.apellido_paterno,' ',up3.apellido_materno) AS nombreUp3
+            from usuarios up
+            INNER JOIN  usuarios up2 on up2.id_usuario = up.id_lider
+            INNER JOIN  usuarios up3 on up3.id_usuario = up2.id_lider
+            where up.id_usuario = $idAsesor";
+
+            $query = $this->db->query($cmd);
+            return $query->result_array();
+        }
+
+        
+
+
+
 }
