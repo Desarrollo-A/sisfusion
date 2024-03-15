@@ -365,6 +365,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 3111)";
                     $filtroSede = "";
+				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";

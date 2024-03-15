@@ -514,6 +514,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 694, 674) AND pr.id_sede IN (14)";
             else if ($id_usuario == 12292) // REYNALDO HERNÁNDEZ SANCHEZ
                 $where = "pr.id_gerente IN ($id_lider, 3111) AND pr.id_sede IN (4)";
+            else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
+                $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

@@ -3533,6 +3533,9 @@
 				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
 					$id_lider = $id_lider . ', 3111';
 					$sede = "";
+				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
+					$id_lider = $id_lider . ', 10063';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
