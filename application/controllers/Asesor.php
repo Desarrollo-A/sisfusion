@@ -691,11 +691,26 @@ class Asesor extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("asesor/DSConsult");
     }
+
+//    public function registrosLoteVentasAsesor() {
+//
+//        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+//        $this->load->view('template/header');
+//
+//        if($this->session->userdata('id_rol') != '22' || $this->session->userdata('id_rol') != '12') {
+//            $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
+//        } else if($this->session->userdata('id_rol') == '22'){
+//            $this->load->view("contratacion/datos_lote_contratacion_view_ac", $datos);
+//        }
+//
+//    }
+
     public function registrosLoteVentasAsesor(){
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
+
     public function invDispAsesor()
     {
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();

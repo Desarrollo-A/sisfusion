@@ -224,16 +224,16 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/validate_region");
   }
 
-  public function resguardos(){
-    $this->load->view('template/header');
-    $this->load->view("ventas/revision_resguardo");
-  }
+  // public function resguardos(){
+  //   $this->load->view('template/header');
+  //   $this->load->view("ventas/revision_resguardo");
+  // }
 
 
-  public function retiros(){
-    $this->load->view('template/header');
-    $this->load->view("ventas/retiros");
-  }
+  // public function retiros(){
+  //   $this->load->view('template/header');
+  //   $this->load->view("ventas/retiros");
+  // }
 
 
   public function historial_retiros()
@@ -283,12 +283,6 @@ class Comisiones extends CI_Controller
         }
         //  se cambio la vista 
     }
-
-    public function bonos_historial()
-    {
-      $this->load->view('template/header');
-      $this->load->view("ventas/bonos_historial");
-    }
     public function bonos_colaborador()
     {
       $this->load->view('template/header');
@@ -306,11 +300,7 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/prestamos");
     }
 
-    public function descuentos_contraloria()
-    {
-      $this->load->view('template/header');
-      $this->load->view("ventas/descuentos");
-    }
+
     public function descuentos_contra()
     {
       $this->load->view('template/header');
@@ -435,13 +425,6 @@ class Comisiones extends CI_Controller
     $this->load->view("comisiones/reporte_pagos");
   }
 
-  function conglomerado_descuentos(){
-    $datos = array();
-    $datos["certificaciones"] = $this->Comisiones_model->getCertificaciones();
-    $this->load->view('template/header');
-    $this->load->view("ventas/conglomerado",$datos);
-  }
-
   public function flujo_comisiones() {
     $this->load->view('template/header');
     $this->load->view('ventas/flujo_comisiones');
@@ -452,17 +435,6 @@ class Comisiones extends CI_Controller
     $this->load->view('comisiones/detenidas-view');
   }
 
-  public function panel_prestamos()
-  {
-    $datos["descuentos"] =  $this->Comisiones_model->lista_estatus_descuentos()->result_array();
-    $this->load->view('template/header');
-    $this->load->view("ventas/panel_prestamos", $datos);
-  }
-  public function viewHistorialPrestamos()
-  {
-      $this->load->view('template/header');
-      $this->load->view("ventas/historial_prestamos");
-  }
   public function viewAsistentesGerencia()
   {
       $this->load->view('template/header');
@@ -3079,43 +3051,6 @@ public function LiquidarLote(){
     $res["data"] = $this->Comisiones_model->getBonosX_User( $this->session->userdata('id_usuario'))->result_array();
     echo json_encode($res);
   }
-
-
-
-
-  public function saveBono()
-  {
-    $user =  $this->input->post("usuarioid");
-    $dato = $this->db->query("SELECT id_usuario FROM bonos WHERE id_usuario = $user AND estatus = 1")->result_array();
-    if(count($dato) <= 0){
-
-      $pago=str_replace("$", "", $this->input->post("pago"));
-      $comas =str_replace(",", "", $pago);
-
-      $monto=str_replace("$", "", $this->input->post("monto"));
-      $coma2 =str_replace(",", "", $monto);
-
-      $pago = $comas;
-      $monto = $coma2;
-
-      $pagoCorresp = $coma2 / $this->input->post("numeroP");
-      $pagoCorresReal = number_format($pagoCorresp, 2, '.', '');
-
-      $dat =  $this->Comisiones_model->insertar_bono($this->input->post("usuarioid"),$this->input->post("roles"),$monto,$this->input->post("numeroP"),$pagoCorresReal,$this->input->post("comentario"),$this->session->userdata('id_usuario') );
-
-      echo json_encode($dat);
-    }else{
-      $data = 3;
-      echo json_encode($data);
-    }
-  }
-
-
-
-  public function getHistorialAbono($id)
-  {
-    echo json_encode($this->Comisiones_model->getHistorialAbono($id)->result_array());
-  }
   public function getHistorialAbono2($id)
   {
     echo json_encode($this->Comisiones_model->getHistorialAbono2($id)->result_array());
@@ -3182,25 +3117,13 @@ public function LiquidarLote(){
         $row = $this->Comisiones_model->UpdateRevision($id_bono);
     echo json_encode($row);
   }
-  public function getBonos()
-  {
-    $res["data"] = $this->Comisiones_model->getBonos()->result_array();
-    echo json_encode($res);
-  }
+
   public function getBonosPorUser($estado)
   {
   $res["data"] = $this->Comisiones_model->getBonosPorUser($this->session->userdata('id_usuario'),$estado)->result_array();
     echo json_encode($res);
   }
 
-
-  public function getBonosAllUser($a,$b){
-    $dat =  $this->Comisiones_model->getBonosAllUser($a,$b)->result_array();
-      for( $i = 0; $i < count($dat); $i++ ){
-        $dat[$i]['pa'] = 0;
-      }
-  echo json_encode( array( "data" => $dat));
-  }
   public function getBonosPorUserContra($estado)
   {
 
@@ -3235,36 +3158,11 @@ public function LiquidarLote(){
     echo json_encode($this->Comisiones_model->getUsuariosRol2($rol)->result_array());
   }
 
-  public function getUsuariosRolBonos($rol)
-  {
-    echo json_encode($this->Comisiones_model->getUsuariosRolBonos($rol)->result_array());
-  }
 
   public function getUsuariosRolDU($rol)
   {
     echo json_encode($this->Comisiones_model->getUsuariosRolDU($rol)->result_array());
   }
-
-
-  public function TieneAbonos($id){
-    $respuesta = $this->Comisiones_model->TieneAbonos($id)->result_array();
-  if(count($respuesta) > 0)
-  {
-    echo json_encode(1);
-  }else{
-    echo json_encode(0);
-  }
-  }
-
-  public function BorrarBono(){
-  // echo $this->input->post("id_bono");
-
-  $respuesta =  $this->Comisiones_model->BorrarBono($this->input->post("id_bono"));
-  echo json_encode($respuesta);
-
-  }
-
-
   public function getLotesOrigen($user,$valor)
   {
     echo json_encode($this->Comisiones_model->getLotesOrigen($user,$valor)->result_array());

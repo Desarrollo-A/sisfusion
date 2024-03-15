@@ -122,15 +122,6 @@ class Comisiones_model extends CI_Model {
         ORDER BY u.nombre");
     }
 
-    function getUsuariosRolBonos($rol){
-        if($rol == 20){
-            $cadena = ' in (18, 19, 20, 25, 26, 27, 28, 30, 36) ';
-        } else{
-            $cadena = ' in ('.$rol.') ';
-        }
-        return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM bonos) AND id_rol $cadena");
-    }
-
     function getUsuariosRolDU($rol) {
         return $this->db->query("SELECT id_usuario,CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) as name_user, estatus FROM usuarios WHERE id_usuario NOT IN (SELECT id_usuario FROM descuentos_universidad) AND estatus = 1 AND id_rol = $rol ORDER BY name_user");
     }
@@ -3062,17 +3053,6 @@ class Comisiones_model extends CI_Model {
         INNER JOIN usuarios usu ON usu.id_usuario = cm.id_usuario
         WHERE lo.idLote = $idLote");
     }
-    
-    function getHistorialAbono($id){
-        $this->db->query("SET LANGUAGE Español;");
-        return $this->db->query("SELECT b.*,p.*,x.nombre as est, b.comentario as motivo, convert(nvarchar, p.fecha_abono, 6) date_final, CONCAT(us.nombre, ' ',us.apellido_paterno, ' ',us.apellido_materno) AS creado_por
-        FROM bonos b 
-        INNER JOIN pagos_bonos_ind p on p.id_bono=b.id_bono 
-        INNER JOIN opcs_x_cats x on x.id_opcion=p.estado
-        INNER JOIN usuarios us on us.id_usuario = p.creado_por
-        WHERE p.id_bono=$id and x.id_catalogo=46 ORDER BY p.id_bono DESC");
-    }
- 
     function getHistorialAbono2($pago){ 
         $this->db->query("SET LANGUAGE Español;");
         return $this->db->query(" SELECT DISTINCT(hc.comentario), hc.id_pago_b, hc.id_usuario, convert(nvarchar(20), hc.fecha_creacion, 113) date_final, hc.fecha_creacion as fecha_movimiento, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
@@ -3082,11 +3062,7 @@ class Comisiones_model extends CI_Model {
         WHERE hc.id_pago_b = $pago
         ORDER BY hc.fecha_creacion DESC");
     }
-
-    function BonoCerrado($id){
-        return $this->db->query("SELECT b.monto,b.num_pagos,SUM(p.abono) as suma,p.n_p FROM bonos b INNER JOIN pagos_bonos_ind p on p.id_bono=b.id_bono WHERE p.id_bono=$id GROUP BY b.monto, b.num_pagos,p.n_p");
-    }
-
+    
     function getBonosPorUserContra($estado){
         $filtro = '';
         if($this->session->userdata("id_rol") == 18)
@@ -3221,14 +3197,7 @@ class Comisiones_model extends CI_Model {
             }
     }
  
-    function insertar_bono($usuarioid,$rol,$monto,$numeroP,$pago,$comentario,$usuario){
-        $respuesta = $this->db->query("INSERT INTO bonos(id_usuario,id_rol,monto,num_pagos,pago,estatus,comentario,fecha_creacion,creado_por) VALUES(".$usuarioid.",".$rol." ,".$monto.",".$numeroP.",".$pago.",1, '".$comentario."', GETDATE(), ".$usuario.")");
-        if (! $respuesta ) {
-            return 0;
-            } else {
-            return 1;
-            }
-    }
+ 
 
     function UpdateRevision($id_bono){
         $respuesta = $this->db->query("UPDATE pagos_bonos_ind SET estado=2 WHERE id_pago_bono=$id_bono ");
@@ -3249,32 +3218,6 @@ class Comisiones_model extends CI_Model {
             return 1;
             }
     }
-
-    function getBonos(){
-        return $this->db->query("SELECT p.id_bono,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno) as nombre, CASE WHEN u.nueva_estructura = 1 THEN opcx2.nombre ELSE opcx.nombre END as id_rol,p.id_bono, p.id_usuario,p.monto,p.num_pagos, p.estatus,convert(date,p.fecha_creacion) as fecha_creacion, sum(d.abono) as suma,p.pago, CAST(p.comentario AS NVARCHAR(4000)) as comentario, (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*p.pago) ELSE p.pago END) impuesto1,sed.impuesto
-        FROM bonos p 
-        LEFT JOIN pagos_bonos_ind d ON d.id_bono = p.id_bono
-        INNER JOIN usuarios u ON u.id_usuario = p.id_usuario 
-        INNER JOIN opcs_x_cats opcx on opcx.id_opcion = u.id_rol AND opcx.id_catalogo = 1
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.forma_pago AND oxc.id_catalogo = 16
-        LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-        WHEN 2 THEN 2 
-        WHEN 3 THEN 2 
-        WHEN 1980 THEN 2 
-        WHEN 1981 THEN 2 
-        WHEN 1982 THEN 2 
-        WHEN 1988 THEN 2 
-        WHEN 4 THEN 5
-        WHEN 5 THEN 3
-        WHEN 607 THEN 1 
-        WHEN 7092 THEN 4
-        WHEN 9629 THEN 2
-        ELSE u.id_sede END) and sed.estatus = 1
-        LEFT JOIN opcs_x_cats opcx2 on opcx2.id_opcion = u.id_rol AND opcx2.id_catalogo = 83
-        WHERE p.estatus = 1
-        GROUP BY CONCAT(u.nombre, ' ', u.apellido_paterno, ' ' ,u.apellido_materno),opcx.nombre, p.id_bono, p.id_usuario, p.monto, p.num_pagos, p.estatus, p.fecha_creacion,p.pago, CAST(p.comentario AS NVARCHAR(4000)), p.id_bono, sed.impuesto, u.forma_pago, u.nueva_estructura, opcx2.nombre");
-    }
-
     function InsertAbono($id_abono,$id_user,$pago,$usuario,$n_p){
         $respuesta = $this->db->query("INSERT INTO pagos_bonos_ind(id_bono,id_usuario,abono,estado,comentario,fecha_abono,fecha_abono_intmex,creado_por,n_p) VALUES(".$id_abono.",".$id_user." ,".$pago.",1,'ABONO', GETDATE(), GETDATE(), ".$usuario." ,$n_p)");
         $id = $this->db->insert_id();
@@ -3287,18 +3230,6 @@ class Comisiones_model extends CI_Model {
             }
     }
 
-    function TieneAbonos($id){
-        return $this->db->query("SELECT * FROM pagos_bonos_ind WHERE id_bono=$id");    
-    }
-    
-    function BorrarBono($id_bono){
-        $respuesta = $this->db->query("UPDATE bonos SET estatus = 0 WHERE id_bono=$id_bono ");
-        if (! $respuesta ) {
-        return 0;
-        } else {
-        return 1;
-        }
-    }
       /**-----------NUEVO PROCESO DE PRESTAMOS AUTOMATICOS---------------------- */
 
     function getPrestamoxUser($id,$tipo){
