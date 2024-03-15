@@ -913,7 +913,9 @@ class Reestructura_model extends CI_Model
     }
 
     public function revisarCFDocumentos($idLote, $idCliente){
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote." AND idCliente=".$idCliente);
+        $ids = implode(",", $idLote);
+        $idsC = implode(",", $idCliente);
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote in (".$ids.") AND idCliente in (".$idsC.")");
 
         return $query->result_array();
     }

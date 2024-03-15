@@ -1286,11 +1286,12 @@ $(document).on('click', '.btn-avanzar', async function () {
             const dataFusionDes = await totalSuperficieFusion(idLote, 3);
             //AA: Obtenemos la superfices de origen y destino de la fusión.
             let separador=', ';
+            console.log(dataFusionDes);
             dataFusionDes.data.forEach((fusionLotes, index) => {
                 separador = (index==0) ? '' : ', ';
                 if(fusionLotes.origen == 1){
                     sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
-                    nombreLote += separador+fusionLotes.nombreLotes;
+                    nombreLote += separador+fusionLotes.nombreLoteDO;
                 }
                 else{
                     sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
@@ -1637,6 +1638,7 @@ const botonesAccionReubicacion = (d) => {
                     title="DESHACER PREPROCESO"
                     data-idCliente="${d.idCliente}"
                     data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
                     data-flagFusion='${flagFusion}'
                     >
                     <i class="fa fa-reply"></i>
@@ -2021,6 +2023,7 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
     let id_lote = $(this).attr('data-idlote');
+    let nombre_lote = $(this).attr('data-nombreLote');
     let flag_fusion = $(this).attr('data-flagFusion');
 
     let arrayManejo = [];
@@ -2029,7 +2032,7 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayManejo['flag_fusion'] = flag_fusion;
     arrayDeshacerRees.push(arrayManejo);
     
-    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ id_lote + ' ?' );
+    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ nombre_lote + ' ?' );
     $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borraran propuestas o fusiones realizadas');
     $('#deshacerPreproceso').modal('toggle');
 });

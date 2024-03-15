@@ -93,8 +93,8 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                 let lblInput = '';
                 if(d.idFusion == null && d.idLotePvOrigen == null ){
                     lblInput = `<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="${d.idAsesorAsignado}"
-                        'data-nombreLote="${d.nombreLote}" data-idCliente="${d.idCliente}"
-                        'data-totalNeto2="${d.totalNeto2}" data-sup="${d.sup}" name="lotesOrigen[]" value="${d.idLote}" ></center>`;
+                         data-nombreLote="${d.nombreLote}" data-idCliente="${d.idCliente}"
+                         data-totalNeto2="${d.totalNeto2}" data-sup="${d.sup}" name="lotesOrigen[]" value="${d.idLote}" ></center>`;
                 }else
                     lblInput = '<center><input type="checkbox" disabled></center>';
                 return lblInput;
