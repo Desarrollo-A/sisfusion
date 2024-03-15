@@ -1207,6 +1207,8 @@
         }
     ?>
 
+    let idDesarrollo = <?php $cliente[0]->desarrollo ?>;
+
 
 
 </script>
