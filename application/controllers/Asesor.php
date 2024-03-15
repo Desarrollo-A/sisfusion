@@ -3282,6 +3282,7 @@ class Asesor extends CI_Controller {
 
     }
     public function intExpAsesor() {
+
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
@@ -3290,6 +3291,7 @@ class Asesor extends CI_Controller {
         $fechaVenc = $this->input->post('fechaVenc');
         $idCondominio = $this->input->post('idCondominio');
         $idCliente = $this->input->post('idCliente');
+        $idMovimientoPost = $this->input->post('idMovimiento');
 
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
@@ -3306,35 +3308,120 @@ class Asesor extends CI_Controller {
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
-            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 1;
-                $idMovimiento = 89;
-            } 
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
-                $statusContratacion = 7;
-                $idMovimiento = 83;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+
+       /* print_r($this->input->post());
+        echo '<br><br>';
+        print_r($valida_tventa);
+
+        exit;*/
+
+        switch($idMovimientoPost){
+            case in_array($idMovimientoPost, [31, 85, 102, 104, 107, 108, 109, 111]):
+
+                if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
+                    if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+                        $statusContratacion = 1;
+                        $idMovimiento = 89;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+                        $statusContratacion = 7;
+                        $idMovimiento = 83;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+                        $statusContratacion = 2;
+                        $idMovimiento = 110;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+                        $statusContratacion = 2;
+                        $idMovimiento = 113;
+                    } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+                        $statusContratacion = 5;
+                        $idMovimiento = 106;
+                    } else {
+                        $statusContratacion = 3;
+                        $idMovimiento = 98;
+                    }
+                }
+                else {
+                    $statusContratacion = 2;
+                    $idMovimiento = 84;
+                }
+
+                break;
+
+            case 20:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento  = 4;
+                }
+
+                break;
+
+            case 63:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento  = 62;
+                }
+                break;
+
+            case 73:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento = 74;
+                }
+                break;
+
+            case 82:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 7;
+                    $idMovimiento  = 83;
+                }
+                break;
+
+            case 92:
                 $statusContratacion = 2;
-                $idMovimiento = 110;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
-                $statusContratacion = 2;
-                $idMovimiento = 113;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                $statusContratacion = 5;
-                $idMovimiento = 106;
-            } else {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
-            }
-        } 
-        else {
-            $statusContratacion = 2;
-            $idMovimiento = 84;
+                $idMovimiento  = 93;
+                break;
+
+            case 96:
+                $statusContratacion = 6;
+                $idMovimiento  = 97;
+                break;
         }
-        
+
+
+        /***********************************/
+
+
+//        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
+//            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+//                $statusContratacion = 1;
+//                $idMovimiento = 89;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+//                $statusContratacion = 7;
+//                $idMovimiento = 83;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+//                $statusContratacion = 2;
+//                $idMovimiento = 110;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+//                $statusContratacion = 2;
+//                $idMovimiento = 113;
+//            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+//                $statusContratacion = 5;
+//                $idMovimiento = 106;
+//            } else {
+//                $statusContratacion = 3;
+//                $idMovimiento = 98;
+//            }
+//        }
+//        else {
+//            $statusContratacion = 2;
+//            $idMovimiento = 84;
+//        }
+//
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $statusContratacion;
@@ -3343,7 +3430,7 @@ class Asesor extends CI_Controller {
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-
+        
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
