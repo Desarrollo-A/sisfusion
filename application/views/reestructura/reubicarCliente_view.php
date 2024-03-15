@@ -140,7 +140,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="deshacerReestrucura" data-keyboard="false" data-backdrop="static">
+        <div class="modal fade" id="deshacerPreproceso" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-sm">
                 <div class="modal-content">
                     <div class="modal-header"></div>
@@ -150,7 +150,7 @@
                     </div>
                     <div class="modal-footer mt-2" >
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="deshacerReestrucuraOK" class="btn btn-primary">Guardar</button>
+                        <button type="button" id="deshacerPreprocesoOK" class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>

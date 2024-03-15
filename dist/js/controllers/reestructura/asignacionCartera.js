@@ -167,7 +167,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                             data-idAsesorAsignado="${d.idAsesorAsignado}">
                             <i class="fas fa-exchange-alt"></i>
                     </button>
-                    <button class="btn-data btn-warning btn-desFusionar"
+                    <button class="btn-data btn-warning btn-quitarFusion"
                             data-toggle="tooltip" 
                             data-placement="left"
                             title="REMOVER LOTES DE LA FUSIÓN"
@@ -176,6 +176,16 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
                             data-idLote="${d.idLote}"
                             data-idAsesorAsignado="${d.idAsesorAsignado}">
                             <i class="fas fa-user-slash"></i>
+                    </button>
+                    <button class="btn-data btn-warning btn-desFusionar"
+                            data-toggle="tooltip" 
+                            data-placement="left"
+                            title="DESHACER FUSIÓN"
+                            data-idCliente="${d.idCliente}"
+                            data-LoteFusionado="1"
+                            data-idLote="${d.idLote}"
+                            data-idAsesorAsignado="${d.idAsesorAsignado}">
+                            <i class="fas fa-reply"></i>
                     </button>`;
                     }else{
                         btns = `<button class="btn-data btn-sky btn-asignar-venta"
@@ -202,8 +212,80 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
         });
     },
 });
+
+$(document).on('click', '.btn-quitarFusion', function () {
+    let idLotePV = $(this).attr('data-idLote');
+    document.getElementById('lotesFusiones2').innerHTML = '';
+    $.post('getFusion/', {idLote: idLotePV, tipoOrigenDestino: 1}, function(respuesta) {
+        respuesta.data.map((elemento, index)=>{
+            $('#lotesFusiones2').append(`
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                <div class="" id="checkDS">
+                    <div class="container boxChecks p-0">
+                        <label class="m-0 checkstyleDS">
+                            <input type="checkbox" class="select-checkbox" id="idFusion_${index}" name="idFusion_${index}" value="${elemento.idFusion}" />
+                            <span class="w-100 d-flex justify-between">
+                                <p class="m-0">Lote <b>${elemento.nombreLoteDO}</b></p>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            </div><br>
+            `);
+            if(index == (respuesta.data.length - 1)){
+                $('#lotesFusiones2').append(`
+                    <div>
+                        <input type="hidden" id="index" name="index" value="${respuesta.data.length}" />
+                    </div>
+                    `);
+            }
+        });
+        $("#modalQuitarFusion").modal("show");
+    }, 'json');
+});
+$(document).on("submit", "#formQuitarFusion", function(e){
+    e.preventDefault();
+    let data = new FormData($(this)[0]);
+    let index = document.getElementById('index').value;
+    let contador = 0;
+    for (let m = 0; m < index; m++) {
+        if($("input[name='idFusion_"+m+"']").is(':checked') === true){
+            contador = contador + 1;
+        }
+    }
+    if(contador == 0){
+        alerts.showNotification("top", "right", "Debe seleccionar al menos un lote para continuar", "warning");
+        return false;
+    }
+    $("#spiner-loader").removeClass('hide');
+    $.ajax({
+        method: 'POST',
+        url: general_base_url + 'Reestructura/quitarLoteFusion',
+        data: data,
+        processData: false,
+        contentType: false,
+        success: function(data) {
+            if (data) {
+            $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
+            $("#spiner-loader").addClass('hide');
+            $('#modalQuitarFusion').modal('hide');
+            alerts.showNotification("top", "right", "Lote(s) removidos correctamente de la fusión.", "success");
+            document.getElementById('lotesFusiones2').innerHTML = '';
+            }else{
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        },
+        error: function(){
+            $('#modalQuitarFusion').modal('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+});
+
 $(document).on('click', '.btn-desFusionar', function () {
     let idLotePV = $(this).attr('data-idLote');
+    document.getElementById("pvLote").value = idLotePV;
     document.getElementById('lotesFusiones').innerHTML = '';
     $.post('getFusion/', {idLote: idLotePV, tipoOrigenDestino: 1}, function(respuesta) {
         respuesta.data.map((elemento, index)=>{
@@ -212,7 +294,7 @@ $(document).on('click', '.btn-desFusionar', function () {
                 <div class="" id="checkDS">
                     <div class="container boxChecks p-0">
                         <label class="m-0 checkstyleDS">
-                            <input type="checkbox" class="select-checkbox" id="idFusion_${index}" name="idFusion_${index}" value="${elemento.idFusion}" />
+                            <input type="checkbox" class="select-checkbox" id="idFusion_${index}" name="idFusion_${index}" value="${elemento.idFusion}" disabled/>
                             <span class="w-100 d-flex justify-between">
                                 <p class="m-0">Lote <b>${elemento.nombreLoteDO}</b></p>
                             </span>
@@ -233,20 +315,12 @@ $(document).on('click', '.btn-desFusionar', function () {
         $("#modalDropFusion").modal("show");
     }, 'json');
 });
+
 $(document).on("submit", "#formDesFusion", function(e){
     e.preventDefault();
     let data = new FormData($(this)[0]);
     let index = document.getElementById('index').value;
     let contador = 0;
-    for (let m = 0; m < index; m++) {
-        if($("input[name='idFusion_"+m+"']").is(':checked') === true){
-            contador = contador + 1; 
-        }
-    }
-    if(contador == 0){
-        alerts.showNotification("top", "right", "Debe seleccionar al menos un lote para continuar", "warning");
-        return false;
-    }
     $("#spiner-loader").removeClass('hide');
     $.ajax({
         method: 'POST',
@@ -255,7 +329,7 @@ $(document).on("submit", "#formDesFusion", function(e){
         processData: false,
         contentType: false,
         success: function(data) {
-            if (data) {
+            if (data.result) {
             $('#tablaAsignacionCartera').DataTable().ajax.reload(null, false);
             $("#spiner-loader").addClass('hide');
             $('#modalDropFusion').modal('hide');
