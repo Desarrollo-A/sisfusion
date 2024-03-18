@@ -351,8 +351,10 @@ class Usuarios_modelo extends CI_Model
         $id_lider = $this->session->userdata('id_lider');
         switch ($type) {
             case '2': // SUBDIRECTOR
+                if ($headquarter == 12)
+                    $validacionSede = " OR id_sede = '6'";
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios 
-                WHERE (id_rol = 1 AND estatus = 1) OR (id_usuario = $id_lider) OR (id_sede='$headquarter' AND id_rol = 2) ORDER BY nombre");
+                WHERE (id_rol = 1 AND estatus = 1) OR (id_usuario = $id_lider) OR ((id_sede LIKE '%$headquarter%' $validacionSede) AND id_rol = 2) ORDER BY nombre");
                 break;
             case '3': // GERENTE
                 /*$sede = '';
