@@ -3506,23 +3506,17 @@
 				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
-				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-					$id_lider = $id_lider . ', 12688';
-					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
 					$id_lider = $id_lider . ', 5604';
 					$sede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-					$id_lider = $id_lider . ', 471';
-					$sede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
 					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-					$id_lider = $id_lider . ', 12027, 13059, 2599';
+					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
 					$sede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
 					$id_lider = $id_lider . ', 694, 4509';
@@ -3535,6 +3529,9 @@
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
+					$sede = "";
+				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+					$id_lider = $id_lider . ', 6942';
 					$sede = "";
 				}
 

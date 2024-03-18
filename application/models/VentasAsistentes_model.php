@@ -338,23 +338,17 @@ class VentasAsistentes_model extends CI_Model {
                 }  else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
-                } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                } else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 5604)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
-				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 471)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509";
@@ -367,6 +361,9 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6942)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
