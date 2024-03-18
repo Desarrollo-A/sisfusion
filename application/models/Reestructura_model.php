@@ -33,6 +33,10 @@ class Reestructura_model extends CI_Model
             $validacionAdicional = "AND lo.id_usuario_asignado = $id_usuario AND lo.estatus_preproceso NOT IN (7)";
         else if ($id_rol == 4) // ASISTENTE SUBDIRECCION
             $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1, 2, 3, 4, 5, 6)";
+        else if (in_array($id_usuario, [13589, 13549])) // SON LOS SUBDIRECTORES
+            $validacionAdicional = "AND (lo.id_gerente_asignado = $id_usuario OR lo.id_subdirector_asignado = $id_usuario)";
+        else if ($id_rol == 5 && in_array($id_lider, [13589, 13549])) // SON LAS ASISTENTES DE SUBDIRECCIÓN
+            $validacionAdicional = "AND (lo.id_gerente_asignado = $id_lider OR lo.id_subdirector_asignado = $id_lider)";
 
        return $this->db->query("SELECT lf.rescision,cl.plan_comision, lo.registro_comision,lf.idLotePvOrigen, lf.idFusion, lf.origen, lf.destino, dxc2.id_dxc, dxc2.rescision as rescisioncl ,cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
