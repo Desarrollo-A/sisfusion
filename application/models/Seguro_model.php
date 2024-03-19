@@ -120,8 +120,61 @@ class Seguro_model extends CI_Model {
             return $query->result_array();
         }
 
-        
-
+        function getDatosComisionesAsesor($estado){
+            $user_data = $this->session->userdata('id_usuario');
+            $sede = $this->session->userdata('id_sede');
+            
+            return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision,lo.nombreLote  lote, re.nombreResidencial as proyecto, pac.totalLote precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci1.estatus, pci1.fecha_abono fecha_creacion, pci1.id_usuario, oxcpj.nombre as pj_name, u.forma_pago, pac.porcentaje_abono, 0 as factura, 1 expediente,
+    
+            oxcest.nombre  estatus_actual,
+ 
+             (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci1.abono_neodata) ELSE pci1.abono_neodata END) impuesto, pac.bonificacion, cl.lugar_prospeccion,
+             pci1.fecha_abono, opt.fecha_creacion AS fecha_opinion, opt.estatus as estatus_opinion, 
+ 
+             (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+             (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0)
+ 
+             FROM pago_seguro_ind pci1 
+             INNER JOIN comisiones_seguro com ON pci1.id_comision = com.id_comision
+             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1
+             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+             INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
+             INNER JOIN usuarios u ON u.id_usuario = com.id_usuario  
+             INNER JOIN opcs_x_cats oxcpj ON oxcpj.id_opcion = u.forma_pago AND oxcpj.id_catalogo = 16 
+             LEFT JOIN pago_seguro pac ON pac.id_lote = com.id_lote
+             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+             INNER JOIN sedes sed ON sed.id_sede = 2 and sed.estatus = 1
+             LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+             LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
+             WHERE pci1.estatus IN ($estado) AND com.estatus in ($estado) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
+             GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, pac.totalLote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata,
+             pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, 
+             pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2");
+        }
+        public function getTotalComisionAsesor($idUsuario) {
+            $query = $this->db->query("SELECT SUM(pci.abono_neodata) AS total
+            FROM pago_seguro_ind pci 
+            INNER JOIN comisiones_seguro com ON pci.id_comision = com.id_comision 
+            where pci.estatus = 1 and com.id_usuario = $idUsuario");
+            return $query->row();
+        }
+        function getComments($pago){
+            $this->db->query("SET LANGUAGE Español;");
+            return $this->db->query("SELECT DISTINCT(hc.comentario), hc.id_pago_i, hc.id_usuario, convert(nvarchar(20), hc.fecha_movimiento, 113) date_final, hc.fecha_movimiento, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombre_usuario
+            FROM historial_seguro hc 
+            INNER JOIN pago_seguro_ind pci ON pci.id_pago_i = hc.id_pago_i
+            INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+            WHERE hc.id_pago_i = $pago
+            ORDER BY hc.fecha_movimiento DESC");
+        }
+        function consulta_codigo_postal($id_user){
+            return $this->db->query("SELECT estatus, codigo_postal FROM cp_usuarios WHERE id_usuario = $id_user");
+        }
+        function update_acepta_solicitante($idsol) {
+            $query = $this->db->query("UPDATE pago_seguro_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+            return true;
+        }
 
 
 }

@@ -326,7 +326,7 @@
                             <li>
                                 <a href="#otras-1" role="tab"  data-toggle="tab">Pausadas</a>
                             </li>
-                            <li>
+                            <li style="display:none">
                                 <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en Neodata</a>
                             </li>
                         </ul>
