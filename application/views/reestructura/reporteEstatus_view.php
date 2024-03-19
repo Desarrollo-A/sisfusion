@@ -57,6 +57,7 @@
                                                 <th>ID LOTE DESTINO</th>
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th>
+                                                <th>FECHA ÚLTIMO MOVIMIENTO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

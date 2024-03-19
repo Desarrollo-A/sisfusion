@@ -35,35 +35,28 @@ function selectOpcion(){
 
             $('#miModalInventario .invent').html('');
             $('#miModalInventario .invent').append(`
-            <h5>Usuarios titulares registrados</h5>
+            <h5><b>Usuarios titulares registrados</b></h5>
             <div class="row">
-            <div class="col-md-6" id="ase2">
-            <b><label class="control-label" >Asesor</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
-        
-            </div>
-            <div class="col-md-6" id="coor2">
-            <b><label class="control-label" >Coordinador</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
-         
-            </div>
-            <div class="col-md-6" id="ger2">
-            <b><label class="control-label" >Gerente</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
- 
-            </div>
-            
-            <div class="col-md-6" id="sub">
-            <b><label class="control-label" >Sub-director</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
-          
-            </div>
-            <div class="col-md-6" id="regio">
-            <b><label class="control-label" >Regional</b></label>
-            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
-         
-            </div>
-
+                <div class="col-md-6" id="ase2">
+                    <b><label class="control-label" >Asesor</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.asesor}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="coor2">
+                    <b><label class="control-label" >Coordinador</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.coordinador == '' || data.coordinador == ' ' || data.coordinador == '  ' ? 'NO REGISTRADO' : data.coordinador}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="ger2">
+                    <b><label class="control-label" >Gerente</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.gerente}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="sub">
+                    <b><label class="control-label" >Sub-director</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.subdirector}" style="font-size:12px;">
+                </div>
+                <div class="col-md-6" id="regio">
+                    <b><label class="control-label" >Regional</b></label>
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data.regional}" style="font-size:12px;">
+                </div>
             </div>
             <input type="hidden" value="${data.id_asesor}" id="asesor" name="asesor">
             <input type="hidden" value="${data.id_coordinador}" id="coordinador" name="coordinador">
@@ -178,32 +171,45 @@ function selectOpcion(){
             else if(cuantos == 1){
                 $('#miModalVc .vc').html('');
                 $('#miModalVc .vc').append(`
-                    <h5>Usuarios registrados en venta compartida</h5>
+                    <h4><b>Usuarios registrados en venta compartida</b></h4>
                     <div class="row">
-                    <div class="col-md-4" id="ase">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].asesor}" style="font-size:12px;">
-                    <b><p style="font-size:12px;">Asesor</b></p>
+                        <div class="col-md-6" id="ase">
+                            <label class="control-label"><b>Asesor</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].asesor}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="coor">
+                            <label class="control-label"><b>Coordinador</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'NO REGISTRADO' : data[0].coordinador}" style="font-size:12px;color:${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'red' : 'black'}">
+                        </div>
+                        <div class="col-md-6" id="ger">
+                            <label class="control-label"><b>Gerente</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].gerente}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="sub">
+                            <label class="control-label"><b>Sub-director</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].subdirector}" style="font-size:12px;">
+                        </div>
+                        <div class="col-md-6" id="dir">
+                            <label class="control-label"><b>Director General</b></label>
+                            <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].lider}" style="font-size:12px;">
+                        </div>
                     </div>
-                    <div class="col-md-4" id="coor">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'NO REGISTRADO' : data[0].coordinador}" style="font-size:12px;color:${data[0].coordinador == '' || data[0].coordinador == ' ' || data[0].coordinador == '  ' ? 'red' : 'black'}">
-                    <b><p style="font-size:12px;">Coordinador</b></p>
-                    </div>
-                    <div class="col-md-4" id="ger">
-                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${data[0].gerente}" style="font-size:12px;">
-                    <b><p style="font-size:12px;">Gerente</b></p>
-                    </div>
-                    </div>
+
                     <input type="hidden" value="${data[0].id_vcompartida}" id="id_vc" name="id_vc">
                     <input type="hidden" value="${cuantos}" id="cuantos" name="cuantos">
                     <input type="hidden" value="${data[0].id_asesor}" id="asesor" name="asesor">
                     <input type="hidden" value="${data[0].id_coordinador}" id="coordinador" name="coordinador">
                     <input type="hidden" value="${data[0].id_gerente}" id="gerente" name="gerente">
+                    <input type="hidden" value="${data[0].id_subdirector}" id="subdirector" name="subdirector">
             
             
             
                     <input type="hidden" value="${data[0].asesor}" id="asesorname" name="asesorname">
                     <input type="hidden" value="${data[0].coordinador}" id="coordinadorname" name="coordinadorname">
                     <input type="hidden" value="${data[0].gerente}" id="gerentename" name="gerentename">
+                    <input type="hidden" value="${data[0].subdirector}" id="subdirectorname" name="subdirectorname">
+                    <input type="hidden" value="${data[0].regional}" id="regionalname" name="regionalname">
+
                     <input type="hidden" value="${idLote}" id="idLote" name="idLote" >
                     <input type="hidden" value="${id_cliente}" id="idCliente" name="idCliente">
                     
@@ -271,7 +277,7 @@ $("#asesorold").change(function() {
 $("#roles3").change(function() {
     var parent = $(this).val();
     document.getElementById('UserSelect').innerHTML = '';
-    document.getElementById('UserSelectDirec').innerHTML = '';
+    //document.getElementById('UserSelectDirec').innerHTML = '';
     let user =0;
     let bandera59 = 0 ;
     let nameUser='';
@@ -293,7 +299,7 @@ $("#roles3").change(function() {
         $('#coor').addClass('coor');
         $('#ase').removeClass('ase');
         $('#ger').removeClass('ger');
-        document.getElementById('UserSelectDirec').innerHTML = '';
+        //document.getElementById('UserSelectDirec').innerHTML = '';
     }
     else if(parent == 3){
         user = $('#gerente').val();
@@ -301,7 +307,7 @@ $("#roles3").change(function() {
         $('#ger').addClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
-        document.getElementById('UserSelectDirec').innerHTML = '';
+        //document.getElementById('UserSelectDirec').innerHTML = '';
 
     }else if(parent == 2){
         user = $('#subdirector').val();
@@ -310,7 +316,7 @@ $("#roles3").change(function() {
         $('#ger').removeClass('ger');
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
-        document.getElementById('UserSelectDirec').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
+        //document.getElementById('UserSelectDirec').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
 
     }else if(parent == 59){
         
@@ -459,6 +465,68 @@ $("#rolesvc").change(function() {
         $('#ase').removeClass('ase');
         $('#coor').removeClass('coor');
     }
+    else if(parent == 2){
+        user = $('#subdirector').val();
+        nameUser = $('#subdirectorname').val();
+        $('#sub').addClass('sub');
+        $('#ger').removeClass('ger');
+        $('#ase').removeClass('ase');
+        $('#coor').removeClass('coor');
+        //document.getElementById('UserSelectvc').innerHTML = '<em>Al modificar el <b>Subdirector</b> Recuerda modificar también el <b>Regional</b> </em>';
+    }
+    else if(parent == 59){
+        
+        subdirector = $('#subdirector').val();
+        var respuesta = 0;
+        console.log(subdirector);
+        console.log(subdirector);
+        console.log('subdirector')
+        bandera59 = 1;
+        $.ajax({
+            url: general_base_url+'Incidencias/tieneRegional',
+            data: {
+                'usuario' : parseInt(subdirector)
+            },
+            dataType: 'json',
+            method: 'POST',
+            type: 'POST',
+            success: function(data) {
+                
+                if( data != false ){
+
+                    console.log(data[0].id_usuario)    
+
+                    document.getElementById('UserSelect').innerHTML = '';
+              
+                    user = $('#regional').val();
+                    nameUser = $('#regionalname').val();
+                 
+                    $('#regio').addClass('regio');
+                    $('#sub').removeClass('sub');
+                    $('#ger').removeClass('ger');
+                    $('#ase').removeClass('ase');
+                    $('#coor').removeClass('coor');
+                    
+                     $("#usuarioid3").append($('<option>').val(data[0].id_usuario).attr('data-value', data[0].id_usuario).text(data[0].name));
+                     $("#usuarioid3").selectpicker("refresh");
+                   }else {
+                    $("#roles3").val('');
+                    $("#roles3").selectpicker("refresh");
+                    alerts.showNotification("top", "right", "El siguiente usuario no es necesario el regional", "warning");
+                  
+                    $("#usuarioid3").val('');
+                    $("#usuarioid3").selectpicker('refresh');
+          
+                }
+            }
+        });
+        // console.log(res['readyState']);
+        // console.log(res.responseJSON);
+        // console.log(res['responseJSON']);
+
+  
+    }
+    
     document.getElementById('UserSelectvc').innerHTML = '<em>Usuario a cambiar: <b>'+nameUser+'</b></em>';
     }
     else if(cuantos2 == 2){
@@ -517,6 +585,7 @@ $("#rolesvc").change(function() {
             </div>
             `);
         }
+        
     }
 
     $('#usuarioid4 option').remove(); 
@@ -540,16 +609,18 @@ function open_Modal(){
 }
 
 /**-----------------------------INVENTARIO---------------------------------------- */
-function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,asesor,coordinador,gerente){
+function cambiarUsuarioInven(idCliente,idLote,ase,coor,ger,sub,asesor,coordinador,gerente,subdirector){
     $("#miModalInventario .invent").html('');
 
     $('#miModalInventario .invent').append(`
     <input type="hidden" value="${ase}" id="asesor" name="asesor">
     <input type="hidden" value="${coor}" id="coordinador" name="coordinador">
     <input type="hidden" value="${ger}" id="gerente" name="gerente">
+    <input type="hidden" value="${sub}" id="subdirector" name="subdirector">
     <input type="hidden" value="${asesor}" id="asesorname" name="asesorname">
     <input type="hidden" value="${coordinador}" id="coordinadorname" name="coordinadorname">
     <input type="hidden" value="${gerente}" id="gerentename" name="gerentename">
+    <input type="hidden" value="${subdirector}" id="subdirectorname" name="subdirectorname">
     <input type="hidden" value="${idLote}" id="idLote" name="idLote" >
     <input type="hidden" value="${idCliente}" id="idCliente" name="idCliente">
     `);
@@ -1599,7 +1670,7 @@ $(".find_doc").click( function() {
 
                                 var counts=0;
                                 /*<div class="col-md-6">Aplicado: '+formatMoney(total0)+'</div>*/ 
-                                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-6"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div><div class="col-md-6">Aplicado: '+formatMoney(total0)+'</div></div>');
+                                $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-6"><h4><b>Precio lote: $'+formatMoney(data1[0].totalNeto2)+'</b></h4></div><div class="col-md-5"><h4><b>Aplicado</b>: '+formatMoney(total0)+'</div></h4></div>');
                                 if(parseFloat(data[0].Bonificado) > 0){
                                     cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
                                 }
@@ -1610,7 +1681,7 @@ $(".find_doc").click( function() {
                                 $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> <i>'+row.data().nombreLote+'</i></b></h3></div></div><br>');
                                 $.getJSON( general_base_url + "Incidencias/getDatosAbonadoDispersion/"+idLote+"/"+1).done( function( data ){
                                     
-                                    $("#modal_NEODATA .modal-body").append(` <div class="row"><div class="col-md-2"><p style="font-zise:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOT. COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-3">ACCIONES</div></div>`);
+                                    $("#modal_NEODATA .modal-body").append();
                                     let contador=0;
                                         
                                     for (let index = 0; index < data.length; index++) {
@@ -1619,6 +1690,17 @@ $(".find_doc").click( function() {
                                             contador +=1;
                                         }
                                     }
+                                    $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <label class="col-md-2 control-label labelNombre"><h4><b>USUARIOS</b></h4></label>
+                                            <label class="col-md-2 control-label labelPorcentaje"><h4><b>%</b></h4></label>
+                                            <label class="col-md-2 control-label labelTComision"><h4><b>TOT. COMISIÓN</b></h4></label>
+                                            <label class="col-md-2 control-label labelAbonado"><h4><b>ABONADO</b></h4></label>
+                                            <label class="col-md-2 control-label labelPendiente"><h4><b>PENDIENTE</b></h4></label>
+                                            <label class="col-md-2 control-label labelPendiente"><h4><b>ACCIONES</b></h4></label>
+                                        </div>
+                                    `);
+
 
                                     $.each( data, function( i, v){
                                         $('#btn_'+i).tooltip({ boundary: 'window' })
@@ -1744,39 +1826,52 @@ $(".find_doc").click( function() {
                                         </button>
                                         `;
 
+                                        //aqui
 
                                         $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                        <div class="col-md-2"><input id="id_disparador" type="hidden" name="id_disparador" value="1">
-                                        <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                        <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
-                                        <input type="hidden" name="pending" id="pending" value="${pending}">
-                                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                        <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
-                                        <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
-                                        <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.colaborador}" 
-                                            style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
-                                            <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
-                                            <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
-                                            font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
+                                            
+                                            <input id="id_disparador" type="hidden" name="id_disparador" value="1">
+                                            <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                            <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
+                                            <input type="hidden" name="pending" id="pending" value="${pending}">
+                                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                            <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
+                                            <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
+                                            
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral"  readonly="true" value="${v.colaborador}" 
+                                                style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
+                                                <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
+                                                <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
+                                                font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
+                                                <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${parseFloat(v.porcentaje_decimal).toFixed(3)}">
+                                                <b id="msj_${i}" style="color:red;"></b>
+                                            </div>
+
+                                            <div class="col-md-2"> 
+                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}">
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}">
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}">
+                                            </div>
+
+                                            <div class="col-md-2 botones">
+                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? '' : boton}  
+                                                ${boton_topar}
+                                                ${boton_pago}
+                                                ${boton_regresar}
+                                            </div> 
                                         </div>
-                                        <div class="col-md-1">
-                                        <input class="form-control ng-invalid ng-invalid-required" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
-                                        <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
-                                        <b id="msj_${i}" style="color:red;"></b>
-                                        </div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
-                                        <div class="col-md-3 botones">
-                                        ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? '' : boton}  
-                                        ${boton_topar}
-                                        ${boton_pago}
-                                        ${boton_regresar}
-                                        
-                                        
-                                        </div>
-                                        </div> `);
-                                    
+                                         `);
                                         counts++
                                     });
                                 });

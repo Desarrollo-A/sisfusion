@@ -3,7 +3,7 @@
 $(document).on("click", ".subir_factura_multiple", function() {
     $('#spiner-loader').removeClass('hide');
     let actual=13;
-    if(userSede == 8){
+    if(sede_usuario_general == 8){
         actual=15;
     }
     var hoy = new Date(fechaServer);
@@ -392,14 +392,14 @@ function save2() {
         method: 'POST',
         type: 'POST', // For jQuery < 1.9
         success: function (data) {
+            console.log(data)
             document.getElementById('btng').disabled = false;
             if (data.resultado) {
                 alerts.showNotification("top", "right", "LA FACTURA SE SUBIO CORRECTAMENTE", "success");
                 // alert("LA FACTURA SE SUBIO CORRECTAMENTE");
                 $("#modal_multiples").modal('toggle');
                 peticionDataTable();
-                tabla_nuevas.ajax.reload();
-                tabla_revision.ajax.reload();
+                // tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 3) {
@@ -408,7 +408,7 @@ function save2() {
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 peticionDataTable();
-                tabla_nuevas.ajax.reload();
+                // tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else if (data == 4) {
@@ -417,7 +417,7 @@ function save2() {
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 peticionDataTable();
-                tabla_nuevas.ajax.reload();
+                // tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             } else {
@@ -426,7 +426,7 @@ function save2() {
                 $('#loader').addClass('hidden');
                 $("#modal_multiples").modal('toggle');
                 peticionDataTable();
-                tabla_nuevas.ajax.reload();
+                // tabla_nuevas.ajax.reload();
                 $("#modal_multiples .modal-body").html("");
                 $("#modal_multiples .header").html("");
             }

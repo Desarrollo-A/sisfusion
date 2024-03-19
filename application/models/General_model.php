@@ -252,6 +252,7 @@ class General_model extends CI_Model
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider = 703 THEN 4
         WHEN us.id_lider = 7886 THEN 5
+        WHEN us.id_lider IN (13549, 13589) THEN 13546
         ELSE 0 END) id_regional,
 		CASE 
 		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3

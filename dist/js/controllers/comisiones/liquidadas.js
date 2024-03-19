@@ -120,7 +120,6 @@ $(document).ready(function () {
                 }
                 return labelEstatus;
             }},
-           
             { data: function (d) {
                 return formatMoney(d.abono_comisiones);;
             }},
@@ -130,7 +129,13 @@ $(document).ready(function () {
             { data: function (d) {
                 return formatMoney(d.pendiente);;
             }},
-
+            { data: function (d) {
+                return formatMoney(d.Precio_Total);
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_Pagadas);
+            }},
+            
             { data: function (d) {
                 var rescisionLote;
                 var reactivo;
