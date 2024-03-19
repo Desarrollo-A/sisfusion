@@ -1,25 +1,25 @@
 var tr;
-var tabla_remanente2 ;
+var tabla_remanente2_seguros;
 
-function CloseModalDelete2(){
+function CloseModalDelete2IntmexSeguros(){
 
     document.getElementById("form_multiples").reset();
-    a = document.getElementById('borrarProyect');
+    a = document.getElementById('borrarProyectoIntmexSeguros');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal_multiples").modal('toggle');  
+    $("#modal_multiples_Intmex_seguros").modal('toggle');  
 }
 
 $(document).ready(function() {
-    $("#tabla_remanente").prop("hidden", true);
+    $("#tabla_remanente_intmex_seguros").prop("hidden", true);
     $.post(general_base_url+"/pagos/lista_roles", function (data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#catalogo_factura").append($('<option>').val(id).text(name.toUpperCase()));
+            $("#catalogo_factura_intmex_seguros").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        $("#catalogo_factura").selectpicker('refresh');
+        $("#catalogo_factura_intmex_seguros").selectpicker('refresh');
     }, 'json');
 
     $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
@@ -30,9 +30,9 @@ $(document).ready(function() {
     });
 });
 
-$('#catalogo_factura').change(function(ruta){
-    rol = $('#catalogo_factura').val();
-    $("#usuario_factura").empty().selectpicker('refresh');
+$('#catalogo_factura_intmex_seguros').change(function(ruta){
+    rol = $('#catalogo_factura_intmex_seguros').val();
+    $("#usuario_factura_intmex_seguros").empty().selectpicker('refresh');
     $.ajax({
         url: general_base_url+'Pagos/lista_usuarios/',
         data:{
@@ -47,48 +47,48 @@ $('#catalogo_factura').change(function(ruta){
             {
                 var id = response[i]['idCondominio'];
                 var name = response[i]['nombre'];
-                $("#usuario_factura").append($('<option>').val(id).text(name));
+                $("#usuario_factura_intmex_seguros").append($('<option>').val(id).text(name));
             }
             if(len<=0){
-            $("#usuario_factura").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
+            $("#usuario_factura_intmex_seguros").append('<option selected="selected" disabled>NO HAY OPCIONES</option>');
             }
-            $("#usuario_factura").selectpicker('refresh');
+            $("#usuario_factura_intmex_seguros").selectpicker('refresh');
         }
     });
 });
 
-$('#usuario_factura').change(function(ruta){
-    proyecto = $('#catalogo_factura').val();
-    condominio = $('#usuario_factura').val();
+$('#usuario_factura_intmex_seguros').change(function(ruta){
+    proyecto = $('#catalogo_factura_intmex_seguros').val();
+    condominio = $('#usuario_factura_intmex_seguros').val();
     if(condominio == '' || condominio == null || condominio == undefined){
         condominio = 0;
     }
-    getAssimilatedCommissions(proyecto, condominio);
+    getAssimilatedCommissionsIntmexSeguros(proyecto, condominio);
 });
 
 $(document).on("click", ".Pagar", function() {          
-    $("#modal_multiples .modal-body").html("");
-    $("#modal_multiples .modal-header").html("");
-    $("#modal_multiples .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
-    $("#modal_multiples .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
+    $("#modal_multiples_Intmex_seguros .modal-body").html("");
+    $("#modal_multiples_Intmex_seguros .modal-header").html("");
+    $("#modal_multiples_Intmex_seguros .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiples_Intmex_seguros .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_Intmex_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_seguros" name="desarrolloSelect_Int_seguros" class="selectpicker select-gral desarrolloSelect_Int_seguros ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
             var name = data[i]['name_user'];
-            $("#desarrolloSelect").append($('<option>').val(id).attr('data-value', id).text(name));
+            $("#desarrolloSelect_Int_seguros").append($('<option>').val(id).attr('data-value', id).text(name));
         }
         if (len <= 0) {
-            $("#desarrolloSelect").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
+            $("#desarrolloSelect_Int_seguros").append('<option selected="selected" disabled>No se han encontrado registros que mostrar</option>');
         }
-        $("#desarrolloSelect").val(0);
-        $("#desarrolloSelect").selectpicker('refresh');
+        $("#desarrolloSelect_Int_seguros").val(0);
+        $("#desarrolloSelect_Int_seguros").selectpicker('refresh');
     }, 'json');
         
-    $('#desarrolloSelect').change(function() {
-        $("#modal_multiples .modal-body .bodypagos").html("");
+    $('#desarrolloSelect_Int_seguros').change(function() {
+        $("#modal_multiples_Intmex_seguros .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
             let a =  document.getElementById('bodypago2');
             padre = a.parentNode;
@@ -96,74 +96,73 @@ $(document).on("click", ".Pagar", function() {
         }
     
         var valorSeleccionado = $(this).val();
-        var combo = document.getElementById("desarrolloSelect");
+        var combo = document.getElementById("desarrolloSelect_Int_seguros");
         var selected = combo.options[combo.selectedIndex].text;
 
         $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
             if (!data) {
-                $("#modal_multiples .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                $("#modal_multiples_Intmex_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
+                    $("#modal_multiples_Intmex_seguros .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
-                $("#modal_multiples .modal-body ").append(`<div  id="bodypago2"></div>`);
+                $("#modal_multiples_Intmex_seguros .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiples .modal-body #bodypago2").append(`
+                    $("#modal_multiples_Intmex_seguros .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                 });
-                document.getElementById('btn-aceptar').disabled = false;
+                document.getElementById('btn-aceptarIntmexSeguros').disabled = false;
             }
         });
     });
 
-    $("#modal_multiples").modal({
+    $("#modal_multiples_Intmex_seguros").modal({
         backdrop: 'static',
         keyboard: false
     });
 });
 
-let titulos = [];
-$('#tabla_remanente thead tr:eq(0) th').each( function (i) {
+let titulos_seguros = [];
+$('#tabla_remanente_intmex_seguros thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
-        titulos.push(title);
+        titulos_seguros.push(title);
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
-            if (tabla_remanente2.column(i).search() !== this.value) {
-                tabla_remanente2.column(i).search(this.value).draw();
+            if (tabla_remanente2_seguros.column(i).search() !== this.value) {
+                tabla_remanente2_seguros.column(i).search(this.value).draw();
                 var total = 0;
-                var index = tabla_remanente2.rows({ selected: true, search: 'applied' }).indexes();
-                var data = tabla_remanente2.rows(index).data();
+                var index = tabla_remanente2_seguros.rows({ selected: true, search: 'applied' }).indexes();
+                var data = tabla_remanente2_seguros.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
                 var to1 = formatMoney(numberTwoDecimal(total));
-                document.getElementById("total_factura").textContent = to1;
+                document.getElementById("total_factura_intmex_seguros").textContent = to1;
             }
         });
     }
     else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAll(this)"/>');
+        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
     }
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
-    $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
+function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
+
+    $('#tabla_remanente_intmex_seguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
         var to = formatMoney(numberTwoDecimal(total));
-        document.getElementById("total_factura").textContent = to;
+        document.getElementById("total_factura_intmex_seguros").textContent = to;
     });
 
-    var modoSubidaSeleccionado = 1;
-
-    $("#tabla_remanente").prop("hidden", false);
-    tabla_remanente2 = $("#tabla_remanente").DataTable({
+    $("#tabla_remanente_intmex_seguros").prop("hidden", false);
+    tabla_remanente2_seguros = $("#tabla_remanente_intmex_seguros").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -173,7 +172,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             action: function() {
                 if ($('input[name="idTQ[]"]:checked').length > 0) {
                     $('#spiner-loader').removeClass('hide');
-                    var idcomision = $(tabla_remanente2.$('input[name="idTQ[]"]:checked')).map(function() { return this.value; }).get();
+                    var idcomision = $(tabla_remanente2_seguros.$('input[name="idTQ[]"]:checked')).map(function() { return this.value; }).get();
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
@@ -187,9 +186,9 @@ function getAssimilatedCommissions(proyecto, condominio){
                             response = JSON.parse(data);
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
-                                $("#autorizar_factura").html(formatMoney(0));
+                                $("#autorizar_factura_intmex_seguros").html(formatMoney(0));
                                 $("#all").prop('checked', false);
-                                tabla_remanente2.ajax.reload();
+                                tabla_remanente2_seguros.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron marcadas como <b>PAGADAS</b> correctamente.";
                                 modalInformation(RESPUESTA_MODAL.SUCCESS, mensaje);
                             }
@@ -222,7 +221,7 @@ function getAssimilatedCommissions(proyecto, condominio){
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15],
                 format: {
                     header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx-1] + ' ';
+                        return ' ' + titulos_seguros[columnIdx-1] + ' ';
                     }
                 }
             },
@@ -368,14 +367,13 @@ function getAssimilatedCommissions(proyecto, condominio){
             "type": "POST",
             data:{
                 proyecto : proyecto,
-                condominio:condominio,
-                modoSubida: 1
+                condominio:condominio
             },
             cache: false
         },
     });
 
-    $("#tabla_remanente tbody").on("click", ".consultar_logs_remanente", function(e){
+    $("#tabla_remanente_intmex_seguros tbody").on("click", ".consultar_logs_remanente", function(e){
         $("#nombreLote").html('');
         $("#comentariosFactura").html('');
         $('#spiner-loader').removeClass('hide');
@@ -435,9 +433,9 @@ function getAssimilatedCommissions(proyecto, condominio){
         });
     });
 
-    $('#tabla_remanente').on('click', 'input', function() {
+    $('#tabla_remanente_intmex_seguros').on('click', 'input', function() {
         tr = $(this).closest('tr');
-        var row = tabla_remanente2.row(tr).data();
+        var row = tabla_remanente2_seguros.row(tr).data();
         if (row.pa == 0) {
             row.pa = row.impuesto;
             totaPen += parseFloat(row.pa);
@@ -447,24 +445,24 @@ function getAssimilatedCommissions(proyecto, condominio){
             totaPen -= parseFloat(row.pa);
             row.pa = 0;
         }
-        $("#autorizar_factura").html(formatMoney(numberTwoDecimal(totaPen)));
+        $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(totaPen)));
     });
 
-    $("#tabla_remanente tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_remanente_intmex_seguros tbody").on("click", ".cambiar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tabla_remanente2_seguros.row( tr );
         id_pago_i = $(this).val();
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
-        $("#modal_nuevas").modal();
+        $("#modal_nuevas_Intmex_seguros .modal-body").html("");
+        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><input type="text" class="form-control observaciones" name="observaciones" required placeholder="Describe mótivo por el cual se pauso la solicitud"></input></div></div>');
+        $("#modal_nuevas_Intmex_seguros .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+        $("#modal_nuevas_Intmex_seguros .modal-body").append('<div class="row"><div class="col-md-6"></div><div class="col-md-3"><input type="submit" class="btn btn-primary" value="PAUSAR"></div><div class="col-md-3"><button type="button" class="btn btn-danger" data-dismiss="modal">CANCELAR</button></div></div>');
+        $("#modal_nuevas_Intmex_seguros").modal();
     });
 
-    $("#tabla_remanente tbody").on("click", ".despausar_estatus", function(){
+    $("#tabla_remanente_intmex_seguros tbody").on("click", ".despausar_estatus", function(){
         var tr = $(this).closest('tr');
-        var row = tabla_remanente2.row( tr );
+        var row = tabla_remanente2_seguros.row( tr );
         id_pago_i = $(this).val();
         $("#modal_refresh .modal-body").html("");
         $("#modal_refresh .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro regresar al estatus inicial la comisión  de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
@@ -479,11 +477,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 $(window).resize(function(){
-    tabla_remanente2.columns.adjust();
+    tabla_remanente2_seguros.columns.adjust();
 });
 
 function cancela(){
-    $("#modal_nuevas").modal('toggle');
+    $("#modal_nuevas_Intmex_seguros").modal('toggle');
 }
 
 $("#form_interes").submit( function(e) {
@@ -504,10 +502,10 @@ $("#form_interes").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modal_nuevas").modal('toggle' );
+                    $("#modal_nuevas_Intmex_seguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tabla_remanente2_seguros.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -539,7 +537,7 @@ $("#form_refresh").submit( function(e) {
                     $("#modal_refresh").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha procesado la solicitud exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tabla_remanente2_seguros.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -571,7 +569,7 @@ $("#form_despausar").submit( function(e) {
                     $("#modal_despausar").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha regresado la comisión exitosamente", "success");
                     setTimeout(function() {
-                        tabla_remanente2.ajax.reload();
+                        tabla_remanente2_seguros.ajax.reload();
                     }, 3000);
                 }else{
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
@@ -617,12 +615,12 @@ function preview_info(archivo){
 
 $(document).on("click", ".individualCheck", function() {
     totaPen = 0;
-    tabla_remanente2.$('input[type="checkbox"]').each(function () {
-        let totalChecados = tabla_remanente2.$('input[type="checkbox"]:checked') ;
-        let totalCheckbox = tabla_remanente2.$('input[type="checkbox"]');
+    tabla_remanente2_seguros.$('input[type="checkbox"]').each(function () {
+        let totalChecados = tabla_remanente2_seguros.$('input[type="checkbox"]:checked') ;
+        let totalCheckbox = tabla_remanente2_seguros.$('input[type="checkbox"]');
         if(this.checked){
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tabla_remanente2_seguros.row(tr).data();
             totaPen += parseFloat(row.impuesto); 
         }
 
@@ -631,29 +629,29 @@ $(document).on("click", ".individualCheck", function() {
         else 
             $("#all").prop("checked", false);
     });
-    $("#autorizar_factura").html(formatMoney(numberTwoDecimal(totaPen)));
+    $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(totaPen)));
 });
 
-function selectAll(e) {
+function selectAllIntmexSeguros(e) {
     tota2 = 0;
     if(e.checked == true){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_remanente2_seguros.$('input[type="checkbox"]')).each(function (i, v) {
             tr = this.closest('tr');
-            row = tabla_remanente2.row(tr).data();
+            row = tabla_remanente2_seguros.row(tr).data();
             tota2 += parseFloat(row.impuesto);
             if(v.checked == false){
                 $(v).prop("checked", true);
             }
         }); 
-        $("#autorizar_factura").html(formatMoney(numberTwoDecimal(tota2)));
+        $("#autorizar_factura_intmex_seguros").html(formatMoney(numberTwoDecimal(tota2)));
     }
     if(e.checked == false){
-        $(tabla_remanente2.$('input[type="checkbox"]')).each(function (i, v) {
+        $(tabla_remanente2_seguros.$('input[type="checkbox"]')).each(function (i, v) {
             if(v.checked == true){
                 $(v).prop("checked", false);
             }
         }); 
-        $("#autorizar_factura").html(formatMoney(0));
+        $("#autorizar_factura_intmex_seguros").html(formatMoney(0));
     }
 }
 
@@ -674,15 +672,15 @@ $("#form_multiples").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data == 1){
-                    CloseModalDelete2();
+                    CloseModalDelete2IntmexSeguros();
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                 }else{
-                    CloseModalDelete2();
+                    CloseModalDelete2IntmexSeguros();
                     alerts.showNotification("top", "right", "No se ha procesado tu solicitud", "danger");
                 }
                 $('#loader').addClass('hidden');
             },error: function( ){
-                CloseModalDelete2();
+                CloseModalDelete2IntmexSeguros();
                 alert("ERROR EN EL SISTEMA");
                 $('#loader').addClass('hidden');
             }
