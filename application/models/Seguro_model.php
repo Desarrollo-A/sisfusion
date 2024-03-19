@@ -9,12 +9,23 @@ class Seguro_model extends CI_Model {
 
     //MODELO DEDIC]
     function validaLoteComision($referencia, $empresa, $nombreLote){
-        $query = $this->db->query("SELECT po.id_lote 
-        FROM pago_seguro po 
-        INNER JOIN lotes lo ON lo.idLote = po.id_lote
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        $query = $this->db->query("SELECT  lo.idLote , 
+        ps.bandera,cs.id_comision,cs.comision_total ,ps.id_pagoc,
+        lo.idLote,lo.idCliente, ps.abonado, ps.total_comision, 
+        cs.id_usuario,cs.porcentaje_decimal,
+        ps.id_pagoc ,psi.abono_pagado , psi.id_comision as pagoind
+        FROM  lotes lo 
+        INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
+        INNER JOIN comisiones_seguro cs on cs.idCliente = lo.idCliente  
+
+        LEFT JOIN  (SELECT SUM(abono_neodata) abono_pagado, id_comision 
+		FROM pago_seguro_ind WHERE (estatus in (1,3) OR descuento_aplicado = 1) 
+		GROUP BY id_comision) psi ON psi.id_comision = cs.id_comision
+
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        WHERE lo.referencia = $referencia AND lo.nombreLote = '".$nombreLote."' AND re.empresa = '".$empresa."'");
+        WHERE lo.referencia = $referencia 
+        AND lo.nombreLote = '".$nombreLote."' AND re.empresa = '".$empresa."'");
 
         return $query->result_array();
     }
@@ -73,7 +84,7 @@ class Seguro_model extends CI_Model {
 
         function insertComisionSeguro($tabla, $data,$dataIndividual,$dataHistorialSeguros,$dataPagoSeguro) {
             if ($data != '' && $data != null){
-                $response = $this->db->insert($tabla, $data);
+                $response = $this->db->insert('comisiones_seguro', $data);
                 if($tabla = 'comisiones_seguro'){
 
                 $insertComision = $this->db->insert_id();
@@ -89,7 +100,7 @@ class Seguro_model extends CI_Model {
 
                 $responsePago_seguro_ind = $this->db->insert('historial_seguro', $dataHistorialSeguros);
 
-                $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
+                // $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
                 
                 }
                 if (!$response) {
@@ -122,6 +133,40 @@ class Seguro_model extends CI_Model {
 
         
 
+        function pago_seguro($dataPagoSeguro) {
+            if ($dataPagoSeguro != '' && $dataPagoSeguro != null){
+                $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
+                if (!$dataPagoSeguro) {
+                    return 0;
+                } else {
+                    return 1;
+                    // return 1;
+                }
+            } else {
+                return 0;
+            }
+        }
 
+
+        
+        function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision) {
+            if ($dataIndividual != '' && $dataIndividual != null){
+                $response = $this->db->insert('pago_seguro_ind', $dataIndividual);
+                if (!$response) {
+                    return 0;
+                } else {
+                    return 1;
+                    // return 1;
+                }
+                if($banderaAbono == 1){
+                    "UPDATE pago_seguro set bandera = 7 where id_pagoc = $comision";
+                } 
+            } else {
+                return 0;
+            }
+        }
+
+
+        
 
 }
