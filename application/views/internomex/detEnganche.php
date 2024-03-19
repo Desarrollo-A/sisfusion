@@ -119,16 +119,16 @@
                                         <table class="table-striped table-hover hide" id="table_lotes_enganche" name="table_lotes_enganche">
                                             <thead>
                                                 <tr>
-                                                    <th>RESIDENCIAL</th>
+                                                    <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>ID LOTE</th>
                                                     <th>NOMBRE CLIENTE</th>
                                                     <th>FECHA APARTADO</th>
-                                                    <th>NOMBRE ASESOR</th>
+                                                    <th>ASESOR</th>
                                                     <th>TIPO VENTA</th>
                                                     <th>UBICACIÓN</th>
-                                                    <th>ENANCHE CONTRALORÍA</th>
+                                                    <th>ENGANCHE CONTRALORÍA</th>
                                                     <th>ENGANCHE ADMINISTRACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
