@@ -530,6 +530,7 @@
 
         $('#liberacionesTable').on('init.dt', function() {
             $('.subirLotes')
+                .attr('onClick', 'cleanInput()')
                 .attr('data-toggle', 'modal')
                 .attr('data-target', '#uploadModal');
                 // .attr('title', '');
@@ -537,9 +538,30 @@
 
         $('#liberacionesTable').on('init.dt', function() {
             $('.bajarLotes')
+                .attr('onClick', 'cleanInput2()')
                 .attr('data-toggle', 'modal')
                 .attr('data-target', '#uploadModalQM');
+
+
         });
+    }
+
+
+    function cleanInput(){
+        // document.getElementById("#fileEmQM").value='';
+        var $el = $('#fileElm');
+        $el.wrap('<form>').closest('form').get(0).reset();
+        $el.unwrap();
+        $("#file-name").val('');
+    }
+
+    function cleanInput2(){
+        // document.getElementById("#fileEmQM").value='';
+        var $el = $('#fileEmQM');
+        $el.wrap('<form>').closest('form').get(0).reset();
+        $el.unwrap();
+        $("#file-nameQM").val('');
+        $("#file-name").val('');
     }
 
     $(document).on('click', '.apply-changes', function () {
