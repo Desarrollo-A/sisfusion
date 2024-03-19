@@ -1899,8 +1899,8 @@ class Api extends CI_Controller
                 echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
             else {
                 $token = apache_request_headers()["Authorization"];
-                $JwtSecretKey = $this->jwt_actions->getSecretKey(5918);
-                $valida_token = json_decode($this->validateToken($token, 5918));
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(7070);
+                $valida_token = json_decode($this->validateToken($token, 7070));
                 if ($valida_token->status !== 200)
                     echo json_encode($valida_token);
                 else {

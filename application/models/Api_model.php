@@ -392,7 +392,7 @@ class Api_model extends CI_Model
             (CASE u1.id_rol WHEN 9 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) WHEN 3 THEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END) gerente
             FROM usuarios u0
             LEFT JOIN usuarios u1 ON u1.id_usuario = u0.id_lider -- GERENTE
-            WHERE u0.id_rol = 7 AND u0.estatus = 1 AND u0.tipo=3
-        ")->row();
+            WHERE u0.id_rol = 7 AND u0.estatus = 1 AND u0.tipo=3 AND u0.id_lider != 1980
+        ")->result_array();
     }
 }
