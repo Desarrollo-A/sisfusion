@@ -232,7 +232,7 @@
                 } 
 
             $query = $this->db->query("SELECT con.idCondominio, con.nombre FROM [condominios] con JOIN [lotes] ON con.idCondominio = lotes.idCondominio 
-                                    WHERE lotes.idStatusLote in($statusLote) AND con.status = '1' AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
+                                    WHERE lotes.idStatusLote in($statusLote) AND con.status = 1 AND idResidencial = ".$residencial." GROUP BY con.idCondominio, con.nombre ORDER BY con.nombre ASC");
 
 
         }

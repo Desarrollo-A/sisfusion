@@ -153,7 +153,7 @@
                                     <h3 class="card-title center-align">Depósito de seriedad</h3>
                                     <p class="card-title pl-1"></p>
                                 </div>
-                                <div  class="toolbar">
+                                <div  class="toolbar hide">
                                     <div class="row">
                                         <div class="col-md-4 form-group">
                                             <div class="form-group  select-is-empty">
@@ -185,8 +185,27 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="toolbar">
+                                    <div class="row">
+                                        <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-lg-offset-6 col-md-offset-6 col-sm-offset-6">
+                                            <div class="container-fluid p-0">
+                                                <div class="row">
+                                                    <div class="col-md-12 p-r">
+                                                        <div class="form-group d-flex">
+                                                            <input type="text" class="form-control datepicker" id="beginDate"  />
+                                                            <input type="text" class="form-control datepicker" id="endDate"  />
+                                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini" id="searchByDateRange">
+                                                                <span class="material-icons update-dataTable">search</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="material-datatables">
-                                    <table  id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover hide">
+                                    <table  id="tabla_deposito_seriedad" name="tabla_deposito_seriedad" class="table-striped table-hover">
                                         <thead>
                                         <tr>
                                             <th>PROYECTO</th>
@@ -213,6 +232,9 @@
     </div>
 </body>
 <?php $this->load->view('template/footer');?>
+<script src="<?= base_url() ?>dist/js/es.js"></script>
+<script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= base_url() ?>dist/js/fullcalendar.min.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/contraloria/dsMariela.js"></script>
 
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">

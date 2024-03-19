@@ -90,6 +90,11 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
             }
         },
         {
+            data: function(d) {
+                return `${d.fechaUltimoMovimiento}`;
+            }
+        },
+        {
             data: function (d) {
                 return `<div class="d-flex justify-center">
                 <button class="btn-data btn-blueMaderas btn-historial"

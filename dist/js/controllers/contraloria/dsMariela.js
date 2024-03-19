@@ -15,7 +15,36 @@ $('body').tooltip({
     $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
 });
 
+
+$('#tabla_deposito_seriedad thead tr:eq(0) th').each( function (i) {
+    var title = $(this).text();
+    titulos.push(title);
+    $(this).html('<input class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
+    $( 'input', this ).on('keyup change', function () {
+        if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value ) {
+            $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
+        }
+    });
+});
+
 $(document).ready (function() {
+    $.ajax({
+        post: "POST",
+        url: `${general_base_url}/registroLote/getDateToday/`
+    }).done(function (data) {
+        $('#showDate').append('(al día de hoy: ' + data + ')');
+    }).fail(function () {
+    });
+
+    sp.initFormExtendedDatetimepickers();
+    $('.datepicker').datetimepicker({locale: 'es'});
+    setIniDatesXMonth("#beginDate", "#endDate");
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+
+    fillDataTable(1, finalBeginDate, finalEndDate);
+
+
     $(document).on('fileselect', '.btn-file :file', function(event, numFiles, label) {
         var input = $(this).closest('.input-group').find(':text'),
             log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -88,16 +117,6 @@ $(document).ready (function() {
         });
     });
 
-    $('#tabla_deposito_seriedad thead tr:eq(0) th').each(function (i) {
-        var title = $(this).text();
-        titulos.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
-        $('input', this).on('keyup change', function () {
-            if ($('#tabla_deposito_seriedad').DataTable().column(i).search() !== this.value) {
-                $('#tabla_deposito_seriedad').DataTable().column(i).search(this.value).draw();
-            }
-        });
-    });
 
     $('#filtro5').change(function(){
         $('#tabla_deposito_seriedad').removeClass('hide');
@@ -310,6 +329,158 @@ $(document).ready (function() {
     });
 });
 
+sp = { //  SELECT PICKER
+    initFormExtendedDatetimepickers: function () {
+        $('.datepicker').datetimepicker({
+            format: 'DD/MM/YYYY',
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-chevron-up",
+                down: "fa fa-chevron-down",
+                previous: 'fa fa-chevron-left',
+                next: 'fa fa-chevron-right',
+                today: 'fa fa-screenshot',
+                clear: 'fa fa-trash',
+                close: 'fa fa-remove',
+                inline: true
+            }
+        });
+    }
+}
+function fillDataTable(typeTransaction, beginDate, endDate)
+{
+    console.log('typeTransaction', typeTransaction);
+    console.log('beginDate', beginDate);
+    console.log('endDate', endDate);
+
+    $('#tabla_deposito_seriedad').DataTable({
+        destroy: true,
+        lengthMenu: [[15, 25, 50, -1], [10, 25, 50, "All"]],
+        ajax:
+            {
+                url: general_base_url+'Contraloria/getAllDsByLote/',
+                "type": "POST",
+                cache: false,
+                data: {
+                    "typeTransaction": typeTransaction,
+                    "beginDate": beginDate,
+                    "endDate": endDate
+                }
+            },
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: "100%",
+        scrollX: true,
+        bAutoWidth:true,
+        ordering: false,
+        language: {
+            url: "../static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        buttons:[
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o"></i>',
+                titleAttr: 'Deposito de seriedad',
+                title:'Deposito de seriedad',
+                className: 'btn buttons-excel',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
+                    }
+                }
+            },
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="fa fa-file-pdf-o"></i>',
+                orientation: 'landscape',
+                pageSize: 'LEGAL',
+                titleAttr: 'Deposito de seriedad',
+                title:'Deposito de seriedad',
+                className: 'btn buttons-pdf',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos[columnIdx] + ' ';
+                        }
+                    }
+                }
+            }
+        ],
+        pagingType: "full_numbers",
+        columns:
+            [
+                { data: "nombreResidencial" },
+                { data: "nombreCondominio" },
+                { data: "nombreLote" },
+                {
+                    data: function( d ){
+                        return d.nombre+" "+d.apellido_paterno+" "+d.apellido_materno;
+                    }
+                },
+                { data: "fechaApartado" },
+                { data: "fechaVenc" },
+                {
+                    data: function( d ){
+                        comentario = d.idMovimiento == 31 ? d.comentario + "<br> <span class='label lbl-green'>Nuevo apartado</span>":
+                            d.idMovimiento == 85 ? d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloría estatus 2</span>":
+                                d.idMovimiento == 20 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>":
+                                    d.idMovimiento == 63 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloría estatus 6</span>":
+                                        d.idMovimiento == 73 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Ventas estatus 8</span>":
+                                            d.idMovimiento == 82 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Jurídico estatus 7</span>":
+                                                d.idMovimiento == 92 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>":
+                                                    d.idMovimiento == 96 ?  d.comentario + "<br> <span class='label lbl-warning'>Rechazo Contraloría estatus 5</span>":
+                                                        d.comentario;
+                        return comentario;
+                    }
+                },
+                {
+                    data: function( d ){
+                        buttonst =
+                            d.idMovimiento == 31 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                d.idMovimiento == 85 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_2 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                    d.idMovimiento == 20 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo5 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                        d.idMovimiento == 63 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo6 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                            d.idMovimiento == 73 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_3 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                                d.idMovimiento == 82 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.fechaVenc+'" class="getInfo2_7 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                                    d.idMovimiento == 92 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="getInfo5_2 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                                        d.idMovimiento == 96 ?  '<a href="#" data-nomLote="'+d.nombreLote+'" data-idCliente="'+d.id_cliente+'" data-nombreResidencial="'+d.nombreResidencial+'" data-nombreCondominio="'+d.nombreCondominio+'" data-nombreLote="'+d.nombreLote+'" data-idCondominio="'+d.idCondominio+'" data-idLote="'+d.idLote+'" data-fechavenc="'+d.modificado+'" class="getInfo5_2 btn-data btn-green"><i class="fas fa-check" aria-hidden="true" title= "Enviar estatus"></i></a>':
+                                                            d.comentario;
+                        return "<div class='d-flex justify-center'>" + buttonst + "</div>";
+                    }
+                },
+                {
+                    data: function( d ){
+                        buttonDS ='<a href="'+general_base_url+'Asesor/deposito_seriedad/'+d.id_cliente+'/0" class="btn-data btn-blueMaderas" data-toggle="tooltip"  data-placement="top" title= "Depósito de seriedad"><i class="fas fa-print" aria-hidden="true" ></i></a>';
+                        return "<div class='d-flex justify-center'>" + buttonDS + "</div>";
+                    }
+                }
+            ],
+    });
+}
+
+
+$(document).on("click", "#searchByDateRange", function () {
+    let finalBeginDate = $("#beginDate").val();
+    let finalEndDate = $("#endDate").val();
+    fillDataTable(3, finalBeginDate, finalEndDate);
+});
+
+
+
+
+
+
+
+
+
 $(document).on('click', '#save1', function(e) {
     e.preventDefault();
     var comentario = $("#comentario").val();
@@ -374,9 +545,6 @@ $(document).on('click', '#save1', function(e) {
         });
     }
 });
-
-
-
 
 $(document).on('click', '#save2', function(e) {
     e.preventDefault();

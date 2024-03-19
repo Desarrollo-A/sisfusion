@@ -99,20 +99,37 @@ function fillTrimestral(beginDate, endDate) {
                 {data: 'nombreSede'},
                 {data: 'tipo_venta'},
                 {data: 'fechaEstatus9'},
-                {data: 'estatusActual'},
-                {data: 'cliente'},
-                {data: function (n) {
-                    return formatMoney(n.enganche);
-                }},
                 {
                     data: function(d){
-                        if(d.estatus == 'Contratado')
-                            return `<center><span class="label lbl-green">CONTRATADO</span><center>`;
-                        else if(d.estatus == 'Apartado')
-                            return `<center><span class="label lbl-sky">APARTADO</span><center>`;   
-                        else       
-                            return `<center><span class="label lbl-warning">CANCELADO</span><center>`;            
-                    }         
+                        return `<center><span class="label lbl-sky" >${d.estatusActual}</span><center>`;
+                    }
+                },
+                {
+                    data: function(d){
+                        let colorEstatus = (d.colorEstatus=='') ? 'fff' : d.colorEstatus;
+                        let fondoEstatus = (d.fondoEstatus=='') ? 'f21100' : d.fondoEstatus;
+                            return `<center><span class="label" style="background-color:#${fondoEstatus}; color:#${colorEstatus}">${d.estatus}</span><center>`;
+                    }
+                },
+                {data: 'cliente'},
+                {
+                    data: function (n) {
+                    return formatMoney(n.enganche);
+                    }
+                },
+                {
+                    data: function (n) {
+                        let compartida = (n.numeroVC == 0) ? 'NO' : 'SI';
+                        let classCompartida = (n.numeroVC == 0) ? 'lbl-gray' : 'lbl-sky';
+                        return `<center><span class="label ${classCompartida}" >${compartida}</span><center>`;
+                    }
+                },
+                {
+                    data: function (n) {
+                        let numCompartida = n.numeroVC;
+                        let classCompartida = (n.numeroVC == 0) ? 'lbl-gray' : 'lbl-sky';
+                        return `<center><span class="label ${classCompartida}" >${numCompartida}</span><center>`;
+                    }
                 }
             ],
             initComplete: function() {
