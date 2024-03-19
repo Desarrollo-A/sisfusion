@@ -1891,12 +1891,20 @@ class Reestructura extends CI_Controller{
     public function setAsesor() {
 	    $idFusion = $this->input->post('idFusion');
         $idAsesorAsignado = $this->input->post('idAsesor');
+        $lineaVenta = $this->Reestructura_model->lineaVenta($idAsesorAsignado)->row();
+
+        $clienteAnterior->id_cliente;
 	    if($idFusion==1){
             $idLote = $this->input->post('idLote');
             $lotesFusionados = explode(",", $idLote);
             $flagEsatus = 0;
             foreach ($lotesFusionados as $elemento){
-                $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+                $updateData = array(
+                    "id_usuario_asignado" => $idAsesorAsignado,
+                    "id_gerente_asignado" =>  $lineaVenta->id_gerente,
+                    "id_subdirector_asignado" => $lineaVenta->id_subdirector,
+                    "usuario" => $this->session->userdata('id_usuario')
+                );
                 if($this->General_model->updateRecord("lotes", $updateData, "idLote", $elemento)){
                     $flagEsatus = $flagEsatus + 1;
                 }
@@ -1907,7 +1915,12 @@ class Reestructura extends CI_Controller{
                 echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
             }
         }else if($idFusion == 0){
-            $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+            $updateData = array(
+                "id_usuario_asignado" => $idAsesorAsignado, 
+                "id_gerente_asignado" =>  $lineaVenta->id_gerente,
+                "id_subdirector_asignado" => $lineaVenta->id_subdirector,
+                "usuario" => $this->session->userdata('id_usuario')
+            );
             if($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote'))){
                 echo json_encode(array("status" => 200, "message" => "OK"), JSON_UNESCAPED_UNICODE);
             }else{

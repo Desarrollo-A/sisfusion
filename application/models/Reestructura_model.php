@@ -599,7 +599,7 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        if( $this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5 ){
+        if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 ){
             $filtroSede = 'AND sede_residencial = ' . $this->session->userdata('id_sede');
         }
 
@@ -628,7 +628,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN(1, 0) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso NOT IN(7) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
@@ -1461,5 +1461,21 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, 1, $idLote));
 
         return $query;
+    }
+
+    public function lineaVenta($id_usuario){
+        $query = "SELECT 
+            u0.id_usuario id_asesor,
+            u0.id_lider id_gerente,
+            u1.id_lider id_subdirector,
+            CASE WHEN u1.id_lider = 13546 THEN 0 ELSE u2.id_lider END id_regional
+        FROM 
+            usuarios u0
+        INNER JOIN usuarios u1 ON u1.id_usuario = u0.id_lider
+        INNER JOIN usuarios u2 ON u2.id_usuario = u1.id_lider
+        WHERE
+            u0.id_usuario IN ($id_usuario)";
+
+        return $this->db->query($query);
     }
 }
