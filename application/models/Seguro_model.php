@@ -10,9 +10,9 @@ class Seguro_model extends CI_Model {
     //MODELO DEDIC]
     function validaLoteComision($referencia, $empresa, $nombreLote){
         $query = $this->db->query("SELECT  lo.idLote , 
-        ps.bandera,cs.id_comision,cs.comision_total ,ps.id_pagoc,
+        ps.bandera,cs.id_comision,cs.comision_total ,
         lo.idLote,lo.idCliente, ps.abonado, ps.total_comision, 
-        cs.id_usuario,cs.porcentaje_decimal,
+        cs.id_usuario,cs.porcentaje_decimal,ps.pendiente,
         ps.id_pagoc ,psi.abono_pagado , psi.id_comision as pagoind
         FROM  lotes lo 
         INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
@@ -203,8 +203,6 @@ class Seguro_model extends CI_Model {
             $query = $this->db->query("UPDATE pago_seguro_ind SET estatus = 4, fecha_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
             return true;
         }
-
-        
         function insertComisionSeguroAbono($dataIndividual,$banderaAbono , $comision) {
             if ($dataIndividual != '' && $dataIndividual != null){
                 $response = $this->db->insert('pago_seguro_ind', $dataIndividual);
@@ -221,7 +219,17 @@ class Seguro_model extends CI_Model {
                 return 0;
             }
         }
-
+        function updatePagoSeguro($cmd) {
+            var_dump($cmd);
+                $response = $this->db->query($cmd);
+                var_dump($response);
+                if ($response) {
+                    return 1;
+                } else {
+                    return 0;
+                    // return 1;
+                }
+        }
 
         
 
