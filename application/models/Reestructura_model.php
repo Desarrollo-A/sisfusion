@@ -1382,13 +1382,13 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    public function updateLotesDestino($idLotes, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, 1));
+    public function updateLotesDestino($idLotes, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, $idUsuario));
         return $query;
     }
 
-    public function updateLotesOrigen($idLotes, $estatusPreproceso, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET estatus_preproceso = ?, idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($estatusPreproceso, $idStatusLote, 1));
+    public function updateLotesOrigen($idLotes, $estatusPreproceso, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET estatus_preproceso = ?, idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($estatusPreproceso, $idStatusLote, $idUsuario));
         return $query;
     }
 
@@ -1398,8 +1398,8 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    public function updateLotesFusion($idLote, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, 1, $idLote));
+    public function updateLotesFusion($idLote, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, $idUsuario, $idLote));
 
         return $query;
     }
