@@ -1403,4 +1403,31 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    public function getAllproyectos($proyectos){
+        $query = $this->db->query("SELECT t.idResidencial AS proyectoReubicacion, descripcion, SUM(disponibles) disponibles 
+        FROM ( SELECT re.idResidencial, UPPER( CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 15 AND lo.status = 1 WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) 
+        UNION ALL 
+        SELECT re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles 
+        FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) 
+        UNION ALL 
+        SELECT re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, 
+        COUNT(*) disponibles 
+        FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 21 AND lo.status = 1 
+        WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))) t 
+        GROUP BY 
+        t.idResidencial, 
+        descripcion");
+
+      return $query->result_array();
+    }
 }

@@ -724,7 +724,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    const idProyecto = $(this).attr("data-idProyecto");
+    const idProyecto = $(this).attr("data-idproyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");

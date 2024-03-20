@@ -72,7 +72,21 @@ class Reestructura extends CI_Controller{
 		$superficie = $this->input->post('superficie');
 		$flagFusion = $this->input->post('flagFusion');
 
-		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $flagFusion);
+        $idUsuario = $this->session->userdata('id_usuario');
+        $proyectosExcluidos = array(14, 21, 22, 25);
+        
+        if (in_array($idProyecto, $proyectosExcluidos)) {
+            unset($proyectosExcluidos[array_search($idProyecto, $proyectosExcluidos)]);
+        }
+
+        if($idUsuario == 13546){
+            $proyectos = implode(', ', $proyectosExcluidos);
+		    $data = $this->Reestructura_model->getAllproyectos($proyectos);
+        }
+        else{
+		    $data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $flagFusion);
+        }
+
         echo json_encode($data);
     }
 
