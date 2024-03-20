@@ -1659,6 +1659,7 @@ function subir_xml2(input) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
                 var informacion_factura = data.datos_xml;
+                console.log(informacion_factura)
                 cargar_info_xml2(informacion_factura);
                 $("#solobs").val(justificacion_globla);
             }
