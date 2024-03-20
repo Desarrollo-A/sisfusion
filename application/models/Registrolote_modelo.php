@@ -3247,7 +3247,7 @@
 		LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
 		LEFT JOIN usuarios u ON CAST(u.id_usuario AS VARCHAR(45)) = (SELECT TOP 1 usuario FROM historial_lotes WHERE idLote = lotes.idLote AND status = 1 AND idStatusContratacion = 6 ORDER BY modificado DESC)
 		WHERE hd.idMovimiento IN (22, 82) and cl.status = 1
-		AND hd.status = 1 $filter ORDER BY hd.modificado asc");
+		AND hd.status = 1 ORDER BY hd.modificado asc");
         return $query->result();
     }
 	function getDirectores(){

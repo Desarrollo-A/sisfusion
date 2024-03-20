@@ -18,64 +18,20 @@
                                 </div>
                                 <div class="material-datatables">
                                     <div class="form-group">
-                                        <div class="table-responsive">
-                                            <table id="users_datatable" class="table-striped table-hover">
-                                                <thead>
-                                                <tr>
-                                                    <th>ESTATUS</th>
-                                                    <th>ID</th>
-                                                    <th>NOMBRE</th>
-                                                    <th>TELÉFONO</th>
-                                                    <th>PUESTO</th>
-                                                    <th>JEFE DIRECTO 1</th>
-                                                    <th>JEFE DIRECTO  2</th>
-                                                    <th>SEDE</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="content hide">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="block full">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                            <i class="material-icons">list</i>
-                                        </div>
-                                        <div class="card-content">
-                                            <div class="row">
-                                                <h4 class="card-title">Asesores y coordinadores</h4>
-                                                <div class="table-responsive">
-                                                    <table id="users_datatable" class="table table-striped table-no-bordered table-hover" style="text-align:center;"><!--table table-bordered table-hover -->
-                                                        <thead>
-                                                        <tr>
-                                                            <th class="disabled-sorting text-right"><center>Estatus</center></th>
-                                                            <th class="disabled-sorting text-right"><center>ID</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Nombre</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Teléfono</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Puesto</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Jefe directo 1</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Jefe directo 2</center></th>
-                                                            <th class="disabled-sorting text-right"><center>Sede</center></th>
-                                                        </tr>
-                                                        </thead>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <table id="users_datatable" class="table-striped table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>ESTATUS</th>
+                                                <th>ID</th>
+                                                <th>NOMBRE</th>
+                                                <th>TELÉFONO</th>
+                                                <th>PUESTO</th>
+                                                <th>JEFE DIRECTO 1</th>
+                                                <th>JEFE DIRECTO 2</th>
+                                                <th>SEDE</th>
+                                            </tr>
+                                            </thead>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -95,10 +51,7 @@
             $(this).html('<input type="text" class="textoshead"  placeholder="'+title+'"/>' );
             $( 'input', this ).on('keyup change', function () {
                 if ($('#users_datatable').DataTable().column(i).search() !== this.value ) {
-                    $('#users_datatable').DataTable()
-                    .column(i)
-                    .search(this.value)
-                    .draw();
+                    $('#users_datatable').DataTable().column(i).search(this.value).draw();
                 }
             } );
         });

@@ -228,7 +228,7 @@ class Suma_model extends CI_Model
         return $this->db->query("SELECT id_opcion AS idRol, nombre AS descripcion FROM opcs_x_cats WHERE id_catalogo = 1 and id_opcion in (3,9,7) ORDER BY nombre");
     }
     function get_lista_usuarios($rol, $forma_pago){
-        return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pagos_suma WHERE estatus in (3, 5)) AND id_rol = $rol AND forma_pago = $forma_pago ORDER BY nombre");
+        return $this->db->query("SELECTt id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario in (SELECT id_usuario FROM pagos_suma WHERE estatus in (3, 5)) AND id_rol = $rol AND forma_pago = $forma_pago ORDER BY nombre");
     }
     function getRemanentesRevisionInternomex(){
         $datos = $this->db->query("SELECT ps.id_pago_suma, ps.referencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) nombreComisionista,

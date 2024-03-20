@@ -16,24 +16,22 @@ $(document).ready(function () {
     $("#subDir").empty().selectpicker('refresh');
     $.post(general_base_url + 'index.php/Clientes/getSubdirs/', function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#subDir").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#subDir").append('<option selected="selected" disabled>NINGUN SUBDIRECTOR</option>');
         }
         $("#subDir").selectpicker('refresh');
     }, 'json');
 
-
     sp.initFormExtendedDatetimepickers();
     $('.datepicker').datetimepicker({locale: 'es'});
     setIniDatesXMonth();
 });
+
 sp = { //  SELECT PICKER
     initFormExtendedDatetimepickers: function () {
         $('.datepicker').datetimepicker({
@@ -80,14 +78,12 @@ $('#subDir').on('change', function () {
     $('#filter_date').addClass('hide');
     $.post(general_base_url + 'index.php/Clientes/getGerentesBySubdir/'+subdir, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#gerente").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#gerente").append('<option selected="selected" disabled>NINGUN GERENTE</option>');
         }
         $("#gerente").selectpicker('refresh');
@@ -105,14 +101,12 @@ $('#gerente').on('change', function () {
     $("#asesores").empty().selectpicker('refresh');
     $.post(general_base_url + 'index.php/Clientes/getCoordsByGrs/'+gerente, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#coordinador").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#coordinador").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
         $("#coordinador").selectpicker('refresh');
@@ -131,14 +125,12 @@ $('#coordinador').on('change', function () {
     $("#asesores").empty().selectpicker('refresh');
     $.post(general_base_url + 'index.php/Clientes/getAsesorByCoords/'+coordinador, function(data) {
         var len = data.length;
-        for( var i = 0; i<len; i++)
-        {
+        for( var i = 0; i<len; i++){
             var id = data[i]['id_usuario'];
             var name = data[i]['nombre'] + ' ' + data[i]['apellido_paterno'] + ' ' + data[i]['apellido_materno'];
             $("#asesores").append($('<option>').val(id).text(name));
         }
-        if(len<=0)
-        {
+        if(len<=0){
             $("#asesores").append('<option selected="selected" disabled>NINGUN COORDINADOR</option>');
         }
         $("#asesores").selectpicker('refresh');
@@ -160,11 +152,8 @@ $('#asesores').on('change', function () {
     updateTable(url, 1, finalBeginDate, finalEndDate, 0);
 });
 
-
-
 var prospectsTable;
-function updateTable(url, typeTransaction, beginDate, endDate, where)
-{
+function updateTable(url, typeTransaction, beginDate, endDate, where){
     prospectsTable = $('#prospects-datatable_dir').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         scrollX: true,
@@ -210,6 +199,7 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
                 }
             },
             { data: function (d) {
+                    b = '';
                     if(d.estatus_particular == 1) { // DESCARTADO
                         b = '<center><span class="label lbl-warning">Descartado</span><center>';
                     } else if(d.estatus_particular == 2) { // INTERESADO SIN CITA
@@ -285,10 +275,10 @@ function updateTable(url, typeTransaction, beginDate, endDate, where)
             cache: false,
             "type": "POST",
             data: {
-                  "typeTransaction": typeTransaction,
-                  "beginDate": beginDate,
-                  "endDate": endDate,
-                  "where": where
+                "typeTransaction": typeTransaction,
+                "beginDate": beginDate,
+                "endDate": endDate,
+                "where": where
             }
         },
         initComplete: function () {
