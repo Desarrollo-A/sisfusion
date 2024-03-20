@@ -633,9 +633,8 @@ class Reestructura_model extends CI_Model
 
     public function getListaUsuariosParaAsignacion() {
         $filtro = '';
-        if($this->session->userdata('id_rol') == 3){
-            $filtro = ' AND id_lider='.$this->session->userdata('id_usuario');
-        }
+        if ($this->session->userdata('id_rol') == 3)
+            $filtro = ' AND id_lider = '.$this->session->userdata('id_usuario');
         return $this->db->query("SELECT id_usuario, UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno)) nombreUsuario 
         FROM usuarios 
         WHERE estatus = 1 AND tipo = 2 AND id_rol = 7 $filtro
