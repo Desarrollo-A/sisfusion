@@ -14,6 +14,11 @@ $(document).ready(function() {
         }
         $("#proyectoRemanente").selectpicker('refresh');
     }, 'json');
+
+    $('input[name="modoSubida"]').change(function() {
+        getDataRemanente(proyecto, condominio);
+
+    });
 });
 
 $('#proyectoRemanente').change(function(){
@@ -69,6 +74,20 @@ $('#tabla_remanente thead tr:eq(0) th').each(function (i) {
     }
 });
 
+function obtenerModoSeleccionado() {
+    var radioButtons = document.getElementsByName("modoSubida");
+    var modoSeleccionado = "";
+
+    for (var i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            modoSeleccionado = radioButtons[i].value;
+            break;
+        }
+    }
+
+    return modoSeleccionado;
+}
+
 function getDataRemanente(proyecto, condominio){
     
     $('#tabla_remanente').on('xhr.dt', function(e, settings, json, xhr) {
@@ -79,7 +98,10 @@ function getDataRemanente(proyecto, condominio){
         var to = formatMoney(numberTwoDecimal(total));
         document.getElementById("disponibleRemanente").textContent = to;
     });
-    
+
+    var modoSubidaSeleccionado = obtenerModoSeleccionado();
+    console.log("prueba");
+    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_remanente").prop("hidden", false);
     tabla_remanente = $("#tabla_remanente").DataTable({
@@ -333,12 +355,13 @@ function getDataRemanente(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasRContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
                 condominio : condominio,
+                modoSubida : modoSubidaSeleccionado
             }
         },
     });

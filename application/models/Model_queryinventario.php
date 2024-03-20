@@ -77,7 +77,74 @@
             return $query;
         }
     }
+
+
     public function getLotesDisCorridaAll($condominio) {
+
+        // $this->db->select('idLote,nombreLote, total, sup');
+        // $this->db->where('idCondominio', $condominio);
+        // $this->db->where('lotes.status','1');
+        $statusLoteVar = '';
+        $idAsesor = '';
+        $statuscl = '';
+        $statuslt = '';
+        $validacionStatusMov = '';
+
+
+        if($this->session->userdata('id_rol') == 6){
+
+            // $this->db->where_in('idStatusLote', array('1', '3'));
+            $statusLoteVar = '1, 3';
+            $statuscl = ' AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
+
+
+        } else if($this->session->userdata('id_rol') == 7){
+            $statusLoteVar = '1, 3';
+            $idAsesor = " AND id_asesor=".$this->session->userdata('id_usuario');
+            $statuscl = ' AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
+            $validacionStatusMov = ' AND idStatusContratacion= 1 AND (idMovimiento = 31 OR idMovimiento = 0)';
+
+
+        }else if( $this->session->userdata('id_rol')==33 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {
+            $statusLoteVar = '2, 3';
+            $idAsesor = "";
+            $statuscl = '';
+            $statuslt = 'lo.status IN (0,1,2,3) AND';
+
+
+        } else if($this->session->userdata('id_rol')==11 || $this->session->userdata('id_usuario') == 2755 || $this->session->userdata('id_rol') == 32){
+            $statusLoteVar = '1, 2, 3';
+            $idAsesor = "";
+            $statuscl = '';
+            $statuslt = 'lo.status IN (0,1,2,3) AND';
+        }
+        else{
+
+            // $this->db->where_in('idStatusLote', array('1'));
+            $statusLoteVar = '1';
+            $statuscl = '  AND cl.status = 1';
+            $statuslt = ' lo.status = 1 AND ';
+
+
+        }
+
+        // $query = $this->db->get('lotes');
+
+
+        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.total, lo.sup, lo.idStatusContratacion, lo.idMovimiento FROM lotes lo
+			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente ".$statuscl." ".$idAsesor."
+			WHERE ".$statuslt." idStatusLote IN (".$statusLoteVar.") AND lo.idCondominio IN (".$condominio.")".$validacionStatusMov);
+        return $query->result();
+        // if($query){
+        // $query = $query->result_array();
+        // return $query;
+        // }
+    }
+
+
+    public function getLotesDisCorridaAll_anterior($condominio) {
 
         // $this->db->select('idLote,nombreLote, total, sup');
         // $this->db->where('idCondominio', $condominio);

@@ -143,6 +143,7 @@ class Incidencias extends CI_Controller
         $asesor=$this->input->post('asesor');
         $coordinador = $this->input->post('coordinador');
         $gerente = $this->input->post('gerente');
+        $subdirector = $this->input->post('subdirector');
         $rolSelect= $this->input->post('rolesvc');
         $newColab = $this->input->post('usuarioid4');
         $comentario=$this->input->post('comentario4');
@@ -156,6 +157,8 @@ class Incidencias extends CI_Controller
         $usuarioOld=$coordinador;
       } else if($rolSelect == 3){
         $usuarioOld=$gerente;
+      } else if($rolSelect == 2){
+        $usuarioOld=$subdirector;
       }
 
       $respuesta = array($this->Incidencias_model->UpdateVcUser($usuarioOld,$newColab,$rolSelect,$idLote,$idCliente,$comentario,$cuantos));
