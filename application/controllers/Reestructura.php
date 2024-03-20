@@ -72,7 +72,21 @@ class Reestructura extends CI_Controller{
 		$superficie = $this->input->post('superficie');
 		$flagFusion = $this->input->post('flagFusion');
 
-		$data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $flagFusion);
+        $idUsuario = $this->session->userdata('id_usuario');
+        $proyectosExcluidos = array(14, 21, 22, 25);
+        
+        if (in_array($idProyecto, $proyectosExcluidos)) {
+            unset($proyectosExcluidos[array_search($idProyecto, $proyectosExcluidos)]);
+        }
+
+        if($idUsuario == 13546){
+            $proyectos = implode(', ', $proyectosExcluidos);
+		    $data = $this->Reestructura_model->getAllproyectos($proyectos);
+        }
+        else{
+		    $data = $this->Reestructura_model->getProyectosDisponibles($idProyecto, $superficie, $flagFusion);
+        }
+
         echo json_encode($data);
     }
 
@@ -619,6 +633,7 @@ class Reestructura extends CI_Controller{
         $lotesFusion = array();
         $idRegresoFusion = 0;
         $lotesOrigen = array();
+        $idUsuario = $this->session->userdata('id_usuario');
 
         if($flag_fusion == 1){ // if par saber si reestructura, reubicacion o fusión
             $checkFusion = $this->Reestructura_model->checkFusion($id_lote);
@@ -738,7 +753,7 @@ class Reestructura extends CI_Controller{
                         $idRegresoFusion = 21;
                     }
 
-                    $update = $this->Reestructura_model->updateLotesFusion($lf->idLote, $idRegresoFusion);
+                    $update = $this->Reestructura_model->updateLotesFusion($lf->idLote, $idRegresoFusion, $idUsuario);
 
                     if(!$update){
                         $updateFusionFlag = false;
@@ -746,7 +761,7 @@ class Reestructura extends CI_Controller{
                 }
             }
             else{
-                $updateLotesDestino = $this->Reestructura_model->updateLotesDestino($ids, $idStatusLote);
+                $updateLotesDestino = $this->Reestructura_model->updateLotesDestino($ids, $idStatusLote, $idUsuario);
                 if($updateLotesDestino){
                     $updateFusionFlag = true;
                 }
@@ -768,7 +783,7 @@ class Reestructura extends CI_Controller{
 
         $idsOrigen = implode(',', $lotesOrigen);
         
-        $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2); // estatus preproceso en 0
+        $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2, $idUsuario); // estatus preproceso en 0
 
         if(!$update){
             $this->db->trans_rollback();
@@ -3126,6 +3141,7 @@ class Reestructura extends CI_Controller{
         $statusLoteDestino = array();
         $idRegreso = 0;
         $allUpdates = true;
+        $idUsuario = $this->session->userdata('id_usuario');
 
         if (!empty($pvLote)) {
             // 1. checamos los lotes que estas involucrados en la fusion
@@ -3171,7 +3187,7 @@ class Reestructura extends CI_Controller{
 
                         //3. Se regresan los lotes a su estatus anterior
                         //actualizar uno por uno
-                        $update = $this->Reestructura_model->updateLotesFusion($d->idLote, $idRegreso);
+                        $update = $this->Reestructura_model->updateLotesFusion($d->idLote, $idRegreso, $idUsuario);
 
                         if (!$update) {
                             $allUpdates = false;
@@ -3185,7 +3201,7 @@ class Reestructura extends CI_Controller{
                     $idsOrigen = implode(',', $lotesOrigen);
                     
                     // 4. se regresa el lotes de origen a su estatus de preproceso 0
-                    $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2); // estatus preproceso en 0
+                    $update = $this->Reestructura_model->updateLotesOrigen($idsOrigen, 0, 2, $idUsuario); // estatus preproceso en 0
 
                     if($update){
                         $this->db->trans_commit();

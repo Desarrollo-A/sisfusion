@@ -206,6 +206,9 @@
 
 
     public function aplicaLiberacion($datos) {
+        $descuentosComerciales = !isset($datos['descuentosComerciales']) ? NULL : $datos['descuentosComerciales'];
+        $descuentoHabMenores = !isset($datos['descuentoHabMenores']) ? NULL : $datos['descuentoHabMenores'] ;
+        $descuentoHabMayores = !isset($datos['descuentoHabMayores']) ? NULL : $datos['descuentoHabMayores'] ;
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
         $userLiberacion = $datos['userLiberacion'];
@@ -233,6 +236,19 @@
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
+           //PAQUETES CF
+           if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+                //si el condominio es comercial solo consultar sin importar la superficie
+               $descuentos=$datos['descuentosComerciales'];
+              }else{ //0 - Habitacional
+                      $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
+                      //var_dump($datos['descuentoHabMenores']);
+             }
+             $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
+            
+        /**----------------------------------------------- */
+           
+           
             $data_l = array(
                 'nombreLote'=> $datos['nombreLote'],
                 'comentarioLiberacion'=> $datos['comentarioLiberacion'],
@@ -286,6 +302,7 @@
                 fechaRL = null, 
                 registro_comision = 8,
                 tipo_venta = ".$tventa.", 
+                $descuento
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
@@ -307,6 +324,7 @@
                 fechaRL = null, 
                 registro_comision = 8,
                 tipo_venta = ".$tventa.", 
+                $descuento
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
@@ -1544,5 +1562,8 @@
     public function validarTipoVenta($idLote) {
         return $this->db-> query("SELECT ISNULL(tipo_venta, 0) tipo_venta FROM lotes WHERE idLote = $idLote")->row(); 
     }
+    public function getDatosCondominio($idCondominio){
+        return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
+     }
 
 }

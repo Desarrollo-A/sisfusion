@@ -5,18 +5,11 @@ function cleanCommentsAsimilados() {
     myCommentsLote.innerHTML = '';
 }
 
-var totalLeon = 0;
-var totalQro = 0;
-var totalSlp = 0;
-var totalMerida = 0;
-var totalCdmx = 0;
-var totalCancun = 0;
 var tr;
 var tabla_asimilados2 ;
-var totaPen = 0;
 let titulos = [];
 
-$('#tabla_asimilados thead tr:eq(0) th').each( function (i) {
+$('#comisiones_solicitadas thead tr:eq(0) th').each( function (i) {
     var title = $(this).text();
     titulos.push(title);
     $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
@@ -48,8 +41,8 @@ $("#tabla_plaza_1").ready( function(){
         document.getElementById("totpagarAsimilados").textContent = to;
     });
 
-    $("#tabla_asimilados").prop("hidden", false);
-    tabla_asimilados2 = $("#tabla_asimilados").DataTable({
+    $("#comisiones_solicitadas").prop("hidden", false);
+    tabla_asimilados2 = $("#comisiones_solicitadas").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         scrollX: true,
@@ -60,7 +53,7 @@ $("#tabla_plaza_1").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE GENERAL PAGOS INTERNOMEX',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
                 format: 
                 {
                     header:  function (d, columnIdx) {
@@ -81,11 +74,6 @@ $("#tabla_plaza_1").ready( function(){
         destroy: true,
         ordering: false,
         columns: [
-        {
-            "data": function( d ){
-                return '<p>N/A</p>';
-            }
-        },    
         {
             "data": function( d ){
                 return '<p class="m-0">'+d.id_pago_i+'</p>';

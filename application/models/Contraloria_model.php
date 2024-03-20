@@ -96,12 +96,14 @@ class Contraloria_model extends CI_Model {
         return $valida;
     }
 
-    public function updateSt($idLote, $arreglo, $arreglo2){
+    public function updateSt($idLote, $arreglo, $arreglo2,$arregloMensualidades){
         $this->db->trans_begin();
         $this->db->where("idLote",$idLote);
         $this->db->update('lotes',$arreglo);
 
         $this->db->insert('historial_lotes',$arreglo2);
+
+        $this->db->insert('mensualidadesXlote',$arregloMensualidades);
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -1308,7 +1310,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     }
 
     function getCatalogs() {
-        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78) AND estatus = 1 ORDER BY id_catalogo, nombre");
+        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (77, 78,121) AND estatus = 1 ORDER BY id_catalogo, nombre");
     }
 
     function validaCorrida($idLote){
