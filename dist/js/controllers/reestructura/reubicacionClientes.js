@@ -1713,7 +1713,7 @@ let BUTTONREGRESO = '';
             return BTN_INFOCLIENTE + BUTTONREGRESO;
         }
         else if (d.idLoteXcliente != null && d.idStatusLote != 17)
-            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
         else
             return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }
