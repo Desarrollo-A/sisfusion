@@ -56,8 +56,7 @@ function validarCostos() {
             return 'success';
         }
     } else {
-        const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
-
+        const descuentoCostoListaM2 = (idDesarrollo == 5 || idDesarrollo == 6) ? costoListaM2 * 0.74 : costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
         if (![2, 3, 4].includes(clienteInfo.proceso)) {
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
