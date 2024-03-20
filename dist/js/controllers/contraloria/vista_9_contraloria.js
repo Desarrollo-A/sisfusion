@@ -231,9 +231,6 @@ $(document).on('click', '#save1', function (e) {
     var validaRL = ($("#rl").val().length == 0) ? 0 : 1;
     var validaResidencia = ($("#residencia").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
-
-    //console.log(getInfo1)
-
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("idCondominio", getInfo1[3]);
     dataExp1.append("nombreLote", getInfo1[4]);
@@ -252,7 +249,6 @@ $(document).on('click', '#save1', function (e) {
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
     if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {
         $('#save1').prop('disabled', true);
-
         $.ajax({
             url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso9`,
             data: dataExp1,

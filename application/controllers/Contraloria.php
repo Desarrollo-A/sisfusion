@@ -1666,9 +1666,6 @@ class Contraloria extends CI_Controller {
         $id_usuario = $this->session->userdata('id_usuario');
         $id_salesforce = $this->input->post('id_salesforce');
 
-        //print_r($id_salesforce);
-        //exit;
-
         $arreglo=array();
         $arreglo["idStatusContratacion"] = 9;
         $arreglo["idMovimiento"] = 39;
@@ -1696,10 +1693,8 @@ class Contraloria extends CI_Controller {
         $this->Contraloria_model->validate90Dias($idLote, $idCliente, $this->session->userdata('id_usuario'));
         
         if($validate == 1) {
-
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
-
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
@@ -1728,7 +1723,6 @@ class Contraloria extends CI_Controller {
                         $this->General_model->addRecord("json_salesforce", $data_to_insert);
                     }
                 }
-
                 $data['message'] = 'OK';
                 echo json_encode($data);
             } else {
