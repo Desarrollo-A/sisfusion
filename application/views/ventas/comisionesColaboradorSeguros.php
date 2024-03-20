@@ -131,7 +131,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close close_modal_xml" data-dismiss="modal">&times;</button>
                     </div>
                     <form method="post" id="form_multiples">
                         <div class="modal-body"></div>
