@@ -1649,13 +1649,10 @@ class Api extends CI_Controller
                                                         // var_dump($getLoteComision[0]['id_pagoc']);
                                                         // $dbTransaction = $this->Seguro_model->updatePago($dataUpdateSeguros,$getLoteComision[0]['id_pagoc']);
                                                         $id_pagoc = $getLoteComision[0]['id_pagoc'];
-                                                        $cmd = "UPDATE pago_seguro SET bandera = 7 WHERE id_pagoc =  $id_pagoc ";
-                                                        var_dump($cmd );
+                                                        $cmd = "UPDATE pago_seguro SET bandera = 7 , fecha_modificacion  = GETDATE() WHERE id_pagoc =  $id_pagoc ";
                                                         $respuestaPagoSeguro = $this->Seguro_model->updatePagoSeguro($cmd);
-                                                        var_dump($respuestaPagoSeguro);
-                                                        $this->db->trans_commit();
-                                                        exit;
                                                         if($respuestaPagoSeguro){
+                                                            $this->db->trans_commit();
                                                             $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente']; 
                                                             $arrayRespuesta['code'] = 210 ;
                                                             $arrayRespuesta['mensaje'] = 'Las comisiones fueron liquidadas correctamente' ;
@@ -1677,7 +1674,9 @@ class Api extends CI_Controller
                                                         $abonadoMas         = ($getLoteComision[0]['abonado'] + $porcentajeMensualidad) ;
                                                         $dataUpdateSeguros['pendiente'] =   $pedienteParaPagos;
                                                         $dataUpdateSeguros['abonado']   =   $abonadoMas;
-                                                        $dbTransaction = $this->Seguro_model->updatePagoSeguro($dataUpdateSeguros,$getLoteComision[0]['id_pagoc']);       
+                                                        $id_pagoc = $getLoteComision[0]['id_pagoc'];
+                                                        $cmd = "UPDATE pago_seguro SET pendiente = $pedienteParaPagos ,abonado = $abonadoMas, fecha_modificacion  = GETDATE() WHERE id_pagoc =  $id_pagoc ";
+                                                        $dbTransaction = $this->Seguro_model->updatePagoSeguro($cmd );       
                                                         for($contadorPorComisiones = 0 ; count($getLoteComision) > $contadorPorComisiones ; $contadorPorComisiones ++ )
                                                         {
                                                             // var_dump($getLoteComision[$contadorPorComisiones]['bandera']);
@@ -1748,9 +1747,14 @@ class Api extends CI_Controller
                                                     
                                                     echo json_encode( $arrayRespuesta );
                                                 
-                                                }else{
+                                                }else
+                                                {
                                                     // eerror
-                                                    var_dump('5555');
+                                                
+                                                    $this->db->trans_rollback();
+                                                    $arrayRespuesta['code'] = 400 ;
+                                                    $arrayRespuesta['mensaje'] = 'Error en sistema' ;
+                                                    echo json_encode(array("status" => 950, "Error con lote bandera no encontrada " => "Error ."));
                                                 }
                                                 // echo (json_encode(array("status" => 385, "message" => "El Lote ingresado ya se encuentra registrado.")));
 
@@ -1807,7 +1811,8 @@ class Api extends CI_Controller
                                                     $dataPagoSeguro['nombreCliente'] = '';
                                                     $dataPagoSeguro['estatusContratacion'] = 0;
                                                     $dataPagoSeguro['totalLote'] = $dataReturn3->seguros[$contadorPrimer]->montoTotal;
-                                                    $dbTransaction1 = $this->Seguro_model->pago_seguro($dataPagoSeguro);
+                                                    
+                                                    $Respuesta_pago_seguro = $this->Seguro_model->pago_seguro($dataPagoSeguro);
                                                     // se mandd los pagos_seguros solo un registro
                                                     if(count($respuestaComisiones) == 0 ){
                                                         echo json_encode( "Error no se tienen datos" );
@@ -1855,7 +1860,7 @@ class Api extends CI_Controller
                                                             $dataHistorialSeguros['estatus']            = 1;
                                                             $dataHistorialSeguros['comentario']         = 'Dispersión pago desde sistema';
                                                             // if (isset($dataComisiones) && !empty($dataComisiones)) {
-                                                            $dbTransaction = $this->Seguro_model->insertComisionSeguro('comisiones_seguro',$dataComisiones, $dataIndSeguros,$dataHistorialSeguros,$dataPagoSeguro);
+                                                            $dbTransaction = $this->Seguro_model->insertComisionSeguro('comisiones_seguro',$dataComisiones, $dataIndSeguros,$dataHistorialSeguros);
                                                                 if ($this->db->trans_status() === FALSE){
                                                                     $this->db->trans_rollback();
                                                                     $arrayRespuesta['cliente'] = $getInfoLote->idCliente; ;  

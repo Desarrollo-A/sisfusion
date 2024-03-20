@@ -17,15 +17,12 @@ class Seguro_model extends CI_Model {
         FROM  lotes lo 
         INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
         INNER JOIN comisiones_seguro cs on cs.idCliente = lo.idCliente  
-
         LEFT JOIN  (SELECT SUM(abono_neodata) abono_pagado, id_comision 
 		FROM pago_seguro_ind WHERE (estatus in (1,3) OR descuento_aplicado = 1) 
 		GROUP BY id_comision) psi ON psi.id_comision = cs.id_comision
-
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         WHERE lo.referencia = $referencia AND lo.nombreLote = '".$nombreLote."' AND re.empresa = '".$empresa."'");
-
         return $query->result_array();
     }
 
@@ -80,8 +77,19 @@ class Seguro_model extends CI_Model {
             return $query->result_array();
         }
 
+        function pago_seguro($data){
+            if ($data != '' && $data != null){
+                $response = $this->db->insert('pago_seguro', $data);
+                if (!$response) {
+                    return 0;
+                } else {
+                    return 1;
+                    // return 1;
+                }
+            }
+        }
 
-        function insertComisionSeguro($tabla, $data,$dataIndividual,$dataHistorialSeguros,$dataPagoSeguro) {
+        function insertComisionSeguro($tabla, $data,$dataIndividual,$dataHistorialSeguros) {
             if ($data != '' && $data != null){
                 $response = $this->db->insert($tabla, $data);
                 if($tabla = 'comisiones_seguro'){
@@ -99,8 +107,8 @@ class Seguro_model extends CI_Model {
 
                 $responsePago_seguro_ind = $this->db->insert('historial_seguro', $dataHistorialSeguros);
 
-                $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
-                
+                // $dataPagoSeguro = $this->db->insert('pago_seguro', $dataPagoSeguro);
+                    
                 }
                 if (!$response) {
                     return 0;
