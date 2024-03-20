@@ -39,6 +39,11 @@ class Seguros extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("ventas/comisionesColaboradorSeguros", $datos);
     }
+    public function historial_colaborador()
+    {
+      $this->load->view('template/header');
+      $this->load->view("comisiones/colaborador/historial_seguros_contraloria_view");    
+    }
     /**--------------------------------------- */
     public function getDatosComisionesAsesor($a)
     {
@@ -389,4 +394,11 @@ public function cargaxml2($id_user = ''){
           echo json_encode(3);
         }
       }
+
+      public function getDatosHistorialPago($proyecto = null,$condominio = null ) {      
+        $dat =  $this->Seguro_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+        echo json_encode( array( "data" => $dat));
+      }
+
+
 }
