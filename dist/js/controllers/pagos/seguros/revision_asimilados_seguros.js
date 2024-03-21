@@ -15,10 +15,7 @@ $(document).ready(function() {
         $("#proyectoAsimilados_seguros").selectpicker('refresh');
     }, 'json');
 
-    $('input[name="modoSubida"]').change(function() {
-        getDataAsimiladosSeguros(proyecto, condominio);
 
-    });
 
 });
 
@@ -357,13 +354,12 @@ function getDataAsimiladosSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/" ,
+            url: general_base_url + "SegurosComision/getDatosNuevasAsimiladosSeguros/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
-                condominio : condominio,
-                modoSubida: modoSubidaSeleccionado
+                condominio : condominio
             }
         },
     });

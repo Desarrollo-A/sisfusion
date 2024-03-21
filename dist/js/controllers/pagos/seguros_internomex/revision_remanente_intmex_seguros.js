@@ -175,7 +175,7 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/pago_internomex/',
+                        url : general_base_url + 'SegurosComision/pago_internomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -380,7 +380,7 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/",
+            "url": general_base_url + "SegurosComision/getDatosNuevasRemanenteSeguros/",
             "type": "POST",
             cache: false,
             data: {

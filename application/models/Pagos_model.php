@@ -388,18 +388,18 @@ class Pagos_model extends CI_Model {
         WHERE /*MONTH(f.fecha_ingreso) >= 4 AND*/ f.uuid = '".$uuid."' ");
     }
     
-    function getDatosNuevasFacturasContraloria($proyecto,$condominio){
+    function getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida){
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
+
+            $tipo='';
         }
         else { // CONTRALORÍA
 
             if($modoSubida != 0){ //Reestructura
-                $ooam = "AND com.ooam IN (0)";
                 $tipo = "AND u.tipo = 2";
             }else{ //Comercialización
-                $ooam = "AND com.ooam NOT IN (0)";
                 $tipo = "AND u.tipo = 1";
             }
             
@@ -423,7 +423,7 @@ class Pagos_model extends CI_Model {
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
             LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
-            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2) $tipo
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
             INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23

@@ -15,10 +15,7 @@ $(document).ready(function() {
         $("#proyectoFactura_seguros").selectpicker('refresh');
     }, 'json');
 
-    $('input[name="modoSubida"]').change(function() {
-        getDataFacturaSeguros(proyecto, condominio);
 
-    });
 });
 
 $('#proyectoFactura_seguros').change(function(){
@@ -99,9 +96,6 @@ function getDataFacturaSeguros(proyecto, condominio){
         document.getElementById("disponibleFactura_seguros").textContent = to;
     });
     
-    var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_factura_seguros").prop("hidden", false);
     tabla_factura_seguros = $("#tabla_factura_seguros").DataTable({
@@ -135,7 +129,7 @@ function getDataFacturaSeguros(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/updateRevisionaInternomex/',
+                        url : general_base_url + 'SegurosComision/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -354,13 +348,12 @@ function getDataFacturaSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasFacturasContraloria/" ,
+            url: general_base_url + "SegurosComision/getDatosNuevasFacturasSeguros/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
-                condominio : condominio,
-                modoSubida: modoSubidaSeleccionado
+                condominio : condominio
             }
         },
     });
