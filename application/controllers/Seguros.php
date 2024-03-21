@@ -209,8 +209,8 @@ class Seguros extends CI_Controller
           }
           public function getDesarrolloSelect($a = ''){
             $validar_sede = $this->session->userdata('id_sede');
-            $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
-            $tipo = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
+            $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;  
+            $tipo = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
             $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
             
             $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
