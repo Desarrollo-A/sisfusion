@@ -2073,7 +2073,8 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-        $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso);
+        $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+        $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
         if(!$validacionM2) {//si es diferente a true
             echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
             exit;
@@ -2120,7 +2121,7 @@ class Asesor extends CI_Controller {
         //si es así hayq ue borrar la rama ya que no la estará utilizando
 
         if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
-            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            //$dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
 
             if (count($revisar_registro)>0) {
@@ -3140,7 +3141,7 @@ class Asesor extends CI_Controller {
         }
     }
 
-    function validarCostos($costoListaM2, $costoFinalM2, $tipoVenta, $proceso){
+    function validarCostos($costoListaM2, $costoFinalM2, $tipoVenta, $proceso, $idResidencial){
         $tipoVenta = (int) $tipoVenta;
         $array = array(
             '$costoListaM2' => $costoListaM2,
@@ -3157,7 +3158,7 @@ class Asesor extends CI_Controller {
                 $estatusTransaccion = true;
             }
         }else{
-             $descuentoCostoListaM2 = $costoListaM2 * 0.80; // Aplicar el descuento del 20%
+            $descuentoCostoListaM2 = (in_array($idResidencial, [5, 6])) ? $costoListaM2 * 0.74 : $costoListaM2 * 0.80; // Aplicar el descuento del 20%
             $estatusProceso = array(2, 3, 4);
             if(!in_array($proceso, $estatusProceso)){
                if($costoFinalM2 > $costoListaM2 || $costoFinalM2 < $descuentoCostoListaM2 || $costoFinalM2 < 0){
