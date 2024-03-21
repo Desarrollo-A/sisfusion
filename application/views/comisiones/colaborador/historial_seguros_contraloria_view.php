@@ -81,10 +81,10 @@
                             </li>
                             <?php }?>
                             <?php if(in_array($this->session->userdata('id_rol'), array(1, 2, 3, 7, 9, 66))) { ?>
-                                <li>
+                                <li style="display:none;">
                                     <a href="#solicitudesSUMA" role="tab" data-toggle="tab">Historial SUMA</a>
                                 </li>
-                                <li>
+                                <li style="display:none;">
                                     <a href="#historialDescuentos" role="tab" data-toggle="tab" onclick="consultarHistorialDescuentos()">Historial descuentos</a>
                                 </li>
 
