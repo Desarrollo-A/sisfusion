@@ -392,14 +392,14 @@ class Pagos_model extends CI_Model {
         if( $this->session->userdata('id_rol') == 31) { // INTERNOMEX
             $filtro = "pci1.estatus IN (8, 88) AND com.id_usuario = $condominio";
             $whereFiltro = "";
+
+            $tipo='';
         }
         else { // CONTRALORÍA
 
             if($modoSubida != 0){ //Reestructura
-                //$ooam = "AND com.ooam IN (0)";
                 $tipo = "AND u.tipo = 2";
             }else{ //Comercialización
-                //$ooam = "AND com.ooam NOT IN (0)";
                 $tipo = "AND u.tipo = 1";
             }
             

@@ -75,6 +75,92 @@ class SegurosComision extends CI_Controller
     echo json_encode( array( "data" => $dat));
   }
 
+  public function updateRevisionaInternomex(){
+    $sol=$this->input->post('idcomision');  
+    $consulta_comisiones = $this->db->query("SELECT id_pago_i FROM pago_seguro_ind where id_pago_i IN (".$sol.")");
+      if( $consulta_comisiones->num_rows() > 0 ){
+        $consulta_comisiones = $consulta_comisiones->result_array();
+        $id_user_Vl = $this->session->userdata('id_usuario');
+          $sep = ',';
+          $id_pago_i = '';
+          $data=array();
+          foreach ($consulta_comisiones as $row) {
+            $id_pago_i .= implode($sep, $row);
+            $id_pago_i .= $sep;
+
+            $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>  $id_user_Vl,
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'CONTRALORÍA ENVÍO PAGO A INTERNOMEX' 
+            );
+              array_push($data,$row_arr);
+          }
+          $id_pago_i = rtrim($id_pago_i, $sep);
+            $arrayUpdateControlaria = array(
+              'estatus' => 8,
+              'modificado_por' => $id_user_Vl
+            );
+            $up_b = $this->Seguros_comision_model->update_acepta_contraloria($arrayUpdateControlaria , $id_pago_i);
+            $ins_b = $this->Seguros_comision_model->insert_phc($data);
+      if($up_b == true && $ins_b == true){
+        $data_response = 1;
+        echo json_encode($data_response);
+      } else {
+        $data_response = 0;
+        echo json_encode($data_response);
+      }
+      }
+      else{
+        $data_response = 0;
+      echo json_encode($data_response);
+      }
+  }
+
+  public function pago_internomex(){
+    $id_pago_is = $this->input->post('idcomision');  
+    $consulta_comisiones = $this->Pagos_model->consultaComisiones($id_pago_is);
+
+      if( $consulta_comisiones != 0 ){
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $sep = ',';
+        $id_pago_i = '';
+        $data=array();
+
+          foreach ($consulta_comisiones as $row) {
+            $id_pago_i .= implode($sep, $row);
+            $id_pago_i .= $sep;
+
+            $row_arr=array(
+              'id_pago_i' => $row['id_pago_i'],
+              'id_usuario' =>   $this->session->userdata('id_usuario'),
+              'fecha_movimiento' => date('Y-m-d H:i:s'),
+              'estatus' => 1,
+              'comentario' =>  'INTERNOMEX APLICÓ PAGO' 
+            );
+            array_push($data,$row_arr);
+          }
+          $id_pago_i = rtrim($id_pago_i, $sep);
+            
+            $up_b = $this->Pagos_model->update_acepta_INTMEX($id_pago_i);
+            $ins_b = $this->Pagos_model->insert_phc($data);
+      
+      if($up_b == true && $ins_b == true){
+        $data_response = 1;
+        echo json_encode($data_response);
+      } else {
+        $data_response = 0;
+        echo json_encode($data_response);
+      }
+            
+      }
+      else{
+        $data_response = 0;
+      echo json_encode($data_response);
+      }
+  }
+
 
 
 

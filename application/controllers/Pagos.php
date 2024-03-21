@@ -394,9 +394,9 @@ class Pagos extends CI_Controller
 
   public function getDatosNuevasFacturasContraloria(){
     $proyecto = $this->input->post('proyecto');  
-    $condominio =   $this->input->post('condominio');  
-    $modoSubida = 1;
-    //$dat =  $this->Pagos_model->getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida);
+    $condominio =  $this->input->post('condominio'); 
+    $modoSubida =  $this->input->post('modoSubida');   
+  
     $dat =  $this->Pagos_model->getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;

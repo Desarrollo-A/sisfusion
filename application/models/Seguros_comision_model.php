@@ -159,5 +159,37 @@ class Seguros_comision_model extends CI_Model {
             return $query->result_array();
     }
 
+    public function update_acepta_contraloria($data , $clave){
+        try {
+            $id_user_Vl = $this->session->userdata('id_usuario');
+            $cmd = "UPDATE pago_seguro_ind SET estatus = 8, modificado_por =  $id_user_Vl  WHERE id_pago_i IN  ($clave) ";
+            $query = $this->db->query($cmd);
+
+            if($this->db->affected_rows() > 0 ){
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }     
+    }
+
+    function insert_phc($data){
+        $this->db->insert_batch('historial_comisiones', $data);
+        return true;
+    }
+
+    function consultaComisiones ($id_pago_is){
+        $cmd = "SELECT id_pago_i FROM pago_seguros_ind WHERE id_pago_i IN ($id_pago_is)";
+        $query = $this->db->query($cmd);
+        return count($query->result()) > 0 ? $query->result_array() : 0 ; 
+    }
+
+    function update_acepta_INTMEX($idsol) {
+        return $this->db->query("UPDATE pago_seguros_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+    }
+
 
 }

@@ -116,7 +116,7 @@ function getDataRemanente_seguros(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/updateRevisionaInternomex/',
+                        url : general_base_url + 'SegurosComision/updateRevisionaInternomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
