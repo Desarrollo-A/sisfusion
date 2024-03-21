@@ -1640,6 +1640,7 @@ const botonesAccionReubicacion = (d) => {
                     data-idLote="${d.idLote}"
                     data-nombreLote="${d.nombreLote}"
                     data-flagFusion='${flagFusion}'
+                    ${botonFusionadoEstatus}
                     >
                     <i class="fa fa-reply"></i>
                 </button>`;
@@ -2033,7 +2034,7 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees.push(arrayManejo);
     
     $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ nombre_lote + ' ?' );
-    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borraran propuestas o fusiones realizadas');
+    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borrará(n) reubicaciones, reestructura o fusiones realizadas');
     $('#deshacerPreproceso').modal('toggle');
 });
 
