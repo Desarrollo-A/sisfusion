@@ -34,24 +34,30 @@ class PaquetesCorrida_model extends CI_Model
     }
  
     public function UpdateLotes($desarrollos,$cadena_lotes,$query_superdicie,$query_tipo_lote,$usuario,$inicio,$fin){
-        $this->db->query("UPDATE  l 
-        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        where r.idResidencial in($desarrollos)  and l.idStatusLote = 1 
-        $query_superdicie
-        $query_tipo_lote");
-        $this->db->query("UPDATE  l 
-        set l.id_descuento = '$cadena_lotes',usuario='$usuario'
-        from lotes l
-        inner join condominios c on c.idCondominio=l.idCondominio 
-        inner join residenciales r on r.idResidencial=c.idResidencial
-        inner join clientes cl on cl.id_cliente=l.idCliente
-        where r.idResidencial in($desarrollos)  and l.idStatusLote = 3 
-        and cl.fechaApartado >= $inicio and cl.fechaApartado <= $fin
-        $query_superdicie
-        $query_tipo_lote"); 
+        $this->db->query("UPDATE lo
+        SET 
+            lo.id_descuento = '$cadena_lotes', 
+            usuario = '$usuario' 
+        FROM 
+            lotes lo 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio $query_tipo_lote
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN ($desarrollos)
+        WHERE 
+            lo.idStatusLote = 1 
+            $query_superdicie");
+
+        $this->db->query("UPDATE lo
+        SET 
+        lo.id_descuento = '$cadena_lotes', 
+        lo.usuario = '$usuario' 
+        FROM 
+        lotes lo 
+        INNER JOIN  condominios co ON co.idCondominio = lo.idCondominio $query_tipo_lote
+        INNER JOIN  residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN ($desarrollos) 
+        INNER JOIN  clientes cl ON cl.id_cliente = lo.idCliente AND cl.fechaApartado BETWEEN '$inicio 00:00:00.000' AND '$fin 23:59:59.999'
+        WHERE 
+            lo.idStatusLote in (2, 3)
+            $query_superdicie"); 
     }
 
     public function insertBatch($table, $data)

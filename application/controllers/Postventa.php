@@ -3264,4 +3264,182 @@ public $controller = 'Postventa';
         }    
     }
 
+    public function cambioNombreCliente() {
+        $this->load->view('template/header');
+        $this->load->view("postventa/cambioNombreCliente/cambio_nombre_cliente_view");
+    }
+
+    public function getListaClientes() {
+        $dato = $this->Postventa_model->getListaClientes($this->input->post('index_proyecto'), $this->input->post('index_condominio'));
+        if ($dato != null)
+            echo json_encode($dato);
+        else
+            echo json_encode(array());
+    }
+
+    public function setInformacionCliente() {
+        $idLote = $this->input->post('idLote');
+        $idCliente = $this->input->post('idCliente');
+        $tipoTramite = $this->input->post('tipoTramite');
+        $tipoTransaccion = $this->input->post('tipoTransaccion');
+        $idRegistro = $this->input->post('idRegistro');
+        $txtNombre = $this->input->post('txtNombre');
+        $txtApellidop = $this->input->post('txtApellidop');
+        $txtApellidom = $this->input->post('txtApellidom');
+        $updateData = array("estatus_validacion" => 2, "validado_por" => $this->session->userdata('id_usuario'));
+        $responseInsertCliente = TRUE;
+        $reponseUpdateLote = TRUE;
+        $responseUpdateCliente = TRUE;
+        if ($tipoTransaccion == 1) { // ES LA PRIMERA VEZ, SE VA A INSERTAR
+            $dataParaInsertar = array(
+                "idLote" => $idLote,
+                "idCliente" => $idCliente,
+                "nombre" => $txtNombre,
+                "apellido_paterno" => $txtApellidop,
+                "apellido_materno" => $txtApellidom,
+                "tipoTramite" => $tipoTramite,
+                "creado_por" => $this->session->userdata('id_usuario'),
+                "modificado_por" => $this->session->userdata('id_usuario')
+            );
+            $responseInsertCliente = $this->General_model->addRecord('clientes_x_lote', $dataParaInsertar);
+            $reponseUpdateLote = $this->General_model->updateRecord("lotes", array("estatusCambioNombre" => 2, "usuario" => 1), "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        }
+        else if ($tipoTransaccion == 2) {
+            $dataParaActualizar = array (
+                "nombre" => $txtNombre,
+                "apellido_paterno" => $txtApellidop,
+                "apellido_materno" => $txtApellidom,
+                "tipoTramite" => $tipoTramite,
+                "fecha_modificacion" => date('Y-m-d H:i:s'),
+                "modificado_por" => $this->session->userdata('id_usuario')
+            );
+            $responseUpdateCliente = $this->General_model->updateRecord("clientes_x_lote", $dataParaActualizar, "id_registro", $idRegistro); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        }
+        if ($responseInsertCliente && $reponseUpdateLote && $responseUpdateCliente)
+            echo json_encode(array("status" => 1, "message" => "Transacción realizada con éxito."), JSON_UNESCAPED_UNICODE);
+        else
+            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+    }
+
+    public function setAvance () {
+        $idLote = $this->input->post('idLoteA');
+        $idCliente = $this->input->post('idClienteA');
+        $tipoTransaccion = $this->input->post('tipoTransaccionA');
+        $comentario = $this->input->post('comentario');
+        $responseLiberacion = TRUE;
+        $responseAgregarCliente = TRUE;
+        $responseInsertHistorial = TRUE;
+        // OBTENEMOS LA INFORMACIÓN DEL CLIENTE
+        $informacionCliente = $this->Postventa_model->getInformacionCliente($idLote);
+        if ($tipoTransaccion == 2) // ESTÁ CON PV, SE VA CON CONTRALORÍA
+            $estatusCambioNombre = 3;
+        else if ($tipoTransaccion == 3 && $this->input->post('tipo') == 0) // CONTRALORÍA LO RECHAZÓ
+            $estatusCambioNombre = 5;
+        else if ($tipoTransaccion == 3 && $this->input->post('tipo') == 1) // CONTRALORÍA LO ACEPTÓ
+            $estatusCambioNombre = 4;
+        if ($tipoTransaccion == 3 && $this->input->post('tipo') == 1) { // ACEPTÓ EL CAMBIO DE NOMBRE
+            // SE ARMA EL ARRAY DE DATOS PARA ENVIAR A LA FUNCIÓN QUE LO VA A LIBERAR
+            $datosLiberacion = array (
+                "idCondominio" => $informacionCliente[0]->idCondominio,
+                "nombreLote" => $informacionCliente[0]->nombreLote,
+                "precio" => $informacionCliente[0]->precio,
+                "activeLE" => $informacionCliente[0]->tipo_venta,
+                "activeLP" => $informacionCliente[0]->tipo_venta,
+                "comentarioLiberacion" => 'LIBERADO' . $comentario,
+                "observacionLiberacion" => 'LIBERADO' . $comentario,
+                "fechaLiberacion" => date('Y-m-d H:i:s'),
+                "modificado" => date('Y-m-d H:i:s'),
+                "status" => 1,
+                "userLiberacion" => $this->session->userdata('id_usuario'),
+                "tipo" => 6
+            );
+            $responseLiberacion = $this->caja_model_outside->aplicaLiberacion($datosLiberacion);
+            if ($responseLiberacion) {
+                $dataAgregarCliente = array (
+                    "nombre" => $informacionCliente[0]->nombreCliente,
+                    "apellido_paterno" => $informacionCliente[0]->apellido_paterno,
+                    "apellido_materno" => $informacionCliente[0]->apellido_materno,
+                    "personalidad_juridica" => $informacionCliente[0]->personalidad_juridica,
+                    "id_asesor" => $informacionCliente[0]->id_asesor,
+                    "id_coordinador" => $informacionCliente[0]->id_coordinador,
+                    "id_gerente" => $informacionCliente[0]->id_gerente,
+                    "id_subdirector" => $informacionCliente[0]->id_subdirector,
+                    "id_regional" => $informacionCliente[0]->id_regional,
+                    "id_regional_2" => $informacionCliente[0]->id_regional_2,
+                    "idLote" => $idLote,
+                    "status" => 1,
+                    "fechaApartado" => date('Y-m-d H:i:s'),
+                    "fecha_creacion" => date('Y-m-d H:i:s'),
+                    "creado_por" => $this->session->userdata('id_usuario'),
+                    "fecha_modificacion" => date('Y-m-d H:i:s'),
+                    "modificado_por" => $this->session->userdata('id_usuario')
+                );
+                $responseAgregarCliente = $this->caja_model_outside->insertClient($dataAgregarCliente);
+            }
+            $dataParaActualizarLote = array (
+                "idStatusContratacion" => 15,
+                "idMovimiento" => 45,
+                "idStatusLote" => 2,
+                "idCliente" => $responseAgregarCliente[0]["lastId"],
+                "perfil" => $this->session->userdata('id_rol'),
+                "comentario" => $comentario,
+                "estatusCambioNombre" => $estatusCambioNombre,
+                "usuario" => $this->session->userdata('id_usuario'),
+                "fecha_modst" => date('Y-m-d H:i:s')
+            );
+            $dataInsertarHistorial = array (
+                "idStatusContratacion" => 15,
+                "idMovimiento" => 45,
+                "nombreLote" => $informacionCliente[0]->nombreLote,
+                "comentario" => $comentario,
+                "perfil" => $this->session->userdata('id_rol'),
+                "usuario" => $this->session->userdata('id_usuario'),
+                "modificado" => date("Y-m-d H:i:s"),
+                "fechaVenc" => date('Y-m-d H:i:s'),
+                "idLote" => $idLote,
+                "idCondominio" => $informacionCliente[0]->idCondominio,
+                "idCliente" => $responseAgregarCliente[0]["lastId"]
+            );
+            $responseInsertHistorial = $this->General_model->addRecord('historial_lotes', $dataInsertarHistorial);
+        } else {
+            $dataParaActualizarLote = array (
+                "comentario" => $comentario,
+                "estatusCambioNombre" => $estatusCambioNombre,
+                "usuario" => $this->session->userdata('id_usuario'),
+                "fecha_modst" => date('Y-m-d H:i:s')
+            );
+        }
+        $reponseUpdateLote = $this->General_model->updateRecord("lotes", $dataParaActualizarLote, "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+        if ($reponseUpdateLote && $responseLiberacion && $responseInsertHistorial)
+            echo json_encode(array("status" => 1, "message" => "Transacción realizada con éxito."), JSON_UNESCAPED_UNICODE);
+        else
+            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+    }
+
+    public function revisionContraloria() {
+        $this->load->view('template/header');
+        $this->load->view("postventa/cambioNombreCliente/validacion_contraloria_view");
+    }
+
+    public function getListaClientesRevision() {
+        $dato = $this->Postventa_model->getListaClientesRevision();
+        if ($dato != null)
+            echo json_encode($dato);
+        else
+            echo json_encode(array());
+    }
+
+    public function historialCambioNombre() {
+        $this->load->view('template/header');
+        $this->load->view("postventa/cambioNombreCliente/historial_cambio_nombre_view");
+    }
+
+    public function getHistorialCambioNombre() {
+        $dato = $this->Postventa_model->getHistorialCambioNombre();
+        if ($dato != null)
+            echo json_encode($dato);
+        else
+            echo json_encode(array());
+    }
+
 }
