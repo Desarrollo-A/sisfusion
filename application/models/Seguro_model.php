@@ -203,16 +203,16 @@ class Seguro_model extends CI_Model {
                     // return 1;
                 }
                 if($banderaAbono == 1){
-                    "UPDATE pago_seguro set bandera = 7 where id_pagoc = $comision";
+                    // "UPDATE pago_seguro set bandera = 7 where id_pagoc = $comision";
                 } 
             } else {
                 return 0;
             }
         }
         function updatePagoSeguro($cmd) {
-            var_dump($cmd);
+        
                 $response = $this->db->query($cmd);
-                var_dump($response);
+            
                 if ($response) {
                     return 1;
                 } else {

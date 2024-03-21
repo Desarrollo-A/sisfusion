@@ -1536,7 +1536,7 @@ class Api extends CI_Controller
                 $valida_token = json_decode($this->validateToken($token, 7070));
                 if ($valida_token->status !== 200)
                     {
-                        // echo json_encode($valida_token);
+                        echo json_encode($valida_token);
                     }
                 else 
                 {
@@ -1629,10 +1629,11 @@ class Api extends CI_Controller
                                         {   
                                             $getLoteComision = $this->Seguro_model->validaLoteComision($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
                                             // VALIDAR QUE EXISTA EL LOTE
+
                                             if(count($getLoteComision) > 0  AND  count($getLoteComision) != 1)
                                             { // validamod que existan datos, 
                                                 // viene para abonar o comprobar si viene liquidado
-
+                                              
                                                 // var_dump($getLoteComision[0]['bandera']);
                                                 if($getLoteComision[0]['bandera'] == 7){
                                                     // se liquido en su momento.
@@ -1678,7 +1679,7 @@ class Api extends CI_Controller
                                                         $comisionTotalSeguro_mensualidad    =   $dataReturn3->seguros[$contadorPrimer]->mensualidad ;
                                                         // $pagadoTotalSeguro               =   $dataReturn3->seguros[$contadorPrimer]->montoTotal ;
                                                         $porcentajeMensualidad              =   ($comisionTotalSeguro_mensualidad * $porcentaje) ;
-                                                        // $ComisionSumaComparar  =   $dataReturn3->seguros[$contadorPrimer]->mensualidad + $getLoteComision[$contadorPorComisiones]['bandera'] ;
+                                                        // $ComisionSumaComparar            =   $dataReturn3->seguros[$contadorPrimer]->mensualidad + $getLoteComision[$contadorPorComisiones]['bandera'] ;
                                                         // $porcentajeComisionSeguroTotal      =   ($pagadoTotalSeguro * $porcentaje) ;
                                                         $pedienteParaPagos = $getLoteComision[0]['pendiente'] - $porcentajeMensualidad ;
                                                         $abonadoMas         = ($getLoteComision[0]['abonado'] + $porcentajeMensualidad) ;
@@ -1709,14 +1710,17 @@ class Api extends CI_Controller
                                                                     {
                                                                         $CuantoFalta = $getLoteComision[$contadorPorComisiones]['abono_pagado'] -  $getLoteComision[$contadorPorComisiones]['comision_total'];
                                                                         if($CuantoFalta > $totalDeLaComision ){
+
                                                                         }else{
                                                                             $sumaDeAbonado = $CuantoFalta;
-                                                                            $bandera_liquidar   =   1 ;     
+                                                                            $bandera_liquidar   =   1 ;    
+
                                                                         }
                                                                 }else{
+
                                                                 }
                                                             }else{
-                                                                // solo le metemos el valor completo
+   // solo le metemos el valor completo
                                                             }
                                                             $dataIndSeguros['id_comision']          =   $getLoteComision[$contadorPorComisiones]['id_comision'];  
                                                             $dataIndSeguros['id_usuario']           =   $getLoteComision[$contadorPorComisiones]['id_usuario'];   
@@ -1755,7 +1759,7 @@ class Api extends CI_Controller
                                                                 // $dataReturn['Respuesta'] =  $arrayRespuesta;    
                                                                 // $arrayRespuesta['Respuesta'] = $dataReturn3->seguros[$contadorPrimer];
                                                             }   
-                                                        } // llave de 
+                                                        } // llave de for 
                                                     }
                                                     echo json_encode( $arrayRespuesta );
                                                 
@@ -1773,6 +1777,7 @@ class Api extends CI_Controller
                                             else 
                                             { //dos caminos 
                                                 //  vienee nuevo a insertar  
+
                                                 $getInfoLote = $this->Seguro_model->getInfoLote($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
                                                 if(empty($getInfoLote))
                                                 {
@@ -1894,6 +1899,7 @@ class Api extends CI_Controller
                                 }else if($bandera_array_vacio == 1){
                                     // este viene de noche porque se tiene que agregar solo uno
                                     //señor de la noche 
+                                    echo json_encode( "posible1" );
                                 }else{
                                     echo json_encode(array("status" => 700, "message" => "No se puedo realizar ningua accion revisar el contenido de los parámetros requeridos."), JSON_UNESCAPED_UNICODE);
                                 }
@@ -1901,6 +1907,7 @@ class Api extends CI_Controller
                                 // aqui creo que va 
                             }else
                             {
+                                echo json_encode( "posible2" );
                             }
                         }
                     } else
