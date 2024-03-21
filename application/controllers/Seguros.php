@@ -197,7 +197,7 @@ class Seguros extends CI_Controller
       }
     
         public function getFechaCorteActual(){
-        $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
+        $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
         $diaActual = date('d'); 
         $fechaCorte = $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual);
         echo json_encode(array("fechasCorte" => $fechaCorte),JSON_NUMERIC_CHECK);
