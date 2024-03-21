@@ -380,7 +380,7 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/",
+            "url": general_base_url + "SegurosComision/getDatosNuevasRemanenteSeguros/",
             "type": "POST",
             cache: false,
             data: {

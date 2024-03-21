@@ -338,11 +338,11 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/",
+            url: general_base_url + "SegurosComision/getDatosNuevasAsimiladosSeguros/",
             type: "POST",
             cache: false,
             data: {
-                puesto:    proyecto,
+                puesto:  proyecto,
                 usuario: condominio
             }
         },

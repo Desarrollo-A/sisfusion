@@ -363,10 +363,10 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasFacturasContraloria/" ,
+            "url": general_base_url + "SegurosComision/getDatosNuevasFacturasSeguros/" ,
             "type": "POST",
             data:{
-                proyecto : proyecto,
+                proyecto:proyecto,
                 condominio:condominio
             },
             cache: false

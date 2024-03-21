@@ -14,11 +14,6 @@ $(document).ready(function() {
         }
         $("#proyectoRemanente_seguros").selectpicker('refresh');
     }, 'json');
-
-    $('input[name="modoSubida"]').change(function() {
-        getDataRemanente_seguros(proyecto, condominio);
-
-    });
 });
 
 $('#proyectoRemanente_seguros').change(function(){
@@ -73,20 +68,6 @@ $('#tabla_remanente_seguros thead tr:eq(0) th').each(function (i) {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllRemanenteSeguros(this)"/>');
     }
 });
-
-function obtenerModoSeleccionado() {
-    var radioButtons = document.getElementsByName("modoSubida");
-    var modoSeleccionado = "";
-
-    for (var i = 0; i < radioButtons.length; i++) {
-        if (radioButtons[i].checked) {
-            modoSeleccionado = radioButtons[i].value;
-            break;
-        }
-    }
-
-    return modoSeleccionado;
-}
 
 function getDataRemanente_seguros(proyecto, condominio){
     
@@ -355,13 +336,12 @@ function getDataRemanente_seguros(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasRemanenteContraloria/" ,
+            url: general_base_url + "SegurosComision/getDatosNuevasRemanenteSeguros/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
-                condominio : condominio,
-                modoSubida : modoSubidaSeleccionado
+                condominio : condominio
             }
         },
     });

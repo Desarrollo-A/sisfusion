@@ -15,10 +15,7 @@ $(document).ready(function() {
         $("#proyectoFactura_seguros").selectpicker('refresh');
     }, 'json');
 
-    $('input[name="modoSubida"]').change(function() {
-        getDataFacturaSeguros(proyecto, condominio);
 
-    });
 });
 
 $('#proyectoFactura_seguros').change(function(){
@@ -354,13 +351,12 @@ function getDataFacturaSeguros(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasFacturasContraloria/" ,
+            url: general_base_url + "SegurosComision/getDatosNuevasFacturasSeguros/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
-                condominio : condominio,
-                modoSubida: modoSubidaSeleccionado
+                condominio : condominio
             }
         },
     });
