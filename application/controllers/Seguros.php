@@ -44,6 +44,18 @@ class Seguros extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("comisiones/colaborador/historial_seguros_contraloria_view");    
     }
+    
+    public function loadFinalPayment() {
+      $this->load->view('template/header');
+      $this->load->view("internomex/load_final_payment_seguros");
+    }
+    public function reporteLotesPorComisionista() {
+      if ($this->session->userdata('id_rol') == FALSE) {
+          redirect(base_url());
+      }
+      $this->load->view('template/header');
+      $this->load->view("comisiones/reporteLotesPorComisionistaSeguros_view");
+  }
     /**--------------------------------------- */
     public function getDatosComisionesAsesor($a)
     {
@@ -399,6 +411,29 @@ public function cargaxml2($id_user = ''){
         $dat =  $this->Seguro_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
         echo json_encode( array( "data" => $dat));
       }
-
-
+      public function getPagosFinal() {
+        $beginDate = $this->input->post('beginDate');
+        $endDate = $this->input->post('endDate');
+        $data['data'] = $this->Seguro_model->getPagosFinal($beginDate, $endDate)->result_array();
+        echo json_encode($data);
+      }
+      public function getReporteLotesPorComisionista() {
+        if (isset($_POST) && !empty($_POST)) {
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $comisionista = $this->input->post("comisionista");       
+            $tipoUsuario = $this->input->post("tipoUsuario");
+            $data['data'] = $this->Seguro_model->getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario)->result_array();
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
+    public function getOpcionesParaReporteComisionistas() {
+      $seeAll = $this->input->post("seeAll");
+      $condicionXUsuario = '';
+      if ($seeAll == 0 ){
+          $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
+      }
+      echo json_encode($this->Seguro_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
+  }
 }
