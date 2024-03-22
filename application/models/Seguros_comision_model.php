@@ -191,5 +191,12 @@ class Seguros_comision_model extends CI_Model {
         return $this->db->query("UPDATE pago_seguro_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
     }
 
+    public function get_lista_usuarios($rol, $forma_pago){
+        $cmd = "SELECT id_usuario AS idCondominio, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) AS nombre FROM usuarios WHERE id_usuario IN (SELECT id_usuario FROM pago_seguro_ind WHERE estatus IN (8,88)) AND id_rol = $rol AND forma_pago = $forma_pago ORDER BY nombre";
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+    }
+    
+
 
 }
