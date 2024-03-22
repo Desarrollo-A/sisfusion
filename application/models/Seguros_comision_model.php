@@ -182,13 +182,13 @@ class Seguros_comision_model extends CI_Model {
     }
 
     function consultaComisiones ($id_pago_is){
-        $cmd = "SELECT id_pago_i FROM pago_seguros_ind WHERE id_pago_i IN ($id_pago_is)";
+        $cmd = "SELECT id_pago_i FROM pago_seguro_ind WHERE id_pago_i IN ($id_pago_is)";
         $query = $this->db->query($cmd);
         return count($query->result()) > 0 ? $query->result_array() : 0 ; 
     }
 
     function update_acepta_INTMEX($idsol) {
-        return $this->db->query("UPDATE pago_seguros_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
     }
 
 
