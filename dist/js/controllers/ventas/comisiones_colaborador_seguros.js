@@ -162,7 +162,7 @@ $(document).ready(function () {
     var hora = hoy.getHours();
 
     if(forma_pago == 3){
-             if(tipo_usuario == 3){
+             if(tipo_usuario == 4){
 
             if (
                 [1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == fechaInicioCorteGlobal[1] && dia == fechaInicioCorteGlobal[2])  
