@@ -200,7 +200,7 @@ class Seguros_comision_model extends CI_Model {
     public function report_empresa(){
         $cmd = "SELECT SUM(pci.abono_neodata) AS porc_empresa, res.empresa
         FROM pago_seguro_ind pci 
-        INNER JOIN comisiones com  ON com.id_comision = pci.id_comision
+        INNER JOIN comisiones_seguro com  ON com.id_comision = pci.id_comision
         INNER JOIN lotes lo  ON lo.idLote = com.id_lote 
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
@@ -208,7 +208,78 @@ class Seguros_comision_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query->result_array();
     }
+
+    function getDesarrolloSelectINTMEX($a = ''){
+        if($a == ''){
+            $forma_p = $this->session->userdata('id_usuario');
+        }else{
+            $forma_p = $a;
+        }
+        return $this->db->query("SELECT res.idResidencial id_usuario, res.descripcion  AS name_user
+        FROM residenciales res WHERE res.idResidencial IN (SELECT re.idResidencial
+        FROM residenciales re
+        INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+        INNER JOIN comisiones_seguro com ON com.id_lote = lo.idLote AND com.estatus IN (1,8)
+        INNER JOIN pago_seguro_ind pci ON pci.id_comision = com.id_comision
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+        WHERE pci.estatus IN (8) and u.forma_pago=$forma_p GROUP BY re.idResidencial)");
+    }
+
+    function getPagosByProyect($proyect = '',$formap = ''){
+        if(!empty($proyect)){
+            $id = $proyect;
+            $forma = $formap;
+        }else{
+            $id = 0;
+        }
+        
+        $datos =array();
+        $suma =  $this->db->query("SELECT sum(pci.abono_neodata) AS suma
+        FROM residenciales re
+        INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+        INNER JOIN comisiones_seguro com ON com.id_lote = lo.idLote AND com.estatus IN (1,8)
+        INNER JOIN pago_seguro_ind pci ON pci.id_comision = com.id_comision
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+        WHERE pci.estatus IN (8) and u.forma_pago=$formap and re.idResidencial=$id")->result_array();
+        
+        $ids = $this->db->query("SELECT pci.id_pago_i
+        FROM residenciales re
+        INNER JOIN condominios co ON re.idResidencial = co.idResidencial
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio
+        INNER JOIN comisiones_seguro com ON com.id_lote = lo.idLote AND com.estatus IN (1,8)
+        INNER JOIN pago_seguro_ind pci ON pci.id_comision = com.id_comision
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario 
+        WHERE pci.estatus IN (8) and u.forma_pago=$forma and re.idResidencial=$id")->result_array();
+        $datos[0]=$suma;
+        $datos[1]=$ids;
+        return $datos;
+    }
+
+    function update_estatus_pausa($id_pago_i, $obs, $estatus) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+    }
+
+    function update_estatus_despausa($id_pago_i, $obs, $estatus) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE ACTIVÓ COMISIÓN, MOTIVO: ".$obs."')");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+    }
+
+    function update_estatus_edit($id_pago_i, $obs) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
+        return $this->db->query("UPDATE pago_seguro_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+    }
     
+    public function registroComisionAsimilados($id_pago){
+        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
+        $query = $this->db->query($cmd);
+        return  $query->result_array();
+    }
 
 
 }
