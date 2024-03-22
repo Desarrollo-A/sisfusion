@@ -34,7 +34,7 @@ $('#catalogo_remanente_intmexSeguros').change(function(ruta){
     rol = $('#catalogo_remanente_intmexSeguros').val();
     $("#usuario_remanente_intmexSeguros").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Pagos/lista_usuarios/',
+        url: general_base_url+'SegurosComision/lista_usuarios/',
         type: 'post',
         data: {
             "rol":    rol,

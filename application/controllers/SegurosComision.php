@@ -118,6 +118,13 @@ class SegurosComision extends CI_Controller
       }
   }
 
+  public function lista_usuarios(){
+    $rol = $this->input->post("rol");
+    $forma_pago = $this->input->post("forma_pago");
+    $respuesta = $this->Seguros_comision_model->get_lista_usuarios($rol,$forma_pago);
+    echo json_encode($respuesta);
+  }
+
   public function pago_internomex(){
     $id_pago_is = $this->input->post('idcomision');  
     $consulta_comisiones = $this->Seguros_comision_model->consultaComisiones($id_pago_is);

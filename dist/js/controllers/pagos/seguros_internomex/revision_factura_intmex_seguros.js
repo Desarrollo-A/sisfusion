@@ -34,7 +34,7 @@ $('#catalogo_factura_intmex_seguros').change(function(ruta){
     rol = $('#catalogo_factura_intmex_seguros').val();
     $("#usuario_factura_intmex_seguros").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url+'Pagos/lista_usuarios/',
+        url: general_base_url+'SegurosComision/lista_usuarios/',
         data:{
             rol: rol,
             forma_pago: 2

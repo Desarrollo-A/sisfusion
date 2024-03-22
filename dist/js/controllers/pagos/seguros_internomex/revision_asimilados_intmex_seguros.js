@@ -20,7 +20,7 @@ $('#puestoAsimilados_intmexSeguros').change(function(ruta){
     rol = $('#puestoAsimilados_intmexSeguros').val();
     $("#usuarioAsimilados_intmexSeguros").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url +'Pagos/lista_usuarios',
+        url: general_base_url +'SegurosComision/lista_usuarios',
         type: 'post',
         data:  { 
             "rol":    rol, 
