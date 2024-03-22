@@ -448,7 +448,7 @@ $("#form_interes").submit( function(e) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/despausar_solicitud",
+            url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,
             cache: false,
             contentType: false,
@@ -489,7 +489,7 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples_intmexA_seguros .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Intmex_seguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
     $("#modal_multiples_intmexA_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
-    $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
+    $.post(general_base_url + 'SegurosComision/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -515,7 +515,7 @@ $(document).on("click", ".Pagar", function() {
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
 
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
+        $.getJSON(general_base_url + "SegurosComision/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
             if (!data) {
                 $("#modal_multiples_intmexA_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
@@ -641,7 +641,7 @@ $("#form_multiples").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
-            url: general_base_url + "Pagos/IntMexPagadosByProyect",
+            url: general_base_url + "SegurosComision/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,
