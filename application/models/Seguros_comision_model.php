@@ -196,6 +196,18 @@ class Seguros_comision_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query->result_array();
     }
+
+    public function report_empresa(){
+        $cmd = "SELECT SUM(pci.abono_neodata) AS porc_empresa, res.empresa
+        FROM pago_seguro_ind pci 
+        INNER JOIN comisiones com  ON com.id_comision = pci.id_comision
+        INNER JOIN lotes lo  ON lo.idLote = com.id_lote 
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales res ON res.idResidencial = con.idResidencial 
+        WHERE pci.estatus IN (8) GROUP BY res.empresa";
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+    }
     
 
 

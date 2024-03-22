@@ -168,6 +168,10 @@ class SegurosComision extends CI_Controller
       }
   }
 
+  public function getReporteEmpresa(){
+    echo json_encode($this->Pagos_model->report_empresa());
+  }
+
 
 
 
