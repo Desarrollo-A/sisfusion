@@ -120,7 +120,7 @@ class SegurosComision extends CI_Controller
 
   public function pago_internomex(){
     $id_pago_is = $this->input->post('idcomision');  
-    $consulta_comisiones = $this->Pagos_model->consultaComisiones($id_pago_is);
+    $consulta_comisiones = $this->Seguros_comision_model->consultaComisiones($id_pago_is);
 
       if( $consulta_comisiones != 0 ){
         $id_user_Vl = $this->session->userdata('id_usuario');
@@ -143,8 +143,8 @@ class SegurosComision extends CI_Controller
           }
           $id_pago_i = rtrim($id_pago_i, $sep);
             
-            $up_b = $this->Pagos_model->update_acepta_INTMEX($id_pago_i);
-            $ins_b = $this->Pagos_model->insert_phc($data);
+            $up_b = $this->Seguros_comision_model->update_acepta_INTMEX($id_pago_i);
+            $ins_b = $this->Seguros_comision_model->insert_phc($data);
       
       if($up_b == true && $ins_b == true){
         $data_response = 1;

@@ -7,7 +7,7 @@ class Seguros_comision_model extends CI_Model {
         parent::__construct();
     }
 
-    //asimilados cambiar la query
+    //asimilados
 
     function getDatosNuevasAsimiladosSeguros($proyecto, $condominio){
 
@@ -79,15 +79,14 @@ class Seguros_comision_model extends CI_Model {
                 $whereFiltro = "AND co.idCondominio  = $condominio";       
         }
 
-            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,' (',com.loteReubicado,')') 
-            ELSE lo.nombreLote END) lote,(CASE WHEN com.ooam = 1 THEN ' (OOAM)' ELSE oxcest.nombre END) estatus_actual, re.nombreResidencial AS proyecto, 
+            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote,oxcest.nombre estatus_actual, re.nombreResidencial AS proyecto, 
             lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, pci2.abono_neodata impuesto, 0 dcto, 0 valimpuesto, pci2.estatus, 
             CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto,
             0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia, u.rfc, 
             (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion,
             CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal 
             FROM pago_seguro_ind pci2
-            INNER JOIN comisiones com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8) 
+            INNER JOIN comisiones_seguro com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8) 
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (1,0) 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente 
@@ -103,7 +102,7 @@ class Seguros_comision_model extends CI_Model {
             GROUP BY pci2.id_comision, 
             lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, pci2.id_usuario,
             u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, 
-            oprol2.nombre, cl.estructura, com.loteReubicado,com.ooam, pl.descripcion, cl.plan_comision, cl.fechaApartado, sed.nombre, oest.nombre";
+            oprol2.nombre, cl.estructura, pl.descripcion, cl.plan_comision, cl.fechaApartado, sed.nombre, oest.nombre";
 
             $query = $this->db->query($cmd);
             return $query->result_array();
@@ -127,14 +126,14 @@ class Seguros_comision_model extends CI_Model {
                 $whereFiltro = "AND co.idCondominio  = $condominio";       
         }
 
-            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, (CASE WHEN com.ooam = 2 THEN CONCAT(lo.nombreLote,'</b> <i>(',com.loteReubicado,')</i><b>') ELSE lo.nombreLote END) lote,(CASE WHEN com.ooam = 1 THEN ' (OOAM)' ELSE oxcest.nombre END) estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
+            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote, oxcest.nombre estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
             com.comision_total, com.porcentaje_decimal, 
             pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, 
             pci2.abono_neodata impuesto, 
             0 dcto, 0 valimpuesto,
             pci2.estatus, CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal
             FROM pago_seguro_ind pci2 
-            INNER JOIN comisiones com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8)
+            INNER JOIN comisiones_seguro com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8)
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (1,0) 
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
@@ -183,13 +182,13 @@ class Seguros_comision_model extends CI_Model {
     }
 
     function consultaComisiones ($id_pago_is){
-        $cmd = "SELECT id_pago_i FROM pago_seguros_ind WHERE id_pago_i IN ($id_pago_is)";
+        $cmd = "SELECT id_pago_i FROM pago_seguro_ind WHERE id_pago_i IN ($id_pago_is)";
         $query = $this->db->query($cmd);
         return count($query->result()) > 0 ? $query->result_array() : 0 ; 
     }
 
     function update_acepta_INTMEX($idsol) {
-        return $this->db->query("UPDATE pago_seguros_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = 11, aply_pago_intmex = GETDATE(),modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idsol.")");
     }
 
 
