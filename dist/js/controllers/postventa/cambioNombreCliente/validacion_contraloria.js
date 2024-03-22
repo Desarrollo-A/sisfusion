@@ -88,6 +88,12 @@ function fillTable() {
             { data: 'fechaUltimoEstatus' },
             {
                 data: function (d) {
+                    let comentario = (d.comentario == '' || d.comentario == null || d.comentario == 'NULL') ? '--' : d.comentario;
+                    return `${comentario}`;
+                },
+            },
+            {
+                data: function (d) {
                     let btnAceptar = `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Aceptar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1"><i class="fas fa-thumbs-up"></i></button>`;
                     let btnRechazar = `<button class="btn-data btn-warning btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Rechazar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="0"><i class="fas fa-thumbs-down"></i></button>`;
                     return `<div class="d-flex justify-center">${btnAceptar} ${btnRechazar}</div>`;
@@ -123,6 +129,7 @@ $(document).on('click', '.btn-avanzar', function () {
     $('#idClienteA').val($(this).attr('data-idCliente'));
     $('#tipoTransaccionA').val($(this).attr('data-tipoTransaccion'));
     $('#tipo').val($(this).attr('data-tipo'));
+    $('#comentarioAvanzar').val('');
     $('#avance').modal();
 })
 

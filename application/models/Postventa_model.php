@@ -1421,7 +1421,9 @@ function checkBudgetInfo($idSolicitud){
                 cxl.nombre nombreCteNuevo,
                 cxl.apellido_paterno apCteNuevo,
                 cxl.apellido_materno amCteNuevo,
-                cxl.tipoTramite idTipoTramite
+                cxl.tipoTramite idTipoTramite, 
+                lo.comentario,
+                lo.totalNeto2 as precioFinalLote
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio $validacionCondminio
@@ -1473,7 +1475,8 @@ function checkBudgetInfo($idSolicitud){
                 cxl.apellido_paterno apCteNuevo,
                 cxl.apellido_materno amCteNuevo,
                 cxl.tipoTramite idTipoTramite,
-                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus
+                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
+                lo.comentario
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -1548,7 +1551,8 @@ function checkBudgetInfo($idSolicitud){
                 oxc0.nombre estatusProceso,
                 lo.estatusCambioNombre,
                 cxl.tipoTramite idTipoTramite,
-                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus
+                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
+                lo.comentario
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
