@@ -24,15 +24,15 @@ class Reestructura_model extends CI_Model
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
             $validacionAdicional = "AND lo.estatus_preproceso IN (2)"; /* AND dxc2.flagProcesoContraloria = 0 */
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
-            $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1, 2, 3, 4, 5, 6) AND u6.id_lider = $id_lider";
+            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider = $id_lider OR lo.id_usuario_asignado = $id_lider)";
         else if ($id_rol == 3 && $tipo == 2) // GERENTE && ES OOAM
-            $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1) AND u6.id_lider = $id_usuario";
-        else if ((in_array($id_rol, array(2, 5)) && $tipo == 2) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
-            $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1)";
+            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider = $id_usuario OR lo.id_usuario_asignado = $id_usuario)";
+        else if ((in_array($id_rol, array(2, 5)) && $tipo == 2 && !in_array($id_usuario, [13589, 13549])) || $id_usuario == 1980) // SUBDIRECTOR / ASISTENTE SUBDIRECTOR && ES OOAM || ES FAB 1980
+            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7)";
         else if ($id_rol == 7 && $tipo == 2) // ASESOR && ES OOAM
             $validacionAdicional = "AND lo.id_usuario_asignado = $id_usuario AND lo.estatus_preproceso NOT IN (7)";
         else if ($id_rol == 4) // ASISTENTE SUBDIRECCION
-            $validacionAdicional = "AND lo.estatus_preproceso IN (0, 1, 2, 3, 4, 5, 6)";
+            $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7)";
         else if (in_array($id_usuario, [13589, 13549])) // SON LOS SUBDIRECTORES
             $validacionAdicional = "AND (lo.id_gerente_asignado = $id_usuario OR lo.id_subdirector_asignado = $id_usuario)";
         else if ($id_rol == 5 && in_array($id_lider, [13589, 13549])) // SON LAS ASISTENTES DE SUBDIRECCIÓN
@@ -63,7 +63,7 @@ class Reestructura_model extends CI_Model
         ISNULL(dxc2.flagProcesoContraloria, 0) flagProcesoContraloria, ISNULL(dxc2.flagProcesoJuridico, 0) flagProcesoJuridico, 
         dxc2.cantidadTraspaso, dxc2.comentario comentarioTraspaso, hpl3.fechaUltimoEstatus, lo.fechaVencimiento, ISNULL(pxl4.id_lotep, 0) lotePreseleccionado, ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLotePreseleccionado,
         CASE WHEN ISNULL(dxc2.banderaProcesoUrgente, 0) = 0 THEN 'NO APLICA' ELSE 'URGENTE' END banderaProcesoUrgenteTexto,
-        ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente
+        ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente, HD.bucket
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
@@ -103,7 +103,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion != 2")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2,0) AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {

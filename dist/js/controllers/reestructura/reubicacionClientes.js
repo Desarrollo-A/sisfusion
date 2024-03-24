@@ -1742,7 +1742,7 @@ let BUTTONREGRESO = '';
 
         return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
-    if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
+    if (idEstatusPreproceso === 3 && (id_rol_general == 6 || id_rol_general == 5)) // Asistente gerente / subdirector: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
         return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
