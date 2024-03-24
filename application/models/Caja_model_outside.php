@@ -176,7 +176,7 @@
         $query = $this->db->query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = " . $datos['idCondominio'] . " and nombreLote = '" . $datos['nombreLote'] . "' and status = 1");
 
         foreach ($query->result_array() as $row) {
-            $this->db->query("UPDATE lotes SET precio = " . $datos['precio'] . ", 
+            $this->db->query("UPDATE lotes SET usuario = 'CAJA', precio = " . $datos['precio'] . ", 
                 total = (" . $datos['precio'] * $row['sup'] . "), 
                 enganche = (" . $datos['precio'] * $row['sup'] . " * 0.1), 
                 saldo = (" . $datos['precio'] * $row['sup'] . " - (" . $datos['precio'] * $row['sup'] . " * 0.1))
@@ -1393,10 +1393,11 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 2411) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
         WHEN us.id_lider = 7886 THEN 5
+        WHEN us.id_lider = 690 THEN 6626
         ELSE 0 END) id_regional,
 		CASE 
 		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 7092) THEN 3
