@@ -158,7 +158,7 @@ class Comisiones extends CI_Controller
     switch($this->session->userdata('id_rol')){
       case '1':
       case '2':
-        if ($this->session->userdata('id_usuario') == 13546) // ALEJANDRO GONZÁLEZ DÁVALOS
+        if (in_array($this->session->userdata('id_usuario'),[13546, 13549, 13589])) // ALEJANDRO GONZÁLEZ DÁVALOS
           $this->load->view("ventas/comisiones_colaborador", $datos);
         else
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
