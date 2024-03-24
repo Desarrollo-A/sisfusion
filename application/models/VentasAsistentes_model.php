@@ -354,7 +354,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509";
                     $filtroSede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 674)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 3111)";
