@@ -68,7 +68,7 @@ $('#tabla_asimilados_seguros thead tr:eq(0) th').each(function (i) {
             }
         });
     }else {
-        $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
+        $(this).html('<input id="all_seguros" type="checkbox" style="width:20px; height:20px;" onchange="selectAllSeguros(this)"/>');
     }
 });
 
@@ -145,7 +145,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                             if(data == 1) {
                                 $('#spiner-loader').addClass('hide');
                                 $("#autorizarAsimilados_seguros").html(formatMoney(0));
-                                $("#all").prop('checked', false);
+                                $("#all_seguros").prop('checked', false);
                                 var fecha = new Date();
                                 tabla_asimilados_seguros.ajax.reload();
                                 var mensaje = "Comisiones de esquema <b>asimilados</b>, fueron enviadas a <b>INTERNOMEX</b> correctamente.";
@@ -518,9 +518,9 @@ $(document).on("click", ".checkPagosIndividual", function() {
             totaPago_asimilados_seguros += parseFloat(row.impuesto); 
         }
         if( totalChecados.length == totalCheckbox.length )
-            $("#all").prop("checked", true);
+            $("#all_seguros").prop("checked", true);
         else 
-            $("#all").prop("checked", false);
+            $("#all_seguros").prop("checked", false);
     });
     $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago_asimilados_seguros)));
 });
