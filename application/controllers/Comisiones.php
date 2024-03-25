@@ -450,6 +450,13 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/ventas_canceladas");
   }
 
+  public function canceladas()
+  {
+      $this->load->view('template/header');
+      $this->load->view("comisiones/canceladas_view");
+  }
+
+
   public function reporteDevolucion(){
     $this->load->view('template/header');
     $this->load->view("comisiones/reporte_devolucion_view");
@@ -4370,158 +4377,157 @@ public function getUsersClient($lote,$compartida,$TipoVenta,$LupgarP,$mdb,$ismkt
 }
  
 
-     public function InsertNeo(){
-      $lote_1 =  $this->input->post("idLote");
-      $bonificacion =  $this->input->post("bonificacion");
-      $penalizacion = $this->input->post("penalizacion");
-      $nombreLote =  $this->input->post("nombreLote");
-      $disparador =  $this->input->post("id_disparador");
-      $ooam = $this->input->post("ooamValor");
-      $nombreOtro = $this->input->post("nombreOtro");
 
-      $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
-      $totalFilas = $responses->num_rows(); 
- 
-      if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
-        // echo "entra a primera";
-        // INICIA PRIMERA VALIDACION DE DISPERSION
-        $this->db->trans_begin();
-        $replace = [",","$"];
-        $id_usuario = $this->input->post("id_usuario[]");
-        $comision_total = $this->input->post("comision_total[]");
-        $porcentaje = $this->input->post("porcentaje[]");
-        $id_rol = $this->input->post("id_rol[]");
-        $comision_abonada = $this->input->post("comision_abonada[]");
-        $comision_pendiente = $this->input->post("comision_pendiente[]");
-        $comision_dar = $this->input->post("comision_dar[]");
-        $pago_neo = $this->input->post("pago_neo");
-        $porcentaje_abono = $this->input->post("porcentaje_abono");
-        $abonado = $this->input->post("abonado");
-        $total_comision = $this->input->post("total_comision");
-        $pendiente = $this->input->post("pendiente");
-        $idCliente = $this->input->post("idCliente");
-        $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
-        $lugar_p = $this->input->post('lugar_p');
-        $totalNeto2 = $this->input->post('totalNeto2');
-        $plan_comision = $this->input->post('plan_c');
-        $banderita = 0;
-        $PorcentajeAsumar=0;
-        $porsicionAsesor = '';
-        for ($l=0; $l < count($id_rol) ; $l++) { 
-            if($id_rol[$l] == 7 || $id_rol[$l] == '7'){
-              $porsicionAsesor = $l;
-            }
+public function InsertNeo(){
+  $lote_1 =  $this->input->post("idLote");
+  $bonificacion =  $this->input->post("bonificacion");
+  $penalizacion = $this->input->post("penalizacion");
+  $nombreLote =  $this->input->post("nombreLote");
+  $disparador =  $this->input->post("id_disparador");
+  $ooam = $this->input->post("ooamValor");
+  $nombreOtro = $this->input->post("nombreOtro");
+
+  $responses = $this->Comisiones_model->validateDispersionCommissions($lote_1);
+  $totalFilas = $responses->num_rows(); 
+
+  if((!empty($responses) && $totalFilas == 0 && ($disparador == '0' || $disparador == 0))||($disparador == '1' || $disparador == 1)||($disparador == '' || $disparador == 3)) {
+    // echo "entra a primera";
+    // INICIA PRIMERA VALIDACION DE DISPERSION
+    $this->db->trans_begin();
+    $replace = [",","$"];
+    $id_usuario = $this->input->post("id_usuario[]");
+    $comision_total = $this->input->post("comision_total[]");
+    $porcentaje = $this->input->post("porcentaje[]");
+    $id_rol = $this->input->post("id_rol[]");
+    $comision_abonada = $this->input->post("comision_abonada[]");
+    $comision_pendiente = $this->input->post("comision_pendiente[]");
+    $comision_dar = $this->input->post("comision_dar[]");
+    $pago_neo = $this->input->post("pago_neo");
+    $porcentaje_abono = $this->input->post("porcentaje_abono");
+    $abonado = $this->input->post("abonado");
+    $total_comision = $this->input->post("total_comision");
+    $pendiente = $this->input->post("pendiente");
+    $idCliente = $this->input->post("idCliente");
+    $tipo_venta_insert = $this->input->post('tipo_venta_insert'); 
+    $lugar_p = $this->input->post('lugar_p');
+    $totalNeto2 = $this->input->post('totalNeto2');
+    $plan_comision = $this->input->post('plan_c');
+    $banderita = 0;
+    $PorcentajeAsumar=0;
+    $porsicionAsesor = '';
+    for ($l=0; $l < count($id_rol) ; $l++) { 
+        if($id_rol[$l] == 7 || $id_rol[$l] == '7'){
+          $porsicionAsesor = $l;
         }
-        if($porsicionAsesor != ''){
-          $validarAsesor = $this->Comisiones_model->validateComisionAsesor($id_usuario[$porsicionAsesor],$lote_1);
-          if($validarAsesor[0]['comisiones'] > 0){
-            $respuesta[0] = 2;
-            echo json_encode( $respuesta );
-            exit;
-          }
-        }
-
-
-        // 1.- validar tipo venta
-        if($tipo_venta_insert <= 6 || $tipo_venta_insert == 11 || $tipo_venta_insert == 13){
-          if($porcentaje_abono < 8){
-            $PorcentajeAsumar = 8 - $porcentaje_abono;
-            $banderita=1;
-            $porcentaje_abono =8;
-          }
-        }
-
-        $tipo_venta_insert = $plan_comision;
-        $pivote=0;
-
-        for ($i=0; $i <count($id_usuario) ; $i++) { 
-
-          if($banderita == 1 && $id_rol[$i] == 45){
-            $banderita=0;
-            $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
-            $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
-          }
-
-          if($id_rol[$i] == 1){
-            $pivote=str_replace($replace,"",$comision_total[$i]);
-          }
-
-          if($penalizacion == 1 && ($id_rol[$i] == 3 || $id_rol[$i] == 7 || $id_rol[$i] == 9)){
-            $respuesta = $this->Comisiones_model->InsertNeoPenalizacion($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$nombreLote);
-          } else{
-            $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
-          }
-          // echo '<br>'.$respuesta.'<br>';
-        }
-        
-        $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-        $respuesta = $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
-        
-        $banderita = in_array($plan_comision,array(64,65,66)) ? 0 : $banderita;
-        if($banderita == 1){
-          $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
-          $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
-        }
-        //TERMINA PRIMERA VALIDACION DE DISPERSION
-
-        if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
-          $this->db->trans_rollback();
-          $respuesta = false;
-        }else{
-          $this->db->trans_commit();
-          $respuesta = true;
-        }
-      
-      } else if($responses->row()->bandera == 0 && ($disparador == '2' || $disparador == 2)){
-        $this->db->trans_begin();
-        $lote_1 =  $this->input->post("idLote");
-        $pending_1 =  $this->input->post("pending");
-        $abono_nuevo = $this->input->post("abono_nuevo[]");
-        $val_rol = $this->input->post("id_rol[]");
-        $id_usuario = $this->input->post("id_usuario[]");
-        $id_comision = $this->input->post("id_comision[]");
-        $pago = $this->input->post("pago_neo");
-        $idCliente = $this->input->post("idCliente");
-
-        $suma = 0;
-        $replace = [",","$"];
-        
-        for($i=0;$i<sizeof($id_comision);$i++){
-          $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-          
-          if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
-            $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
-          }else{
-            $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
-          }
-        }
-        
-        for($i=0;$i<sizeof($abono_nuevo);$i++){
-          $var_n = str_replace($replace,"",$abono_nuevo[$i]);
-          $suma = $suma + $var_n;
-        }
-        
-        $resta = $pending_1 - $pago;
-        if($suma > 0){
-          $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
-          $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
-        }
-
-        if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
-          $this->db->trans_rollback();
-          $respuesta = false;
-        }else{
-          $this->db->trans_commit();
-          $respuesta = true;
-        }
-      }
-      else if($responses->row()->bandera != 0) {
-        $respuesta[0] = 2;
-      } else{
-        $respuesta[0] = 3;
-      } 
-    echo json_encode( $respuesta );
     }
+    if($porsicionAsesor != ''){
+      $validarAsesor = $this->Comisiones_model->validateComisionAsesor($id_usuario[$porsicionAsesor],$lote_1);
+      if($validarAsesor[0]['comisiones'] > 0){
+        $respuesta[0] = 2;
+        echo json_encode( $respuesta );
+        exit;
+      }
+    }
+    // 1.- validar tipo venta
+    if($tipo_venta_insert != 64 || $tipo_venta_insert != 65 || $tipo_venta_insert != 66){
+      if($porcentaje_abono < 8){
+        $PorcentajeAsumar = 8 - $porcentaje_abono;
+        $banderita=1;
+        $porcentaje_abono =8;
+      }
+    }
+    $tipo_venta_insert = $plan_comision;
+    $pivote=0;
+
+    for ($i=0; $i <count($id_usuario) ; $i++) { 
+
+      if($banderita == 1 && $id_rol[$i] == 45){
+        $banderita=0;
+        $comision_total[$i] = $totalNeto2 * (($porcentaje[$i] + $PorcentajeAsumar) / 100 );  
+        $porcentaje[$i] = $porcentaje[$i] + $PorcentajeAsumar;
+      }
+
+      if($id_rol[$i] == 1){
+        $pivote=str_replace($replace,"",$comision_total[$i]);
+      }
+
+      if($penalizacion == 1 && ($id_rol[$i] == 3 || $id_rol[$i] == 7 || $id_rol[$i] == 9)){
+        $respuesta = $this->Comisiones_model->InsertNeoPenalizacion($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$nombreLote);
+      } else{
+        $respuesta = $this->Comisiones_model->InsertNeo($lote_1,$id_usuario[$i],str_replace($replace,"",$comision_total[$i]),$this->session->userdata('id_usuario'),$porcentaje[$i],str_replace($replace,"",$comision_dar[$i]),str_replace($replace,"",$pago_neo),$id_rol[$i],$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
+      }
+      // echo '<br>'.$respuesta.'<br>';
+    }
+    
+    $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+    $respuesta = $this->Comisiones_model->InsertPagoComision($lote_1,str_replace($replace,"",$total_comision),str_replace($replace,"",$abonado),$porcentaje_abono,str_replace($replace,"",$pendiente),$this->session->userdata('id_usuario'),str_replace($replace,"",$pago_neo),str_replace($replace,"",$bonificacion)); 
+    
+    $banderita = in_array($plan_comision,array(64,65,66)) ? 0 : $banderita;
+    if($banderita == 1){
+      $total_com = $totalNeto2 * (($PorcentajeAsumar) / 100 );
+      $respuesta = $this->Comisiones_model->InsertNeo($lote_1,4824,$total_com,$this->session->userdata('id_usuario'),$PorcentajeAsumar,($pivote*$PorcentajeAsumar),str_replace($replace,"",$pago_neo),45,$idCliente,$tipo_venta_insert,$ooam, $nombreOtro);
+    }
+    //TERMINA PRIMERA VALIDACION DE DISPERSION
+
+    if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+      $this->db->trans_rollback();
+      $respuesta = false;
+    }else{
+      $this->db->trans_commit();
+      $respuesta = true;
+    }
+  
+  } else if($responses->row()->bandera == 0 && ($disparador == '2' || $disparador == 2)){
+    $this->db->trans_begin();
+    $lote_1 =  $this->input->post("idLote");
+    $pending_1 =  $this->input->post("pending");
+    $abono_nuevo = $this->input->post("abono_nuevo[]");
+    $val_rol = $this->input->post("id_rol[]");
+    $id_usuario = $this->input->post("id_usuario[]");
+    $id_comision = $this->input->post("id_comision[]");
+    $pago = $this->input->post("pago_neo");
+    $idCliente = $this->input->post("idCliente");
+
+    $suma = 0;
+    $replace = [",","$"];
+    
+    for($i=0;$i<sizeof($id_comision);$i++){
+      $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+      
+      if($penalizacion == 1 && ($val_rol[$i] == 3 || $val_rol[$i] == 7 || $val_rol[$i] == 9)){
+        $respuesta = $this->Comisiones_model->insert_penalizacion_individual($id_comision[$i], $id_usuario[$i], $val_rol[$i], $var_n, $pago, $idCliente);
+      }else{
+        $respuesta = $this->Comisiones_model->insert_dispersion_individual($id_comision[$i], $id_usuario[$i], $var_n, $pago);
+      }
+    }
+    
+    for($i=0;$i<sizeof($abono_nuevo);$i++){
+      $var_n = str_replace($replace,"",$abono_nuevo[$i]);
+      $suma = $suma + $var_n;
+    }
+    
+    $resta = $pending_1 - $pago;
+    if($suma > 0){
+      $respuesta = $this->Comisiones_model->UpdateLoteDisponible($lote_1);
+      $respuesta = $this->Comisiones_model->update_pago_dispersion($suma, $lote_1, $pago);
+    }
+
+    if ($respuesta === FALSE || $this->db->trans_status() === FALSE){
+      $this->db->trans_rollback();
+      $respuesta = false;
+    }else{
+      $this->db->trans_commit();
+      $respuesta = true;
+    }
+  }
+  else if($responses->row()->bandera != 0) {
+    $respuesta[0] = 2;
+  } else{
+    $respuesta[0] = 3;
+  } 
+echo json_encode( $respuesta );
+}
+
 
   
     public function porcentajes(){
