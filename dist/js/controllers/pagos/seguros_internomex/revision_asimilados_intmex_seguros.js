@@ -20,7 +20,7 @@ $('#puestoAsimilados_intmexSeguros').change(function(ruta){
     rol = $('#puestoAsimilados_intmexSeguros').val();
     $("#usuarioAsimilados_intmexSeguros").empty().selectpicker('refresh');
     $.ajax({
-        url: general_base_url +'Pagos/lista_usuarios',
+        url: general_base_url +'SegurosComision/lista_usuarios',
         type: 'post',
         data:  { 
             "rol":    rol, 
@@ -103,7 +103,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                     var com2 = new FormData();
                     com2.append("idcomision", idcomision); 
                     $.ajax({
-                        url : general_base_url + 'Pagos/pago_internomex/',
+                        url : general_base_url + 'SegurosComision/pago_internomex/',
                         data: com2,
                         cache: false,
                         contentType: false,
@@ -338,11 +338,11 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/",
+            url: general_base_url + "SegurosComision/getDatosNuevasAsimiladosSeguros/",
             type: "POST",
             cache: false,
             data: {
-                puesto:    proyecto,
+                puesto:  proyecto,
                 usuario: condominio
             }
         },
@@ -448,7 +448,7 @@ $("#form_interes").submit( function(e) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/despausar_solicitud",
+            url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,
             cache: false,
             contentType: false,
@@ -489,7 +489,7 @@ $(document).on("click", ".Pagar", function() {
     $("#modal_multiples_intmexA_seguros .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Intmex_seguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
     $("#modal_multiples_intmexA_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
-    $.post(general_base_url + 'Pagos/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
+    $.post(general_base_url + 'SegurosComision/getDesarrolloSelectINTMEX/', {desarrollo: 3 } ,function(data) {
         var len = data.length;
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_usuario'];
@@ -515,7 +515,7 @@ $(document).on("click", ".Pagar", function() {
         var combo = document.getElementById("desarrolloSelect");
         var selected = combo.options[combo.selectedIndex].text;
 
-        $.getJSON(general_base_url + "Pagos/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
+        $.getJSON(general_base_url + "SegurosComision/getPagosByProyect/"+valorSeleccionado+'/'+3).done(function(data) {
             let sumaComision = 0;
             if (!data) {
                 $("#modal_multiples_intmexA_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
@@ -626,7 +626,7 @@ function selectAllIntmexSeguros(e) {
 }
 
 $(document).ready( function(){
-    $.getJSON( general_base_url + "Pagos/getReporteEmpresa").done( function( data ){
+    $.getJSON( general_base_url + "SegurosComision/getReporteEmpresa").done( function( data ){
         $(".report_empresa").html();
         $.each( data, function( i, v){
             $(".report_empresa").append('<div class="col xol-xs-3 col-sm-3 col-md-3 col-lg-3"><label style="color: #00B397;">&nbsp;'+v.empresa+': $<input style="border-bottom: none; border-top: none; border-right: none;  border-left: none; background: white; color: #00B397; font-weight: bold;" value="'+formatMoney(v.porc_empresa)+'" disabled="disabled" readonly="readonly" type="text"  name="myText_FRO" id="myText_FRO"></label></div>');
@@ -641,7 +641,7 @@ $("#form_multiples").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         $.ajax({
-            url: general_base_url + "Pagos/IntMexPagadosByProyect",
+            url: general_base_url + "SegurosComision/IntMexPagadosByProyect",
             data: data,
             cache: false,
             contentType: false,

@@ -334,7 +334,7 @@ class Reestructura_model extends CI_Model
         $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
 
         if(!in_array($row[0]['registro_comision'],array(7))){
-            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
+            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'],0)->result_array();
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
 
             if(in_array($row[0]['registro_comision'],array(8,0))){
