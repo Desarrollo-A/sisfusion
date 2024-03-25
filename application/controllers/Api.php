@@ -1566,10 +1566,15 @@ class Api extends CI_Controller
                         $dataReturn3 = json_decode(file_get_contents("php://input"));
                         $dataReturn = json_decode(file_get_contents("php://input"));
                         // se valida que datos no sean isset 
-                        // echo($dataReturn);
-                        // var_dump($dataReturn3->seguros);
-                        //echo($dataReturn);
-                        // var_dump(count($dataReturn3->seguros));
+
+                        if($dataReturn3 != NULL){
+                            echo json_encode(array("status" => 5000, "message" => " 5225552."), JSON_UNESCAPED_UNICODE);
+
+                            var_dump($dataReturn3->seguros);
+                        if($dataReturn3->seguros != undefined){
+                            echo json_encode(array("status" => 5000, "message" => " requeridos."), JSON_UNESCAPED_UNICODE);
+                        }
+
                         if(count($dataReturn3->seguros) > 0 &&  count($dataReturn3->seguros) == 1 ){
                             $bandera_array_vacio = 2;
                                 // AQUI VA CUANDO SE TIENE UNO DIRECTO
@@ -1919,6 +1924,10 @@ class Api extends CI_Controller
 
                             }
                         }
+                        }else{
+                            echo json_encode(array("status" => 900, "message" => "La información como se envia es posible que no tenga la forma correcta. Revisar el manual."), JSON_UNESCAPED_UNICODE);
+                        }
+                        
                     } else
                         {echo json_encode($arrayRespuesta );
 
