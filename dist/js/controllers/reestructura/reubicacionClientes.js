@@ -724,7 +724,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    const idProyecto = $(this).attr("data-idProyecto");
+    const idProyecto = $(this).attr("data-idproyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
@@ -915,9 +915,9 @@ $(document).on("change", "#loteAOcupar", function(e){
         arrayProyIdProp.push(idProyectoRE);
 
         numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
-        mensajeMaxLotes = '';
-    }else{
         mensajeMaxLotes = ' más de tres lotes';
+    }else{
+        mensajeMaxLotes = ' ';
     }
 
     if ($itself.val() === '') {
@@ -944,7 +944,7 @@ $(document).on("change", "#loteAOcupar", function(e){
             return;
     }else{
         let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
-        if(conteoRepeticiones>=2 && idProyectoCO==21){
+        if(conteoRepeticiones > 2 && idProyectoCO==21){
             alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
             return;
         }
@@ -1115,8 +1115,14 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
+<<<<<<< HEAD
+                        <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">
+                        
+                        <span class="w-100 d-flex justify-between"> 
+=======
                         <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">                        
                         <span class="w-100 d-flex justify-between">
+>>>>>>> 1338f1e8f7d06b3f79fa391473daf769a3fd046f
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
                         </span>
                         <span class="w-100 d-flex justify-between">
@@ -1280,11 +1286,12 @@ $(document).on('click', '.btn-avanzar', async function () {
             const dataFusionDes = await totalSuperficieFusion(idLote, 3);
             //AA: Obtenemos la superfices de origen y destino de la fusión.
             let separador=', ';
+            console.log(dataFusionDes);
             dataFusionDes.data.forEach((fusionLotes, index) => {
                 separador = (index==0) ? '' : ', ';
                 if(fusionLotes.origen == 1){
                     sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
-                    nombreLote += separador+fusionLotes.nombreLotes;
+                    nombreLote += separador+fusionLotes.nombreLoteDO;
                 }
                 else{
                     sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
@@ -1625,12 +1632,16 @@ const botonesAccionReubicacion = (d) => {
                     <i class="fas fa-map-marker"></i>
                 </button>`;
 
-    const BTN_DESHACER_REESTRUCURA = `<button class="btn-data btn-warning deshacer-reestructura"
+    const BTN_DESHACER_PREPROCESO = `<button class="btn-data btn-warning deshacer-preproceso"
                     data-toggle="tooltip" 
                     data-placement="left"
-                    title="DESHACER LA REESTRUCTURA"
+                    title="DESHACER PREPROCESO"
                     data-idCliente="${d.idCliente}"
-                    data-idLote="${d.idLote}">
+                    data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
+                    data-flagFusion='${flagFusion}'
+                    ${botonFusionadoEstatus}
+                    >
                     <i class="fa fa-reply"></i>
                 </button>`;
     const BTN_REUBICACION = `
@@ -1691,25 +1702,25 @@ const botonesAccionReubicacion = (d) => {
 let BUTTONREGRESO = '';
 
     if(d.idStatusLote == 17)
-        BUTTONREGRESO = BTN_DESHACER_REESTRUCURA;
+        BUTTONREGRESO = BTN_DESHACER_PREPROCESO;
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
         return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASANLUIS) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
-            return BTN_PROPUESTAS + BTN_INFOCLIENTE;
+            return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
         else if (d.idLoteXcliente == null && d.idStatusLote == 17){
             return BTN_INFOCLIENTE + BUTTONREGRESO;
         }
         else if (d.idLoteXcliente != null && d.idStatusLote != 17)
-            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
         else
             return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }
     if (idEstatusPreproceso === 1 && id_rol_general == 7){ // EEC: Ver/Editar la información del cliente
         return BTN_INFOCLIENTE;
-    }
+    } 
 
     if (idEstatusPreproceso === 2 && ROLES_PERMITIDOS_CONTRALORIA.includes(id_rol_general) && FLAGPROCESOCONTRALORIA === 0) { // Contraloría: ELABORACIÓN DE CORRIDAS
         if(flagFusion==1){
@@ -2008,25 +2019,32 @@ const obtenerSedesLista = () =>{
     });
 }
 
-$(document).on('click', '.deshacer-reestructura', function(){
+
+$(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
     let id_lote = $(this).attr('data-idlote');
+    let nombre_lote = $(this).attr('data-nombreLote');
+    let flag_fusion = $(this).attr('data-flagFusion');
+
     let arrayManejo = [];
     arrayManejo['id_lote'] = id_lote;
     arrayManejo['id_cliente'] = id_cliente;
+    arrayManejo['flag_fusion'] = flag_fusion;
     arrayDeshacerRees.push(arrayManejo);
-    $('#tituloDeshacer').text('¿Deseas deshacer la reestrucura del lote '+ id_lote + ' ?' );
-    $('#textDeshacer').text('Se revertiran los cambios al hacer este lote como reestrucura');
-    $('#deshacerReestrucura').modal('toggle');
+    
+    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ nombre_lote + ' ?' );
+    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borrará(n) reubicaciones, reestructura o fusiones realizadas');
+    $('#deshacerPreproceso').modal('toggle');
 });
 
-$(document).on('click', '#deshacerReestrucuraOK', function () {
-    $('#deshacerReestrucura').modal('toggle');
+$(document).on('click', '#deshacerPreprocesoOK', function () {
+    $('#deshacerPreproceso').modal('toggle');
 
     let data = new FormData();
     data.append('id_cliente', arrayDeshacerRees[0]['id_cliente']);
     data.append('id_lote', arrayDeshacerRees[0]['id_lote']);
+    data.append('flag_fusion', arrayDeshacerRees[0]['flag_fusion']);
 
     $.ajax({
         url: `${general_base_url}Reestructura/deshacerReestrucura`,
@@ -2034,28 +2052,27 @@ $(document).on('click', '#deshacerReestrucuraOK', function () {
         cache: false,
         contentType: false,
         processData: false,
-        type: "POST",
+        method: "POST",
         beforeSend:function(){
             $('#spiner-loader').removeClass('hide');
         },
         success: function (response) {
-            response = JSON.parse(response);
-
-            $("#deshacerReestrucuraOK").prop("disabled", false);
-            if (response.resultado) {
+            $("#deshacerPreprocesoOK").prop("disabled", false);
+            if (response.result) {
                 alerts.showNotification("top", "right", response.message, "success");
                 $('#reubicacionClientes').DataTable().ajax.reload(null, false);
                 $("#deshacerReestrucura").modal("hide");
+                $("#spiner-loader").addClass('hide');
             }
             else
                 alerts.showNotification("top", "right", "Oops, algo salió mal. Inténtalo más tarde.", "warning");
 
 
-            $("#deshacerReestrucuraOK").prop("disabled", false);
+            $("#deshacerPreprocesoOK").prop("disabled", false);
 
         },
         error: function () {
-            $("#deshacerReestrucuraOK").prop("disabled", false);
+            $("#deshacerPreprocesoOK").prop("disabled", false);
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
