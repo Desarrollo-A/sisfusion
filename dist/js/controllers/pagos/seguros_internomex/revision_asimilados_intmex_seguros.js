@@ -300,7 +300,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 let btns = '';
 
                 const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
-                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_seguros" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
                 const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -407,7 +407,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
         });
     });
 
-    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_asimilados2_seguros.row( tr );
         id_pago_i = $(this).val();
@@ -447,7 +447,7 @@ $("#form_interes_seguros").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
-        console.log(data);
+        
         $.ajax({
             url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,
