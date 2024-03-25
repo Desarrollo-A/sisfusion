@@ -375,7 +375,7 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
             }
             else { // SON EEC
-                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
+                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider) OR asesor.id_lider = $id_lider)";
                 $filtroSede = "";
             }
             
