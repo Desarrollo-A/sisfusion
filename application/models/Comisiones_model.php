@@ -4581,7 +4581,7 @@ function getDatosGralInternomex(){
     
     public function porcentajes($clienteData, $totalNeto, $plan_comision){
 
-        if($plan_comision == 66){
+        if($plan_comision == 66 || $plan_comision == 86){
             $innerMktd = 'pl.mktd';
             $innerOtro = 'pl.otro';
             $innerOtro2 = 'pl.otro2';
@@ -4616,7 +4616,7 @@ function getDatosGralInternomex(){
             $rol7 = 'pl.otro4';
         }
 
-        if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 ){
+        if($plan_comision == 64 ||$plan_comision == 65 ||$plan_comision == 66 || $plan_comision == 84 ||$plan_comision == 85 ||$plan_comision == 86 ){
             $joinLotes = 'INNER JOIN lotes lo ON lo.idLote = cA.idLote';
         }else{
             $joinLotes = 'INNER JOIN lotes lo ON lo.idCliente = cA.id_cliente';

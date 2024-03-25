@@ -641,7 +641,7 @@ $(document).ready(function () {
                                 let porcentaje_abono=0;
                                 let total_comision=0;
 
-                                const datosPlan8P =  [
+                                const datosPlan8PAnterior =  [
                                     {
                                         idRol:7,
                                         porcentaje:0.50
@@ -659,12 +659,36 @@ $(document).ready(function () {
                                         porcentaje:0.1
                                     }
                                 ];
+                                const datosPlan8PNuevo =  [
+                                    {
+                                        idRol:7,
+                                        porcentaje:0.50
+                                    },
+                                    {
+                                        idRol:3,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:2,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:59,
+                                        porcentaje:0.2
+                                    },
+                                    {
+                                        idRol:1,
+                                        porcentaje:0.1
+                                    }
+                                ];
+                                const datosPlan8P = plan_comision == 66 ? datosPlan8PAnterior : datosPlan8PNuevo;
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
-                                        if(plan_comision == 66){
+                                        if(plan_comision == 66 || plan_comision == 86){
+                                            v.id_rol = plan_comision == 86 && v.id_usuario == 13546 ? 59 : v.id_rol;
                                             const busqueda = datosPlan8P.find((roles) => roles.idRol == v.id_rol);
                                             porcentajes = busqueda != undefined ? `<p style="font-size:12px;">${busqueda.porcentaje}% L.O. + ${v.porcentaje_decimal}% E.</p>` : '' ;
                                             v.porcentaje_decimal = busqueda != undefined ? v.porcentaje_decimal + busqueda.porcentaje : v.porcentaje_decimal;
@@ -853,7 +877,7 @@ $(document).ready(function () {
                                                 saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
                                             else{
-                                                saldo = [2,3,4,7].includes(parseInt(procesoReestructura)) ? ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal))  : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                saldo = [2,3,4,7].includes(parseInt(procesoReestructura)) ? ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(total))  : ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
 
                                             if(parseFloat(v.abono_pagado) > 0){
