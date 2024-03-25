@@ -447,6 +447,7 @@ $("#form_interes_seguros").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        console.log(data);
         $.ajax({
             url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,
