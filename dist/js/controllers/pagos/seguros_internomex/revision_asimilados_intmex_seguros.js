@@ -24,7 +24,7 @@ $('#puestoAsimilados_intmexSeguros').change(function(ruta){
         type: 'post',
         data:  { 
             "rol":    rol, 
-            "forma_pago" : 3
+            "forma_pago" : 3 
                 },
         dataType: 'json',
         success:function(response){
@@ -53,9 +53,9 @@ $('#usuarioAsimilados_intmexSeguros').change(function(ruta){
 
 $('#tabla_asimilados_intmexSeguros thead tr:eq(0) th').each( function (i) {
     if(i != 0){
-        var title = $(this).text();
-        titulos_intmex_seguros.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        var title_seguros = $(this).text();
+        titulos_intmex_seguros.push(title_seguros);
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title_seguros}" title_seguros="${title_seguros}"/>` );
         $('input', this).on('keyup change', function() {
             if ($('#tabla_asimilados_intmexSeguros').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_asimilados_intmexSeguros').DataTable().column(i).search(this.value).draw();
@@ -143,7 +143,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title:'Comisiones Asimilados - Revisión INTERNOMEX',
+            title_seguros:'Comisiones Asimilados - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
