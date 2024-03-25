@@ -1,5 +1,4 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 class Administracion_model extends CI_Model {
 
     public function __construct()
@@ -257,18 +256,24 @@ class Administracion_model extends CI_Model {
 		ORDER BY cl.id_cliente DESC")->result();
     }
     public function getDatosLotes($idLote){
-        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN ESPECIFICAR')) AS nombreCliente, cl.id_cliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'NA') AS fechaApartado, 
+        $query = $this->db->query("SELECT UPPER(COALESCE(NULLIF(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno), ''), 'SIN ESPECIFICAR')) AS nombreCliente, 
+        COALESCE(cl.id_cliente,0)idCliente,lo.idLote, UPPER(lo.nombreLote) nombreLote,ISNULL(CONVERT(VARCHAR, cl.fechaApartado, 103), 'SIN ESPECIFICAR') AS fechaApartado, 
         UPPER(co.nombre) nombreCondominio, re.nombreResidencial,UPPER(COALESCE(opx.nombre, 'SIN ESPECIFICAR')) representante,
         COALESCE(UPPER(tip.tipo_venta), 'SIN ESPECIFICAR') tipoVenta, 
         CASE WHEN lo.idStatuslote = 6 THEN 1 ELSE 0 END cambioDisponible, lo.idStatusContratacion, lo.idMovimiento, lo.idStatusLote,
-        UPPER(sta.nombre) as 'estatusLote', UPPER(mov.descripcion) as 'movimientoEstatus', UPPER(sta.nombre) as 'estatusContratacion',
-        CASE WHEN (lo.idMovimiento IN (39,45)) THEN comentario ELSE '' END AS comentario
+        COALESCE(UPPER(sta.nombre), 'SIN ESPECIFICAR') as 'estatusLote', 
+        COALESCE(UPPER(mov.descripcion), 'SIN ESPECIFICAR') as 'movimientoEstatus', 
+        COALESCE(UPPER(sta.nombre), 'SIN ESPECIFICAR') as 'estatusContratacion',
+        CASE WHEN (lo.idMovimiento IN (39,45)) THEN comentario ELSE '' END AS comentario,
+        COALESCE(lo.tipo_venta, 0) idTipoVenta,
+        COALESCE(cl.tipo_casa,0) tipoCasa, 
+        COALESCE(co.idCondominio, 0) idCondominio
         FROM lotes lo
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN movimientos mov ON mov.idMovimiento = lo.idMovimiento
-        INNER JOIN statuslote sta ON sta.idStatusLote = lo.idStatusLote
-        INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+        LEFT JOIN condominios co ON co.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales re ON re.idResidencial = co.idResidencial
+        LEFT JOIN movimientos mov ON mov.idMovimiento = lo.idMovimiento
+        LEFT JOIN statuslote sta ON sta.idStatusLote = lo.idStatusLote
+        LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1
         LEFT JOIN opcs_x_cats opx ON opx.id_opcion = cl.rl AND opx.id_catalogo = 77
         LEFT JOIN tipo_venta tip ON tip.id_tventa = lo.tipo_venta
@@ -279,7 +284,7 @@ class Administracion_model extends CI_Model {
     public function getCatalogoMaster() {   
         return $this->db->query("SELECT id_catalogo, id_opcion, nombre, estatus
         FROM (SELECT CAST(id_catalogo AS varchar(4)) id_catalogo,id_opcion, nombre, estatus
-        FROM opcs_x_cats WHERE id_catalogo IN (120,77) AND estatus = 1
+        FROM opcs_x_cats WHERE id_catalogo IN (120,77, 35) AND estatus = 1
         UNION ALL SELECT 'venta_tipo' id_catalogo, id_tventa id_opcion, tipo_venta nombre, NULL estatus FROM tipo_venta
         UNION ALL SELECT 'sedes' id_catalogo, id_sede id_opcion, nombre, impuesto from sedes WHERE estatus = 1)t1 ORDER BY id_catalogo, nombre");
     }
@@ -304,5 +309,9 @@ class Administracion_model extends CI_Model {
         $filter = $idCliente == '' ? '' : " AND idCliente = $idCliente";
         $query = $this->db->query("SELECT * FROM historial_lotes WHERE idLote = $idLote $filter ORDER BY idHistorialLote DESC");
         return $query->result_array();
+    }
+
+    public function verifyPagos($idPago) {
+        //$query = $this->db->query("SELECT")
     }
 }
