@@ -1566,10 +1566,15 @@ class Api extends CI_Controller
                         $dataReturn3 = json_decode(file_get_contents("php://input"));
                         $dataReturn = json_decode(file_get_contents("php://input"));
                         // se valida que datos no sean isset 
-                        // echo($dataReturn);
-                        // var_dump($dataReturn3->seguros);
-                        //echo($dataReturn);
-                        // var_dump(count($dataReturn3->seguros));
+
+                        if($dataReturn3 != NULL){
+                            echo json_encode(array("status" => 5000, "message" => " 5225552."), JSON_UNESCAPED_UNICODE);
+
+                            var_dump($dataReturn3->seguros);
+                        if($dataReturn3->seguros != undefined){
+                            echo json_encode(array("status" => 5000, "message" => " requeridos."), JSON_UNESCAPED_UNICODE);
+                        }
+
                         if(count($dataReturn3->seguros) > 0 &&  count($dataReturn3->seguros) == 1 ){
                             $bandera_array_vacio = 2;
                                 // AQUI VA CUANDO SE TIENE UNO DIRECTO
@@ -1578,7 +1583,7 @@ class Api extends CI_Controller
                             // VIENE MAS DE UNO 
                         }else if(count($dataReturn3->seguros) ==  0){
                             $bandera_array_vacio = 0;
-                            echo json_encode(array("status" => 700, "message" => "No se viene información favor de validar los parámetros requeridos."), JSON_UNESCAPED_UNICODE);
+                            echo json_encode(array("status" => 375, "message" => "No se viene información favor de validar los parámetros requeridos."), JSON_UNESCAPED_UNICODE);
                         }
                         
                         for($contadorPrimer = 0;   count($dataReturn3->seguros) > $contadorPrimer ; $contadorPrimer ++  )
@@ -1633,17 +1638,17 @@ class Api extends CI_Controller
                                             if(count($getLoteComision) > 0  AND  count($getLoteComision) != 1)
                                             { // validamod que existan datos, 
                                                 // viene para abonar o comprobar si viene liquidado
-                                              
+                                                
                                                 // var_dump($getLoteComision[0]['bandera']);
                                                 if($getLoteComision[0]['bandera'] == 7){
-                                                    // se liquido en su momento.
+                                                    // se liquido en su momento.    
                                                         $this->db->trans_commit();
                                                         $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
                                                         $arrayRespuesta['empresa']      = $dataReturn3->seguros[$contadorPrimer]->empresa;
                                                         $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
 
                                                         $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente']; 
-                                                        $arrayRespuesta['code'] = 350 ;
+                                                        $arrayRespuesta['code'] = 300 ;
                                                         $arrayRespuesta['mensaje'] = 'La siguiente seguro no es posible ya que se encuentra liquidada' ;
 
                                                         $dataReturn3->seguros[$contadorPrimer] ;
@@ -1665,7 +1670,7 @@ class Api extends CI_Controller
                                                             $arrayRespuesta['empresa']      = $dataReturn3->seguros[$contadorPrimer]->empresa;
                                                             $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
                                                             $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente']; 
-                                                            $arrayRespuesta['code'] = 350 ;
+                                                            $arrayRespuesta['code'] = 300 ;
                                                             $arrayRespuesta['mensaje'] = 'Las comisiones fueron liquidadas correctamente' ;
                                                             // $dataReturn['Respuesta'] =  $arrayRespuesta;    
                                                             // $arrayRespuesta['RESPUESTA'] = $dataReturn3->seguros[$contadorPrimer];
@@ -1720,7 +1725,7 @@ class Api extends CI_Controller
 
                                                                 }
                                                             }else{
-   // solo le metemos el valor completo
+                                                                // solo le metemos el valor completo
                                                             }
                                                             $dataIndSeguros['id_comision']          =   $getLoteComision[$contadorPorComisiones]['id_comision'];  
                                                             $dataIndSeguros['id_usuario']           =   $getLoteComision[$contadorPorComisiones]['id_usuario'];   
@@ -1747,7 +1752,7 @@ class Api extends CI_Controller
                                                                 $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente'];  
                                                                 $arrayRespuesta['code'] = 400 ;
                                                                 $arrayRespuesta['mensaje'] = 'Error al registrar una peticion por favor vuelve a intentarlo ' ;
-                                                                echo json_encode(array("status" => 950, "Error al registrar una peticion por favor vuelve a intentarlo " => "Error ."));
+                                                                // echo json_encode(array("status" => 950, "Error al registrar una peticion por favor vuelve a intentarlo " => "Error ."));
                                                             } else {
                                                                 $this->db->trans_commit();
                                                                 $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
@@ -1768,9 +1773,12 @@ class Api extends CI_Controller
                                                     // eerror
                                                 
                                                     $this->db->trans_rollback();
-                                                    $arrayRespuesta['code'] = 400 ;
-                                                    $arrayRespuesta['mensaje'] = 'Error en sistema' ;
-                                                    echo json_encode(array("status" => 950, "Error con lote bandera no encontrada " => "Error ."));
+                                                    $arrayRespuesta['referencia']   =   $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                    $arrayRespuesta['empresa']      =   $dataReturn3->seguros[$contadorPrimer]->empresa;
+                                                    $arrayRespuesta['referencia']   =   $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                    $arrayRespuesta['cliente']      =   $getLoteComision[0]['idCliente']; 
+                                                    $arrayRespuesta['code']         =   460 ;
+                                                    $arrayRespuesta['mensaje']      =   'Las comisiones fueron liquidadas correctamente' ;
                                                 }
                                                 // echo (json_encode(array("status" => 385, "message" => "El Lote ingresado ya se encuentra registrado.")));
                                             }//dos caminos 
@@ -1781,7 +1789,14 @@ class Api extends CI_Controller
                                                 $getInfoLote = $this->Seguro_model->getInfoLote($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
                                                 if(empty($getInfoLote))
                                                 {
-                                                    echo (json_encode(array("status" => 390, "message" => "Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.")));
+                                                    $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                    $arrayRespuesta['empresa']      = $dataReturn3->seguros[$contadorPrimer]->empresa;
+                                                    $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                    $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente'];  
+                                                    $arrayRespuesta['code'] = 390 ;
+                                                    $arrayRespuesta['mensaje'] = 'Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.s ' ;
+                                                    echo json_encode( $arrayRespuesta );
+                                                    // echo (json_encode(array("status" => 390, "message" => "Alguno de los datos (referencia, empresa, nombre de Lote) no se encuentra registrada.")));
                                                 }
                                                 else {
                                                     // empiezan las operaciones de comisiones por el usuario 
@@ -1875,7 +1890,7 @@ class Api extends CI_Controller
                                                                     $arrayRespuesta['cliente'] = $getInfoLote->idCliente; ;  
                                                                     $arrayRespuesta['code'] = 400 ;
                                                                     $arrayRespuesta['mensaje'] = 'Error al registrar una peticion por favor vuelve a intentarlo ' ;
-                                                                    echo json_encode(array("status" => 950, "Error al registrar una peticion por favor vuelve a intentarlo " => "Error ."));
+                                                                    // echo json_encode(array("status" => 950, "Error al registrar una peticion por favor vuelve a intentarlo " => "Error ."));
                                                                 } else {
                                                                     $this->db->trans_commit();
                                                                     $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
@@ -1898,8 +1913,7 @@ class Api extends CI_Controller
                                     // fin  bandera array 2
                                 }else if($bandera_array_vacio == 1){
                                     // este viene de noche porque se tiene que agregar solo uno
-                                    //señor de la noche 
-                                    echo json_encode( "posible1" );
+
                                 }else{
                                     echo json_encode(array("status" => 700, "message" => "No se puedo realizar ningua accion revisar el contenido de los parámetros requeridos."), JSON_UNESCAPED_UNICODE);
                                 }
@@ -1907,12 +1921,16 @@ class Api extends CI_Controller
                                 // aqui creo que va 
                             }else
                             {
-                                echo json_encode( "posible2" );
+
                             }
                         }
+                        }else{
+                            echo json_encode(array("status" => 900, "message" => "La información como se envia es posible que no tenga la forma correcta. Revisar el manual."), JSON_UNESCAPED_UNICODE);
+                        }
+                        
                     } else
                         {echo json_encode($arrayRespuesta );
-                            echo json_encode( "88888" );
+
                         }
                 }
             }
