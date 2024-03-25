@@ -369,7 +369,8 @@ function getAssimilatedCommissions(proyecto, condominio){
             data:{
                 proyecto : proyecto,
                 condominio:condominio,
-                modoSubida: 1
+                modoSubida: 3
+                
             },
             cache: false
         },

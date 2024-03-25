@@ -44,6 +44,18 @@ class Seguros extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("comisiones/colaborador/historial_seguros_contraloria_view");    
     }
+    
+    public function loadFinalPayment() {
+      $this->load->view('template/header');
+      $this->load->view("internomex/load_final_payment_seguros");
+    }
+    public function reporteLotesPorComisionista() {
+      if ($this->session->userdata('id_rol') == FALSE) {
+          redirect(base_url());
+      }
+      $this->load->view('template/header');
+      $this->load->view("comisiones/reporteLotesPorComisionistaSeguros_view");
+  }
     /**--------------------------------------- */
     public function getDatosComisionesAsesor($a)
     {
@@ -72,7 +84,7 @@ class Seguros extends CI_Controller
         $formaPagoUsuario = $this->session->userdata('forma_pago');
         $sol=$this->input->post('idcomision');  
         $consulta_comisiones = $this->db->query("SELECT pci.id_pago_i FROM pago_seguro_ind pci LEFT JOIN usuarios u ON u.id_usuario=pci.id_usuario WHERE pci.id_pago_i IN (".$sol.")");
-        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=3 THEN 4 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
+        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=4 THEN 4 ELSE 0 END) tipo,forma_pago FROM usuarios WHERE id_usuario IN (".$id_user_Vl.")")->result_array();
     
         if(in_array($consultaTipoUsuario[0]['forma_pago'],$formaPagoInvalida)){ //EL COMISIONISTA SI TIENE UNA FORMA DE PAGO VALIDA Y CONTINUA CON EL PROCESO DE ENVIO DE COMISIONES
           $opinionCumplimiento = $this->Comisiones_model->findOpinionActiveByIdUsuario($id_user_Vl);
@@ -185,7 +197,7 @@ class Seguros extends CI_Controller
       }
     
         public function getFechaCorteActual(){
-        $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
+        $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
         $diaActual = date('d'); 
         $fechaCorte = $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual);
         echo json_encode(array("fechasCorte" => $fechaCorte),JSON_NUMERIC_CHECK);
@@ -197,8 +209,8 @@ class Seguros extends CI_Controller
           }
           public function getDesarrolloSelect($a = ''){
             $validar_sede = $this->session->userdata('id_sede');
-            $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual; 
-            $tipo = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
+            $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;  
+            $tipo = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
             $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE tipoCorte = $tipo AND estatus = 1 AND mes = $mesActual")->result_array();
             
             $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
@@ -324,7 +336,7 @@ public function cargaxml2($id_user = ''){
         $validar_sede =  $this->session->userdata('id_sede');
         $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
     
-        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=3 THEN 4 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuarioid.")")->result_array();
+        $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 WHEN tipo=4 THEN 4 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuarioid.")")->result_array();
         $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND tipoCorte = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
     
         $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
@@ -399,6 +411,29 @@ public function cargaxml2($id_user = ''){
         $dat =  $this->Seguro_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
         echo json_encode( array( "data" => $dat));
       }
-
-
+      public function getPagosFinal() {
+        $beginDate = $this->input->post('beginDate');
+        $endDate = $this->input->post('endDate');
+        $data['data'] = $this->Seguro_model->getPagosFinal($beginDate, $endDate)->result_array();
+        echo json_encode($data);
+      }
+      public function getReporteLotesPorComisionista() {
+        if (isset($_POST) && !empty($_POST)) {
+            $beginDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("beginDate"))));
+            $endDate = date("Y-m-d", strtotime(str_replace('/', '-', $this->input->post("endDate"))));
+            $comisionista = $this->input->post("comisionista");       
+            $tipoUsuario = $this->input->post("tipoUsuario");
+            $data['data'] = $this->Seguro_model->getReporteLotesPorComisionista($beginDate, $endDate, $comisionista, $tipoUsuario)->result_array();
+            echo json_encode($data);
+        } else
+            json_encode(array());
+    }
+    public function getOpcionesParaReporteComisionistas() {
+      $seeAll = $this->input->post("seeAll");
+      $condicionXUsuario = '';
+      if ($seeAll == 0 ){
+          $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
+      }
+      echo json_encode($this->Seguro_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
+  }
 }
