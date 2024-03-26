@@ -121,21 +121,22 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
-                return formatMoney(d.abono_comisiones);;
-            }},
-            { data: function (d) {
-                return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
-            }},
-            { data: function (d) {
-                return formatMoney(d.pendiente);;
-            }},
-            { data: function (d) {
+                // PRECIO TOTAL
                 return formatMoney(d.Precio_Total);
             }},
             { data: function (d) {
-                return formatMoney(d.Comisiones_Pagadas);
+                // PORCENTAJE
+                return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
+            }},
+            { data: function (d) {
+                // importe comision PAGADA
+                return formatMoney(d.abono_comisiones);
             }},
             
+            { data: function (d) {
+                // iMPORTE DE COMISION PENDIENTE
+                return formatMoney(d.pendiente);
+            }},
             { data: function (d) {
                 var rescisionLote;
                 var reactivo;

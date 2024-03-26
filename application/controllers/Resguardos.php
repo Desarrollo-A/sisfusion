@@ -47,6 +47,13 @@ class Resguardos extends CI_Controller
     $this->load->view("resguardos/resguardos_comisiones_view");
 }
 
+
+  public function retiros_resguardos(){
+    $this->load->view('template/header');
+    $this->load->view("resguardos/descuentos_resguardos_view");
+  }
+
+
   // Finalizan vistas resguardos.
 
   

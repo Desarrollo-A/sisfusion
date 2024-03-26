@@ -334,7 +334,7 @@ class Reestructura_model extends CI_Model
         $datos['tipo'] == 8 ? $this->db->query("UPDATE clientes SET idLote=".$datos['idLote'].",modificado_por='".$modificado_por."' WHERE id_cliente=".$datos['idClienteNuevo'].";")  : '' ;
 
         if(!in_array($row[0]['registro_comision'],array(7))){
-            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'])->result_array();
+            $comisionesNuevas = $this->Comisiones_model->porcentajes($id_cliente[0]['id_cliente'],$row[0]["totalNeto2"],$id_cliente[0]['plan_comision'],0)->result_array();
             $comisiones = $this->db->query("SELECT id_comision,id_lote,comision_total,id_usuario,rol_generado,porcentaje_decimal FROM comisiones where id_lote=".$row[0]['idLote']." AND estatus=1")->result_array();
 
             if(in_array($row[0]['registro_comision'],array(8,0))){
@@ -923,7 +923,9 @@ class Reestructura_model extends CI_Model
     }
 
     public function revisarCFDocumentos($idLote, $idCliente){
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote." AND idCliente=".$idCliente);
+        $ids = implode(",", $idLote);
+        $idsC = implode(",", $idCliente);
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote in (".$ids.") AND idCliente in (".$idsC.")");
 
         return $query->result_array();
     }
@@ -1397,13 +1399,13 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    public function updateLotesDestino($idLotes, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, 1));
+    public function updateLotesDestino($idLotes, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, $idUsuario));
         return $query;
     }
 
-    public function updateLotesOrigen($idLotes, $estatusPreproceso, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET estatus_preproceso = ?, idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($estatusPreproceso, $idStatusLote, 1));
+    public function updateLotesOrigen($idLotes, $estatusPreproceso, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET estatus_preproceso = ?, idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($estatusPreproceso, $idStatusLote, $idUsuario));
         return $query;
     }
 
@@ -1413,8 +1415,8 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    public function updateLotesFusion($idLote, $idStatusLote){
-        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, 1, $idLote));
+    public function updateLotesFusion($idLote, $idStatusLote, $idUsuario){
+        $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, $idUsuario, $idLote));
 
         return $query;
     }
@@ -1433,5 +1435,32 @@ class Reestructura_model extends CI_Model
             u0.id_usuario IN ($id_usuario)";
 
         return $this->db->query($query);
+    }
+
+    public function getAllproyectos($proyectos){
+        $query = $this->db->query("SELECT t.idResidencial AS proyectoReubicacion, descripcion, SUM(disponibles) disponibles 
+        FROM ( SELECT re.idResidencial, UPPER( CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 15 AND lo.status = 1 WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) 
+        UNION ALL 
+        SELECT re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, COUNT(*) disponibles 
+        FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 1 AND lo.status = 1 AND ISNULL(lo.tipo_venta, 0) != 1 WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) 
+        UNION ALL 
+        SELECT re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100))) descripcion, 
+        COUNT(*) disponibles 
+        FROM residenciales re 
+        INNER JOIN condominios co ON co.idResidencial = re.idResidencial 
+        INNER JOIN lotes lo ON lo.idCondominio = co.idCondominio AND lo.idStatusLote = 21 AND lo.status = 1 
+        WHERE re.status = 1 AND re.idResidencial NOT IN(". $proyectos .")
+        GROUP BY re.idResidencial, UPPER(CAST((CONCAT(re.nombreResidencial, ' - ', re.descripcion)) AS NVARCHAR(100)))) t 
+        GROUP BY 
+        t.idResidencial, 
+        descripcion");
+
+      return $query->result_array();
     }
 }

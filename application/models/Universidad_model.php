@@ -109,7 +109,7 @@ class Universidad_model extends CI_Model {
         INNER JOIN pago_comision_ind pci ON pci.id_comision = com.id_comision
         WHERE com.estatus = 1 AND pci.estatus IN (1) AND pci.id_usuario = $user ")->result_array();
 
-        $maximo = 12500;
+        $maximo = $valor;
     
         if($pagos[0]['suma'] < $maximo){
             $datosnew[0] = array(

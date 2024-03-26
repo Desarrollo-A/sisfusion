@@ -160,6 +160,8 @@ function getAssimilatedCommissions(proyecto, condominio){
         document.getElementById("total_factura").textContent = to;
     });
 
+    var modoSubidaSeleccionado = 1;
+
     $("#tabla_remanente").prop("hidden", false);
     tabla_remanente2 = $("#tabla_remanente").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -362,12 +364,13 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "pagos/getDatosNuevasFContraloria/" ,
+            "url": general_base_url + "pagos/getDatosNuevasFacturasContraloria/" ,
             "type": "POST",
             data:{
                 proyecto : proyecto,
                 condominio:condominio,
-                modoSubida: modoSubidaSeleccionado
+                modoSubida: 3
+                
             },
             cache: false
         },

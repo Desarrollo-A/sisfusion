@@ -981,7 +981,8 @@ function checkBudgetInfo($idSolicitud){
             'usuario' => $user['usuario'],
             'idCondominio' => $datos['idCondominio'],
             'fecha_creacion' => date('Y-m-d h:i:s'),
-            'creado_por' => 1,
+            'fechaApartado' => date('Y-m-d h:i:s'),
+            'creado_por' => $this->session->userdata('id_usuario'),
             'fecha_modificacion' => date('Y-m-d h:i:s'),
             'banderaEscrituracion' => 1
         );

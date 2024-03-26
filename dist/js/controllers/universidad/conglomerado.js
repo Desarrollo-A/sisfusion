@@ -165,7 +165,7 @@ function loadTable(tipoDescuento) {
                 return `<p style="font-size: 1em;">${d.sede}</p>`;
             }},
             {"data": function (d) {
-                if (d.saldo_comisiones < 12500) {
+                if (d.saldo_comisiones < d.pendiente) {
                     color = 'color:gray';
                 } else{
                     color = 'color:blue';
@@ -197,7 +197,7 @@ function loadTable(tipoDescuento) {
                 if(d.estado_usuario != 1){
                     reactivado = `<span class="label lbl-warning">USUARIO BAJA</span>`;
                 }
-                if (d.saldo_comisiones < 12500 && d.estatus != 5 && d.estatus != 2 && d.estatus != 3 && d.estatus != 4) {
+                if (d.saldo_comisiones < d.pendiente && d.estatus != 5 && d.estatus != 2 && d.estatus != 3 && d.estatus != 4) {
                     valor = '<span class="label lbl-gray">SIN SALDO</span>';
                 } else if (d.estatus == 1 || d.banderaReactivado == 1 ) {
                     valor = '<span class="label lbl-violetChin">DISPONIBLE</span>';
@@ -218,9 +218,9 @@ function loadTable(tipoDescuento) {
                 valor = 0;
                 pendiente = 0;
                 
-                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
+                if (d.saldo_comisiones >= d.pendiente && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1) {//TODAS SEDES
                     color = 'color:purple';
-                    valor = Math.floor(d.saldo_comisiones/12500);
+                    valor = Math.floor(d.saldo_comisiones/d.pendiente );
                     pendiente = Math.floor(d.pendiente/d.pago_individual);
                     pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                 }
@@ -251,9 +251,9 @@ function loadTable(tipoDescuento) {
                     base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
                     <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
                 }
-                
-                if (d.saldo_comisiones >= 12500 && (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && (id_rol_general != 49 || id_usuario_general != 6376)) {
-                    valor = Math.floor(d.saldo_comisiones/12500 );
+                // d.saldo_comisiones >= 12500 &&
+                if ( d.saldo_comisiones >= d.pendiente &&  (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && (id_rol_general != 49 || id_usuario_general != 6376)) {
+                    valor = Math.floor(d.saldo_comisiones/d.pendiente);
                     pendiente = Math.floor(d.pendiente/d.pago_individual);
                     pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
                     adicionales = `<button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i></button>`;

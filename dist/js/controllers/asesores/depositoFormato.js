@@ -192,9 +192,12 @@ $('input[type=radio][name=imprimePagare]').change(function () {
 });
 
 function historial() {
+    $('#spiner-loader').removeClass('hide');
+
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
         const info = JSON.parse(data);
         if (info.length === 0) {
+            $('#spiner-loader').addClass('hide');
             alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
             return;
         }
@@ -203,6 +206,8 @@ function historial() {
 
         appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
         showModal();
+        $('#spiner-loader').addClass('hide');
+
     });
 }
 

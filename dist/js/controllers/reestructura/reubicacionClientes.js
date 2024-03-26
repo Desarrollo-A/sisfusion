@@ -724,7 +724,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    const idProyecto = $(this).attr("data-idProyecto");
+    const idProyecto = $(this).attr("data-idproyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
@@ -1286,11 +1286,12 @@ $(document).on('click', '.btn-avanzar', async function () {
             const dataFusionDes = await totalSuperficieFusion(idLote, 3);
             //AA: Obtenemos la superfices de origen y destino de la fusión.
             let separador=', ';
+            console.log(dataFusionDes);
             dataFusionDes.data.forEach((fusionLotes, index) => {
                 separador = (index==0) ? '' : ', ';
                 if(fusionLotes.origen == 1){
                     sumSuperficieO = sumSuperficieO + parseFloat(fusionLotes.sup);
-                    nombreLote += separador+fusionLotes.nombreLotes;
+                    nombreLote += separador+fusionLotes.nombreLoteDO;
                 }
                 else{
                     sumSuperficieD = sumSuperficieD + parseFloat(fusionLotes.sup);
@@ -1637,7 +1638,9 @@ const botonesAccionReubicacion = (d) => {
                     title="DESHACER PREPROCESO"
                     data-idCliente="${d.idCliente}"
                     data-idLote="${d.idLote}"
+                    data-nombreLote="${d.nombreLote}"
                     data-flagFusion='${flagFusion}'
+                    ${botonFusionadoEstatus}
                     >
                     <i class="fa fa-reply"></i>
                 </button>`;
@@ -1711,7 +1714,7 @@ let BUTTONREGRESO = '';
             return BTN_INFOCLIENTE + BUTTONREGRESO;
         }
         else if (d.idLoteXcliente != null && d.idStatusLote != 17)
-            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE;
+            return BTN_PROPUESTAS + BTN_AVANCE + BTN_INFOCLIENTE + BTN_DESHACER_PREPROCESO;
         else
             return BTN_AVANCE + BTN_INFOCLIENTE + BUTTONREGRESO;
     }
@@ -2021,6 +2024,7 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees = [];
     let id_cliente = $(this).attr('data-idcliente');
     let id_lote = $(this).attr('data-idlote');
+    let nombre_lote = $(this).attr('data-nombreLote');
     let flag_fusion = $(this).attr('data-flagFusion');
 
     let arrayManejo = [];
@@ -2029,8 +2033,8 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayManejo['flag_fusion'] = flag_fusion;
     arrayDeshacerRees.push(arrayManejo);
     
-    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ id_lote + ' ?' );
-    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borraran propuestas o fusiones realizadas');
+    $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ nombre_lote + ' ?' );
+    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borrará(n) reubicaciones, reestructura o fusiones realizadas');
     $('#deshacerPreproceso').modal('toggle');
 });
 
