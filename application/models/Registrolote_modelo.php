@@ -3522,7 +3522,7 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 694, 674';
+					$id_lider = $id_lider . ', 13295';
 					$sede = "";
 				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
 					$id_lider = $id_lider . ', 3111';

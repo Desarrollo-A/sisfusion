@@ -484,7 +484,7 @@ function cancela(){
     $("#modal_nuevas_Intmex_seguros").modal('toggle');
 }
 
-$("#form_interes").submit( function(e) {
+$("#form_interes_seguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {

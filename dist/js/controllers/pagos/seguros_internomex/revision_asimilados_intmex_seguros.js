@@ -24,7 +24,7 @@ $('#puestoAsimilados_intmexSeguros').change(function(ruta){
         type: 'post',
         data:  { 
             "rol":    rol, 
-            "forma_pago" : 3
+            "forma_pago" : 3 
                 },
         dataType: 'json',
         success:function(response){
@@ -53,9 +53,9 @@ $('#usuarioAsimilados_intmexSeguros').change(function(ruta){
 
 $('#tabla_asimilados_intmexSeguros thead tr:eq(0) th').each( function (i) {
     if(i != 0){
-        var title = $(this).text();
-        titulos_intmex_seguros.push(title);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
+        var title_seguros = $(this).text();
+        titulos_intmex_seguros.push(title_seguros);
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title_seguros}" title_seguros="${title_seguros}"/>` );
         $('input', this).on('keyup change', function() {
             if ($('#tabla_asimilados_intmexSeguros').DataTable().column(i).search() !== this.value ) {
                 $('#tabla_asimilados_intmexSeguros').DataTable().column(i).search(this.value).draw();
@@ -143,7 +143,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title:'Comisiones Asimilados - Revisión INTERNOMEX',
+            title_seguros:'Comisiones Asimilados - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
@@ -300,7 +300,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 let btns = '';
 
                 const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
-                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_seguros" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
                 const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -407,17 +407,17 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
         });
     });
 
-    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_asimilados2_seguros.row( tr );
         id_pago_i = $(this).val();
 
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="88"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
-        $("#modal_nuevas .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
-        $("#modal_nuevas").modal();
+        $("#modal_nuevas_seguros .modal-body").html("");
+        $("#modal_nuevas_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_nuevas_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="1"><input type="hidden" name="estatus" value="88"><input type="text" class="text-modal observaciones" name="observaciones" rows="3" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_nuevas_seguros .modal-body").append('<input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'">');
+        $("#modal_nuevas_seguros .modal-body").append(`<div class="row"><div class="col-md-6"></div><div class="d-flex justify-end"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="PAUSAR">PAUSAR</button></div></div>`);
+        $("#modal_nuevas_seguros").modal();
     });
 
     $("#tabla_asimilados_intmexSeguros tbody").on("click", ".regresar_estatus", function(){
@@ -425,11 +425,11 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
         var row = tabla_asimilados2_seguros.row( tr );
         id_pago_i = $(this).val();
 
-        $("#modal_nuevas .modal-body").html("");
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
-        $("#modal_nuevas .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="8"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
-        $("#modal_nuevas .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
-        $("#modal_nuevas").modal();
+        $("#modal_nuevas_seguros .modal-body").html("");
+        $("#modal_nuevas_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><p>¿Está seguro de activar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b> <i>'+row.data().usuario+'</i>?</p></div></div>');
+        $("#modal_nuevas_seguros .modal-body").append('<div class="row"><div class="col-lg-12"><input type="hidden" name="value_pago" value="2"><input type="hidden" name="estatus" value="8"><input type="text" class="text-modal observaciones"  rows="3" name="observaciones" required placeholder="Describe mótivo por el cual se va activar nuevamente la solicitud"></input></div></div>');
+        $("#modal_nuevas_seguros .modal-body").append(`<div class="d-flex justify-end"><input type="hidden" name="id_pago" value="'+row.data().id_pago_i+'"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CANCELAR</button><button type="submit" class="btn btn-primary" value="ACTIVAR">ACTIVAR</button></div>`);        
+        $("#modal_nuevas_seguros").modal();
     });
 }
 
@@ -438,15 +438,16 @@ $(window).resize(function(){
 });
 
 function cancela(){
-    $("#modal_nuevas").modal('toggle');
+    $("#modal_nuevas_seguros").modal('toggle');
 }
 
-$("#form_interes").submit( function(e) {
+$("#form_interes_seguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        
         $.ajax({
             url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,
@@ -458,7 +459,7 @@ $("#form_interes").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modal_nuevas").modal('toggle' );
+                    $("#modal_nuevas_seguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se aplicó el cambio exitosamente", "success");
                     setTimeout(function() {
                         tabla_asimilados2_seguros.ajax.reload();

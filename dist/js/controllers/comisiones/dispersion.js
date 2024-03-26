@@ -35,7 +35,7 @@ $(document).ready(function () {
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
             title: 'Reporte Comisiones Dispersión',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -116,22 +116,8 @@ $(document).ready(function () {
                     }
                 }
                 return labelEstatus;
-            }
-        },
-        { data: function (d) {
-            return formatMoney(d.Precio_Total);
-        }},
-        { data: function (d) {
-            return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
-        }},
-        { data: function (d) {
-            return formatMoney(d.Comisiones_Pagadas);
-        }},
-        { data: function (d) {
-            return formatMoney(d.Comisiones_pendientes);
-        }},
-        { 
-            data: function (d) {
+            }},
+            { data: function (d) {
                 var rescisionLote;
                 var reactivo;
                 rescisionLote = '';
@@ -608,7 +594,7 @@ $(document).ready(function () {
                                 if(procesoReestructura != 0 && estatusLote < 15 && ooamDispersion == 1 ){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM 50%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
-                                    bandera_anticipo = 4;
+                                    bandera_anticipo = 3; //[2,4,7].includes(parseInt(procesoReestructura)) ? 4 : 3;
                                 } else if(procesoReestructura != 0 && estatusLote >= 15 && ooamDispersion == 1){
                                     // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
@@ -693,6 +679,9 @@ $(document).ready(function () {
                                             resto1 = total_comision1 - saldo1;
                                         }
                                         let saldo1C = 0;
+                                        total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? AplicadoGlobal  : total;
+                                        total = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (data[0].Aplicado-abonadoAnterior) <= 0) ? 0 : total;
+
                                         switch(bandera_anticipo){
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                             operacionValidar = (total*(0.125*v.porcentaje_decimal));
@@ -824,7 +813,7 @@ $(document).ready(function () {
                                     <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                     </div><br>`);
 
-                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+data1[0].estructura+"/"+ooamDispersion).done( function( data ){
+                                    $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+data1[0].estructura).done( function( data ){
                                         $("#modal_NEODATA .modal-body").append(`
                                                         <div class="row">
                                                             <div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div>
@@ -853,7 +842,9 @@ $(document).ready(function () {
                                                 saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
                                             else{
+                                                //saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = [2,3,4,7].includes(parseInt(procesoReestructura)) ? ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal))  : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
                                             }
 
                                             if(parseFloat(v.abono_pagado) > 0){
@@ -1134,7 +1125,7 @@ $("#form_NEODATA").submit( function(e) {
                 }
             },error: function(){
                 $('#spiner-loader').addClass('hidden');
-                alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, REVISAR CON SISTEMAS", "warning");
+                alerts.showNotification("top", "right", "EL LOTE NO SE PUEDE DISPERSAR, INTÉNTALO MÁS TARDE", "warning");
             }
         });
     }

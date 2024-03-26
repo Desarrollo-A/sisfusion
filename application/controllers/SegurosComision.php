@@ -242,20 +242,20 @@ class SegurosComision extends CI_Controller
   
       switch($validate){
           case 1:
-            $respuesta = array($this->Pagos_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
+            $respuesta = array($this->Seguros_comision_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
           break;    
           case 2:
-            $respuesta = array($this->Pagos_model->update_estatus_despausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus")));
+            $respuesta = array($this->Seguros_comision_model->update_estatus_despausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus")));
           break;
           case 3:
-            $validate =  $this->Pagos_model->registroComisionAsimilados();
+            $validate =  $this->Seguros_comision_model->registroComisionAsimilados();
           // echo $validate->row()->registro_comision.' *COMISION'.$validate->row()->registro_comision;
           if($validate->row()->registro_comision == 7){
             $respuesta = FALSE;
               // echo 'no entra';
           }else{
             // echo 'si entra';
-          $respuesta = array($this->Pagos_model->update_estatus_edit($this->input->post("id_pago_i"), $this->input->post("observaciones")));
+          $respuesta = array($this->Seguros_comision_model->update_estatus_edit($this->input->post("id_pago_i"), $this->input->post("observaciones")));
           }
           break;
       }  

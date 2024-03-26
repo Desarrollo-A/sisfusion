@@ -274,12 +274,13 @@ function fillUsersTable() {
         },
         {
             data: function (d) {
-                tipo = '';
-                if (d.tipo == 2 || d.tipo == "2") {
-                    tipo = '<span class="label lbl-sky">REESTRUCTURA</span>';
-                } else {
-                     tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
-                }
+                let tipo = '';
+                if (d.tipo == 2 || d.tipo == '2')
+                    tipo = '<span class="label lbl-sky">MADERAS UPGRADE</span>';
+                else if (d.tipo == 3 || d.tipo == '3')
+                    tipo = '<span class="label lbl-violetBoots">CASAS</span>';
+                else
+                    tipo = '<span class="label lbl-oceanGreen">NORMAL</span>';
                 return tipo;
             }
         },
