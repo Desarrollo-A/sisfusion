@@ -121,16 +121,21 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
-                return formatMoney(d.abono_comisiones);;
+                // PRECIO TOTAL
+                return formatMoney(d.Precio_Total);
             }},
             { data: function (d) {
+                // PORCENTAJE
                 return d.porcentaje_comisiones ? `${parseFloat(d.porcentaje_comisiones).toFixed(2)}%`: 'SIN ESPECIFICAR';
             }},
             { data: function (d) {
-                return formatMoney(d.pendiente);
+                // importe comision PAGADA
+                return formatMoney(d.abono_comisiones);
             }},
+            
             { data: function (d) {
-                return formatMoney(d.Precio_Total);
+                // iMPORTE DE COMISION PENDIENTE
+                return formatMoney(d.pendiente);
             }},
             { data: function (d) {
                 var rescisionLote;

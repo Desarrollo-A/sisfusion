@@ -80,67 +80,56 @@
 
 
     public function getLotesDisCorridaAll($condominio) {
-
-        // $this->db->select('idLote,nombreLote, total, sup');
-        // $this->db->where('idCondominio', $condominio);
-        // $this->db->where('lotes.status','1');
         $statusLoteVar = '';
         $idAsesor = '';
-        $statuscl = '';
-        $statuslt = '';
         $validacionStatusMov = '';
-
-
-        if($this->session->userdata('id_rol') == 6){
-
-            // $this->db->where_in('idStatusLote', array('1', '3'));
+        if ($this->session->userdata('id_rol') == 6)
             $statusLoteVar = '1, 3';
-            $statuscl = ' AND cl.status = 1';
-            $statuslt = ' lo.status = 1 AND ';
-
-
-        } else if($this->session->userdata('id_rol') == 7){
+        else if ($this->session->userdata('id_rol') == 7) {
             $statusLoteVar = '1, 3';
-            $idAsesor = " AND id_asesor=".$this->session->userdata('id_usuario');
-            $statuscl = ' AND cl.status = 1';
-            $statuslt = ' lo.status = 1 AND ';
-            $validacionStatusMov = ' AND idStatusContratacion= 1 AND (idMovimiento = 31 OR idMovimiento = 0)';
-
-
-        }else if( $this->session->userdata('id_rol')==33 || $this->session->userdata('id_rol') == 17 || $this->session->userdata('id_rol') == 70) {
+            $idAsesor = " AND id_asesor = ".$this->session->userdata('id_usuario');
+        	$validacionStatusMov = ' AND idStatusContratacion= 1 AND (idMovimiento = 31 OR idMovimiento = 0)';
+        }
+		else if (in_array($this->session->userdata('id_rol'), [33, 17, 70, 71, 73])) {
             $statusLoteVar = '2, 3';
             $idAsesor = "";
-            $statuscl = '';
-            $statuslt = 'lo.status IN (0,1,2,3) AND';
-
-
-        } else if($this->session->userdata('id_rol')==11 || $this->session->userdata('id_usuario') == 2755 || $this->session->userdata('id_rol') == 32){
+        } else if (in_array($this->session->userdata('id_rol'), [11, 32]) || $this->session->userdata('id_usuario') == 2755) {
             $statusLoteVar = '1, 2, 3';
             $idAsesor = "";
-            $statuscl = '';
-            $statuslt = 'lo.status IN (0,1,2,3) AND';
         }
-        else{
-
-            // $this->db->where_in('idStatusLote', array('1'));
+        else
             $statusLoteVar = '1';
-            $statuscl = '  AND cl.status = 1';
-            $statuslt = ' lo.status = 1 AND ';
-
-
-        }
-
-        // $query = $this->db->get('lotes');
-
-
-        $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.total, lo.sup, lo.idStatusContratacion, lo.idMovimiento FROM lotes lo
-			LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente ".$statuscl." ".$idAsesor."
-			WHERE ".$statuslt." idStatusLote IN (".$statusLoteVar.") AND lo.idCondominio IN (".$condominio.")".$validacionStatusMov);
-        return $query->result();
-        // if($query){
-        // $query = $query->result_array();
-        // return $query;
-        // }
+        return $this->db->query(
+			"SELECT
+				lo.idLote, 
+				lo.nombreLote, 
+				lo.total, 
+				lo.sup, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento 
+			FROM 
+				lotes lo 
+				INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = lo.idCliente AND cl.status = 1 AND YEAR(cl.fechaApartado) >= 2024 AND cl.banderaEscrituracion != 1 AND cl.proceso <= 1 $idAsesor 
+			WHERE 
+				lo.status = 1 
+				AND idStatusLote IN ($statusLoteVar) 
+				AND lo.idCondominio IN ($condominio)
+					
+			UNION ALL 
+			SELECT 
+				lo.idLote, 
+				lo.nombreLote, 
+				lo.total, 
+				lo.sup, 
+				lo.idStatusContratacion, 
+				lo.idMovimiento 
+			FROM 
+				lotes lo 
+			WHERE 
+				lo.status = 1 
+				AND idStatusLote IN (1) 
+				AND lo.idCondominio IN ($condominio)"
+		)->result();
     }
 
 

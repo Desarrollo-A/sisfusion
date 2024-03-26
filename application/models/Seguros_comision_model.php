@@ -177,7 +177,7 @@ class Seguros_comision_model extends CI_Model {
     }
 
     function insert_phc($data){
-        $this->db->insert_batch('historial_comisiones', $data);
+        $this->db->insert_batch('historial_seguro', $data);
         return true;
     }
 
@@ -259,19 +259,19 @@ class Seguros_comision_model extends CI_Model {
 
     function update_estatus_pausa($id_pago_i, $obs, $estatus) {
         $id_user_Vl = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         return $this->db->query("UPDATE pago_seguro_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
 
     function update_estatus_despausa($id_pago_i, $obs, $estatus) {
         $id_user_Vl = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO  historial_comisiones VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE ACTIVÓ COMISIÓN, MOTIVO: ".$obs."')");
+        $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, ".$id_user_Vl.", GETDATE(), 1, 'SE ACTIVÓ COMISIÓN, MOTIVO: ".$obs."')");
         return $this->db->query("UPDATE pago_seguro_ind SET estatus = ".$estatus.", comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
 
     function update_estatus_edit($id_pago_i, $obs) {
         $id_user_Vl = $this->session->userdata('id_usuario');
-        $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
+        $this->db->query("INSERT INTO historial_seguro VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'ACTUALIZÓ CONTRALORIA CON NUEVO MONTO: ".$obs."')");
         return $this->db->query("UPDATE pago_seguro_ind SET abono_neodata = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
     }
     
