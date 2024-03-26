@@ -94,7 +94,11 @@ function fillTable() {
             },
             {
                 data: function (d) {
-                    let btnAceptar = `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Aceptar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1"><i class="fas fa-thumbs-up"></i></button>`;
+                    let btnAceptar = `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" 
+                    data-placement="top" title= "Aceptar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" 
+                    data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1" data-precioFinal="${d.precioFinal}">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>`;
                     let btnRechazar = `<button class="btn-data btn-warning btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Rechazar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="0"><i class="fas fa-thumbs-down"></i></button>`;
                     return `<div class="d-flex justify-center">${btnAceptar} ${btnRechazar}</div>`;
                 }
@@ -123,13 +127,68 @@ function fillTable() {
         });
     });
 }
+// $("#precioFinal").on({
+//     "focus": function (event) {
+//         $(event.target).select();
+//     },
+//     "keyup": function (event) {
+//         $(event.target).val(function (index, value ) {
+//             return value.replace(/\D/g, "")
+//                 .replace(/([0-9])([0-9]{2})$/, '$1.$2')
+//                 .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+//         });
+//     }
+// });
 
 $(document).on('click', '.btn-avanzar', function () {
+    let tipoTransaccion = $(this).attr('data-tipo');
+    let precioFinal = $(this).attr('data-precioFinal');
+    let precioFinalCrudo = $(this).attr('data-precioFinal');
+    let inputEditar = '';
+    var options = { style: 'currency', currency: 'MXN' };
+    var numberFormat = new Intl.NumberFormat('es-MX', options);
+    precioFinal = numberFormat.format(precioFinal);
     $('#idLoteA').val($(this).attr('data-idLote'));
     $('#idClienteA').val($(this).attr('data-idCliente'));
     $('#tipoTransaccionA').val($(this).attr('data-tipoTransaccion'));
-    $('#tipo').val($(this).attr('data-tipo'));
+    $('#tipo').val(tipoTransaccion);
     $('#comentarioAvanzar').val('');
+    if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null'){
+        inputEditar = '<div class="col-lg-12">\n' +
+            '                  <label class="control-label">Precio Final</label>\n' +
+            '                  <input class="form-control input-gral mb-1" data-type="currency" ' +
+            '                   name="precioFinal" autocomplete="off" id="precioFinal" step="any"\n' +
+            '                  style="margin-top: 0px;" >' +
+            '            </div><script>$("input[data-type=\'currency\']").on({keyup: function() {formatCurrencyG($(this));},blur: function() { formatCurrencyG($(this), "blur");} });</script>';
+
+    }
+    else{
+        inputEditar = '<div class="col-lg-12">\n' +
+            '                  <label class="control-label">Precio Final</label>\n' +
+            '                  <input class="form-control input-gral mb-1" data-type="currency" pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$" ' +
+            '                    autocomplete="off" id="precioFinal" step="any"\n' +
+            '                  style="margin-top: 0px;"\n' +
+            '                   disabled value="'+precioFinal+'">' +
+            '                  <input type="hidden" value="'+$(this).attr('data-precioFinal')+'" name="precioFinal">'+
+            '            </div>';
+    }
+
+    if(tipoTransaccion == 1){
+        /*let htmlInput = '<div class="col-lg-12">\n' +
+            '                  <label class="control-label">Precio Final</label>\n' +
+            '                  <input class="form-control input-gral mb-1" pattern="^\\$\\d{1,3}(,\\d{3})*(\\.\\d+)?$" ' +
+            '                   name="precioFinal" autocomplete="off" id="precioFinal" step="any"\n' +
+            '                  style="margin-top: 0px;"\n' +
+            '                  disabled value="'+precioFinal+'">' +
+            '                  <input type="hidden" value="'+$(this).attr('data-precioFinal')+'" name="precioFinalpost">'+
+            '            </div>';*/
+        $('#divTotalNeto').html(inputEditar);
+        $('#divTotalNeto').removeClass('hide');
+    }else{
+        $('#divTotalNeto').html('');
+        $('#divTotalNeto').addClass('hide');
+    }
+
     $('#avance').modal();
 })
 

@@ -273,10 +273,11 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
+                                                <th>ID LOTE</th>
                                                 <th>SUPERFICIE</th>
-                                                <th>PRECIO POR M2</th>
                                                 <th>PRECIO DE LISTA</th>
                                                 <th>TOTAL CON DESCUENTOS</th>
+                                                <th>M2</th>
                                                 <th>REFERENCIA</th>
                                                 <th>MESES SIN INTERESES</th>
                                                 <th>ASESOR</th>
@@ -286,12 +287,21 @@
                                                 <th>DIRECTOR REGIONAL</th>
                                                 <th>DIRECTOR REGIONAL 2</th>
                                                 <th>ESTATUS</th>
+                                                <th>ESTATUS DE CONTRATACION</th>
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>COMENTARIO</th>
                                                 <th>LUGAR DE PROSPECCIÓN</th>
-                                                <th>FECHA DE APERTURA</th>
                                                 <th>FECHA DE VALIDACIÓN DEL ENGANCHE</th>
+                                                <th>FECHA DE APERTURA</th>
                                                 <th>CANTIDAD DEL ENGANCHE PAGADO</th>
+                                                <th>CLIENTE</th>
+                                                <th>COMENTARIO DE NEODATA</th>
+                                                <th>FECHA APERTURA</th>
+                                                <th>APARTADO DE REUBICACIÓN</th>
+                                                <th>FECHA ALTA</th>
+                                                <th>VENTA COMPARTIDA</th>
+                                                <th>UBICACIÓN DE LA VENTA</th>
+                                                <th>TIPO PROCESO</th>
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
                                             </tr>

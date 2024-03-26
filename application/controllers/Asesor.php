@@ -2073,12 +2073,16 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-        $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
-        $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
-        if(!$validacionM2) {//si es diferente a true
-            echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
-            exit;
+
+        if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
+            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
+            if(!$validacionM2) {//si es diferente a true
+                echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
+                exit;
+            }
         }
+
 
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
@@ -3556,6 +3560,7 @@ class Asesor extends CI_Controller {
         $arreglo2["idLote"] = $idLote;
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
+
 
         $validate = $this->Asesor_model->validateSt2($idLote);
 

@@ -224,10 +224,7 @@ $(document).on('click', '.btn-avanzar', function () {
     $('#idLoteA').val($(this).attr('data-idLote'));
     $('#idClienteA').val($(this).attr('data-idCliente'));
     $('#tipoTransaccionA').val($(this).attr('data-tipoTransaccion'));
-    let tipoTransaccion = $(this).attr('data-tipoTransaccion');
-    if(tipoTransaccion == 3){
-        //mostrar a contraloria el total neto 2
-    }
+    $('#comentarioAvanzar').val('');
     $('#avance').modal();
 })
 

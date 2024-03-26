@@ -1476,7 +1476,7 @@ function checkBudgetInfo($idSolicitud){
                 cxl.apellido_materno amCteNuevo,
                 cxl.tipoTramite idTipoTramite,
                 CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
-                lo.comentario
+                lo.comentario, lo.totalNeto2 as precioFinal
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio

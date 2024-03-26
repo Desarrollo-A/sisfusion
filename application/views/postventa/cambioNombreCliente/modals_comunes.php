@@ -68,7 +68,7 @@
                                        style="margin-top: 0px;"
                                        disabled value="$25.2">
                             </div>-->
-                            <div class="col-12">
+                            <div class="col-lg-12">
                                 <label class="control-label">Comentario</label>
                                 <input class="form-control input-gral text-modal mb-1" name="comentario" autocomplete="off" id="comentarioAvanzar">
                             </div>
