@@ -61,9 +61,16 @@
                 <form method="post" id="formAvanzarEstatus">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-12">
+                            <div id="divTotalNeto" class="hide"></div>
+                            <!--<div class="col-lg-12">
+                                <label class="control-label">Precio Final</label>
+                                <input class="form-control input-gral mb-1" name="precioFinal" autocomplete="off" id="precioFinal"
+                                       style="margin-top: 0px;"
+                                       disabled value="$25.2">
+                            </div>-->
+                            <div class="col-lg-12">
                                 <label class="control-label">Comentario</label>
-                                <input class="text-modal mb-1" name="comentario" autocomplete="off">
+                                <input class="form-control input-gral text-modal mb-1" name="comentario" autocomplete="off" id="comentarioAvanzar">
                             </div>
                             <div class="modal-footer">
                                 <input type="hidden" id="idLoteA" name="idLoteA">

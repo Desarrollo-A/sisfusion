@@ -6,7 +6,7 @@ public $controller = 'Postventa';
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model'));
+        $this->load->model(array('Postventa_model', 'General_model', 'Contraloria_model', 'asesor/Asesor_model', 'caja_model_outside'));
         $this->load->library(array('session', 'form_validation', 'Jwt_actions','formatter', 'email','permisos_sidebar'));
         $this->jwt_actions->authorize('2278',$_SERVER['HTTP_HOST']);
         $this->validateSession();
@@ -3322,10 +3322,16 @@ public $controller = 'Postventa';
     }
 
     public function setAvance () {
+
+
+
         $idLote = $this->input->post('idLoteA');
         $idCliente = $this->input->post('idClienteA');
         $tipoTransaccion = $this->input->post('tipoTransaccionA');
         $comentario = $this->input->post('comentario');
+        $arraySignos = array('$',',');
+        $totalNeto = str_replace($arraySignos ,'', $this->input->post('precioFinal'));
+
         $responseLiberacion = TRUE;
         $responseAgregarCliente = TRUE;
         $responseInsertHistorial = TRUE;
@@ -3385,7 +3391,8 @@ public $controller = 'Postventa';
                 "comentario" => $comentario,
                 "estatusCambioNombre" => $estatusCambioNombre,
                 "usuario" => $this->session->userdata('id_usuario'),
-                "fecha_modst" => date('Y-m-d H:i:s')
+                "fecha_modst" => date('Y-m-d H:i:s'),
+                "totalNeto2" => $totalNeto
             );
             $dataInsertarHistorial = array (
                 "idStatusContratacion" => 15,
@@ -3406,7 +3413,7 @@ public $controller = 'Postventa';
                 "comentario" => $comentario,
                 "estatusCambioNombre" => $estatusCambioNombre,
                 "usuario" => $this->session->userdata('id_usuario'),
-                "fecha_modst" => date('Y-m-d H:i:s')
+                "fecha_modst" => date('Y-m-d H:i:s'),
             );
         }
         $reponseUpdateLote = $this->General_model->updateRecord("lotes", $dataParaActualizarLote, "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value

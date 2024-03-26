@@ -338,12 +338,16 @@ let validacionRealizada = false;
 $(document).on('submit', '#deposito-seriedad-form', async function (e) {
     e.preventDefault();
 
-     
-    const tipoMensaje = validarCostos();
-    if (tipoMensaje !== 'success') {
-        //validarMensaje(tipoMensaje);
-        return; 
+    if(![17, 32, 70].includes(id_rol_general)){
+        const tipoMensaje = validarCostos();
+        if (tipoMensaje !== 'success') {
+            validarMensaje(tipoMensaje);
+            return;
+        }
     }
+     // if(id_rol_general!= 17 || id_rol_general != 70 || id_rol_general != 32){
+     //
+     // }
 
     if (!$("input[name='tipo_vivienda']").is(':checked')) {
         alerts.showNotification('top', 'right', 'Debes seleccionar un tipo de vivienda', 'danger');

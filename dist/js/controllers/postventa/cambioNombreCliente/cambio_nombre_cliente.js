@@ -125,12 +125,26 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
+                    let comentario = (d.comentario=='' || d.comentario==null) ? '' : d.comentario;
+                    return `${comentario}`;
+                },
+            },
+            {
+                data: function (d) {
                     let btns = '';
-                    let btnBase = `<button class="btn-data btn-blueMaderas iniciarTramite" data-toggle="tooltip" data-placement="top" title= "Iniciar trámite para cambio de nombre" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-nombreCteNuevo="${d.nombreCteNuevo}" data-apCteNuevo="${d.apCteNuevo}" data-amCteNuevo="${d.amCteNuevo}" data-idTipoTramite="${d.idTipoTramite}" data-idRegistro="${d.id_registro}"><i class="fas fa-user-edit"></i></button>`;
+                    let btnBase = `<button class="btn-data btn-blueMaderas iniciarTramite" data-toggle="tooltip" 
+                    data-placement="top" title= "Iniciar trámite para cambio de nombre" data-idLote="${d.idLote}" 
+                    data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" 
+                    data-nombreCteNuevo="${d.nombreCteNuevo}" data-apCteNuevo="${d.apCteNuevo}" 
+                    data-amCteNuevo="${d.amCteNuevo}" data-idTipoTramite="${d.idTipoTramite}" 
+                    data-idRegistro="${d.id_registro}"><i class="fas fa-user-edit"></i></button>`;
                     if (d.estatusCambioNombre == 1)
                         btns = btnBase;
-                    else if (d.estatusCambioNombre == 2)
-                        btns = btnBase + `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Enviar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}"><i class="fas fa-thumbs-up"></i></button>`;
+                    else if (d.estatusCambioNombre == 2 || d.estatusCambioNombre == 5)
+                        btns = btnBase + `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" data-placement="top" 
+                        title= "Enviar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" 
+                        data-tipoTransaccion="${d.estatusCambioNombre}" 
+                        data-precioFinal="${d.precioFinalLote}" ><i class="fas fa-thumbs-up"></i></button>`;
                     return `<div class="d-flex justify-center">${btns}</div>`;
                 }
             }
@@ -210,6 +224,7 @@ $(document).on('click', '.btn-avanzar', function () {
     $('#idLoteA').val($(this).attr('data-idLote'));
     $('#idClienteA').val($(this).attr('data-idCliente'));
     $('#tipoTransaccionA').val($(this).attr('data-tipoTransaccion'));
+    $('#comentarioAvanzar').val('');
     $('#avance').modal();
 })
 
