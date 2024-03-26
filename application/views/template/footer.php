@@ -89,3 +89,6 @@
 
     var id_rol_global = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
 </script>
+
+<script src="<?= base_url() ?>dist/js/components/table.js"></script>
+<script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
