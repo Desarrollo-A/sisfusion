@@ -35,6 +35,7 @@
                                                     <th>UBICACIÓN</th>
                                                     <th>ESTATUS PROCESO</th>
                                                     <th>TIPO DE TRÁMITE</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>FECHA ÚLTIMO ESTATUS</th>
                                                 </tr>
                                             </thead>

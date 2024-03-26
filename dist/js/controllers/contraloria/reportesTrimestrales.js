@@ -126,7 +126,7 @@ function fillTrimestral(beginDate, endDate) {
                 },
                 {
                     data: function (n) {
-                        let numCompartida = n.numeroVC;
+                        let numCompartida = (n.numeroVC == 0) ? 0 : parseInt(n.numeroVC) + 1;
                         let classCompartida = (n.numeroVC == 0) ? 'lbl-gray' : 'lbl-sky';
                         return `<center><span class="label ${classCompartida}" >${numCompartida}</span><center>`;
                     }

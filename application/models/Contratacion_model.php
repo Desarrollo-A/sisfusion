@@ -262,7 +262,10 @@ class Contratacion_model extends CI_Model {
       UPPER($prospectingPlaceDetail) AS lugar_prospeccion, 
       ISNULL(CONVERT(varchar, lot.fecha_creacion, 20), '') fecha_creacion,sl.background_sl,
       lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') fecha_validacion,
-      cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+      cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, sc.nombreStatus as estatusContratacion,
+      CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
+      ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -282,6 +285,11 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios u44 ON u44.id_usuario = u33.id_lider -- REGIONAL
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
+      LEFT JOIN statusContratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
+      LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+      LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
+      LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
       WHERE lot.status = 1 $whereProceso ORDER BY con.nombre, lot.idLote");
    }
 
