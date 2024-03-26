@@ -37,6 +37,7 @@
                                                     <th>ESTATUS PROCESO</th>
                                                     <th>TIPO DE TRÁMITE</th>
                                                     <th>FECHA ÚLTIMO ESTATUS</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

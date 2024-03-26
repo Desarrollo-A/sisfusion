@@ -84,6 +84,12 @@ function fillTable() {
                     return `<span class="label lbl-violetBoots">${d.tipoTramite}</span>`;
                 },
             },
+            {
+                data: function (d) {
+                    let comentario = (d.comentario == 'NULL' || d.comentario == null || d.comentario=='') ? '--' : d.comentario;
+                    return `${comentario}`;
+                },
+            },
             { data: 'fechaUltimoEstatus' }
         ],
         columnDefs: [{

@@ -1192,8 +1192,9 @@
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script>
-    const cliente = "<?=$cliente[0]->id_cliente?>";
+    var cliente = "<?=$cliente[0]->id_cliente?>";
     const onlyView = <?=$onlyView?>;
+    let idDesarrollo = <?=$cliente[0]->desarrollo?>;
 </script>
 <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/asesores/depositoFormato.js"></script>
@@ -1222,7 +1223,6 @@
         }
     ?>
 
-    let idDesarrollo = <?php $cliente[0]->desarrollo ?>;
 
 
 

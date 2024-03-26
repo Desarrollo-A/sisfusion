@@ -51,6 +51,7 @@
                                                     <th>UBICACIÓN</th>
                                                     <th>ESTATUS PROCESO</th>
                                                     <th>TIPO DE TRÁMITE</th>
+                                                    <th>COMENTARIO</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

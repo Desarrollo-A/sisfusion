@@ -286,10 +286,12 @@ function cerrarModalDetEnganche() {
     $("#cmbFormaPago").html("");
     $("#cmbInsMonetario").html("");
     $("#cmbMonedaDiv").html("");
+    $("#cdpplote").html("");
     $("#txtIdLote").attr("data-idDetEnganche", "0");
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
+    $("#cdpplote").selectpicker('refresh');
     $('#verDetalles').modal('hide');
     $("#pila-carrito").html("");
     objEnganche = { enganchesGuardados: [], nuevoEnganche: [] };
@@ -308,6 +310,8 @@ function generarInputCatalogos(dto) {
             $("#cmbInsMonetario").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
         if (catalogoOpciones.id_catalogo == 112) // MONEDA O DIVISA
             $("#cmbMonedaDiv").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
+        if (catalogoOpciones.id_catalogo == 119) // CONCEPTO DEL PRIMER PAGO
+            $("#cdpplote").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
     });
 
 
@@ -315,6 +319,7 @@ function generarInputCatalogos(dto) {
         $("#cmbMonedaDiv").val(dto.dtoEnganches[0].monedaDivisa);
         $("#cmbInsMonetario").val(dto.dtoEnganches[0].instrumentoMonetario);
         $("#cmbFormaPago").val(dto.dtoEnganches[0].formaPago);
+        $("#cdpplote").val(dto.dtoEnganches[0].conceptoPago);
         let fechaBase = dto.dtoEnganches[0].fechaPago.split("-");
         $('#txtFechaPago').val(fechaBase[2]+'/'+fechaBase[1]+'/'+fechaBase[0]);
         // Create our number formatter.
@@ -329,6 +334,7 @@ function generarInputCatalogos(dto) {
     $("#cmbFormaPago").selectpicker('refresh');
     $("#cmbInsMonetario").selectpicker('refresh');
     $("#cmbMonedaDiv").selectpicker('refresh');
+    $("#cdpplote").selectpicker('refresh');
 
     if (dto.dtoEnganches.length > 0)
         agregarEngancheT(dto.dtoEnganches);
