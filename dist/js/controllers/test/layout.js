@@ -40,15 +40,24 @@ function clickedAsk(data){
     alert.show()
 }
 
+function sendData(data){
+    console.log(data)
+}
+
 let form = new Form({
     title: 'Formulario',
     text: 'Descripcion del formulario',
 })
 
+
+
 function clickedForm(data){
     form.fields = [
-        { id: 'name', type: 'text', placeholder: 'nombre del plan' },
+        { id: 'name', label: 'Nombre', type: 'text', placeholder: 'Nombre del plan' },
+        { id: 'lote', label: 'Lote', type: 'text', placeholder: 'Nombre del lote' },
     ]
+
+    form.onSubmit = sendData
     
     form.show()
 }
