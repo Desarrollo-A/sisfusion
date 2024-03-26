@@ -1519,8 +1519,10 @@ class Api extends CI_Controller
         $banderaAbono = 0;
         $bandera_liquidar = 0;
         $dataUpdateSeguros = array();
+        $dataRespuestas = array();
+
         if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
-        {
+        {   
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }
         else 
@@ -1540,6 +1542,7 @@ class Api extends CI_Controller
                     }
                 else 
                 {
+                    // SE EMPIENZA A VALIDAR EL TOKEN
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
                     $valida_token = Null;
                     foreach ($result->data as $key => $value) {
@@ -1558,23 +1561,17 @@ class Api extends CI_Controller
                     {
                         $checkSingup = null;
                         echo json_encode(array("status" => 370, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
-                        // 
+
                     }
-                    // aquis se valida que eeste correcto la passs y el usario
+                    // aquis se valida que eeste correcto la passs y el usario Y QUE CUMPLA CON LOS PARAAMETROS DE ENCABEZADO
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200)
                     {
                         $dataReturn3 = json_decode(file_get_contents("php://input"));
                         $dataReturn = json_decode(file_get_contents("php://input"));
+                        // SE RECIBE LA INFORMASCIÓN
                         // se valida que datos no sean isset 
-
                         if($dataReturn3 != NULL){
-                            echo json_encode(array("status" => 5000, "message" => " 5225552."), JSON_UNESCAPED_UNICODE);
-
-                            var_dump($dataReturn3->seguros);
-                        if($dataReturn3->seguros != undefined){
-                            echo json_encode(array("status" => 5000, "message" => " requeridos."), JSON_UNESCAPED_UNICODE);
-                        }
-
+                            // SI ENTRAMOS AQUI ES PORQUE EMPEZAMOS A MANEJRAR LA INFORMACIÓN DE LOS LOTES
                         if(count($dataReturn3->seguros) > 0 &&  count($dataReturn3->seguros) == 1 ){
                             $bandera_array_vacio = 2;
                                 // AQUI VA CUANDO SE TIENE UNO DIRECTO
@@ -1583,28 +1580,19 @@ class Api extends CI_Controller
                             // VIENE MAS DE UNO 
                         }else if(count($dataReturn3->seguros) ==  0){
                             $bandera_array_vacio = 0;
+                            // SUSTITUIR LA FORMA DE ESTA RESPUESTA
                             echo json_encode(array("status" => 375, "message" => "No se viene información favor de validar los parámetros requeridos."), JSON_UNESCAPED_UNICODE);
                         }
                         
                         for($contadorPrimer = 0;   count($dataReturn3->seguros) > $contadorPrimer ; $contadorPrimer ++  )
                         {
                             $this->db->trans_begin();
-                            if($bandera_array_vacio == 1 || $bandera_array_vacio  == 2){
-                                // SI ENTRA CORRRECTAMENTE continuar se divide en uno directo o mensualidad noche
-                                // 
-                                // $bandera_array_vacio = 2 corresponde a ejecuta solo 1 se encuentra en el siguiente if
-                                // 
-                                // $bandera_array_vacio = 1 vienen varios puede ser noche se encuentra el en else del siguiente if
+                            // SE INICIA LA TRANSACCIÓN 
+                                // SI ENTRA CORRRECTAMENTE continuar se divide en uno directo o mensualidad (ABONOS)
                                 //comparamos cual es    
                                 if($bandera_array_vacio == 2 || $bandera_array_vacio == 1 ){
-                                    //var_dump(count($dataReturn3->seguros));
-                                    // 
-                                    // OJO AQUI AFUERZAS SOLO VIENE UNO Y SIEMPRE LA PRIMERA
-                                    // 
-                                    // validamos que solo es un lote directo ahora a comprar si es en mensualidad o contado.
-                                    // incio bandera array 2
-                                    // se coloca 0 solo viene uno 
-                                    // echo json_encode($dataReturn3->seguros[0]->referencia);
+                                    // contadorPrimer es el que valida viene del for que barre toda la información del array de datos que nos enviaron
+                                    // se valida que datos enviado no sean isset 
                                     if (!isset($dataReturn3->seguros[$contadorPrimer]->referencia)    || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->empresa)       || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->montoTotal)    || 
@@ -1612,9 +1600,19 @@ class Api extends CI_Controller
                                         !isset($dataReturn3->seguros[$contadorPrimer]->mensualidad)   || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->tipo_pago)     || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_asesor)     ||
+                                        !isset($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad)   ||
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_gerente))
                                     {
-                                        echo json_encode(array("status" => 375, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                                           // SUSTITUIR LA FORMA DE ESTA RESPUESTA 
+                                        $arrayRespuesta['numero_mensualidad']   = $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad;
+                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                        $arrayRespuesta['empresa']              = $dataReturn3->seguros[$contadorPrimer]->empresa;
+                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                        $arrayRespuesta['cliente']              = $getLoteComision[0]['idCliente']; 
+                                        $arrayRespuesta['estatus']              = 375 ;
+                                        $arrayRespuesta['mensaje']              = 'Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición' ;
+                                        // array_push($dataRespuestas,$arrayRespuesta);
+                                        echo json_encode($arrayRespuesta);
                                     }
                                     else 
                                     {
@@ -1626,9 +1624,19 @@ class Api extends CI_Controller
                                         ($dataReturn3->seguros[$contadorPrimer]->mensualidad == '')   ||
                                         ($dataReturn3->seguros[$contadorPrimer]->tipo_pago  == '')    ||
                                         ($dataReturn3->seguros[$contadorPrimer]->id_asesor  == '')    ||
+                                        ($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad  == '')  ||
                                         ($dataReturn3->seguros[$contadorPrimer]->id_gerente  == '')) 
                                         {
-                                            echo json_encode(array("status" => 380, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                                                 // SUSTITUIR LA FORMA DE ESTA RESPUESTA
+                                        $arrayRespuesta['numero_mensualidad']   = $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad;
+                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                        $arrayRespuesta['empresa']              = $dataReturn3->seguros[$contadorPrimer]->empresa;
+                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                        $arrayRespuesta['cliente']              = $getLoteComision[0]['idCliente']; 
+                                        $arrayRespuesta['estatus']              = 375 ;
+                                        $arrayRespuesta['mensaje']              = 'Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición' ;
+                                        // array_push($dataRespuestas,$arrayRespuesta);
+                                        echo json_encode($arrayRespuesta);
                                         }
                                         else 
                                         {   
@@ -1639,17 +1647,17 @@ class Api extends CI_Controller
                                             { // validamod que existan datos, 
                                                 // viene para abonar o comprobar si viene liquidado
                                                 
-                                                // var_dump($getLoteComision[0]['bandera']);
+                                                // se coloca el 0 para como pivote traemos el primero
                                                 if($getLoteComision[0]['bandera'] == 7){
                                                     // se liquido en su momento.    
                                                         $this->db->trans_commit();
-                                                        $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
-                                                        $arrayRespuesta['empresa']      = $dataReturn3->seguros[$contadorPrimer]->empresa;
-                                                        $arrayRespuesta['referencia']   = $dataReturn3->seguros[$contadorPrimer]->referencia;
-
-                                                        $arrayRespuesta['cliente'] = $getLoteComision[0]['idCliente']; 
-                                                        $arrayRespuesta['code'] = 300 ;
-                                                        $arrayRespuesta['mensaje'] = 'La siguiente seguro no es posible ya que se encuentra liquidada' ;
+                                                        $arrayRespuesta['numero_mensualidad']   = $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad;
+                                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                        $arrayRespuesta['empresa']              = $dataReturn3->seguros[$contadorPrimer]->empresa;
+                                                        $arrayRespuesta['referencia']           = $dataReturn3->seguros[$contadorPrimer]->referencia;
+                                                        $arrayRespuesta['cliente']              = $getLoteComision[0]['idCliente']; 
+                                                        $arrayRespuesta['estatus']              = 300 ;
+                                                        $arrayRespuesta['mensaje']              = 'La siguiente seguro no es posible ya que se encuentra liquidada' ;
 
                                                         $dataReturn3->seguros[$contadorPrimer] ;
                                                         echo json_encode( $arrayRespuesta);
@@ -1919,11 +1927,8 @@ class Api extends CI_Controller
                                 }
                                 // bandera_array_vacio
                                 // aqui creo que va 
-                            }else
-                            {
-
-                            }
-                        }
+                            
+                        } // llave del for 
                         }else{
                             echo json_encode(array("status" => 900, "message" => "La información como se envia es posible que no tenga la forma correcta. Revisar el manual."), JSON_UNESCAPED_UNICODE);
                         }
