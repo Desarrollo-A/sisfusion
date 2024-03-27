@@ -36,6 +36,7 @@
                                         <table class="table-striped table-hover" id="comisiones_solicitadas" name="comisiones_solicitadas">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th>ID PAGO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
