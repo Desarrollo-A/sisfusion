@@ -98,8 +98,8 @@ function getDataAsimiladosSeguros(proyecto, condominio){
     });
 
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    //console.log("prueba");
+    //console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
     
 
     $("#tabla_asimilados_seguros").prop("hidden", false);
