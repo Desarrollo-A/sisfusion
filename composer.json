@@ -15,7 +15,8 @@
       "ext-json": "*",
 		"phpoffice/phpspreadsheet": "^1.22",
 		"google/apiclient": "^2.0",
-		"vlucas/phpdotenv": "^5.5"
+		"vlucas/phpdotenv": "^5.5",
+		"google/cloud-core": "1.49.4"
     },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

@@ -100,8 +100,8 @@ function getDataFactura(proyecto, condominio){
     });
     
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    // console.log("prueba");
+    // console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_factura").prop("hidden", false);
     tabla_factura = $("#tabla_factura").DataTable({

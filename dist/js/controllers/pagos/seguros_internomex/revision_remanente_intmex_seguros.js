@@ -341,7 +341,7 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
                 let btns = '';
 
                 const BTN_DETREM = `<button href="#" value="${data.id_pago_i}"  data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" title="DETALLES"><i class="fas fa-info"></i></button>`;
-                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
+                const BTN_STAREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_seguros" title="PAUSAR SOLICITUD"><i class="fas fa-pause"></i></button>`;
                 const BTN_ACTREM = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="ACTIVAR SOLICITUD"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -466,7 +466,7 @@ function getAssimilatedCommissionsIntmexSeguros(proyecto, condominio){
         $("#total_autorizar_intmexSeguros").html(formatMoney(numberTwoDecimal(totaPen_intmexSeguros)));
     });
 
-    $("#tabla_remanente_intmexSeguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_remanente_intmexSeguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tablaRemanente2.row( tr );
         id_pago_i = $(this).val();

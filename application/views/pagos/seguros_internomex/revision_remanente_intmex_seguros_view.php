@@ -5,7 +5,7 @@
                 <h3 class="card-title center-align">Comisiones nuevas <b>remanente seguros</b></h3>
             </div>
             <div>
-                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
+                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible seguros)</p>
             </div>
         </div>
         <div class="toolbar">

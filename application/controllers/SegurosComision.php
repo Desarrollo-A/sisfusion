@@ -242,9 +242,6 @@ class SegurosComision extends CI_Controller
   
       switch($validate){
           case 1:
-            $prueba= $this->input->post("estatus");
-            echo $prueba;
-            return;
             $respuesta = array($this->Seguros_comision_model->update_estatus_pausa($this->input->post("id_pago_i"), $this->input->post("observaciones"), $this->input->post("estatus") ));
           break;    
           case 2:

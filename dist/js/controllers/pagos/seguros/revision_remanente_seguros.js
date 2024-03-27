@@ -81,8 +81,8 @@ function getDataRemanente_seguros(proyecto, condominio){
     });
 
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    // console.log("prueba");
+    // console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_remanente_seguros").prop("hidden", false);
     tabla_remanente_seguros = $("#tabla_remanente_seguros").DataTable({

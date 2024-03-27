@@ -1,7 +1,6 @@
 var tr;
 var tabla_asimilados2_seguros ;
 var totaPen_seguros = 0;
-let titulos_intmex_seguros = [];
 
 $(document).ready(function() {
     $("#tabla_asimilados_intmexSeguros").prop("hidden", true);
@@ -24,7 +23,7 @@ $('#puestoAsimilados_intmexSeguros').change(function(ruta){
         type: 'post',
         data:  { 
             "rol":    rol, 
-            "forma_pago" : 3
+            "forma_pago" : 3 
                 },
         dataType: 'json',
         success:function(response){
@@ -51,31 +50,33 @@ $('#usuarioAsimilados_intmexSeguros').change(function(ruta){
     getAssimilatedCommissions_asimilados(proyecto, condominio);
 });
 
+let titulos_intmex_seguros = [];
 $('#tabla_asimilados_intmexSeguros thead tr:eq(0) th').each( function (i) {
     if(i != 0){
         var title = $(this).text();
         titulos_intmex_seguros.push(title);
         $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
-            if ($('#tabla_asimilados_intmexSeguros').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_asimilados_intmexSeguros').DataTable().column(i).search(this.value).draw();
+            if (tabla_asimilados2_seguros.column(i).search() !== this.value) {
+                tabla_asimilados2_seguros.column(i).search(this.value).draw();
                 var total = 0;
                 var index = tabla_asimilados2_seguros.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_asimilados2_seguros.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-                document.getElementById("totpagarAsimilados_intmexSeguros").textContent = formatMoney(numberTwoDecimal(total));
+                var to1 = formatMoney(total);
+                document.getElementById("totpagarPen_intmexSeguros").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
-    } 
+        } 
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
     }
 });
 
 function getAssimilatedCommissions_asimilados(proyecto, condominio){
-    console.log("s");
+    // console.log("s");
     $('#tabla_asimilados_intmexSeguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -143,12 +144,13 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title:'Comisiones Asimilados - Revisión INTERNOMEX',
+            title_seguros:'Comisiones Asimilados - Revisión INTERNOMEX',
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
-                    header: function (columnIdx) {
-                        return ' ' + titulos_intmex_seguros[columnIdx-1] + ' ';
+                    header: function (columnIdx, i) {
+                        return titulos_intmex_seguros[i-1];
+                        //return ' ' + titulos_intmex_seguros[columnIdx-1] + ' ';
                     }
                 }
             }
@@ -300,7 +302,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
                 let btns = '';
 
                 const BTN_DETASI = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles"><i class="fas fa-info"></i></button>`;
-                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
+                const BTN_PAUASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-orangeYellow cambiar_estatus_seguros" title="Pausar solicitud"> <i class="fas fa-pause"></i></button>`;
                 const BTN_ACTASI = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-green regresar_estatus" title="Activar solicitud"><i class="fas fa-play"></i></button>`
 
                 if(data.estatus == 8){
@@ -407,7 +409,7 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
         });
     });
 
-    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_asimilados_intmexSeguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_asimilados2_seguros.row( tr );
         id_pago_i = $(this).val();
@@ -447,6 +449,7 @@ $("#form_interes_seguros").submit( function(e) {
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
+        
         $.ajax({
             url: general_base_url + "SegurosComision/despausar_solicitud",
             data: data,

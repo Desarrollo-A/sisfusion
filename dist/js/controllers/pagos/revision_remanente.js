@@ -100,8 +100,8 @@ function getDataRemanente(proyecto, condominio){
     });
 
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    // console.log("prueba");
+    // console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_remanente").prop("hidden", false);
     tabla_remanente = $("#tabla_remanente").DataTable({

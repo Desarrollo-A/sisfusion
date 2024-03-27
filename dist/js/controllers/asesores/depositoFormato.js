@@ -20,11 +20,17 @@ $(document).ready(function() {
 
     personaFisicaMoralOnChange();
 
-    $('#costoM2, #costom2f').on('change', function() {
-        const tipoMensaje = validarCostos();
-        console.log('tipoMensaje', tipoMensaje);
-        validarMensaje(tipoMensaje);
-    });
+
+    let idPermitidos = [2752, 2826, 2810, 2855, 2815, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342];
+    if(!idPermitidos.includes(id_usuario_general)){//si el id usuario no está aqui va a hacer la validación de M2 final
+        $('#costoM2, #costom2f').on('change', function() {
+            const tipoMensaje = validarCostos();
+            console.log('tipoMensaje', tipoMensaje);
+            validarMensaje(tipoMensaje);
+        });
+    }
+
+
 
 });
 
@@ -50,8 +56,7 @@ function validarCostos() {
             return 'success';
         }
     } else {
-        const descuentoCostoListaM2 = costoListaM2 * 0.80; // Aplicar el descuento del 20%
-
+        const descuentoCostoListaM2 = (idDesarrollo == 5 || idDesarrollo == 6) ? costoListaM2 * 0.74 : costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
         if (![2, 3, 4].includes(clienteInfo.proceso)) {
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
@@ -187,9 +192,12 @@ $('input[type=radio][name=imprimePagare]').change(function () {
 });
 
 function historial() {
+    $('#spiner-loader').removeClass('hide');
+
     $.get(`${general_base_url}Asesor/getHistorialDS/${cliente}`, function (data) {
         const info = JSON.parse(data);
         if (info.length === 0) {
+            $('#spiner-loader').addClass('hide');
             alerts.showNotification('top', 'right', 'No hay registro de movimientos', 'warning');
             return;
         }
@@ -198,6 +206,8 @@ function historial() {
 
         appendFooterModal(`<button type="button" class="btn btn-danger btn-simple" onclick="hideModal()">Cerrar</button>`);
         showModal();
+        $('#spiner-loader').addClass('hide');
+
     });
 }
 
