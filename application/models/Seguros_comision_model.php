@@ -42,7 +42,7 @@ class Seguros_comision_model extends CI_Model {
         LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (3)
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23
         INNER JOIN cp_usuarios cp ON cp.id_usuario = u.id_usuario AND cp.estatus = 1
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -92,7 +92,7 @@ class Seguros_comision_model extends CI_Model {
             INNER JOIN residenciales re ON re.idResidencial = co.idResidencial LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente 
             INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (4) 
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1 
-            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote 
+            INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote 
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23 LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83 
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision 
             LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
@@ -140,7 +140,7 @@ class Seguros_comision_model extends CI_Model {
             LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
             INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
             INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci2.estatus AND oxcest.id_catalogo = 23
             LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
             LEFT JOIN plan_comision pl ON pl.id_plan = cl.plan_comision
