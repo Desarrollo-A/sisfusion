@@ -484,7 +484,7 @@ function CloseModalDelete2Intmex_seguros(){
     $("#modal_multiples_intmexA_seguros").modal('toggle');  
 }
 
-$(document).on("click", ".Pagar", function() {
+$(document).on("click", ".PagarSeguros", function() {
     
     $("#modal_multiples_intmexA_seguros .modal-body").html("");
     $("#modal_multiples_intmexA_seguros .modal-header").html("");
