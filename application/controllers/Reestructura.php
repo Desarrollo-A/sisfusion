@@ -742,21 +742,14 @@ class Reestructura extends CI_Controller{
             if($proceso == 5){
                 $updateFusionFlag = true;
 
-                $checkLotes = $this->Reestructura_model->checkLotesFusion($ids);
-                $lotesFusion = $checkLotes->result();
+                foreach($data as $lote){
+                    if($lote->destino == 1){
+                        $idRegresoFusion = $lote->tipo_estatus_regreso == 1 ? 15 : ($lote->tipo_estatus_regreso == 2 ? 21 : 1);
+                        $update = $this->Reestructura_model->updateLotesFusion($lote->idLote, $idRegresoFusion, $idUsuario);
 
-                foreach($lotesFusion as $lf){
-                    if($lf->idStatusLote == 16){
-                        $idRegresoFusion = 15; 
-                    }
-                    else if($lf->idStatusLote == 20){
-                        $idRegresoFusion = 21;
-                    }
-
-                    $update = $this->Reestructura_model->updateLotesFusion($lf->idLote, $idRegresoFusion, $idUsuario);
-
-                    if(!$update){
-                        $updateFusionFlag = false;
+                        if(!$update){
+                            $updateFusionFlag = false;
+                        }
                     }
                 }
             }
