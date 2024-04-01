@@ -330,6 +330,10 @@
                                                         <th>MODALIDAD</th>
                                                         <th>CONTRATACIÓN</th>
                                                         <th>PLAN VENTA</th>
+                                                        <th>PRECIO FINAL LOTE</th>
+                                                        <th>% COMISION TOTAL</th>
+                                                        <th>IMPORTE COMISION PAGADA</th>
+                                                        <th>IMPORTE COMISION PENDIENTE</th>
                                                         <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
                                                         <th>ACCIONES</th>

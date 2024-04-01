@@ -97,8 +97,8 @@ class Pagos extends CI_Controller
   public function getBonosPorUserContra($estado){
     $dat = $this->Pagos_model->getBonosPorUserContra($estado);
     for( $i = 0; $i < count($dat); $i++ ){
-    $dat[$i]['pa'] = 0;
-  }
+      $dat[$i]['pa'] = 0;
+    }
   echo json_encode( array( "data" => $dat));
   }
 
@@ -107,14 +107,25 @@ class Pagos extends CI_Controller
       $this->load->view("pagos/bonos_historial_view");
   }
 
-  public function getDatosNuevasAContraloria(){
-    $proyecto = $this->input->post('proyecto');  
-    $condominio = $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasAContraloria($proyecto,$condominio);
-  for( $i = 0; $i < count($dat); $i++ ){
-      $dat[$i]['pa'] = 0;
-  }
-  echo json_encode( array( "data" => $dat));
+  public function getDatosNuevasAsimiladosContraloria(){
+
+    if( $this->session->userdata('id_rol') == 31){
+      $filtro1 = $this->input->post('puesto');  
+      $filtro2 = $this->input->post('usuario'); 
+      $modoSubida =3; 
+      
+    }else{
+      $filtro1 = $this->input->post('proyecto');  
+      $filtro2 = $this->input->post('condominio'); 
+      $modoSubida = $this->input->post('modoSubida'); 
+    }
+    
+    $dat =  $this->Pagos_model->getDatosNuevasAsimiladosContraloria($filtro1,$filtro2,$modoSubida);
+    
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
   }
 
   function despausar_solicitud(){
@@ -323,10 +334,11 @@ class Pagos extends CI_Controller
       }
   }
 
-  public function getDatosNuevasRContraloria(){
+  public function getDatosNuevasRemanenteContraloria(){
     $proyecto = $this->input->post('proyecto');  
-    $condominio =   $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasRContraloria($proyecto,$condominio);
+    $condominio =   $this->input->post('condominio');
+    $modoSubida = $this->input->post('modoSubida');  
+    $dat =  $this->Pagos_model->getDatosNuevasRemanenteContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }
@@ -380,10 +392,12 @@ class Pagos extends CI_Controller
     echo json_encode( $respuesta );
   }
 
-  public function getDatosNuevasFContraloria(){
+  public function getDatosNuevasFacturasContraloria(){
     $proyecto = $this->input->post('proyecto');  
-    $condominio =   $this->input->post('condominio');  
-    $dat =  $this->Pagos_model->getDatosNuevasFContraloria($proyecto,$condominio);
+    $condominio =  $this->input->post('condominio'); 
+    $modoSubida =  $this->input->post('modoSubida');   
+  
+    $dat =  $this->Pagos_model->getDatosNuevasFacturasContraloria($proyecto,$condominio,$modoSubida);
     for( $i = 0; $i < count($dat); $i++ ){
       $dat[$i]['pa'] = 0;
     }

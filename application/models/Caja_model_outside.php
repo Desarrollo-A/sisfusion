@@ -176,7 +176,7 @@
         $query = $this->db->query("SELECT idLote, nombreLote, status, sup FROM lotes where idCondominio = " . $datos['idCondominio'] . " and nombreLote = '" . $datos['nombreLote'] . "' and status = 1");
 
         foreach ($query->result_array() as $row) {
-            $this->db->query("UPDATE lotes SET precio = " . $datos['precio'] . ", 
+            $this->db->query("UPDATE lotes SET usuario = 'CAJA', precio = " . $datos['precio'] . ", 
                 total = (" . $datos['precio'] * $row['sup'] . "), 
                 enganche = (" . $datos['precio'] * $row['sup'] . " * 0.1), 
                 saldo = (" . $datos['precio'] * $row['sup'] . " - (" . $datos['precio'] * $row['sup'] . " * 0.1))
@@ -206,6 +206,9 @@
 
 
     public function aplicaLiberacion($datos) {
+        $descuentosComerciales = !isset($datos['descuentosComerciales']) ? NULL : $datos['descuentosComerciales'];
+        $descuentoHabMenores = !isset($datos['descuentoHabMenores']) ? NULL : $datos['descuentoHabMenores'] ;
+        $descuentoHabMayores = !isset($datos['descuentoHabMayores']) ? NULL : $datos['descuentoHabMayores'] ;
         $idCondominio = $datos['idCondominio'];
         $nombreLote = $datos['nombreLote'];
         $userLiberacion = $datos['userLiberacion'];
@@ -233,6 +236,19 @@
                 $this->db->query("UPDATE comisiones set  modificado_por='" . $datos['userLiberacion'] . "',comision_total=$sumaxcomision,estatus=8 where id_comision=".$comisiones[$i]['id_comision']." ");
             }
             $this->db->query("UPDATE pago_comision set bandera=0,total_comision=0,abonado=0,pendiente=0,ultimo_pago=0  where id_lote=".$row['idLote']." ");
+           //PAQUETES CF
+           if($datos['tipo_lote'] == 1 ){ //1 - Comercial
+                //si el condominio es comercial solo consultar sin importar la superficie
+               $descuentos=$datos['descuentosComerciales'];
+              }else{ //0 - Habitacional
+                      $descuentos = $row['sup'] < 200 ? $datos['descuentoHabMenores'] : $datos['descuentoHabMayores'];
+                      //var_dump($datos['descuentoHabMenores']);
+             }
+             $descuento = $descuentos != NULL ? "id_descuento='$descuentos'," : "id_descuento=NULL,";
+            
+        /**----------------------------------------------- */
+           
+           
             $data_l = array(
                 'nombreLote'=> $datos['nombreLote'],
                 'comentarioLiberacion'=> $datos['comentarioLiberacion'],
@@ -286,6 +302,7 @@
                 fechaRL = null, 
                 registro_comision = 8,
                 tipo_venta = ".$tventa.", 
+                $descuento
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = ".$st.", 
@@ -307,6 +324,7 @@
                 fechaRL = null, 
                 registro_comision = 8,
                 tipo_venta = ".$tventa.", 
+                $descuento
                 observacionContratoUrgente = NULL,
                 firmaRL = 'NULL', comentarioLiberacion = 'LIBERADO', 
                 observacionLiberacion = 'LIBERADO POR CORREO', idStatusLote = 101, 
@@ -1393,15 +1411,17 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 690, 2411) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 2411, 9783) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
         WHEN us.id_lider = 7886 THEN 5
+        WHEN us.id_lider = 690 THEN 6626
         ELSE 0 END) id_regional,
 		CASE 
-		WHEN (us.id_sede = '13' AND u0.id_lider = 7092) THEN 3
-		WHEN (us.id_sede = '13' AND u0.id_lider = 3) THEN 7092
-		ELSE 0 END id_regional_2
+		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 7092) THEN 3
+		WHEN (us.id_sede IN ('13', '14') AND u0.id_lider = 3) THEN 7092
+		ELSE 0 END id_regional_2,
+        us.id_sede
         FROM usuarios us
         LEFT JOIN usuarios u0 ON u0.id_usuario = us.id_lider
         WHERE us.id_usuario IN ($id_gerente)")->result_array();
@@ -1544,5 +1564,8 @@
     public function validarTipoVenta($idLote) {
         return $this->db-> query("SELECT ISNULL(tipo_venta, 0) tipo_venta FROM lotes WHERE idLote = $idLote")->row(); 
     }
+    public function getDatosCondominio($idCondominio){
+        return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
+     }
 
 }

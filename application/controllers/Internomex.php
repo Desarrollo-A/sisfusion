@@ -28,6 +28,12 @@
       $this->load->view('template/footer');
     }
 
+    public function general_Intmex()
+    {
+      $this->load->view('template/header');
+      $this->load->view("internomex/comisiones_solicitadas_intmex_view");
+    }
+
     public function nuevos(){
       $this->load->view('template/header');
       $this->load->view("internomex/nuevos");
@@ -246,6 +252,7 @@
             $this->db->trans_begin();
             $idLote = $this->input->post('txtIdLote');
             $cmbFormaPago = $this->input->post('cmbFormaPago');
+            $cdpplote = $this->input->post('cdpplote');
             $cmbInsMonetario= $this->input->post('cmbInsMonetario');
             $cmbMonedaDiv = $this->input->post('cmbMonedaDiv');
             $idEnganche = ($this->input->post('idEnganche')=='null') ? 0 : $this->input->post('idEnganche');
@@ -269,6 +276,7 @@
                     "fechaPago" => $newDate, //CAMBIAR FECHAS
                     "montoPago" => $montoEnganche,
                     "fechaModificacion" => $ahora,
+                    "conceptoPago" => $cdpplote,
                     "idModificacion" => $this->session->userdata('id_usuario')
                 );
                 $respuesta = $this->General_model->updateRecord($table, $dataEnganche, $key, $idEnganche);
@@ -282,7 +290,7 @@
                     "monedaDivisa" => $cmbMonedaDiv,
                     "fechaPago" => $newDate,
                     "montoPago" => $montoEnganche,
-                    "conceptoPago" =>  1, //este es el enganche
+                    "conceptoPago" =>  $cdpplote, //este es el enganche
                     "estatus" => 1,
                     "fechaCreacion" => $ahora,
                     "idCreacion" => $this->session->userdata('id_usuario'),

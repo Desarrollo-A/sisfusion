@@ -3389,25 +3389,38 @@
 		$id_usuario = $this->session->userdata('id_usuario');
         switch ($this->session->userdata('id_rol')) {
 			case '2':
-				$sede =  $this->session->userdata('id_sede');
-				if ($id_usuario == 3) // MJ: JESUS TORRE VERÁ LO DE QUERÉTARO, CDMX, EDOMEXO, EDOMEXP Y PUEBLA
-					$where = "id_rol = 3 AND id_sede IN ('2', '4', '13', '14', '15')";
-				else
-					$where = "id_rol = 3 AND id_sede IN ($sede) and id_lider = $id_usuario";
-                $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote WHERE clientes.id_gerente IN (SELECT id_usuario FROM usuarios WHERE $where) 
-                AND lotes.status = 1 AND clientes.status = 1 AND lotes.idCondominio = $condominio
-                UNION ALL
-                SELECT lotes.idLote, nombreLote, idStatusLote, vc.id_asesor, '2' venta_compartida FROM lotes
-                INNER JOIN clientes ON clientes.idLote = lotes.idLote 
-                INNER JOIN ventas_compartidas vc ON vc.id_cliente = clientes.id_cliente
-                WHERE vc.id_gerente IN (SELECT id_usuario FROM usuarios WHERE $where)  AND vc.estatus = 1 AND 
-                clientes.status = 1 AND lotes.status = 1 AND lotes.idCondominio = $condominio
-				UNION ALL
-				SELECT lotes.idLote, nombreLote, idStatusLote, cl.id_asesor, '1' venta_compartida FROM lotes
-				INNER JOIN clientes cl ON cl.idLote = lotes.idLote AND cl.id_asesor = $id_usuario AND cl.id_coordinador IN (10806, 10807) AND cl.id_gerente IN (10806, 10807) AND cl.status = 1
-				WHERE lotes.status = 1 AND lotes.idCondominio = $condominio
-				ORDER BY lotes.idLote");
+				$id_usuario =  $this->session->userdata('id_usuario');
+				$query = $this->db->query(
+					"SELECT 
+						lo.idLote, 
+						lo.nombreLote, 
+						lo.idStatusLote, 
+						cl.id_asesor, 
+						'1' venta_compartida 
+					FROM 
+						lotes lo
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+					WHERE 
+						lo.status = 1 
+						AND lo.idCondominio = $condominio 
+					UNION ALL 
+					SELECT 
+						lo.idLote, 
+						lo.nombreLote, 
+						lo.idStatusLote, 
+						vc.id_asesor, 
+						'2' venta_compartida 
+					FROM 
+						lotes lo
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+					WHERE 
+						vc.estatus = 1 
+						AND lo.status = 1 
+						AND lo.idCondominio = $condominio 
+					ORDER BY 
+						lo.idLote
+				");
 				break;
             case '3': // GERENTE
 				$query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida FROM lotes
@@ -3493,23 +3506,32 @@
 				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
-				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-					$id_lider = $id_lider . ', 12688';
-					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
 					$id_lider = $id_lider . ', 5604';
 					$sede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
 					$id_lider = $id_lider . ', 455';
 					$sede = "";
-				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-					$id_lider = $id_lider . ', 471';
-					$sede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
 					$id_lider = $id_lider . ', 21, 1545';
 					$sede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-					$id_lider = $id_lider . ', 12027, 13059, 2599';
+					$id_lider = $id_lider . ', 12027, 13059, 2599, 609, 11680, 7435';
+					$sede = "";
+				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
+					$id_lider = $id_lider . ', 694, 4509';
+					$sede = "";
+				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
+					$id_lider = $id_lider . ', 13295';
+					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
+					$id_lider = $id_lider . ', 3111';
+					$sede = "";
+				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
+					$id_lider = $id_lider . ', 10063';
+					$sede = "";
+				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+					$id_lider = $id_lider . ', 6942';
 					$sede = "";
 				}
 

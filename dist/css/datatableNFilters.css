@@ -1839,7 +1839,7 @@ table {
   text-transform: uppercase;
 }
 table tbody > tr.selected, table tbody > tr > .selected {
-  background-color: #96843D !important;
+  background-color: #337ab7 !important;/*anterior: 96843D*/
   opacity: 0.6;
   color: #ffffff !important;
 }

@@ -14,6 +14,12 @@ $(document).ready(function() {
         }
         $("#proyectoAsimilados").selectpicker('refresh');
     }, 'json');
+
+    $('input[name="modoSubida"]').change(function() {
+        getDataAsimilados(proyecto, condominio);
+
+    });
+
 });
 
 $('#proyectoAsimilados').change(function(){
@@ -69,6 +75,20 @@ $('#tabla_asimilados thead tr:eq(0) th').each(function (i) {
     }
 });
 
+function obtenerModoSeleccionado() {
+    var radioButtons = document.getElementsByName("modoSubida");
+    var modoSeleccionado = "";
+
+    for (var i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            modoSeleccionado = radioButtons[i].value;
+            break;
+        }
+    }
+
+    return modoSeleccionado;
+}
+
 function getDataAsimilados(proyecto, condominio){
     
     $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
@@ -79,6 +99,10 @@ function getDataAsimilados(proyecto, condominio){
         var to = formatMoney(numberTwoDecimal(total));
         document.getElementById("disponibleAsimilados").textContent = to;
     });
+
+    var modoSubidaSeleccionado = obtenerModoSeleccionado();
+    console.log("prueba");
+    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
     
 
     $("#tabla_asimilados").prop("hidden", false);
@@ -333,12 +357,13 @@ function getDataAsimilados(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasAContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasAsimiladosContraloria/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
                 condominio : condominio,
+                modoSubida: modoSubidaSeleccionado
             }
         },
     });

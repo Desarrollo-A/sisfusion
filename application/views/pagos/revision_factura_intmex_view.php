@@ -14,6 +14,16 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modal_nuevas_seguros" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="form_interes_seguros">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_despausar" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -68,6 +78,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#nuevas-1" role="tab" data-toggle="tab">Pagos lotes</a></li>
+                        <!-- <li><a href="#proceso-1" role="tab" data-toggle="tab">Pagos lotes ooam</a></li> -->
+                        <li><a href="#factura_seguros" role="tab" data-toggle="tab">Pagos lotes seguros</a></li>
                     </ul>
                     <div class="card no-shadow m-0 border-conntent__tabs">
                         <div class="card-content p-0">
@@ -75,9 +87,13 @@
                                 <div class="tab-content p-2">
                                     <div class="tab-pane active" id="nuevas-1">
                                         <div class="card-content">  
-                                            <div class="encabezadoBox">
-                                                <h3 class="card-title center-align" >Comisiones nuevas <b>factura</b></h3>
-                                                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturacion)</p>
+                                            <div class="text-center">
+                                                <div class="encabezadoBox">
+                                                    <h3 class="card-title center-align" >Comisiones nuevas <b>factura</b></h3>
+                                                </div>
+                                                <div>
+                                                     <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturacion)</p>
+                                                </div>
                                             </div>
                                             <div class="toolbar">
                                                 <div class="container-fluid p-0">
@@ -145,72 +161,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane" id="proceso-1">
-                                            <div class="text-center">
-                                                <h3 class="card-title center-align" >Comisiones nuevas <b>factura</b></h3>
-                                                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturacion)</p>
-                                            </div>
-                                                <div class="toolbar">
-                                                    <div class="container-fluid p-0">
-                                                        <div class="row">
-                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                                <div class="form-group d-flex justify-center align-center">
-                                                                    <h4 class="title-tot center-align m-0">Disponible:</h4>
-                                                                    <p class="input-tot pl-1" name="total_factura_ooam" id="total_factura_ooam">$0.00</p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                                                                <div class="form-group d-flex justify-center align-center">
-                                                                    <h4 class="title-tot center-align m-0">Autorizar:</h4>
-                                                                    <p class="input-tot pl-1" id="autorizar_factura_ooam" name="autorizar_factura_ooam">$0.00</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row aligned-row d-flex align-end">
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label" for="catalogo_factura_ooam">Puesto</label>
-                                                                <select name="catalogo_factura_ooam" id="catalogo_factura_ooam" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label" for="usuario_factura_ooam">Usuario</label>
-                                                                <select class="selectpicker select-gral" id="usuario_factura_ooam" name="usuario_factura_ooam[]" data-style="btn " data-show-subtext="true" data-live-search="true" data-container="body" title="SELECCIONA UNA OPCIÓN" data-size="7" required></select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
-                                                            <div class="form-group w-100">
-                                                                <button type="button" class="btn-gral-data PagarOoam">Pagar masivamente</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                <table class="table-striped table-hover" id="tabla_factura_ooam" name="tabla_factura_ooam">
-                                                    <thead>
-                                                        <tr>
-                                                            <th></th>
-                                                            <th>ID</th>
-                                                            <th>PROYECTO</th>
-                                                            <th>CONDOMINIO</th>
-                                                            <th>LOTE</th>
-                                                            <th>REFERENCIA</th>
-                                                            <th>PRECIO DEL LOTE</th>
-                                                            <th>EMPRESA</th>
-                                                            <th>TOTAL DE LA COMPRA</th>
-                                                            <th>PAGO DEL CLIENTE</th>
-                                                            <th>A PAGAR</th>
-                                                            <th>TIPO DE VENTA</th>
-                                                            <th>USUARIO</th>
-                                                            <th>RFC</th>
-                                                            <th>PUESTO</th>
-                                                            <th>FECHA DE ENVÍO</th>
-                                                            <th>ACCIONES</th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-                                        </div>
+                                        <?php $this->load->view('pagos/seguros_internomex/revision_factura_intmex_ooam_view'); ?>
+                                        <?php $this->load->view('pagos/seguros_internomex/revision_factura_intmex_seguros_view'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -224,4 +176,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_factura_intmex.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros_internomex/revision_factura_intmex_seguros.js"></script>
 </body>

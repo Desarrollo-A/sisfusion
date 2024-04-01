@@ -49,19 +49,21 @@ class Contratacion_model extends CI_Model {
       return $lpReturn;
    }
 
-   function getInventarioData($estatus, $condominio, $proyecto) {
-      $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : ( $this->session->userdata('id_rol') == 40 ? "AND ISNULL(lot.idStatusLote, 0) NOT IN (15, 16, 17, 18, 19, 20, 21)" : "");      $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
-      $filtroProyecto = "";
-      $filtroCondominio = "";
-      $filtroEstatus = "";
-      if ($proyecto != 0)
-         $filtroProyecto = "AND res.idResidencial = $proyecto";
-      if ($condominio != 0)
-         $filtroCondominio = "AND con.idCondominio = $condominio";
-      if ($estatus != 0)
+
+    function getInventarioData($estatus, $condominio, $proyecto) {
+        $whereProceso = !in_array($this->session->userdata('id_rol'), array(17, 70, 71, 73, 11, 15, 33)) ? "AND ISNULL(cl.proceso, 0) NOT IN (2, 3, 4, 5, 6, 7) AND lot.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)" : ($this->session->userdata('id_rol') == 40 ? "AND lot.idStatusLote NOT IN (15, 16, 17, 20, 21)" : "");
+        $prospectingPlaceDetail = $this->getProspectingPlaceDetail();
+        $filtroProyecto = "";
+        $filtroCondominio = "";
+        $filtroEstatus = "";
+        if ($proyecto != 0)
+            $filtroProyecto = "AND res.idResidencial = $proyecto";
+        if ($condominio != 0)
+            $filtroCondominio = "AND con.idCondominio = $condominio";
+        if ($estatus != 0)
             $filtroEstatus = "AND lot.idStatusLote = $estatus";
 
-      $query = $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
+        $query = $this->db->query("SELECT  lot.idLote, lot.nombreLote, con.nombre as nombreCondominio, res.nombreResidencial, lot.idStatusLote, con.idCondominio, CONVERT(varchar, CONVERT(money, lot.sup), 1) as superficie, lot.sup, lot.totalNeto2,
       lot.total, lot.referencia, ISNULL(lot.comentario, 'SIN ESPECIFICAR') comentario, lot.comentarioLiberacion, lot.observacionLiberacion, 
       CASE WHEN lot.casa = 1 THEN CONCAT(sl.nombre, ' casa') ELSE sl.nombre end as descripcion_estatus, sl.color, tv.tipo_venta, lot.msi as msni,
       CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END asesor,
@@ -112,9 +114,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
       WHERE lot.status = 1 $filtroEstatus $whereProceso
       ORDER BY lot.nombreLote");
-      return $query->result_array();
-   }
-
+        return $query->result_array();
+    }
    function get_datos_historial($lote){
        return $this->db->query("SELECT nombreLote, idLiberacion, UPPER(observacionLiberacion) AS observacionLiberacion, precio, fechaLiberacion
               modificado, usuarios.nombre, status, idLote, UPPER(userLiberacion) AS userLiberacion,
@@ -261,7 +262,10 @@ class Contratacion_model extends CI_Model {
       UPPER($prospectingPlaceDetail) AS lugar_prospeccion, 
       ISNULL(CONVERT(varchar, lot.fecha_creacion, 20), '') fecha_creacion,sl.background_sl,
       lot.totalValidado as cantidad_enganche, ISNULL(CONVERT(varchar, fechaSolicitudValidacion, 20), '') fecha_validacion,
-      cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+      cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, sc.nombreStatus as estatusContratacion,
+      CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
+      ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -281,6 +285,11 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios u44 ON u44.id_usuario = u33.id_lider -- REGIONAL
       LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = cl.lugar_prospeccion AND oxc.id_catalogo = 9   
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
+      LEFT JOIN statusContratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
+      LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+      LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
+      LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
+      LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
       WHERE lot.status = 1 $whereProceso ORDER BY con.nombre, lot.idLote");
    }
 
@@ -301,5 +310,13 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN usuarios us ON us.id_usuario = TRY_CAST (au.creado_por AS INT)
       WHERE id_parametro = $id_parametro AND tabla = 'lotes' AND col_afect = 'idStatusLote' ORDER BY id_auditoria");
   }
-     
+
+
+    public function downloadCompleteInventory () {
+        if (isset($_POST) && !empty($_POST)) {
+            $data['data'] = $this->Contratacion_model->getCompleteInventory($this->input->post("id_sede"))->result_array();
+            echo json_encode($data);
+        } else
+            echo json_encode(array());
+    }
 }

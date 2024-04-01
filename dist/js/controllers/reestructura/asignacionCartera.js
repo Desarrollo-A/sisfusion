@@ -91,7 +91,9 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
             width: "30%",
             data: function (d) {
                 let lblInput = '';
-                if(d.idFusion == null && d.idLotePvOrigen == null ){
+                console.log('d.idFusion: ', d.idFusion, ' d.idLotePvOrigen: ', d.idLotePvOrigen, ' d.id_estatus_preproceso: ', d.id_estatus_preproceso);
+                
+                if(d.idFusion == null && d.idLotePvOrigen == null && d.id_estatus_preproceso == 0){
                     lblInput = `<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="${d.idAsesorAsignado}"
                          data-nombreLote="${d.nombreLote}" data-idCliente="${d.idCliente}"
                          data-totalNeto2="${d.totalNeto2}" data-sup="${d.sup}" name="lotesOrigen[]" value="${d.idLote}" ></center>`;

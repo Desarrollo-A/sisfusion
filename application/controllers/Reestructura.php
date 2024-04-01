@@ -508,11 +508,9 @@ class Reestructura extends CI_Controller{
             $lotesString = implode(",", $idLotes);
             $dataLoteDis = $this->Reestructura_model->getLotesDetail($lotesString);
 
-
-
             foreach ($dataLoteDis as $index => $dataLote) {
                 if ( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] == 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22)){
-                    //Reubicación en el mismo norte
+                    //Reubicación en los mismos proyectos
                     $statusLote = 20;
                 }
                 else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22) ){
@@ -744,21 +742,14 @@ class Reestructura extends CI_Controller{
             if($proceso == 5){
                 $updateFusionFlag = true;
 
-                $checkLotes = $this->Reestructura_model->checkLotesFusion($ids);
-                $lotesFusion = $checkLotes->result();
+                foreach($data as $lote){
+                    if($lote->destino == 1){
+                        $idRegresoFusion = $lote->tipo_estatus_regreso == 1 ? 15 : ($lote->tipo_estatus_regreso == 2 ? 21 : 1);
+                        $update = $this->Reestructura_model->updateLotesFusion($lote->idLote, $idRegresoFusion, $idUsuario);
 
-                foreach($lotesFusion as $lf){
-                    if($lf->idStatusLote == 16){
-                        $idRegresoFusion = 15; 
-                    }
-                    else if($lf->idStatusLote == 20){
-                        $idRegresoFusion = 21;
-                    }
-
-                    $update = $this->Reestructura_model->updateLotesFusion($lf->idLote, $idRegresoFusion, $idUsuario);
-
-                    if(!$update){
-                        $updateFusionFlag = false;
+                        if(!$update){
+                            $updateFusionFlag = false;
+                        }
                     }
                 }
             }
@@ -1632,9 +1623,6 @@ class Reestructura extends CI_Controller{
                 'tipo_doc' => $doc['tipo_doc'],
                 'estatus_validacion' => 0
             );
-
-
-
         }
 
         // Crear las ramas extras que no se tengan en el expediente anterior
@@ -1908,12 +1896,18 @@ class Reestructura extends CI_Controller{
     public function setAsesor() {
 	    $idFusion = $this->input->post('idFusion');
         $idAsesorAsignado = $this->input->post('idAsesor');
+        $lineaVenta = $this->Reestructura_model->lineaVenta($idAsesorAsignado)->row();
 	    if($idFusion==1){
             $idLote = $this->input->post('idLote');
             $lotesFusionados = explode(",", $idLote);
             $flagEsatus = 0;
             foreach ($lotesFusionados as $elemento){
-                $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+                $updateData = array(
+                    "id_usuario_asignado" => $idAsesorAsignado,
+                    "id_gerente_asignado" =>  $lineaVenta->id_gerente,
+                    "id_subdirector_asignado" => $lineaVenta->id_subdirector,
+                    "usuario" => $this->session->userdata('id_usuario')
+                );
                 if($this->General_model->updateRecord("lotes", $updateData, "idLote", $elemento)){
                     $flagEsatus = $flagEsatus + 1;
                 }
@@ -1924,7 +1918,12 @@ class Reestructura extends CI_Controller{
                 echo json_encode(array("status" => 500, "message" => "ERROR"), JSON_UNESCAPED_UNICODE);
             }
         }else if($idFusion == 0){
-            $updateData = array("id_usuario_asignado" => $idAsesorAsignado, "usuario" => $this->session->userdata('id_usuario'));
+            $updateData = array(
+                "id_usuario_asignado" => $idAsesorAsignado, 
+                "id_gerente_asignado" =>  $lineaVenta->id_gerente,
+                "id_subdirector_asignado" => $lineaVenta->id_subdirector,
+                "usuario" => $this->session->userdata('id_usuario')
+            );
             if($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote'))){
                 echo json_encode(array("status" => 200, "message" => "OK"), JSON_UNESCAPED_UNICODE);
             }else{
@@ -1965,7 +1964,7 @@ class Reestructura extends CI_Controller{
 	    $flagFusion = $this->input->post('flagFusion');
 	    $data['opcionesLotes'] = $this->Reestructura_model->getOpcionesLote($idLote, $flagFusion);
 	    $data['copropietarios'] = $this->Reestructura_model->getCopropietariosReestructura($idLote);
-        echo json_encode ($data);
+        echo json_encode ($data, JSON_NUMERIC_CHECK);
     }
 
     function updateArchivos(){
@@ -2523,7 +2522,7 @@ class Reestructura extends CI_Controller{
         foreach ($notSelectedLotes as $lote){
             $arrayLote = array(
                 'idLote' => $lote['id_lotep'],
-                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : 1,
+                'idStatusLote' => $lote['tipo_estatus_regreso'] == 1 ? 15 : ($lote['tipo_estatus_regreso'] == 2 ? 21 : 1),
                 'usuario' => $this->session->userdata('id_usuario')
             );
 
@@ -3095,6 +3094,8 @@ class Reestructura extends CI_Controller{
     public function getReporteEstatus() {
         $registros = $this->Reestructura_model->getReporteEstatus();
         for ($i = 0; $i < count($registros); $i ++) {
+            $registros[$i]['nombreResidencialOrigen'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialOrigen'])));
+            $registros[$i]['nombreCondominioOrigen'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioOrigen'])));
             $registros[$i]['nombreResidencialDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreResidencialDestino'])));
             $registros[$i]['nombreCondominioDestino'] = implode(', ', array_unique(explode(', ', $registros[$i]['nombreCondominioDestino'])));
             $registros[$i]['estatusProceso'] = implode(', ', array_unique(explode(', ', $registros[$i]['estatusProceso'])));

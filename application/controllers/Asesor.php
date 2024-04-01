@@ -95,7 +95,12 @@ class Asesor extends CI_Controller {
         if($data[0]['casasDetail']!=null){
             if(count($cd->tipo_casa) >= 1){
                 foreach($cd->tipo_casa as $value) {
-                    if($data_casa->id === $value->id){
+//                    print_r($data_casa);
+//                    echo '<br>';
+//                    print_r($value->id);
+//                    echo '<br>';
+//                    echo '<br>';
+                    if($data_casa === $value->id){
                         $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
                         foreach($value->extras as $v) {
                             $total_construccion += $v->techado;
@@ -691,11 +696,26 @@ class Asesor extends CI_Controller {
         $this->load->view('template/header');
         $this->load->view("asesor/DSConsult");
     }
+
+//    public function registrosLoteVentasAsesor() {
+//
+//        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+//        $this->load->view('template/header');
+//
+//        if($this->session->userdata('id_rol') != '22' || $this->session->userdata('id_rol') != '12') {
+//            $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
+//        } else if($this->session->userdata('id_rol') == '22'){
+//            $this->load->view("contratacion/datos_lote_contratacion_view_ac", $datos);
+//        }
+//
+//    }
+
     public function registrosLoteVentasAsesor(){
         $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
         $this->load->view('template/header');
         $this->load->view("contratacion/datos_lote_contratacion_view", $datos);
     }
+
     public function invDispAsesor()
     {
         $datos["residencial"] = $this->registrolote_modelo->getResidencialQro();
@@ -2053,11 +2073,16 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-        $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso);
-        if(!$validacionM2) {//si es diferente a true
-            echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
-            exit;
+
+        if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
+            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
+            if(!$validacionM2) {//si es diferente a true
+                echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
+                exit;
+            }
         }
+
 
         $proyecto = $this->input->post('proyecto');
         $municipioDS = $this->input->post('municipioDS');
@@ -2100,7 +2125,7 @@ class Asesor extends CI_Controller {
         //si es así hayq ue borrar la rama ya que no la estará utilizando
 
         if($tipo_comprobante == 2){ //ha eligido que no, hay que borrar la rama y el archivo el archivo
-            $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
+            //$dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $revisar_registro = $this->Asesor_model->revisarCartaVerif($id_cliente,  29);
 
             if (count($revisar_registro)>0) {
@@ -3120,7 +3145,7 @@ class Asesor extends CI_Controller {
         }
     }
 
-    function validarCostos($costoListaM2, $costoFinalM2, $tipoVenta, $proceso){
+    function validarCostos($costoListaM2, $costoFinalM2, $tipoVenta, $proceso, $idResidencial){
         $tipoVenta = (int) $tipoVenta;
         $array = array(
             '$costoListaM2' => $costoListaM2,
@@ -3137,7 +3162,7 @@ class Asesor extends CI_Controller {
                 $estatusTransaccion = true;
             }
         }else{
-             $descuentoCostoListaM2 = $costoListaM2 * 0.80; // Aplicar el descuento del 20%
+            $descuentoCostoListaM2 = (in_array($idResidencial, [5, 6])) ? $costoListaM2 * 0.74 : $costoListaM2 * 0.80; // Aplicar el descuento del 20%
             $estatusProceso = array(2, 3, 4);
             if(!in_array($proceso, $estatusProceso)){
                if($costoFinalM2 > $costoListaM2 || $costoFinalM2 < $descuentoCostoListaM2 || $costoFinalM2 < 0){
@@ -3262,6 +3287,7 @@ class Asesor extends CI_Controller {
 
     }
     public function intExpAsesor() {
+
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
@@ -3270,6 +3296,7 @@ class Asesor extends CI_Controller {
         $fechaVenc = $this->input->post('fechaVenc');
         $idCondominio = $this->input->post('idCondominio');
         $idCliente = $this->input->post('idCliente');
+        $idMovimientoPost = $this->input->post('idMovimiento');
 
 
         if (!$this->validarDocumentosEstatus2($idLote, $tipo_comprobante, $idCliente)) {
@@ -3286,35 +3313,120 @@ class Asesor extends CI_Controller {
         }
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
-        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
-            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
-                $statusContratacion = 1;
-                $idMovimiento = 89;
-            } 
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
-                $statusContratacion = 7;
-                $idMovimiento = 83;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+
+       /* print_r($this->input->post());
+        echo '<br><br>';
+        print_r($valida_tventa);
+
+        exit;*/
+
+        switch($idMovimientoPost){
+            case in_array($idMovimientoPost, [31, 85, 102, 104, 107, 108, 109, 111]):
+
+                if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
+                    if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+                        $statusContratacion = 1;
+                        $idMovimiento = 89;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+                        $statusContratacion = 7;
+                        $idMovimiento = 83;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+                        $statusContratacion = 2;
+                        $idMovimiento = 110;
+                    }
+                    elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+                        $statusContratacion = 2;
+                        $idMovimiento = 113;
+                    } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+                        $statusContratacion = 5;
+                        $idMovimiento = 106;
+                    } else {
+                        $statusContratacion = 3;
+                        $idMovimiento = 98;
+                    }
+                }
+                else {
+                    $statusContratacion = 2;
+                    $idMovimiento = 84;
+                }
+
+                break;
+
+            case 20:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento  = 4;
+                }
+
+                break;
+
+            case 63:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento  = 62;
+                }
+                break;
+
+            case 73:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 2;
+                    $idMovimiento = 74;
+                }
+                break;
+
+            case 82:
+                if($valida_tventa[0]['tipo_venta'] != 1){
+                    $statusContratacion = 7;
+                    $idMovimiento  = 83;
+                }
+                break;
+
+            case 92:
                 $statusContratacion = 2;
-                $idMovimiento = 110;
-            }
-            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
-                $statusContratacion = 2;
-                $idMovimiento = 113;
-            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
-                $statusContratacion = 5;
-                $idMovimiento = 106;
-            } else {
-                $statusContratacion = 3;
-                $idMovimiento = 98;
-            }
-        } 
-        else {
-            $statusContratacion = 2;
-            $idMovimiento = 84;
+                $idMovimiento  = 93;
+                break;
+
+            case 96:
+                $statusContratacion = 6;
+                $idMovimiento  = 97;
+                break;
         }
-        
+
+
+        /***********************************/
+
+
+//        if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
+//            if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
+//                $statusContratacion = 1;
+//                $idMovimiento = 89;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 109 ) {
+//                $statusContratacion = 7;
+//                $idMovimiento = 83;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 111 ){
+//                $statusContratacion = 2;
+//                $idMovimiento = 110;
+//            }
+//            elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 102) { #rechazo del status 5
+//                $statusContratacion = 2;
+//                $idMovimiento = 113;
+//            } elseif($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 107) { #rechazo del status 6
+//                $statusContratacion = 5;
+//                $idMovimiento = 106;
+//            } else {
+//                $statusContratacion = 3;
+//                $idMovimiento = 98;
+//            }
+//        }
+//        else {
+//            $statusContratacion = 2;
+//            $idMovimiento = 84;
+//        }
+//
 
         $arreglo = array();
         $arreglo["idStatusContratacion"] = $statusContratacion;
@@ -3323,7 +3435,7 @@ class Asesor extends CI_Controller {
         $arreglo["usuario"] = $this->session->userdata('id_usuario');
         $arreglo["perfil"] = $this->session->userdata('id_rol');
         $arreglo["modificado"] = date("Y-m-d H:i:s");
-
+        
 
         date_default_timezone_set('America/Mexico_City');
         $horaActual = date('H:i:s');
@@ -3448,6 +3560,7 @@ class Asesor extends CI_Controller {
         $arreglo2["idLote"] = $idLote;
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
+
 
         $validate = $this->Asesor_model->validateSt2($idLote);
 

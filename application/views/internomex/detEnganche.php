@@ -29,24 +29,32 @@
                             <div class="modal-body pt-0">
                                 <div class="container-fluid">
                                     <div class="row">
-                                        <div class="col-md-4 pr-0">
+                                        <div class="col-md-6 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Lote (<small style="color: red;">*</small>)</label>
                                                 <input id="txtIdLote" name="txtIdLote" data-idDetEnganche="0" data-idDetEngancheNuevo="0" class="form-control input-gral" type="text" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 pr-0">
+                                        <div class="col-md-6 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Forma de pago (<small style="color: red;">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="cmbFormaPago" name="cmbFormaPago" data-live-search="true">
                                             </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4 pr-0">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 pr-0">
                                             <div class="form-group text-left m-0">
-
+                                                <label class="control-label label-gral">Concepto del primer pago del lote (<small style="color: red;">*</small>)</label>
+                                                <select class="selectpicker select-gral m-0" data-style="btn" title="SELECCIONA UNA OPCIÓN" data-size="7" id="cdpplote" name="cdpplote" data-live-search="true">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 pr-0">
+                                            <div class="form-group text-left m-0">
                                                 <label class="control-label">Fecha (<small style="color: red;">*</small>)</label>
-                                                <input type="text" class="form-control datepicker" id="txtFechaPago" name="txtFechaPago" placeholder="Seleccione una fecha" autocomplete="off" value="01/01/2024"/>
+                                                <input type="text" class="form-control datepicker  input-gral" id="txtFechaPago" name="txtFechaPago" placeholder="Seleccione una fecha" autocomplete="off" value="01/01/2024"/>
                                             </div>
                                         </div>
                                     </div>
@@ -69,7 +77,7 @@
                                         <div class="col-md-4 pr-0">
                                             <div class="form-group text-left m-0">
                                                 <label class="control-label label-gral">Monto Enganche (<small style="color: red;">*</small>)</label>
-                                                <input id="montoEnganche" name="montoEnganche" class="form-control input-gral"
+                                                <input id="montoEnganche" name="montoEnganche" class="form-control input-gral" style="margin-top: 7px"
                                                        data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"  step="any" type="text" >
                                             </div>
                                         </div>
@@ -119,16 +127,16 @@
                                         <table class="table-striped table-hover hide" id="table_lotes_enganche" name="table_lotes_enganche">
                                             <thead>
                                                 <tr>
-                                                    <th>RESIDENCIAL</th>
+                                                    <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>
                                                     <th>LOTE</th>
                                                     <th>ID LOTE</th>
                                                     <th>NOMBRE CLIENTE</th>
                                                     <th>FECHA APARTADO</th>
-                                                    <th>NOMBRE ASESOR</th>
+                                                    <th>ASESOR</th>
                                                     <th>TIPO VENTA</th>
                                                     <th>UBICACIÓN</th>
-                                                    <th>ENANCHE CONTRALORÍA</th>
+                                                    <th>ENGANCHE CONTRALORÍA</th>
                                                     <th>ENGANCHE ADMINISTRACIÓN</th>
                                                     <th>ACCIONES</th>
                                                 </tr>

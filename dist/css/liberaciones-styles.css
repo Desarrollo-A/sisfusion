@@ -46,6 +46,49 @@
 .buttons-excel:hover i {
     color: white;
 }
+.buttons-azul i {
+    color: #337ab7;
+}
+
+.buttons-azul {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: #337ab7;
+    background-color: white !important;
+    border: 1px solid #337ab7;
+    border-radius: 27px;
+    margin: 0;
+}
+
+.buttons-azul:hover {
+    background-color: #337ab7 !important;
+    border: none;
+}
+.buttons-azul:hover i {
+    color: white;
+}
+
+.buttons-orange i {
+    color: #ff7b00;
+}
+
+.buttons-orange {
+    box-shadow: none;
+    padding: 7px 25px;
+    color: #ff7b00;
+    background-color: white !important;
+    border: 1px solid #ff7b00;
+    border-radius: 27px;
+    margin: 0;
+}
+
+.buttons-orange:hover {
+    background-color: #ff7b00 !important;
+    border: none;
+}
+.buttons-orange:hover i {
+    color: white;
+}
 
 .paginate_button i {
     font-size: 18px;

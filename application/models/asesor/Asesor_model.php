@@ -1726,6 +1726,8 @@ class Asesor_model extends CI_Model {
     function informacionVerificarCliente($idCliente){
         $query = $this->db->query("SELECT * FROM clientes cl
         INNER JOIN lotes l ON cl.id_cliente=l.idCliente
+        INNER JOIN condominios co ON co.idCondominio = l.idCondominio
+		INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         WHERE cl.status=1 AND cl.id_cliente=".$idCliente);
         return $query->row();
     }

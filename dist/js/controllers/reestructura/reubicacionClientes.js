@@ -915,9 +915,9 @@ $(document).on("change", "#loteAOcupar", function(e){
         arrayProyIdProp.push(idProyectoRE);
 
         numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
-        mensajeMaxLotes = '';
-    }else{
         mensajeMaxLotes = ' más de tres lotes';
+    }else{
+        mensajeMaxLotes = ' ';
     }
 
     if ($itself.val() === '') {
@@ -1640,6 +1640,7 @@ const botonesAccionReubicacion = (d) => {
                     data-idLote="${d.idLote}"
                     data-nombreLote="${d.nombreLote}"
                     data-flagFusion='${flagFusion}'
+                    ${botonFusionadoEstatus}
                     >
                     <i class="fa fa-reply"></i>
                 </button>`;
@@ -1744,7 +1745,7 @@ let BUTTONREGRESO = '';
 
         return (totalContrato === totalContratoRef && parseInt(totalResicion) === parseInt(totalResicionNumero)) ? BTN_AVANCE + BTN_RECHAZO + BTN_SUBIR_ARCHIVO + botonJuridico : BTN_SUBIR_ARCHIVO + BTN_RECHAZO  + botonJuridico ;
     }
-    if (idEstatusPreproceso === 3 && id_rol_general == 6) // Asistente gerente: Recepción de documentación
+    if (idEstatusPreproceso === 3 && (id_rol_general == 6 || id_rol_general == 5)) // Asistente gerente / subdirector: Recepción de documentación
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
         return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
@@ -2033,7 +2034,7 @@ $(document).on('click', '.deshacer-preproceso', function(){
     arrayDeshacerRees.push(arrayManejo);
     
     $('#tituloDeshacer').text('¿Desea deshacer el movimiento del lote '+ nombre_lote + ' ?' );
-    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borraran propuestas o fusiones realizadas');
+    $('#textDeshacer').text('Se revertirán los cambios sobre este lote, se borrará(n) reubicaciones, reestructura o fusiones realizadas');
     $('#deshacerPreproceso').modal('toggle');
 });
 

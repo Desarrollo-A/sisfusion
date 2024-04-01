@@ -41,7 +41,7 @@ class Juridico extends CI_Controller
 		public function getStatus7ContratacionJuridico() {
 
 			if(isset($_POST) && !empty($_POST))
-			$data = $this->Juridico_model->registroStatusContratacion7($this->input->post("typeTransaction"), $this->input->post("beginDate"), $this->input->post("endDate"), $this->input->post("idResidencial"),$this->input->post("idCondominio"));
+			    $data = $this->Juridico_model->registroStatusContratacion7($this->input->post("typeTransaction"), $this->input->post("beginDate"), $this->input->post("endDate"), $this->input->post("idResidencial"),$this->input->post("idCondominio"));
             else
                 $data = $this->Juridico_model->registroStatusContratacion7();
 
@@ -470,7 +470,7 @@ class Juridico extends CI_Controller
 }
 	
 	
-public function editar_registro_loteRevision_juridico_proceceso7(){
+public function editar_registro_loteRevision_juridico_proceso7(){
 
     $idLote=$this->input->post('idLote');
     $idCondominio=$this->input->post('idCondominio');
@@ -568,7 +568,8 @@ public function editar_registro_loteRevision_juridico_proceceso7(){
     $arreglo2["idLote"]= $idLote;  
     $arreglo2["idCondominio"]= $idCondominio;          
 	$arreglo2["idCliente"]= $idCliente;    
-	
+
+
 	$validate = $this->Juridico_model->validateSt7($idLote);
 
 	if($validate == 1){

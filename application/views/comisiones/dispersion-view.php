@@ -3,9 +3,39 @@
 <body class="">
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
-        <?php $this->load->view('complementos/estilos_extra'); ?>
 
+        <style type="text/css">        
+            #modal_nuevas{
+                z-index: 1041!important;
+            }
+            #modal_vc{
+                z-index: 1041!important;
+            }
+            .beginDate, #beginDate{
+                background-color: #eaeaea !important;
+                border-radius: 27px 0 0 27px!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+                
+            .endDate, #endDate{
+                background-color: #eaeaea !important;
+                border-radius: 0!important;
+                background-image: initial!important;
+                text-align: center!important;
+            }
+            .btn-fab-mini {
+                border-radius: 0 27px 27px 0 !important;
+                background-color: #eaeaea !important;
+                box-shadow: none !important;
+                height: 45px !important;
+            }
+            .btn-fab-mini span {
+                color: #929292;
+            }
+        </style>
 
+        <!-- Modals -->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -18,13 +48,16 @@
                                         <div class="form-group d-flex">
                                             <input type="text" class="form-control datepicker beginDate" id="beginDate" />
                                             <input type="text" class="form-control datepicker endDate"  id="endDate"/>
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
+                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini"id="searchByDateRange">
+                                                <span class="material-icons update-dataTable">search</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <!-- <br><br><br><br> -->
                     <div id="mBody" class="modal-body pr-0 ml-4"></div>
                     <div class="modal-footer"><button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button></div>
                 </div>
@@ -35,12 +68,13 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header alcenter-align">
+         
                         <h4 class="modal-title  center-align" ><b>Llenado de Plan</b></h4>
                     </div>
                     <div class="modal-body ">
                         <label class="">Nota:</label>
                         <label class="">La siguiente acción asignará el plan de venta a los lotes que cumplan con las condiciones correspondientes, si no se asigna favor de revisar otros datos como la sede o los usuarios que tiene asignados la venta. Esta acción solo se podrá realizar cada 4 horas.</span>
-                        <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide"></label> 
+                         <label  id='tiempoRestante' name='tiempoRestante' class=" tiempoRestante hide"></label> 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple cerradoPlan hide" id="cerradoPlan" name="cerradoPlan" data-dismiss="modal">Cerrar</button>
@@ -95,13 +129,15 @@
                             <input type="hidden" name="id_pagoc" id="id-lote-detenido">
                             <input type="hidden" name="anterior" id="anterior">
                             <input type="hidden" name="saldoNeodata" id="saldoNeodata">
+                            
                             <div class="col-lg-12" >
                                 <div class="form-group">
                                 <label for="motivo" class="control-label mt-0">Motivo (<span class="isRequired">*</span>)</label>
                                     <select class="selectpicker select-gral" id="motivo" name="motivo" data-style="btn" required title="SELECCIONA UNA OPCIÓN">
                                         <?php foreach($controversias as $controversia){ ?>
-                                            <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
-                                        <?php } ?>
+                                                <?php if($controversia['id_opcion'] != 8 ){  ?>
+                                                    <option value="<?= $controversia['id_opcion']; ?>"><?= $controversia['nombre'] ?> </option>
+                                        <?php }} ?>
                                     </select>
                                 </div>
                             </div>
@@ -213,11 +249,23 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modal_NEODATA_reubicadas" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" id="form_NEODATA_reubicadas">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- modal verifyNEODATA -->
         <div class="modal fade modal-alertas" id="modal_NEODATA" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <form method="post" id="form_NEODATA">
-                        <div class="modal-header"></div>
                         <div class="modal-body"></div>
                         <div class="modal-footer"></div>
                     </form>
@@ -236,7 +284,9 @@
                                     <select class="selectpicker select-gral" id="planes" name="planes" title="SELECCIONA UNA OPCIÓN" required data-live-search="true" data-style="btn" required></select>
                                 </div>
                             </div>
-                            <div id="detalle-tabla-div"class="container-fluid"></div>
+                            <div id="detalle-tabla-div"class="container-fluid">
+                                
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -245,6 +295,7 @@
                 </div>
             </div>
         </div>
+        <!-- END Modals -->
 
         <div class="content boxContent">
             <div class="container-fluid">
@@ -265,33 +316,41 @@
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Monto hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="monto_label"></p>
+                                                    <p class="category input-tot pl-1" id="monto_label">
+                                                        <!-- monto o -->
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Pagos hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="pagos_label"></p>
+                                                    <p class="category input-tot pl-1" id="pagos_label">
+                                                            <!-- PAGOS HOY  -->
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2">
                                                 <div class="form-group text-center">
                                                     <h4 class="title-tot center-align m-0">Lotes hoy: </h4>
-                                                    <p class="category input-tot pl-1" id="lotes_label"></p>
+                                                    <p class="category input-tot pl-1" id="lotes_label">
+                                                        <!-- lOTES HOY -->
+                                                    </p>
                                                 </div>
                                             </div>
                                             <br>
                                             <br>
                                             <br><br>
                                             <div class="col-xs-4 col-sm-3 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
+                                                    <button type="sum" data-toggle="modal" class="btn-gral-data" id="planllenado" style="color:white" onclick="llenado()"> Llenado de plan</button>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
-                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" href="#myModal" style="color:white"> Reporte dispersión</a>
+                                                <a data-target="#myModal" data-toggle="modal" class="btn-gral-data" id="MainNavHelp" 
+                                                href="#myModal" style="color:white"> Reporte dispersión</a>
                                             </div>
                                             <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-end text-center">
                                                 <button class="btn-gral-data" id="btn-detalle-plan" style="color:white; ">Planes</button>
                                             </div>
+                                            
                                         </div>
                                     </div>
                                 </div>
@@ -328,5 +387,7 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/dispersion.js"></script>
+
 </body>

@@ -74,6 +74,11 @@ $('#tablaReporteVentas').DataTable({
         },
         {
             data: function (d) {
+                return `${d.ultiModificacion}`;
+            }
+        },
+        {
+            data: function (d) {
                 return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
             }
         }

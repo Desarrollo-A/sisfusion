@@ -2787,7 +2787,7 @@
 
 
 
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
+                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=48 && $scope.noPagomensualidad == 0) {
 
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
@@ -3195,7 +3195,7 @@
 
 
 
-                    if($scope.infoLote.mesesSinInteresP1 == 36) {
+                    if($scope.infoLote.mesesSinInteresP1 == 48) {
 
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
@@ -3455,7 +3455,7 @@
                     }
 
 
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
+                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=48 && $scope.noPagomensualidad == 0) {
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
 
@@ -3867,7 +3867,7 @@
 
                     }
 
-                    if($scope.infoLote.mesesSinInteresP1 == 36) {
+                    if($scope.infoLote.mesesSinInteresP1 == 48) {
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
 
@@ -4253,7 +4253,7 @@
 
                     }
 
-                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=35 && $scope.noPagomensualidad == 0) {
+                    if($scope.infoLote.mesesSinInteresP1 > 0 && $scope.infoLote.mesesSinInteresP1 <=48 && $scope.noPagomensualidad == 0) {
 
                         for (var i = ini; i < $scope.infoLote.mesesSinInteresP1; i++) {
 

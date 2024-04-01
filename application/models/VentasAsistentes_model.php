@@ -96,95 +96,8 @@ class VentasAsistentes_model extends CI_Model {
     }
    
 	public function registroStatusContratacion8 () {
-        $id_sede = $this->session->userdata('id_sede');
-        $id_rol = $this->session->userdata('id_rol');
-        $id_usuario = $this->session->userdata('id_usuario');
-        $id_lider = $this->session->userdata('id_lider');
-        $tipo = $this->session->userdata('tipo');
-        $filtroProceso = "";
-        if (in_array($id_rol, array(17, 70))) { // MJ: ES CONTRALORÍA Y EJECUTIVO DE CONTRALORÍA JR
-            $filtroUsuarioBR = '';
-            if($id_usuario == 2815 || $id_usuario == 12931)
-                $filtroUsuarioBR = ' AND (l.tipo_venta IN (4, 6) OR cl.id_asesor IN (2549, 2570, 2591))';
-            else if (in_array($id_usuario, array(12377, 2799, 10088, 2827, 6012))) // MIRIAM PAOLA JIMENEZ FIGUEROA o LADY SKARLETT LOPEZ VEN REUBICACIONES
-                $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
-            else
-                $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 ".$filtroUsuarioBR;
-        }
-        else if (in_array($id_rol, array(54, 63, 4))) // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO OR ASISTENTES DIRECCIÓN COMERCIAL
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1";
-        else { // MJ: ES COMERCIALIZACIÓN
-            if ($tipo == 1) { // SON COMERCIALIZACIÓN
-                if ($id_sede == 9)
-                    $filtroSede = "AND l.ubicacion IN ('4', '$id_sede')";
-                else if ($id_sede == 10 && $id_usuario == 11422) // FRANCISCA JUDITH VE TEXAS, TIJUANA Y MTY
-                    $filtroSede = "AND l.ubicacion IN ('8', '11', '$id_sede')";
-                else if ($id_sede == 10 && !in_array($id_rol, array(6, 5, 4))) 
-                    $filtroSede = "AND l.ubicacion IN ('11', '$id_sede')";
-                else
-                    $filtroSede = "AND l.ubicacion IN ('$id_sede')";
-                
-                if (in_array($id_usuario, array(28, 3)))
-                    $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
-
-                $filtroGerente = "";
-                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
-                    $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
-                else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
-                    $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
-                else if(in_array($id_usuario, array(13050))){
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
-                    $filtroSede = " AND l.ubicacion IN ($id_sede, '4')";
-                }
-                else if ($id_usuario == 6831) { // YARETZI MARICRUZ ROSALES HERNANDEZ
-                    $filtroGerente = "AND cl.id_subdirector IN ($id_lider)";
-                    $filtroSede = "";
-                } else if ($id_usuario == 13521) { // LETY LIZBETH ROMERO RIVERA	
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
-                    $filtroSede = "";
-                } else if ($id_usuario == 13770) { // ITAYETZI PAULINA CAMPOS GONZALEZ	
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
-                    $filtroSede = "";
-                } else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
-                    $filtroSede = "";
-                } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 5604)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 471)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599)";
-                    $filtroSede = "";
-				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
-                    $filtroSede = "";
-                } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
-                    $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
-                    $filtroSede = "";
-                }
-                $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
-            }
-            else { // SON EEC
-                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
-                $filtroSede = "";
-            }
-        
-            $where = "l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 AND cl.status = 1 $filtroSede $filtroGerente";
-        }
-
-		$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+        list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
+		return $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
         CAST(l.comentario AS varchar(MAX)) as comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
         ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta, l.observacionContratoUrgente as vl,
@@ -194,7 +107,7 @@ class VentasAsistentes_model extends CI_Model {
         cond.idCondominio, cl.expediente, UPPER(mo.descripcion) AS descripcion,
         ISNULL(oxc0.nombre, 'Normal') tipo_proceso
         FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote and cl.status = 1 $filtroProceso
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $validacionMktd $filtroProceso
         INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN movimientos mo ON mo.idMovimiento = l.idMovimiento
@@ -204,7 +117,7 @@ class VentasAsistentes_model extends CI_Model {
         LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
         LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE $where
+        WHERE l.idStatusContratacion IN (7, 11) AND l.idMovimiento IN (37, 7, 64, 66, 77, 41) AND l.status8Flag = 0 $where
         GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc, sd.nombre,
         CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -213,8 +126,7 @@ class VentasAsistentes_model extends CI_Model {
         CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
         CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
         cond.idCondominio, cl.expediente, mo.descripcion, ISNULL(oxc0.nombre, 'Normal')
-        ORDER BY l.nombreLote");
-		return $query->result();
+        ORDER BY l.nombreLote")->result();
 	}
 
     public function validateSt8($idLote){
@@ -316,12 +228,69 @@ class VentasAsistentes_model extends CI_Model {
 	}
 	
     public function registroStatusContratacion14 () {
-        $id_rol = $this->session->userdata('id_rol');
-        $id_usuario = $this->session->userdata('id_usuario');
-        $id_sede = $this->session->userdata('id_sede');
-        $id_lider = $this->session->userdata('id_lider');
-        $tipo = $this->session->userdata('tipo');
+        list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
+        return $this->db->query(" SELECT l.idLote, cl.id_cliente,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) AS modificado, cl.rfc,
+        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
+        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
+        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
+        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
+        CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
+        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
+        cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede,
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+        FROM lotes l
+        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote AND cl.status = 1 $validacionMktd $filtroProceso
+        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
+        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
+        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
+        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
+        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
+        LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
+        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        WHERE l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) $where
+        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
+        CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
+        tv.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
+        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
+        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
+        cond.idCondominio, l.observacionContratoUrgente, sd.nombre, ISNULL(oxc0.nombre, 'Normal')
+        ORDER BY l.nombreLote")->result();
+	}
+    
+	public function validateSt14($idLote){
+        $this->db->where("idLote",$idLote);
+        $this->db->where_in('idStatusLote', 3);
+        $this->db->where("(idStatusContratacion IN (13) AND idMovimiento IN (43, 68))");	
+        $query = $this->db->get('lotes');
+        $valida = (empty($query->result())) ? 0 : 1;
+        return $valida;
+
+    }
+
+	public function get_lp($idLote){
+		$query = $this->db-> query("SELECT cl.lugar_prospeccion
+        FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
+		return $query->row();
+	}
+
+	public function validaCartaCM($idCliente){
+        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
+        INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
+        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
+        return $query->result_array();
+    }
+    public function check_carta($idCliente){
+        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$idCliente);
+        return $query->result_array();
+    }
+
+    public function setFilters($id_rol, $id_usuario, $id_sede, $id_lider, $tipo) {
         $filtroProceso = "";
+        $where = "";
+        $validacionMktd = $id_rol == 54 ? "AND cl.lugar_prospeccion IN (52, 42)" : "";
         if (in_array($id_rol, array(17, 70))){ // MJ: ES CONTRALORÍA Y EJECUTIVO CONTRALORÍA JR
             $filtroUsuarioBR = '';
             if($id_usuario == 2815 || $id_usuario == 12931)
@@ -330,10 +299,10 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (6)';
             else
                 $filtroUsuarioBR = ' AND l.tipo_venta IN (4, 6)';
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1".$filtroUsuarioBR;
+            $where = "AND cl.status = 1".$filtroUsuarioBR;
         }
         else if (in_array($id_rol, array(54, 63, 4)))  // MJ: MARKETING DIGITAL (POPEA) OR CONTROL INTERNO OR ASISTENTES DIRECCIÓN COMERCIAL
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1";
+            $where = "AND cl.status = 1";
         else { // MJ: ES COMERCIALIZACIÓN
             if ($tipo == 1) { // SON COMERCIALIZACIÓN
                 if ($id_sede == 9)
@@ -369,23 +338,32 @@ class VentasAsistentes_model extends CI_Model {
                 }  else if ($id_usuario == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 1916, 11196)";
                     $filtroSede = "";
-                } else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12688)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
+                } else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 5604)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12855) { // ARIADNA ZORAIDA ALDANA ZAPATA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 455)";
                     $filtroSede = "";
-				} else if ($id_usuario == 13511) { // DANYA YOALY LEYVA FLORIAN
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 471)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 14449) { // ANALI MONSERRAT REYES ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 21, 1545)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14649) { // NOEMÍ DE LOS ANGELES CASTILLO CASTILLO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509";
+                    $filtroSede = "";
+				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 3111)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6942)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
@@ -397,68 +375,13 @@ class VentasAsistentes_model extends CI_Model {
                 $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";
             }
             else { // SON EEC
-                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider))";
+                $filtroGerente = "AND (cl.id_gerente IN ($id_lider) OR cl.id_asesor IN ($id_lider) OR asesor.id_lider = $id_lider)";
                 $filtroSede = "";
             }
             
-            $where = "l.idStatusContratacion = 13 AND l.idMovimiento IN (43, 68) AND cl.status = 1 $filtroSede $filtroGerente";
+            $where = "AND cl.status = 1 $filtroSede $filtroGerente";
         }
-        $query = $this->db->query(" SELECT l.idLote, cl.id_cliente,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR,l.modificado,120) AS modificado, cl.rfc,
-        CAST(l.comentario AS VARCHAR(MAX)) AS comentario, CONVERT(VARCHAR,l.fechaVenc,120) AS fechaVenc, l.perfil, cond.nombre AS nombreCondominio, res.nombreResidencial, l.ubicacion,
-        ISNULL(tv.tipo_venta, 'Sin especificar') tipo_venta,
-        UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
-        CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno) AS asesor,
-        CONCAT(coordinador.nombre, ' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno) AS coordinador,
-        CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) AS gerente,
-        cond.idCondominio, l.observacionContratoUrgente AS vl, sd.nombre as nombreSede,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso
-        FROM lotes l
-        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote $filtroProceso
-        INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
-        INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
-        LEFT JOIN usuarios asesor ON cl.id_asesor = asesor.id_usuario
-        LEFT JOIN usuarios coordinador ON cl.id_coordinador = coordinador.id_usuario
-        LEFT JOIN usuarios gerente ON cl.id_gerente = gerente.id_usuario
-        LEFT JOIN sedes sd ON sd.id_sede = l.ubicacion
-        LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
-        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-        WHERE $where
-        GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-        l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
-        CAST(l.comentario AS VARCHAR(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
-        tv.tipo_venta, CONCAT(asesor.nombre,' ',asesor.apellido_paterno, ' ', asesor.apellido_materno),
-        CONCAT(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
-        CONCAT(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
-        cond.idCondominio, l.observacionContratoUrgente, sd.nombre, ISNULL(oxc0.nombre, 'Normal')
-        ORDER BY l.nombreLote");
-		return $query->result();
-	}
-    
-	public function validateSt14($idLote){
-        $this->db->where("idLote",$idLote);
-        $this->db->where_in('idStatusLote', 3);
-        $this->db->where("(idStatusContratacion IN (13) AND idMovimiento IN (43, 68))");	
-        $query = $this->db->get('lotes');
-        $valida = (empty($query->result())) ? 0 : 1;
-        return $valida;
-
+        return [$filtroProceso, $where, $validacionMktd];
     }
 
-	public function get_lp($idLote){
-		$query = $this->db-> query("SELECT cl.lugar_prospeccion
-        FROM clientes cl where cl.lugar_prospeccion = 6 AND cl.idLote = ".$idLote." "); 
-		return $query->row();
-	}
-
-	public function validaCartaCM($idCliente){
-        $query = $this->db->query("SELECT hd.*, cl.personalidad_juridica, cl.tipo_comprobanteD FROM historial_documento  hd
-        INNER JOIN clientes cl ON cl.id_cliente = hd.idCliente
-        WHERE idCliente=".$idCliente." AND hd.status=1 AND (tipo_doc=29 OR tipo_doc=26) AND movimiento='CARTA DOMICILIO CM';");
-        return $query->result_array();
-    }
-    public function check_carta($idCliente){
-        $query = $this->db->query("SELECT * FROM clientes WHERE id_cliente=".$idCliente);
-        return $query->result_array();
-    }
 }

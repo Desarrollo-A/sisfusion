@@ -131,7 +131,7 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close close_modal_xml" data-dismiss="modal">&times;</button>
                     </div>
                     <form method="post" id="form_multiples">
                         <div class="modal-body"></div>
@@ -326,7 +326,7 @@
                             <li>
                                 <a href="#otras-1" role="tab"  data-toggle="tab">Pausadas</a>
                             </li>
-                            <li>
+                            <li style="display:none">
                                 <a href="#sin_pago_neodata" role="tab" data-toggle="tab">Sin pago en Neodata</a>
                             </li>
                         </ul>
@@ -575,5 +575,5 @@
         var userSede = <?= $this->session->userdata('id_sede') ?>;
         var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
     </script>
-    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador.js"></script>
+    <script src="<?=base_url()?>dist/js/controllers/ventas/comisiones_colaborador_seguros.js"></script>
 </body>

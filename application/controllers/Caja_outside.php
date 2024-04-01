@@ -282,11 +282,11 @@ class Caja_outside extends CI_Controller {
 
 
         }
-        else if ($data->accion == 3) {
+        else if ($data->accion == 3) { 
             $inicio = date("Y-m-01");
             $fin = date("Y-m-t");
-            //$datosCondominio = $this->caja_model_aoutside->getDatosCondominio($data->idCondominio);
-                    if($data->lotes[0]->tipo_lote == 1 ){ //1 - Comercial
+            $datosCondominio = $this->caja_model_outside->getDatosCondominio($data->idCondominio);
+                    if($datosCondominio[0]['tipo_lote'] == 1 ){ //1 - Comercial
                         //si el condominio es comercial solo consultar sin importar la superficie
                         $getPaquetesDescuentos = $this->PaquetesCorrida_model->getPaquetesDisponiblesyApart("AND c.tipo_lote =1","",$data->id_proy, $inicio, $fin);
                         $datos["descuentoComerciales"] = count($getPaquetesDescuentos) == 0 ? NULL :  $getPaquetesDescuentos[0]['id_descuento'] ;
@@ -303,7 +303,7 @@ class Caja_outside extends CI_Controller {
                 $datos["nombreLote"] = $value->nombreLote;
                 $datos["precio"] = $value->precio;
                 $datos["activeLE"] = $data->activeLE;
-                $datos["tipo_lote"] = $data->lotes[0]->tipo_lote;
+                $datos["tipo_lote"] = $datosCondominio[0]['tipo_lote'];
                 $datos["activeLP"] = $data->activeLP;
 
 

@@ -14,6 +14,11 @@ $(document).ready(function() {
         }
         $("#proyectoFactura").selectpicker('refresh');
     }, 'json');
+
+    $('input[name="modoSubida"]').change(function() {
+        getDataFactura(proyecto, condominio);
+
+    });
 });
 
 $('#proyectoFactura').change(function(){
@@ -69,6 +74,20 @@ $('#tabla_factura thead tr:eq(0) th').each(function (i) {
     }
 });
 
+function obtenerModoSeleccionado() {
+    var radioButtons = document.getElementsByName("modoSubida");
+    var modoSeleccionado = "";
+
+    for (var i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            modoSeleccionado = radioButtons[i].value;
+            break;
+        }
+    }
+
+    return modoSeleccionado;
+}
+
 function getDataFactura(proyecto, condominio){
     
     $('#tabla_factura').on('xhr.dt', function(e, settings, json, xhr) {
@@ -80,6 +99,9 @@ function getDataFactura(proyecto, condominio){
         document.getElementById("disponibleFactura").textContent = to;
     });
     
+    var modoSubidaSeleccionado = obtenerModoSeleccionado();
+    console.log("prueba");
+    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_factura").prop("hidden", false);
     tabla_factura = $("#tabla_factura").DataTable({
@@ -332,12 +354,13 @@ function getDataFactura(proyecto, condominio){
             },
         }],
         ajax: {
-            url: general_base_url + "Pagos/getDatosNuevasFContraloria/" ,
+            url: general_base_url + "Pagos/getDatosNuevasFacturasContraloria/" ,
             type: "POST",
             cache: false,
             data :{
                 proyecto : proyecto,
                 condominio : condominio,
+                modoSubida: modoSubidaSeleccionado
             }
         },
     });

@@ -77,6 +77,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>ESTATUS CONTRATACIÓN</th>
+                                                <th>FECHA ÚLTIMO STATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

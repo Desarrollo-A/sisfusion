@@ -61,15 +61,15 @@ class Juridico_model extends CI_Model {
 		else {
 			$id_sede = $this->session->userdata('id_sede');
 			$id_usuario = $this->session->userdata('id_usuario');
-			if(in_array($this->session->userdata('id_usuario'), array("2765", "2776", "10463", "2820", "2876", "10437", "5468", "2764", "6856", "2800", "11129", "11258", "12047", "12842", "11097", "2825", "14183")))
+			if(in_array($this->session->userdata('id_usuario'), array(2765, 2776, 10463, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11129, 11258, 12047, 15108, 11097, 2825, 14183, 15046, 11125, 10427, 15025)))
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
 			
 			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
-			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15')";
+			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla y lo de Estado de México Norte
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15', '14')";
 			else if($id_sede == 5) // JURÍDICO LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
 			else
@@ -232,7 +232,7 @@ class Juridico_model extends CI_Model {
 		return $this->db->query("SELECT us.id_usuario, CONCAT(UPPER(us.nombre), ' ', UPPER(us.apellido_paterno), ' ', 
 		UPPER(us.apellido_materno), ' (', se.nombre, ')') nombreUsuario FROM usuarios us 
 		INNER JOIN sedes se ON se.id_sede = us.id_sede
-		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 12842, 11097, 14183) AND us.id_rol = 15 AND us.estatus = 1 
+		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 5468, 2764, 6856, 2800, 11258, 12047, 15108, 11097, 14183, 15046, 11125, 10427, 15025) AND us.id_rol = 15 AND us.estatus = 1 
 		ORDER BY us.id_sede, nombreUsuario")->result_array();
 	}
 

@@ -981,7 +981,8 @@ function checkBudgetInfo($idSolicitud){
             'usuario' => $user['usuario'],
             'idCondominio' => $datos['idCondominio'],
             'fecha_creacion' => date('Y-m-d h:i:s'),
-            'creado_por' => 1,
+            'fechaApartado' => date('Y-m-d h:i:s'),
+            'creado_por' => $this->session->userdata('id_usuario'),
             'fecha_modificacion' => date('Y-m-d h:i:s'),
             'banderaEscrituracion' => 1
         );
@@ -1394,4 +1395,188 @@ function checkBudgetInfo($idSolicitud){
         GROUP BY doc22.no_editados22,creado.nombre,creado.apellido_paterno,creado.apellido_materno,doc22.documentosCargados22,se.creado_por, doc22.estatusValidacion22,doc22.no_rechazos22,se.id_solicitud,c.banderaEscrituracion,se.id_cliente,se.id_lote,doc22.documentosCargados22, doc22.estatusValidacion22,doc22.no_rechazos22,de2.documentosCargados,presup2.presupuestoAprobado,de2.estatusValidacion,de2.no_rechazos,se.id_titulacion, cp.estatus_actual, se.id_estatus, se.fecha_creacion, l.nombreLote, cond.nombre, r.nombreResidencial, c.nombre,c.apellido_paterno,c.apellido_materno, n.pertenece, se.bandera_notaria, se.descuento, se.aportacion, ae.id_actividad, ae.clave, cp.tipo_permiso, cp.clave_actividad, cp.clave_actividad, ae.nombre, ar.id_opcion, cp.estatus_siguiente, ar.nombre, cp.nombre_actividad, cp.estatus_siguiente, cp.estatus_siguiente, cr.estatus_siguiente, cr.nombre_estatus_siguiente, cr.tipo_permiso, dc.expediente, dc.tipo_documento, dc.idDocumento, se.bandera_comite, se.bandera_admin, se.estatus_construccion, se.nombre_a_escriturar, cp.area_actual, se.cliente_anterior, cr.area_sig, ae.nombre, ae.dias_vencimiento,se.fecha_modificacion, de4.contrato, a.descripcion,pr.banderaPresupuesto,se.id_notaria,se.fecha_firma,userAsig.nombre,userAsig.apellido_paterno, userAsig.apellido_materno, se.valor_contrato,de5.formasPago ORDER BY se.id_solicitud DESC");
 
     }
+
+    function getListaClientes($id_residencial, $id_condominio) {
+        $validacionCondminio = $id_condominio == 0 ? "" : "AND co.idCondominio = $id_condominio";
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.idLote, 
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+                lo.idCliente,
+                fechaApartado, 
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor, 
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+                CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+                ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipoVenta, 
+                ISNULL(se.nombre, 'SIN ESPECIFICAR') ubicacion,
+                ISNULL(oxc1.nombre, 'SIN ESPECIFICAR') tipoTramite,
+                oxc0.nombre estatusProceso,
+                lo.estatusCambioNombre,
+                ISNULL(cxl.id_registro, 0) id_registro,
+                cxl.nombre nombreCteNuevo,
+                cxl.apellido_paterno apCteNuevo,
+                cxl.apellido_materno amCteNuevo,
+                cxl.tipoTramite idTipoTramite, 
+                lo.comentario,
+                lo.totalNeto2 as precioFinalLote
+            FROM 
+                lotes lo 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio $validacionCondminio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $id_residencial
+                LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
+                LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
+                LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+                LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+                LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+                LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+                LEFT JOIN sedes se ON se.id_sede = lo.ubicacion 
+                LEFT JOIN clientes_x_lote cxl ON cxl.idLote = lo.idLote AND cxl.estatus = 1
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatusCambioNombre AND oxc0.id_catalogo = 123
+                LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cxl.tipoTramite  AND oxc1.id_catalogo = 122
+            WHERE 
+                lo.status = 1 
+                AND lo.idStatusLote IN (2, 3)
+            ORDER BY
+                lo.nombreLote"
+        )->result();
+    }
+
+    function getListaClientesRevision() {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.idLote, 
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+                UPPER(CONCAT(cxl.nombre, ' ', cxl.apellido_paterno, ' ', cxl.apellido_materno)) nombreClienteNuevo, 
+                lo.idCliente,
+                CONVERT(varchar, cl.fechaApartado, 120) fechaApartado, 
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor, 
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+                CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+                ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipoVenta, 
+                ISNULL(se.nombre, 'SIN ESPECIFICAR') ubicacion,
+                ISNULL(oxc1.nombre, 'SIN ESPECIFICAR') tipoTramite,
+                oxc0.nombre estatusProceso,
+                lo.estatusCambioNombre,
+                ISNULL(cxl.id_registro, 0) id_registro,
+                cxl.nombre nombreCteNuevo,
+                cxl.apellido_paterno apCteNuevo,
+                cxl.apellido_materno amCteNuevo,
+                cxl.tipoTramite idTipoTramite,
+                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
+                lo.comentario, lo.totalNeto2 as precioFinal
+            FROM 
+                lotes lo 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
+                LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
+                LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+                LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+                LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+                LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+                LEFT JOIN sedes se ON se.id_sede = lo.ubicacion 
+                INNER JOIN clientes_x_lote cxl ON cxl.idLote = lo.idLote AND cxl.estatus = 1
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatusCambioNombre AND oxc0.id_catalogo = 123
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cxl.tipoTramite  AND oxc1.id_catalogo = 122
+            WHERE 
+                lo.status = 1 
+                AND lo.idStatusLote IN (2, 3)
+                AND lo.estatusCambioNombre = 3
+            ORDER BY
+                lo.nombreLote"
+        )->result();
+    }
+
+    public function getInformacionCliente($idLote) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idCondominio,
+                lo.precio,
+                lo.tipo_venta,
+                ISNULL(cl.id_asesor, 0) id_asesor,
+                ISNULL(cl.id_coordinador, 0) id_coordinador,
+                ISNULL(cl.id_gerente, 0) id_gerente,
+                ISNULL(cl.id_subdirector, 0) id_subdirector,
+                ISNULL(cl.id_regional, 0) id_regional,
+                ISNULL(cl.id_regional_2, 0) id_regional_2,
+                ISNULL(cl.personalidad_juridica, 0) personalidad_juridica,
+                cxl.nombre nombreCliente,
+                cxl.apellido_paterno,
+                cxl.apellido_materno
+            FROM 
+                lotes lo 
+                LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
+                INNER JOIN clientes_x_lote cxl ON cxl.idLote = lo.idLote AND cxl.estatus = 1
+            WHERE 
+                lo.status = 1 
+                AND lo.idLote IN ($idLote)"
+        )->result();
+    }
+
+    function getHistorialCambioNombre() {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.idLote, 
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, 
+                lo.idCliente,
+                CONVERT(varchar, cl.fechaApartado, 120) fechaApartado, 
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor, 
+                CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
+                CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
+                ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipoVenta, 
+                ISNULL(se.nombre, 'SIN ESPECIFICAR') ubicacion,
+                ISNULL(oxc1.nombre, 'SIN ESPECIFICAR') tipoTramite,
+                oxc0.nombre estatusProceso,
+                lo.estatusCambioNombre,
+                cxl.tipoTramite idTipoTramite,
+                CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
+                lo.comentario
+            FROM 
+                lotes lo 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 
+                LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
+                LEFT JOIN usuarios u1 ON u1.id_usuario = cl.id_coordinador
+                LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+                LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
+                LEFT JOIN usuarios u5 ON u5.id_usuario = cl.id_regional_2
+                LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta 
+                LEFT JOIN sedes se ON se.id_sede = lo.ubicacion 
+                INNER JOIN clientes_x_lote cxl ON cxl.idLote = lo.idLote AND cxl.estatus = 1
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatusCambioNombre AND oxc0.id_catalogo = 123
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cxl.tipoTramite  AND oxc1.id_catalogo = 122
+            WHERE 
+                lo.status = 1 
+                AND lo.idStatusLote IN (2, 3)
+                AND lo.estatusCambioNombre IN (4, 5)
+            ORDER BY
+                lo.nombreLote"
+        )->result();
+    }
+    
 }
