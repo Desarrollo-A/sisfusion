@@ -205,18 +205,77 @@ $("#comisiones_solicitadas").ready( function(){
         }
     });
     
+    // $("#comisiones_solicitadas tbody").on("click", ".consultar_logs_asimilados", function(e){
+    //     console.log("prueba");
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation();
+    //     id_pago = $(this).val();
+    //     lote = $(this).attr("data-value");
+    //     $("#seeInformationModalAsimilados").modal();
+    //     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+    //     $.getJSON("getComments/"+id_pago).done( function( data ){
+    //         $.each( data, function(i, v){
+    //             $("#comments-list-pagos").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+    //         });
+    //     });
+    // });
+
     $("#comisiones_solicitadas tbody").on("click", ".consultar_logs_asimilados", function(e){
-        console.log("prueba");
+        $('#spiner-loader').removeClass('hide');
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul >
+                        <div id="nameLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
+        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-pagos").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
+        $('#spiner-loader').addClass('hide');
         });
     });
 });
