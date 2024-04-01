@@ -553,8 +553,6 @@ $("#tabla_nuevas_comisiones").ready(function () {
                     var dia = hoy.getDate();
                     var mes = hoy.getMonth() + 1;
                     var hora = hoy.getHours();
-                    console.log(mes)
-                    console.log(parseInt(fechaInicioCorteGlobal[1]));
                     if([1,2,4].includes(datosFechaCorte[0].tipoCorte) && ((mes == parseInt(fechaInicioCorteGlobal[1]) && dia == parseInt(fechaInicioCorteGlobal[2]))  
                     ||  (mes == parseInt(fechaFinCorteGlobal[1]) && dia == parseInt(fechaFinCorteGlobal[2]) && hora <= parseInt(horaFinCorteGlobal[0]))) //VALIDACION FECHA CORTE
                         ) {
@@ -1659,7 +1657,6 @@ function subir_xml2(input) {
             if (data.respuesta[0]) {
                 documento_xml = xml;
                 var informacion_factura = data.datos_xml;
-                console.log(informacion_factura)
                 cargar_info_xml2(informacion_factura);
                 $("#solobs").val(justificacion_globla);
             }
@@ -1802,7 +1799,6 @@ function sumCheck() {
     pagos.length = 0;
     let suma = 0;
     let cantidad = 0;
-    console.log(c)
     for (let index = 0; index < c; index++) {
         if (document.getElementById("comisiones_facura_mult" + index).checked == true) {
             pagos[index] = $("#idpago-" + index).val();
