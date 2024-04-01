@@ -284,7 +284,7 @@ class Seguros_comision_model extends CI_Model {
     function update_estatus_pausaM($id_pago_i, $obs) {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
-        $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        $respuesta =  $this->db->query("UPDATE pago_seguro_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
         $row = $this->db->query("SELECT uuid FROM facturas_seguro WHERE id_comision = ".$id_pago_i.";")->result_array();
         
         if(count($row) > 0){
