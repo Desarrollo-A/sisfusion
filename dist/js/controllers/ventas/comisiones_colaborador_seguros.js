@@ -1210,7 +1210,7 @@ $("#tabla_otras_comisiones").ready(function () {
             className: 'dt-body-center'
         }],
         ajax: {
-            url: general_base_url + "Seguros/getDatosComisionesAsesor/" + 6,
+            url: general_base_url + "Seguros/getDatosComisionesAsesor/" + '6,88',
             type: "POST",
             cache: false,
             data: function (d) { }
