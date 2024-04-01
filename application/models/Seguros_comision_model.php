@@ -32,8 +32,14 @@ class Seguros_comision_model extends CI_Model {
         pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, 
         (CASE u.forma_pago WHEN 3 THEN (((100-sed.impuesto)/100)*pci2.abono_neodata) ELSE pci2.abono_neodata END) impuesto, 
         (CASE u.forma_pago WHEN 3 THEN (((sed.impuesto)/100)*pci2.abono_neodata) ELSE 0 END) dcto, sed.impuesto valimpuesto,
-        pci2.estatus, CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura, 
-        pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, cp.codigo_postal
+        pci2.estatus, CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, 
+        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario,
+        pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, 
+        u.forma_pago, 0 AS factura, 
+        pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, 
+        co.nombre AS condominio, lo.referencia,  u.rfc, 
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
+        tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, cp.codigo_postal
         FROM pago_seguro_ind pci2 
         INNER JOIN comisiones_seguro com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8) 
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (1,0) 
@@ -79,10 +85,15 @@ class Seguros_comision_model extends CI_Model {
                 $whereFiltro = "AND co.idCondominio  = $condominio";       
         }
 
-            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote,oxcest.nombre estatus_actual, re.nombreResidencial AS proyecto, 
-            lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, pci2.abono_neodata impuesto, 0 dcto, 0 valimpuesto, pci2.estatus, 
-            CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto,
-            0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia, u.rfc, 
+            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote,oxcest.nombre estatus_actual, 
+            re.nombreResidencial AS proyecto, 
+            lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci2.abono_neodata solicitado, 
+            pci2.pago_neodata pago_cliente, pci2.abono_neodata impuesto, 0 dcto, 0 valimpuesto, pci2.estatus, 
+            CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, 
+            CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto,
+            0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, 
+            oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia, u.rfc, 
             (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion,
             CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal 
             FROM pago_seguro_ind pci2
@@ -126,12 +137,19 @@ class Seguros_comision_model extends CI_Model {
                 $whereFiltro = "AND co.idCondominio  = $condominio";       
         }
 
-            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote, oxcest.nombre estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
+            $cmd = "SELECT pci2.id_pago_i, pci2.id_comision, lo.nombreLote lote,
+            oxcest.nombre estatus_actual, re.nombreResidencial AS proyecto, lo.totalNeto2 precio_lote, 
             com.comision_total, com.porcentaje_decimal, 
             pci2.abono_neodata solicitado, pci2.pago_neodata pago_cliente, 
             pci2.abono_neodata impuesto, 
             0 dcto, 0 valimpuesto,
-            pci2.estatus, CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura, pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal
+            pci2.estatus, CONVERT(VARCHAR,pci2.fecha_pago_intmex,20) AS fecha_creacion, 
+            CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci2.id_usuario, 
+            CASE WHEN cl.estructura = 1 THEN oprol2.nombre ELSE oprol.nombre END AS puesto, 0 personalidad_juridica, u.forma_pago, 0 AS factura,
+            pac.porcentaje_abono, oxcest.nombre AS estatus_actual, oxcest.id_opcion id_estatus_actual, 
+            re.empresa, 0 lugar_prospeccion, co.nombre AS condominio, lo.referencia,  u.rfc, 
+            (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, tv.tipo_venta, 
+            CONVERT(VARCHAR,cl.fechaApartado,20) AS fecha_apartado, sed.nombre as sede_nombre, oest.nombre as estatus_usuario, 'NA' AS codigo_postal
             FROM pago_seguro_ind pci2 
             INNER JOIN comisiones_seguro com ON pci2.id_comision = com.id_comision AND com.estatus IN (1,8)
             INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status IN (1,0) 
@@ -153,7 +171,7 @@ class Seguros_comision_model extends CI_Model {
             com.porcentaje_decimal, pci2.abono_neodata, pci2.pago_neodata, pci2.estatus, pci2.fecha_pago_intmex, 
             pci2.id_usuario, u.forma_pago, pci2.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, 
             oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, u.rfc, oprol2.nombre, cl.estructura,
-            com.loteReubicado,com.ooam, pl.descripcion, cl.plan_comision, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre";
+            pl.descripcion, cl.plan_comision, tv.tipo_venta, cl.fechaApartado, sed.nombre, oest.nombre";
 
             $query = $this->db->query($cmd);
             return $query->result_array();
