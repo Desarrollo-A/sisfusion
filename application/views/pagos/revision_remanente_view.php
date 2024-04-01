@@ -14,6 +14,16 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modalPausarRemanenteSeguros" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="formPausarRemanenteSeguros">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modalPausarRemanenteOOAM" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
