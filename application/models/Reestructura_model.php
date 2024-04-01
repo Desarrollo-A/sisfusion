@@ -841,7 +841,11 @@ class Reestructura_model extends CI_Model
                 cl.fechaApartado,
                 sl.nombre estatusLote,
                 sc.nombreStatus estatusContratacion,
-                mo.descripcion detalleUltimoEstatus
+                mo.descripcion detalleUltimoEstatus,
+                CASE 
+                    WHEN oxc0.id_opcion IN(1) THEN CAST(lo.nombreLote AS varchar(20))
+                    WHEN oxc0.id_opcion IN(2, 3, 4) THEN CAST(ISNULL(lo2.nombreLote, lo.nombreLote) AS VARCHAR(20))
+                END AS idLotePvOrigen
             FROM lotes lo
                 INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -853,8 +857,46 @@ class Reestructura_model extends CI_Model
                 INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
                 INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
                 INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+                LEFT JOIN propuestas_x_lote pl ON pl.id_lotep = lo.idLote
+                LEFT JOIN lotes lo2 ON lo2.idLote = pl.idLote
             WHERE lo.status = 1
-            ORDER BY UPPER(CAST(re.descripcion AS varchar(100))), co.nombre,  lo.nombreLote"
+            AND oxc0.id_opcion IN(1, 2, 3, 4)
+            UNION ALL
+            SELECT
+                oxc0.nombre tipoProceso,
+                UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
+                cl.fechaApartado,
+                sl.nombre estatusLote,
+                sc.nombreStatus estatusContratacion,
+                mo.descripcion detalleUltimoEstatus,
+                CASE
+                    WHEN oxc0.id_opcion IN(5, 6) THEN CAST(ISNULL(ltf.lotesOrigen, lo.nombreLote ) AS VARCHAR(150))
+                END AS idLotePvOrigen
+            FROM lotes lo
+                INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+                INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
+                INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
+                INNER JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+                INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+                INNER JOIN (SELECT *FROM lotesFusion WHERE destino = 1) ltff on ltff.idLote = lo.idLote
+                INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+                LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote 
+                LEFT JOIN (SELECT ltf.idLotePvOrigen, STRING_AGG(ltf.nombreLotes, ', ') lotesOrigen FROM lotesFusion ltf WHERE origen = 1 GROUP BY ltf.idLotePvOrigen) ltf ON ltf.idLotePvOrigen = lf.idLotePvOrigen
+            WHERE lo.status = 1
+            AND oxc0.id_opcion IN(5, 6)
+            order by lo.idLote
+            "
         )->result_array();
     }
 

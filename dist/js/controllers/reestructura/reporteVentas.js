@@ -56,6 +56,7 @@ $('#tablaReporteVentas').DataTable({
         { data: "nombreCondominio" },
         { data: "nombreLote" },
         { data: "idLote" },
+        { data: "idLotePvOrigen" },
         { data: "nombreCliente" },
         { data: "nombreAsesor" },
         { data: "nombreGerente" },

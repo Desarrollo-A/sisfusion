@@ -917,7 +917,7 @@ function getStatusMktdPreventa(){
     }
 
     function getAuthorizationDetails($idLote){
-        $condicion;
+        $condicion = '';
         if($this->session->userdata('id_rol') == 1)
         {
             $condicion ='';

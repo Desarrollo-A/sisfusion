@@ -67,8 +67,9 @@
                                                 <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
-                                                <th>LOTE</th>
+                                                <th>LOTE</th>                                                
                                                 <th>ID LOTE</th>
+                                                <th>LOTE(S) ORIGEN</th>
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
