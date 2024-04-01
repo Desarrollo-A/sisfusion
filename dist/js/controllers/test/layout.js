@@ -6,7 +6,20 @@ let buttons = ['excel']
 
 let columns = [
     { data: 'idLote' },
-    { data: 'nombreLote' },
+    { data: function(data){
+        return `Lote: ${data.nombreLote}`
+    } },
+    { data: function(data){
+        let row = ''
+
+        for (var i = 0; i < actions.length; i++) {
+            actions[i].data = data
+
+            row += actions[i]
+        }
+
+        return '<div class="d-flex justify-center">' + row + '</div>'
+    } },
 ]
 
 function clickedButton(data) {
@@ -42,6 +55,24 @@ function clickedAsk(data){
 
 function sendData(data){
     console.log(data)
+
+    $.ajax({
+        type: 'POST',
+        url: 'form',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.log(response)
+
+            table.reload()
+
+            form.hide()
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
 }
 
 let form = new Form({
@@ -52,9 +83,16 @@ let form = new Form({
 
 
 function clickedForm(data){
+    let items = [
+        {value : 0, label: 'Opcion 1'},
+        {value : 1, label: 'Occion 2'},
+    ]
+
     form.fields = [
-        { id: 'name', label: 'Nombre', type: 'text', placeholder: 'Nombre del plan' },
-        { id: 'lote', label: 'Lote', type: 'text', placeholder: 'Nombre del lote' },
+        new TextField({   id: 'name',   label: 'Nombre',  placeholder: 'Nombre del plan' }),
+        new NumberField({ id: 'number', label: 'Numero',  placeholder: 'Campo de numero' }),
+        new FileField({   id: 'file',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+        new SelectField({ id: 'select', label: 'Opcion',  placeholder: 'Selecciona una opcion', data: items }),
     ]
 
     form.onSubmit = sendData
@@ -79,5 +117,4 @@ let table = new Table({
     url,
     buttons,
     columns,
-    actions
 })

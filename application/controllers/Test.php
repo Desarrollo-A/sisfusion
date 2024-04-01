@@ -19,4 +19,10 @@ class Test extends BaseController {
 
         echo json_encode($lotes);
     }
+
+    public function form()
+    {
+        $form = $this->input->post();
+        print_r($form);
+    }
 }

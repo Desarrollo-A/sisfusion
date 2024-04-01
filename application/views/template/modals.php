@@ -1,4 +1,4 @@
-<div id="alert-modal" class="modal fade" role="dialog">
+<div id="alert-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header d-flex d-wrap"> 
@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<div id="ask-modal" class="modal fade" role="dialog">
+<div id="ask-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header d-flex d-wrap"> 
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<div id="form-modal" class="modal fade" role="dialog">
+<div id="form-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="form-form-modal" method="post">

@@ -1,5 +1,5 @@
 class Table{
-    constructor({id, url, buttons=[], columns=[], actions}) {
+    constructor({id, url, buttons=[], columns=[]}) {
         //this.buttons = buttons || []
 
         let table_buttons = []
@@ -56,21 +56,7 @@ class Table{
                     next: "<i class='fa fa-angle-right'>"
                 }
             },
-            columns: [
-                { data: 'idLote' },
-                { data: 'nombreLote' },
-                { data: function(data){
-                    let row = ''
-
-                    for (var i = 0; i < actions.length; i++) {
-                        actions[i].data = data
-
-                        row += actions[i]
-                    }
-
-                    return '<div class="d-flex justify-center">' + row + '</div>'
-                } },
-            ],
+            columns: columns,
             initComplete: function () {
                 $('[data-toggle="tooltip"]').tooltip({
                     trigger: "hover"
