@@ -1135,7 +1135,7 @@ class Reestructura_model extends CI_Model
         hpl.fecha_modificacion fechaUltimoMovimiento
         FROM propuestas_x_lote pxl
         INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio,
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
         LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
