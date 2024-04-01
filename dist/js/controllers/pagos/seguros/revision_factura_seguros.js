@@ -322,7 +322,7 @@ function getDataFacturaSeguros(proyecto, condominio){
                 let btns = '';
 
                 const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_factura" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_seguros" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
 
@@ -435,7 +435,7 @@ function getDataFacturaSeguros(proyecto, condominio){
         $("#autorizarFactura_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
     });
 
-    $("#tabla_factura_seguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_factura_seguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_factura_seguros.row( tr );
         id_pago_i = $(this).val();
