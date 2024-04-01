@@ -270,8 +270,4 @@ class SegurosComision extends CI_Controller
     }
     echo json_encode( $respuesta );
   }
-
-
-
-
 }
