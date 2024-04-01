@@ -239,6 +239,8 @@
             let statusValidateExtension = validateExtension(extension, ".xlsx");
             if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
                 //let lotes = $("#lotes").val();
+                $('#spiner-loader').removeClass('hide');
+
                 processFile(fileElm.files[0]).then(jsonInfo => {
                     console.log(processFile(fileElm.files[0]));
                     $.ajax({
@@ -250,8 +252,9 @@
                             //"lotes": lotes
                         },
                         success: function (response) {
+                            $('#spiner-loader').addClass('hide');
 
-                            if (response == 0) {
+                            if (response.status == 1) {
                                 alerts.showNotification("top", "right", "Los registros han sido actualizados de manera éxitosa.", "success");
                                 $('#uploadModal').modal('toggle');
 
@@ -282,6 +285,8 @@
             let statusValidateExtension = validateExtension(extension, ".xlsx");
             if (statusValidateExtension == true) { // MJ: ARCHIVO VÁLIDO PARA CARGAR
                 //let lotes = $("#lotes").val();
+                $('#spiner-loader').removeClass('hide');
+
                 processFile(fileElmQM.files[0]).then(jsonInfo => {
                     console.log(processFile(fileElmQM.files[0]));
                     $.ajax({
@@ -293,6 +298,7 @@
                             //"lotes": lotes
                         },
                         success: function (response) {
+                            $('#spiner-loader').addClass('hide');
 
                             if (response == 0) {
                                 alerts.showNotification("top", "right", "Los registros han sido actualizados de manera éxitosa.", "success");
@@ -533,7 +539,7 @@
                 .attr('onClick', 'cleanInput()')
                 .attr('data-toggle', 'modal')
                 .attr('data-target', '#uploadModal');
-                // .attr('title', '');
+            // .attr('title', '');
         });
 
         $('#liberacionesTable').on('init.dt', function() {

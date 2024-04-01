@@ -129,10 +129,12 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
-                                                    <th>IMPORTE COMISION PAGADA</th>
-                                                    <th>PORCENTAJE</th>
-                                                    <th>PENDIENTE</th>
                                                     <th>PRECIO FINAL LOTE</th>
+                                                    <th>PORCENTAJE</th>
+                                                    <th>IMPORTE COMISION PAGADA</th>
+                                                    
+                                                    <th>IMPORTE COMISION PENDIENTE</th>
+
                                                     <!-- <th>IMPORTE COMISION PAGADA</th> -->
                                                     <th>DETALLES</th>
                                                     <th>FECHA ACTUALIZACIÓN</th>

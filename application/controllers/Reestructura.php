@@ -1630,9 +1630,6 @@ class Reestructura extends CI_Controller{
                 'tipo_doc' => $doc['tipo_doc'],
                 'estatus_validacion' => 0
             );
-
-
-
         }
 
         // Crear las ramas extras que no se tengan en el expediente anterior
@@ -1907,8 +1904,6 @@ class Reestructura extends CI_Controller{
 	    $idFusion = $this->input->post('idFusion');
         $idAsesorAsignado = $this->input->post('idAsesor');
         $lineaVenta = $this->Reestructura_model->lineaVenta($idAsesorAsignado)->row();
-
-        $clienteAnterior->id_cliente;
 	    if($idFusion==1){
             $idLote = $this->input->post('idLote');
             $lotesFusionados = explode(",", $idLote);
@@ -1976,7 +1971,7 @@ class Reestructura extends CI_Controller{
 	    $flagFusion = $this->input->post('flagFusion');
 	    $data['opcionesLotes'] = $this->Reestructura_model->getOpcionesLote($idLote, $flagFusion);
 	    $data['copropietarios'] = $this->Reestructura_model->getCopropietariosReestructura($idLote);
-        echo json_encode ($data);
+        echo json_encode ($data, JSON_NUMERIC_CHECK);
     }
 
     function updateArchivos(){

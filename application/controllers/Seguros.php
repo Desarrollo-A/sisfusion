@@ -20,7 +20,7 @@ class Seguros extends CI_Controller
     $this->validateSession();
     $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
     $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-    $rutaUrl = substr($_SERVER["REQUEST_URI"],1); //explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+    $rutaUrl = substr($_SERVER["REQUEST_URI"],1);
     $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl,$this->session->userdata('opcionesMenu'));
     }
 
@@ -103,7 +103,7 @@ class Seguros extends CI_Controller
               $consultaCP = $this->Comisiones_model->consulta_codigo_postal($id_user_Vl)->result_array();
             }
     
-            if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) || ($id_user_Vl == 7689)){
+            if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin)){
               if( $formaPagoUsuario == 3 && ( $this->input->post('cp') == '' || $this->input->post('cp') == 'undefined' ) ){
                 $data_response = 3;
                 echo json_encode($data_response);
@@ -200,14 +200,14 @@ class Seguros extends CI_Controller
         $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
         $diaActual = date('d'); 
         $fechaCorte = $this->Comisiones_model->getFechaCorteActual($tipoUsuario,$diaActual);
-        echo json_encode(array("fechasCorte" => $fechaCorte),JSON_NUMERIC_CHECK);
+          echo json_encode(array("fechasCorte" => $fechaCorte),JSON_NUMERIC_CHECK);
         }
         public function insertar_codigo_postal(){
             $cp = $this->input->post('cp');
             $nuevoCp = $this->input->post('nuevoCp');
             $respuesta = $this->Comisiones_model->insertar_codigo_postal($cp, $nuevoCp);
-          }
-          public function getDesarrolloSelect($a = ''){
+        }
+        public function getDesarrolloSelect($a = ''){
             $validar_sede = $this->session->userdata('id_sede');
             $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;  
             $tipo = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 4 ? '4' : '1' ));
@@ -229,33 +229,28 @@ class Seguros extends CI_Controller
               } else{
                 echo json_encode(3);
               }
-          }
+        }
       
-          function getDatosProyecto($idlote,$id_usuario = ''){
+        function getDatosProyecto($idlote,$id_usuario = ''){
             if($id_usuario == ''){
               echo json_encode($this->Seguro_model->getDatosProyecto($idlote)->result_array());
-        
             }else{
               echo json_encode($this->Seguro_model->getDatosProyecto($idlote,$id_usuario)->result_array());
-        
             }
-          }
+        }
         
-public function cargaxml2($id_user = ''){
+    public function cargaxml2($id_user = ''){
 
     $user =   $usuarioid =$this->session->userdata('id_usuario');
     $this->load->model('Usuarios_modelo');
-  
     if(empty($id_user)){
       $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
-  
     }else{
       $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
-  
     }
    
-  $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
-  if( isset( $_FILES ) && !empty($_FILES) ){
+    $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+    if( isset( $_FILES ) && !empty($_FILES) ){
       $config['upload_path'] = './UPLOADS/XMLS/';
       $config['allowed_types'] = 'xml';
       //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
@@ -320,11 +315,11 @@ public function cargaxml2($id_user = ''){
             $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
           }
           unlink( $xml_subido );
-        }
-        else{
-          $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
-        }
       }
+      else{
+        $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+      }
+    }
       echo json_encode( $respuesta );
     }
     public function guardar_solicitud2($usuario = ''){

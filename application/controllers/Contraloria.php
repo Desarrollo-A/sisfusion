@@ -766,8 +766,8 @@ class Contraloria extends CI_Controller {
         if(in_array($idMovimiento, [4, 84, 101, 103])){
             $valida_tl = $this->Contraloria_model->checkTipoVenta($idLote);
             $arreglo["fechaVenc"]= $fechaVenc;
-            $idStatC1 = 1;
-            $idMov1 = 20;
+            $idStaC = 1;
+            $idMov = 20;
 
             if($valida_tl[0]['tipo_venta'] == 1){
                 $idStaC = 1;
@@ -779,14 +779,13 @@ class Contraloria extends CI_Controller {
             }
         }
         if(in_array($idMovimiento, [74, 93])){
-            $idStatC1 = 1;
-            $idMov1 = 92;
+            $idStaC = 1;
             $idMov = 92;
         }
 
         
-        $arreglo["idStatusContratacion"]= $idStatC1;
-        $arreglo["idMovimiento"]=$idMov1;
+        $arreglo["idStatusContratacion"]= $idStaC;
+        $arreglo["idMovimiento"]=$idMov;
         $arreglo["comentario"]=$motivoRechazo;
         $arreglo["usuario"]=$this->session->userdata('id_usuario');
         $arreglo["perfil"]=$this->session->userdata('id_rol');
@@ -804,6 +803,8 @@ class Contraloria extends CI_Controller {
         $arreglo2["idLote"]= $idLote;
         $arreglo2["idCondominio"]= $idCondominio;
         $arreglo2["idCliente"]= $idCliente;
+
+
 
 //        $datos= $this->Contraloria_model->getCorreoSt($idCliente);
 //        $lp = $this->Contraloria_model->get_lp($idLote);
@@ -865,7 +866,7 @@ class Contraloria extends CI_Controller {
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('tester.ti2@ciudadmaderas.com')
+            ->to('programador.analista8@ciudadmaderas.com')
             ->subject('EXPEDIENTE RECHAZADO-CONTRALORÍA (5. REVISIÓN 100%)')
             ->view($this->load->view('mail/contraloria/editar-registro-lote-rechazo-proceso5', [
                 'encabezados' => $encabezados,
@@ -1114,8 +1115,8 @@ class Contraloria extends CI_Controller {
                 $id_asig = $data_asig->contador;
                 
                 if ($id_asig == 11097)
-                    $assigned_user = 12842;
-                else if ($id_asig == 12842)
+                    $assigned_user = 15108;
+                else if ($id_asig == 15108)
                     $assigned_user = 11097;
 
                 $arreglo["asig_jur"] = $assigned_user;
@@ -2595,8 +2596,13 @@ class Contraloria extends CI_Controller {
                 array_push($insertArrayData, $commonData2);
                 array_push($updateArrayData, $commonData); 
             }
-        $response = $this->db->update_batch('lotes', $updateArrayData, 'idLote');
-        $this->db->insert_batch('auditoria',$insertArrayData);
+        if($this->db->insert_batch('auditoria',$insertArrayData) ){
+            $this->db->update_batch('lotes', $updateArrayData, 'idLote');
+            $response['status'] = 1;
+        }else{
+            $response['status'] = 0;
+
+        }
         echo json_encode($response);
     }
 
