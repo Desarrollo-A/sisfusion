@@ -1,7 +1,7 @@
 <div class="tab-pane" id="facturaSeguros">
     <div class="text-center">
         <h3 class="card-title center-align">Comisiones en revisión <b>factura seguros </b></h3>
-        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura.</p>
+        <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de factura seguros.</p>
     </div>
     <div class="toolbar">
         <div class="container-fluid p-0">

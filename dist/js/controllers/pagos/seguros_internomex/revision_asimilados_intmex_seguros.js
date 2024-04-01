@@ -1,7 +1,6 @@
 var tr;
 var tabla_asimilados2_seguros ;
 var totaPen_seguros = 0;
-let titulos_intmex_seguros = [];
 
 $(document).ready(function() {
     $("#tabla_asimilados_intmexSeguros").prop("hidden", true);
@@ -51,31 +50,33 @@ $('#usuarioAsimilados_intmexSeguros').change(function(ruta){
     getAssimilatedCommissions_asimilados(proyecto, condominio);
 });
 
+let titulos_intmex_seguros = [];
 $('#tabla_asimilados_intmexSeguros thead tr:eq(0) th').each( function (i) {
     if(i != 0){
-        var title_seguros = $(this).text();
-        titulos_intmex_seguros.push(title_seguros);
-        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title_seguros}" title_seguros="${title_seguros}"/>` );
+        var title = $(this).text();
+        titulos_intmex_seguros.push(title);
+        $(this).html(`<input data-toggle="tooltip" data-placement="top" placeholder="${title}" title="${title}"/>` );
         $('input', this).on('keyup change', function() {
-            if ($('#tabla_asimilados_intmexSeguros').DataTable().column(i).search() !== this.value ) {
-                $('#tabla_asimilados_intmexSeguros').DataTable().column(i).search(this.value).draw();
+            if (tabla_asimilados2_seguros.column(i).search() !== this.value) {
+                tabla_asimilados2_seguros.column(i).search(this.value).draw();
                 var total = 0;
                 var index = tabla_asimilados2_seguros.rows({ selected: true, search: 'applied' }).indexes();
                 var data = tabla_asimilados2_seguros.rows(index).data();
                 $.each(data, function(i, v) {
                     total += parseFloat(v.impuesto);
                 });
-                document.getElementById("totpagarAsimilados_intmexSeguros").textContent = formatMoney(numberTwoDecimal(total));
+                var to1 = formatMoney(total);
+                document.getElementById("totpagarPen_intmexSeguros").textContent = formatMoney(numberTwoDecimal(total));
             }
         });
-    } 
+        } 
     else {
         $(this).html('<input id="all" type="checkbox" style="width:20px; height:20px;" onchange="selectAllIntmexSeguros(this)"/>');
     }
 });
 
 function getAssimilatedCommissions_asimilados(proyecto, condominio){
-    console.log("s");
+    // console.log("s");
     $('#tabla_asimilados_intmexSeguros').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -147,8 +148,9 @@ function getAssimilatedCommissions_asimilados(proyecto, condominio){
             exportOptions: {
                 columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
                 format: {
-                    header: function (columnIdx) {
-                        return ' ' + titulos_intmex_seguros[columnIdx-1] + ' ';
+                    header: function (columnIdx, i) {
+                        return titulos_intmex_seguros[i-1];
+                        //return ' ' + titulos_intmex_seguros[columnIdx-1] + ' ';
                     }
                 }
             }

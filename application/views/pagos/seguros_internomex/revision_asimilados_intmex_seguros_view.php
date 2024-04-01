@@ -3,7 +3,7 @@
             <h3 class="card-title center-align">Comisiones nuevas <b>asimiliados seguros</b></h3>
         </div>
         <div>
-            <p class="card-title text-center pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados)</p>
+            <p class="card-title text-center pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de asimilados seguros)</p>
         </div>
         <div class="toolbar">
             <div class="container-fluid p-0">
