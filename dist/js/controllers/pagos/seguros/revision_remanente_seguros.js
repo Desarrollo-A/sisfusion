@@ -429,8 +429,8 @@ function getDataRemanente_seguros(proyecto, condominio){
         var tr = $(this).closest('tr');
         var row = tabla_remanente_seguros.row( tr );
         id_pago_i = $(this).val();
-        $("#modalPausarRemanente .modal-body").html("");
-        $("#modalPausarRemanente .modal-body").append(
+        $("#modalPausarRemanenteSeguros .modal-body").html("");
+        $("#modalPausarRemanenteSeguros .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -455,18 +455,18 @@ function getDataRemanente_seguros(proyecto, condominio){
         buttonPausar.addEventListener('click', function handleClick() {
             $("#autorizarRemanente_seguros").html(formatMoney(0));
         });
-        $("#modalPausarRemanente").modal();
+        $("#modalPausarRemanenteSeguros").modal();
     });
 }
 
-$("#formPausarRemanente").submit( function(e) {
+$("#formPausarRemanenteSeguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/pausar_solicitudM/",
+            url: general_base_url + "SegurosComision/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -476,7 +476,7 @@ $("#formPausarRemanente").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarRemanente").modal('toggle' );
+                    $("#modalPausarRemanenteSeguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_seguros.ajax.reload();

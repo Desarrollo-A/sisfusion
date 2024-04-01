@@ -119,7 +119,7 @@ class Seguros_comision_model extends CI_Model {
             return $query->result_array();
     }
 
-    //facturas
+    //facturas_seguro
 
     function getDatosNuevasFacturasSeguros($proyecto,$condominio){
 
@@ -297,6 +297,28 @@ class Seguros_comision_model extends CI_Model {
         $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
         return  $query->result_array();
+    }
+
+    function update_estatus_pausaM($id_pago_i, $obs) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
+        $respuesta =  $this->db->query("UPDATE pago_comision_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
+        $row = $this->db->query("SELECT uuid FROM facturas_seguro WHERE id_comision = ".$id_pago_i.";")->result_array();
+        
+        if(count($row) > 0){
+            $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM facturas_seguro WHERE uuid='".$row[0]['uuid']."'")->result_array();
+    
+            for ($i=0; $i <count($datos); $i++) {
+                if($datos[$i]['bandera'] == 1){
+                    $respuesta = 1;
+                }else{
+                    $comentario = 'Se regresó esta factura que correspondo al pago con id '.$datos[$i]['id_comision'].' con el monto global de '.$datos[$i]['total'].' por motivo de: '.$obs.' ';
+                    $response = $this->db->query("UPDATE facturas_seguro set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
+                    $respuesta = $this->db->query("INSERT INTO  historial_seguro VALUES (".$datos[$i]['id_comision'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
+                }
+            }
+        }
+        return $respuesta;
     }
 
 

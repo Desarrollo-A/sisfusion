@@ -439,8 +439,8 @@ function getDataFacturaSeguros(proyecto, condominio){
         var tr = $(this).closest('tr');
         var row = tabla_factura_seguros.row( tr );
         id_pago_i = $(this).val();
-        $("#modalPausarFactura .modal-body").html("");
-        $("#modalPausarFactura .modal-body").append(
+        $("#modalPausarFacturaSeguros .modal-body").html("");
+        $("#modalPausarFacturaSeguros .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -465,18 +465,18 @@ function getDataFacturaSeguros(proyecto, condominio){
         buttonPausar.addEventListener('click', function handleClick() {
             $("#autorizarFactura_seguros").html(formatMoney(0));
         });
-        $("#modalPausarFactura").modal();
+        $("#modalPausarFacturaSeguros").modal();
     });
 }
 
-$("#formPausarFactura").submit( function(e) {
+$("#formPausarFacturaSeguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/pausar_solicitudM/",
+            url: general_base_url + "SegurosComision/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -486,7 +486,7 @@ $("#formPausarFactura").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarFactura").modal('toggle' );
+                    $("#modalPausarFacturaSeguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_factura_seguros.ajax.reload();
