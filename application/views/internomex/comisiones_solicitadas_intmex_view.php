@@ -8,6 +8,37 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                        <div class="modal fade" id="seeInformationModalAsimilados" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    </div>
+                                    <div class="modal-body">
+                                        <div role="tabpanel">
+                                            <div id="nameLote"></div>                            
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="card card-plain">
+                                                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                                    <ul class="timeline-3" id="comments-list-pagos"></ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanCommentsAsimilados()"><b>Cerrar</b></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
                                 <i class="fas fa-wallet fa-2x"></i>
@@ -36,6 +67,7 @@
                                         <table class="table-striped table-hover" id="comisiones_solicitadas" name="comisiones_solicitadas">
                                             <thead>
                                                 <tr>
+                                                    <th></th>
                                                     <th>ID PAGO</th>
                                                     <th>PROYECTO</th>
                                                     <th>CONDOMINIO</th>

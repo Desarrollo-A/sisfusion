@@ -81,8 +81,8 @@ function getDataRemanente_seguros(proyecto, condominio){
     });
 
     var modoSubidaSeleccionado = obtenerModoSeleccionado();
-    console.log("prueba");
-    console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
+    // console.log("prueba");
+    // console.log('Valor seleccionado: ' + modoSubidaSeleccionado);
 
     $("#tabla_remanente_seguros").prop("hidden", false);
     tabla_remanente_seguros = $("#tabla_remanente_seguros").DataTable({
@@ -309,7 +309,7 @@ function getDataRemanente_seguros(proyecto, condominio){
                 let btns = '';
 
                 const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_remanente" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_seguros" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
 
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
@@ -425,12 +425,12 @@ function getDataRemanente_seguros(proyecto, condominio){
         $("#autorizarRemanente_seguros").html(formatMoney(numberTwoDecimal(totaPago)));
     });
 
-    $("#tabla_remanente_seguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_remanente_seguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_remanente_seguros.row( tr );
         id_pago_i = $(this).val();
-        $("#modalPausarRemanente .modal-body").html("");
-        $("#modalPausarRemanente .modal-body").append(
+        $("#modalPausarRemanenteSeguros .modal-body").html("");
+        $("#modalPausarRemanenteSeguros .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -455,18 +455,18 @@ function getDataRemanente_seguros(proyecto, condominio){
         buttonPausar.addEventListener('click', function handleClick() {
             $("#autorizarRemanente_seguros").html(formatMoney(0));
         });
-        $("#modalPausarRemanente").modal();
+        $("#modalPausarRemanenteSeguros").modal();
     });
 }
 
-$("#formPausarRemanente").submit( function(e) {
+$("#formPausarRemanenteSeguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/pausar_solicitudM/",
+            url: general_base_url + "SegurosComision/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -476,7 +476,7 @@ $("#formPausarRemanente").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarRemanente").modal('toggle' );
+                    $("#modalPausarRemanenteSeguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_remanente_seguros.ajax.reload();

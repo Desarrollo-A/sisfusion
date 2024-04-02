@@ -496,7 +496,7 @@ $(document).ready(function () {
         // alert(nombreOtro);
         // alert(estatusLote);
         
-        totalNeto2 = plan_comision == 66 ? total8P : totalNeto2;
+        totalNeto2 = (plan_comision == 66 || plan_comision == 86) ? total8P : totalNeto2;
         // alert(totalNeto2);
 
 
@@ -533,7 +533,7 @@ $(document).ready(function () {
 
                                 $("#modal_NEODATA .modal-body").append(`<input type="hidden" name="bonificacion" id="bonificacion" value=">${bonificadoTotal}">`);
                                 
-                                if(plan_comision == 66){
+                                if(plan_comision == 66 || plan_comision == 86){
                                     cadena = 
                                     `<div class="col-md-3 p-0">
                                         <h5>Bonificación: <b style="color:#D84B16;">${formatMoney(bonificadoTotal)}</b></h5>
@@ -671,6 +671,7 @@ $(document).ready(function () {
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
+                                    console.log(resultArr)
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
                                         if(plan_comision == 66 || plan_comision == 86){
@@ -703,7 +704,8 @@ $(document).ready(function () {
                                             resto1 = total_comision1 - saldo1;
                                         }
                                         let saldo1C = 0;
-                                        total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? AplicadoGlobal  : total;
+                                        console.log(total);
+                                        total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? total  : total;
                                         total = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (data[0].Aplicado-abonadoAnterior) <= 0) ? 0 : total;
 
                                         switch(bandera_anticipo){
@@ -866,8 +868,9 @@ $(document).ready(function () {
                                                 saldo = tipo_venta == 7 && v.rol_generado == "3" ? (0.675*total) : tipo_venta == 7 && v.rol_generado == "7" ? (0.075*total) : tipo_venta == 7 && v.rol_generado == "9" ?  (0.25*total) :   ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                             }
                                             else{
+                                                console.log(total)
                                                 //saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
-                                                saldo = [2,3,4,7].includes(parseInt(procesoReestructura)) ? ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal))  : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 5000 )? ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal))  : ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
                                             }
 
@@ -880,7 +883,8 @@ $(document).ready(function () {
                                                 else{
                                                     pending = evaluar;
                                                 }
-                                                resta_1 = saldo-v.abono_pagado;
+                                                console.log(total);
+                                                resta_1 = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000)) ? saldo : saldo-v.abono_pagado;
 
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -890,7 +894,7 @@ $(document).ready(function () {
                                                         saldo = pending;
                                                     }
                                                     else{
-                                                        saldo = saldo-v.abono_pagado;
+                                                        saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total < (5000)) ? saldo : saldo-v.abono_pagado;
                                                     }
                                                 }
                                             }

@@ -263,7 +263,11 @@ class SegurosComision extends CI_Controller
     echo json_encode( $respuesta );
   }
 
-
-
-
+  function pausar_solicitudM(){
+    $respuesta = array( FALSE );
+    if($this->input->post("id_pago")){
+      $respuesta = array( $this->Seguros_comision_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+    }
+    echo json_encode( $respuesta );
+  }
 }
