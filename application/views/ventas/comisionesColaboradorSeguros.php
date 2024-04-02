@@ -344,17 +344,17 @@
                                                 <?php
                                                 $sede = $this->session->userdata('id_sede');
                                                 $query = $this->db->query("SELECT * FROM sedes WHERE estatus in (1) AND id_sede = ".$sede."");
-                                                foreach ($query->result() as $row){
-                                                    $number = $row->impuesto;
-                                                    echo '<b>' .number_format($number,2).'%</b> e ISR de acuerdo a las tablas publicadas en el SAT.';
-                                                }
+                                                    foreach ($query->result() as $row){
+                                                        $number = $row->impuesto;
+                                                        echo '<b>' .number_format($number,2).'%</b> e ISR de acuerdo a las tablas publicadas en el SAT.';
+                                                    }
                                                 ?>
-                                                </p>
+                                                    </p>
                                                 <?php
                                                 }else if($this->session->userdata('forma_pago') == 4){
                                                     ?>
-                                                <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
-                                                <?php }?>
+                                                    <p style="color:#0a548b;"><i class="fa fa-info-circle" aria-hidden="true"></i> La cantidad mostrada es menos las deducciones aplicables para el régimen de <b>Remanente Distribuible.</b>
+                                        <?php   } ?>
                                                 <?php if ($this->session->userdata('forma_pago') == 5) { ?>
                                                     <p class="card-title pl-2">Comprobantes fiscales emitidos por residentes en el <b>extranjero</b> sin establecimiento permanente en México.
                                                         <a data-toggle="modal" data-target="#info-modal" style="cursor: pointer;">

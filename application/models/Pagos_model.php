@@ -108,10 +108,8 @@ class Pagos_model extends CI_Model {
         else { // CONTRALORÍA
 
             if($modoSubida != 0){ //Reestructura
-                //$ooam = "AND com.ooam IN (0)";
                 $tipo = "AND u.tipo = 2";
             }else{ //Comercialización
-                //$ooam = "AND com.ooam NOT IN (0)";
                 $tipo = "AND u.tipo = 1";
             }
             

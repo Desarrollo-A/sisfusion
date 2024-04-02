@@ -614,7 +614,6 @@ function fillTableInventario(sede) {
             titleAttr: 'Inventario Lotes',
             title: "Inventario Lotes",
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos[columnIdx] + ' ';
@@ -649,6 +648,7 @@ function fillTableInventario(sede) {
                 {data: 'nombreResidencial'},
                 {data: 'nombreCondominio'},
                 {data: 'nombreLote'},
+                { data: 'idLote' },
                 {
                     data: function (d) {
                         return d.sup + ' <b>m<sup>2</sup></b>';
@@ -661,14 +661,18 @@ function fillTableInventario(sede) {
                 },
                 {
                     data: function (d) {
-                        return formatMoney(d.precio * d.sup);
-                    }
-                },
-                {
-                    data: function (d) {
                         return formatMoney(d.totalNeto2);
                     }
                 },
+
+
+
+                {
+                    data: function (d) {
+                        return formatMoney(d.precio * d.sup);
+                    }
+                },
+
                 {data: 'referencia'},
                 {data: 'msni'},
                 {
@@ -729,6 +733,11 @@ function fillTableInventario(sede) {
                 },
                 {
                     data: function (d) {
+                        return (d.estatusContratacion == null || d.estatusContratacion=='') ? 'SIN ESPECIFICAR':d.estatusContratacion;
+                    }
+                },
+                {
+                    data: function (d) {
                         if (d.idStatusLote == 8 || d.idStatusLote == 9 || d.idStatusLote == 10)
                             return d.fecha_modst;
                         else
@@ -754,17 +763,73 @@ function fillTableInventario(sede) {
                 {data: 'lugar_prospeccion'},
                 {
                     data: function (d) {
-                        return (d.fecha_creacion == null || d.fecha_creacion=='') ? '--': d.fecha_creacion;
-                    }
-                },
-                {
-                    data: function (d) {
                         return (d.fecha_validacion == null || d.fecha_validacion=='') ? '--': d.fecha_validacion;
                     }
                 },
                 {
                     data: function (d) {
+                        return (d.fecha_creacion == null || d.fecha_creacion=='') ? '--': d.fecha_creacion;
+                    }
+                },
+                {
+                    data: function (d) {
                         return formatMoney(d.cantidad_enganche);
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.nombreCliente == null || d.nombreCliente=='' || d.nombreCliente==' '|| d.nombreCliente=='  ') ? 'SIN EPECIFICAR': d.nombreCliente;
+                    }
+                },
+                {
+                    data: function (d) {
+                        return (d.comentario_administracion == null || d.comentario_administracion=='' || d.comentario_administracion==' '|| d.comentario_administracion=='  ') ? 'SIN EPECIFICAR': d.comentario_administracion;
+                    }
+                },
+                {
+                    data: function(d){
+                        if(d.fecha_creacion == 'NULL' || d.fecha_creacion == 'null' || d.fecha_creacion == null || d.fecha_creacion == '')
+                            return 'SIN ESPECIFICAR';
+                        else
+                            return d.fecha_creacion;
+                    }
+                },
+                {
+                    data: function(d){
+                        if(d.apartadoXReubicacion == 1)
+                            return `<center><span class="label lbl-violetBoots">REUBICACIÓN</span> <center>`;
+                        else
+                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                    }
+                },
+                {
+                    data: function(d){
+                        if(d.apartadoXReubicacion == 1)
+                            return d.fechaAlta;
+                        else
+                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                    }
+                },
+                {
+                    data: function(d){
+                        if(d.venta_compartida != 0)
+                            return `<center><span class="label lbl-green">COMPARTIDA</span> <center>`;
+                        else
+                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                    }
+                },
+                {
+                    data: function(d) {
+                        if(d.ubicacion != null)
+                            return `<center><span class="label lbl-oceanGreen">${d.ubicacion}</span> <center>`;
+                        else
+                            return `<center><span class="label lbl-gray">NO APLICA</span> <center>`;
+                    }
+                },
+                {
+                    visible: (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 70) ? true : false,
+                    data: function (d) {
+                        return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                     }
                 },
                 {
