@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                     <div class="form-group w-100">
-                        <button type="button" class="btn-gral-data Pagar">Pagar masivamente</button>
+                        <button type="button" class="btn-gral-data PagarSeguros">Pagar masivamente</button>
                     </div>
                 </div>
             </div>
