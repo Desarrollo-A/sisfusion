@@ -47,7 +47,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul class="nav nav-tabs nav-tabs-cm" role="tablist">
                         <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Asimilados lotes</a></li>
-                        <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes</a></li>
+                        <!--<li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes</a></li>-->
                         <!-- <li ><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados lotes</a></li> -->
 
                     </ul>
@@ -149,8 +149,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <?php $this->load->view('pagos/seguros/revision_asimilados_ooam_view'); ?>
-                                    <?php $this->load->view('pagos/seguros/revision_asimilados_seguros_view'); ?>
                                 </div>
                             </div>
                         </div>
@@ -163,5 +161,5 @@
     <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/pagos/revision_asimilados.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos/seguros/revision_asimilados_seguros.js"></script>
+    <!--<script src="<?= base_url() ?>dist/js/controllers/pagos/seguros/revision_asimilados_seguros.js"></script>-->
 </body>
