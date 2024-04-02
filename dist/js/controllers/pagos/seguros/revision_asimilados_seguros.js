@@ -327,7 +327,7 @@ function getDataAsimiladosSeguros(proyecto, condominio){
                 let btns = '';
 
                 const BTN_HISTORIAL = `<button href="#" value="${data.id_pago_i}" data-value='"${data.lote}"' data-code="${data.cbbtton}" class="btn-data btn-blueMaderas consultar_logs_asimilados" data-toggle="tooltip" data-placement="top" title="DETALLES"><i class="fas fa-info"></i></button>`
-                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
+                const BTN_PAUSAR = `<button href="#" value="${data.id_pago_i}" data-value="${data.id_pago_i}" data-code="${data.cbbtton}" class="btn-data btn-warning cambiar_estatus_seguros" data-toggle="tooltip" data-placement="top" title="PAUSAR LA SOLICITUD"><i class="fas fa-ban"></i></button>`
 
                 btns += BTN_HISTORIAL;
                 btns += BTN_PAUSAR;
@@ -441,12 +441,12 @@ function getDataAsimiladosSeguros(proyecto, condominio){
         $("#autorizarAsimilados_seguros").html(formatMoney(numberTwoDecimal(totaPago_asimilados_seguros)));
     });
 
-    $("#tabla_asimilados_seguros tbody").on("click", ".cambiar_estatus", function(){
+    $("#tabla_asimilados_seguros tbody").on("click", ".cambiar_estatus_seguros", function(){
         var tr = $(this).closest('tr');
         var row = tabla_asimilados_seguros.row( tr );
         id_pago_i = $(this).val();
-        $("#modalPausarAsimilados .modal-body").html("");
-        $("#modalPausarAsimilados .modal-body").append(
+        $("#modalPausarAsimiladosSeguros .modal-body").html("");
+        $("#modalPausarAsimiladosSeguros .modal-body").append(
             '<div class="row">'+
                 '<div class="col-lg-12">'+
                     '<p>¿Está seguro de pausar la comisión de <b>'+row.data().lote+'</b> para el <b>'+(row.data().puesto).toUpperCase()+':</b>'+
@@ -471,18 +471,18 @@ function getDataAsimiladosSeguros(proyecto, condominio){
         buttonPausar.addEventListener('click', function handleClick() {
             $("#autorizarAsimilados_seguros").html(formatMoney(0));
         });
-        $("#modalPausarAsimilados").modal();
+        $("#modalPausarAsimiladosSeguros").modal();
     });
 }
 
-$("#formPausarAsimilados").submit( function(e) {
+$("#formPausarAsimiladosSeguros").submit( function(e) {
     e.preventDefault();
 }).validate({
     submitHandler: function( form ) {
         var data = new FormData( $(form)[0] );
         data.append("id_pago_i", id_pago_i);
         $.ajax({
-            url: general_base_url + "Pagos/pausar_solicitudM/",
+            url: general_base_url + "SegurosComision/pausar_solicitudM/",
             data: data,
             cache: false,
             contentType: false,
@@ -492,7 +492,7 @@ $("#formPausarAsimilados").submit( function(e) {
             type: 'POST',
             success: function(data){
                 if( data[0] ){
-                    $("#modalPausarAsimilados").modal('toggle' );
+                    $("#modalPausarAsimiladosSeguros").modal('toggle' );
                     alerts.showNotification("top", "right", "Se ha pausado la comisión exitosamente", "success");
                     setTimeout(function() {
                         tabla_asimilados_seguros.ajax.reload();

@@ -531,11 +531,11 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			cl.creado_por, cl.fecha_modificacion, cl.modificado_por, cond.nombre AS nombreCondominio, residencial.nombreResidencial AS nombreResidencial,
 			cl.status, nombreLote, lotes.comentario, lotes.idMovimiento, lotes.fechaVenc, lotes.modificado
 			FROM deposito_seriedad AS ds
-			INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente
+			INNER JOIN clientes AS cl ON ds.id_cliente = cl.id_cliente AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549)
 			INNER JOIN lotes AS lotes ON lotes.idLote=cl.idLote AND lotes.idCliente = cl.id_cliente AND cl.status = 1
 			LEFT JOIN condominios AS cond ON lotes.idCondominio=cond.idCondominio
 			LEFT JOIN residenciales AS residencial ON cond.idResidencial=residencial.idResidencial
-			WHERE idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND cl.status = 1 
+			WHERE idStatusContratacion IN (1, 2, 3) AND idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) AND cl.status = 1 
 			$filter
 			ORDER BY cl.id_Cliente ASC");
         return $query->result_array();
@@ -770,14 +770,14 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $query = $this->db-> query("SELECT l.* FROM lotes l 
 		INNER JOIN clientes c ON c.id_cliente = l.idCliente
 		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor AND u.estatus IN (0, 1, 3)
-		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) 
+		WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) 
 		AND c.status = 1 AND c.id_gerente = $id_lider AND l.idCondominio = $idCondominio
 		UNION ALL
         SELECT l.* FROM lotes l 
 		INNER JOIN clientes c ON c.id_cliente = l.idCliente AND c.id_coordinador IN (2562, 2541) AND c.id_asesor != 1908
 		INNER JOIN usuarios u ON u.id_usuario = c.id_asesor
 		INNER JOIN usuarios uu ON uu.id_usuario = u.id_lider AND (uu.id_lider = $id_lider OR u.id_lider = $id_lider)
-        WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96) AND c.status = 1 AND l.idCondominio = $idCondominio");
+        WHERE l.status = 1 AND l.idStatusContratacion IN (1, 2, 3) AND l.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) AND c.status = 1 AND l.idCondominio = $idCondominio");
         return $query->result_array();
     }
 
@@ -785,7 +785,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $query = $this->db-> query("SELECT * FROM lotes lo
 		INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.id_asesor IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549)
 		WHERE lo.status = 1 AND lo.idCondominio = $idCondominio AND lo.idStatusContratacion IN (1, 2, 3) 
-		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96)");
+		AND lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111)");
         return $query->result_array();
     }
 
