@@ -1536,8 +1536,8 @@ class Api extends CI_Controller
                 else {
                     // SE EMPIENZA A VALIDAR EL TOKEN
                     $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
-                    $valida_token = Null;
                     foreach ($result->data as $key => $value) {
+                        $valida_token = Null;
                         if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) ==  '' || empty($value)))
                             $valida_token = false;
                     }
@@ -1555,6 +1555,8 @@ class Api extends CI_Controller
                         $dataReturn = json_decode(file_get_contents("php://input"));
                         // SE RECIBE LA INFORMASCIÓN
                         // se valida que datos no sean isset 
+                        
+                        
                         if($dataReturn3 != NULL) {
                             // SI ENTRAMOS AQUI ES PORQUE EMPEZAMOS A MANEJRAR LA INFORMACIÓN DE LOS LOTES
                             if(count($dataReturn3->seguros) > 0 &&  count($dataReturn3->seguros) == 1 ) {
@@ -1567,7 +1569,9 @@ class Api extends CI_Controller
                                 $bandera_array_vacio = 0;
                                 // SUSTITUIR LA FORMA DE ESTA RESPUESTA
                                 echo json_encode(array("status" => 375, "message" => "Sin información para procesar, asegúrate de incluir todos los parámetros mínimos requeridos para continuar con esta petición."), JSON_UNESCAPED_UNICODE);
+                                // $respuestaFinal
                             }
+
                             for($contadorPrimer = 0;  $contadorPrimer < count($dataReturn3->seguros); $contadorPrimer ++) {
                                 $status = 200;
                                 $message = 'Comisiones agregadas con éxito.';
@@ -1587,6 +1591,7 @@ class Api extends CI_Controller
                                         !isset($dataReturn3->seguros[$contadorPrimer]->tipo_pago) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_asesor) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad) || 
+                                        !isset($dataReturn3->seguros[$contadorPrimer]->id_pago) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_gerente)
                                     ) { 
                                         // SUSTITUIR LA FORMA DE ESTA RESPUESTA 
@@ -1603,6 +1608,7 @@ class Api extends CI_Controller
                                             ($dataReturn3->seguros[$contadorPrimer]->tipo_pago  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_asesor  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad  == '') ||
+                                            ($dataReturn3->seguros[$contadorPrimer]->id_pago  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_gerente  == '')
                                         ) {
                                             // SUSTITUIR LA FORMA DE ESTA RESPUESTA
@@ -1614,7 +1620,7 @@ class Api extends CI_Controller
                                             // VALIDAR QUE EXISTA EL LOTE
                                             if (count($getLoteComision) > 0 && count($getLoteComision) != 1) { // validamod que existan datos, 
                                                 $idCliente = $getLoteComision[0]['idCliente'];
-                                                // viene para abonar o comprobar si viene liquidado
+                                                // viene para abonar o comprobar si viene liquidadol
                                                 // se coloca el 0 para como pivote traemos el primero
                                                 if ($getLoteComision[0]['bandera'] == 7) {
                                                     // se liquido en su momento.    
@@ -1694,7 +1700,7 @@ class Api extends CI_Controller
                                                     }
                                                 } else {
                                                     $status = 460;
-                                                    $message = 'Bandera no es 7 y tampoco 1 (revisar).';
+                                                    $message = 'Bandera erronea comunicar a crm administrador.';
                                                 }
                                                 // echo (json_encode(array("status" => 385, "message" => "El Lote ingresado ya se encuentra registrado.")));
                                             }//dos caminos 
@@ -1749,7 +1755,7 @@ class Api extends CI_Controller
                                                     $Respuesta_pago_seguro = $this->Seguro_model->pago_seguro($dataPagoSeguro);
                                                     // se mandd los pagos_seguros solo un registro
                                                     if (count($respuestaComisiones) == 0 ) {
-                                                        echo json_encode("Error no se tienen datos", JSON_UNESCAPED_UNICODE);
+                                                        
                                                     } else {
                                                         for ($contador = 0; count($respuestaComisiones) > $contador; $contador ++) {
                                                             $comisionReal = ($respuestaComisiones[$contador]['porcentaje_decimal']  * ($dataReturn3->seguros[$contadorPrimer]->mensualidad * 0.10) ) /100;
@@ -1818,12 +1824,14 @@ class Api extends CI_Controller
                                         'status' => $status,
                                         'message' => $message,
                                         'numero_mensualidad' => $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
+                                        'id_pago' => $dataReturn3->seguros[$contadorPrimer]->id_pago,
                                         'referencia' => $dataReturn3->seguros[$contadorPrimer]->referencia,
                                         'empresa' => $dataReturn3->seguros[$contadorPrimer]->empresa,
                                         'idCliente' => $idCliente
                                     )
                                 );                         
-                            }                        
+                                } 
+
                             echo json_encode($respuestaFinal, JSON_UNESCAPED_UNICODE);
                         } else {
                             echo json_encode(array('status' => 375, 'message' => 'Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición.'), JSON_UNESCAPED_UNICODE);
