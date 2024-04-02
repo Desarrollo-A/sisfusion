@@ -1,6 +1,6 @@
 class Table{
-    constructor({id, url, buttons=[], columns=[]}) {
-        //this.buttons = buttons || []
+    constructor({id, url, params={}, buttons=[], columns=[]}) {
+        this.url = url
 
         let table_buttons = []
 
@@ -40,9 +40,10 @@ class Table{
         this.table = $(id).DataTable({
             destroy: true,
             ajax: {
-                url: `${general_base_url}${url}`,
+                url: `${general_base_url}${this.url}`,
                 dataSrc: ""
             },
+            deferLoading: true,
             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
             scrollX: true,
@@ -64,9 +65,16 @@ class Table{
             },
         })
 
+        this.params = new URLSearchParams(params).toString();
+    }
+
+    setParams(params){
+        this.params = new URLSearchParams(params).toString();
     }
 
     reload(){
+        this.table.ajax.url(`${general_base_url}${this.url}?${this.params}`)
+
         this.table.ajax.reload()
     }
 }
@@ -80,6 +88,7 @@ class TableButton {
         this.onClick = onClick
         this.data = data
     }
+    
     toString() {
         const button = $('<button />')
         .addClass(`btn-data btn-${this.color}`)

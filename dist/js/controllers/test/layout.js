@@ -4,6 +4,23 @@ let url = "test/lotes"
 
 let buttons = ['excel']
 
+let items = [
+    {value : 0, label: 'Opcion 1'},
+    {value : 1, label: 'Occion 2'},
+]
+
+let view_button = new TableButton({icon: 'add', onClick: clickedButton})
+let alert_button = new TableButton({color: 'yellow', icon: 'train', onClick: clickedAlert})
+let ask_button = new TableButton({color: 'warning', icon: 'home', onClick: clickedAsk})
+let form_button = new TableButton({color: 'violetChin', icon: 'list', onClick: clickedForm})
+
+let actions = [
+    view_button,
+    alert_button,
+    ask_button,
+    form_button,
+]
+
 let columns = [
     { data: 'idLote' },
     { data: function(data){
@@ -83,11 +100,6 @@ let form = new Form({
 
 
 function clickedForm(data){
-    let items = [
-        {value : 0, label: 'Opcion 1'},
-        {value : 1, label: 'Occion 2'},
-    ]
-
     form.fields = [
         new TextField({   id: 'name',   label: 'Nombre',  placeholder: 'Nombre del plan' }),
         new NumberField({ id: 'number', label: 'Numero',  placeholder: 'Campo de numero' }),
@@ -100,21 +112,30 @@ function clickedForm(data){
     form.show()
 }
 
-let view_button = new TableButton({icon: 'add', onClick: clickedButton})
-let alert_button = new TableButton({color: 'yellow', icon: 'train', onClick: clickedAlert})
-let ask_button = new TableButton({color: 'warning', icon: 'home', onClick: clickedAsk})
-let form_button = new TableButton({color: 'violetChin', icon: 'list', onClick: clickedForm})
-
-let actions = [
-    view_button,
-    alert_button,
-    ask_button,
-    form_button,
-]
-
 let table = new Table({
     id: id_table,
     url,
     buttons,
     columns,
 })
+
+let mi_filtro1 = new SelectFilter({ id: 'select', label: 'Opcion 1',  placeholder: 'Selecciona una opcion', data: items })
+let mi_filtro2 = new SelectFilter({ id: 'select', label: 'Opcion 2',  placeholder: 'Selecciona una opcion' })
+
+mi_filtro1.onChange(function(){
+    mi_filtro2.setOptions(items)
+})
+
+mi_filtro2.onChange(function(){
+    table.reload()
+})
+
+let filters = new Filters({
+    id: 'table-filters',
+    filters: [
+        mi_filtro1,
+        mi_filtro2
+    ],
+})
+
+filters.add(new SelectFilter({ id: 'select', label: 'Opcion 3',  placeholder: 'Selecciona otra opcion', data: items }))

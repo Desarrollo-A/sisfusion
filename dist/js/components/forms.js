@@ -1,5 +1,19 @@
+class HiddenField{
+    constructor({id, value}){
+        this.id = id
+        this.value = () => {return value}
+
+        this.field = $('<input />')
+        .attr('type', 'hidden')
+    }
+
+    get(){
+        return this.field
+    }
+}
+
 class SelectField{
-    constructor({id, label, placeholder, data}){
+    constructor({id, label, placeholder, data=[]}){
         this.id = id
 
         let options = []
