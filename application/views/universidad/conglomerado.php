@@ -358,7 +358,7 @@
         <?php $this->load->view('template/footer_legend');?>
     </div>
     <?php $this->load->view('template/footer');?>
-    <script src="http://momentjs.com/downloads/moment.min.js"></script>
+    <!-- <script src="http://momentjs.com/downloads/moment.min.js"></script> -->
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/universidad/conglomerado.js"></script>
 </body>
