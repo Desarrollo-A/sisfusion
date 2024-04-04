@@ -27,6 +27,12 @@ class Seguro_model extends CI_Model {
     }
 
 
+    function validarUsuarios($usuario_gerente, $usuario_asesor){
+        $cmd = "SELECT tipo FROM usuarios WHERE id_usuario in ($usuario_gerente, $usuario_asesor) ";
+        $query = $this->db->query($cmd);
+        return $query->result_array();
+    }
+
     function getInfoLote($referencia, $empresa, $nombreLote){
         $query = $this->db->query("SELECT lo.idLote , idCliente
         FROM lotes lo
