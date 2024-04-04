@@ -265,7 +265,7 @@ class Contratacion_model extends CI_Model {
       cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, sc.nombreStatus as estatusContratacion,
       CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
       ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
-      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -287,6 +287,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
       LEFT JOIN statusContratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+      LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
+      FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
       LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97

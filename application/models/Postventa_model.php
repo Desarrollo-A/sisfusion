@@ -1578,5 +1578,19 @@ function checkBudgetInfo($idSolicitud){
                 lo.nombreLote"
         )->result();
     }
+
+    function getCopropsByIdCliente($id_cliente){
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = ".$id_cliente);
+        return $query->result_array();
+    }
+
+    function eliminaCopropietario($id_copropietario){
+        $response = $this->db->query("DELETE FROM copropietarios WHERE id_copropietario = $id_copropietario");
+        if (! $response ) {
+            return $finalAnswer = 0;
+        } else {
+            return $finalAnswer = 1;
+        }
+    }
     
 }
