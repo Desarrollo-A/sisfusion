@@ -74,7 +74,7 @@
                     <div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <labe class="control-label">Comentario (<span class="isRequired">*</span>)</label>
+                                <label class="control-label">Comentario (<span class="isRequired">*</span>)</label>
                                 <textarea type="text" class="text-modal" name="comentario" id="comentarioDirSt6"></textarea>
                             </div>
                             <input type="hidden" name="idLote" id="idLoteDirSt6" >

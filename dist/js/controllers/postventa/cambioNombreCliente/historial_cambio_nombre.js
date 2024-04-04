@@ -76,7 +76,13 @@ function fillTable() {
             },
             {
                 data: function (d) {
-                    return `<span class="label lbl-green">${d.estatusProceso}</span>`;
+                    let classStatus = '';
+                    if(d.estatusProceso == 'Rechazado'){
+                        classStatus = 'lbl-warning';
+                    }else if(d.estatusProceso == 'Aceptado'){
+                        classStatus = 'lbl-green';
+                    }
+                    return `<span class="label ${classStatus}">${d.estatusProceso}</span>`;
                 },
             },
             {
