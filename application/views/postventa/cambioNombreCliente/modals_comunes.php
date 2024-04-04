@@ -37,6 +37,14 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <hr>
+                            <div class="row mt-4" style="text-align: end">
+                                <div class="col-xs-12 col-lg-12">
+                                    <a class="btn btn-blueMaderas" onclick="agregarCoprop()">AGREGAR CO-PROPIERTARIO</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" id="divHtmlCoprop"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -44,6 +52,7 @@
                         <input type="hidden" id="idCliente" name="idCliente">
                         <input type="hidden" id="tipoTransaccion" name="tipoTransaccion">
                         <input type="hidden" id="idRegistro" name="idRegistro">
+                        <input type="hidden" id="banderaCoprop" name="banderaCoprop">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Aceptar</button>
                     </div>

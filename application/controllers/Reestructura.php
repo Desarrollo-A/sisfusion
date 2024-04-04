@@ -156,7 +156,7 @@ class Reestructura extends CI_Controller{
 		$datos["apellido_materno"] = str_replace("'","`", $dataPost['apellidomCli']);
         $datos["telefono1"] = $dataPost['telefonoCli'];
         $datos["correo"] = $dataPost['correoCli'];
-        $datos["domicilio_particular"] = $dataPost['domicilioCli'];
+        $datos["domicilio_particular"] = str_replace("'", "`", $dataPost['domicilioCli']) ;
         $datos["estado_civil"] = $dataPost['estadoCli'];
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
