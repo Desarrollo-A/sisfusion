@@ -1619,6 +1619,7 @@ class Api extends CI_Controller
                                         } 
                                         else {
                                             $getLoteComision = $this->Seguro_model->validaLoteComision($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
+
                                             // VALIDAR QUE EXISTA EL LOTE
                                             $validarUsuarios = $this->Seguro_model->validarUsuarios($dataReturn3->seguros[$contadorPrimer]->id_gerente,$dataReturn3->seguros[$contadorPrimer]->id_asesor);
                                             if (count($getLoteComision) > 0 && count($getLoteComision) != 1) { // validamod que existan datos, 
@@ -1630,6 +1631,9 @@ class Api extends CI_Controller
                                                     $status = 300;
                                                     $message = 'Seguro liquidado, no es posible procesar la petición.';
                                                     $dataReturn3->seguros[$contadorPrimer];
+                                                } else if(($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  > $getLoteComision[0]['totalLote']){
+                                                    $status =375;
+                                                    $message ='Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición o sea mayor que 0.';
                                                 } else if ($getLoteComision[0]['bandera'] == 1) {
                                                     // viene por abono
                                                     if ($getLoteComision[0]['pendiente'] == 0 ) {
@@ -1655,7 +1659,8 @@ class Api extends CI_Controller
                                                         $dataUpdateSeguros['pendiente'] = $pedienteParaPagos;
                                                         $dataUpdateSeguros['abonado'] = $abonadoMas;
                                                         $id_pagoc = $getLoteComision[0]['id_pagoc'];
-                                                        $cmd = "UPDATE pago_seguro SET pendiente = $pedienteParaPagos ,abonado = $abonadoMas, fecha_modificacion  = GETDATE() WHERE id_pagoc =  $id_pagoc ";
+                                                        $sql = (($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  == $getLoteComision[0]['totalLote']) ? ",bandera=7" : '';
+                                                        $cmd = "UPDATE pago_seguro SET pendiente = $pedienteParaPagos ,abonado = $abonadoMas,ultimo_pago=ultimo_pago + ".$dataReturn3->seguros[$contadorPrimer]->mensualidad." ,numero_dispersion=".$dataReturn3->seguros[$contadorPrimer]->numero_mensualidad.", fecha_modificacion  = GETDATE() $sql WHERE id_pagoc =  $id_pagoc ";
                                                         $dbTransaction = $this->Seguro_model->updatePagoSeguro($cmd );     
                                                         for ($contadorPorComisiones = 0; count($getLoteComision) > $contadorPorComisiones; $contadorPorComisiones ++) {
                                                             $totalDeLaComision = ($porcentajeMensualidad * $getLoteComision[$contadorPorComisiones]['porcentaje_decimal']);
@@ -1687,7 +1692,7 @@ class Api extends CI_Controller
                                                                 'pago_neodata' => $dataReturn3->seguros[$contadorPrimer]->mensualidad,
                                                                 'estatus' => 1,
                                                                 'creado_por' => 1,
-                                                                'comentario' => 'Dispersión pago por sistema pago automático Abono',
+                                                                'comentario' => 'Dispersión pago por sistema pago automático Abono mensualidad'.$dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
                                                                 'descuento_aplicado' => 0,
                                                                 'modificado_por' => 1,
                                                                 'fecha_modificado' => date("Y-m-d H:i:s"),
@@ -1758,7 +1763,7 @@ class Api extends CI_Controller
                                                         'fecha_neodata' => date("Y-m-d H:i:s"),
                                                         'new_neo' => 0,
                                                         'monto_anticipo' => 0,
-                                                        'numero_dispersion' => 1,
+                                                        'numero_dispersion' => $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
                                                         'ultima_dispersion' => date("Y-m-d H:i:s"),
                                                         'plan_comision' => 1,
                                                         'nombreCliente' => '',
@@ -1839,7 +1844,8 @@ class Api extends CI_Controller
                                         'numero_mensualidad' => $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
                                         'referencia' => $dataReturn3->seguros[$contadorPrimer]->referencia,
                                         'empresa' => $dataReturn3->seguros[$contadorPrimer]->empresa,
-                                        'idCliente' => $idCliente
+                                        'idCliente' => $idCliente,
+                                        'id_pago' => $dataReturn3->seguros[$contadorPrimer]->id_pago
                                     )
                                 );                         
                                 } 

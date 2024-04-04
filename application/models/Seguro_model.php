@@ -13,7 +13,7 @@ class Seguro_model extends CI_Model {
         ps.bandera,cs.id_comision,cs.comision_total ,
         lo.idLote,lo.idCliente, ps.abonado, ps.total_comision, 
         cs.id_usuario,cs.porcentaje_decimal,ps.pendiente,
-        ps.id_pagoc ,psi.abono_pagado , psi.id_comision as pagoind
+        ps.id_pagoc ,psi.abono_pagado , psi.id_comision as pagoind,ps.ultimo_pago,ps.totalLote
         FROM  lotes lo 
         INNER JOIN pago_seguro ps ON ps.id_lote = lo.idLote 
         INNER JOIN comisiones_seguro cs on cs.idCliente = lo.idCliente  
