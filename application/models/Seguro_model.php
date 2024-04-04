@@ -59,7 +59,7 @@ class Seguro_model extends CI_Model {
         )
         UNION
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comGerente porcentaje_decimal, ((@totalSeguro/100)*(pl.comGerente)) comision_total,
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol, 
             opc.nombre as detail_rol, 2 rolVal
             FROM plan_comision_seguros pl
             INNER JOIN usuarios u1 ON u1.id_usuario = @idGerente
@@ -68,7 +68,7 @@ class Seguro_model extends CI_Model {
         UNION
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, up.valorComision porcentaje_decimal, ((@totalSeguro/100)*(up.valorComision)) comision_total,
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
-            CASE WHEN up.comentario != '' THEN opc.nombre ELSE up.comentario END detail_rol, 1 as rolVal
+			CASE WHEN up.comentario != '' THEN up.comentario ELSE opc.nombre END detail_rol, 1 as rolVal
             FROM plan_comision_seguros pl
             INNER JOIN usuariosPlanComisionSeguros up ON up.idPlan=pl.id_plan 
             INNER JOIN usuarios u1 ON u1.id_usuario = up.idUsuario AND u1.id_usuario NOT IN (1980)
