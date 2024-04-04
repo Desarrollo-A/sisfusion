@@ -2529,8 +2529,8 @@ public function getDatosHistorialPagoRP($id_usuario){
   echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto = null,$condominio = null ) {      
-  $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {      
+  $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio,$tipo)->result_array();
   echo json_encode( array( "data" => $dat));
 }
 

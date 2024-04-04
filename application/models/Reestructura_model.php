@@ -603,7 +603,7 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        $id_sede = $id_usuario == 2148 ? '3' : $id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede');
+        $id_sede = $id_usuario == 2148 ? '3' : ($id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede'));
         if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
             $filtroSede = "AND sede_residencial IN ($id_sede)";
 
