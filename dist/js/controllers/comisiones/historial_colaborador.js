@@ -46,7 +46,6 @@ $('#catalogo_historial, #tipo_historial').change(function(){
 
     if (catalogoSeleccionado && tipoSeleccionado) {
         proyecto = $('#ano_historial').val();
-        console.log(proyecto, "asd");
         condominio = $('#catalogo_historial').val();
         tipo = $('#tipo_historial').val();
         console.log(tipo, "asdf");
@@ -133,6 +132,22 @@ function modalHistorial(){
 }
 
 function getAssimilatedCommissions(proyecto, condominio, tipo){
+
+    var Comisiones;
+
+    if(tipo == 1 || tipo == 2){
+        
+        Comisiones = "Comisiones/getDatosHistorialPago/";
+
+    }else if(tipo == 4){
+
+        Comisiones = "SegurosComision/getDatosHistorialPago/";
+
+    }else{
+        alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
+    }
+
+
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -323,7 +338,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
             },
         }],
         ajax: {
-            "url": general_base_url + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio + "/" + tipo,
+            "url": general_base_url + Comisiones + proyecto + "/" + condominio + "/" + tipo,
             "type": "POST",
             cache: false,
             "data": function( d ){}

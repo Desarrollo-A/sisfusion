@@ -270,4 +270,9 @@ class SegurosComision extends CI_Controller
     }
     echo json_encode( $respuesta );
   }
+
+  public function getDatosHistorialPago($proyecto = null, $condominio = null) {      
+    $dat =  $this->Seguros_comision_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+    echo json_encode( array( "data" => $dat));
+  }
 }
