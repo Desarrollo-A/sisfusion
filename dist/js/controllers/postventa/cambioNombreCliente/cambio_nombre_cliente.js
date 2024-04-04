@@ -1,3 +1,5 @@
+let contador = 0;
+let banderasPosiciones = [];
 $(document).ready(function () {
     $('#spiner-loader').removeClass('hide');
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -115,7 +117,15 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
-                    return `<span class="label ${d.estatusCambioNombre == 1 ? 'lbl-gray' : 'lbl-green'}">${d.estatusProceso}</span>`;
+                    let classStatus = '';
+                    if(d.estatusProceso == 'Rechazado'){
+                        classStatus = 'lbl-warning';
+                    }else if(d.estatusProceso == 'Aceptado'){
+                        classStatus = 'lbl-green';
+                    }else if(d.estatusProceso = 'Sin iniciar proceso'){
+                        classStatus = 'lbl-gray';
+                    }
+                    return `<span class="label ${classStatus}">${d.estatusProceso}</span>`;
                 },
             },
             {
@@ -176,29 +186,120 @@ function fillTable(index_proyecto, index_condominio) {
     });
 }
 
-$(document).on('click', '.iniciarTramite', function () {
+$(document).on('click', '.iniciarTramite', async function () {
+    banderasPosiciones = [];
+    contador = 0;
     $('#idLote').val($(this).attr('data-idLote'));
     $('#idCliente').val($(this).attr('data-idCliente'));
     $('#tipoTransaccion').val($(this).attr('data-tipoTransaccion'));
     $('#idRegistro').val($(this).attr('data-idRegistro'));
+    $('#banderaCoprop').val(contador);
+    document.getElementById('divHtmlCoprop').innerHTML = '';
     if ($(this).attr('data-tipoTransaccion') == 1) {
         $("#tipoTramite").val('').selectpicker('refresh');
         $('#txtNombre').val('');
         $('#txtApellidop').val('');
         $('#txtApellidom').val('');
     } 
-    else if ($(this).attr('data-tipoTransaccion') == 2) {
+    else if ($(this).attr('data-tipoTransaccion') == 2 || $(this).attr('data-tipoTransaccion') == 5) {
         $("#tipoTramite").val($(this).attr('data-idTipoTramite')).selectpicker('refresh');
         $('#txtNombre').val($(this).attr('data-nombreCteNuevo'));
         $('#txtApellidop').val($(this).attr('data-apCteNuevo'));
         $('#txtApellidom').val($(this).attr('data-amCteNuevo'));
+        let id_cliente = $(this).attr('data-idcliente');
+        let copropietarios = await getDescriptionNotaria(id_cliente);
+        let contadorInner = 0;
+        let divAddCoprop = document.getElementById('divHtmlCoprop');
+
+        copropietarios.map((elemento, index)=>{
+            console.log(index);
+            console.log(elemento['apellido_paterno']);
+            contadorInner = index + 1;
+            contador = index + 1; //se inicia el contador agregando las posiciones actuales
+            banderasPosiciones.push(contador);
+            $('#banderaCoprop').val(contador);
+            let contenidoDinamico  = '<div class="row mt-4" id="campoDinamico'+contadorInner+'">';
+            contenidoDinamico += '  <div class="row">';
+            contenidoDinamico += '    <div class="col-lg-12">';
+            contenidoDinamico += '        <div class="form-group text-left m-0">';
+            contenidoDinamico += '            <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>';
+            contenidoDinamico += '            <input id="nomCopro'+contadorInner+'" name="nomCopro'+contadorInner+'" value="'+elemento.nombre+'" class="form-control input-gral" type="text">';
+            contenidoDinamico += '        </div>';
+            contenidoDinamico += '    </div>';
+            contenidoDinamico += '    <div class="col-lg-6">';
+            contenidoDinamico += '        <div class="form-group text-left m-0">';
+            contenidoDinamico += '            <label class="control-label label-gral">Apellido paterno (<small style="color: red;">*</small>)</label>';
+            contenidoDinamico += '            <input id="appCopro'+contadorInner+'" name="app'+contadorInner+'" class="form-control input-gral" value="'+elemento.apellido_paterno+'" type="text">';
+            contenidoDinamico += '        </div>';
+            contenidoDinamico += '    </div>';
+            contenidoDinamico += '    <div class="col-lg-6">';
+            contenidoDinamico += '        <div class="form-group text-left m-0">';
+            contenidoDinamico += '            <label class="control-label label-gral">Apellido materno (<small style="color: red;">*</small>)</label>';
+            contenidoDinamico += '            <input id="apmCopro'+contadorInner+'" name="apm'+contadorInner+'" class="form-control input-gral" value="'+elemento.apellido_materno+'" type="text">';
+            contenidoDinamico += '            <input id="idCoprop'+contadorInner+'" name="idCoprop'+contadorInner+'" type="hidden" value="'+elemento.id_copropietario+'" type="text">';
+            contenidoDinamico += '        </div>';
+            contenidoDinamico += '    </div>';
+
+            contenidoDinamico += '    <div class="col-lg-2 col-lg-offset-9 center-align text-center justify-center">';
+            contenidoDinamico += '            <button type="button" class="btn btn-danger btn-simple" onClick="eliminarCopropDiv('+contadorInner+'); eliminarCoproP('+elemento.id_copropietario+')">eliminar</button>';
+            contenidoDinamico += '    </div>';
+
+            contenidoDinamico += '  </div>';
+            contenidoDinamico += '  <hr>';
+            contenidoDinamico += '</div>';
+
+            divAddCoprop.innerHTML += contenidoDinamico;
+
+        });
+
+        //divHtmlCoprop
+
+
+
+        async function getDescriptionNotaria(idCliente) {
+            $("#spiner-loader").removeClass("hide");
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    url: "getCopropsByIdCliente",
+                    data: { idCliente: idCliente },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (response) {
+                        resolve(response);
+                        $("#spiner-loader").addClass("hide");
+                    },
+                });
+            });
+        }
+
+
     }
     $('#inicioTramite').modal();
 });
 
+function eliminarCoproP(id_copropietario){
+    console.log('id_copropietario', id_copropietario);
+    $("#spiner-loader").removeClass("hide");
+    $.ajax({
+        url: "eliminaCopropietario",
+        data: { idCopropietario: id_copropietario },
+        type: "POST",
+        dataType: "json",
+        success: function (response) {
+            if(response.status = 1){
+                alerts.showNotification('top','right', response.message,'success');
+            }else{
+                alerts.showNotification('top','right', response.message,'danger');
+            }
+            $("#spiner-loader").addClass("hide");
+        },
+    });
+}
+
 $(document).on("submit", "#formCambioNombre", function (e) {
     e.preventDefault();
     let data = new FormData($(this)[0]);
+    data.append('arrayPosiciones', banderasPosiciones);
     //$('#spiner-loader').removeClass('hide');
     $.ajax({
         url: `${general_base_url}Postventa/setInformacionCliente`,
@@ -252,3 +353,57 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         }
     });
 });
+
+function agregarCoprop(){
+    let divAddCoprop = document.getElementById('divHtmlCoprop');
+    contador = contador + 1;
+
+    $('#banderaCoprop').val(contador);
+    let divInternoInner  = '<div class="row mt-4" id="campoDinamico'+contador+'">';
+        divInternoInner += '  <div class="row">';
+        divInternoInner += '    <div class="col-lg-12">';
+        divInternoInner += '        <div class="form-group text-left m-0">';
+        divInternoInner += '            <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>';
+        divInternoInner += '            <input id="nomCopro'+contador+'" name="nomCopro'+contador+'" class="form-control input-gral" type="text">';
+        divInternoInner += '        </div>';
+        divInternoInner += '    </div>';
+        divInternoInner += '    <div class="col-lg-6">';
+        divInternoInner += '        <div class="form-group text-left m-0">';
+        divInternoInner += '            <label class="control-label label-gral">Apellido paterno (<small style="color: red;">*</small>)</label>';
+        divInternoInner += '            <input id="appCopro'+contador+'" name="app'+contador+'" class="form-control input-gral" type="text">';
+        divInternoInner += '        </div>';
+        divInternoInner += '    </div>';
+        divInternoInner += '    <div class="col-lg-6">';
+        divInternoInner += '        <div class="form-group text-left m-0">';
+        divInternoInner += '            <label class="control-label label-gral">Apellido materno (<small style="color: red;">*</small>)</label>';
+        divInternoInner += '            <input id="apmCopro'+contador+'" name="apm'+contador+'" class="form-control input-gral" type="text">';
+        divInternoInner += '        </div>';
+        divInternoInner += '    </div>';
+
+        divInternoInner += '    <div class="col-lg-2 col-lg-offset-9 center-align text-center justify-center">';
+        divInternoInner += '            <button type="button" class="btn btn-danger btn-simple" onClick="eliminarCopropDiv('+contador+')">eliminar</button>';
+        divInternoInner += '    </div>';
+
+        divInternoInner += '  </div>';
+        divInternoInner += '  <hr>';
+        divInternoInner += '</div>';
+    divAddCoprop.innerHTML += divInternoInner;
+
+    banderasPosiciones.push(contador);
+
+}
+
+function eliminarCopropDiv(index){
+    console.log('contador: ', index);
+    $("#campoDinamico"+index).remove();
+    contador = contador - 1;
+    $('#banderaCoprop').val(contador);
+
+
+    var indice = banderasPosiciones.indexOf(index); // obtenemos el indice
+    banderasPosiciones.splice(indice, 1); // 1 es la cantidad de elemento a eliminar
+
+    console.log('banderasPosiciones', banderasPosiciones);
+
+}
+
