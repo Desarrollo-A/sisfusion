@@ -3278,6 +3278,8 @@ public $controller = 'Postventa';
     }
 
     public function setInformacionCliente() {
+
+
         $idLote = $this->input->post('idLote');
         $idCliente = $this->input->post('idCliente');
         $tipoTramite = $this->input->post('tipoTramite');
@@ -3290,7 +3292,14 @@ public $controller = 'Postventa';
         $responseInsertCliente = TRUE;
         $reponseUpdateLote = TRUE;
         $responseUpdateCliente = TRUE;
+        $arrayPosiciones = $pieces = explode(",", $this->input->post('arrayPosiciones')); ;
+        $banderaCoprop = $this->input->post('banderaCoprop');
+
+
+
+
         if ($tipoTransaccion == 1) { // ES LA PRIMERA VEZ, SE VA A INSERTAR
+
             $dataParaInsertar = array(
                 "idLote" => $idLote,
                 "idCliente" => $idCliente,
@@ -3303,8 +3312,106 @@ public $controller = 'Postventa';
             );
             $responseInsertCliente = $this->General_model->addRecord('clientes_x_lote', $dataParaInsertar);
             $reponseUpdateLote = $this->General_model->updateRecord("lotes", array("estatusCambioNombre" => 2, "usuario" => 1), "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+
+            #insercion de los coprop
+                if($banderaCoprop>0){
+                    foreach ($arrayPosiciones as $index_array){
+                        $dataInsertCoprop = array(
+                        "id_cliente" => $idCliente,
+                        "nombre" => $this->input->post('nomCopro'.$index_array),
+                        "apellido_paterno" => $this->input->post('app'.$index_array),
+                        "apellido_materno" => $this->input->post('apm'.$index_array),
+                        "personalidad_juridica" => null,
+                        "rfc" => null,
+                        "correo" => null,
+                        "telefono" => null,
+                        "telefono_2" => null,
+                        "nacionalidad" => null,
+                        "fecha_nacimiento" => '2000-01-01 00:00:00',
+                        "estado_civil" => null,
+                        "regimen_matrimonial" => null,
+                        "conyuge" => null,
+                        "domicilio_particular" => null,
+                        "originario_de" => null,
+                        "tipo_vivienda" => null,
+                        "ocupacion" => null,
+                        "empresa" => null,
+                        "posicion" => null,
+                        "antiguedad" => null,
+                        "direccion" => null,
+                        "edadFirma" => null,
+                        "estatus" => 1,
+                        "fecha_creacion" => date('Y-m-d H:i:s'),
+                        "creado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => date('Y-m-d H:i:s'),
+                        "modificado_por" => 0,
+                        "ine" => null,
+                        "ladaTel" => null,
+                        "ladaCel" => null
+                    );
+                        $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
+                    }
+                }
+            #termino de los coprop
+
         }
-        else if ($tipoTransaccion == 2) {
+        else if ($tipoTransaccion == 2 || $tipoTransaccion == 5) {
+
+            #actualizacion o inserción de los prospectos
+            if($banderaCoprop>0) {
+                foreach ($arrayPosiciones as $index_array) {
+                    $idCoprop = $this->input->post('idCoprop'.($index_array));
+                    if(isset($idCoprop)){
+                        $dataParaActualizar = array (
+                            "nombre" =>  $this->input->post('nomCopro'.($index_array)),
+                            "apellido_paterno" => $this->input->post('app'.($index_array)),
+                            "apellido_materno" => $this->input->post('apm'.($index_array)),
+                            "fecha_modificacion" => date('Y-m-d H:i:s'),
+                            "modificado_por" => $this->session->userdata('id_usuario')
+                        );
+                        $responseUpdateCopropietario = $this->General_model->updateRecord("copropietarios", $dataParaActualizar, "id_copropietario", $idCoprop); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+                    }
+                    else{
+                        $dataInsertCoprop = array(
+                            "id_cliente" => $idCliente,
+                            "nombre" => $this->input->post('nomCopro'.$index_array),
+                            "apellido_paterno" => $this->input->post('app'.$index_array),
+                            "apellido_materno" => $this->input->post('apm'.$index_array),
+                            "personalidad_juridica" => null,
+                            "rfc" => null,
+                            "correo" => null,
+                            "telefono" => null,
+                            "telefono_2" => null,
+                            "nacionalidad" => null,
+                            "fecha_nacimiento" => '2000-01-01 00:00:00',
+                            "estado_civil" => null,
+                            "regimen_matrimonial" => null,
+                            "conyuge" => null,
+                            "domicilio_particular" => null,
+                            "originario_de" => null,
+                            "tipo_vivienda" => null,
+                            "ocupacion" => null,
+                            "empresa" => null,
+                            "posicion" => null,
+                            "antiguedad" => null,
+                            "direccion" => null,
+                            "edadFirma" => null,
+                            "estatus" => 1,
+                            "fecha_creacion" => date('Y-m-d H:i:s'),
+                            "creado_por" => $this->session->userdata('id_usuario'),
+                            "fecha_modificacion" => date('Y-m-d H:i:s'),
+                            "modificado_por" => 0,
+                            "ine" => null,
+                            "ladaTel" => null,
+                            "ladaCel" => null
+                        );
+                        $responseInsertCliente = $this->General_model->addRecord('copropietarios', $dataInsertCoprop);
+                    }
+                }
+            }
+            #termina logica de los prospectos
+
+
             $dataParaActualizar = array (
                 "nombre" => $txtNombre,
                 "apellido_paterno" => $txtApellidop,
@@ -3322,8 +3429,6 @@ public $controller = 'Postventa';
     }
 
     public function setAvance () {
-
-
 
         $idLote = $this->input->post('idLoteA');
         $idCliente = $this->input->post('idClienteA');
@@ -3343,6 +3448,9 @@ public $controller = 'Postventa';
             $estatusCambioNombre = 5;
         else if ($tipoTransaccion == 3 && $this->input->post('tipo') == 1) // CONTRALORÍA LO ACEPTÓ
             $estatusCambioNombre = 4;
+        else if($tipoTransaccion == 5 && $this->input->post('tipo') == NULL) // RECHAZO DE CONTRALORIA  y LO AVANZA NUEVAMENTE
+            $estatusCambioNombre = 3;
+
         if ($tipoTransaccion == 3 && $this->input->post('tipo') == 1) { // ACEPTÓ EL CAMBIO DE NOMBRE
             // SE ARMA EL ARRAY DE DATOS PARA ENVIAR A LA FUNCIÓN QUE LO VA A LIBERAR
             $datosLiberacion = array (
@@ -3408,7 +3516,8 @@ public $controller = 'Postventa';
                 "idCliente" => $responseAgregarCliente[0]["lastId"]
             );
             $responseInsertHistorial = $this->General_model->addRecord('historial_lotes', $dataInsertarHistorial);
-        } else {
+        }
+        else {
             $dataParaActualizarLote = array (
                 "comentario" => $comentario,
                 "estatusCambioNombre" => $estatusCambioNombre,
@@ -3447,6 +3556,37 @@ public $controller = 'Postventa';
             echo json_encode($dato);
         else
             echo json_encode(array());
+    }
+
+    public function getCopropsByIdCliente(){
+        $idCliente = $this->input->post('idCliente');
+
+        $dato = $this->Postventa_model->getCopropsByIdCliente($idCliente);
+        if ($dato != null)
+            echo json_encode($dato);
+        else
+            echo json_encode(array());
+    }
+
+
+    public function eliminaCopropietario(){
+        $id_copropietario = $this->input->post('idCopropietario');
+
+        $response = $this->Postventa_model->eliminaCopropietario($id_copropietario);
+
+        if($response = 1){
+            $respuesta['status'] = 1;
+            $respuesta['message'] = 'Se eliminó correctamente';
+        }else{
+            $respuesta['status'] = 0;
+            $respuesta['message'] = 'Ocurrió un error al eliminar el registro, inténtalo nuevamente';
+        }
+
+        if ($respuesta != null)
+            echo json_encode($respuesta);
+        else
+            echo json_encode(array());
+
     }
 
 }

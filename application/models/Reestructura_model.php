@@ -103,7 +103,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2,0) AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -1382,7 +1382,10 @@ class Reestructura_model extends CI_Model
     }
 
     public function checkFusion($id_lote){
-        $query = $this->db->query('SELECT *FROM lotesFusion WHERE idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
+        $query = $this->db->query('SELECT lf.*, lo.nombreLote, lo.tipo_estatus_regreso
+        FROM lotesFusion lf
+        INNER JOIN lotes lo on lo.idLote = lf.idLote
+        WHERE lf.idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotesFusion WHERE idLote = ? )', $id_lote);
         return $query;
     }
 
@@ -1413,11 +1416,11 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    public function checkLotesFusion($idLotes){
-        $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
+    // public function checkLotesFusion($idLotes){
+    //     $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
 
-        return $query;
-    }
+    //     return $query;
+    // }
 
     public function updateLotesFusion($idLote, $idStatusLote, $idUsuario){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, $idUsuario, $idLote));
