@@ -111,7 +111,7 @@ class FileField{
         )
 
         this.value = () => {
-            return $(`#${id}`).val()
+            return $(`#${id}`)[0].files[0]
         }
         
     }

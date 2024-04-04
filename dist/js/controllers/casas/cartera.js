@@ -38,8 +38,8 @@ filtro_proyectos.onChange(function(option){
 filtro_condominios.onChange(function(option){
     // console.log(option)
 
-    tabla.setParams({condominio: option.value})
-    tabla.reload()
+    table.setParams({condominio: option.value})
+    table.reload()
 })
 
 let filtros = new Filters({
@@ -58,6 +58,8 @@ function sendToAsignacion(data){
         url: `to_asignacion?lote=${data.idLote}`,
         success: function (response) {
             alerts.showNotification("top", "right", "El lote ha sido enviado a asignacion.", "success");
+
+            table.reload()
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -88,7 +90,7 @@ let columns = [
     } },
 ]
 
-let tabla = new Table({
+let table = new Table({
     id: '#tableDoct',
     url: 'casas/lotes',
     buttons: ['excel'],

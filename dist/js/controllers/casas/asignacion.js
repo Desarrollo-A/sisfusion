@@ -49,20 +49,37 @@ function choose_asesor(data) {
 }
 
 function sendToNext(data){
-    console.log(data)
+    //console.log(data)
 
-    /*
     $.ajax({
         type: 'POST',
-        url: `to_asignacion?lote=${data.idLote}`,
+        url: `to_carta_auth?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha sido enviado a asignacion.", "success");
+            alerts.showNotification("top", "right", "El lote ha sido puesto para ingresar carta de autorizacion.", "success");
+
+            table.reload()
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     })
-    */
+}
+
+function sendToCancel(data) {
+    // console.log(data)
+
+    $.ajax({
+        type: 'POST',
+        url: `cancel_process?id=${data.idProcesoCasas}`,
+        success: function (response) {
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido cancelado.`, "success");
+
+            table.reload()
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
 }
 
 select_asesor = function(data) {
@@ -70,6 +87,17 @@ select_asesor = function(data) {
         title: 'Continuar proceso', 
         text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
         onOk: () => sendToNext(data),
+        //onCancel: sayNo,
+    })
+
+    ask.show()
+}
+
+cancel_process = function(data) {
+    let ask = new AskDialog({
+        title: 'Cancelar proceso', 
+        text: `Desea cancelar el proceso del lote ${data.nombreLote}`,
+        onOk: () => sendToCancel(data),
         //onCancel: sayNo,
     })
 
@@ -88,7 +116,9 @@ let columns = [
             pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignacion', onClick: select_asesor, data})
         }
 
-        return `<div class="d-flex justify-center">${asesor_button}${pass_button}</div>`
+        let cancel_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})
+
+        return `<div class="d-flex justify-center">${asesor_button}${pass_button}${cancel_button}</div>`
     } },
 ]
 
