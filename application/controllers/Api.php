@@ -1607,8 +1607,9 @@ class Api extends CI_Controller
                                             ($dataReturn3->seguros[$contadorPrimer]->id_asesor  == '')  ||
                                             ($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_pago  == '')    ||
-                                            ($dataReturn3->seguros[$contadorPrimer]->mensualidad < 0)   || 
-                                            ($dataReturn3->seguros[$contadorPrimer]->montoTotal  < 0)   ||
+                                            ($dataReturn3->seguros[$contadorPrimer]->mensualidad <= 0)   || 
+                                            ($dataReturn3->seguros[$contadorPrimer]->montoTotal  <= 0)   ||
+                                            ($dataReturn3->seguros[$contadorPrimer]->tipo_pago  == 2  && ($dataReturn3->seguros[$contadorPrimer]->mensualidad != $dataReturn3->seguros[$contadorPrimer]->montoTotal) ) ||
                                             ($dataReturn3->seguros[$contadorPrimer]->mensualidad > $dataReturn3->seguros[$contadorPrimer]->montoTotal )  ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_gerente  == '')
                                         ) {
@@ -1617,17 +1618,9 @@ class Api extends CI_Controller
                                             $message ='Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición o sea mayor que 0.';
                                         } 
                                         else {
-
-
                                             $getLoteComision = $this->Seguro_model->validaLoteComision($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
                                             // VALIDAR QUE EXISTA EL LOTE
-
                                             $validarUsuarios = $this->Seguro_model->validarUsuarios($dataReturn3->seguros[$contadorPrimer]->id_gerente,$dataReturn3->seguros[$contadorPrimer]->id_asesor);
-                                            var_dump($validarUsuarios[0]['tipo']);
-                                            var_dump($validarUsuarios[1]['tipo']);
-
-
-                                            
                                             if (count($getLoteComision) > 0 && count($getLoteComision) != 1) { // validamod que existan datos, 
                                                 $idCliente = $getLoteComision[0]['idCliente'];
                                                 // viene para abonar o comprobar si viene liquidadol
