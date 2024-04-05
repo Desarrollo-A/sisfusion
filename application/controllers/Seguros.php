@@ -251,7 +251,7 @@ class Seguros extends CI_Controller
    
     $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
     if( isset( $_FILES ) && !empty($_FILES) ){
-      $config['upload_path'] = './UPLOADS/XMLS/';
+      $config['upload_path'] = './UPLOADS/XMLSEGUROS/';
       $config['allowed_types'] = 'xml';
       //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
       $this->load->library('upload', $config);
@@ -349,7 +349,7 @@ class Seguros extends CI_Controller
             $resultado = TRUE;
             
             if( isset( $_FILES ) && !empty($_FILES) ){
-              $config['upload_path'] = './UPLOADS/XMLS/';
+              $config['upload_path'] = './UPLOADS/XMLSEGUROS/';
               $config['allowed_types'] = 'xml';
               $this->load->library('upload', $config);
               $resultado = $this->upload->do_upload("xmlfile");
@@ -366,8 +366,12 @@ class Seguros extends CI_Controller
                   $nuevo_nombre .= date("Hms")."_";
                   $nuevo_nombre .= rand(4, 100)."_";
                   $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
-                  rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+                  rename( $xml_subido['full_path'], "./UPLOADS/XMLSEGUROS/".$nuevo_nombre );
                   $datos_xml['nombre_xml'] = $nuevo_nombre;
+
+                 
+
+
                   ini_set('max_execution_time', 0);
                   for ($i=0; $i <count($datos) ; $i++) { 
                     if(!empty($datos[$i])){

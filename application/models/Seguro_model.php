@@ -345,6 +345,9 @@ class Seguro_model extends CI_Model {
                 "id_comision" => $id_comision,
                 "regimen" => $datos_factura['regimenFiscal'],
                 "forma_pago" => $datos_factura['formaPago'],
+
+                "fecha_creacion" => date('Y-m-d H:i:s'),
+
                 "cfdi" => $datos_factura['usocfdi'],
                 "unidad" => $datos_factura['claveUnidad'],
                 "claveProd" => $datos_factura['claveProdServ']
