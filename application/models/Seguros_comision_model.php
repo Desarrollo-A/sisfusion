@@ -119,7 +119,7 @@ class Seguros_comision_model extends CI_Model {
             return $query->result_array();
     }
 
-    //facturas_seguro
+    //facturas_seguros
 
     function getDatosNuevasFacturasSeguros($proyecto,$condominio){
 
@@ -294,7 +294,7 @@ class Seguros_comision_model extends CI_Model {
     }
     
     public function registroComisionAsimilados($id_pago){
-        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
+        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguros c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
         return  $query->result_array();
     }
@@ -303,17 +303,17 @@ class Seguros_comision_model extends CI_Model {
         $id_user_Vl = $this->session->userdata('id_usuario');
         $this->db->query("INSERT INTO  historial_seguro VALUES ($id_pago_i, $id_user_Vl, GETDATE(), 1, 'SE PAUSÓ COMISIÓN, MOTIVO: ".$obs."')");
         $respuesta =  $this->db->query("UPDATE pago_seguro_ind SET estatus = 6, comentario = '".$obs."',modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$id_pago_i.")");
-        $row = $this->db->query("SELECT uuid FROM facturas_seguro WHERE id_comision = ".$id_pago_i.";")->result_array();
+        $row = $this->db->query("SELECT uuid FROM facturas_seguros WHERE id_comision = ".$id_pago_i.";")->result_array();
         
         if(count($row) > 0){
-            $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM facturas_seguro WHERE uuid='".$row[0]['uuid']."'")->result_array();
+            $datos =  $this->db->query("select id_factura,total,id_comision,bandera FROM facturas_seguros WHERE uuid='".$row[0]['uuid']."'")->result_array();
     
             for ($i=0; $i <count($datos); $i++) {
                 if($datos[$i]['bandera'] == 1){
                     $respuesta = 1;
                 }else{
                     $comentario = 'Se regresó esta factura que correspondo al pago con id '.$datos[$i]['id_comision'].' con el monto global de '.$datos[$i]['total'].' por motivo de: '.$obs.' ';
-                    $response = $this->db->query("UPDATE facturas_seguro set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
+                    $response = $this->db->query("UPDATE facturas_seguros set total=0,id_comision=0,bandera=1,descripcion='$comentario'  WHERE id_factura=".$datos[$i]['id_factura']."");
                     $respuesta = $this->db->query("INSERT INTO  historial_seguro VALUES (".$datos[$i]['id_comision'].", ".$this->session->userdata('id_usuario').", GETDATE(), 1, '".$comentario."')");
                 }
             }
@@ -352,14 +352,14 @@ class Seguros_comision_model extends CI_Model {
         LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
         FROM pago_seguro_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
         GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
-        INNER JOIN comisiones com ON pci1.id_comision = com.id_comision and com.estatus = 1
+        INNER JOIN comisiones_seguros com ON pci1.id_comision = com.id_comision and com.estatus = 1
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
-        INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+        INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
         LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -368,5 +368,12 @@ class Seguros_comision_model extends CI_Model {
         GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, 
         oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus,pe.id_penalizacion, oxcest.color, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2 ORDER BY lo.nombreLote");
     }
+
+    
+    function update_estatus_refresh($idcom) {
+        $id_user_Vl = $this->session->userdata('id_usuario');
+        $this->db->query("INSERT INTO  historial_seguro VALUES ($idcom, $id_user_Vl, GETDATE(), 1, 'SE ACTIVÓ NUEVAMENTE COMISIÓN')");
+        return $this->db->query("UPDATE pago_seguro_ind SET estatus = 4,modificado_por='".$this->session->userdata('id_usuario')."' WHERE id_pago_i IN (".$idcom.")");
+    } 
 
 }
