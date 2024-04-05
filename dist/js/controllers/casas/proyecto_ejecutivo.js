@@ -27,7 +27,7 @@ back_to_adeudos = function(data) {
 }
 
 go_to_documentos = function(data) {
-    window.location.href = `documentacion/${data.idProcesoCasas}`;
+    window.location.href = `documentos_proyecto_ejecutivo/${data.idProcesoCasas}`;
 }
 
 function sendToNext(data){
@@ -81,19 +81,19 @@ let columns = [
         let docu_button = new TableButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
 
         let pass_button = ''
-        if(data.documentos >= 13){
-             pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validacion de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+        if(data.documentos >= 2){
+             // pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validacion de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
-        // let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
+        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
 
-        return `<div class="d-flex justify-center">${docu_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_proceso_documentos',
+    url: 'casas/lista_proyecto_ejecutivo_documentos',
     buttons: ['excel'],
     columns,
 })

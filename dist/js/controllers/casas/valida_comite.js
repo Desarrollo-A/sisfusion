@@ -1,11 +1,11 @@
-function sendToAdeudos(data) {
+function sendToDocumentacion(data) {
     console.log(data)
 
     $.ajax({
         type: 'POST',
-        url: `back_to_adeudos?id=${data.idProcesoCasas}`,
+        url: `back_to_documentos?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a documentación del cliente.`, "success");
 
             table.reload()
         },
@@ -15,19 +15,15 @@ function sendToAdeudos(data) {
     })
 }
 
-back_to_adeudos = function(data) {
+back_to_documentos = function(data) {
     let ask = new AskDialog({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
-        onOk: () => sendToAdeudos(data),
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a documentación del cliente?`,
+        onOk: () => sendToDocumentacion(data),
         //onCancel: sayNo,
     })
 
     ask.show()
-}
-
-go_to_documentos = function(data) {
-    window.location.href = `documentacion/${data.idProcesoCasas}`;
 }
 
 function sendToNext(data){
@@ -35,9 +31,9 @@ function sendToNext(data){
 
     $.ajax({
         type: 'POST',
-        url: `to_valida_comite?id=${data.idProcesoCasas}`,
+        url: `to_titulacion?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite tecnico.", "success");
+            alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
 
             table.reload()
         },
@@ -47,15 +43,19 @@ function sendToNext(data){
     })
 }
 
-pass_to_proyecto_ejecutivo = function(data) {
+pass_to_titulacion = function(data) {
     let ask = new AskDialog({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
 
     ask.show()
+}
+
+go_to_documentos = function(data) {
+    window.location.href = `comite_documentos/${data.idProcesoCasas}`;
 }
 
 let columns = [
@@ -78,22 +78,22 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let docu_button = new TableButton({icon: 'toc', label: 'Editar documentos', onClick: go_to_documentos, data})
+        let docu_button = new TableButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
         let pass_button = ''
-        if(data.documentos >= 13){
-             pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validacion de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+        if(data.documentos >= 1){
+            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
         }
 
-        // let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
+        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
 
-        return `<div class="d-flex justify-center">${docu_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_proceso_documentos',
+    url: 'casas/lista_valida_comite',
     buttons: ['excel'],
     columns,
 })

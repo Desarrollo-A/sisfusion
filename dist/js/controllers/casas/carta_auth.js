@@ -1,5 +1,3 @@
-Shadowbox.init();
-
 function sendToAsignacion(data) {
     console.log(data)
 
@@ -29,12 +27,14 @@ back_process = function(data) {
 }
 
 function show_preview(data) {
-    let url = `${general_base_url}casas/archivo/${data.cartaAuth}`
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    Shadowbox.init();
 
     Shadowbox.open({
         content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${url}"></iframe></div>`,
         player: "html",
-        title: `Visualizando archivo: ${data.cartaAuth}`,
+        title: `Visualizando archivo: ${data.documento}`,
         width: 985,
         height: 660
     });
@@ -50,7 +50,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `upload_carta_auth`,
+                url: `${general_base_url}/casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -67,8 +67,10 @@ function show_upload(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id',               value: data.idProcesoCasas }),
-            new FileField({   id: 'carta_auth',       label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
+            new HiddenField({ id: 'name_documento', value: data.documento }),
+            new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo' }),
         ],
     })
 
@@ -127,7 +129,7 @@ let columns = [
 
         let view_button = ''
         let pass_button = ''
-        if(data.cartaAuth){
+        if(data.archivo){
             view_button = new TableButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
             pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a concentrar adeudos', onClick: pass_to_adeudos, data})
         }

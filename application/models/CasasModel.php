@@ -4,6 +4,8 @@ class CasasModel extends CI_Model
 {
     function __construct(){
         parent::__construct();
+
+        $this->load->library(['session']);
     }
 
     public function getProceso($idProcesoCasas){
@@ -103,6 +105,19 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
+    public function getDocumentosCartaAuth(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (1)";
+
+        return $this->db->query($query)->row();
+    }
+
     public function setProcesoToCartaAuth($idProcesoCasas){
         $query = "UPDATE proceso_casas
         SET
@@ -118,10 +133,12 @@ class CasasModel extends CI_Model
         $query = "SELECT
             pc.*,
             lo.nombreLote,
-            doc.nombre AS cartaAuth
+            doc.archivo,
+            doc.documento,
+            doc.idDocumento
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idDocumento = pc.idCartaAuth
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 1
         WHERE
             pc.proceso = 1
         AND pc.status = 1";
@@ -149,24 +166,16 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function addDocumentRow($idProcesoCasas, $nombre, $documento){
-        $data = [
-            'idProcesoCasas' => $idProcesoCasas,
-            'nombre' => $nombre,
-            'documento' => $documento,
-        ];
+    public function updateDocumentRow($idDocumento, $archivo){
+        $idModificacion = $this->session->userdata('id_usuario');
 
-        $this->db->insert('documentos_proceso_casas', $data);
-
-        return $this->db->insert_id();
-    }
-
-    public function setCartaAuth($idProcesoCasas, $idCartaAuth){
-        $query = "UPDATE proceso_casas
+        $query = "UPDATE documentos_proceso_casas
         SET
-            idCartaAuth = $idCartaAuth
+            archivo = '$archivo',
+            fechaModificacion = GETDATE(),
+            idModificacion = $idModificacion
         WHERE
-            idProcesoCasas = $idProcesoCasas";
+            idDocumento = $idDocumento";
 
         return $this->db->query($query);
     }
@@ -206,10 +215,201 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
+    public function getDocumentosCliente(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats 
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function inserDocumentsToProceso($idProcesoCasas, $tipo, $documento){
+        $idCreacion = $this->session->userdata('id_usuario');
+
+        $query = "BEGIN
+            IF NOT EXISTS (SELECT * FROM documentos_proceso_casas 
+                           WHERE tipo = $tipo
+                           AND idProcesoCasas = $idProcesoCasas)
+            BEGIN
+                INSERT INTO documentos_proceso_casas (idProcesoCasas, tipo, documento, idCreacion)
+                VALUES ($idProcesoCasas, $tipo, '$documento', $idCreacion)
+            END
+        END";
+
+        return $this->db->query($query);
+    }
+
     public function setProcesoToDocumentacionCliente($idProcesoCasas){
         $query = "UPDATE proceso_casas
         SET
             proceso = 3,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaProcesoDocumentos(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.documentos
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        WHERE
+            pc.proceso = 3
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToAdeudos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 2,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaDocumentosCliente($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaProyectoEjecutivo(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.documentos
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        WHERE
+            pc.proceso = 3
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentosProyectoEjecutivo($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (13,14,15)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToValidaComite($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 4,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getDocumentoAnexosTecnicos(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (16)";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function getListaValidaComite(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.documentos
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (16) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        WHERE
+            pc.proceso = 4
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToDocumentos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 3,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaDocumentosComiteEjecutivo($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (13,14,15,16)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getDocumentoTitulacion(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (17)";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function setProcesoToTitulacion($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 5,
             fechaProceso = GETDATE()
         WHERE
             idProcesoCasas = $idProcesoCasas";

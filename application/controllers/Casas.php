@@ -34,6 +34,49 @@ class Casas extends BaseController {
         $this->load->view("casas/docu_cliente");
     }
 
+    public function documentacion($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/documentacion", $data);
+    }
+
+    public function proyecto_ejecutivo(){
+        $this->load->view('template/header');
+        $this->load->view("casas/proyecto_ejecutivo");
+    }
+
+    public function documentos_proyecto_ejecutivo($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/documentos_proyecto_ejecutivo", $data);
+    }
+
+    public function valida_comite(){
+        $this->load->view('template/header');
+        $this->load->view("casas/valida_comite");
+    }
+
+    public function comite_documentos($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/comite_documentos", $data);
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -130,7 +173,17 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToCartaAuth($id);
+        $documento = $this->CasasModel->getDocumentosCartaAuth();
+
+        if($documento){
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                http_response_code(500);
+            }
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToValidaComite($id);
 
         if($is_ok){
             $this->json([]);
@@ -177,37 +230,48 @@ class Casas extends BaseController {
         }
     }
 
-    public function upload_carta_auth(){
-        $id = $this->form('id');
+    public function generateFileName($documento, $lote, $proceso, $archivo){
+        $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
-        if(!isset($id)){
+        $documento = strtoupper($documento);
+        $documento = str_replace(" ", "_", $documento);
+
+        $lote = str_replace("-", "_", $lote);
+
+        $filename = $documento . "_" . $lote . "_" . $proceso . ".pdf";
+
+        return $filename;
+    }
+
+    public function upload_documento(){
+        $form = $this->form();
+
+        $id_proceso = $this->form('id_proceso');
+        $id_documento = $this->form('id_documento');
+        $name_documento = $this->form('name_documento');
+
+        if(!isset($id_proceso)){
             http_response_code(400);
         }
 
-        $proceso = $this->CasasModel->getProceso($id);
+        $proceso = $this->CasasModel->getProceso($id_proceso);
 
-        $file = $this->file('carta_auth');
+        $file = $this->file('file_uploaded');
 
-        if(!isset($file)){
+        if(!$file){
             http_response_code(400);
         }
 
         if($file){
-            $date = date('Ymd');
-
-            $filename = "CARTA_AUTH_" . $proceso->nombreLote . "_" . $proceso->idProcesoCasas . "_" . $date . ".pdf";
+            $filename = $this->generateFileName($name_documento, $proceso->nombreLote, $id_proceso, $file->name);
 
             $uploaded = $this->upload($file->tmp_name, $filename);
 
             if($uploaded){
-                $inserted = $this->CasasModel->addDocumentRow($id, $filename, 'CARTA DE AUTORIZACION');
+                $updated = $this->CasasModel->updateDocumentRow($id_documento, $filename);
 
-                if($inserted){
-                    $updated = $this->CasasModel->setCartaAuth($id, $inserted);
-
-                    if($updated){
-                        $this->json([]);
-                    }
+                if($updated){
+                    $this->json([]);
                 }
             }
         }
@@ -260,6 +324,21 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
+        $documentos = $this->CasasModel->getDocumentosCliente();
+
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                break;
+            }
+        }
+
+        if(!$is_ok){
+            http_response_code(500);
+        }
+
         $is_ok = $this->CasasModel->setProcesoToDocumentacionCliente($id);
 
         if($is_ok){
@@ -269,7 +348,123 @@ class Casas extends BaseController {
         }
     }
 
-    public function lista_documentos_cliente(){
-        $this->json([]);
+    public function lista_proceso_documentos(){
+        $lotes = $this->CasasModel->getListaProcesoDocumentos();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_adeudos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToAdeudos($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_documentos_cliente($proceso){
+        $lotes = $this->CasasModel->getListaDocumentosCliente($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function lista_proyecto_ejecutivo_documentos(){
+        $lotes = $this->CasasModel->getListaProyectoEjecutivo();
+
+        $this->json($lotes);
+    }
+
+    public function lista_documentos_proyecto_ejecutivo($proceso){
+        $lotes = $this->CasasModel->getListaDocumentosProyectoEjecutivo($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function to_valida_comite(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $documento = $this->CasasModel->getDocumentoAnexosTecnicos();
+
+        if($documento){
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                http_response_code(500);
+            }
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToValidaComite($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_valida_comite(){
+        $lotes = $this->CasasModel->getListaValidaComite();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_documentos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToDocumentos($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_documentos_comite($proceso){
+        $lotes = $this->CasasModel->getListaDocumentosComiteEjecutivo($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function to_titulacion(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $documento = $this->CasasModel->getDocumentoTitulacion();
+
+        if($documento){
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                http_response_code(500);
+            }
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToTitulacion($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
     }
 }

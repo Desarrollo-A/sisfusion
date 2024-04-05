@@ -16,16 +16,17 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentacion del cliente</h3>
+                                    <h3 class="card-title center-align">Documentacion del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID LOTE</th>
-                                            <th>LOTE</th>
-                                            <th>VIGENCIA</th>
+                                            <th>ID DOC</th>
+                                            <th>DOCUMENTO</th>
+                                            <th>ARCHIVO</th>
+                                            <th>FECHA SUBIDO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -43,5 +44,8 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/docu_cliente.js"></script>
+    <script type="text/javascript">
+        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
+    </script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/documentacion.js"></script>
 </body>
