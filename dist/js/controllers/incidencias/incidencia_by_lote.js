@@ -1793,7 +1793,7 @@ $(".find_doc").click( function() {
                                         // boton guardar
                                         let boton = `
                                         <button type="button" id="btn_${i}" 
-                                        ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
+                                        ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
                                          data-toggle="tooltip" disabled
                                         data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
@@ -1847,7 +1847,7 @@ $(".find_doc").click( function() {
                                             </div>
 
                                             <div class="col-md-2">
-                                                <input class="form-control input-gral" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
+                                                <input class="form-control input-gral" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
                                                 <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${parseFloat(v.porcentaje_decimal).toFixed(3)}">
                                                 <b id="msj_${i}" style="color:red;"></b>
                                             </div>
@@ -1865,7 +1865,7 @@ $(".find_doc").click( function() {
                                             </div>
 
                                             <div class="col-md-2 botones">
-                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 4878 && id_user != 5957 && id_user != 2749) ? '' : boton}  
+                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? '' : boton}  
                                                 ${boton_topar}
                                                 ${boton_pago}
                                                 ${boton_regresar}
