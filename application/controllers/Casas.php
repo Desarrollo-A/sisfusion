@@ -77,6 +77,79 @@ class Casas extends BaseController {
         $this->load->view("casas/comite_documentos", $data);
     }
 
+    public function carga_titulos(){
+        $this->load->view('template/header');
+        $this->load->view("casas/carga_titulos");
+    }
+
+    public function eleccion_propuestas(){
+        $this->load->view('template/header');
+        $this->load->view("casas/eleccion_propuestas");
+    }
+
+    public function propuesta_firma(){
+        $this->load->view('template/header');
+        $this->load->view("casas/propuesta_firma");
+    }
+
+    public function validacion_contraloria(){
+        $this->load->view('template/header');
+        $this->load->view("casas/validacion_contraloria");
+    }
+
+    public function valida_documentacion($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/valida_documentacion", $data);
+    }
+
+    public function solicitar_contratos(){
+        $this->load->view('template/header');
+        $this->load->view("casas/solicitar_contratos");
+    }
+
+    public function contratos($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/contratos", $data);
+    }
+
+    public function recepcion_contratos(){
+        $this->load->view('template/header');
+        $this->load->view("casas/recepcion_contratos");
+    }
+
+    public function vobo_contratos($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/vobo_contratos", $data);
+    }
+
+    public function cierre_cifras(){
+        $this->load->view('template/header');
+        $this->load->view("casas/cierre_cifras");
+    }
+
+    public function vobo_cifras(){
+        $this->load->view('template/header');
+        $this->load->view("casas/vobo_cifras");
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -250,7 +323,7 @@ class Casas extends BaseController {
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
 
-        if(!isset($id_proceso)){
+        if(!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)){
             http_response_code(400);
         }
 
@@ -460,6 +533,229 @@ class Casas extends BaseController {
         }
 
         $is_ok = $this->CasasModel->setProcesoToTitulacion($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_carga_titulos(){
+        $lotes = $this->CasasModel->getListaCargaTitulos();
+
+        $this->json($lotes);
+    }
+
+    public function to_propuestas(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $documento = $this->CasasModel->getDocumentoAnticipo();
+
+        if($documento){
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                http_response_code(500);
+            }
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToPropuesta($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_eleccion_propuestas(){
+        $lotes = $this->CasasModel->getListaEleccionPropuestas();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_carga_titulos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToCargaTitulos($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function to_validacion_contraloria(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToValidacionContraloria($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_propuesta_firma(){
+        $lotes = $this->CasasModel->getListaPropuestaFirma();
+
+        $this->json($lotes);
+    }
+
+    public function lista_validacion_contraloria(){
+        $lotes = $this->CasasModel->getListaValidaContraloria();
+
+        $this->json($lotes);
+    }
+
+    public function lista_valida_documentacion($proceso){
+        $lotes = $this->CasasModel->getListaDocumentosValidaContraloria($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function to_solicitud_contratos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $documentos = $this->CasasModel->getDocumentosContratos();
+
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                break;
+            }
+        }
+
+        if(!$is_ok){
+            http_response_code(500);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToSolicitudContratos($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_solicitar_contratos(){
+        $lotes = $this->CasasModel->getListaSolicitarContratos();
+
+        $this->json($lotes);
+    }
+
+    public function to_confirmar_contratos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToConfirmarContratos($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_contratos($proceso){
+        $lotes = $this->CasasModel->getListaContratos($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function lista_recepcion_contratos(){
+        $lotes = $this->CasasModel->getListaRecepcionContratos();
+
+        $this->json($lotes);
+    }
+
+    public function to_carga_cifras(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $documento = $this->CasasModel->getDocumentoCifras();
+
+        if($documento){
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                http_response_code(500);
+            }
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToCargaCifras($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_cierre_cifras(){
+        $lotes = $this->CasasModel->getListaCierreCifras();
+
+        $this->json($lotes);
+    }
+
+    public function to_vobo_cifras(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToVoBoCifras($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_vobo_cifras(){
+        $lotes = $this->CasasModel->getListaVoBoCifras();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_cierre_cifras(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToCierreCifras($id);
 
         if($is_ok){
             $this->json([]);

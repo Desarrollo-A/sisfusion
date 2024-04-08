@@ -416,4 +416,284 @@ class CasasModel extends CI_Model
 
         return $this->db->query($query);
     }
+
+    public function getListaCargaTitulos(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.archivo,
+            doc.documento,
+            doc.idDocumento
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
+        WHERE
+            pc.proceso = 5
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getDocumentoAnticipo(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (18)";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function setProcesoToPropuesta($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 6,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaEleccionPropuestas(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.archivo,
+            doc.documento,
+            doc.idDocumento
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
+        WHERE
+            pc.proceso = 6
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToCargaTitulos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 5,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setProcesoToValidacionContraloria($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 7,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaPropuestaFirma(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso > 6
+        AND pc.proceso < 8
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaValidaContraloria(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 7
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaDocumentosValidaContraloria($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getDocumentosContratos(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats 
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (19,20,21,22,23,24)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToSolicitudContratos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 8,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaSolicitarContratos(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.documentos
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        WHERE
+            pc.proceso = 8
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaContratos($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (19,20,21,22,23,24)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToConfirmarContratos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 9,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaRecepcionContratos(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 9
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getDocumentoCifras(){
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN (25)";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function setProcesoToCargaCifras($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 10,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaCierreCifras(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.archivo,
+            doc.documento,
+            doc.idDocumento
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 25
+        WHERE
+            pc.proceso = 10
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToVoBoCifras($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 11,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaVoBoCifras(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote,
+            doc.archivo,
+            doc.documento,
+            doc.idDocumento
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 25
+        WHERE
+            pc.proceso = 11
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToCierreCifras($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 10
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
 }

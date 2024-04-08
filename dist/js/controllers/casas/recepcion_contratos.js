@@ -1,39 +1,11 @@
-function sendToDocumentacion(data) {
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_documentos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a documentación del cliente.`, "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
-back_to_documentos = function(data) {
-    let ask = new AskDialog({
-        title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a documentación del cliente?`,
-        onOk: () => sendToDocumentacion(data),
-        //onCancel: sayNo,
-    })
-
-    ask.show()
-}
-
 function sendToNext(data){
     //console.log(data)
 
     $.ajax({
         type: 'POST',
-        url: `to_titulacion?id=${data.idProcesoCasas}`,
+        url: `to_carga_cifras?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
+            alerts.showNotification("top", "right", "El lote ha pasado al proceso de carga de cifras.", "success");
 
             table.reload()
         },
@@ -43,10 +15,10 @@ function sendToNext(data){
     })
 }
 
-pass_to_titulacion = function(data) {
+pass_to_solicitud_contratos = function(data) {
     let ask = new AskDialog({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Carga de cifras"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
@@ -54,8 +26,36 @@ pass_to_titulacion = function(data) {
     ask.show()
 }
 
+function sendToConcentrarAdeudos(data) {
+    // console.log(data)
+
+    $.ajax({
+        type: 'POST',
+        url: `back_to_solicitar_contratos?id=${data.idProcesoCasas}`,
+        success: function (response) {
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a solicitud de contratos.`, "success");
+
+            table.reload()
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
+}
+
+back_to_adeudos = function(data) {
+    let ask = new AskDialog({
+        title: 'Regresar proceso', 
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Solicitud de contratos"</b>?`,
+        onOk: () => sendToConcentrarAdeudos(data),
+        //onCancel: sayNo,
+    })
+
+    ask.show()
+}
+
 go_to_documentos = function(data) {
-    window.location.href = `comite_documentos/${data.idProcesoCasas}`;
+    window.location.href = `vobo_contratos/${data.idProcesoCasas}`;
 }
 
 let columns = [
@@ -63,7 +63,7 @@ let columns = [
     { data: 'nombreLote' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 5)
+        vigencia.setDate(vigencia.getDate() + 1)
         let today = new Date()
 
         let difference = vigencia.getTime() - today.getTime()
@@ -80,12 +80,9 @@ let columns = [
     { data: function(data){
         let docu_button = new TableButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let pass_button = ''
-        if(data.documentos >= 1){
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
-        }
+        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
+        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
 
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },
@@ -93,7 +90,7 @@ let columns = [
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'casas/lista_valida_comite',
+    url: 'casas/lista_recepcion_contratos',
     buttons: ['excel'],
     columns,
 })
