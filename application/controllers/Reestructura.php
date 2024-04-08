@@ -758,9 +758,9 @@ class Reestructura extends CI_Controller{
                 $updateBatch = $this->General_model->updateBatch('lotes', $idToUpdate, 'idLote');
                 // $update = $this->Reestructura_model->updateLotesFusion($lote->idLote, $idRegresoFusion, $idUsuario);
 
-                        if(!$updateBatch){
-                            $updateFusionFlag = false;
-                        }
+                if(!$updateBatch){
+                    $updateFusionFlag = false;
+                }
             }
             else{
                 $updateLotesDestino = $this->Reestructura_model->updateLotesDestino($ids, $idStatusLote, $idUsuario);

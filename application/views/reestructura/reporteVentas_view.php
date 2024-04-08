@@ -70,6 +70,9 @@
                                                 <th>LOTE</th>                                                
                                                 <th>ID LOTE</th>
                                                 <th>LOTE(S) ORIGEN</th>
+                                                <th>TOTAL NETO ORIGENES</th>
+                                                <th>SUPERFICIE DE ORIGEN</th>
+                                                <th>PRECIO M2</th>                                
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
@@ -77,6 +80,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>ESTATUS CONTRATACIÓN</th>
+                                                <th>FECHA ESTATUS 2</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
