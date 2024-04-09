@@ -6,6 +6,17 @@
     }
 </style>
 <body>
+<?php
+if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
+    $statusInput = '';
+    $classAllowed = '';
+    $classWidth = 'w-50';
+}else{
+    $statusInput = 'disabled';
+    $classAllowed = 'notAllowedClass';
+    $classWidth = 'w-100';
+}
+?>
 <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
 
@@ -224,7 +235,7 @@
                                                 <th>ESTATUS DE CONTRATACIÓN</th>
                                                 <th>APARTADO</th>
                                                 <th>COMENTARIO</th>
-                                                <th>LUGAR DE PROSPECCIÓN</th>
+                                                <th>LUGAR DE PROSPECCIÓN</th><!--20-->
                                                 <th>FECHA DE VALIDACIÓN ENGANCHE</th>
                                                 <th>CANTIDAD DE ENGANCHE PAGADO</th>
                                                 <th>ESTATUS DE LA CONTRATACIÓN</th>
@@ -234,10 +245,50 @@
                                                 <th>FECHA DE APERTURA</th>
                                                 <th>APARTADO DE REUBICACIÓN</th>
                                                 <th>FECHA DE ALTA</th>
-                                                <th>VENTA COMPARTIDA</th>
+                                                <th>VENTA COMPARTIDA</th><!--30-->
                                                 <th>UBICACIÓN DE LA VENTA</th>
                                                 <th>TIPO DE PROCESO</th>
-                                                <th>ACCIONES</th>
+
+                                                <!--SOLO PARA POPEA Y EL OTRO SUJETO-->
+                                                <th>FOLIO</th>
+                                                <th>DOCUMENTACION ENTREGADA</th>
+                                                <th>NOMBRE CLIENTE</th>
+                                                <th>TEL. CASA</th>
+                                                <th>CELULAR</th>
+                                                <th>CORREO</th>
+                                                <th>FECHA DE NACIMIENTO</th>
+                                                <th>NACIONALIDAD</th><!--40-->
+                                                <th>ORIGINARIO DE</th>
+                                                <th>ESTADO CIVIL</th>
+                                                <th>NOMBRE CONYUGUE</th>
+                                                <th>REGIMEN</th>
+                                                <th>DOM. PARTICULAR</th>
+                                                <th>OCUPACIÓN</th>
+                                                <th>EMPRESA EN LA QUE TRABAJA</th>
+                                                <th>PUESTO</th>
+                                                <th>ANTIGÜEDAD</th>
+                                                <th>EDAD</th><!--50-->
+                                                <th>DOM. EMPRESA</th>
+                                                <th>TEL. EMPRESA</th>
+                                                <th>VIVE EN CASA</th>
+                                                <th>COPROPIETARIO</th>
+                                                <th>NO. REFERENCIA PAGO</th>
+                                                <th>COSTO M2 LISTA</th>
+                                                <th>COSTO M2 FINAL</th>
+
+                                                <th>EN EL MUNICIPIO DE</th>
+                                                <th>IMPORTE DE LA OFERTA</th>
+                                                <th>IMPORTE EN LETRA</th><!--60-->
+                                                <th>SALDO DEL DEPÓSITO</th>
+                                                <th>APORTACIÓN MENSUAL</th>
+                                                <th>FECHA 1RA APORTACIÓN</th>
+                                                <th>FECHA LIQUIDACIÓN</th>
+                                                <th>FECHA 2DA LIQUIDACIÓN</th>
+                                                <th>REFERENCIAS PERSONALES</th>
+                                                <th>OBSERVACIONES</th>
+
+                                                <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
+                                                <th>ACCIONES</th><!--68-->
                                             </tr>
                                             </thead>
                                         </table>
