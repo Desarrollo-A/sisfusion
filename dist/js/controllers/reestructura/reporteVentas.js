@@ -56,6 +56,10 @@ $('#tablaReporteVentas').DataTable({
         { data: "nombreCondominio" },
         { data: "nombreLote" },
         { data: "idLote" },
+        { data: "nombrePvOrigen" },
+        { data: "totalNeto2Sep" },
+        { data: "supLoteOrigen" },
+        { data: "precioM2FinalOrigen" },
         { data: "nombreCliente" },
         { data: "nombreAsesor" },
         { data: "nombreGerente" },
@@ -69,6 +73,11 @@ $('#tablaReporteVentas').DataTable({
         {
             data: function (d) {
                 return `<span class="label lbl-blueMaderas">${d.estatusContratacion}</span><br><span class="label lbl-warning">${d.detalleUltimoEstatus}</span>`;
+            }
+        },
+        {
+            data: function (d) {
+                return `${d.fechaEstatus2 == null ? 'SIN FECHA' : d.fechaEstatus2}`;
             }
         },
         {
