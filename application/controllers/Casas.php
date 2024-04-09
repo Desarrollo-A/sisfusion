@@ -150,6 +150,31 @@ class Casas extends BaseController {
         $this->load->view("casas/vobo_cifras");
     }
 
+    public function expediente_cliente(){
+        $this->load->view('template/header');
+        $this->load->view("casas/expediente_cliente");
+    }
+
+    public function envio_a_firma(){
+        $this->load->view('template/header');
+        $this->load->view("casas/envio_a_firma");
+    }
+
+    public function firma_contrato(){
+        $this->load->view('template/header');
+        $this->load->view("casas/firma_contrato");
+    }
+
+    public function recepcion_contrato(){
+        $this->load->view('template/header');
+        $this->load->view("casas/recepcion_contrato");
+    }
+
+    public function finalizar(){
+        $this->load->view('template/header');
+        $this->load->view("casas/finalizar");
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -756,6 +781,164 @@ class Casas extends BaseController {
         }
 
         $is_ok = $this->CasasModel->backToCierreCifras($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function to_expediente_cliente(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToExpedienteCliente($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_expediente_cliente(){
+        $lotes = $this->CasasModel->getListaExpedienteCliente();
+
+        $this->json($lotes);
+    }
+
+    public function to_envio_a_firma(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToEnvioAFirma($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_envio_a_firma(){
+        $lotes = $this->CasasModel->getListaEnvioAFirma();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_expediente_cliente(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToExpedienteCliente($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function to_firma_contrato(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToFirmaContrato($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_firma_contrato(){
+        $lotes = $this->CasasModel->getListaFirmaContrato();
+
+        $this->json($lotes);
+    }
+
+    public function to_recepcion_contrato(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToRecepcionContrato($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_recepcion_contrato(){
+        $lotes = $this->CasasModel->getListaRecepcionContrato();
+
+        $this->json($lotes);
+    }
+
+    public function back_to_firma_contrato(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->backToFirmaContrato($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function to_finalizar(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->setProcesoToFinalizar($id);
+
+        if($is_ok){
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function lista_finalizar(){
+        $lotes = $this->CasasModel->getListaFinalizar();
+
+        $this->json($lotes);
+    }
+
+    public function finalizar_proceso(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $is_ok = $this->CasasModel->markProcesoFinalizado($id);
 
         if($is_ok){
             $this->json([]);

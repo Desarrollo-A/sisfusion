@@ -690,7 +690,161 @@ class CasasModel extends CI_Model
     public function backToCierreCifras($idProcesoCasas){
         $query = "UPDATE proceso_casas
         SET
-            proceso = 10
+            proceso = 10,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setProcesoToExpedienteCliente($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 12,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaExpedienteCliente(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 12
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToEnvioAFirma($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 13,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaEnvioAFirma(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 13
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToExpedienteCliente($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 12,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setProcesoToFirmaContrato($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 14,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaFirmaContrato(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 14
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoToRecepcionContrato($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 15,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaRecepcionContrato(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 15
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function backToFirmaContrato($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 14,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setProcesoToFinalizar($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = 16,
+            fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaFinalizar(){
+        $query = "SELECT
+            pc.*,
+            lo.nombreLote
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        WHERE
+            pc.proceso = 16
+        AND pc.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function markProcesoFinalizado($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            finalizado = 1,
+            fechaProceso = GETDATE()
         WHERE
             idProcesoCasas = $idProcesoCasas";
 
