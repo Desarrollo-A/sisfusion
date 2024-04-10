@@ -17,6 +17,7 @@ class Comisiones extends CI_Controller
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
     $this->load->model('General_model');
+    $this->load->model('Seguro_model');
     $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions','permisos_sidebar'));
     $this->load->helper(array('url', 'form'));
     $this->load->database('default');
@@ -164,10 +165,7 @@ class Comisiones extends CI_Controller
           $this->load->view("ventas/comisiones_colaboradorRigel", $datos);
       break;
       default:
-      if ($this->session->userdata('tipo') == 3) // SEGUROS
-        $this->load->view("ventas/comisionesColaboradorSeguros", $datos);
-      else
-      $this->load->view("ventas/comisiones_colaborador", $datos);
+          $this->load->view("ventas/comisiones_colaborador", $datos);
       break;
     }
   }
@@ -2531,8 +2529,8 @@ public function getDatosHistorialPagoRP($id_usuario){
   echo json_encode( array( "data" => $dat));
 }
 
-public function getDatosHistorialPago($proyecto = null,$condominio = null ) {      
-  $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+public function getDatosHistorialPago($proyecto = null,$condominio = null, $tipo= null ) {      
+  $dat =  $this->Comisiones_model->getDatosHistorialPago($proyecto,$condominio,$tipo)->result_array();
   echo json_encode( array( "data" => $dat));
 }
 
@@ -5599,7 +5597,7 @@ public function lista_usuarios($rol,$forma_pago){
 
   public function getDatosFechasProyecCondm(){
     
-    $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') : '1' );
+    $tipoUsuario = (($this->session->userdata('id_rol') == 1 || $this->session->userdata('id_rol') == 2 ) ?  ($this->session->userdata('tipo') == 1 ? ( date('N') == 3 ? '3' : '1'): '2') :( $this->session->userdata('tipo') == 3 ? '4' : '1' ));
     //var_dump(date('N') );
     //$fechaFin = $this->session->userdata('id_sede') == 8 ? 'fechaTijuana' : 'fechaFinGeneral';
     $diaActual = date('d'); 

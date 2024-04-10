@@ -87,10 +87,10 @@
                                                 </div>
                                             </div>
                                             <div class="toolbar"> 
-                                                <div class="row">
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
+                                                <div class="row aligned-row d-flex align-end" style="display: flex; justify-content: center">
+                                                    <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0">
                                                         <div class="form-group select-is-empty overflow-hidden">
-                                                            <label class="control-label">Año</label>
+                                                            <label class="control-label">Año:</label>
                                                             <select name="ano_historial" id="ano_historial" class="selectpicker select-gral" data-container="body" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
@@ -103,10 +103,16 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0 overflow-hidden">
+                                                    <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden">
                                                         <div class="form-group select-is-empty">
-                                                            <label for="proyecto" class="control-label">Proyecto</label>
+                                                            <label for="proyecto" class="control-label">Proyectos:</label>
                                                             <select name="catalogo_historial" id="catalogo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-3 col-md-3 col-lg-3 m-0 overflow-hidden">
+                                                        <div class="form-group select-is-empty">
+                                                            <label for="tipo" class="control-label">Tipo:</label>
+                                                            <select name="tipo_historial" id="tipo_historial" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -154,7 +160,7 @@
                                                 <div class="row">
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 m-0">
                                                         <div class="form-group overflow-hidden">
-                                                            <label class="control-label" for="proyecto">Año</label>
+                                                            <label class="control-label" for="proyecto">Año:</label>
                                                             <select name="ano_canceladas" id="ano_canceladas" class="selectpicker select-gral" data-container="body" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required>
                                                                 <?php
                                                                 setlocale(LC_ALL, 'es_ES');
@@ -168,7 +174,7 @@
                                                     </div>
                                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 overflow-hidden">
                                                         <div class="form-group">
-                                                            <label class="control-label" for="proyecto">Proyecto</label>
+                                                            <label class="control-label" for="proyecto">Proyecto:</label>
                                                             <select name="catalogo_canceladas" id="catalogo_canceladas" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-container="body" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" required><option value="0">Seleccione todo</option></select>
                                                         </div>
                                                     </div>

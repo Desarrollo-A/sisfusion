@@ -263,7 +263,111 @@ class SegurosComision extends CI_Controller
     echo json_encode( $respuesta );
   }
 
+  function pausar_solicitudM(){
+    $respuesta = array( FALSE );
+    if($this->input->post("id_pago")){
+      $respuesta = array( $this->Seguros_comision_model->update_estatus_pausaM( $this->input->post("id_pago_i"), $this->input->post("observaciones")));
+    }
+    echo json_encode( $respuesta );
+  }
 
+  public function getDatosHistorialPago($proyecto = null, $condominio = null) {      
+    $dat =  $this->Seguros_comision_model->getDatosHistorialPago($proyecto,$condominio)->result_array();
+    echo json_encode( array( "data" => $dat));
+  }
 
+  public function getDatosNuevasXContraloria(){
+    $proyecto = $this->input->post('proyecto');
+    $dat =  $this->Pagos_model->getDatosNuevasXContraloria($proyecto)->result_array();
+    for( $i = 0; $i < count($dat); $i++ ){
+        $dat[$i]['pa'] = 0;
+    }
+    echo json_encode( array( "data" => $dat));
+  }
 
+  public function cargaxml2($id_user = ''){
+
+    $user =   $usuarioid =$this->session->userdata('id_usuario');
+    $this->load->model('Usuarios_modelo');
+  
+    if(empty($id_user)){
+      $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+  
+    }else{
+      $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+    }
+  
+  $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+  if( isset( $_FILES ) && !empty($_FILES) ){
+      $config['upload_path'] = './UPLOADS/XMLS/';
+      $config['allowed_types'] = 'xml';
+      //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+      $this->load->library('upload', $config);
+      if( $this->upload->do_upload("xmlfile") ){
+          $xml_subido = $this->upload->data()['full_path'];
+          $datos_xml = $this->Seguros_comision_model->leerxml( $xml_subido, TRUE );
+          if( $datos_xml['version'] >= 3.3){
+            $responsable_factura = $this->Seguros_comision_model->verificar_uuid( $datos_xml['uuidV'] );
+            if($responsable_factura->num_rows()>=1){
+              $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+            }
+            else{
+  
+              if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+        
+              if($datos_xml['claveProdServ'][0]=='80131600' || (($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+                $diasxmes = date('t');
+                $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+                $fecha2 = date('Y-m-').$diasxmes;
+                if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+  
+              if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+              if($datos_xml['regimenFiscal'][0]=='612' || ( ($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+              if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+              if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+              if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+              if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+                $respuesta['respuesta'] = array( TRUE );
+                $respuesta['datos_xml'] = $datos_xml;
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+              }//FINAL DE UNIDAD
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+              }//FINAL DE METODO DE PAGO
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+              }//FINAL DE USO DEL CFDI
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+              }//FINAL DE FORMA DE PAGO
+              }else{
+                $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+              }//FINAL DE REGIMEN FISCAL
+              }else{
+              $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+              }//FINAL DE RFC VALIDO
+            }else{
+              $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+            }          
+              }else{
+              $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+            }
+  
+            }else{
+              $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+            }
+  
+          }
+          }else{
+            $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+          }
+          unlink( $xml_subido );
+        }
+        else{
+          $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+        }
+      }
+      echo json_encode( $respuesta );
+    }
 }

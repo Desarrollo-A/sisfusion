@@ -5,7 +5,7 @@
                 <h3 class="card-title center-align">Comisiones nuevas <b>remanente seguros</b></h3>
             </div>
             <div>
-                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible)</p>
+                <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de remanente distribuible seguros)</p>
             </div>
         </div>
         <div class="toolbar">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                         <div class="form-group w-100">
-                            <button type="button" class="btn-gral-data pagar_remanente">Pagar masivamente</button>
+                            <button type="button" class="btn-gral-data pagar_remanente_seguros">Pagar masivamente</button>
                         </div>
                     </div>
                 </div>

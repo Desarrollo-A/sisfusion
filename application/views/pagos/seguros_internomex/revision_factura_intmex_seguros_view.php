@@ -4,7 +4,7 @@
             <h3 class="card-title center-align">Comisiones nuevas <b>factura seguros</b></h3>
         </div>
         <div>
-            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturación)</p>
+            <p class="card-title pl-1">(Comisiones nuevas, solicitadas para proceder a pago en esquema de facturación seguros)</p>
         </div>
     </div>
     <div class="toolbar">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex align-end">
                     <div class="form-group w-100">
-                        <button type="button" class="btn-gral-data Pagar">Pagar masivamente</button>
+                        <button type="button" class="btn-gral-data PagarSeguros">Pagar masivamente</button>
                     </div>
                 </div>
             </div>

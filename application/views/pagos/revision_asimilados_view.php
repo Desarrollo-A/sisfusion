@@ -14,6 +14,16 @@
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modalPausarAsimiladosSeguros" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" id="formPausarAsimiladosSeguros">
+                        <div class="modal-body"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modalPausarAsimiladosOOAM" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -49,7 +59,6 @@
                         <li class="active"><a href="#asimiladosComercializacion" role="tab" data-toggle="tab">Asimilados lotes</a></li>
                         <li ><a href="#asimiladosSeguros" role="tab" data-toggle="tab">Seguros lotes</a></li>
                         <!-- <li ><a href="#asimiladosOOAM" role="tab" data-toggle="tab">Asimilados lotes</a></li> -->
-
                     </ul>
                     
                     <div class="card no-shadow m-0 border-conntent__tabs">
@@ -83,7 +92,6 @@
                                                         <h3 class="card-title center-align">Cambio de modalidad</h3>  
                                                     </div>
                                                     <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
-                                                        
                                                         <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                                                             <div >
                                                                 <div class="radio_container w-100">

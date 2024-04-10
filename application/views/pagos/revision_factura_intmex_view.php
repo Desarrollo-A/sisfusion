@@ -59,7 +59,19 @@
                 </div>
             </div>
         </div>
-        
+
+        <div class="modal fade modal-alertas" id="modal_multiples_IntmexF_seguros" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiples_seguros">
+                        <div class="modal-body"></div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="modal_multiplesOoam" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">

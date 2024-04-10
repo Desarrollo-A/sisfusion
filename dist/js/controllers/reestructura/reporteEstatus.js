@@ -95,17 +95,19 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
             }
         },
         {
-            data: function (d) {
+            data: function(d) {
                 return `<div class="d-flex justify-center">
-                <button class="btn-data btn-blueMaderas btn-historial"
-                data-toggle="tooltip" 
-                data-placement="left"
-                title="Consultar historial de movimientos"
-                data-idLote="${d.idLoteOrigen}">
-                <i class="fas fa-info"></i>
-                </button></div>`;
+                    <button class="btn-data btn-blueMaderas btn-historial"
+                        data-toggle="tooltip" 
+                        data-placement="left"
+                        title="Consultar historial de movimientos"
+                        data-idLote="${d.idLoteOrigen}" data-comentario="${d.comentario}">
+                        <i class="fas fa-info"></i>
+                    </button>
+                </div>`;
             }
-        }
+        },
+        
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteEstatus`,

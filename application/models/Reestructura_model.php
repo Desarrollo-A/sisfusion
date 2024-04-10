@@ -603,9 +603,9 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 ){
-            $filtroSede = 'AND sede_residencial = ' . $this->session->userdata('id_sede');
-        }
+        $id_sede = $id_usuario == 2148 ? '3' : ($id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede'));
+        if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
+            $filtroSede = "AND sede_residencial IN ($id_sede)";
 
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
@@ -632,7 +632,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso NOT IN(7) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN (0, 1) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
@@ -1334,7 +1334,7 @@ class Reestructura_model extends CI_Model
         WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
         WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
         ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
-        CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus
+        CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
         FROM historial_preproceso_lote hp
         INNER JOIN propuestas_x_lote pr ON pr.idLote = hp.idLote
         INNER JOIN lotes lo ON lo.idLote = pr.idLote
@@ -1343,7 +1343,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
         WHERE hp.idLote = $idLote
-        ORDER BY lo.idLote, hp.fecha_modificacion")->result_array();
+        ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
     }
     public function borrarPXL($id_lote){
         $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);

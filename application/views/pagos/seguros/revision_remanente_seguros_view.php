@@ -1,7 +1,7 @@
 <div class="tab-pane" id="remanenteSeguros">
         <div class="text-center">
             <h3 class="card-title center-align">Comisiones en revisión <b>remanente seguros</b></h3>
-            <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de remanente.</p>
+            <p class="card-title pl-1">Comisiones solicitadas por el área comercial para proceder a pago en esquema de remanente seguros.</p>
         </div>
 
         <div class="toolbar">

@@ -1743,7 +1743,7 @@ let BUTTONREGRESO = '';
         return BTN_AVANCE + BTN_RECHAZO;
     if (idEstatusPreproceso === 4 && id_rol_general == 7) // MJ: ASESOR - Obtención de firma del cliente
         return (flagFusion != 1 && d.totalPropuestas > 1 && d.lotePreseleccionado == 0) ? BTN_PRESELECCIONAR_PROPUESTAS : ((d.totalPropuestas == 1) ? BTN_AVANCE : BTN_AVANCE );
-    if (idEstatusPreproceso === 6 && id_rol_general == 7) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
+    if (idEstatusPreproceso === 6 && (id_rol_general == 7 || id_rol_general == 3) && d.idAsesorAsignado == id_usuario_general) // EEC: CONFIRMACIÓN DE RECEPCIÓN DE DOCUMENTOS
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_RECHAZO : BTN_REUBICACION + BTN_RECHAZO ;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;

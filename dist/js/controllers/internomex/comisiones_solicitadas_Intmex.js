@@ -26,19 +26,19 @@ $('#comisiones_solicitadas thead tr:eq(0) th').each( function (i) {
                 total += parseFloat(v.impuesto);
             });
             var to1 = formatMoney(total);
-            document.getElementById("totpagarAsimilados").textContent = formatMoney(total);
+            document.getElementById("totpagarAsimilados").textContent = formatMoney(to1);
         }
     });
 });
 
-$("#tabla_plaza_1").ready( function(){
-    $('#tabla_asimilados').on('xhr.dt', function(e, settings, json, xhr) {
+$("#comisiones_solicitadas").ready( function(){
+    $('#comisiones_solicitadas').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
             total += parseFloat(v.impuesto);
         });
-        var to = formatMoney(total);
-        document.getElementById("totpagarAsimilados").textContent = to;
+        // var to = formatMoney(total);
+        // document.getElementById("totpagarAsimilados").textContent = formatMoney(to);
     });
 
     $("#comisiones_solicitadas").prop("hidden", false);
@@ -53,7 +53,7 @@ $("#tabla_plaza_1").ready( function(){
             titleAttr: 'Descargar archivo de Excel',
             title: 'REPORTE GENERAL PAGOS INTERNOMEX',
             exportOptions: {
-                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+                columns: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
                 format: 
                 {
                     header:  function (d, columnIdx) {
@@ -76,7 +76,12 @@ $("#tabla_plaza_1").ready( function(){
         columns: [
         {
             "data": function( d ){
-                return '<p class="m-0">'+d.id_pago_i+'</p>';
+                return '<p class="m-0">'+d.id_pago+'</p>';
+            }
+        },
+        {
+            "data": function( d ){
+                return '<p class="m-0">'+d.id_pago+'</p>';
             }
         },
         {
@@ -162,7 +167,7 @@ $("#tabla_plaza_1").ready( function(){
             "orderable": false,
             "data": function( data ){
                 var BtnStats;
-                BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago_i+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button></div>';
+                BtnStats = '<div class="d-flex justify-center"><button href="#" value="'+data.id_pago+'" data-value="'+data.lote+'" data-code="'+data.cbbtton+'" ' +'class="btn-data btn-blueMaderas consultar_logs_asimilados" title="Detalles">' +'<i class="fas fa-info"></i></button></div>';
                 return BtnStats;
             }
         }],
@@ -173,9 +178,10 @@ $("#tabla_plaza_1").ready( function(){
             searchable: false,
             className: 'dt-body-center',
             render: function (d, type, full, meta){
+
                 if(full.estatus == 8){
                     if(full.id_comision){
-                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago_i + '">';
+                    return '<input type="checkbox" name="idTQ[]" style="width:20px;height:20px;"  value="' + full.id_pago + '">';
                     }
                     else{
                         return '<p>N/A</p>';
@@ -199,17 +205,77 @@ $("#tabla_plaza_1").ready( function(){
         }
     });
     
-    $("#tabla_asimilados tbody").on("click", ".consultar_logs_asimilados", function(e){
+    // $("#comisiones_solicitadas tbody").on("click", ".consultar_logs_asimilados", function(e){
+    //     console.log("prueba");
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation();
+    //     id_pago = $(this).val();
+    //     lote = $(this).attr("data-value");
+    //     $("#seeInformationModalAsimilados").modal();
+    //     $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+    //     $.getJSON("getComments/"+id_pago).done( function( data ){
+    //         $.each( data, function(i, v){
+    //             $("#comments-list-pagos").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+    //         });
+    //     });
+    // });
+
+    $("#comisiones_solicitadas tbody").on("click", ".consultar_logs_asimilados", function(e){
+        $('#spiner-loader').removeClass('hide');
+        $("#comments-list-asimilados").html('');
+        $("#nameLote").html('');
         e.preventDefault();
         e.stopImmediatePropagation();
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
-        $("#seeInformationModalAsimilados").modal();
-        $("#nameLote").append('<p><h5 style="color: white;">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
-        $.getJSON("getComments/"+id_pago).done( function( data ){
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul >
+                        <div id="nameLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comments-list-asimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
+        $("#nameLote").append('<p><h5">HISTORIAL DEL PAGO DE: <b>'+lote+'</b></h5></p>');
+        $.getJSON(general_base_url+"Pagos/getComments/"+id_pago  ).done( function( data ){
             $.each( data, function(i, v){
-                $("#comments-list-asimilados").append('<li><div class="container-fluid"><div class="row"><div class="col-md-6"><a><small>Campo: </small><b>' + v.comentario + '</b></a><br></div><div class="float-end text-right"><a>' + v.fecha_movimiento + '</a></div><div class="col-md-12"><p class="m-0"><small>USUARIO: </small><b> ' + v.nombre_usuario + '</b></p></div><h6></h6></div></div></li>');
+                $("#comments-list-asimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a><b> ' +v.comentario.toUpperCase()+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a>' + v.fecha_movimiento.split(".")[0] + '</a>\n' +
+                '      </div>\n' +
+                '      <div class="col-md-12">\n' +
+                '        <p class="m-0"><small>Usuario: </small><b> ' + v.nombre_usuario + '</b></p>\n'+
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
             });
+        $('#spiner-loader').addClass('hide');
         });
     });
 });
