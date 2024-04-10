@@ -20,6 +20,70 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
+    public function getAsesor($id){
+        $query = "SELECT TOP 1
+            nombre AS nombre,
+            id_usuario AS idUsuario
+        FROM usuarios
+        WHERE
+            id_usuario = $id";
+
+        return $this->db->query($query)->row();
+    }
+
+    public function setProcesoTo($idProcesoCasas, $proceso){
+        $idModificacion = $this->session->userdata('id_usuario');
+
+        $query = "UPDATE proceso_casas
+        SET
+            proceso = $proceso,
+            fechaProceso = GETDATE(),
+            fechaModificacion = GETDATE(),
+            idModificacion = $idModificacion
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function addHistorial($idProcesoCasas, $procesoAnterior, $procesoNuevo, $descripcion){
+        $idMovimiento = $this->session->userdata('id_usuario');
+
+        $query = "INSERT INTO historial_proceso_casas
+        (
+            idProcesoCasas,
+            procesoAnterior,
+            procesoNuevo,
+            idMovimiento,
+            descripcion
+        )
+        VALUES
+        (
+            $idProcesoCasas,
+            $procesoAnterior,
+            $procesoNuevo,
+            $idMovimiento,
+            '$descripcion'
+        )";
+
+        return $this->db->query($query);
+    }
+
+    public function getDocumentos($docs){
+        $documents = implode(",", $docs);
+
+        $query = "SELECT
+            id_opcion AS tipo,
+            nombre
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 118
+        AND estatus = 1
+        AND id_opcion IN ($documents)";
+
+        return $this->db->query($query)->result();
+    }
+
     public function getResidencialesOptions(){
         $query = "SELECT
             CONCAT(nombreResidencial, ' - ', UPPER(CONVERT(VARCHAR(50), descripcion))) AS label,
@@ -76,11 +140,22 @@ class CasasModel extends CI_Model
 
     public function addLoteToAsignacion($idLote){
         $query = "INSERT INTO proceso_casas
-        (idLote)
+        (
+            idLote
+        )
         VALUES
-        ($idLote)";
+        (
+            $idLote
+        )";
 
-        return $this->db->query($query);
+        $result = $this->db->query($query);
+
+        if($result){
+            $query = "SELECT TOP 1 * FROM proceso_casas ORDER BY idProcesoCasas DESC";
+            return $this->db->query($query)->row();
+        }else{
+            return null;
+        }
     }
 
     public function getAsesoresOptions(){
@@ -103,19 +178,6 @@ class CasasModel extends CI_Model
             idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
-    }
-
-    public function getDocumentosCartaAuth(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (1)";
-
-        return $this->db->query($query)->row();
     }
 
     public function setProcesoToCartaAuth($idProcesoCasas){
@@ -156,16 +218,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function backToAsignacion($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 0
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function updateDocumentRow($idDocumento, $archivo){
         $idModificacion = $this->session->userdata('id_usuario');
 
@@ -180,17 +232,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setProcesoToConcentrarAdeudos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 2,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaConcentradoAdeudos(){
         $query = "SELECT
             pc.*,
@@ -200,30 +241,6 @@ class CasasModel extends CI_Model
         WHERE
             pc.proceso = 2
         AND pc.status = 1";
-
-        return $this->db->query($query)->result();
-    }
-
-    public function backToCartaAutorizacion($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 1,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
-    public function getDocumentosCliente(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats 
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)";
 
         return $this->db->query($query)->result();
     }
@@ -244,17 +261,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setProcesoToDocumentacionCliente($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 3,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaProcesoDocumentos(){
         $query = "SELECT
             pc.*,
@@ -268,17 +274,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function backToAdeudos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 2,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaDocumentosCliente($idProcesoCasas){
@@ -327,30 +322,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function setProcesoToValidaComite($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 4,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
-    public function getDocumentoAnexosTecnicos(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (16)";
-
-        return $this->db->query($query)->row();
-    }
-
     public function getListaValidaComite(){
         $query = "SELECT
             pc.*,
@@ -364,17 +335,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function backToDocumentos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 3,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaDocumentosComiteEjecutivo($idProcesoCasas){
@@ -391,30 +351,6 @@ class CasasModel extends CI_Model
         AND tipo IN (13,14,15,16)";
 
         return $this->db->query($query)->result();
-    }
-
-    public function getDocumentoTitulacion(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (17)";
-
-        return $this->db->query($query)->row();
-    }
-
-    public function setProcesoToTitulacion($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 5,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaCargaTitulos(){
@@ -434,30 +370,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getDocumentoAnticipo(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (18)";
-
-        return $this->db->query($query)->row();
-    }
-
-    public function setProcesoToPropuesta($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 6,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaEleccionPropuestas(){
         $query = "SELECT
             pc.*,
@@ -473,17 +385,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function backToCargaTitulos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 5,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function setProcesoToValidacionContraloria($idProcesoCasas){
@@ -539,19 +440,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getDocumentosContratos(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats 
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (19,20,21,22,23,24)";
-
-        return $this->db->query($query)->result();
-    }
-
     public function setProcesoToSolicitudContratos($idProcesoCasas){
         $query = "UPDATE proceso_casas
         SET
@@ -594,17 +482,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function setProcesoToConfirmarContratos($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 9,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaRecepcionContratos(){
         $query = "SELECT
             pc.*,
@@ -616,30 +493,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function getDocumentoCifras(){
-        $query = "SELECT
-            id_opcion AS tipo,
-            nombre
-        FROM opcs_x_cats
-        WHERE
-            id_catalogo = 118
-        AND estatus = 1
-        AND id_opcion IN (25)";
-
-        return $this->db->query($query)->row();
-    }
-
-    public function setProcesoToCargaCifras($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 10,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaCierreCifras(){
@@ -659,17 +512,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function setProcesoToVoBoCifras($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 11,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaVoBoCifras(){
         $query = "SELECT
             pc.*,
@@ -687,28 +529,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function backToCierreCifras($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 10,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
-    public function setProcesoToExpedienteCliente($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 12,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaExpedienteCliente(){
         $query = "SELECT
             pc.*,
@@ -720,17 +540,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function setProcesoToEnvioAFirma($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 13,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaEnvioAFirma(){
@@ -746,28 +555,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function backToExpedienteCliente($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 12,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
-    public function setProcesoToFirmaContrato($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 14,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaFirmaContrato(){
         $query = "SELECT
             pc.*,
@@ -781,17 +568,6 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function setProcesoToRecepcionContrato($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 15,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
     public function getListaRecepcionContrato(){
         $query = "SELECT
             pc.*,
@@ -803,28 +579,6 @@ class CasasModel extends CI_Model
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
-    }
-
-    public function backToFirmaContrato($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 14,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
-    }
-
-    public function setProcesoToFinalizar($idProcesoCasas){
-        $query = "UPDATE proceso_casas
-        SET
-            proceso = 16,
-            fechaProceso = GETDATE()
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
-
-        return $this->db->query($query);
     }
 
     public function getListaFinalizar(){
@@ -845,6 +599,16 @@ class CasasModel extends CI_Model
         SET
             finalizado = 1,
             fechaProceso = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setAdeudo($idProcesoCasas, $columna, $adeudo){
+        $query = "UPDATE proceso_casas
+        SET
+            $columna = $adeudo
         WHERE
             idProcesoCasas = $idProcesoCasas";
 

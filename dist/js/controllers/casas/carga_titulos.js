@@ -82,7 +82,7 @@ function sendToConcentrarAdeudos(data) {
 
     $.ajax({
         type: 'POST',
-        url: `back_to_adeudos?id=${data.idProcesoCasas}`,
+        url: `back_to_documentos?id=${data.idProcesoCasas}`,
         success: function (response) {
             alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
 

@@ -116,7 +116,7 @@ let columns = [
             pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignacion', onClick: select_asesor, data})
         }
 
-        let cancel_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})
+        let cancel_button = new TableButton({icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})
 
         return `<div class="d-flex justify-center">${asesor_button}${pass_button}${cancel_button}</div>`
     } },

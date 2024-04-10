@@ -16,7 +16,7 @@ function show_upload(data) {
     //console.log(data)
 
     let form = new Form({
-        title: 'Subir carta de autorizacion',
+        title: 'Subir cierre de cifras',
         onSubmit: function(data){
             //console.log(data)
 
@@ -97,7 +97,7 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir carta de autorizacion', onClick: show_upload, data})
+        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''

@@ -57,6 +57,7 @@ back_to_carta_auth = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'adeudoOOAM' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 2)
@@ -74,7 +75,12 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentacion del cliente', onClick: pass_to_docu_cliente, data})
+        // console.log(data)
+        
+        let pass_button = ''
+        if(data.adeudoOOAM){
+            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentacion del cliente', onClick: pass_to_docu_cliente, data})
+        }
         let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorizacion', onClick: back_to_carta_auth, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`

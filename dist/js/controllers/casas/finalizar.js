@@ -82,8 +82,8 @@ let columns = [
         let pass_button = ''
         let back_button = ''
         if(!data.finalizado){
-            let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Finalizar proceso', onClick: finalizar, data})
-            let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_firma_contrato, data})
+            pass_button = new TableButton({icon: 'check', color: 'green', label: 'Finalizar proceso', onClick: finalizar, data})
+            back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_firma_contrato, data})
         }
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`

@@ -175,6 +175,11 @@ class Casas extends BaseController {
         $this->load->view("casas/finalizar");
     }
 
+    public function ingresar_adeudos(){
+        $this->load->view('template/header');
+        $this->load->view("casas/ingresar_adeudos");
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -239,9 +244,11 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->addLoteToAsignacion($idLote);
+        $proceso = $this->CasasModel->addLoteToAsignacion($idLote);
 
-        if($is_ok){
+        if($proceso){
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -255,9 +262,16 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->asignarAsesor($form->id, $form->asesor);
+        $proceso = $this->CasasModel->getProceso($form->id);
+
+        $asesor = $this->CasasModel->getAsesor($form->asesor);
+
+        $is_ok = $this->CasasModel->asignarAsesor($proceso->idProcesoCasas, $asesor->idUsuario);
 
         if($is_ok){
+            $motivo = "Se asigno asesor $asesor->idUsuario: $asesor->nombre";
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, $motivo);
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -271,19 +285,25 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documento = $this->CasasModel->getDocumentosCartaAuth();
+        $proceso = $this->CasasModel->getProceso($id);
 
-        if($documento){
+        $new_status = 1;
+
+        $documentos = $this->CasasModel->getDocumentos([1]);
+
+        foreach ($documentos as $key => $documento) {
             $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
             if(!$is_ok){
-                http_response_code(500);
+                break;
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoToValidaComite($id);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -305,7 +325,11 @@ class Casas extends BaseController {
 
         $is_ok = $this->CasasModel->cancelProcess($id);
 
+        $proceso = $this->CasasModel->getProceso($id);
+
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, 'NULL', 'Se cancelo proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -319,9 +343,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToAsignacion($id);
+        $new_status = 0;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -369,6 +399,9 @@ class Casas extends BaseController {
                 $updated = $this->CasasModel->updateDocumentRow($id_documento, $filename);
 
                 if($updated){
+                    $motivo = "Se subio archivo: $name_documento";
+                    $this->CasasModel->addHistorial($id_proceso, $proceso->proceso, $proceso->proceso, $motivo);
+
                     $this->json([]);
                 }
             }
@@ -384,9 +417,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToConcentrarAdeudos($id);
+        $new_status = 2;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -406,9 +445,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToCartaAutorizacion($id);
+        $new_status = 1;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -422,7 +467,7 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documentos = $this->CasasModel->getDocumentosCliente();
+        $documentos = $this->CasasModel->getDocumentos([2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
 
         $is_ok = true;
         foreach ($documentos as $key => $documento) {
@@ -437,9 +482,15 @@ class Casas extends BaseController {
             http_response_code(500);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToDocumentacionCliente($id);
+        $new_status = 3;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -459,9 +510,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToAdeudos($id);
+        $new_status = 2;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+
             $this->json([]);
         }else{
             http_response_code(404);
@@ -493,19 +550,26 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documento = $this->CasasModel->getDocumentoAnexosTecnicos();
+        $documentos = $this->CasasModel->getDocumentos([16]);
 
-        if($documento){
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
             $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
             if(!$is_ok){
-                http_response_code(500);
+                break;
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoToValidaComite($id);
+        $new_status = 4;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -525,9 +589,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToDocumentos($id);
+        $new_status = 3;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -547,19 +617,26 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documento = $this->CasasModel->getDocumentoTitulacion();
+        $documentos = $this->CasasModel->getDocumentos([17]);
 
-        if($documento){
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
             $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
             if(!$is_ok){
-                http_response_code(500);
+                break;
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoToTitulacion($id);
+        $new_status = 5;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -579,19 +656,26 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documento = $this->CasasModel->getDocumentoAnticipo();
+        $documentos = $this->CasasModel->getDocumentos([18]);
 
-        if($documento){
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
             $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
             if(!$is_ok){
-                http_response_code(500);
+                break;
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoToPropuesta($id);
+        $new_status = 6;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -611,9 +695,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToCargaTitulos($id);
+        $new_status = 5;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -627,9 +717,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToValidacionContraloria($id);
+        $new_status = 7;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -661,7 +757,7 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documentos = $this->CasasModel->getDocumentosContratos();
+        $documentos = $this->CasasModel->getDocumentos([19,20,21,22,23,24]);
 
         $is_ok = true;
         foreach ($documentos as $key => $documento) {
@@ -672,13 +768,15 @@ class Casas extends BaseController {
             }
         }
 
-        if(!$is_ok){
-            http_response_code(500);
-        }
+        $new_status = 8;
 
-        $is_ok = $this->CasasModel->setProcesoToSolicitudContratos($id);
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -698,9 +796,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToConfirmarContratos($id);
+        $new_status = 9;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -726,19 +830,26 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documento = $this->CasasModel->getDocumentoCifras();
+        $documentos = $this->CasasModel->getDocumentos([25]);
 
-        if($documento){
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
             $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
 
             if(!$is_ok){
-                http_response_code(500);
+                break;
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoToCargaCifras($id);
+        $new_status = 10;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -758,9 +869,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToVoBoCifras($id);
+        $new_status = 11;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -780,9 +897,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToCierreCifras($id);
+        $new_status = 10;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -796,9 +919,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToExpedienteCliente($id);
+        $new_status = 12;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -818,9 +947,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToEnvioAFirma($id);
+        $new_status = 13;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -840,9 +975,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToExpedienteCliente($id);
+        $new_status = 12;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -856,9 +997,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToFirmaContrato($id);
+        $new_status = 14;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -878,9 +1025,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToRecepcionContrato($id);
+        $new_status = 15;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -900,9 +1053,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->backToFirmaContrato($id);
+        $new_status = 14;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -916,9 +1075,15 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $is_ok = $this->CasasModel->setProcesoToFinalizar($id);
+        $new_status = 16;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso');
+            
             $this->json([]);
         }else{
             http_response_code(404);
@@ -938,12 +1103,44 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
+        $proceso = $this->CasasModel->getProceso($id);
+
         $is_ok = $this->CasasModel->markProcesoFinalizado($id);
 
         if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $proceso->proceso, 'Proceso finalizado');
+
             $this->json([]);
         }else{
             http_response_code(404);
         }
+    }
+
+    public function ingresar_adeudo(){
+        $form = $this->form();
+
+        if(!isset($form->id) || !isset($form->adeudo)){
+            http_response_code(400);
+        }
+
+        $id_rol = 2;
+
+        $column = 'adeudoOOAM';
+
+        $proceso = $this->CasasModel->getProceso($form->id);
+
+        if($proceso && isset($column)){
+            $is_ok = $this->CasasModel->setAdeudo($proceso->idProcesoCasas, $column, $form->adeudo);
+
+            if($is_ok){
+                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modifico adeudo: $column");
+
+                $this->json([]);
+            }else{
+                http_response_code(404);
+            }
+        }
+
+        http_response_code(404);
     }
 }
