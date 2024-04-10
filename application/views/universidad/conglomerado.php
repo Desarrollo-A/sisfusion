@@ -291,25 +291,12 @@
                         </div>
                         <div class="card-content">
                             <div class="encabezadoBox">
-                                <h3 class="card-title center-align" >Descuentos Universidad</h3>
+                                <h2 class="card-title center-align"><p>Descuentos Universidad</p></h2>
                             </div>
                             <div class="toolbar">
                                 <div class="container-fluid">
-                                    <div class="row aligned-row">
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <h4 class="title-tot center-align m-0">Total<p class="category input-tot pl-1" id="totalGeneral"></p></h4>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <h4 class="title-tot center-align m-0">Total recaudado <p class="category input-tot pl-1 text-center" id="totalRecaudado"></p></h4>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <h4 class="title-tot center-align m-0">Total pagado caja <p class="category input-tot pl-1" id="totalPagadoCaja"></p></h4>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-                                            <h4 class="title-tot center-align m-0">Pendiente<p class="category input-tot pl-1" id="totalPendiente"></p></h4>
-                                        </div>                                     
-                                    </div>
-                                    <div class="col-lg-12">
+                                        <?php $this->load->view('universidad/conglomerado_cards_view'); ?>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
                                         <div class="form-group is-empty">
                                             <label for="proyecto">Tipo descuento:</label>
                                             <select name="tipo_descuento" id="tipo_descuento" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="Selecciona el tipo de descuento" data-size="7" required onChange="checkTypeOfDesc()">
