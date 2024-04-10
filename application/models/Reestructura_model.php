@@ -1126,7 +1126,7 @@ class Reestructura_model extends CI_Model
             SELECT idLote
                 ,id_lotep
             FROM propuestas_x_lote
-            WHERE estatus = 1
+            WHERE estatus IN(0, 1)
             GROUP BY idLote
                 ,id_lotep
             ) pxl ON pxl.idLote = lo.idLote
