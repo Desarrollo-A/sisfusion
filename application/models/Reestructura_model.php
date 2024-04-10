@@ -1224,9 +1224,9 @@ class Reestructura_model extends CI_Model
         FROM lotes lo
         LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN lotesFusion lf ON lf.idLotePvOrigen = lo.idLote
-        INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
-        INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-        INNER JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
+        INNER JOIN usuarios u0 ON u0.id_usuario = lo.id_usuario_asignado
+        LEFT JOIN usuarios u2 ON u2.id_usuario = u0.id_lider
+        LEFT JOIN usuarios u3 ON u3.id_usuario = U2.id_lider
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso
             AND oxc.id_catalogo = 106
         INNER JOIN (
