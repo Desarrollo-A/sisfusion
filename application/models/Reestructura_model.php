@@ -1093,7 +1093,7 @@ class Reestructura_model extends CI_Model
         re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
         STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
         STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        hpl.fecha_modificacion fechaUltimoMovimiento
+        hpl.fecha_modificacion fechaUltimoMovimiento, hpl.comentario
         FROM propuestas_x_lote pxl
         INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -1104,12 +1104,12 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
 		LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
         SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre, hpl.fecha_modificacion
+        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre, hpl.fecha_modificacion,hpl.comentario
         UNION ALL
         SELECT 'Reubicación' tipo_proceso, tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
         STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
         STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        hpl.fecha_modificacion fechaUltimoMovimiento
+        hpl.fecha_modificacion fechaUltimoMovimiento, hpl.comentario
         FROM (
         SELECT lf1.idLotePvOrigen, re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, 
         lo.referencia referenciaOrigen, lo.idLote idLoteOrigen, CASE WHEN (lo.validacionEnganche = 'NULL' OR lo.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion
@@ -1125,7 +1125,7 @@ class Reestructura_model extends CI_Model
 		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106
         LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = tb.idLotePvOrigen AND hpl.idHistoPreproceso = (
         SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion, hpl.fecha_modificacion
+        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion, hpl.fecha_modificacion, hpl.comentario
         ORDER BY nombreLoteDestino")->result_array();
     }
 
@@ -1136,7 +1136,7 @@ class Reestructura_model extends CI_Model
         WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
         WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
         ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
-        CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus
+        CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
         FROM historial_preproceso_lote hp
         INNER JOIN propuestas_x_lote pr ON pr.idLote = hp.idLote
         INNER JOIN lotes lo ON lo.idLote = pr.idLote
@@ -1145,7 +1145,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
         WHERE hp.idLote = $idLote
-        ORDER BY lo.idLote, hp.fecha_modificacion")->result_array();
+        ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
     }
     public function borrarPXL($id_lote){
         $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);
