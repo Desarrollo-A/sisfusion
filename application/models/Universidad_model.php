@@ -29,8 +29,11 @@ class Universidad_model extends CI_Model {
                 $filtro = ' ';
         }
 
-        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, 
-        UPPER(opc.nombre) AS puesto, se.id_sede, UPPER(se.nombre) AS sede, ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, 
+        $query = $this->db->query("SELECT du.id_descuento, du.id_usuario, 
+        UPPER(CONCAT(us.nombre,' ',us.apellido_paterno,' ',us.apellido_materno)) AS nombre, 
+        UPPER(opc.nombre) AS puesto, se.id_sede, 
+        UPPER(se.nombre) AS sede, 
+        ISNULL(pci3.saldo_comisiones, 0) saldo_comisiones, du.monto, 
         ISNULL(pci2.total_descontado, 0) total_descontado, ISNULL(du.pagado_caja, 0) pagado_caja, 
         ISNULL(du.monto-(ISNULL(pci2.total_descontado,0) + ISNULL(du.pagado_caja, 0)), 0) pendiente, 
         du.pago_individual, du.estatus, us.estatus as estado_usuario, convert(nvarchar(20), du.fecha_modificacion, 113) fecha_modificacion, 
