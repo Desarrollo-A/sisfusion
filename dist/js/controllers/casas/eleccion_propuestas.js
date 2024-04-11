@@ -1,3 +1,53 @@
+function show_propuestas(proceso) {
+    let form = new Form({
+        title: 'Seleccionar propuesta',
+        //text: 'Descripcion del formulario',
+    })
+
+    form.onSubmit = function(data){
+        // console.log(data)
+        
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}/casas/set_propuesta`,
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                // console.log(response)
+
+                table.reload()
+
+                form.hide()
+            },
+            error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        })
+    }
+
+    let propuestas = []
+
+    $.ajax({
+        type: 'GET',
+        url: `${general_base_url}/casas/options_propuestas?id=${proceso.idProcesoCasas}`,
+        async: false,
+        success: function (response) {
+            propuestas = response
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
+
+    form.fields = [
+        new HiddenField({ id: 'idProcesoCasas',      value: proceso.idProcesoCasas }),
+        new OptionField({id: 'idPropuesta', label: 'Propuestas', data: propuestas}),
+    ]
+
+    form.show()
+}
+
 function sendToNext(data){
     //console.log(data)
 
@@ -124,15 +174,20 @@ let columns = [
 
         return text
     } },
+    { data: 'notaria' },
+    { data: 'fechaFirma' },
+    { data: 'costo' },
     { data: function(data){
-        let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma'})
+        let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: show_propuestas, data})
         let upload_button = new RowButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
+            if(data.idPropuesta){
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
+            }
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_titulos, data})
@@ -144,6 +199,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_eleccion_propuestas',
-    buttons: ['excel'],
     columns,
 })

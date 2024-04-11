@@ -1,4 +1,49 @@
+class DateField{
+    constructor({id, label, placeholder, value}){
+        this.id = id
 
+        this.field = $('<div />')
+        .addClass('col-lg-6 col-md-12')
+        .append(
+            $('<label />')
+            .addClass('control-label label-gral')
+            .attr('for', id)
+            .text(label)
+        )
+        .append(
+            $('<input />')
+            .addClass('form-control input-gral datepicker')
+            .attr('type', 'text')
+            .attr('name', id)
+            .attr('id', id)
+            .attr('placeholder', placeholder.toUpperCase())
+            .val(value)
+            .datetimepicker({
+                format: 'YYYY-MM-DD',
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove',
+                    inline: true
+                }
+            })
+        )
+
+        this.value = () => {
+            return $(`#${id}`).val()
+        }
+    }
+
+    get(){
+        return this.field
+    }
+}
 
 class HiddenField{
     constructor({id, value}){
@@ -15,7 +60,7 @@ class HiddenField{
 }
 
 class SelectField{
-    constructor({id, label, placeholder, data=[]}){
+    constructor({id, label, placeholder, data=[], value}){
         this.id = id
 
         let options = []
@@ -26,6 +71,10 @@ class SelectField{
                 value: item.value,
                 text: item.label
             })
+
+            if(value === item.value){
+                option.attr("selected", true)
+            }
 
             options.push(option)
         }
@@ -54,6 +103,9 @@ class SelectField{
                 .append(options)
             )
         )
+
+        //$(`#${id}`).trigger("change")
+        //$(`#${id} option[value='${value}']`).prop('selected', true);
 
         this.value = () => {
             return $(`#${id}`).val()
@@ -154,7 +206,7 @@ class TextField{
 }
 
 class NumberField{
-    constructor({id, label, placeholder}){
+    constructor({id, label, placeholder, value}){
         this.id = id
         this.field = $('<div />')
         .addClass('col-lg-6 col-md-12')
@@ -171,10 +223,63 @@ class NumberField{
             .attr('name', id)
             .attr('type', 'number')
             .attr('placeholder', placeholder)
+            .val(value)
         )
 
         this.value = () => {
             return $(`#${id}`).val()
+        }
+    }
+
+    get(){
+        return this.field
+    }
+}
+
+class OptionField{
+    constructor({id, label, placeholder, data, value}){
+        this.id = id
+
+        let options = []
+        for (const option of data) {
+            options.push(
+                $('<div />')
+                .addClass('container boxChecks p-0')
+                .append(
+                    $('<label />')
+                    .addClass('m-0 checkstyleDS')
+                    .append(
+                        $('<input />')
+                        //.addClass('hide')
+                        .attr('type', 'radio')
+                        .attr('id', id)
+                        .attr('name', id)
+                        .val(option.value)
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
+                            $('<p />')
+                            .addClass('m-0')
+                            .text(option.label)
+                        )
+                    )
+                )
+            )
+        }
+
+        this.field = $('<div />')
+        .addClass('col-12 lotePropuesto')
+        .append(
+            $('<label />')
+            .text(label)
+        )
+        .append(options)
+
+        this.value = () => {
+            //return $(`#${id}`).val()
+            return $(`input[name="${id}"]:checked`).val()
         }
     }
 
@@ -226,7 +331,11 @@ class Form{
         for (var i = 0; i < this.fields.length; i++) {
             let field = this.fields[i]
 
-            data.append(field.id, field.value())
+            if(field.value()){
+                data.append(field.id, field.value())
+            }else{
+                data.append(field.id, null)
+            }
         }
 
         this.onSubmit(data)

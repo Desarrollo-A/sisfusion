@@ -182,6 +182,17 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    public function getPropuestasOptions($idProcesoCasas){
+        $query = "SELECT
+            fechaFirma AS label,
+            idPropuesta AS value
+        FROM propuestas_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query)->result();
+    }
+
     public function asignarAsesor($idProcesoCasas, $idAsesor){
         $query = "UPDATE proceso_casas
         SET
@@ -388,10 +399,15 @@ class CasasModel extends CI_Model
             lo.nombreLote,
             doc.archivo,
             doc.documento,
-            doc.idDocumento
+            doc.idDocumento,
+            pro.idPropuesta,
+            pro.notaria,
+            pro.fechaFirma,
+            pro.costo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         WHERE
             pc.proceso = 6
         AND pc.status = 1";
@@ -413,9 +429,14 @@ class CasasModel extends CI_Model
     public function getListaPropuestaFirma(){
         $query = "SELECT
             pc.*,
-            lo.nombreLote
+            lo.nombreLote,
+            pro.idPropuesta,
+            pro.notaria,
+            pro.fechaFirma,
+            pro.costo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         WHERE
             pc.proceso > 6
         AND pc.proceso < 8
@@ -635,5 +656,54 @@ class CasasModel extends CI_Model
             idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
+    }
+
+    public function addPropuesta($idProcesoCasas, $notaria, $fechaFirma, $costo){
+        $idModificacion = $this->session->userdata('id_usuario');
+
+        $query = "INSERT INTO propuestas_proceso_casas
+        (
+            idProcesoCasas,
+            notaria,
+            fechaFirma,
+            costo,
+            idCreacion,
+            idModificacion,
+            fechaModificacion
+        )
+        VALUES
+        (
+            $idProcesoCasas,
+            $notaria,
+            '$fechaFirma',
+            $costo,
+            $idModificacion,
+            $idModificacion,
+            GETDATE()
+        )";
+
+        return $this->db->query($query);
+    }
+
+    public function updatePropuesta($idPropuesta, $notaria, $fechaFirma, $costo){
+        $query = "UPDATE propuestas_proceso_casas
+        SET
+            notaria = $notaria,
+            fechaFirma = '$fechaFirma',
+            costo = $costo
+        WHERE
+            idPropuesta = $idPropuesta";
+
+        return $this->db->query($query);
+    }
+
+    public function setPropuesta($idProcesoCasas, $idPropuesta){
+        $query = "UPDATE proceso_casas
+        SET
+            idPropuesta = $idPropuesta
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
     }
 }

@@ -26,6 +26,9 @@
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
                                             <th>VIGENCIA</th>
+                                            <th>NOTARIA ELEGIDA</th>
+                                            <th>FECHA DE FIRMA</th>
+                                            <th>COSTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

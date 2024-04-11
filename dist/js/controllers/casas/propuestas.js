@@ -12,9 +12,9 @@ $.ajax({
     }
 })
 
-function show_new() {
+function show_form(propuesta) {
     let form = new Form({
-        title: 'Asignar asesor',
+        title: 'Propuesta de firma',
         //text: 'Descripcion del formulario',
     })
 
@@ -23,7 +23,7 @@ function show_new() {
 
         $.ajax({
             type: 'POST',
-            url: 'add_propuesta',
+            url: `${general_base_url}/casas/save_propuesta`,
             data: data,
             contentType: false,
             processData: false,
@@ -41,11 +41,22 @@ function show_new() {
     }
 
     form.fields = [
-        new HiddenField({ id: 'id', value: idProcesoCasas }),
-        new SelectField({ id: 'asesor', label: 'Notaria',  placeholder: 'Selecciona una opcion', data: notarias }),
+        new HiddenField({ id: 'idPropuesta', value: propuesta.idPropuesta }),
+        new HiddenField({ id: 'idProcesoCasas', value: idProcesoCasas }),
+        new SelectField({ id: 'notaria', label: 'Notaria',  placeholder: 'Selecciona una opcion', data: notarias, value: propuesta.notaria }),
+        new DateField({ id: 'fecha', label: 'Fecha de firma',  placeholder: 'Elige una fecha', value: propuesta.fechaFirma }),
+        new NumberField({ id: 'costo', label: 'Costo',  placeholder: 'Ingresa el dato', value: propuesta.costo })
     ]
 
     form.show()
+}
+
+function edit_propuesta(data) {
+    show_form(data)
+}
+
+function new_propuesta() {
+    show_form({})
 }
 
 let columns = [
@@ -54,7 +65,9 @@ let columns = [
     { data: 'fechaFirma' },
     { data: 'costo' },
     { data: function(data){
-        return `<div class="d-flex justify-center"></div>`
+        let edit_button = new RowButton({icon: 'edit', label: 'Editar prpopuesta', onClick: edit_propuesta, data})
+
+        return `<div class="d-flex justify-center">${edit_button}</div>`
     } },
 ]
 
@@ -62,7 +75,7 @@ let buttons = [
     {
         text: '<i class="mr-1 fa fa-check"></i>Agregar propuesta',
         action: function() {
-            show_new()
+            new_propuesta()
         },
         attr: {
             class: 'btn btn-azure',

@@ -236,6 +236,14 @@ class Casas extends BaseController {
         $this->json($notarias);
     }
 
+    public function options_propuestas(){
+        $id = $this->input->get('id');
+
+        $propuestas = $this->CasasModel->getPropuestasOptions($id);
+
+        $this->json($propuestas);
+    }
+
     public function lotes(){
         $idCondominio = $this->input->get('condominio');
 
@@ -1165,5 +1173,53 @@ class Casas extends BaseController {
         $propuestas = $this->CasasModel->getPropuestas($proceso);
 
         $this->json($propuestas);
+    }
+
+    public function save_propuesta(){
+        $form = $this->form();
+
+        if(!$form->idProcesoCasas || !$form->notaria || !$form->fecha){
+            http_response_code(400);
+        }
+
+        $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
+
+        if($form->idPropuesta){
+            $is_ok = $this->CasasModel->updatePropuesta($form->idPropuesta, $form->notaria, $form->fecha, $form->costo);
+
+            $descripcion = "Se actualizo propuesta: $form->idPropuesta";
+        }else{
+            $is_ok = $this->CasasModel->addPropuesta($form->idProcesoCasas, $form->notaria, $form->fecha, $form->costo);
+
+            $descripcion = "Se agrego propuesta";
+        }
+
+        if($is_ok){
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, $descripcion);
+
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
+    public function set_propuesta(){
+        $form = $this->form();
+
+        if(!$form->idProcesoCasas || !$form->idPropuesta){
+            http_response_code(400);
+        }
+
+        $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
+
+        $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta);
+
+        if($is_ok){
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono propuesta: $form->idPropuesta");
+
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
     }
 }

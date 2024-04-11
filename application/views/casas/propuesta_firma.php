@@ -25,8 +25,10 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
-                                            <th>PROPUESTA</th>
-                                            <th>ACCIONES</th>
+                                            <th>VIGENCIA</th>
+                                            <th>NOTARIA ELEGIDA</th>
+                                            <th>FECHA DE FIRMA</th>
+                                            <th>COSTO</th>
                                         </tr>
                                     </thead>
                                 </table>
