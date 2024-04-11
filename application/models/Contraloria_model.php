@@ -1913,6 +1913,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13', '14')";
         else if ($id_sede == 1) // CONTRALORÍA SAN LUIS POTOSÍ TAMBIÉN VE EXPEDIENTES DE MORELIA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '18')";
+        else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE MIAMI
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '19')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 

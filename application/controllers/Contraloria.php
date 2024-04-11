@@ -1133,7 +1133,7 @@ class Contraloria extends CI_Controller {
                     $assigned_user = 10427;
                 $arreglo["asig_jur"] = $assigned_user;
             }
-            else if ($assigned_location == 8) { // TIJUANA
+            else if (in_array($assigned_location, [8, 19])) { // TIJUANA / MIAMI
                 $id_sede_jur = 8;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
@@ -1167,7 +1167,7 @@ class Contraloria extends CI_Controller {
         return;
     }
 
-    if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8]))
+    if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8, 19]))
         $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
 
     if ($cliente->proceso <= 1) {

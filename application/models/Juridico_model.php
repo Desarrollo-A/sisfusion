@@ -72,6 +72,8 @@ class Juridico_model extends CI_Model {
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15', '14')";
 			else if($id_sede == 5) // JURÍDICO LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
+			else if($id_sede == 8) // JURÍDICO TIJUANA TAMBIÉN VE EXPEDIENTES DE MIAMI
+				$filtroSede = "AND l.ubicacion IN ('$id_sede', '19')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 
