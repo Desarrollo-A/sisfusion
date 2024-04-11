@@ -679,7 +679,7 @@ hr {
                                 <div class="material-datatables">
                                     <div class="form-group">
                                         <div class="table-responsive">
-                                            <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
+                                            <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria" style="display: none;">
                                                 <thead>
                                                     <tr>   
                                                         <th>PROYECTO</th>

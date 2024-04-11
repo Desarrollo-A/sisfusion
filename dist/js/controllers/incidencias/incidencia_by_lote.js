@@ -940,7 +940,6 @@ $('#tabla_inventario_contraloria thead tr:eq(0) th').each( function (i) {
     $(this).css('text-align', 'center');
     var title = $(this).text();
     titulos_incidencias.push(title);
-    if (i != 0 ) {
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
         $( 'input', this ).on('keyup change', function () {
             if ($('#tabla_inventario_contraloria').DataTable().column(i).search() !== this.value ) {
@@ -952,11 +951,16 @@ $('#tabla_inventario_contraloria thead tr:eq(0) th').each( function (i) {
         }).indexes();
         var data = $('#tabla_inventario_contraloria').DataTable().rows(index).data();
     });
-}});
+    
+
+});
  
 $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
-   if(idLote != '' ){
+   if(idLote != ''){
+
+    $('#tabla_inventario_contraloria').show();
+
     tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
@@ -968,6 +972,7 @@ $(".find_doc").click( function() {
         pagingType: "full_numbers",
         fixedHeader: true,
         language: {
+            emptyTable:"No hay datos",
             url: general_base_url+"/static/spanishLoader_v2.json",
             paginate: {
                 previous: "<i class='fa fa-angle-left'>",
@@ -1023,11 +1028,12 @@ $(".find_doc").click( function() {
         {data: function (d) {
             var labelEstatus;
             if(d.totalNeto2 == null) {
-                labelEstatus ='<p class="m-0"><span>Sin Precio Lote</b></span>';
+                //labelEstatus ='<p class="m-0"><span>Sin Precio Lote</b></span>';
+                labelEstatus ='<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top" style="cursor: pointer;"><span><b>Sin Precio Lote</b></span></label>';
             }else if(d.registro_comision == 2){
                 labelEstatus ='<span class="label lbl-cerulean">SOLICITADO MKT</span>'+' '+d.plan_descripcion;
             }else {
-             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
+             labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top" title="VER MÁS DETALLES"><b><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">${d.plan_descripcion}</span></label>`;
             }
             return labelEstatus;
         }},
@@ -1035,11 +1041,11 @@ $(".find_doc").click( function() {
             var fechaSistema;
             if(d.fecha_sistema <= '01 OCT 20' || d.fecha_sistema == null ) {
                 //fechaSistema ='<span class="label" style="color:#626567;background:#E5E7E9;">Sin Definir</span>';
-                fechaSistema =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"><b><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">Sin Definir</span></label>`;
+                fechaSistema =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top"><b><span onclick="showDetailModal(${d.plan_comision})" style="cursor: pointer;">Sin Definir</span></label>`;
 
             }else {
                 //fechaSistema = '<br><span class="label" style="color:#1B4F72;background:#AED6F1;">'+d.fecha_sistema+'</span>';
-                fechaSistema =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"><b><span onclick="showDetailModal(${d.fecha_sistema})" style="cursor: pointer;">${d.fecha_sistema}</span></label>`;
+                fechaSistema =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip" data-placement="top"><b><span onclick="showDetailModal(${d.fecha_sistema})" style="cursor: pointer;">${d.fecha_sistema}</span></label>`;
             }
             return fechaSistema;
         }},
@@ -1063,7 +1069,7 @@ $(".find_doc").click( function() {
             "data": function( d ){
                 var lblStats;
                 if(d.totalNeto2==null) {
-                        lblStats ='<span class="label label-danger">Sin precio lote</span>';
+                        lblStats ='<span class="label lbl-warning">Sin precio lote</span>';
                 }
                 else {
                     switch(d.lugar_prospeccion){
