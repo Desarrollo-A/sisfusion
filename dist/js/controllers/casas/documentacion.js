@@ -57,16 +57,16 @@ let columns = [
     { data: function(data){
         let view_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }else{
             if([13,14,15].includes(data.tipo)){
-                view_button = new TableButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
+                view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
             }
         }
 
         let upload_button = ''
         if(![13,14,15].includes(data.tipo)){
-            upload_button = new TableButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
+            upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
         }
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },

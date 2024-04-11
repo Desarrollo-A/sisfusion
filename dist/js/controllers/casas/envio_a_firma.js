@@ -74,9 +74,9 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Enviar a firma', onClick: pass_to_firma_contrato, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a firma', onClick: pass_to_firma_contrato, data})
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_expediente_cliente, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_expediente_cliente, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },

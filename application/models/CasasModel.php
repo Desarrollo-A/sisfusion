@@ -170,6 +170,18 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    public function getNotariasOptions(){
+        $query = "SELECT
+            nombre AS label,
+            id_usuario AS value
+        FROM usuarios
+        WHERE
+            estatus = 1
+        AND id_rol = 7";
+
+        return $this->db->query($query)->result();
+    }
+
     public function asignarAsesor($idProcesoCasas, $idAsesor){
         $query = "UPDATE proceso_casas
         SET
@@ -613,5 +625,15 @@ class CasasModel extends CI_Model
             idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
+    }
+
+    public function getPropuestas($idProcesoCasas){
+        $query = "SELECT
+            *
+        FROM propuestas_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query)->result();
     }
 }

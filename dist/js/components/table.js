@@ -3,8 +3,15 @@ class Table{
         this.url = url
         this.params = new URLSearchParams(params).toString();
 
+        /*
         let table_buttons = []
 
+        for(let button of buttons){
+            table_buttons.push(button.get())
+        }
+        */
+
+        /*
         if(buttons.includes('excel')){
             table_buttons.push({
                 extend: 'excelHtml5',
@@ -12,7 +19,6 @@ class Table{
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'DOCUMENTACION_LOTE',
-                /*
                 exportOptions: {
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
                     format: {
@@ -21,9 +27,23 @@ class Table{
                         }
                     }
                 },
-                */
             })
         }
+        */
+
+        /*
+        table_buttons.push({
+            text: '<i class="fa fa-check"></i> NUEVO BONO',
+            action: function(data) {
+                console.log(data)
+                //open_Mb();
+            },
+            attr: {
+                class: 'btn btn-azure',
+                style: 'position: relative; float: right',
+            }
+        })
+        */
 
         $(`${id} thead tr:eq(0) th`).each(function (i) {
             $(this).css('text-align', 'center');
@@ -50,7 +70,7 @@ class Table{
             scrollX: true,
             ordering: false,
             pageLength: 20,
-            buttons: table_buttons,
+            buttons: buttons,
             language: {
                 url: `${general_base_url}/static/spanishLoader_v2.json`,
                 paginate: {
@@ -79,6 +99,29 @@ class Table{
 }
 
 class TableButton {
+    constructor({id, label, icon, color, onClick}) {
+        this.id = id || ''
+        this.label = label || ''
+        this.icon = icon || ''
+        this.color = color || 'blueMaderas'
+        this.onClick = onClick
+    }
+
+    get(){
+        return {
+            text: `<i class="fa fa-${this.icon}""></i><span class="${this.label ? 'ml-1' : ''}">${this.label}</span>`,
+            action: function(data) {
+                this.onClick()
+            },
+            attr: {
+                class: `btn btn-${this.color}`,
+                style: 'position: relative; float: right',
+            }
+        }
+    }
+}
+
+class RowButton {
     constructor({id, label, icon, color, onClick, data}) {
         this.id = id || ''
         this.label = label || ''

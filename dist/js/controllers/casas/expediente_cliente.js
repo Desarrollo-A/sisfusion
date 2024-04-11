@@ -46,9 +46,9 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Ingreso el expediente', onClick: pass_to_envio_a_firma, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Ingreso el expediente', onClick: pass_to_envio_a_firma, data})
 
-        // let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
+        // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
 
         return `<div class="d-flex justify-center">${pass_button}</div>`
     } },

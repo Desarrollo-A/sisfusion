@@ -57,7 +57,7 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let adeudo_button = new TableButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
+        let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
         return `<div class="d-flex justify-center">${adeudo_button}</div>`
     } },

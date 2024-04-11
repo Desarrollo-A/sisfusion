@@ -180,6 +180,17 @@ class Casas extends BaseController {
         $this->load->view("casas/ingresar_adeudos");
     }
 
+    public function propuestas($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/propuestas", $data);
+    }
+
     public function archivo($name)
     {
         $object = $this->bucket->object(urldecode($name));
@@ -217,6 +228,12 @@ class Casas extends BaseController {
         $asesores = $this->CasasModel->getAsesoresOptions();
 
         $this->json($asesores);
+    }
+
+    public function options_notarias(){
+        $notarias = $this->CasasModel->getNotariasOptions();
+
+        $this->json($notarias);
     }
 
     public function lotes(){
@@ -1142,5 +1159,11 @@ class Casas extends BaseController {
         }
 
         http_response_code(404);
+    }
+
+    public function lista_propuestas($proceso){
+        $propuestas = $this->CasasModel->getPropuestas($proceso);
+
+        $this->json($propuestas);
     }
 }

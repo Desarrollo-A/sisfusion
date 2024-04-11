@@ -57,10 +57,10 @@ let columns = [
     { data: function(data){
         let view_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
-        let upload_button = new TableButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
 
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },

@@ -79,9 +79,9 @@ let columns = [
         
         let pass_button = ''
         if(data.adeudoOOAM){
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentacion del cliente', onClick: pass_to_docu_cliente, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a subir documentacion del cliente', onClick: pass_to_docu_cliente, data})
         }
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorizacion', onClick: back_to_carta_auth, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carta de autorizacion', onClick: back_to_carta_auth, data})
 
         return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },

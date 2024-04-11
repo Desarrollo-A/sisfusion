@@ -105,6 +105,10 @@ back_to_adeudos = function(data) {
     ask.show()
 }
 
+go_to_propuestas = function(data) {
+    window.location.href = `propuestas/${data.idProcesoCasas}`;
+}
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -125,17 +129,17 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let propuestas_button = new TableButton({icon: 'list', label: 'Propuestas para firma', onClick: show_upload, data})
-        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir titulo de propiedad', onClick: show_upload, data})
+        let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: go_to_propuestas, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir titulo de propiedad', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_propuestas, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_propuestas, data})
         }
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_adeudos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_adeudos, data})
 
         return `<div class="d-flex justify-center">${propuestas_button}${view_button}${upload_button}${pass_button}${back_button}</div>`
     } },

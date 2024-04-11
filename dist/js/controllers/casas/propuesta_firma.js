@@ -19,17 +19,17 @@ let columns = [
     } },
     { data: function(data){
         /*
-        let propuestas_button = new TableButton({icon: 'list', label: 'Propuestas para firma'})
-        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
+        let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma'})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
         }
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_titulos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_titulos, data})
         */
 
         return `<div class="d-flex justify-center"></div>`

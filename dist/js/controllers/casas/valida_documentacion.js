@@ -18,9 +18,9 @@ let columns = [
     { data: 'archivo' },
     { data: 'fechaModificacion' },
     { data: function(data){
-        let view_button = new TableButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+        let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         if(!data.archivo){
-            view_button = new TableButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
+            view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
         }
 
         return `<div class="d-flex justify-center">${view_button}</div>`

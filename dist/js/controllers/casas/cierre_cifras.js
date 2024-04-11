@@ -97,13 +97,13 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: 'Visualizar cierre de cifras', onClick: show_preview, data})
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_vobo_cifras, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar cierre de cifras', onClick: show_preview, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_vobo_cifras, data})
         }
 
         return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`

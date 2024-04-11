@@ -78,14 +78,14 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let docu_button = new TableButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
+        let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
         let pass_button = ''
         if(data.documentos >= 1){
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
         }
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
 
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },

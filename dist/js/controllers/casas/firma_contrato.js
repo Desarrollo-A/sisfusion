@@ -46,7 +46,7 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Confirmar firma', onClick: pass_to_recepcion_contrato, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Confirmar firma', onClick: pass_to_recepcion_contrato, data})
 
         return `<div class="d-flex justify-center">${pass_button}</div>`
     } },

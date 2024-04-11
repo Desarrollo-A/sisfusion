@@ -88,14 +88,14 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let view_button = new TableButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+        let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         if(!data.archivo){
-            view_button = new TableButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
+            view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
         }
 
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Aprobar cierre de cifras', onClick: pass_to_expediente_cliente, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aprobar cierre de cifras', onClick: pass_to_expediente_cliente, data})
 
-        let back_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a carga de cierre de cifras', onClick: back_to_cierre_cifras, data})
 
         return `<div class="d-flex justify-center">${view_button}${pass_button}${back_button}</div>`
     } },

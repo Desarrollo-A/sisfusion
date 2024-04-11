@@ -125,16 +125,16 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let upload_button = new TableButton({icon: 'file_upload', label: 'Subir carta de autorizacion', onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir carta de autorizacion', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new TableButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Pasar a concentrar adeudos', onClick: pass_to_adeudos, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a concentrar adeudos', onClick: pass_to_adeudos, data})
         }
 
-        let cancel_button = new TableButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_process, data})
+        let cancel_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_process, data})
 
         return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}${cancel_button}</div>`
     } },

@@ -84,7 +84,7 @@ let columns = [
         return `Lote: ${data.nombreLote}`
     } },
     { data: function(data){
-        let pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignacion', onClick: select_lote, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignacion', onClick: select_lote, data})
 
         return '<div class="d-flex justify-center">' + pass_button + '</div>'
     } },

@@ -109,14 +109,14 @@ let columns = [
     { data: 'nombreLote' },
     { data: 'nombreAsesor' },
     { data: function(data){
-        let asesor_button = new TableButton({icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data})
+        let asesor_button = new RowButton({icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data})
 
         let pass_button = ''
         if(data.idAsesor){
-            pass_button = new TableButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignacion', onClick: select_asesor, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignacion', onClick: select_asesor, data})
         }
 
-        let cancel_button = new TableButton({icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})
+        let cancel_button = new RowButton({icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})
 
         return `<div class="d-flex justify-center">${asesor_button}${pass_button}${cancel_button}</div>`
     } },
