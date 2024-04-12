@@ -848,6 +848,28 @@ class Casas extends BaseController {
         $this->json($lotes);
     }
 
+    public function back_to_solicitar_contratos(){
+        $id = $this->input->get('id');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $new_status = 8;
+
+        $proceso = $this->CasasModel->getProceso($id);
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status);
+
+        if($is_ok){
+            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso');
+            
+            $this->json([]);
+        }else{
+            http_response_code(404);
+        }
+    }
+
     public function to_carga_cifras(){
         $id = $this->input->get('id');
 
@@ -1116,7 +1138,19 @@ class Casas extends BaseController {
     }
 
     public function lista_finalizar(){
-        $lotes = $this->CasasModel->getListaFinalizar();
+        $finalizado = $this->input->get('finalizado');
+
+        $in = '0, 1';
+
+        if($finalizado == '1'){
+            $in = '1';
+        }
+
+        if($finalizado == '0'){
+            $in = '0';
+        }
+
+        $lotes = $this->CasasModel->getListaFinalizar($in);
 
         $this->json($lotes);
     }

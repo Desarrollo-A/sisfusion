@@ -30,6 +30,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_contratos/${idProcesoCasas}`,
-    buttons: ['excel'],
     columns,
 })

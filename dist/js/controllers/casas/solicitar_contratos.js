@@ -87,13 +87,12 @@ let columns = [
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
 
-        return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${docu_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_solicitar_contratos`,
-    buttons: ['excel'],
     columns,
 })

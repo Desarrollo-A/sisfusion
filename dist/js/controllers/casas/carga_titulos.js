@@ -148,6 +148,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_carga_titulos',
-    buttons: ['excel'],
     columns,
 })

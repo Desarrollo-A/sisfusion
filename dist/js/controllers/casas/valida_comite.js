@@ -94,6 +94,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_valida_comite',
-    buttons: ['excel'],
     columns,
 })

@@ -93,6 +93,29 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_finalizar',
-    buttons: ['excel'],
     columns,
+})
+
+let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opcion'})
+
+filtro_proceso.onChange(function(option){
+    // console.log(option)
+
+    table.setParams({finalizado: option.value})
+    table.reload()
+})
+
+let status_option = [
+    {value: 'all', label: 'Todos'},
+    {value: 1, label: 'Finalizado'},
+    {value: 0, label: 'No finalizado'},
+]
+
+filtro_proceso.setOptions(status_option)
+
+let filtros = new Filters({
+    id: 'table-filters',
+    filters: [
+        filtro_proceso,
+    ],
 })

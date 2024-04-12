@@ -143,6 +143,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_carta_auth',
-    buttons: ['excel'],
     columns,
 })

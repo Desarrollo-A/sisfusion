@@ -31,7 +31,7 @@ function sendToConcentrarAdeudos(data) {
 
     $.ajax({
         type: 'POST',
-        url: `back_to_solicitar_contratos?id=${data.idProcesoCasas}`,
+        url: `back_to_adeudos?id=${data.idProcesoCasas}`,
         success: function (response) {
             alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a solicitud de contratos.`, "success");
 
@@ -91,6 +91,5 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_recepcion_contratos',
-    buttons: ['excel'],
     columns,
 })

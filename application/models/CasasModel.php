@@ -522,7 +522,7 @@ class CasasModel extends CI_Model
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         WHERE
-            pc.proceso = 9
+            pc.proceso IN (8,9)
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
@@ -614,7 +614,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getListaFinalizar(){
+    public function getListaFinalizar($in){
         $query = "SELECT
             pc.*,
             lo.nombreLote
@@ -622,6 +622,7 @@ class CasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         WHERE
             pc.proceso = 16
+        AND pc.finalizado IN ($in)
         AND pc.status = 1";
 
         return $this->db->query($query)->result();
