@@ -170,7 +170,7 @@ class Reestructura extends CI_Controller{
 		$datos["apellido_materno"] = str_replace("'","`", $dataPost['apellidomCli']);
         $datos["telefono1"] = $dataPost['telefonoCli'];
         $datos["correo"] = $dataPost['correoCli'];
-        $datos["domicilio_particular"] = $dataPost['domicilioCli'];
+        $datos["domicilio_particular"] = str_replace("'", "`", $dataPost['domicilioCli']) ;
         $datos["estado_civil"] = $dataPost['estadoCli'];
         $datos["ine"] = $dataPost['ineCLi'];
         $datos["ocupacion"] = $dataPost['ocupacionCli'];
@@ -668,7 +668,7 @@ class Reestructura extends CI_Controller{
             }
         }
 
-        switch($proceso){ // checar si este swicth puede usase para algo mas
+        switch($proceso){ // checar si este swicth puede usarse para algo mas
             case 2:
 
                 $idStatusLote = 15; // valor para lotes de destino            
@@ -714,7 +714,7 @@ class Reestructura extends CI_Controller{
         $banderaActualizar = 0;
 
         // 1: eliminar la propuesta por lote de este lote
-        if ($proceso != 0) { // diferente a 0 significa que si tiene lotesen su fusion o rebicacion, etc.
+        if ($proceso != 0) { // diferente a 0 significa que si tiene lotes en su fusion o rebicacion, etc.
             if ($proceso == 5) {
                 $delete = $this->Reestructura_model->deleteFusion($id_lote);
             } else {
@@ -742,22 +742,24 @@ class Reestructura extends CI_Controller{
             if($proceso == 5){
                 $updateFusionFlag = true;
 
-                $checkLotes = $this->Reestructura_model->checkLotesFusion($ids);
-                $lotesFusion = $checkLotes->result();
+                foreach($data as $lote){
+                    if($lote->destino == 1){
+                        $idRegresoFusion = $lote->tipo_estatus_regreso == 1 ? 15 : ($lote->tipo_estatus_regreso == 2 ? 21 : 1);
 
-                foreach($lotesFusion as $lf){
-                    if($lf->idStatusLote == 16){
-                        $idRegresoFusion = 15; 
-                    }
-                    else if($lf->idStatusLote == 20){
-                        $idRegresoFusion = 21;
-                    }
+                        $idToUpdate[] = array(
+                            "idLote" => $lote->idLote,
+                            "idStatusLote" => $idRegresoFusion
+                        );
 
-                    $update = $this->Reestructura_model->updateLotesFusion($lf->idLote, $idRegresoFusion, $idUsuario);
-
-                    if(!$update){
-                        $updateFusionFlag = false;
+                        
                     }
+                }
+
+                $updateBatch = $this->General_model->updateBatch('lotes', $idToUpdate, 'idLote');
+                // $update = $this->Reestructura_model->updateLotesFusion($lote->idLote, $idRegresoFusion, $idUsuario);
+
+                if(!$updateBatch){
+                    $updateFusionFlag = false;
                 }
             }
             else{

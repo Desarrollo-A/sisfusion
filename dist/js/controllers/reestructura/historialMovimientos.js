@@ -1,12 +1,17 @@
-$(document).on('click', '.btn-historial', function (){
+$(document).on('click', '.btn-historial', function () {
     let idLoteOrigen = $(this).attr("data-idLote");
     $('#historialLine').html('');
     $("#spiner-loader").removeClass('hide');
-    $.post(`getHistorialPorLote/${idLoteOrigen}`).done( function( data ){
+    $.post(`getHistorialPorLote/${idLoteOrigen}`).done(function (data) {
         $("#modal_historial").modal();
-        $.each( JSON.parse(data), function(i, v){
-            fillChangelog(v);
-        });
+        if (JSON.parse(data).length > 0) {
+            $.each(JSON.parse(data), function (i, v) {
+                fillChangelog(v);
+            });
+        }
+        else{
+            emptyLog();
+        }
         $("#spiner-loader").addClass('hide');
     });
 });
@@ -35,3 +40,14 @@ function fillChangelog(v) {
     </li>`);
 }
 
+function emptyLog() {
+    $("#historialLine").append(`<li>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <a><b>  No Hay historial de preproceso sobre este lote  </b></a><br>
+                </div>
+            </div>
+        </div>
+    </li>`);
+}

@@ -53,6 +53,7 @@ $('#tablaInventario thead tr:eq(0) th').each(function (i) {
 });
 
 $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', function () {
+    let maxPopea = 67;
     ix_idResidencial = ($("#idResidencial").val().length <= 0) ? 0 : $("#idResidencial").val();
     ix_idCondominio = $("#idCondominioInventario").val() == '' ? 0 : $("#idCondominioInventario").val();
     ix_idEstatus = $("#idEstatus").val() == '' ? 0 : $("#idEstatus").val();
@@ -73,7 +74,7 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
             titleAttr: 'Descargar archivo de Excel',
             title: 'Inventario lotes',
             exportOptions: {
-                columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31]),
+                columns: coordinador = (id_rol_general == 11 || id_rol_general == 17 || id_rol_general == 63 || id_rol_general == 70)   ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32] : ( (id_usuario_general == 2748 || id_usuario_general == 5957) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31]  : ((id_usuario_general==9495) ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 5, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 26, 27, 28, 29, 30, 31])),
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx] + ' ';
@@ -300,6 +301,245 @@ $(document).on('change', '#idResidencial, #idCondominioInventario, #idEstatus', 
                     return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
                 }
             },
+            /***********/
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return d.clave; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    let documentacionString = '';
+                    if(d.personalidad_juridica == 1){
+                        //32
+                        //persona moral: ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm
+                        if(d.actaConstitutiva_pm==1){
+                            documentacionString += '-ACTA CONSTITUTIVA<br>';
+                        }
+                        if(d.poder_pm==1){
+                            documentacionString += '-CARTA PODER<br>';
+                        }
+                        if(d.idOficialApoderado_pm==1){
+                            documentacionString += '-IDENTIFICACIÓN OFICIAL APODERADO<br>';
+                        }
+                    }
+                    else if(d.personalidad_juridica == 2){
+                        //31
+                        //persona fisica: ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf
+                        if(d.idOficial_pf==1){
+                            documentacionString += '-IDENTIFICACIÓN OFICIAL<br>';
+                        }
+                        if(d.idDomicilio_pf==1){
+                            documentacionString += '-COMPROBANTE DE DOMICILIO<br>';
+                        }
+                        if(d.actaMatrimonio_pf==1){
+                            documentacionString += '-ACTA DE MATRIMONIO<br>';
+                        }
+                    }
+                    return myFunctions.validateEmptyField(documentacionString); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return d.nombreCliente; // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.telefono1); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.telefono2); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.correo); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fecha_nacimiento); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.nacionalidad); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.originario_de); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.estado_civil); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.nombre_conyugue); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.regimen_matrimonial); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.domicilio_particular); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.ocupacion); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.empresa); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.puesto); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField( d.antiguedad); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.edadFirma); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.domicilio_empresa); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.telefono_empresa); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.tipo_vivienda); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.nombreCopropietario); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.referencia); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return '$'+myFunctions.number_format(d.precio); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return '$'+myFunctions.number_format(d.costom2f); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.municipio); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return '$'+myFunctions.number_format(d.importOferta); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.letraImport); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return '$'+myFunctions.number_format(d.saldoDeposito); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return '$'+myFunctions.number_format(d.aportMenusalOfer); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fecha1erAport); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fechaLiquidaDepo); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.fecha2daAport); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.referenciasPersonales); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            {
+                visible: (id_usuario_general == 9495) ? true : false,
+                data: function (d) {
+                    return myFunctions.validateEmptyField(d.observacion); // VALIDAR COPROPIETARIO NULL DESDE LA QUERY
+                }
+            },
+            /***********/
             {
                 data: function (d) {
                     return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
