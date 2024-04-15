@@ -431,7 +431,8 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0, 
+                    id_usuario_asignado = 0, id_gerente_asignado = 0, id_subdirector_asignado = 0, estatus_preproceso = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
                     if(!in_array($datos["tipo"],array(7, 8, 9))) {
@@ -603,7 +604,12 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        $id_sede = $id_usuario == 2148 ? '3' : ($id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede'));
+        if (in_array($id_usuario, [2148, 13995]))
+            $id_sede  = '3';
+        else if ($id_usuario == 13549)
+            $id_sede = '2, 5, 1';
+        else 
+            $id_sede = $this->session->userdata('id_sede');
         if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
             $filtroSede = "AND sede_residencial IN ($id_sede)";
 
@@ -1197,7 +1203,6 @@ class Reestructura_model extends CI_Model
     }
 
     public function getReporteEstatus() {
-
         return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
         re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, CAST(lo.referencia AS VARCHAR (250)) referenciaOrigen, CAST(lo.idLote AS VARCHAR (250)) idLoteOrigen,
             STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
@@ -1286,45 +1291,6 @@ class Reestructura_model extends CI_Model
       tb2.estatusProceso 
     ORDER BY 
         nombreLoteDestino")->result_array();
-
-        // return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
-        // re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
-        // STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
-        // STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        // hpl.fecha_modificacion fechaUltimoMovimiento
-        // FROM propuestas_x_lote pxl
-        // INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
-        // INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        // INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        // LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
-        // LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        // LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		// INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
-		// LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
-        // SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        // GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre, hpl.fecha_modificacion
-        // UNION ALL
-        // SELECT 'Reubicación' tipo_proceso, tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
-        // STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
-        // STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        // hpl.fecha_modificacion fechaUltimoMovimiento
-        // FROM (
-        // SELECT lf1.idLotePvOrigen, re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, 
-        // lo.referencia referenciaOrigen, lo.idLote idLoteOrigen, CASE WHEN (lo.validacionEnganche = 'NULL' OR lo.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion
-        // FROM lotesFusion lf1
-        // INNER JOIN lotes lo ON lo.idLote = lf1.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2
-        // INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        // INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        // WHERE lf1.origen = 1 AND lf1.destino = 0) tb
-        // INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen AND lf2.estatusTraspaso = 0
-        // INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1
-        // INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        // INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		// INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106
-        // LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = tb.idLotePvOrigen AND hpl.idHistoPreproceso = (
-        // SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        // GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion, hpl.fecha_modificacion
-        // ORDER BY nombreLoteDestino")->result_array();
     }
 
     public function getHistorialPorLote($idLote){

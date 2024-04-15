@@ -107,7 +107,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 </div>`;
             }
         },
-        
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteEstatus`,
