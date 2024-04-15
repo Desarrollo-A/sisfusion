@@ -1218,7 +1218,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
 
-        if($form->idPropuesta){
+        if(isset($form->idPropuesta)){
             $is_ok = $this->CasasModel->updatePropuesta($form->idPropuesta, $form->notaria, $form->fecha, $form->costo);
 
             $descripcion = "Se actualizo propuesta: $form->idPropuesta";

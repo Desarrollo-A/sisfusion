@@ -333,8 +333,6 @@ class Form{
 
             if(field.value()){
                 data.append(field.id, field.value())
-            }else{
-                data.append(field.id, null)
             }
         }
 
