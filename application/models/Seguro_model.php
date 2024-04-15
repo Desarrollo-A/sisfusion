@@ -657,4 +657,68 @@ class Seguro_model extends CI_Model {
             ORDER BY id_catalogo, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))");
         }
         
+        public function getDataPagosSeguro($val = '') {
+            $this->db->query("SET LANGUAGE Español;");
+            ini_set('memory_limit', -1);    
+    
+            $query = $this->db->query("SELECT re.descripcion nombreResidencial,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+			tv.tipo_venta,st.nombreStatus,pg.totalLote Precio_Total,(pg.porcentaje_abono * 100) porcentaje,pg.total_comision Comision_total,pg.abonado Comisiones_Pagadas,pg.pendiente Comisiones_pendientes,pg.fecha_modificacion,
+            (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
+			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,
+			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,opc.nombre AS estatusSeguro,
+			(CASE WHEN cl.estatusSeguro = 1 THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
+			FROM lotes l
+			INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
+			INNER JOIN condominios co ON co.idCondominio=l.idCondominio
+			INNER JOIN residenciales re ON re.idResidencial=co.idResidencial
+			INNER JOIN pago_seguro pg ON pg.id_lote=l.idLote
+			LEFT JOIN tipo_venta tv ON tv.id_tventa=l.tipo_venta
+			LEFT JOIN statuscontratacion st ON st.idStatusContratacion=l.idStatusContratacion
+            LEFT JOIN opcs_x_cats opc ON opc.id_opcion=cl.estatusSeguro AND opc.id_catalogo=125
+			INNER JOIN plan_comision_seguros pl ON pl.id_plan=1");
+    
+            return $query;
+        }
+        public function getDetallePlanesComisiones($idPlan)
+        {
+            $query = $this->db->query("SELECT pc.id_plan, pc.descripcion, pc.comGerente, rolGer.nombre AS gerente, pc.comAsesor, rolAse.nombre AS asesor,u.valorComision,
+			(CASE WHEN u.comentario != '' THEN u.comentario ELSE rol.nombre END) nombre
+            FROM plan_comision_seguros pc
+            INNER  JOIN opcs_x_cats rolGer ON rolGer.id_opcion = pc.gerente AND rolGer.id_catalogo = 1
+            INNER JOIN opcs_x_cats rolAse ON rolAse.id_opcion = pc.asesor AND rolAse.id_catalogo = 1
+			INNER JOIN usuariosPlanComisionSeguros u ON u.idPlan=pc.id_plan
+			INNER JOIN opcs_x_cats rol ON rol.id_opcion=u.rolComisionista AND rol.id_catalogo=1
+            WHERE pc.id_plan = $idPlan");
+            return $query;
+        }
+        public function getDatosAbonadoSuma11($idlote){
+            return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, c2.total_comision
+            FROM lotes lo
+            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
+            INNER JOIN comisiones_seguro c1 ON c1.id_lote=lo.idLote
+            LEFT JOIN (SELECT SUM(comision_total) total_comision, id_lote FROM comisiones_seguro WHERE estatus = 1 GROUP BY id_lote) c2 ON c2.id_lote = lo.idLote
+            INNER JOIN pago_seguro pac ON pac.id_lote = lo.idLote
+            LEFT JOIN pago_seguro_ind pci on pci.id_comision = c1.id_comision
+            WHERE c1.estatus = 1 AND lo.idLote in ($idlote)
+            GROUP BY lo.idLote,c2.total_comision
+            ");
+        }
+        
+        public function getDatosAbonadoDispersion($idlote){
+             return $this->db->query("SELECT com.id_comision, com.id_usuario, lo.totalNeto2, lo.idLote, res.idResidencial, lo.referencia, lo.tipo_venta, com.id_lote, 
+             lo.nombreLote, com.porcentaje_decimal, CONCAT(us.nombre,' ' ,us.apellido_paterno,' ',us.apellido_materno) colaborador,
+             (CASE WHEN us.id_usuario IN(15103) THEN 'EQUIPO ADMINISTRATIVO' ELSE oxc.nombre END) rol, 
+             com.comision_total, pci.abono_pagado, com.rol_generado,
+             com.descuento
+             FROM comisiones_seguro com
+             LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_seguro_ind 
+             GROUP BY id_comision) pci ON pci.id_comision = com.id_comision
+             INNER JOIN lotes lo ON lo.idLote = com.id_lote 
+             INNER JOIN usuarios us ON us.id_usuario = com.id_usuario
+             INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = com.rol_generado AND oxc.id_catalogo = 1
+             INNER JOIN condominios con ON con.idCondominio = lo.idCondominio
+             INNER JOIN residenciales res ON res.idResidencial = con.idResidencial
+             LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
+             WHERE com.id_lote = $idlote AND com.estatus = 1   ORDER BY com.rol_generado asc");
+         }
 }

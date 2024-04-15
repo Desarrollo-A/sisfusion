@@ -56,6 +56,11 @@ class Seguros extends CI_Controller
       $this->load->view('template/header');
       $this->load->view("comisiones/reporteLotesPorComisionistaSeguros_view");
   }
+  public function AutSeguros()
+  {
+    $this->load->view('template/header');
+    $this->load->view("comisiones/autSeguros-view");    
+  }
     /**--------------------------------------- */
     public function getDatosComisionesAsesor($a)
     {
@@ -434,5 +439,48 @@ class Seguros extends CI_Controller
           $condicionXUsuario = 'AND us.id_usuario = '.$this->session->userdata('id_usuario');
       }
       echo json_encode($this->Seguro_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
+  }
+  public function getDataPagosSeguro() {
+    $data['data'] = $this->Seguro_model->getDataPagosSeguro()->result_array();
+    echo json_encode($data);
+  }
+  public function getDetallePlanesComisiones($idPlan)
+  {
+      $data = $this->Seguro_model->getDetallePlanesComisiones($idPlan)->result_array();
+      $info = array();
+      $info['id_plan'] = $data[0]['id_plan'];
+      $info['descripcion'] = $data[0]['descripcion'];
+      $info['comisiones'][] = array(
+          'puesto' => $data[0]['asesor'],
+          'com' => $data[0]['comAsesor']
+      );
+      $info['comisiones'][] = array(
+          'puesto' => $data[0]['gerente'],
+          'com' => $data[0]['comGerente']
+      );
+      for ($m=0; $m < count($data) ; $m++) { 
+          $info['comisiones'][] = array(
+            'puesto' => $data[$m]['nombre'],
+            'com' => $data[$m]['valorComision']
+        );
+      }
+
+      echo json_encode($info);
+  }
+  function getDatosAbonadoSuma11($idlote){
+    echo json_encode($this->Seguro_model->getDatosAbonadoSuma11($idlote)->result_array());
+  }
+  function getDatosAbonadoDispersion($idlote){
+
+    echo json_encode($this->Seguro_model->getDatosAbonadoDispersion($idlote)->result_array());
+  }
+  public function changeStatusSeguro(){
+    $idCliente = $this->input->post('idCliente');
+    $estatusAut = $this->input->post('tipoAut');
+    $data = [
+      'estatusSeguro' => $estatusAut
+    ];
+   echo json_encode($this->General_model->updateRecord('clientes',$data,'id_cliente',$idCliente));
+
   }
 }

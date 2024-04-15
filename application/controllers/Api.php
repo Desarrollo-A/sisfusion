@@ -1703,7 +1703,16 @@ class Api extends CI_Controller
                                                                 'aply_pago_intmex' => 0,
                                                                 'fecha_pago_intmex' => 0
                                                             );
-                                                            $dbTransaction = $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc']);  
+                                                            //$dbTransaction = $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc']);
+                                                            $dataHistorialSeguros = array (
+                                                                'id_usuario' =>  1,
+                                                                'fecha_movimiento' => date("Y-m-d H:i:s"),
+                                                                'estatus' => 1,
+                                                                'comentario' => 'Dispersión pago desde sistema'
+                                                            );
+                                                            
+                                                            $dbTransaction = $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc'],$dataHistorialSeguros);  
+                                                            
                                                         }
                                                     }
                                                 } else {
