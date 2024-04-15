@@ -57,6 +57,9 @@ $('#tablaReporteReubicaciones').DataTable({
         { data: "nombreCondominio" },
         { data: "nombreLote" },
         { data: "idLote" },
+        { data: "supLoteOrigen" },
+        { data: "totalNeto2Sep" },
+        { data: "precioM2FinalOrigen" },
         { data: "nombreCliente" },
         { data: "nombreAsesor" },
         { data: "nombreGerente" },
@@ -74,6 +77,8 @@ $('#tablaReporteReubicaciones').DataTable({
         { data: "nombreResidencial2" },
         { data: "nombreCondominio2" },
         { data: "nombreLote2" },
+        { data: "idLoteDestino" },
+        { data: "supLoteDestino" },
         {
             data: function (d) {
                 return `<div class="d-flex justify-center">
