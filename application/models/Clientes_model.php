@@ -514,6 +514,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
+            else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
+                $where = "pr.id_gerente IN ($id_lider, 10251, 455)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

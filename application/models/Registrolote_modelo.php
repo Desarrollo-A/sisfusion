@@ -3533,6 +3533,9 @@
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
 					$id_lider = $id_lider . ', 6942';
 					$sede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+					$id_lider = $id_lider . ', 10251, 455';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes
