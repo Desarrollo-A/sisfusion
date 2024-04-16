@@ -83,7 +83,7 @@ class Usuarios_modelo extends CI_Model
                 else if($this->session->userdata('id_usuario') == 28) // 28	ADRIANA RODRIGUEZ
                     $id_sede = "(usuarios.id_sede IN ('2', '4', '13', '14', '15'))";
                 else if (in_array($this->session->userdata('id_usuario'), [30, 7401])) // 30 VALERIA PALACIOS / CLAUDIA LORENA SERRATO VEGA
-                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11'))";
+                    $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11', '19'))";
                 else if (in_array($this->session->userdata('id_usuario'), [6627])) // 30 JUANA GUZMAN
                     $id_sede = "(usuarios.id_sede IN ('6', '12')) AND";
                 else 
@@ -366,6 +366,7 @@ class Usuarios_modelo extends CI_Model
         $id_lider = $this->session->userdata('id_lider');
         switch ($type) {
             case '2': // SUBDIRECTOR
+                $validacionSede = '';
                 if ($headquarter == 12)
                     $validacionSede = " OR id_sede = '6'";
                 return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios 
