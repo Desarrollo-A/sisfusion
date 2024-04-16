@@ -179,8 +179,8 @@ $(document).ready (function() {
                                             file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
                                         }
                                     } else {
-                            file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
-                        }
+                                        file = '<a class="pdfLink btn-data btn-warning" data-Pdf="'+data.expediente+'" title= "Ver archivo" style="cursor:pointer;" data-nomExp="'+data.expediente+'"><i class="fas fa-file-pdf"></i></a>';
+                                    }
                                 }
                             }
                             else if (getFileExtension(data.expediente) == "xlsx" || getFileExtension(data.expediente) == "XLSX") {
@@ -257,7 +257,7 @@ $(document).ready (function() {
 $(document).on('click', '.pdfLink', function () {
     var $itself = $(this);
     Shadowbox.open({
-        content:    '<div style="height: 100%";><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+general_base_url+'static/documentos/cliente/expediente/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+        content:    '<div style="height: 100%";><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+$itself.attr('data-Pdf')+'"></iframe></div>',
         player:     "html",
         title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
         width:      985,
@@ -279,7 +279,7 @@ $(document).on('click', '.pdfLink2', function () {
 $(document).on('click', '.pdfLink3', function () {
     var $itself = $(this);
     Shadowbox.open({
-        content:    '<div style="height: 100%";><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+general_base_url+'static/documentos/cliente/contrato/'+$itself.attr('data-Pdf')+'"></iframe></div>',
+        content:    '<div style="height: 100%";><iframe style="overflow:hidden;width: 100%;height: -webkit-fill-available;" src="'+$itself.attr('data-Pdf')+'"></iframe></div>',
         player:     "html",
         title:      "Visualizando archivo: " + $itself.attr('data-nomExp'),
         width:      985,

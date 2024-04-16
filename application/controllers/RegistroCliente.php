@@ -1,6 +1,12 @@
 <?php
 
+require 'vendor/autoload.php';
+
+use Google\Cloud\Storage\StorageClient;
+
 class RegistroCliente extends CI_Controller {
+    private $bucket;
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -23,6 +29,12 @@ class RegistroCliente extends CI_Controller {
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
         $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+
+        $storage = new StorageClient([
+            'keyFilePath' => APPPATH . 'config/google.json'
+        ]);
+
+        $this->bucket = $storage->bucket('bucket_prueba_php');// maderascrm_bucket
     }
 	// EN ESTA PARTE SE REALIZA EL REGISTRO DE CLIENTES TODOS LOS CLIENTES EXCEPTO DE SAN LUIS Y DE CIUDAD MADERAS SUR
 	public function index (){
@@ -6057,7 +6069,7 @@ class RegistroCliente extends CI_Controller {
             $cond= strtoupper($condom);
             $numeroLote = preg_replace('/[^0-9]/','',$nombreLote);
             $date= date('dmYHis');
-            $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
+            $composicion = "EXPEDIENTE_".$proyecto."_".$cond.$numeroLote."_".$date;
 
             $nombArchivo= $composicion;
             $expediente=  eliminar_acentos($nombArchivo.'_'.$idCliente.'_'.$aleatorio);
@@ -6066,17 +6078,23 @@ class RegistroCliente extends CI_Controller {
 
 
             if ($fileExt == 'jpeg' || $fileExt == 'jpg' || $fileExt == 'png' || $fileExt == 'pdf'){
-                $carpeta = '';
-                if($tipodoc==31){
-                    $carpeta = 'autFechainicio';
-                }else{
-                    $carpeta = 'expediente';
-                }
-                $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$carpeta."/".$expediente.'.'.$fileExt);
 
-                $validaMove = $move == FALSE ? 0 : 1;
+                // $move = move_uploaded_file($_FILES["expediente"]["tmp_name"],"static/documentos/cliente/".$carpeta."/".$expediente.'.'.$fileExt);
 
-                if ($validaMove == 1) {
+                $path = $_FILES["expediente"]["tmp_name"];
+
+                $filename = $expediente . '.' . $fileExt;
+
+                $file = $this->bucket->upload(
+                    fopen($path, 'r'),
+                    [
+                        'name' => $filename,
+                    ]
+                );
+
+                // $validaMove = $move == FALSE ? 0 : 1;
+
+                if ($file->exists()) {
 
                     $arreglo=array();
                     $arreglo["expediente"] = $expediente.'.'.$fileExt;
@@ -6086,15 +6104,13 @@ class RegistroCliente extends CI_Controller {
                     $arreglo2["expediente"]= $expediente.'.'.$fileExt;
                     $arreglo2["modificado"]= date('Y-m-d H:i:s');
                     $arreglo2["idUser"]= $this->session->userdata('id_usuario');
+                    $arreglo2["bucket"] = 1;
                     $this->registrolote_modelo->editaRegistroCliente($idCliente,$arreglo);
                     $this->registrolote_modelo->updateDoc($arreglo2,$tipodoc,$idCliente,$idDocumento);
 
                     $response['message'] = 'OK';
                     echo json_encode($response);
 
-                } else if ($validaMove == 0){
-                    $response['message'] = 'ERROR 1';
-                    echo json_encode($response);
                 } else {
                     $response['message'] = 'ERROR';
                     echo json_encode($response);
