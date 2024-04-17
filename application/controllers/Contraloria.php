@@ -1749,7 +1749,7 @@ class Contraloria extends CI_Controller {
                         "id" => $this->input->post('id_prospecto'),
                         "propiedadRelacionada" => $idLote,
                         "fechaDeCompra" => date('Y-m-d'),
-                        "montoDelNegocio" => $totalNeto2,
+                        "montoDelNegocio" => $totalNeto2, 
                         "uid" => $this->input->post('uid'),
                         "etapa" => 'Contratado'
                     );
