@@ -1115,14 +1115,8 @@ function divSeleccionadosFusion(idLote, nombreLote, superficie){
             <div class="" id="checkDS">
                 <div class="container boxChecks p-0">
                     <label class="m-0 checkstyleDS">
-<<<<<<< HEAD
                         <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">
-                        
                         <span class="w-100 d-flex justify-between"> 
-=======
-                        <input type="checkbox" name="idLote[]" value="${idLote}" checked onclick="return false;">                        
-                        <span class="w-100 d-flex justify-between">
->>>>>>> 1338f1e8f7d06b3f79fa391473daf769a3fd046f
                             <p class="m-0">Lote <b>${nombreLote}</b></p>
                         </span>
                         <span class="w-100 d-flex justify-between">

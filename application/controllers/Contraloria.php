@@ -1677,6 +1677,10 @@ class Contraloria extends CI_Controller {
 
     public function editar_registro_lote_contraloria_proceceso9() {
         $idLote = $this->input->post('idLote');
+        //mio
+        $arregloMensualidades = array();
+        $arregloMensualidades['idLote'] = $idLote;
+
         $idCondominio = $this->input->post('idCondominio');
         $nombreLote = $this->input->post('nombreLote');
         $idCliente = $this->input->post('idCliente');
@@ -1687,7 +1691,11 @@ class Contraloria extends CI_Controller {
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
 
-        $mensualidades = $this->input->post('mensualidades');
+        $mensualidades = $this->input->post('mensualidad9');
+
+        if (!isset($mensualidadesGuardadas)) {
+            $mensualidadesGuardadas = $mensualidades;
+        }
 
         $charactersNoPermit = array('$',',');
         $totalNeto2 = str_replace($charactersNoPermit, '', $totalNeto2);
@@ -1695,7 +1703,7 @@ class Contraloria extends CI_Controller {
         
         $arregloMensualidades = array();
         $arregloMensualidades['id_lote'] = $idLote ;
-        $arregloMensualidades['mensualidad'] = $mensualidades;
+        //$arregloMensualidades['mensualidad'] = $mensualidades;
         $arregloMensualidades['estatus'] = 1;
         $arregloMensualidades['fecha_modificado'] = date("Y-m-d H:i:s");
         $arregloMensualidades['fecha_creacion'] = date("Y-m-d H:i:s");
@@ -1725,12 +1733,17 @@ class Contraloria extends CI_Controller {
         $arreglo2["idCondominio"] = $idCondominio;
         $arreglo2["idCliente"] = $idCliente;
 
+        $estatusContratacion = $arreglo["idStatusContratacion"];
+
         $validate = $this->Contraloria_model->validateSt9($idLote);
         $this->Contraloria_model->validate90Dias($idLote, $idCliente, $this->session->userdata('id_usuario'));
         
         if($validate == 1) {
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2, $arregloMensualidades) == TRUE) {
                 $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
+
+                $this->Contraloria_model->insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, 1, $mensualidadesGuardadas);
+
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
@@ -2081,6 +2094,11 @@ class Contraloria extends CI_Controller {
 		$nombreLote = $this->input->post('nombreLote');
 		$idCliente = $this->input->post('idCliente');
 		$comentario = $this->input->post('comentario');
+        $mensualidades = $this->input->post('mensualidad15');
+
+        if (!isset($mensualidadesGuardadas)) {
+            $mensualidadesGuardadas = $mensualidades;
+        }
 		$modificado = date('Y-m-d H:i:s');
 		$fechaVenc = $this->input->post('fechaVenc');
 		$idResidencial = $this->input->post('idResidencial');
@@ -2107,12 +2125,14 @@ class Contraloria extends CI_Controller {
 		$arreglo2["idLote"] = $idLote;  
 		$arreglo2["idCondominio"] = $idCondominio;          
 		$arreglo2["idCliente"] = $idCliente;   
+
+        $estatusContratacion = $arreglo["idStatusContratacion"];
 		
 		$validate = $this->Contraloria_model->validateSt15($idLote);
 		if($validate == 1){
 			if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) { 
 				$validacionContratoFirmado = $this->Contraloria_model->getContratoFirmado($idLote);
-				if (COUNT($validacionContratoFirmado) == 0) { // NO EXISTE LA RAMA ACTIVA DE CONTRATO FIRMADO, SE LELVA A CABO LA INSERCIÓN
+				if (COUNT($validacionContratoFirmado) == 0) { // NO EXISTE LA RAMA ACTIVA DE CONTRATO FIRMADO, SE LLEVA A CABO LA INSERCIÓN
 					$insertToData = array(
 						"movimiento" => 'CONTRATO FIRMADO',
 						"expediente" => '',
@@ -2128,6 +2148,18 @@ class Contraloria extends CI_Controller {
 						"estatus_validacion" =>0
 					);
 					$this->General_model->addRecord('historial_documento', $insertToData);
+                   
+                    if($this->Contraloria_model->validarMensualidad($idLote, $idCliente)){
+
+                        $this->Contraloria_model->updateMensualidad($mensualidades, $idLote, $idCliente, $mensualidadesGuardadas);
+                        
+                    }else{
+                    
+                        $this->Contraloria_model->insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, 1, $mensualidadesGuardadas);
+                    }
+
+                    //$this->Contraloria_model->insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, 1);  
+
 				}
 				$data['message'] = 'OK';
 				echo json_encode($data);
@@ -2269,7 +2301,6 @@ class Contraloria extends CI_Controller {
             echo json_encode($data);
         }
     }
-
 
     public function inventario_c() {
         $this->validateSession();
@@ -3334,7 +3365,6 @@ class Contraloria extends CI_Controller {
             else if ($accion == 2){
                $data["id_proceso"] = 1;
             }
-            
         }
 
         if ($rol == 12) {
@@ -3454,5 +3484,9 @@ class Contraloria extends CI_Controller {
         $registros = $this->Contraloria_model->getReporteCoincidenciasCT();
         echo json_encode($registros, JSON_NUMERIC_CHECK);
     }
-    
+
+    public function fillMensualidades() {
+        echo json_encode($this->Contraloria_model->getMensualidades()->result_array());
+    }
+
 }

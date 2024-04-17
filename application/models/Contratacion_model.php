@@ -84,7 +84,16 @@ class Contratacion_model extends CI_Model {
       lot.idStatusContratacion, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
       sl.background_sl, ISNULL(cl.tipo_casa, 0) tipo_casa, ISNULL(oxc2.nombre, 'SIN ESPECIFICAR') nombre_tipo_casa, lot.casa,
       sed.nombre as ubicacion, ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, ISNULL(sc.nombreStatus, 'SIN ESPECIFICAR') statusContratacion,
-      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso 
+      , ds.clave, cl.telefono1, cl.telefono2, cl.correo, cl.fecha_nacimiento, catNaci.nombre nacionalidad, cl.originario_de, catEdoCivil.nombre estado_civil,
+      cl.nombre_conyuge, catRegMat.nombre regimen_matrimonial, cl.domicilio_particular, cl.ocupacion, cl.empresa, cl.puesto, cl.antiguedad, 
+      cl.fecha_nacimiento as edad,
+	  cl.domicilio_empresa, cl.telefono_empresa, catalogoTipoViv.nombre tipo_vivienda, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
+      lot.referencia, lot.precio, ds.costom2f, ds.municipio, ds.importOferta, ds.letraImport, ds.saldoDeposito, 
+      ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
+	  ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
+      ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
+      cl.edadFirma
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -112,6 +121,14 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+      --nuevo
+      LEFT JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+      LEFT JOIN (SELECT id_cliente, STRING_AGG(nombre, ', ') nombreReferencias FROM referencias WHERE estatus = 1 GROUP BY id_cliente) ref ON ref.id_cliente = cl.id_cliente
+	  LEFT JOIN opcs_x_cats catalogoTipoViv ON catalogoTipoViv.id_opcion = cl.tipo_vivienda AND catalogoTipoViv.id_catalogo = 20
+	  LEFT JOIN opcs_x_cats catRegMat ON catRegMat.id_opcion = cl.regimen_matrimonial AND catRegMat.id_catalogo = 19
+	  LEFT JOIN opcs_x_cats catEdoCivil ON catEdoCivil.id_opcion = cl.estado_civil AND catEdoCivil.id_catalogo = 18
+	  LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11
+      --nuevo 
       WHERE lot.status = 1 $filtroEstatus $whereProceso
       ORDER BY lot.nombreLote");
         return $query->result_array();
@@ -265,7 +282,7 @@ class Contratacion_model extends CI_Model {
       cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, sc.nombreStatus as estatusContratacion,
       CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
       ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
-      ISNULL(oxc0.nombre, 'Normal') tipo_proceso
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -287,6 +304,8 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN prospectos pr ON pr.id_prospecto = cl.id_prospecto    
       LEFT JOIN statusContratacion sc ON sc.idStatusContratacion = lot.idStatusContratacion 
       LEFT JOIN sedes sed ON sed.id_sede = lot.ubicacion
+      LEFT JOIN (SELECT id_cliente, estatus, STRING_AGG(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno), ' - ') nombreCopropietario
+      FROM copropietarios GROUP BY id_cliente, estatus) co ON co.id_cliente = cl.id_cliente AND co.estatus = 1
       LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97

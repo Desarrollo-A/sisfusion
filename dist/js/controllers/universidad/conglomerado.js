@@ -251,11 +251,25 @@ function loadTable(tipoDescuento) {
                     base = `<button href="#" value="${d.id_usuario}" data-value="${d.nombre}" data-code="${d.id_usuario}" class="btn-data btn-green consultar_fecha_pagos" title="Consulta de saldos"><i class="fas fa-file"></i></button>
                     <button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" data-descuento="${d.id_descuento}" data-certificacion="${d.idCertificacion}" class="btn-data btn-gray btn_certificacion" id="btn_certificacion" name="btn_certificacion" title="Asignar certificación"><i class="fas fa-closed-captioning"></i></button>`;
                 }
-                // d.saldo_comisiones >= 12500 &&
-                if ( d.saldo_comisiones >= d.pago_individual &&  (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && (id_rol_general != 49 || id_usuario_general != 6376)) {
+
+                var fechaCreacion = new Date(d.nueva_fecha);
+                var fechaActual = new Date();
+
+                var mesActual = parseInt(fechaActual.getMonth()) + 1;
+                console.log("Mes actual (entero):", mesActual);
+
+                //cambiarlo a 3 meses
+                var tresMesesDespues = new Date(fechaCreacion);
+                tresMesesDespues.setMonth(tresMesesDespues.getMonth() + 3);
+
+                var mesTresMesesDespues = parseInt(tresMesesDespues.getMonth()) + 1;
+                console.log("Mes después de agregar tres meses (entero):", mesTresMesesDespues);
+
+                if (fechaActual >= tresMesesDespues && d.saldo_comisiones >= d.pago_individual &&  (d.estatus == 1 || d.banderaReactivado == 1) && d.pendiente > 1 && d.estado_usuario == 1 && (id_rol_general != 49 || id_usuario_general != 6376)) {
                     valor = Math.floor(d.saldo_comisiones/d.pago_individual);
                     pendiente = Math.floor(d.pendiente/d.pago_individual);
                     pagosDescontar = valor>pendiente ? d.pendiente : valor*d.pago_individual;
+                    
                     adicionales = `<button href="#" value="${d.id_usuario}" data-value="${pagosDescontar}" data-saldoComisiones="${d.saldo_comisiones}" data-nombre="${d.nombre}" data-code="${d.cbbtton}" class="btn-data btn-violetDeep aplicarDescuentoMensual" title="Aplicar descuento"><i class="fas fa-plus"></i></button>`;
                 } 
 

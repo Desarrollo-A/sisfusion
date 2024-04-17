@@ -144,6 +144,7 @@ function getAssimilatedCommissions(proyecto, condominio, tipo){
 
     }else{
         alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
+        return false;p
     }
 
 

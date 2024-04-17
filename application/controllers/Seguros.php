@@ -361,7 +361,7 @@ class Seguros extends CI_Controller
               
               if( $resultado ){
                 $xml_subido = $this->upload->data();
-                $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+                $datos_xml = $this->Seguro_model->leerxml( $xml_subido['full_path'], TRUE );
                 $total = (float)$this->input->post('total');
                 $totalXml = (float)$datos_xml['total'];
                 
