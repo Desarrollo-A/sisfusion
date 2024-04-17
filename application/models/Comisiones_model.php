@@ -249,7 +249,8 @@ class Comisiones_model extends CI_Model {
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
         lor.sup AS supAnt, l.sup AS supAct, 
-        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion,l.totalNeto2 as Precio_Total, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes
+        ISNULL(pc.abonado,0) abonadoAnterior,ISNULL(sumComisionReu.sumComisiones,0) sumComisionesReu,lof.sumaFusion,l.totalNeto2 as Precio_Total, pc.porcentaje_abono as Comision_total, pc.ultimo_pago as Comisiones_Pagadas, pc.pendiente as Comisiones_pendientes,
+        mc.opcion as opcionMensualidad, ISNULL(opc_mc.nombre, 'Mensualidad No Existente') AS nombreMensualidad
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -276,6 +277,8 @@ class Comisiones_model extends CI_Model {
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
         LEFT JOIN (SELECT SUM(comision_total) AS sumComisiones,id_lote,idCliente FROM comisiones GROUP BY id_lote,idCliente) sumComisionReu ON sumComisionReu.id_lote = lor.idLote AND sumComisionReu.idCliente = cl.id_cliente_reubicacion_2
         LEFT JOIN (SELECT SUM(totalNeto2) as sumaFusion,idLotePvOrigen FROM lotesFusion WHERE origen=1 GROUP BY idLotePvOrigen) lof ON lof.idLotePvOrigen=clr.idLote
+        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote
+        LEFT JOIN opcs_x_cats opc_mc ON opc_mc.id_opcion = mc.opcion AND opc_mc.id_catalogo= 126
         WHERE l.idLote IN (7167,7168,10304,17231,18338,18549,23730,27250,25836) 
         AND l.registro_comision not IN (7) 
         AND (pc.bandera IN (0,100) OR pc.bandera IS NULL)
@@ -1513,15 +1516,16 @@ class Comisiones_model extends CI_Model {
 
     public function getDatosAbonadoSuma11($idlote,$ooam){
         // validar 
-        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura
+        return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, pac.total_comision, c2.abono_pagado, lo.totalNeto2, cl.lugar_prospeccion,cl.estructura,mc.opcion
         FROM lotes lo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
         INNER JOIN comisiones c1 ON lo.idLote = c1.id_lote AND c1.estatus = 1
         LEFT JOIN (SELECT SUM(comision_total) abono_pagado, id_comision FROM comisiones WHERE descuento in (1) AND estatus = 1 GROUP BY id_comision) c2 ON c1.id_comision = c2.id_comision
         INNER JOIN pago_comision pac ON pac.id_lote = lo.idLote
         LEFT JOIN pago_comision_ind pci on pci.id_comision = c1.id_comision
+        LEFT JOIN mensualidad_cliente mc ON mc.id_lote = lo.idLote
         WHERE lo.status = 1 AND cl.status = 1 AND c1.estatus = 1 AND lo.idLote in ($idlote)
-        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado,cl.estructura");
+        GROUP BY lo.idLote, lo.referencia, pac.total_comision, lo.totalNeto2, cl.lugar_prospeccion, c2.abono_pagado,cl.estructura,mc.opcion");
     }
 
     function update_pago_comision($ideLote, $TOTALCOMISION, $PORCETOTAL, $ABONOCONTRALORIA, $PENDICONTRALORIA){

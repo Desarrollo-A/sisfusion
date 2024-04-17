@@ -198,8 +198,10 @@ $("#tabla_ingresar_9").ready(function () {
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
         $("#rl").val("");
+        $("#mensualidad9").val("");
         $("#residencia").val(residencia);
         $("#rl").selectpicker('refresh');
+        $("#mensualidad9").selectpicker('refresh');
         $("#residencia").selectpicker('refresh');
     });
 
@@ -224,6 +226,10 @@ $(document).on('click', '#save1', function (e) {
     var comentario = $("#comentario").val();
     var totalNeto2 = $("#totalNeto2").val();
     var rl = $("#rl").val();
+    var mensualidad9 = $("#mensualidad9").val();
+    var mensaValida = ($("#mensualidad9").val().length != 0) ? 1 : 0;
+    mensaValida = parseInt(mensaValida); 
+    console.log(mensaValida);
     var residencia = $("#residencia").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
@@ -238,14 +244,15 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
+    dataExp1.append("mensualidad9", mensualidad9);
     dataExp1.append("residencia", residencia);
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
+    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || mensaValida == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
-    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {
+    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && mensaValida == 1) {
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso9`,
@@ -338,6 +345,7 @@ $(document).on('click', '#save3', function (e) {
 
 jQuery(document).ready(function () {
     fillSelectsForV9();
+    fillMensualidades();
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
@@ -376,5 +384,14 @@ function fillSelectsForV9() {
         }
         $('#rl').selectpicker('refresh');
         $('#residencia').selectpicker('refresh');
+    });
+}
+
+function fillMensualidades() {
+    $.getJSON("fillMensualidades").done(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $('#mensualidad9').selectpicker('refresh');
     });
 }
