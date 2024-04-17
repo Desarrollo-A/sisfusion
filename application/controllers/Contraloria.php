@@ -1089,10 +1089,10 @@ class Contraloria extends CI_Controller {
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
                 
-                if ($id_asig == 5468)
+                if ($id_asig == 15418)
                     $assigned_user = 2764;
                 else if ($id_asig == 2764)
-                    $assigned_user = 5468;
+                    $assigned_user = 15418;
 
                 $arreglo["asig_jur"] = $assigned_user;
             } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
