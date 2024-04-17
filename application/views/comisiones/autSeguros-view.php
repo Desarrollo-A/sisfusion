@@ -23,6 +23,10 @@
                         <div class="modal-body">
                             <input type="hidden" name="tipoAut" id="tipoAut">
                             <input type="hidden" name="idCliente" id="idCliente">
+                            <div class="form-group">
+                                <label>Observaciones</label>
+                                <textarea class="text-modal" id="observaciones" name="observaciones" rows="3"></textarea>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <div class="col-lg-12">
@@ -35,7 +39,6 @@
             </div>
         </div>
 
-        <!-- modal verifyNEODATA -->
         <div class="modal fade modal-alertas" id="modalComisiones" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -45,6 +48,27 @@
                             <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modal-alertas" id="modalHistorial" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                        <div class="modal-body">
+                            <div role="tabpanel">
+                                <h6 id="nameLote"></h6>
+                                <div class="container-fluid" id="changelogTab">
+                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3 historialSeguros" id=""></ul>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                        </div>
                 </div>
             </div>
         </div>
@@ -79,8 +103,13 @@
                                     <h3 class="card-title center-align" >Comisiones Seguros Maderas</h3>
                                 </div>
                                 <div class="toolbar">
-                                    <div class="container-fluid">
-                                        <div class="row aligned-row"></div>
+                                    <div class="row">
+                                        <div class="col-12 col-sm-4 col-md-4 col-lg-4 m-0 overflow-hidden">
+                                            <div class="form-group select-is-empty">
+                                                <label for="proyecto" class="control-label">Estatus</label>
+                                                <select name="estatusSeguro" id="estatusSeguro" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="material-datatables">
@@ -94,7 +123,7 @@
                                                     <th>ID LOTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>TIPO DE VENTA</th>
-                                                    <th>CONTRATACIÓN</th>
+                                                    <th id="filterInfo">CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
                                                     <th>PRECIO FINAL SEGURO</th>
                                                     <th>% COMISION TOTAL</th>

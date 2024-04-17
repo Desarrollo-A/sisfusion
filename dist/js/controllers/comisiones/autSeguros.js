@@ -7,12 +7,24 @@ $(document).ready(function () {
         $('[data-toggle="tooltip"], [title]:not([data-toggle="popover"])').tooltip('destroy');
     });
 
+    $.post(general_base_url+"General/getOpcionesPorCatalogo/125", function (data) {
+        $('[data-toggle="tooltip"]').tooltip()
+        var len = data.length;
+        for (var i = 0; i < len; i++) {
+            var id = data[i]['id_opcion'];
+            var name = data[i]['nombre'];
+            $("#estatusSeguro").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#estatusSeguro").selectpicker('refresh');
+    }, 'json');
+
     let titulos_intxt = [];
     $('#tabla_comisiones_seguro thead tr:eq(0) th').each( function (i) {
         $(this).css('text-align', 'center');
         var title = $(this).text();
         titulos_intxt.push(title);
-            $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="'+title+'"/>' );
+       let id = i == 6 ? 'id="filterInfo"' : '';
+            $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" ${id} data-placement="top" title="${title}" placeholder="${title}"/>` );
             $( 'input', this ).on('keyup change', function () {
                 if ($('#tabla_comisiones_seguro').DataTable().column(i).search() !== this.value ) {
                     $('#tabla_comisiones_seguro').DataTable().column(i).search(this.value).draw();
@@ -25,7 +37,7 @@ $(document).ready(function () {
         });
     });
     
-    activasDataTable = $('#tabla_comisiones_seguro').dataTable({
+    segurosDataTable = $('#tabla_comisiones_seguro').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX: true,
@@ -36,9 +48,9 @@ $(document).ready(function () {
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
                 titleAttr: 'Descargar archivo de Excel',
-                title: 'Reporte Comisiones Activas',
+                title: 'Comisiones seguros',
                 exportOptions: {
-                    columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                    columns: [0,1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header:  function (d, columnIdx) {
                             return ' ' + titulos_intxt[columnIdx]  + ' ';
@@ -80,7 +92,7 @@ $(document).ready(function () {
                     return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span>`;
             }},
             { data: function (d) {
-                return `<span class="label ${d.colorContratacion}">${d.idStatusContratacion}</span>`;
+                return `<span class="label ${d.colorContratacion}">${d.idStatusContratacion}</span><br><span class="label ${d.colorSeguro}">${d.estatusSeguro}</span>`;
             }},
             { data: function (d) {
                 return labelEstatus =`<label class="label lbl-azure btn-dataTable" data-toggle="tooltip"  data-placement="top"  title="VER MÁS DETALLES"><b><span  onclick="showDetailModal(${d.id_plan})" style="cursor: pointer;">${d.plan_comision}</span></label>`;
@@ -101,14 +113,14 @@ $(document).ready(function () {
                 return formatMoney(d.Comisiones_pendientes);
             }},
             { data: function (d) {
-                    return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span><br><span class="label ${d.colorSeguro}">${d.estatusSeguro}</span>`;
+                    return `<span class="label lbl-azure">${moment(d.fecha_modificacion.split('.')[0],'YYYY/MM/DD HH:mm:ss').format('DD/MM/YYYY HH:mm:ss')}</span>`;
                 
             }},
             { data: function (d) {
                         let botonView = `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" class="btn-data btn-green verify_neodata" title="VERIFICAR COMISIONES"><span class="material-icons">verified_user</span></button>`,
-                            botonAutorizar = [1,3].indexOf(d.idestatusSeguro) ?  `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="2" class="btn-data btn-violetDeep aut" title="Autorizar comisiones"><span class="material-icons">thumb_up</span></button>` : '',
+                            botonAutorizar = [1,3].indexOf(parseInt(d.idestatusSeguro)) >= 0 ?  `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="2" class="btn-data btn-violetDeep aut" title="Autorizar comisiones"><span class="material-icons">thumb_up</span></button>` : '',
                             botonRechazar = d.idestatusSeguro == 1 ? `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" data-tipoAut="3" class="btn-data btn-warning aut" title="Rechazar comisiones"><span class="material-icons">thumb_down</span></button>` : '',
-                            botonHistorial = `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" class="btn-data btn-gray verify_neodata" title="Historial movimientos"><span class="material-icons">info</span></button>`;
+                            botonHistorial = `<button href="#" value="${d.idLote}"  data-cliente="${d.id_cliente}" data-nombreLote="${d.nombreLote}" data-totalLote="${d.Precio_Total}" class="btn-data btn-gray historial" title="Historial movimientos"><span class="material-icons">info</span></button>`;
                 return `<div class="d-flex justify-center">`+botonView + botonAutorizar + botonRechazar + botonHistorial+`</div>`;
             }}  
         ],
@@ -132,6 +144,7 @@ $(document).ready(function () {
 
     
 $("#tabla_comisiones_seguro tbody").on('click', '.aut', function () {
+    $('#observaciones').val('');
     const nombreLote = $(this).attr("data-nombreLote");
     const idCliente = $(this).attr("data-cliente");
     const cadena = $(this).attr("data-tipoAut") == 2 ? 'Autorizar' : 'Rechazar';
@@ -143,23 +156,42 @@ $("#tabla_comisiones_seguro tbody").on('click', '.aut', function () {
     $("#modalAut").modal();
 });
 
+$("#tabla_comisiones_seguro tbody").on('click', '.historial', function (e) {
+    //e.stopImmediatePropagation();
+    const idCliente = $(this).attr("data-cliente");
+    $("#modalHistorial .modal-header").html("");
+    $("#modalHistorial .modal-body").html("");
+    $("#modalHistorial .modal-body").append(`<p><h5 style="color: black;">HISTORIAL MOVIENTOS SEGURO <b style="color:#39A1C0; text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;"></b></h5></p>`);
+    //$("#modalHistorial").modal();     
+
+    $.getJSON(general_base_url+ "Seguros/getHistorialSeguro/" + idCliente).done(function (data) {
+        console.log(data);
+        $.each(data, function (i, v) {
+            console.log(v)
+            $("#modalHistorial .historialSeguros").append(`<div class="col-lg-12"><p><i style="color:BLACK;">${v.observaciones}</i><br><b style="color:#39A1C0">${v.fechaCreacion}</b><b style="color:gray;"> - ${v.nombreUsuario}</b></p></div>`);
+        });
+      data.length == 0 ?  alerts.showNotification("top", "right", "No se encontraron observaciones", "warning") :   $("#modalHistorial").modal();
+    });  
+});
+
 
     $("#tabla_comisiones_seguro tbody").on("click", ".verify_neodata", async function(){ 
         $("#modalComisiones .modal-header").html("");
         $("#modalComisiones .modal-body").html("");
+        
         var tr = $(this).closest('tr');
         var row = $('#tabla_comisiones_seguro').DataTable().row(tr);
         idLote = $(this).val();
         nombreLote = $(this).attr("data-nombreLote");
         precioSeguro = $(this).attr("data-totalLote");
         idCliente = $(this).attr("data-cliente");
-        $.getJSON( general_base_url + "Seguros/getDatosAbonadoSuma11/"+idLote).done( function( data1 ){
+        $.getJSON( general_base_url + "Seguros/getAbonado/"+idLote).done( function( data1 ){
             var counts=0;
             $("#modalComisiones .modal-body").append(`<div class="row"><div class="col-md-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div><div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(data1[0].abonado)}</b></div><div class="col-md-4">Total pendiente: <b  style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div></div>`);
             $("#modalComisiones .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio del seguro: ${formatMoney(precioSeguro)}</b></h4></div>
             </div>`);
             $.getJSON( general_base_url + "Seguros/getDatosAbonadoDispersion/"+idLote).done( function( data ){
-                $("#modalComisiones .modal-body").append('<div class="row rowTitulos"><div class="col-md-3"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div><div class="col-md-2"><b>DISPONIBLE</b></div></div>');
+                $("#modalComisiones .modal-body").append('<div class="row rowTitulos"><div class="col-md-4"><p style="font-size:10px;"><b>USUARIOS</b></p></div><div class="col-md-1"><b>%</b></div><div class="col-md-2"><b>TOTAL DE LA COMISIÓN</b></div><div class="col-md-2"><b><b>ABONADO</b></div><div class="col-md-2"><b>PENDIENTE</b></div></div>');
                 $.each( data, function( i, v){
                     saldo =0;
                     if(parseFloat(v.abono_pagado) > 0){
@@ -200,7 +232,7 @@ $("#tabla_comisiones_seguro tbody").on('click', '.aut', function () {
                     }
                     $("#modalComisiones .modal-body").append(`
                     <div class="row">
-                        <div class="col-md-3 ">
+                        <div class="col-md-4 ">
                             <label class="control-label labelNombre hide">USUARIO</label>
                             <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style=" font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                             <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b>
@@ -220,10 +252,6 @@ $("#tabla_comisiones_seguro tbody").on('click', '.aut', function () {
                         <div class="col-md-2">
                             <label id="" class="control-label labelPendiente hide">Pendiente</label>
                             <input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}">
-                        </div>
-                        <div class="col-md-2">
-                            <label id="" class="control-label labelDisponible hide">Disponible</label>
-                            <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}">
                         </div>
                     </div>`);
                     counts++
@@ -253,6 +281,7 @@ $('#formAut').on('submit', function (e) {
             if (data) {
                 $('#modalAut').modal("hide");
                 document.getElementById('btnAcept').disabled = false;
+                document.getElementById("formAut").reset();
                 alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                 $('#tabla_comisiones_seguro').DataTable().ajax.reload();
                 $('#spiner-loader').addClass('hide');
@@ -434,3 +463,14 @@ function responsive(maxWidth) {
 var maxWidth = window.matchMedia("(max-width: 992px)");
 responsive(maxWidth);
 maxWidth.addListener(responsive);
+
+
+$("#estatusSeguro").change(function() {
+    var	valor = $(this).val();
+
+    alert();
+    segurosDataTable.on('search.dt', function () {
+        $('#filterInfo').val(valor);
+      //  $('#filterInfo').html('Currently applied global search: ' + segurosDataTable.search('pendiente'));
+    });
+});

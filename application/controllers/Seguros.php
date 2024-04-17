@@ -467,8 +467,8 @@ class Seguros extends CI_Controller
 
       echo json_encode($info);
   }
-  function getDatosAbonadoSuma11($idlote){
-    echo json_encode($this->Seguro_model->getDatosAbonadoSuma11($idlote)->result_array());
+  function getAbonado($idlote){
+    echo json_encode($this->Seguro_model->getAbonado($idlote)->result_array());
   }
   function getDatosAbonadoDispersion($idlote){
 
@@ -477,10 +477,19 @@ class Seguros extends CI_Controller
   public function changeStatusSeguro(){
     $idCliente = $this->input->post('idCliente');
     $estatusAut = $this->input->post('tipoAut');
-    $data = [
-      'estatusSeguro' => $estatusAut
+    $observaciones = $this->input->post('observaciones');
+    $dataInsert = [
+      "estatus" => $estatusAut,
+      "idCliente" => $idCliente,
+      "idUsuario" => $this->session->userdata('id_usuario'),
+      "observaciones" => $observaciones,
+      "fechaCreacion" => date("Y-m-d H:i:s")
     ];
-   echo json_encode($this->General_model->updateRecord('clientes',$data,'id_cliente',$idCliente));
-
+    $data = ['estatusSeguro' => $estatusAut];
+    $this->General_model->addRecord("historialSeguros", $dataInsert);
+    echo json_encode($this->General_model->updateRecord('clientes',$data,'id_cliente',$idCliente));
+  }
+  function getHistorialSeguro($idCliente){
+    echo json_encode($this->Seguro_model->getHistorialSeguro($idCliente));
   }
 }

@@ -171,7 +171,7 @@ class Seguro_model extends CI_Model {
              INNER JOIN sedes sed ON sed.id_sede = 2 and sed.estatus = 1
              LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
              LEFT JOIN (SELECT id_usuario, fecha_creacion, estatus FROM opinion_cumplimiento WHERE estatus = 1) opt ON opt.id_usuario = com.id_usuario
-             WHERE pci1.estatus IN ($estado) AND lo.idStatusContratacion > 8   AND com.id_usuario = $user_data
+             WHERE pci1.estatus IN ($estado) AND cl.estatusSeguro = 2   AND com.id_usuario = $user_data
              GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, pac.totalLote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata,
              pci1.pago_neodata, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, oxcpj.nombre, u.forma_pago,pci1.id_pago_i, pac.porcentaje_abono, oxcest.nombre, sed.impuesto, 
              pac.bonificacion, cl.lugar_prospeccion, opt.fecha_creacion, opt.estatus, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2");
@@ -691,7 +691,7 @@ class Seguro_model extends CI_Model {
             WHERE pc.id_plan = $idPlan");
             return $query;
         }
-        public function getDatosAbonadoSuma11($idlote){
+        public function getAbonado($idlote){
             return $this->db->query("SELECT SUM(pci.abono_neodata) abonado, c2.total_comision
             FROM lotes lo
             INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente
@@ -721,4 +721,10 @@ class Seguro_model extends CI_Model {
              LEFT JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = com.rol_generado AND oxc2.id_catalogo = 83
              WHERE com.id_lote = $idlote AND com.estatus = 1   ORDER BY com.rol_generado asc");
          }
+         public function getHistorialSeguro($idCliente){
+            return $this->db->query("SELECT h.*,opc.nombre,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) nombreUsuario
+            FROM historialSeguros h 
+            INNER JOIN opcs_x_cats opc ON opc.id_opcion=h.estatus AND opc.id_catalogo=125
+            INNER JOIN usuarios u ON u.id_usuario=h.idUsuario WHERE idCliente=$idCliente ORDER BY h.fechaCreacion")->result_array();
+        }
 }
