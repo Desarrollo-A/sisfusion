@@ -192,9 +192,9 @@ $("#Jtabla").ready(function () {
                             cntActions += `<li><button href="#" title= "Código de barras" data-lote="${data.cbbtton}" class="btn btn-primary btn-round btn-fab btn-fab-mini barcode" title="Ver código"> <span class="material-icons">select_all</span></button></li><br>`;
                         } else
                             cntActions = 'N/A';
-                        if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747, 13498, 15041, 15042, 15044, 15387).includes(user))
+                        if (Array(2762, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 2747, 13498, 15041, 15042, 15044, 15387, 15455).includes(user))
                             cntActions += `<li><button href="#" title= "Cambio de sede" data-nomLote="${data.nombreLote}" data-lote="${data.idLote}" class="btn btn-secondary btn-round btn-fab btn-fab-mini change_sede"><span class="material-icons">pin_drop</span></button></li><br>`;
-                        if (Array(1, 2, 4, 5, 3, 12, 15, 16, 6, 8, 13).includes(parseInt(data.ubicacion)) && Array(2762, 2845, 2747, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 13498, 15041, 15042, 15044, 15387).includes(user))
+                        if (Array(1, 2, 4, 5, 3, 12, 15, 16, 6, 8, 13).includes(parseInt(data.ubicacion)) && Array(2762, 2845, 2747, 6096, 6864, 10937, 10938, 12136, 12173, 13015, 13498, 15041, 15042, 15044, 15387, 15455).includes(user))
                             cntActions += `<li><button href="#" title= "Reasignacion" data-nomLote="${data.nombreLote}" data-usuario="${data.juridico}" data-lote="${data.idLote}" class="btn btn-warning btn-round btn-fab btn-fab-mini change_user"><span class="material-icons">find_replace</span></button></li><br>`;
                         var color = (data.idMovimiento == 36) ? '#58D68D' : (data.idMovimiento == 23) ? '#F39C12' : '#85929E';
                         var label = (data.idMovimiento == 36) ? 'NUEVO' :

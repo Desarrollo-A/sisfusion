@@ -741,7 +741,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function val_ub($idLote){
         $this->db->select('ubicacion');
         $this->db->where("idLote",$idLote);
-        $this->db->where_in('ubicacion', array('1', '2', '4', '5', '3', '15', '16', '6', '8'));
+        $this->db->where_in('ubicacion', array('1', '2', '4', '5', '3', '15', '16', '6', '8', '11'));
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? array(0 => array('ubicacion' => 0)) : $query->result_array();
         return $valida;
