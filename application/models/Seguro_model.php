@@ -34,7 +34,7 @@ class Seguro_model extends CI_Model {
     }
 
     function getInfoLote($referencia, $empresa, $nombreLote){
-        $query = $this->db->query("SELECT lo.idLote , idCliente
+        $query = $this->db->query("SELECT lo.idLote , idCliente,idCondominio
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -44,7 +44,10 @@ class Seguro_model extends CI_Model {
 
 
 
-    function getPlanComision($idAsesor, $idGerente,$totalSeguro){
+    function getPlanComision($idAsesor, $idGerente,$totalSeguro,$divisorCompartida,$idAsesor2 = 0, $idGerente2 = 0){
+        $sqlAsesor = $idAsesor2 != 0 ? "OR u1.id_usuario = $idAsesor2" : "";
+        $sqlGerente = $idGerente2 != 0 ? "OR u1.id_usuario = $idGerente2" : "";
+        $divisorGerente = ($divisorCompartida == 2 && $idGerente2 == 0) ? 1 : $divisorCompartida;
         $query = $this->db->query("DECLARE @idAsesor INT=$idAsesor,@idGerente INT = $idGerente, @totalSeguro FLOAT = $totalSeguro
             /* DIRECTOR */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, up.valorComision porcentaje_decimal, ((@totalSeguro/100)*(up.valorComision)) comision_total, 
@@ -56,19 +59,19 @@ class Seguro_model extends CI_Model {
         INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
         )
         UNION
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAsesor porcentaje_decimal, ((@totalSeguro/100)*(pl.comAsesor)) comision_total,
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAsesor / $divisorCompartida porcentaje_decimal, ((@totalSeguro/100)*(pl.comAsesor / $divisorCompartida)) comision_total,
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
             opc.nombre as detail_rol, 3 rolVal
             FROM plan_comision_seguros pl
-            INNER JOIN usuarios u1 ON u1.id_usuario = @idAsesor
+            INNER JOIN usuarios u1 ON u1.id_usuario = @idAsesor $sqlAsesor
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
         )
         UNION
-        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comGerente porcentaje_decimal, ((@totalSeguro/100)*(pl.comGerente)) comision_total,
+        (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comGerente / $divisorGerente porcentaje_decimal, ((@totalSeguro/100)*(pl.comGerente / $divisorGerente)) comision_total,
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.gerente as id_rol, 
             opc.nombre as detail_rol, 2 rolVal
             FROM plan_comision_seguros pl
-            INNER JOIN usuarios u1 ON u1.id_usuario = @idGerente
+            INNER JOIN usuarios u1 ON u1.id_usuario = @idGerente $sqlGerente
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
         )
         UNION
@@ -726,5 +729,41 @@ class Seguro_model extends CI_Model {
             FROM historialSeguros h 
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=h.estatus AND opc.id_catalogo=125
             INNER JOIN usuarios u ON u.id_usuario=h.idUsuario WHERE idCliente=$idCliente ORDER BY h.fechaCreacion")->result_array();
+        }
+
+        public function InsertCli($datos){
+            $user = $this->session->userdata;
+            $id_usuario = $user['id_usuario'] ;
+            $dataCliente = array(
+                'id_asesor' => 0,
+                'id_coordinador' => 0,
+                'id_gerente' => 0,
+                'id_sede' => $user['id_sede'],
+                'nombre' => $datos['nombre'],
+                'apellido_paterno' => $datos['app'],
+                'apellido_materno' => $datos['apm'],
+                'rfc' => 0,
+                'correo' => 0,
+                'telefono1' => 0,
+                'telefono2' => 0,
+                'estado_civil' => 0,
+                'regimen_matrimonial' => 0 ,
+                'domicilio_particular' => '',
+                'originario_de' => 0,
+                'ocupacion' => 0,
+                'status' => 1,
+                'idLote' => $datos['idLote'],
+                'usuario' => $user['usuario'],
+                'idCondominio' => $datos['idCondominio'],
+                'fecha_creacion' => date('Y-m-d h:i:s'),
+                'fechaApartado' => date('Y-m-d h:i:s'),
+                'creado_por' => $this->session->userdata('id_usuario'),
+                'fecha_modificacion' => date('Y-m-d h:i:s'),
+                'estatusSeguro' => 1
+            );
+            $this->db->insert('clientes', $dataCliente);
+            $idCliente = $this->db->query("SELECT IDENT_CURRENT('clientes') idCliente")->row()->idCliente;
+            $this->db->query("UPDATE lotes SET idCliente = $idCliente, usuario = $id_usuario WHERE idLote = ".$datos['idLote']." ");      
+            return $idCliente;
         }
 }

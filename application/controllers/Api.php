@@ -1733,13 +1733,28 @@ class Api extends CI_Controller
                                                     $message = 'Alguno de los datos (referencia, empresa, nombre de Lote ) no se encuentra registrados U ( Asesor o gerente no valido por CRM)';
                                                 }
                                                 else { // los datos de referencia, lote y empresa sí están bien.
-                                                    $idCliente = $getInfoLote->idCliente;
+                                                    $datosCliente = array(
+                                                        "nombre" => $dataReturn3->seguros[$contadorPrimer]->nombre,
+                                                        "app" => $dataReturn3->seguros[$contadorPrimer]->app,
+                                                        "apm" => $dataReturn3->seguros[$contadorPrimer]->apm,
+                                                        "idLote" => $getInfoLote->idLote,
+                                                        "idCondominio" => $getInfoLote->idCondominio
+                                                    );
+                                                    echo $idCliente = $getInfoLote->idCliente == 0 ? $this->Seguro_model->InsertCli($datosCliente) : $getInfoLote->idCliente ;
+                                                    exit;
                                                     // empiezan las operaciones de comisiones por el usuario 
                                                     $comisionTotalSeguro = $dataReturn3->seguros[$contadorPrimer]->mensualidad;
                                                     $pagadoTotalSeguro = $dataReturn3->seguros[$contadorPrimer]->montoTotal;
                                                     $porcentajeComisionSeguroTotal = ($pagadoTotalSeguro * $porcentaje);
                                                     // aqui se envia el asesor , gerente y el porcentaje que les corresponde.
-                                                    $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal);
+                                                    $divisorCompartida = $dataReturn3->seguros[$contadorPrimer]->compartida == 1 ? 2 : 1;
+                                                    $idGerente2 = ($dataReturn3->seguros[$contadorPrimer]->compartida == 1 && isset($dataReturn3->seguros[$contadorPrimer]->id_gerente_2))  ? 0 : $dataReturn3->seguros[$contadorPrimer]->id_gerente_2;
+                                                    $dataReturn3->seguros[$contadorPrimer]->compartida == 0
+                                                    ?
+                                                        $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal,$divisorCompartida)
+                                                    :
+                                                        $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal,$divisorCompartida,$dataReturn3->seguros[$contadorPrimer]->id_asesor_2,$idGerente2);
+
                                                     $pendienteReal = ($dataReturn3->seguros[$contadorPrimer]->mensualidad * 0.10);
                                                     if ($dataReturn3->seguros[$contadorPrimer]->tipo_pago == 2 ) {
                                                         // liquidado en este caso
