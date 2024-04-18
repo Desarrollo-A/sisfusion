@@ -1960,8 +1960,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
             $this->updateMensualidad($mensualidades, $idLote, $idCliente, $mensualidadesGuardadas);
         } else {
             $this->insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, 1, $mensualidadesGuardadas);
-
         }
+    }
 
     
 
