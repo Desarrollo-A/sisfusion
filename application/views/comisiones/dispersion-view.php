@@ -375,7 +375,7 @@
                                                     <th>IMPORTE COMISION PENDIENTE</th>
                                                     <th>DETALLES</th>
                                                     <th>FECHA ACTUALIZACIÓN</th>
-                                                    <th>TIPO MENSUALIDAD</th>
+                                                    <th>TIPO MENSUALIDAD</th> 
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
