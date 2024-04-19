@@ -127,6 +127,8 @@ class Documentacion_model extends CI_Model {
             return "{$pathBase}contratoFirmado/";
         if ($tipoDocumento == 50) // ANEXO VENTA DE PARTICUALES: POSTVENTA
             return "{$pathBase}anexo_vp/";
+        if ($tipoDocumento == 51) // ESCRITURAS CON SELLOS NOTARIADOS
+            return "{$pathBase}escrituraNotariada/";
         // EL RESTO DE DOCUMENTOS SE GUARDAN EN LA CARPETA DE EXPEDIENTES
         return "{$pathBase}expediente/";
     }
