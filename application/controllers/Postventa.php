@@ -3537,7 +3537,7 @@ public $controller = 'Postventa';
                         "idUser"    => $this->session->userdata('id_usuario'),
                         "tipo_documento" => 0,
                         "id_autorizacion" => 0,
-                        "tipo_doc" => 51,
+                        "tipo_doc" => 52,
                         "estatus_validacion" => 0
                     );
                     $responseInsertHistorial = $this->General_model->addRecord('historial_documento', $arrayArbolDocumentos);

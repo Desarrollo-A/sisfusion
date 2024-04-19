@@ -144,7 +144,7 @@ function fillTable(index_proyecto, index_condominio) {
                     let btns = '';
                     const DATE = new Date();
                     const DATE_STR = [DATE.getMonth() + 1, DATE.getDate(), DATE.getFullYear()].join('-');
-                    const TITULO_DOCUMENTO = `${d.nombreResidencial}_${d.nombreLote}_${d.idLote}_${d.idCliente}_TDOC51${'ESCRITURA CON SELLOS DE NOTARIA'.slice(0, 4)}_${DATE_STR}`;
+                    const TITULO_DOCUMENTO = `${d.nombreResidencial}_${d.nombreLote}_${d.idLote}_${d.idCliente}_TDOC52{'ESCRITURA CON SELLOS DE NOTARIA'.slice(0, 4)}_${DATE_STR}`;
 
                     let btnBase = `<button class="btn-data btn-blueMaderas iniciarTramite" data-toggle="tooltip" 
                     data-placement="top" title= "Iniciar trámite para cambio de nombre" data-idLote="${d.idLote}" 
