@@ -330,12 +330,15 @@ class Contratacion_model extends CI_Model {
       WHERE id_parametro = $id_parametro AND tabla = 'lotes' AND col_afect = 'idStatusLote' ORDER BY id_auditoria");
   }
 
+   public function downloadCompleteInventory () {
+      if (isset($_POST) && !empty($_POST)) {
+         $data['data'] = $this->Contratacion_model->getCompleteInventory($this->input->post("id_sede"))->result_array();
+         echo json_encode($data);
+      }else
+         echo json_encode(array());
+   }
 
-    public function downloadCompleteInventory () {
-        if (isset($_POST) && !empty($_POST)) {
-            $data['data'] = $this->Contratacion_model->getCompleteInventory($this->input->post("id_sede"))->result_array();
-            echo json_encode($data);
-        } else
-            echo json_encode(array());
-    }
+   public function getNombreTipo(){
+      return $this->db->query("SELECT DISTINCT u.tipo, o.nombre AS nombre_tipo FROM usuarios u INNER JOIN opcs_x_cats o ON o.id_opcion = u.tipo WHERE o.id_catalogo = 124");
+   }
 }

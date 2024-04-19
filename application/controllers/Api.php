@@ -1591,6 +1591,7 @@ class Api extends CI_Controller
                                         !isset($dataReturn3->seguros[$contadorPrimer]->tipo_pago) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_asesor) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad) || 
+                                        !isset($dataReturn3->seguros[$contadorPrimer]->id_pago) || 
                                         !isset($dataReturn3->seguros[$contadorPrimer]->id_gerente)
                                     ) { 
                                         // SUSTITUIR LA FORMA DE ESTA RESPUESTA 
@@ -1607,6 +1608,7 @@ class Api extends CI_Controller
                                             ($dataReturn3->seguros[$contadorPrimer]->tipo_pago  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_asesor  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->numero_mensualidad  == '') ||
+                                            ($dataReturn3->seguros[$contadorPrimer]->id_pago  == '') ||
                                             ($dataReturn3->seguros[$contadorPrimer]->id_gerente  == '')
                                         ) {
                                             // SUSTITUIR LA FORMA DE ESTA RESPUESTA
@@ -1822,6 +1824,7 @@ class Api extends CI_Controller
                                         'status' => $status,
                                         'message' => $message,
                                         'numero_mensualidad' => $dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
+                                        'id_pago' => $dataReturn3->seguros[$contadorPrimer]->id_pago,
                                         'referencia' => $dataReturn3->seguros[$contadorPrimer]->referencia,
                                         'empresa' => $dataReturn3->seguros[$contadorPrimer]->empresa,
                                         'idCliente' => $idCliente
