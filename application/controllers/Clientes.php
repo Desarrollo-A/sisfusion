@@ -2677,7 +2677,9 @@ public function getStatusMktdPreventa(){
         $sede = $this->input->post("sede");
         $id_dragon = $this->input->post("id_dragon");
         $id_salesforce = $this->input->post("id_salesforce");
+        $id_arcus = $this->input->post("id_arcus");
         $tipo_busqueda = $this->input->post("TB");
+        $tipoBusqueda = $this->input->post("tipoBusqueda");
 
         $fechaInicio = explode('/', $this->input->post("fecha_init"));
         $fechaFin = explode('/', $this->input->post("fecha_end"));
@@ -2692,9 +2694,11 @@ public function getStatusMktdPreventa(){
             'sede' => $sede,
             'id_dragon' => $id_dragon,
             'id_salesforce' => $id_salesforce,
+            'id_arcus' => $id_arcus,
             'tipo_busqueda' => $tipo_busqueda,
             'fecha_init' => $fecha_init,
-            'fecha_end' => $fecha_end
+            'fecha_end' => $fecha_end,
+            'tipoBusqueda' => $tipoBusqueda,
         );
 
         $result['data'] = $this->Clientes_model->searchData($data_search);

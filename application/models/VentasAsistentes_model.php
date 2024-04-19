@@ -96,6 +96,7 @@ class VentasAsistentes_model extends CI_Model {
     }
    
 	public function registroStatusContratacion8 () {
+
         list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
 		return $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,

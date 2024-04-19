@@ -4,7 +4,7 @@
 <div class="wrapper ">
     <?php $this->load->view('template/sidebar'); ?>
 
-    <div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
+    <!--<div class="modal fade" id="editLoteRev" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="modal fade" id="rechReg" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
@@ -117,6 +117,28 @@
             </div>
         </div>
     </div>
+
+    <!-- modal  ENVIA A CONTRALORIA 7-->
+    <div class="modal fade" id="editReg" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <center><h4 class="modal-title"><label>Registro estatus 7 (Ventas)- <b><span class="lote"></span></b></label></h4></center>
+                </div>
+                <div class="modal-body">
+                    <label>Comentario:</label>
+                    <textarea class="form-control" id="comentario" rows="3"></textarea>
+                    <br>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                    <button type="button" id="save1" class="btn btn-primary">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+
 
     <div class="content boxContent">
         <div class="container-fluid">
