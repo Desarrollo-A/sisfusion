@@ -514,6 +514,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
+            else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
+                $where = "pr.id_gerente IN ($id_lider, 10251, 455)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -4022,7 +4024,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_nombre = $condicion_dinamica." CONCAT($prefix.nombre, ' ', $prefix.apellido_paterno, ' ', $prefix.apellido_materno) LIKE '%".$data_search['nombre']."%' ";
         }else{
@@ -4034,7 +4036,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_idlote = $condicion_dinamica." cl.idLote=".$data_search['idLote'];
         }else{
@@ -4046,7 +4048,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_correo = $condicion_dinamica." $prefix.correo LIKE '%".$data_search['correo']."%'";
         }else{
@@ -4058,7 +4060,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             if($data_search['tipo_busqueda']==1){
                 $condition_telefono = $condicion_dinamica." (cl.telefono1 LIKE '%".$data_search['telefono']."%' OR cl.telefono2 LIKE'%".$data_search['telefono']."%' OR cl.telefono3 LIKE '%".$data_search['telefono']."%')";
@@ -4075,7 +4077,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
 
             if($data_search['tipo_busqueda']==1){
@@ -4092,7 +4094,7 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
             $condition_iddragon = $condicion_dinamica." pr.id_dragon=".$data_search['id_dragon'];
         }else{
@@ -4104,13 +4106,42 @@ function getStatusMktdPreventa(){
             if($flag_where==1){
                 $condicion_dinamica = ' WHERE ';
             }elseif($flag_where>1){
-                $condicion_dinamica = ' OR ';
+                $condicion_dinamica = ' AND ';
             }
-            $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce=".$data_search['id_salesforce'];
+            $condition_idsalesforce = $condicion_dinamica." pr.id_salesforce= '".$data_search['id_salesforce']."'";
         }else{
             $condition_idsalesforce = "";
         }
 
+        if(!empty($data_search['id_arcus'])){
+            $flag_where = $flag_where+1;
+            if($flag_where==1){
+                $condicion_dinamica = ' WHERE ';
+            }elseif($flag_where>1){
+                $condicion_dinamica = ' AND ';
+            }
+            $condition_arcus = $condicion_dinamica." pr.id_arcus=  '".$data_search['id_arcus']."'";
+        }else{
+            $condition_arcus = "";
+        }
+
+        switch($data_search['tipoBusqueda']) {
+            case 0://salesforce
+                $tipoPro = 'AND pr.lugar_prospeccion = 52';
+                $tipoCli = 'AND cl.lugar_prospeccion = 52';
+                break;
+            case 1: //Dragon
+                $tipoPro = 'AND pr.lugar_prospeccion = 42';
+                $tipoCli = 'AND cl.lugar_prospeccion = 42';
+                break;
+            case 2:  //Maderas rewads (arcus)
+                $tipoPro = 'AND pr.lugar_prospeccion = 47';
+                $tipoCli = 'AND cl.lugar_prospeccion = 47';
+                break;
+
+            default:
+                break;
+        }
 
         switch ($data_search['tipo_busqueda']){
             case 1://clientes
@@ -4118,7 +4149,7 @@ function getStatusMktdPreventa(){
                 c.nombre as nombreCondominio, l.nombreLote, UPPER(CONCAT(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS nombreCliente,
                 cl.noRecibo, l.referencia, cl.fechaApartado, l.totalValidado engancheCliente, cl.fechaEnganche, pr.fecha_creacion as fechaCreacionProspecto,
                 sc.nombreStatus as nombreStatusContratacion, l.idStatusContratacion, cl.id_cliente, pr.id_dragon, pr.id_salesforce, pr.id_prospecto,
-                CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
+                CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source, pr.id_arcus
                 FROM clientes cl 
                 INNER JOIN lotes l ON cl.idLote = l.idLote 
                 INNER JOIN condominios c ON c.idCondominio = l.idCondominio
@@ -4132,6 +4163,8 @@ function getStatusMktdPreventa(){
                 $condition_sedes
                 $condition_iddragon
                 $condition_idsalesforce
+                $condition_arcus
+                $tipoCli
                 AND cl.status=1");
                 break;
             case 2:    //prospectos
@@ -4140,7 +4173,7 @@ function getStatusMktdPreventa(){
                 CONCAT(coord.nombre, ' ', coord.apellido_materno, ' ', coord.apellido_paterno) as nombre_coordinador, 
                 CONCAT(ger.nombre,' ', ger.apellido_paterno, ' ', ger.apellido_materno) as nombre_gerente, pr.fecha_creacion, pr.id_dragon, pr.id_salesforce, UPPER(sedes.nombre) as sede_nombre,
                 sedes.abreviacion as abreviacion_sedes, pr.source, UPPER(opc.nombre) as lugar_prospeccion, pr.id_prospecto,
-                CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source
+                CASE WHEN pr.source = '0' THEN 'CRM' ELSE pr.source END source, pr.id_arcus
                 FROM prospectos pr
                 INNER JOIN usuarios asesor ON pr.id_asesor = asesor.id_usuario
                 LEFT JOIN usuarios coord ON pr.id_coordinador = coord.id_usuario
@@ -4152,8 +4185,10 @@ function getStatusMktdPreventa(){
                 $condition_correo
                 $condition_telefono
                 $condition_iddragon
+                $condition_sedes
                 $condition_idsalesforce
-                $condition_sedes");
+                $condition_arcus
+                $tipoPro");
                 break;
         }
         return $query->result_array();
@@ -4447,7 +4482,7 @@ function getStatusMktdPreventa(){
         CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2,
-        sl.nombre estatusLote, sc.nombreStatus estatusContratacion
+        sl.nombre estatusLote, sc.nombreStatus estatusContratacion, pr.id_arcus as idMaderasRewards
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial

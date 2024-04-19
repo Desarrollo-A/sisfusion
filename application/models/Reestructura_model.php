@@ -103,7 +103,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -603,10 +603,14 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        $id_sede = $id_usuario == 2148 ? '3' : $id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede');
-        if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
+        if ($in_array(id_usuario, [2148, 13995]))
+            $id_sede = '3';
+        else if ($id_usuario == 13549)
+            $id_sede = '2, 5, 1';
+        else 
+            $id_sede = $this->session->userdata('id_sede');
+        if ((!in_array($this->session->userdata('id_rol'), [2, 5])) || in_array($this->session->userdata('id_usuario'), [13549, 13589]))
             $filtroSede = "AND sede_residencial IN ($id_sede)";
-
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
