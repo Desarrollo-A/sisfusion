@@ -17,11 +17,19 @@
                             <textarea class="text-modal" id="comentario" rows="3"></textarea>
                             <br>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0">
-                                <label class="control-label" id="tvLbl">Total neto</label>
-                                <input class="form-control m-0 input-gral" name="totalNeto2" id="totalNeto2" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                        <div >
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group m-0">
+                                    <label class="control-label" id="tvLbl">Total neto</label>
+                                    <input class="form-control m-0 input-gral" name="totalNeto2" id="totalNeto2" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency">
+                                </div>
                             </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div class="form-group m-0">
+                                <label class="control-label" for="sedeRecepcion">Sede recepción</label>
+                                <select name="sedeRecepcion" id="sedeRecepcion"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                            </div>
+                        </div>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="form-group m-0 overflow-hidden">
