@@ -256,14 +256,23 @@ class CasasModel extends CI_Model
     }
 
     public function getListaConcentradoAdeudos(){
-        $query = "SELECT
-            pc.*,
-            lo.nombreLote
-        FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        WHERE
-            pc.proceso = 2
-        AND pc.status = 1";
+        $query = "SELECT pc.*,
+                    CASE
+                        WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+                        ELSE CONCAT('$', pc.adeudoOOAM) 
+                    END AS adOOAM,
+                    CASE
+                        WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
+                        ELSE CONCAT('$', pc.adeudoADM) 
+                    END AS adADM,
+                    CASE
+                        WHEN pc.adeudoGPH IS NULL THEN 'Sin registro'
+                        ELSE CONCAT('$', pc.adeudoGPH) 
+                    END AS adGPH,
+                    lo.nombreLote
+                    FROM proceso_casas pc
+                    LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+                    WHERE pc.proceso = 2 AND pc.status = 1";
 
         return $this->db->query($query)->result();
     }

@@ -5,7 +5,7 @@ function sendToAsignacion(data) {
         type: 'POST',
         url: `back_to_asignacion?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a asignacion de cartera.`, "success");
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a asignación de cartera.`, "success");
 
             table.reload()
         },
@@ -18,7 +18,7 @@ function sendToAsignacion(data) {
 back_process = function(data) {
     let ask = new AskDialog({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a asignacion de cartera?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a asignación de cartera?`,
         onOk: () => sendToAsignacion(data),
         //onCancel: sayNo,
     })
@@ -44,7 +44,7 @@ function show_upload(data) {
     //console.log(data)
 
     let form = new Form({
-        title: 'Subir carta de autorizacion',
+        title: 'Subir carta de autorización',
         onSubmit: function(data){
             //console.log(data)
 
@@ -125,12 +125,12 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir carta de autorizacion', onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir carta de autorización', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a concentrar adeudos', onClick: pass_to_adeudos, data})
         }
 
