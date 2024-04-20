@@ -25,7 +25,7 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
-                                            <th>ADEUDO</th>
+                                            <th>ADEUDO OOAM</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>

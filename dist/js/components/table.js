@@ -3,48 +3,6 @@ class Table{
         this.url = url
         this.params = new URLSearchParams(params).toString();
 
-        /*
-        let table_buttons = []
-
-        for(let button of buttons){
-            table_buttons.push(button.get())
-        }
-        */
-
-        /*
-        if(buttons.includes('excel')){
-            table_buttons.push({
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                className: 'btn buttons-excel',
-                titleAttr: 'Descargar archivo de Excel',
-                title: 'DOCUMENTACION_LOTE',
-                exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
-                    format: {
-                        header: function (d, columnIdx) {
-                            return ' ' + titulos[columnIdx] + ' ';
-                        }
-                    }
-                },
-            })
-        }
-        */
-
-        /*
-        table_buttons.push({
-            text: '<i class="fa fa-check"></i> NUEVO BONO',
-            action: function(data) {
-                console.log(data)
-                //open_Mb();
-            },
-            attr: {
-                class: 'btn btn-azure',
-                style: 'position: relative; float: right',
-            }
-        })
-        */
-
         $(`${id} thead tr:eq(0) th`).each(function (i) {
             $(this).css('text-align', 'center');
             const title = $(this).text();
@@ -68,7 +26,7 @@ class Table{
             dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
             width: '100%',
             scrollX: true,
-            ordering: false,
+            ordering:false,
             pageLength: 20,
             buttons: buttons,
             language: {
