@@ -516,6 +516,10 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
                 $where = "pr.id_gerente IN ($id_lider, 10251, 455)";
+            else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 6661)";
+            else if ($id_usuario == 15466) // LAURA CAROLINA GUTIERREZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 80, 664)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
