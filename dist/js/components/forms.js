@@ -118,7 +118,7 @@ class SelectField{
 }
 
 class FileField{
-    constructor({id, label, placeholder}){
+    constructor({id, label, placeholder, accept}){
         this.id = id
 
         this.field = $('<div />')
@@ -138,7 +138,28 @@ class FileField{
                 .attr('id', id)
                 .attr('name', id)
                 .attr('type', 'file')
-                .attr('accept', 'application/pdf')
+                .attr('accept', accept)
+                .change(function(e) { 
+                    console.log(e.target.files[0])
+
+                    let name = e.target.files[0].name
+                    let size = e.target.files[0].size / 1024
+                    let prefix = 'KB'
+
+                    if(size > 1024){
+                        size = size / 1024
+                        prefix = 'MB'
+                    }
+
+                    $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
+
+                    if(accept){
+                        if(accept !== e.target.files[0].type){
+                            alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
+                            $(`#${id}-name`).val('')
+                        }
+                    }
+                })
             )
             .append(
                 $('<input />')
