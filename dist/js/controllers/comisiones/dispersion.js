@@ -118,6 +118,19 @@ $(document).ready(function () {
                 return labelEstatus;
             }},
             { data: function (d) {
+                return formatMoney(d.Precio_Total);
+            }},
+            { data: function (d) {
+                return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_Pagadas);
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_pendientes);
+            }},
+
+            { data: function (d) {
                 var rescisionLote;
                 var reactivo;
                 rescisionLote = '';

@@ -294,7 +294,7 @@ class Seguros_comision_model extends CI_Model {
     }
     
     public function registroComisionAsimilados($id_pago){
-        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
+        $cmd = "SELECT registro_comision FROM lotes l WHERE l.idLote IN (select c.id_lote FROM comisiones_seguro c WHERE c.id_comision IN (SELECT p.id_comision FROM pago_seguro_ind p WHERE p.id_pago_i = $id_pago ";
         $query = $this->db->query($cmd);
         return  $query->result_array();
     }
@@ -321,5 +321,149 @@ class Seguros_comision_model extends CI_Model {
         return $respuesta;
     }
 
+    function getDatosHistorialPago($anio,$proyecto) {
+        ini_set('memory_limit', -1);
+
+        $filtro_02 = '';
+        $filtro_00 = ' re.idResidencial = '.$proyecto.' AND YEAR(pci1.fecha_abono) = '.$anio.' ';
+
+        switch ($this->session->userdata('id_rol')) {
+            case 1:
+            case 2:
+            case 3:
+            case 7:
+            case 9:
+                $filtro_02 = ' com.id_usuario = '.$this->session->userdata('id_usuario').'  AND '.$filtro_00;
+                break;
+            case 31:
+                $filtro_02 = ' '.$filtro_00. 'AND pci1.estatus IN (8,11,88) AND pci1.pago_neodata > 0 AND pci1.descuento_aplicado != 1 ';
+                break;
+            default:
+                $filtro_02 = ' '.$filtro_00;
+                break;
+        }
+        return $this->db->query("SELECT pci1.id_pago_i, pci1.id_comision, lo.nombreLote, re.nombreResidencial as proyecto, co.nombre as condominio,lo.totalNeto2 precio_lote, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata pago_cliente, pci1.pago_neodata, pci2.abono_pagado pagado, com.comision_total-pci2.abono_pagado restante, pci1.estatus, pci1.fecha_abono fecha_creacion, 
+        CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) user_names ,pci1.id_usuario, CASE WHEN cl.estructura = 1 THEN UPPER(oprol2.nombre) ELSE UPPER(oprol.nombre) END as puesto, 
+        oxcest.nombre estatus_actual, oxcest.id_opcion id_estatus_actual, pci1.descuento_aplicado, (CASE WHEN cl.lugar_prospeccion IS NULL THEN 0 ELSE cl.lugar_prospeccion END) lugar_prospeccion, lo.referencia, pac.bonificacion, u.estatus as activo, 
+        (CASE WHEN pe.id_penalizacion IS NOT NULL THEN 1 ELSE 0 END) penalizacion, oxcest.color,
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl,
+        (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2
+        FROM pago_seguro_ind pci1 
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
+        FROM pago_seguro_ind WHERE (estatus in (11,3) OR descuento_aplicado = 1) 
+        GROUP BY id_comision) pci2 ON pci1.id_comision = pci2.id_comision
+        INNER JOIN comisiones_seguro com ON pci1.id_comision = com.id_comision and com.estatus = 1
+        INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
+        INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
+        INNER JOIN pago_seguro pac ON pac.id_lote = com.id_lote
+        INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23
+        LEFT JOIN penalizaciones pe ON pe.id_lote = lo.idLote AND pe.id_cliente = lo.idCliente
+        LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        WHERE $filtro_02
+        GROUP BY pci1.id_comision, lo.nombreLote, re.nombreResidencial, co.nombre, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci2.abono_pagado, pci1.estatus, pci1.fecha_abono, pci1.id_usuario, pci1.id_pago_i, u.nombre, u.apellido_paterno, u.apellido_materno, 
+        oprol.nombre, oxcest.nombre, oxcest.id_opcion, pci1.descuento_aplicado, cl.lugar_prospeccion, lo.referencia, com.estatus, pac.bonificacion, u.estatus,pe.id_penalizacion, oxcest.color, cl.estructura, oprol2.nombre, cl.proceso, oxc0.nombre, cl.id_cliente_reubicacion_2 ORDER BY lo.nombreLote");
+    }
+
+    function getDatosNuevasXContraloria($proyecto,$condominio = 0){
+        if( $this->session->userdata('id_rol') == 31 ){
+            $filtro = "WHERE pci1.estatus IN (8,88) ";
+        } else{
+            $filtro = "WHERE pci1.estatus IN (4) ";
+        }
+
+        $user_data = $this->session->userdata('id_usuario');
+        switch($this->session->userdata('id_rol')){
+            case 2:
+            case 3:
+            case 7:
+            case 9:
+                $filtro02 = $filtro.' AND  fa.id_usuario = '.$user_data .' ';
+            break;
+            default:
+                $filtro02 = $filtro.' ';
+            break;
+        }
+        
+        if($condominio == 0){
+            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial AS proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 AS factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo AS xmla,fa.bandera, u.rfc
+            FROM pago_comision_ind pci1 
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
+            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
+            $filtro02 
+            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid, fa.nombre_archivo, fa.bandera, u.rfc
+            ORDER BY u.nombre");
+        }
+        else{
+            return $this->db->query("SELECT SUM(pci1.abono_neodata) total, re.idResidencial, re.nombreResidencial AS proyecto, CONCAT(u.nombre, ' ',u.apellido_paterno, ' ', u.apellido_materno) usuario, pci1.id_usuario, u.forma_pago, 0 AS factura, oxcest.id_opcion id_estatus_actual, re.empresa, opn.estatus estatus_opinion, opn.archivo_name, fa.uuid,fa.nombre_archivo AS xmla,fa.bandera , u.rfc
+            FROM pago_comision_ind pci1 
+            INNER JOIN comisiones com ON pci1.id_comision = com.id_comision AND com.estatus IN (1,8)
+            INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial = $proyecto
+            INNER JOIN usuarios u ON u.id_usuario = com.id_usuario AND u.forma_pago IN (2)
+            INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
+            INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
+            INNER JOIN opinion_cumplimiento opn ON opn.id_usuario = u.id_usuario and opn.estatus IN (2) 
+            INNER JOIN facturas fa ON fa.id_comision = pci1.id_pago_i
+            $filtro02
+            GROUP BY re.idResidencial, re.nombreResidencial, u.nombre, u.apellido_paterno, u.apellido_materno, pci1.id_usuario, u.forma_pago, oxcest.id_opcion, re.empresa, re.idResidencial, opn.estatus, opn.archivo_name, fa.uuid,fa.nombre_archivo,fa.bandera, u.rfc
+            ORDER BY u.nombre");
+        }
+    }
+
+    function leerxml( $xml_leer, $cargar_xml ){
+        $str = '';
+        if( $cargar_xml ){
+            rename( $xml_leer, "./UPLOADS/XMLS/documento_temporal.txt" );
+            $str = file_get_contents( "./UPLOADS/XMLS/documento_temporal.txt" );
+            if( substr ( $str, 0, 3 ) == 'o;?' ){
+                $str = str_replace( "o;?", "", $str );
+                file_put_contents( './UPLOADS/XMLS/documento_temporal.txt', $str );
+            }
+            rename( "./UPLOADS/XMLS/documento_temporal.txt", $xml_leer );
+        }
+    
+        libxml_use_internal_errors(true);
+        $xml = simplexml_load_file( $xml_leer, null, true );
+        $datosxml = array(
+            "version" => $xml ->xpath('//cfdi:Comprobante')[0]['Version'],
+            "regimenFiscal" => $xml ->xpath('//cfdi:Emisor')[0]['RegimenFiscal'],
+            "formaPago" => $xml -> xpath('//cfdi:Comprobante')[0]['FormaPago'],
+            "usocfdi" => $xml -> xpath('//cfdi:Receptor')[0]['UsoCFDI'],
+            "metodoPago" => $xml -> xpath('//cfdi:Comprobante')[0]['MetodoPago'],
+            "claveUnidad" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveUnidad'],
+            "unidad" => $xml -> xpath('//cfdi:Concepto')[0]['Unidad'],
+            "claveProdServ" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveProdServ'],
+            "descripcion" => $xml -> xpath('//cfdi:Concepto')[0]['Descripcion'],
+            "subTotal" => $xml -> xpath('//cfdi:Comprobante')[0]['SubTotal'],
+            "total" => $xml -> xpath('//cfdi:Comprobante')[0]['Total'],
+            "rfcemisor" => $xml -> xpath('//cfdi:Emisor')[0]['Rfc'],
+            "nameEmisor" => $xml -> xpath('//cfdi:Emisor')[0]['Nombre'],
+            "rfcreceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Rfc'],
+            "namereceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Nombre'],
+            "TipoRelacion"=> $xml->xpath('//@TipoRelacion'),
+            "uuidV" =>$xml->xpath('//@UUID')[0],
+            "fecha"=> $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'],
+            "folio"=> $xml -> xpath('//cfdi:Comprobante')[0]['Folio'],
+        );
+        $datosxml["textoxml"] = $str;
+        return $datosxml;
+    }
+
+    function verificar_uuid( $uuid ){
+        return $this->db->query("SELECT * FROM facturas WHERE uuid = '".$uuid."'");
+    }
 
 }

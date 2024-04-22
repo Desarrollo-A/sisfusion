@@ -3470,6 +3470,7 @@ public $controller = 'Postventa';
         $arraySignos = array('$',',');
         $totalNeto = str_replace($arraySignos ,'', $this->input->post('precioFinal'));
 
+
         $responseLiberacion = TRUE;
         $responseAgregarCliente = TRUE;
         $responseInsertHistorial = TRUE;
@@ -3570,6 +3571,56 @@ public $controller = 'Postventa';
                 "idCliente" => $responseAgregarCliente[0]["lastId"]
             );
             $responseInsertHistorial = $this->General_model->addRecord('historial_lotes', $dataInsertarHistorial);
+
+            //actualizar el id_Cliente de copropietarios
+                //$copropActuales = $this->Postventa_model->getCopropsActuales($idCliente);
+                $copropActuales = $this->Postventa_model->getCopropsActuales($idCliente);
+                if(count($copropActuales) > 0)
+                {
+                    foreach ($copropActuales as $registro)
+                    {
+                        $arrayUpdate = array(
+                            "estatus" => 0,
+                            "fecha_modificacion" => date('Y-m-d H:i:s')
+                        );
+                        $this->General_model->updateRecord("copropietarios", $arrayUpdate, "id_copropietario", $registro['id_copropietario']); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+                        $dataInsertarCopropietarios = array(
+                            "id_cliente" => $responseAgregarCliente[0]["lastId"],
+                            "nombre" => $registro['nombre'],
+                            "apellido_paterno" => $registro['apellido_paterno'],
+                            "apellido_materno" => $registro['apellido_materno'],
+                            "personalidad_juridica" => $registro['personalidad_juridica'],
+                            "rfc" => $registro['rfc'],
+                            "correo" => $registro['correo'],
+                            "telefono" => $registro['telefono'],
+                            "telefono_2" => $registro['telefono_2'],
+                            "nacionalidad" => $registro['nacionalidad'],
+                            "fecha_nacimiento" => $registro['fecha_nacimiento'],
+                            "estado_civil" => $registro['estado_civil'],
+                            "regimen_matrimonial" => $registro['regimen_matrimonial'],
+                            "conyuge" => $registro['conyuge'],
+                            "domicilio_particular" => $registro['domicilio_particular'],
+                            "originario_de" => $registro['originario_de'],
+                            "tipo_vivienda" => $registro['tipo_vivienda'],
+                            "ocupacion" => $registro['ocupacion'],
+                            "empresa" => $registro['empresa'],
+                            "posicion" => $registro['posicion'],
+                            "antiguedad" => $registro['antiguedad'],
+                            "edadFirma" => $registro['edadFirma'],
+                            "estatus" => $registro['estatus'],
+                            "fecha_creacion" => $registro['fecha_creacion'],
+                            "creado_por" => $registro['creado_por'],
+                            "fecha_modificacion" => $registro['fecha_modificacion'],
+                            "modificado_por" => $registro['modificado_por'],
+                            "ine" => $registro['ine'],
+                            "ladaTel" => $registro['ladaTel'],
+                            "ladaCel" => $registro['ladaCel'],
+                        );
+                        $this->General_model->addRecord('copropietarios', $dataInsertarCopropietarios);
+                    }
+                }
+
+            //fin de id_cliente
         }
         else {
             $dataParaActualizarLote = array (
