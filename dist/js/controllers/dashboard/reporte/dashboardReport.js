@@ -227,7 +227,7 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, idarr = null, aptId  = null, contId = null, canConId = null, canApt = null){
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
     if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888 && idUser != 29 && idUser != 7401))
@@ -343,8 +343,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-sede="${[d.apt_id_sede, d.cont_id_sede, d.cancont_id_sede, d.canapt_id_sede]}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idarr="${[d.apt_arr, d.cont_arr, d.canapar_arr, d.cancon_arr]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
                    
                 }
             },
@@ -356,8 +355,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede=0 data-idarr="${[d.apt_arr, d.cont_arr]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede=0  data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
                     
                 }
             },
@@ -369,8 +367,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    //return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede=0 data-idarr="${[d.apt_arr]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-option="${option}" data-cancontid="${d.cancon_arr}" data-contId="${d.cont_arr}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-aptid="${d.apt_arr}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-option="${option}" data-cancontid="${d.cancon_arr}" data-contId="${d.cont_arr}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-aptid="${d.apt_arr}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -386,7 +383,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-idarr="${[d.canapar_arr, d.shareCanAp]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-contId="${d.cont_arr}" data-aptid="${d.apt_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-contId="${d.cont_arr}" data-aptid="${d.apt_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                 }
             },
             {
@@ -397,7 +394,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede=0 data-idarr="${[d.cont_arr, d.shareContratadas]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                 }
             },
             {
@@ -413,7 +410,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede=0 data-idarr="${[d.cancon_arr, d.shareCanCon]}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
             },
             {
@@ -424,7 +421,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-idarr="${[d.apt_arr, d.cont_arr, d.canapar_arr, d.cancon_arr]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
                 },
             },
         ],
@@ -438,10 +435,6 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             url: `${base_url}Reporte/getInformation`,
             type: "POST",
             cache: false,
-            beforeSend: function(e) {
-               console.log("cancontid: ", canConId);
-               console.log("canaptid: ", canApt);
-            },
             data: {
                 "typeTransaction": transaction,
                 "where": '1',
@@ -453,8 +446,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
-                "filters" : filters
-                ,"idarr": idarr,
+                "filters" : filters,
                 "aptid":aptId,
                 "contid": contId,
                 "cancontid": canConId,
@@ -543,7 +535,6 @@ $(document).on('click', '.update-dataTable', function (e) {
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
     const transaction = $(this).data("transaction");
-    const idarr = $(this).attr("data-idarr");
     const aptid = $(this).attr("data-aptid");
     const contid = $(this).attr("data-contid");
     const cancontid = $(this).attr("data-cancontid");
@@ -557,37 +548,37 @@ $(document).on('click', '.update-dataTable', function (e) {
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); 
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid, canaptid, cancontid); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid, canaptid, cancontid); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
@@ -597,11 +588,11 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if(idUser == 28 || idUser == 30 || idUser == 4888 || idUser == 29 || idUser == 7401){
                 const table = "gerente";
-                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
-                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, idarr, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
             }
         } 
     }
@@ -723,14 +714,12 @@ $(document).on('click', '.btnSub', function () {
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
         regional: $(this).data("dr"),
-        sede:  $(this).data("sede")
-        ,idarr: $(this).data("idarr"),
+        sede:  $(this).data("sede"),
         aptid : $(this).data('aptid'),
         contid: $(this).data('contid'),
         canaptid : $(this).data('canaptid'),
         cancontid: $(this).data('cancontid')
     }
-    console.log("data: ", data);
     //initDetailRow(data);
     initDetailRow($(this).closest('tr'), data);
 });
@@ -1137,8 +1126,6 @@ function accordionToRemove(rol){
 
 function initDetailRow(tr,dataObj){
     var detailRows = [];
-  //  var tr = $(`#details-${dataObj.user}`).closest('tr');
-    // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
@@ -1170,7 +1157,6 @@ function createDetailRow(row, tr, dataObj){
         regional: dataObj.regional,
         filters: filters,
         sede:dataObj.sede,
-        idarr: dataObj.idarr,
         contid: dataObj.contid,
         aptid: dataObj.aptid,
         canaptid: dataObj.canaptid,
@@ -1208,18 +1194,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.id_sede]}" data-idarr="${[v.apt_arr, v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}" data-contid="${[v.cont_arr]}" data-canaptid="${[v.canapar_arr]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${[v.id_sede]}" data-idarr="${[v.apt_arr]}"  data-rol="${dataObj.rol}"  data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}"  data-rol="${dataObj.rol}"  data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${[v.id_sede]}" data-idarr="${[v.canapar_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${[v.id_sede]}" data-canaptid="${[v.canapar_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${[v.id_sede]}" data-idarr="${[v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${[v.id_sede]}" data-contid="${[v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${[v.id_sede]}" data-idarr="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${[v.id_sede]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -1324,11 +1310,10 @@ $(document).on('click', '.btnModalDetails', function () {
     let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
-        idarr : $(this).data("idarr"),
-        aptId: $(this).data('aptid'),
-        contid: $(this).data('contid'),
-        cancontid: $(this).data('cancontid'),
-        canaptid: $(this).data('canaptid'),
+        aptid : $(this).attr("data-aptid"),
+        contid : $(this).attr("data-contid"),
+        cancontid : $(this).attr("data-cancontid"),
+        canaptid : $(this).attr("data-canaptid"),
         leader: $(this).data("leader"),
         transaction: $(this).data("transaction"),
         user: $(this).data("iduser"),
@@ -1341,7 +1326,6 @@ $(document).on('click', '.btnModalDetails', function () {
         subdirector: $(this).data("su"),
         regional: $(this).data("dr")
     }
-    console.log("dataObject: ", dataObject);
     fillTableReport(dataObject);
     if (dataObject.type != 3 && dataObject.type != 33 && dataObject.type != 4 && dataObject.type != 4)
         $("#seeInformationModalReport").modal();
@@ -1523,11 +1507,10 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                    "idarr": dataObject.idarr,
                     "aptid":dataObject.aptid,
                     "contid":dataObject.contid,
-                    "canaptid":dataObject.canaptid,
-                    "cancontid":dataObject.cancontid,
+                  //  "canaptid":dataObject.canaptid,
+                    //"cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1810,9 +1793,8 @@ function fillTableReport(dataObject) {
                     
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                    "idarr": dataObject.idarr,
-                    "aptid": dataObject.aptid,
-                    "contid":dataObject.contid,
+                   // "aptid": dataObject.aptid,
+                    //"contid":dataObject.contid,
                     "canaptid":dataObject.canaptid,
                     "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
