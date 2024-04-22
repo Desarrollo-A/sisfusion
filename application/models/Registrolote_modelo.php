@@ -3524,9 +3524,6 @@
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295';
 					$sede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-					$id_lider = $id_lider . ', 3111';
-					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
 					$sede = "";
