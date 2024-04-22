@@ -171,24 +171,20 @@ class CasasModel extends CI_Model
     }
 
     public function getNotariasOptions(){
-        $query = "SELECT
-            nombre AS label,
-            id_usuario AS value
-        FROM usuarios
-        WHERE
-            estatus = 1
-        AND id_rol = 7";
+        $query = "SELECT oxc.nombre AS label, oxc.id_opcion AS value
+        FROM catalogos c 
+        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = c.id_catalogo 
+        WHERE c.estatus = 1 AND c.id_catalogo = 128";
 
         return $this->db->query($query)->result();
     }
 
     public function getPropuestasOptions($idProcesoCasas){
-        $query = "SELECT
-            fechaFirma AS label,
-            idPropuesta AS value
-        FROM propuestas_proceso_casas
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
+        $query = "SELECT idPropuesta AS value, CONCAT('Notaria: ',oxc.nombre) AS title, CONCAT('Fecha de firma: ',ppc.fechaFirma) AS subtitle, 
+        CONCAT('Consto: $', ppc.costo) AS description  
+        FROM propuestas_proceso_casas ppc
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 128
+        WHERE idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
     }
@@ -312,7 +308,10 @@ class CasasModel extends CI_Model
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
-            archivo,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
             documento,
             tipo,
             fechaModificacion
@@ -343,7 +342,10 @@ class CasasModel extends CI_Model
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
-            archivo,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
             documento,
             fechaModificacion
         FROM documentos_proceso_casas
@@ -373,7 +375,10 @@ class CasasModel extends CI_Model
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
-            archivo,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
             documento,
             tipo,
             fechaModificacion
@@ -404,19 +409,20 @@ class CasasModel extends CI_Model
 
     public function getListaEleccionPropuestas(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.archivo,
-            doc.documento,
-            doc.idDocumento,
-            pro.idPropuesta,
-            pro.notaria,
-            pro.fechaFirma,
-            pro.costo
+        pc.*,
+        lo.nombreLote,
+        doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        pro.idPropuesta,
+        oxc.nombre AS notaria,
+        pro.fechaFirma,
+        CONCAT('$', pro.costo) AS costo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
-        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta -- AND pro.status = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 128
         WHERE
             pc.proceso = 6
         AND pc.status = 1";
@@ -659,11 +665,11 @@ class CasasModel extends CI_Model
     }
 
     public function getPropuestas($idProcesoCasas){
-        $query = "SELECT
-            *
-        FROM propuestas_proceso_casas
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
+
+        $query = "SELECT ppc.idPropuesta, oxc.nombre AS notaria, ppc.fechaFirma, CONCAT('$', ppc.costo) AS costo
+        FROM propuestas_proceso_casas ppc
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 128
+        WHERE ppc.idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
     }

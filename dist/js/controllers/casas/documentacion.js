@@ -27,7 +27,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -56,7 +56,7 @@ let columns = [
     { data: 'fechaModificacion' },
     { data: function(data){
         let view_button = ''
-        if(data.archivo){
+        if(data.archivo != 'Sin archivo'){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }else{
             if([13,14,15].includes(data.tipo)){

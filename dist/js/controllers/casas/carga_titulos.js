@@ -5,7 +5,7 @@ function sendToNext(data){
         type: 'POST',
         url: `to_propuestas?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptacion de propuestas.", "success");
+            alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
 
             table.reload()
         },
@@ -18,7 +18,7 @@ function sendToNext(data){
 pass_to_propuestas = function(data) {
     let ask = new AskDialog({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptacion de propuestas"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
@@ -44,7 +44,7 @@ function show_upload(data) {
     //console.log(data)
 
     let form = new Form({
-        title: `Subir titulo de propiedad`,
+        title: `Subir título de propiedad`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -55,7 +55,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -84,7 +84,7 @@ function sendToConcentrarAdeudos(data) {
         type: 'POST',
         url: `back_to_documentos?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
 
             table.reload()
         },
@@ -97,7 +97,7 @@ function sendToConcentrarAdeudos(data) {
 back_to_adeudos = function(data) {
     let ask = new AskDialog({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentracion de adeudos"</b>?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
         onOk: () => sendToConcentrarAdeudos(data),
         //onCancel: sayNo,
     })
@@ -130,13 +130,13 @@ let columns = [
     } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: go_to_propuestas, data})
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir titulo de propiedad', onClick: show_upload, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir título de propiedad', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_propuestas, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_adeudos, data})

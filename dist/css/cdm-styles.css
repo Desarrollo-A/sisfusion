@@ -340,3 +340,56 @@ div #lblDataCl2
 	  justify-content: flex-end;
 	}
   }
+
+  .checkDS .boxChecks {
+  	background-color: #eeeeee;
+  	width: 100%;
+  	border-radius: 27px;
+  	box-shadow: none;
+  	padding: 5px !important;
+  }
+
+  .checkDS .boxChecks .checkstyleDS {
+  	cursor: pointer;
+  	user-select: none;
+  	display: block;
+  }
+
+  .checkDS .boxChecks .checkstyleDS span {
+  	display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	height: 31px;
+  	border-radius: 9999px;
+  	overflow: hidden;
+  	transition: linear 0.3s;
+  	margin: 0;
+  	font-weight: 100;
+  }
+
+  .checkDS .boxChecks .checkstyleDS span:nth-child(2) {
+  	margin: 0 3px;
+  }
+
+  .boxChecks .boxChecks .checkstyleDS span:hover {
+  	box-shadow: none;
+  }
+
+  .checkDS .boxChecks .checkstyleDS input {
+  	pointer-events: none;
+  	display: none;
+  }
+
+  .checkDS .boxChecks .checkstyleDS input:checked+span {
+  	transition: 0.3s;
+  	font-weight: 400;
+  	color: #0a548b;
+  }
+
+  .checkDS .boxChecks .checkstyleDS input:checked+span:before {
+  	font-family: FontAwesome !important;
+  	content: "\f00c";
+  	color: #0a548b;
+  	font-size: 18px;
+  	margin-right: 5px;
+  }

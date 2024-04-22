@@ -43,5 +43,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/asignacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/asignacion.js?=v2"></script>
 </body>

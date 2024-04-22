@@ -95,4 +95,4 @@
 <script src="<?= base_url() ?>dist/js/components/components.js"></script>
 <script src="<?= base_url() ?>dist/js/components/table.js"></script>
 <script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
-<script src="<?= base_url() ?>dist/js/components/forms.js"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js?v=3"></script>

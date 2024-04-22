@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Concentracion de adeudos</h3>
+                                    <h3 class="card-title center-align">Concentración de adeudos</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -26,6 +26,8 @@
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
                                             <th>ADEUDO OOAM</th>
+                                            <th>ADEUDO ADM</th>
+                                            <th>ADEUDO GPH</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -44,5 +46,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/adeudos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/adeudos.js?=v3"></script>
 </body>

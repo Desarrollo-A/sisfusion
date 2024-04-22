@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Eleccion de propuestas</h3>
+                                    <h3 class="card-title center-align">Elección de propuestas</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -46,5 +46,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/eleccion_propuestas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/eleccion_propuestas.js?=v4"></script>
 </body>
