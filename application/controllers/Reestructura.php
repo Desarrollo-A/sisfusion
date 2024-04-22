@@ -218,7 +218,7 @@ class Reestructura extends CI_Controller{
         $idClienteAnterior = $clienteAnterior->id_cliente;
         $loteAOcupar = $clienteAnterior->idLote;
 
-        $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
+        $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($loteAOcupar);
         $fechaCambio = "09/03/2024";
         $fechaCambio = date("Y-m-d", strtotime("09/03/2024") );
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
@@ -241,7 +241,7 @@ class Reestructura extends CI_Controller{
         $expediente = $this->Reestructura_model->obtenerDocumentacionPorReestructura();
         $loteNuevoInfo = $this->Reestructura_model->obtenerLotePorId($loteAOcupar);
         $documentacionActiva = $this->Reestructura_model->obtenerDocumentacionActiva($clienteAnterior->idLote, $idClienteAnterior);
-        $planComision = $esquemaAnterior ? 64 : 84
+        $planComision = $esquemaAnterior ? 64 : 84;
 
         $proceso = 3;
         $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
@@ -858,7 +858,6 @@ class Reestructura extends CI_Controller{
         $fechaCambio = date("Y-m-d", strtotime("09/03/2024") );
 
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
-        $lineaVenta = $this->General_model->getLider($idLider)->row();
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
@@ -1684,7 +1683,8 @@ class Reestructura extends CI_Controller{
                 'tipo_documento' => 0,
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['tipo_doc'],
-                'estatus_validacion' => 0
+                'estatus_validacion' => 0,
+                'bucket' => 1,
             );
         }
 
@@ -1708,7 +1708,8 @@ class Reestructura extends CI_Controller{
                 'tipo_documento' => 0,
                 'id_autorizacion' => 0,
                 'tipo_doc' => $doc['id_opcion'],
-                'estatus_validacion' => 0
+                'estatus_validacion' => 0,
+                'bucket' => 0,
             );
         }
 
@@ -1746,7 +1747,8 @@ class Reestructura extends CI_Controller{
                                             'tipo_documento' => 0,
                                             'id_autorizacion' => 0,
                                             'tipo_doc' => $doc['id_opcion'],
-                                            'estatus_validacion' => 0
+                                            'estatus_validacion' => 0,
+                                            'bucket' => 1,
                                         );
                                 }
                                 $banderainterna = $banderainterna + 1;
@@ -1770,7 +1772,8 @@ class Reestructura extends CI_Controller{
                                 'tipo_documento' => 0,
                                 'id_autorizacion' => 0,
                                 'tipo_doc' => $doc['id_opcion'],
-                                'estatus_validacion' => 0
+                                'estatus_validacion' => 0,
+                                'bucket' => 1,
                             );
                             continue;
 
@@ -1797,7 +1800,8 @@ class Reestructura extends CI_Controller{
                         'tipo_documento' => 0,
                         'id_autorizacion' => 0,
                         'tipo_doc' => $doc['id_opcion'],
-                        'estatus_validacion' => 0
+                        'estatus_validacion' => 0,
+                        'bucket' => 1,
                     );
     
                     continue;
@@ -1827,7 +1831,8 @@ class Reestructura extends CI_Controller{
                     'tipo_documento' => 0,
                     'id_autorizacion' => 0,
                     'tipo_doc' => $doc['id_opcion'],
-                    'estatus_validacion' => 0
+                    'estatus_validacion' => 0,
+                    'bucket' => 1,
                 );
 
                 continue;
@@ -1854,7 +1859,8 @@ class Reestructura extends CI_Controller{
                         'tipo_documento' => 0,
                         'id_autorizacion' => 0,
                         'tipo_doc' => $doc['id_opcion'],
-                        'estatus_validacion' => 0
+                        'estatus_validacion' => 0,
+                        'bucket' => 0,
                     );
                 }
             }
@@ -2770,8 +2776,7 @@ class Reestructura extends CI_Controller{
                 $dataUpdateLote['estatus_preproceso'] = 2;
                 $this->General_model->updateRecord("datos_x_cliente", array('flagProcesoContraloria' => 0, 'flagProcesoJuridico' => 0, 'modificado_por' => $idUsuario, 'fecha_modificacion' => date("Y-m-d H:i:s")), 'idLote', $idLote);
             } else
-                $dataUpdateLote['estatus_preproceso'] =  $idPreproceso == 6 ? 3 : $idPreproceso - 1;
-
+                $dataUpdateLote['estatus_preproceso'] = $idPreproceso == 6 ? 3 : $idPreproceso - 1;
                 
             $dataHistorial = array(
                 'idLote' => $idLote,
