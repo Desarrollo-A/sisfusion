@@ -160,14 +160,13 @@ $(document).on('click', '.btn-avanzar', function () {
     $('#valorTramite').val($(this).attr('data-tipoTramite'));
 
 
-    if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null'){
+    if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null' || precioFinalCrudo == '.00' ){
         inputEditar = '<div class="col-lg-12">\n' +
             '                  <label class="control-label">Precio Final</label>\n' +
             '                  <input class="form-control input-gral mb-1" data-type="currency" ' +
             '                   name="precioFinal" autocomplete="off" id="precioFinal" step="any"\n' +
             '                  style="margin-top: 0px;" >' +
             '            </div><script>$("input[data-type=\'currency\']").on({keyup: function() {formatCurrencyG($(this));},blur: function() { formatCurrencyG($(this), "blur");} });</script>';
-
     }
     else{
         inputEditar = '<div class="col-lg-12">\n' +

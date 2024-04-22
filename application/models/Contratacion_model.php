@@ -210,7 +210,7 @@ class Contratacion_model extends CI_Model {
    }
 
     function getClauses($lote){
-         return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1");                        
+        return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1 ORDER BY id_clausula DESC");
     }
 
     function getInventoryBylote($idLote){
