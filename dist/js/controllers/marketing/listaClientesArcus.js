@@ -70,7 +70,13 @@ function fillTablaClientesArcus() {
                 data: function (d) {
                     return `<span class='label lbl-green'>${d.estatusContratacion}</span>`;
                 }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label lbl-blueMaderas'>${d.idMaderasRewards}</span>`;
+                }
             }
+
 		],
         columnDefs: [{
             visible: false,

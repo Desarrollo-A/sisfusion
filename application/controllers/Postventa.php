@@ -3294,7 +3294,7 @@ public $controller = 'Postventa';
         $responseUpdateCliente = TRUE;
         $arrayPosiciones = $pieces = explode(",", $this->input->post('arrayPosiciones')); ;
         $banderaCoprop = $this->input->post('banderaCoprop');
-
+        $folder = 'static/documentos/cliente/escrituraNotariada/';
 
 
 
@@ -3310,6 +3310,19 @@ public $controller = 'Postventa';
                 "creado_por" => $this->session->userdata('id_usuario'),
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
+            if($tipoTramite == 6){
+                $file = $_FILES["fileElm"];
+                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+
+                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+
+                if ($movement) {
+                    //echo 'se subió correctamente '.$folder.$documentName;
+                    $dataParaInsertar['escrituraNotariada'] = $documentName;
+                }
+            }
             $responseInsertCliente = $this->General_model->addRecord('clientes_x_lote', $dataParaInsertar);
             $reponseUpdateLote = $this->General_model->updateRecord("lotes", array("estatusCambioNombre" => 2, "usuario" => 1), "idLote", $idLote); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
 
@@ -3353,6 +3366,8 @@ public $controller = 'Postventa';
                     }
                 }
             #termino de los coprop
+
+
 
         }
         else if ($tipoTransaccion == 2 || $tipoTransaccion == 5) {
@@ -3420,6 +3435,23 @@ public $controller = 'Postventa';
                 "fecha_modificacion" => date('Y-m-d H:i:s'),
                 "modificado_por" => $this->session->userdata('id_usuario')
             );
+
+            if($tipoTramite == 6){
+                $file = $_FILES["fileElm"];
+                $fileExt = pathinfo($file['name'], PATHINFO_EXTENSION);
+
+
+                $documentName = "{$this->input->post('tituloDocumentoInput')}.$fileExt";
+                //borrar el archivo actual
+                unlink('static/documentos/cliente/escrituraNotariada/'.$documentName);
+                $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
+
+                if ($movement) {
+                    //echo 'se subió correctamente '.$folder.$documentName;
+                    $dataParaActualizar['escrituraNotariada'] = $documentName;
+                }
+            }
+
             $responseUpdateCliente = $this->General_model->updateRecord("clientes_x_lote", $dataParaActualizar, "id_registro", $idRegistro); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
         }
         if ($responseInsertCliente && $reponseUpdateLote && $responseUpdateCliente)
@@ -3434,8 +3466,10 @@ public $controller = 'Postventa';
         $idCliente = $this->input->post('idClienteA');
         $tipoTransaccion = $this->input->post('tipoTransaccionA');
         $comentario = $this->input->post('comentario');
+        $valorTramite = $this->input->post('valorTramite');
         $arraySignos = array('$',',');
         $totalNeto = str_replace($arraySignos ,'', $this->input->post('precioFinal'));
+
 
         $responseLiberacion = TRUE;
         $responseAgregarCliente = TRUE;
@@ -3489,6 +3523,27 @@ public $controller = 'Postventa';
                     "modificado_por" => $this->session->userdata('id_usuario')
                 );
                 $responseAgregarCliente = $this->caja_model_outside->insertClient($dataAgregarCliente);
+
+                #se inserta el árbol de documentos
+                if($valorTramite == 6){
+                    $documento = $this->input->post('escrituraNotariada');
+                    $arrayArbolDocumentos = array(
+                        "movimiento" => "ESCRITURA CON SELLOS DE NOTARIA",
+                        "expediente" => $documento,
+                        "modificado" => date('Y-m-d H:i:s'),
+                        "status"    => 1,
+                        "idcliente"  => $responseAgregarCliente[0]["lastId"],
+                        "idcondominio" => 0,
+                        "idLote"     => $idLote,
+                        "idUser"    => $this->session->userdata('id_usuario'),
+                        "tipo_documento" => 0,
+                        "id_autorizacion" => 0,
+                        "tipo_doc" => 52,
+                        "estatus_validacion" => 0
+                    );
+                    $responseInsertHistorial = $this->General_model->addRecord('historial_documento', $arrayArbolDocumentos);
+                }
+                #se termina árbol de documentos
             }
             $dataParaActualizarLote = array (
                 "idStatusContratacion" => 15,
@@ -3516,6 +3571,56 @@ public $controller = 'Postventa';
                 "idCliente" => $responseAgregarCliente[0]["lastId"]
             );
             $responseInsertHistorial = $this->General_model->addRecord('historial_lotes', $dataInsertarHistorial);
+
+            //actualizar el id_Cliente de copropietarios
+                //$copropActuales = $this->Postventa_model->getCopropsActuales($idCliente);
+                $copropActuales = $this->Postventa_model->getCopropsActuales($idCliente);
+                if(count($copropActuales) > 0)
+                {
+                    foreach ($copropActuales as $registro)
+                    {
+                        $arrayUpdate = array(
+                            "estatus" => 0,
+                            "fecha_modificacion" => date('Y-m-d H:i:s')
+                        );
+                        $this->General_model->updateRecord("copropietarios", $arrayUpdate, "id_copropietario", $registro['id_copropietario']); // MJ: LLEVA 4 PARÁMETROS $table, $data, $key, $value
+                        $dataInsertarCopropietarios = array(
+                            "id_cliente" => $responseAgregarCliente[0]["lastId"],
+                            "nombre" => $registro['nombre'],
+                            "apellido_paterno" => $registro['apellido_paterno'],
+                            "apellido_materno" => $registro['apellido_materno'],
+                            "personalidad_juridica" => $registro['personalidad_juridica'],
+                            "rfc" => $registro['rfc'],
+                            "correo" => $registro['correo'],
+                            "telefono" => $registro['telefono'],
+                            "telefono_2" => $registro['telefono_2'],
+                            "nacionalidad" => $registro['nacionalidad'],
+                            "fecha_nacimiento" => $registro['fecha_nacimiento'],
+                            "estado_civil" => $registro['estado_civil'],
+                            "regimen_matrimonial" => $registro['regimen_matrimonial'],
+                            "conyuge" => $registro['conyuge'],
+                            "domicilio_particular" => $registro['domicilio_particular'],
+                            "originario_de" => $registro['originario_de'],
+                            "tipo_vivienda" => $registro['tipo_vivienda'],
+                            "ocupacion" => $registro['ocupacion'],
+                            "empresa" => $registro['empresa'],
+                            "posicion" => $registro['posicion'],
+                            "antiguedad" => $registro['antiguedad'],
+                            "edadFirma" => $registro['edadFirma'],
+                            "estatus" => $registro['estatus'],
+                            "fecha_creacion" => $registro['fecha_creacion'],
+                            "creado_por" => $registro['creado_por'],
+                            "fecha_modificacion" => $registro['fecha_modificacion'],
+                            "modificado_por" => $registro['modificado_por'],
+                            "ine" => $registro['ine'],
+                            "ladaTel" => $registro['ladaTel'],
+                            "ladaCel" => $registro['ladaCel'],
+                        );
+                        $this->General_model->addRecord('copropietarios', $dataInsertarCopropietarios);
+                    }
+                }
+
+            //fin de id_cliente
         }
         else {
             $dataParaActualizarLote = array (
@@ -3560,8 +3665,10 @@ public $controller = 'Postventa';
 
     public function getCopropsByIdCliente(){
         $idCliente = $this->input->post('idCliente');
+        $idLote = $this->input->post('idLote');
 
-        $dato = $this->Postventa_model->getCopropsByIdCliente($idCliente);
+        $dato['copropietarios'] = $this->Postventa_model->getCopropsByIdCliente($idCliente);
+        $dato['escrituraNotariada'] = $this->Postventa_model->getEscrituraNotariada($idCliente, $idLote);
         if ($dato != null)
             echo json_encode($dato);
         else

@@ -142,12 +142,16 @@ function fillTable(index_proyecto, index_condominio) {
             {
                 data: function (d) {
                     let btns = '';
+                    const DATE = new Date();
+                    const DATE_STR = [DATE.getMonth() + 1, DATE.getDate(), DATE.getFullYear()].join('-');
+                    const TITULO_DOCUMENTO = `${d.nombreResidencial}_${d.nombreLote}_${d.idLote}_${d.idCliente}_TDOC52${'ESCRITURA CON SELLOS DE NOTARIA'.slice(0, 4)}_${DATE_STR}`;
+
                     let btnBase = `<button class="btn-data btn-blueMaderas iniciarTramite" data-toggle="tooltip" 
                     data-placement="top" title= "Iniciar trámite para cambio de nombre" data-idLote="${d.idLote}" 
                     data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" 
                     data-nombreCteNuevo="${d.nombreCteNuevo}" data-apCteNuevo="${d.apCteNuevo}" 
                     data-amCteNuevo="${d.amCteNuevo}" data-idTipoTramite="${d.idTipoTramite}" 
-                    data-idRegistro="${d.id_registro}"><i class="fas fa-user-edit"></i></button>`;
+                    data-idRegistro="${d.id_registro}" data-tituloDocumento="${TITULO_DOCUMENTO}"><i class="fas fa-user-edit"></i></button>`;
                     if (d.estatusCambioNombre == 1)
                         btns = btnBase;
                     else if (d.estatusCambioNombre == 2 || d.estatusCambioNombre == 5)
@@ -193,8 +197,11 @@ $(document).on('click', '.iniciarTramite', async function () {
     $('#idCliente').val($(this).attr('data-idCliente'));
     $('#tipoTransaccion').val($(this).attr('data-tipoTransaccion'));
     $('#idRegistro').val($(this).attr('data-idRegistro'));
+    $('#tituloDocumentoInput').val($(this).attr('data-tituloDocumento'));
     $('#banderaCoprop').val(contador);
     document.getElementById('divHtmlCoprop').innerHTML = '';
+    document.getElementById('fileEscrituraSellos').innerHTML = '';
+    document.getElementById('fileEscrituraSellos').classList.add = 'hide';
     if ($(this).attr('data-tipoTransaccion') == 1) {
         $("#tipoTramite").val('').selectpicker('refresh');
         $('#txtNombre').val('');
@@ -207,9 +214,14 @@ $(document).on('click', '.iniciarTramite', async function () {
         $('#txtApellidop').val($(this).attr('data-apCteNuevo'));
         $('#txtApellidom').val($(this).attr('data-amCteNuevo'));
         let id_cliente = $(this).attr('data-idcliente');
-        let copropietarios = await getDescriptionNotaria(id_cliente);
+        let idLote = $(this).attr('data-idLote');
+        let tipoTramite = $(this).attr('data-idTipoTramite');
+        let valoresGenerales = await getDescriptionNotaria(id_cliente, idLote);
+        let copropietarios = valoresGenerales.copropietarios;
         let contadorInner = 0;
         let divAddCoprop = document.getElementById('divHtmlCoprop');
+        let divEscrituraNotariada = document.getElementById('fileEscrituraSellos');
+        let escrituraNotariadaValor = valoresGenerales.escrituraNotariadaObject.escrituraNotariada;
 
         copropietarios.map((elemento, index)=>{
             console.log(index);
@@ -252,20 +264,42 @@ $(document).on('click', '.iniciarTramite', async function () {
 
         });
 
-        //divHtmlCoprop
+        if(tipoTramite == 6){
+            let escrituraNotariadaINNER = '<h5>Escritura notariada</h5><hr>';
+            escrituraNotariadaINNER    += '<iframe src="'+general_base_url+'static/documentos/cliente/escrituraNotariada/'+escrituraNotariadaValor+'" width="100%" height="250px"></iframe>\n';
+            escrituraNotariadaINNER    += '<br><br><p id="secondaryLabelDetail"> Sube la escritura con sellos de notaria para actualizar el registro actual</p>' +
+                '           <div class="" id="selectFileSection">\n' +
+                '                        <div class="file-gph">\n' +
+                '                            <input class="d-none" type="file" name="fileElm" id="fileElm">\n' +
+                '                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+                '                            <label class="upload-btn m-0" for="fileElm">\n' +
+                '                                <span>Seleccionar</span>\n' +
+                '                                <i class="fas fa-folder-open"></i>\n' +
+                '                            </label>\n' +
+                '                        </div>\n' +
+                '             </div>';
+            divEscrituraNotariada.innerHTML = escrituraNotariadaINNER;
+            divEscrituraNotariada.classList.remove('hide');
+            $("input:file").on("change", function () {
+                const target = $(this);
+                const relatedTarget = target.siblings(".file-name");
+                const fileName = target[0].files[0].name;
+                relatedTarget.val(fileName);
+            });
+        }
 
 
 
-        async function getDescriptionNotaria(idCliente) {
+        async function getDescriptionNotaria(idCliente, idLote) {
             $("#spiner-loader").removeClass("hide");
             return new Promise((resolve, reject) => {
                 $.ajax({
                     url: "getCopropsByIdCliente",
-                    data: { idCliente: idCliente },
+                    data: { idCliente: idCliente, idLote: idLote },
                     type: "POST",
                     dataType: "json",
                     success: function (response) {
-                        resolve(response);
+                        resolve({copropietarios:response['copropietarios'], escrituraNotariadaObject:response['escrituraNotariada']});
                         $("#spiner-loader").addClass("hide");
                     },
                 });
@@ -301,6 +335,7 @@ $(document).on("submit", "#formCambioNombre", function (e) {
     let data = new FormData($(this)[0]);
     data.append('arrayPosiciones', banderasPosiciones);
     //$('#spiner-loader').removeClass('hide');
+
     $.ajax({
         url: `${general_base_url}Postventa/setInformacionCliente`,
         data: data,
@@ -407,3 +442,32 @@ function eliminarCopropDiv(index){
 
 }
 
+$(document).on('change', '#tipoTramite', ()=>{
+    let tipoTramite = $('#tipoTramite').val();
+    //6: escrituracion tercero
+    let contenedorInput = document.getElementById('fileEscrituraSellos');
+    if(tipoTramite == 6){
+        let htmlInner = '<p id="secondaryLabelDetail"> Sube la escritura con sellos de notaria</p>' +
+            '           <div class="" id="selectFileSection">\n' +
+            '                        <div class="file-gph">\n' +
+            '                            <input class="d-none" type="file" name="fileElm" id="fileElm">\n' +
+            '                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">\n' +
+            '                            <label class="upload-btn m-0" for="fileElm">\n' +
+            '                                <span>Seleccionar</span>\n' +
+            '                                <i class="fas fa-folder-open"></i>\n' +
+            '                            </label>\n' +
+            '                        </div>\n' +
+            '             </div>';
+
+        contenedorInput.innerHTML = htmlInner;
+        contenedorInput.classList.remove('hide');
+        $("input:file").on("change", function () {
+            const target = $(this);
+            const relatedTarget = target.siblings(".file-name");
+            const fileName = target[0].files[0].name;
+            relatedTarget.val(fileName);
+        });
+    }else{
+        contenedorInput.classList.add('hide');
+    }
+});
