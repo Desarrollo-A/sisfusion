@@ -3,11 +3,11 @@ var tabla_remanente2_seguros;
 
 function CloseModalDelete2IntmexSeguros(){
 
-    document.getElementById("form_multiples").reset();
+    document.getElementById("form_multiples_seguros").reset();
     a = document.getElementById('borrarProyectoIntmexSeguros');
     padre = a.parentNode;
     padre.removeChild(a);
-    $("#modal_multiples_Intmex_seguros").modal('toggle');  
+    $("#modal_multiples_IntmexF_seguros").modal('toggle');  
 }
 
 $(document).ready(function() {
@@ -66,12 +66,12 @@ $('#usuario_factura_intmex_seguros').change(function(ruta){
     getAssimilatedCommissionsIntmexSeguros(proyecto, condominio);
 });
 
-$(document).on("click", ".Pagar", function() {          
-    $("#modal_multiples_Intmex_seguros .modal-body").html("");
-    $("#modal_multiples_Intmex_seguros .modal-header").html("");
-    $("#modal_multiples_Intmex_seguros .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples_Intmex_seguros .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
-    $("#modal_multiples_Intmex_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_seguros" name="desarrolloSelect_Int_seguros" class="selectpicker select-gral desarrolloSelect_Int_seguros ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
+$(document).on("click", ".PagarSeguros", function() {          
+    $("#modal_multiples_IntmexF_seguros .modal-body").html("");
+    $("#modal_multiples_IntmexF_seguros .modal-header").html("");
+    $("#modal_multiples_IntmexF_seguros .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
+    $("#modal_multiples_IntmexF_seguros .modal-footer").append(`<div id="borrarProyectoIntmexSeguros"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2IntmexSeguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptarIntmexSeguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_IntmexF_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect_Int_seguros" name="desarrolloSelect_Int_seguros" class="selectpicker select-gral desarrolloSelect_Int_seguros ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'SegurosComision/getDesarrolloSelectINTMEX/', {desarrollo: 2 } ,function(data) {
         var len = data.length;
@@ -88,7 +88,7 @@ $(document).on("click", ".Pagar", function() {
     }, 'json');
         
     $('#desarrolloSelect_Int_seguros').change(function() {
-        $("#modal_multiples_Intmex_seguros .modal-body .bodypagos").html("");
+        $("#modal_multiples_IntmexF_seguros .modal-body .bodypagos").html("");
         if(document.getElementById('bodypago2')){
             let a =  document.getElementById('bodypago2');
             padre = a.parentNode;
@@ -102,16 +102,16 @@ $(document).on("click", ".Pagar", function() {
         $.getJSON(general_base_url + "SegurosComision/getPagosByProyect/"+valorSeleccionado+'/'+2).done(function(data) {
             let sumaComision = 0;
             if (!data) {
-                $("#modal_multiples_Intmex_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
+                $("#modal_multiples_IntmexF_seguros .modal-body").append('<div class="row"><div class="col-md-12">SIN DATOS A MOSTRAR</div></div>');
             } 
             else {
                 if(data.length > 0){
-                    $("#modal_multiples_Intmex_seguros .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
+                    $("#modal_multiples_IntmexF_seguros .modal-body ").append(`<center><div class="row bodypagos"><p style='color:#9D9D9D;'>¿Estas seguro que deseas autorizar $ <b style="color:green">${formatMoney(data[0][0].suma)}</b> de ${selected}?</div></center>`);
                 } 
                 
-                $("#modal_multiples_Intmex_seguros .modal-body ").append(`<div  id="bodypago2"></div>`);
+                $("#modal_multiples_IntmexF_seguros .modal-body ").append(`<div  id="bodypago2"></div>`);
                 $.each(data[1], function(i, v) {
-                    $("#modal_multiples_Intmex_seguros .modal-body #bodypago2").append(`
+                    $("#modal_multiples_IntmexF_seguros .modal-body #bodypago2").append(`
                     <input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                 });
                 document.getElementById('btn-aceptarIntmexSeguros').disabled = false;
@@ -119,7 +119,7 @@ $(document).on("click", ".Pagar", function() {
         });
     });
 
-    $("#modal_multiples_Intmex_seguros").modal({
+    $("#modal_multiples_IntmexF_seguros").modal({
         backdrop: 'static',
         keyboard: false
     });
@@ -655,7 +655,7 @@ function selectAllIntmexSeguros(e) {
     }
 }
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiples_seguros").submit( function(e) {
     $('#loader').removeClass('hidden');
     e.preventDefault();
 }).validate({

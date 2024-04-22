@@ -209,4 +209,9 @@ class Contratacion extends CI_Controller
         } else
             echo json_encode(array());
     }
+
+    public function nombreTipo(){
+       $this->validateSession();
+       echo json_encode($this->Contratacion_model->getNombreTipo()->result_array());
+    }
 }

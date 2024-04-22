@@ -58,6 +58,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade modal-alertas" id="modal_multiples_intmexR_seguros" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiples_seguros">
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
     
         <div class="modal fade modal-alertas" id="documento_preview" role="dialog">
             <div class="modal-dialog" style= "margin-top:20px;"></div>

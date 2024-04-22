@@ -23,7 +23,7 @@ $(document).ready(function() {
 });
 
 function CloseModalDelete2Seguros(){
-    document.getElementById("form_multiples").reset();
+    document.getElementById("form_multiples_seguros").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
     padre.removeChild(a);
@@ -65,11 +65,11 @@ $('#usuario_remanente_intmexSeguros').change(function(ruta){
     getAssimilatedCommissionsIntmexSeguros(proyecto, condominio);
 });
 
-$(document).on("click", ".pagar_remanente", function() {          
+$(document).on("click", ".pagar_remanente_seguros", function() {          
     $("#modal_multiples_intmexR_seguros .modal-body").html("");
     $("#modal_multiples_intmexR_seguros .modal-header").html("");
     $("#modal_multiples_intmexR_seguros .modal-header").append(`<center> <h4 class="card-title"><b>Marcar pagadas</b></h4> </center>`);
-    $("#modal_multiples_intmexR_seguros .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Seguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptar" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
+    $("#modal_multiples_intmexR_seguros .modal-footer").append(`<div id="borrarProyect"><button type="button" class="btn btn-danger btn-simple " data-dismiss="modal" onclick="CloseModalDelete2Seguros()">CANCELAR</button><button type="submit" disabled id="btn-aceptar-seguros" class="btn btn-primary" value="ACEPTAR"> ACEPTAR</button></div>`);
     $("#modal_multiples_intmexR_seguros .modal-header").append(`<div class="row"><div class="col-md-12"><select id="desarrolloSelect" name="desarrolloSelect" class="selectpicker select-gral desarrolloSelect ng-invalid ng-invalid-required" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select></div></div>`);
     
     $.post(general_base_url + 'SegurosComision/getDesarrolloSelectINTMEX/', {desarrollo: 4 } ,function(data) {
@@ -114,7 +114,7 @@ $(document).on("click", ".pagar_remanente", function() {
                     $("#modal_multiples_intmexR_seguros .modal-body #bodypago2").append(`<input type="hidden" name="ids[]" id="ids" value="${v.id_pago_i}"></div>`);
                     
                 });
-                document.getElementById('btn-aceptar').disabled = false;
+                document.getElementById('btn-aceptar-seguros').disabled = false;
             }
         });
     });
@@ -671,7 +671,7 @@ function selectAllIntmexSeguros(e) {
     }
 }
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiples_seguros").submit( function(e) {
     $('#loader').removeClass('hidden');
     e.preventDefault();
 }).validate({

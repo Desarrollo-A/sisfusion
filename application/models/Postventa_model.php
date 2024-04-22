@@ -1597,5 +1597,10 @@ function checkBudgetInfo($idSolicitud){
         $query = $this->db->query("SELECT * FROM clientes_x_lote WHERE idCliente=".$idCliente." AND idLote=".$idLote);
         return $query->row();
     }
+
+    function getCopropsActuales($id_cliente){
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = ".$id_cliente);
+        return $query->result_array();
+    }
     
 }

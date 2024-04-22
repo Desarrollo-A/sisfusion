@@ -565,7 +565,7 @@ $(document).on("click", ".ver_historial", function () {
     let rolesContraloria = [17, 70, 71, 73, 12];
     if ($itself.attr('data-tipo-venta') == 'Venta de particulares') {
         $.getJSON(`${general_base_url}Contratacion/getClauses/${idLote}`).done(function (data) {
-            if (data.length == 1)
+            if (data.length >= 1)
                 $('#clauses_content').html(data[0]['nombre']);
             else
                 $('#clauses_content').html('SIN DATOS QUE MOSTRAR');

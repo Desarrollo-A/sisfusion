@@ -26,6 +26,8 @@
 	<link href="<?= base_url() ?>static/yadcf/jquery.datatables.yadcf.css" rel="stylesheet" type="text/css"/>
 	<link href='<?=base_url()?>dist/js/fullcalendar/main.css' rel='stylesheet' />
 
+	<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
+
 </head>
 
 <!-- MODALES GENERALES -->
