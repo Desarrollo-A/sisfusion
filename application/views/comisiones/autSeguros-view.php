@@ -55,20 +55,22 @@
         <div class="modal fade modal-alertas" id="modalHistorial" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                        <div class="modal-body">
-                            <div role="tabpanel">
-                                <h6 id="nameLote"></h6>
-                                <div class="container-fluid" id="changelogTab">
-                                    <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                        <ul class="timeline-3 historialSeguros" id=""></ul>
-                                    </div>
-                                
+                    <div class="modal-header">
+
+                    </div>
+                    <div class="modal-body">
+                        <div role="tabpanel">
+                            <h6 id="nameLote"></h6>
+                            <div class="container-fluid" id="changelogTab">
+                                <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="historialSeguros"></ul>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
-                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -123,7 +125,7 @@
                                                     <th>ID LOTE</th>
                                                     <th>CLIENTE</th>
                                                     <th>TIPO DE VENTA</th>
-                                                    <th id="filterInfo">CONTRATACIÓN</th>
+                                                    <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
                                                     <th>PRECIO FINAL SEGURO</th>
                                                     <th>% COMISION TOTAL</th>

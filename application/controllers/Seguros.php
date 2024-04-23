@@ -441,7 +441,7 @@ class Seguros extends CI_Controller
       echo json_encode($this->Seguro_model->getOpcionesParaReporteComisionistas($condicionXUsuario)->result_array());
   }
   public function getDataPagosSeguro() {
-    $data['data'] = $this->Seguro_model->getDataPagosSeguro()->result_array();
+    $data['data'] =  !isset($_POST["estatus"]) ? $this->Seguro_model->getDataPagosSeguro()->result_array() : $this->Seguro_model->getDataPagosSeguro($_POST["estatus"])->result_array();
     echo json_encode($data);
   }
   public function getDetallePlanesComisiones($idPlan)

@@ -34,7 +34,8 @@ class Seguro_model extends CI_Model {
     }
 
     function getInfoLote($referencia, $empresa, $nombreLote){
-        $query = $this->db->query("SELECT lo.idLote , idCliente,idCondominio
+        $query = $this->db->query("SELECT lo.idLote ,
+        (CASE WHEN	lo.idCliente IS NULL OR lo.idCliente = 0 THEN 0 ELSE lo.idCliente END) idCliente,lo.idCondominio
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -660,16 +661,18 @@ class Seguro_model extends CI_Model {
             ORDER BY id_catalogo, UPPER(CONCAT(us.id_usuario, ' - ', us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno))");
         }
         
-        public function getDataPagosSeguro($val = '') {
+        public function getDataPagosSeguro($estatus = '') {
             $this->db->query("SET LANGUAGE Español;");
-            ini_set('memory_limit', -1);    
+            ini_set('memory_limit', -1);  
+            $cadena = $estatus != '' ? "WHERE  cl.estatusSeguro=".$estatus : "";  
     
             $query = $this->db->query("SELECT re.descripcion nombreResidencial,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
 			tv.tipo_venta,st.nombreStatus,pg.totalLote Precio_Total,(pg.porcentaje_abono * 100) porcentaje,pg.total_comision Comision_total,pg.abonado Comisiones_Pagadas,pg.pendiente Comisiones_pendientes,pg.fecha_modificacion,
             (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,
-			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,opc.nombre AS estatusSeguro,
-			(CASE WHEN cl.estatusSeguro = 1 THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
+			(CASE WHEN l.idStatusContratacion = 15 THEN 'CONTRATADO' ELSE CONVERT(VARCHAR,l.idStatusContratacion) END) idStatusContratacion,pl.descripcion plan_comision,pl.id_plan,
+            (CASE WHEN cl.estatusSeguro = 0 THEN 'PENDIENTE' ELSE opc.nombre END) estatusSeguro,
+			(CASE WHEN cl.estatusSeguro IN (0,1) THEN 'lbl-vividOrange' WHEN cl.estatusSeguro = 2 THEN 'lbl-green' WHEN cl.estatusSeguro = 3 THEN 'lbl-warning' ELSE '' END) colorSeguro,cl.id_cliente,cl.estatusSeguro AS idestatusSeguro
 			FROM lotes l
 			INNER JOIN clientes cl ON cl.id_cliente=l.idCliente
 			INNER JOIN condominios co ON co.idCondominio=l.idCondominio
@@ -678,7 +681,9 @@ class Seguro_model extends CI_Model {
 			LEFT JOIN tipo_venta tv ON tv.id_tventa=l.tipo_venta
 			LEFT JOIN statuscontratacion st ON st.idStatusContratacion=l.idStatusContratacion
             LEFT JOIN opcs_x_cats opc ON opc.id_opcion=cl.estatusSeguro AND opc.id_catalogo=125
-			INNER JOIN plan_comision_seguros pl ON pl.id_plan=1");
+			INNER JOIN plan_comision_seguros pl ON pl.id_plan=1
+            $cadena
+            ");
     
             return $query;
         }

@@ -1575,4 +1575,12 @@ class Reestructura_model extends CI_Model
 
       return $query->result_array();
     }
+
+    public function buscarPagos($idLote,$idCliente){    
+        $query = "SELECT * FROM comisiones co 
+        INNER JOIN pago_comision_ind pci ON pci.id_comision = co.id_comision
+        WHERE pci.estatus NOT IN(1,6) AND co.id_lote=$idLote AND co.idCliente=$idCliente";
+
+        return $this->db->query($query)->result_array(); 
+    }
 }

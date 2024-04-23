@@ -297,7 +297,8 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
          LEFT JOIN residenciales RE ON RE.idResidencial IN (CAST(A2.value AS INT))
         WHERE $estatusWhere1 $estatusWhere2
         GROUP BY aut.id_autorizacion, aut.idResidencial,aut.fecha_inicio,aut.fecha_fin,aut.id_sede,aut.tipo_lote,aut.superficie,aut.paquetes,aut.estatus,aut.fecha_creacion,aut.modificado_por,
-         opc.id_opcion,opc2.nombre,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno),aut.estatus_autorizacion,aut.creado_por,aut.fecha_modificacion,sd.nombre")->result_array();
+         opc.id_opcion,opc2.nombre,CONCAT(us.nombre, ' ',us.apellido_paterno, ' ', us.apellido_materno),aut.estatus_autorizacion,aut.creado_por,aut.fecha_modificacion,sd.nombre
+         ORDER BY aut.id_autorizacion DESC")->result_array();
     }
     public function saveAutorizacion($datos){
         $idResidencial = $datos['idResidencial'];

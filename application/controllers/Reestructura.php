@@ -3330,4 +3330,10 @@ class Reestructura extends CI_Controller{
 			echo json_encode(0);
 		} 
     }
+
+    public function verificarComisiones($idLote,$idCliente){
+        $data = $this->Reestructura_model->buscarPagos($idLote,$idCliente);    
+        if(count($data)){}
+        
+    }
 }
