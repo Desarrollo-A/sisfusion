@@ -1,14 +1,13 @@
-let tituloshistorialCompleta = [];
-
 LotesPorClienteAll = [];
 
     $('#tablaHistorialCompleta thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
+        console.log(title);
         LotesPorClienteAll.push(title);
         $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
         $('input', this).on('keyup change', function () {
             if (tablaHistorialLotesALL.column(i).search() !== this.value)
-            tablaHistorialLotesALL.column(i).search(this.value).draw();
+                tablaHistorialLotesALL.column(i).search(this.value).draw();
         });
     });
 
@@ -26,7 +25,7 @@ LotesPorClienteAll = [];
                     columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + LotesPorClienteAll[columnIdx - 1] + ' ';
+                            return ' ' + LotesPorClienteAll[columnIdx] + ' ';
                         }
                     }
                 }
@@ -67,20 +66,13 @@ LotesPorClienteAll = [];
             { data: 'sede' },
             { data: 'tipo_proceso' }
         ],
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            },
-        ],
+
         ajax: {
             url: `${general_base_url}Reporte/getLotesTotal`,
             dataSrc: "",
             type: "POST",
             cache: false,
         },
-        order: [[1, 'asc']]
     });
 
     $('#tablaHistorialCompleta').on('draw.dt', function () {

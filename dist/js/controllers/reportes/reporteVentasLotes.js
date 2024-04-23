@@ -8,6 +8,7 @@ $("#lotesClientesIndividual").ready(function () {
         
             var title = $(this).text();
             titulosLotesIndividual.push(title);
+            console.log(title);
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_15.column(i).search() !== this.value)
@@ -27,10 +28,10 @@ $("#lotesClientesIndividual").ready(function () {
                 titleAttr: 'Registro lotes individual',
                 title: "Registro lotes individual",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                    columns: [0, 1, 2, 3],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + titulosLotesIndividual[columnIdx - 1] + ' ';
+                            return ' ' + titulosLotesIndividual[columnIdx] + ' ';
                         }
                     }
                 }
@@ -64,13 +65,6 @@ $("#lotesClientesIndividual").ready(function () {
                 }
             }
         ],
-        columnDefs: [
-            {
-                searchable: false,
-                orderable: false,
-                targets: 0
-            },
-        ],
         ajax: {
             url: `${general_base_url}Reporte/getLotesUnicos`,
             dataSrc: "",
@@ -100,8 +94,6 @@ $("#lotesClientesIndividual").ready(function () {
 
 function consultarHistorialLotes(nombreCliente) {
 
-    LotesPorClienteAll = [];
-
     $('#tablaHistorialLotes thead tr:eq(0) th').each(function (i) {
         var title = $(this).text();
         LotesPorClienteAll.push(title);
@@ -128,10 +120,10 @@ function consultarHistorialLotes(nombreCliente) {
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'HISTORIAL LOTES POR CLIENTE',
                 exportOptions: {
-                    columns: [0, 1, 2, 3],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' ' + LotesPorClienteAll[columnIdx] + ' ';
+                            return ' ' + LotesPorClienteAll[columnIdx - 1] + ' ';
                         }
                     }
                 },
