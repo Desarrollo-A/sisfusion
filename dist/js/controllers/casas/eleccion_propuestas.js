@@ -42,7 +42,7 @@ function show_propuestas(proceso) {
 
     form.fields = [
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
-        new OptionField({id: 'idPropuesta', label: 'Propuestas', data: propuestas}),
+        new OptionField({id: 'idPropuesta', label: '', data: propuestas}),
     ]
 
     form.show()

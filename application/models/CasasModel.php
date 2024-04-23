@@ -418,13 +418,19 @@ class CasasModel extends CI_Model
         doc.documento,
         doc.idDocumento,
         pro.idPropuesta,
-        oxc.nombre AS notaria,
+        CASE
+			 WHEN oxc.nombre IS NULL THEN 'Sin elegir'
+			 ELSE oxc.nombre
+		END AS notaria,
         pro.fechaFirma,
-        CONCAT('$', pro.costo) AS costo
+        CASE
+			 WHEN pro.costo IS NULL THEN ''
+			 ELSE CONCAT('$', pro.costo)
+		END AS costo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
-        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta -- AND pro.status = 1
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 128
         WHERE
             pc.proceso = 6
@@ -449,12 +455,13 @@ class CasasModel extends CI_Model
             pc.*,
             lo.nombreLote,
             pro.idPropuesta,
-            pro.notaria,
+            oxc.nombre AS notaria,
             pro.fechaFirma,
             pro.costo
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 128
         WHERE
             pc.proceso > 6
         AND pc.proceso < 8
@@ -521,7 +528,10 @@ class CasasModel extends CI_Model
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
-            archivo,
+            CASE
+                WHEN archivo IS NULL THEN 'Sin archivo'
+                ELSE archivo
+            END AS archivo,
             documento,
             tipo,
             fechaModificacion
@@ -657,12 +667,10 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setAdeudo($idProcesoCasas, $columna, $adeudo){
+    public function setAdeudo($idProcesoCasas, $adeudoOoam, $adeudoAdm, $adeudoGph){
         $query = "UPDATE proceso_casas
-        SET
-            $columna = $adeudo
-        WHERE
-            idProcesoCasas = $idProcesoCasas";
+                  SET adeudoOOAM = $adeudoOoam, adeudoADM = $adeudoAdm, adeudoGPH = $adeudoGph
+                  WHERE idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }

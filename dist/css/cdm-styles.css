@@ -393,3 +393,7 @@ div #lblDataCl2
   	font-size: 18px;
   	margin-right: 5px;
   }
+
+  .btnSelect{
+	height: 45px;
+  }

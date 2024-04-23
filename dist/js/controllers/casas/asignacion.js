@@ -42,7 +42,7 @@ $.ajax({
 function choose_asesor(data) {
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new SelectField({ id: 'asesor', label: 'Asesor',  placeholder: 'Selecciona una opcion', data: items }),
+        new SelectField({ id: 'asesor', label: 'Asesor',  placeholder: 'Selecciona una opcion', data: items, width: '12' }),
     ]
 
     form.show()
