@@ -1,5 +1,5 @@
 function show_preview(data) {
-    let url = `${general_base_url}casas/archivo/${data.archivo}`
+    let url = `${general_base_url}pagoscasas/archivo/${data.archivo}`
 
     Shadowbox.init();
 
@@ -14,6 +14,15 @@ function show_preview(data) {
 
 function show_upload(data) {
     //console.log(data)
+    let accept = ['image/png', 'image/jpeg', 'application/pdf']
+    
+    if(data.tipo === 5){
+        accept = ['application/pdf']
+    }
+
+    if(data.tipo === 6){
+        accept = ['text/xml']
+    }
 
     let form = new Form({
         title: `Subir ${data.documento}`,
@@ -22,7 +31,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}/pagoscasas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -39,10 +48,10 @@ function show_upload(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
-            new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo'}),
+            new HiddenField({ id: 'id_proceso',         value: data.idProcesoPagos }),
+            new HiddenField({ id: 'id_documento',       value: data.idDocumento }),
+            new HiddenField({ id: 'name_documento',     value: data.documento }),
+            new FileField({   id: 'file_uploaded',      label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept }),
         ],
     })
 
@@ -61,13 +70,13 @@ let columns = [
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
-        
+
         return `<div class="d-flex justify-center">${view_button}${upload_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: `casas/lista_contratos/${idProcesoCasas}`,
+    url: `pagoscasas/lista_subir_documentos/${idProcesoPagos}`,
     columns,
 })

@@ -16,17 +16,17 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Carga de documentacion</h3>
+                                    <h3 class="card-title center-align">Documentacion del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID LOTE</th>
-                                            <th>NOMBRE LOTE</th>
-                                            <th>COSTO DE CONSTRUCCION</th>
-                                            <th>VIGENCIA</th>
+                                            <th>ID DOC</th>
+                                            <th>DOCUMENTO</th>
+                                            <th>ARCHIVO</th>
+                                            <th>FECHA SUBIDO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -44,5 +44,8 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/carga_documentos.js"></script>
+    <script type="text/javascript">
+        const idProcesoPagos = <?php echo $lote->idProcesoPagos ?>
+    </script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/subir_documentacion.js"></script>
 </body>

@@ -191,8 +191,7 @@ class Casas extends BaseController {
         $this->load->view("casas/propuestas", $data);
     }
 
-    public function archivo($name)
-    {
+    public function archivo($name){
         $object = $this->bucket->object(urldecode($name));
 
         if($object->exists()){

@@ -140,7 +140,7 @@ class FileField{
                 .attr('type', 'file')
                 .attr('accept', accept)
                 .change(function(e) { 
-                    console.log(e.target.files[0])
+                    //console.log(e.target.files[0])
 
                     let name = e.target.files[0].name
                     let size = e.target.files[0].size / 1024
@@ -154,7 +154,9 @@ class FileField{
                     $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
 
                     if(accept){
-                        if(accept !== e.target.files[0].type){
+                        // console.log(e.target.files[0].type)
+
+                        if(!accept.includes(e.target.files[0].type)){
                             alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
                             $(`#${id}-name`).val('')
                         }
