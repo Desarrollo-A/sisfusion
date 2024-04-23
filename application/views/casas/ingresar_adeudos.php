@@ -26,6 +26,8 @@
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
                                             <th>ADEUDO OOAM</th>
+                                            <th>ADEUDO ADM</th>
+                                            <th>ADEUDO GPH</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -44,5 +46,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js?=v1"></script>
 </body>

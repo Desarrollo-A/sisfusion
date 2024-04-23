@@ -264,7 +264,7 @@ class OptionField{
         let options = []
         for (const option of data) {
             options.push(
-                $('<div />')
+                $('<div /><br>')
                 .addClass('container boxChecks p-0')
                 .append(
                     $('<label />')
@@ -281,9 +281,27 @@ class OptionField{
                         $('<span />')
                         .addClass('w-100 d-flex justify-between')
                         .append(
+                            $('<b />')
+                            .addClass('m-0')
+                            .text(option.title)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
                             $('<p />')
                             .addClass('m-0')
-                            .text(option.label)
+                            .text(option.subtitle)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
+                            $('<p />')
+                            .addClass('m-0')
+                            .text(option.description)
                         )
                     )
                 )
@@ -291,7 +309,7 @@ class OptionField{
         }
 
         this.field = $('<div />')
-        .addClass('col-12 lotePropuesto')
+        .addClass('col-12 lotePropuesto checkDS')
         .append(
             $('<label />')
             .text(label)

@@ -1249,6 +1249,7 @@ class Casas extends BaseController {
         $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta);
 
         if($is_ok){
+            
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono propuesta: $form->idPropuesta");
 
             $this->json([]);
