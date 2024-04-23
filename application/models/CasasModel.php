@@ -127,7 +127,10 @@ class CasasModel extends CI_Model
         $query = "SELECT
             pc.*,
             lo.nombreLote,
-            us.nombre as nombreAsesor
+            (CASE
+                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                ELSE 'Sin asignar'
+            END) AS nombreAsesor
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -160,7 +163,7 @@ class CasasModel extends CI_Model
 
     public function getAsesoresOptions(){
         $query = "SELECT
-            nombre AS label,
+            concat(nombre, ' ', apellido_paterno) AS label,
             id_usuario AS value
         FROM usuarios
         WHERE

@@ -81,7 +81,7 @@ let buttons = [
             class: 'btn btn-azure',
             style: 'position: relative; float: right',
         }
-    }
+    },
 ]
 
 let table = new Table({
