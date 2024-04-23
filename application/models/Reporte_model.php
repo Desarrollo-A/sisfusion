@@ -1199,4 +1199,116 @@ class Reporte_model extends CI_Model {
         )->result_array();
     }
 
+    public function getLotesUnicos(){
+        $query=$this->db->query("SELECT reporteIndividual.id_cliente, reporteIndividual.nombre_cliente, 
+        CASE
+            WHEN COALESCE(cp.nombre, '') = '' THEN 'Sin copropietario'
+            ELSE UPPER(CONCAT(cp.nombre, ' ', cp.apellido_paterno, ' ', cp.apellido_materno))
+        END AS nombre_copropietario, reporteIndividual.fechaApartado, reporteIndividual.repeticiones
+        FROM (
+        SELECT UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombre_cliente, us.id_cliente, us.fechaApartado, repeticiones_por_nombre.repeticiones, 
+            ROW_NUMBER() OVER (PARTITION BY repeticiones_por_nombre.nombre_normalizado ORDER BY us.fechaApartado) AS rn
+        FROM clientes AS us
+        JOIN (
+            SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS nombre_normalizado, 
+                COUNT(*) AS repeticiones
+            FROM clientes
+            GROUP BY REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U'), status
+            HAVING COUNT(*) > 10 and status=1
+        ) AS repeticiones_por_nombre
+        ON UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) = repeticiones_por_nombre.nombre_normalizado
+        ) AS reporteIndividual
+        LEFT JOIN copropietarios cp ON cp.id_cliente = reporteIndividual.id_cliente
+        WHERE rn = 1 
+        ORDER BY nombre_cliente;");
+        return $query;
+    }
+
+    public function getAllLotes($nombreCliente){
+        $query=$this->db->query("SELECT us.status, us.id_cliente, lo.idLote, res.nombreResidencial as proyectoCondominio, res.descripcion, 
+        cond.nombre_condominio, lo.nombreLote, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreRepetidos, 
+        repeticiones_por_nombre.repeticiones, us.fechaApartado, 
+        CASE WHEN COALESCE(cp.nombre, '') = '' THEN 'Sin copropietario' ELSE UPPER(CONCAT(cp.nombre, ' ', cp.apellido_paterno, ' ', cp.apellido_materno)) END AS nombre_copropietario, 
+        lo.referencia, us.fechaApartado, 
+        CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, 
+        CONCAT(coo.nombre,' ',coo.apellido_paterno,' ',coo.apellido_materno) AS coordinador,
+        CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) AS gerente, 
+        st.nombre as estatusApartado, sc.nombreStatus as estatus_contratacion, se.nombre as sede, oxc0.nombre as tipo_proceso
+         FROM clientes AS us
+         LEFT JOIN lotes lo ON lo.idLote = us.idLote
+         LEFT JOIN copropietarios cp ON cp.id_cliente = us.id_cliente
+         LEFT JOIN opcs_x_cats oxc0 ON 
+             (CASE 
+                 WHEN us.proceso = 0 THEN 1 
+                 WHEN us.proceso IS NULL THEN 1 
+                 ELSE us.proceso 
+             END) = oxc0.id_opcion
+         AND oxc0.id_catalogo = 97
+         LEFT JOIN sedes se ON se.id_sede = us.id_sede 
+         LEFT JOIN condominios cond ON lo.idCondominio = cond.idCondominio
+         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+         LEFT JOIN residenciales res ON cond.idResidencial = res.idResidencial
+         LEFT JOIN usuarios ase ON ase.id_usuario = us.id_asesor
+         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+         LEFT JOIN usuarios coo ON coo.id_usuario = us.id_coordinador
+         LEFT JOIN usuarios ger ON ger.id_usuario = us.id_gerente
+         JOIN (
+             SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS nombre_normalizado, 
+                    COUNT(*) AS repeticiones
+             FROM clientes
+             GROUP BY REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U'), 
+                      status
+             HAVING COUNT(*) > 1 and status = 1
+         ) AS repeticiones_por_nombre
+         ON REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') = repeticiones_por_nombre.nombre_normalizado
+         WHERE repeticiones > 10 
+         AND REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') LIKE '%" . strtoupper($nombreCliente) . "%'
+         AND us.status = 1
+         ORDER BY us.nombre");
+        return $query;
+    }   
+
+    public function getLotesTotal(){
+        
+        $query=$this->db->query("SELECT us.status, us.id_cliente, lo.idLote, res.nombreResidencial as proyectoCondominio, res.descripcion, 
+        cond.nombre_condominio, lo.nombreLote, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreRepetidos, 
+        repeticiones_por_nombre.repeticiones, us.fechaApartado, 
+        CASE WHEN COALESCE(cp.nombre, '') = '' THEN 'Sin copropietario' ELSE UPPER(CONCAT(cp.nombre, ' ', cp.apellido_paterno, ' ', cp.apellido_materno)) END AS nombre_copropietario, 
+        lo.referencia, us.fechaApartado, 
+        CONCAT(ase.nombre,' ',ase.apellido_paterno,' ',ase.apellido_materno) AS asesor, 
+        CONCAT(coo.nombre,' ',coo.apellido_paterno,' ',coo.apellido_materno) AS coordinador,
+        CONCAT(ger.nombre,' ',ger.apellido_paterno,' ',ger.apellido_materno) AS gerente, 
+        st.nombre as estatusApartado, sc.nombreStatus as estatus_contratacion, se.nombre as sede, oxc0.nombre as tipo_proceso
+         FROM clientes AS us
+         LEFT JOIN lotes lo ON lo.idLote = us.idLote
+         LEFT JOIN copropietarios cp ON cp.id_cliente = us.id_cliente
+         LEFT JOIN opcs_x_cats oxc0 ON 
+             (CASE 
+                 WHEN us.proceso = 0 THEN 1 
+                 WHEN us.proceso IS NULL THEN 1 
+                 ELSE us.proceso 
+             END) = oxc0.id_opcion
+         AND oxc0.id_catalogo = 97
+         LEFT JOIN sedes se ON se.id_sede = us.id_sede 
+         LEFT JOIN condominios cond ON lo.idCondominio = cond.idCondominio
+         LEFT JOIN statuslote st ON st.idStatusLote = lo.idStatusLote
+         LEFT JOIN residenciales res ON cond.idResidencial = res.idResidencial
+         LEFT JOIN usuarios ase ON ase.id_usuario = us.id_asesor
+         LEFT JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
+         LEFT JOIN usuarios coo ON coo.id_usuario = us.id_coordinador
+         LEFT JOIN usuarios ger ON ger.id_usuario = us.id_gerente
+         JOIN (
+             SELECT REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') AS nombre_normalizado, 
+                    COUNT(*) AS repeticiones
+             FROM clientes
+             GROUP BY REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U'), 
+                      status
+             HAVING COUNT(*) > 1 and status = 1
+         ) AS repeticiones_por_nombre
+         ON REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)),'á','a'),'é','e'),'í','i'),'ó','o'),'ú','u'),'Á','A'),'É','E'),'Í','I'),'Ó','O'),'Ú','U') = repeticiones_por_nombre.nombre_normalizado
+         WHERE repeticiones > 10 
+         AND us.status = 1
+         ORDER BY us.nombre;");
+        return $query;
+    }
 }

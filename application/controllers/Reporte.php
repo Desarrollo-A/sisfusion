@@ -284,6 +284,11 @@ class Reporte extends CI_Controller {
 		$this->load->view("reportes/lotesXStatus_view");
     }
 
+    public function reporteLotesCliente(){        
+		$this->load->view('template/header');
+		$this->load->view("reportes/reporteClientes_view");
+    }
+
     public function lotesContrato(){
         $this->load->view('template/header');
         $this->load->view("reportes/reporteLotesContrato");
@@ -311,6 +316,38 @@ class Reporte extends CI_Controller {
         $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $result['data'] = $this->Reporte_model->getListadoDeVentas($beginDate, $endDate);
         echo json_encode($result, JSON_NUMERIC_CHECK);
+    }
+
+    public function getAllLotes(){
+
+        $nombreCliente = $this->input->post("nombreCliente");
+
+        $data = $this->Reporte_model->getAllLotes($nombreCliente)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesUnicos(){
+
+        $data = $this->Reporte_model->getLotesUnicos()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesTotal(){
+
+        $data = $this->Reporte_model->getLotesTotal()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 
 }
