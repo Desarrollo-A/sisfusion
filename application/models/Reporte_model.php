@@ -423,6 +423,11 @@ class Reporte_model extends CI_Model {
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.estatus = 1
+                    left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                    ) vc2 on vc2.id_cliente = cl.id_cliente
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     $filtroSt
@@ -448,6 +453,11 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND (lo.totalNeto2 IS NOT NULL AND lo.totalNeto2 != 0.00)
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.estatus = 1
+                    left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                    ) vc2 on vc2.id_cliente = cl.id_cliente
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
@@ -478,6 +488,11 @@ class Reporte_model extends CI_Model {
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.estatus = 1
+                    left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                    ) vc2 on vc2.id_cliente = cl.id_cliente
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.idLote = lo.idLote AND hl.id_cliente = cl.id_cliente
@@ -508,6 +523,11 @@ class Reporte_model extends CI_Model {
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.estatus = 1
+                    left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                    ) vc2 on vc2.id_cliente = cl.id_cliente
                     $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
@@ -575,7 +595,7 @@ class Reporte_model extends CI_Model {
             $filtroSt .= 'INNER JOIN (SELECT idLote, idCliente, MAX(idStatusContratacion) statusContratacion FROM historial_lotes GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente AND hlo3.statusContratacion = ' . $estatusContratacion;
         
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, $leader);
-        list($nombreUsuario, $precioDescuento, $total) = $this->amountShare($id_rol);
+        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol);
         
         $idList = $generalArr == [0,0,0,0] ? '0' : '(' . implode(',', $generalArr) . ')';
         $loteFiltro .= $idList == "0" ? '' : ' and lo.idLote IN ' . $idList;
@@ -650,7 +670,8 @@ class Reporte_model extends CI_Model {
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 ISNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, ISNULL(cl.total_cl ,lo.total) totalLista,
                 $nombreUsuario,
-                $precioDescuento,COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
+                $total,
+                COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND ( lo.totalNeto2 IS NOT NULL AND lo.totalNeto2 != 0.00 )
                 $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
@@ -662,6 +683,11 @@ class Reporte_model extends CI_Model {
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN sedes ss ON ss.id_sede = cl.id_sede
                 LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+                left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                ) vc2 on vc2.id_cliente = cl.id_cliente
                 WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
                 $filtro
                 $conList
@@ -682,7 +708,7 @@ class Reporte_model extends CI_Model {
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) totalLista,
                 $nombreUsuario,
-                $precioDescuento,
+                $total,
                 COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote = 3 AND (lo.idStatusContratacion < 9 OR lo.idStatusContratacion = 11) AND (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00)
@@ -692,6 +718,11 @@ class Reporte_model extends CI_Model {
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN sedes ss ON ss.id_sede = cl.id_sede
                 LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+                left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                ) vc2 on vc2.id_cliente = cl.id_cliente
                 $filtroSt
                 WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
                 $filtro
@@ -713,7 +744,7 @@ class Reporte_model extends CI_Model {
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) totalLista, CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado,
                 $nombreUsuario,
-                $precioDescuento,
+                $total,
                 COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
@@ -723,9 +754,14 @@ class Reporte_model extends CI_Model {
                 INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 0
                 GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                 $filtroSt
-                INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
+                INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio 
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
                 LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+                left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                ) vc2 on vc2.id_cliente = cl.id_cliente
                 LEFT JOIN sedes ss ON ss.id_sede = cl.id_sede
                 WHERE (cl.cancelacion_proceso != 2 OR (isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 0 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739))) 
                 $filtro
@@ -748,8 +784,7 @@ class Reporte_model extends CI_Model {
                 cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
                 isNULL(cl.totalNeto2_cl ,lo.totalNeto2) totalNeto2, isNULL(cl.total_cl ,lo.total) totalLista, CONVERT(VARCHAR, cl.fechaApartado, 103) fechaApartado,
                 $nombreUsuario,
-                $precioDescuento
-                ,COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
+                $total,COALESCE(ss.nombre, 'SIN ESPECIFICAR') sede, COALESCE(ss.id_sede, 0) id_sede
                 FROM clientes cl
                 INNER JOIN lotes lo ON lo.idLote = cl.idLote
                 $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
@@ -758,6 +793,11 @@ class Reporte_model extends CI_Model {
                 INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes GROUP BY idLote, idCliente) hlo ON hlo.idLote = lo.idLote AND hlo.idCliente = cl.id_cliente
                 INNER JOIN historial_lotes hlo2 ON hlo2.idLote = hlo.idLote AND hlo2.idCliente = hlo.idCliente AND hlo2.modificado = hlo.modificado
                 LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+                left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+                ) vc2 on vc2.id_cliente = cl.id_cliente
                 $filtroSt
                 INNER JOIN condominios cn ON cn.idCondominio = lo.idCondominio
                 INNER JOIN residenciales r ON r.idResidencial = cn.idResidencial
@@ -874,7 +914,12 @@ class Reporte_model extends CI_Model {
             LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
             LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
             LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
-            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1 
+            left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+            ) vc2 on vc2.id_cliente = cl.id_cliente
             LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
             
             LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaStatus9 FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente
@@ -933,7 +978,12 @@ class Reporte_model extends CI_Model {
             LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
             LEFT JOIN usuarios u4 ON u4.id_usuario = cl.id_regional
             LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
-            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1 
+            left join (select count(vc.id_cliente) cuenta, cl.id_cliente from clientes cl
+                        inner join
+                        ventas_compartidas vc on vc.id_cliente = cl.id_cliente  and vc.estatus = 1
+                        group by cl.id_cliente, vc.id_cliente
+            ) vc2 on vc2.id_cliente = cl.id_cliente
             
             LEFT JOIN historial_liberacion hl ON hl.idLote = lo.idLote AND hl.tipo NOT IN (2, 5, 6) AND hl.id_cliente = cl.id_cliente
             LEFT JOIN (SELECT idLote, idCliente, MAX(modificado) fechaStatus9 FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 GROUP BY idLote, idCliente) hl2 ON hl2.idLote = lo.idLote AND hl2.idCliente = cl.id_cliente
@@ -1400,15 +1450,15 @@ class Reporte_model extends CI_Model {
         if($id_rol == 7) {
             $join = 'id_gerente';
             $selectRol = "vc.id_regional,vc.id_subdirector,vc.id_coordinador,vc.id_gerente,vc.id_regional_2,vc.id_asesor";
-            $filtroTotal = "(COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente) + COUNT(cl.id_cliente))END AS total";
-            $filtroPrecio = "(COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente) + COUNT(cl.id_cliente))END, 'C') AS precioDescuento";
+            $filtroTotal = "(COUNT(vc.id_cliente) )END AS total";
+            $filtroPrecio = "(COUNT(vc.id_cliente) )END, 'C') AS precioDescuento";
             $filter = "vc.id_asesor = cl.id_asesor";
         }
         if($id_rol == 9) {
             $join = 'id_coordinador';
             $selectRol = "vc.id_regional,vc.id_subdirector,vc.id_coordinador,vc.id_gerente,vc.id_regional_2,vc.id_asesor";
-            $filtroTotal = "(COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente) + COUNT(cl.id_cliente))END) AS total";
-            $filtroPrecio = "(COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente) + COUNT(cl.id_cliente))END, 'C') AS precioDescuento";
+            $filtroTotal  =" (COUNT(vc.id_cliente) )END AS total";
+            $filtroPrecio ="(COUNT(vc.id_cliente))END, 'C') AS precioDescuento";
             $filter = "vc.id_coordinador = cl.id_coordinador";
         }
         if($id_rol == 59) {
@@ -1419,9 +1469,9 @@ class Reporte_model extends CI_Model {
             $filter = "vc.id_subdirector = vc.id_subdirector";
         }
         $nombreUsuario = "CASE WHEN vc.id_cliente IS NULL THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END ELSE CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END ELSE 'ACUMULADO SIN ESPECIFICAR (COMPARTIDO)' END END AS nombreUsuario";
-        $total = "CASE WHEN vc.id_cliente IS NULL THEN SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) ELSE SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / ((COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente)) + COUNT(cl.id_cliente)) * $filtroTotal";
+        $total = "CASE WHEN vc.id_cliente IS NULL THEN SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) ELSE SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / (MAX(vc2.cuenta) + COUNT(cl.id_cliente)) * $filtroTotal";
         $precioDescuento = "FORMAT(CASE WHEN vc.id_cliente IS NULL THEN SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)
-                ELSE lo.totalNeto2 END) ELSE SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / ((COUNT(vc.id_cliente) OVER (PARTITION BY vc.id_cliente)) + COUNT(cl.id_cliente)) * $filtroPrecio";
+                ELSE lo.totalNeto2 END) ELSE SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / (MAX(vc2.cuenta) + COUNT(cl.id_cliente)) * $filtroPrecio";
 
         return [$nombreUsuario, $total, $precioDescuento];
     }
