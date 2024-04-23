@@ -42,7 +42,7 @@ $.ajax({
 function choose_asesor(data) {
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new SelectField({ id: 'asesor', label: 'Asesor',  placeholder: 'Selecciona una opcion', data: items }),
+        new SelectField({ id: 'asesor', label: 'Asesor',  placeholder: 'Selecciona una opcion', data: items, width: '12' }),
     ]
 
     form.show()
@@ -113,7 +113,7 @@ let columns = [
 
         let pass_button = ''
         if(data.idAsesor){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignacion', onClick: select_asesor, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Aceptar asignación', onClick: select_asesor, data})
         }
 
         let cancel_button = new RowButton({icon: 'cancel', color: 'warning', label: 'Cancelar proceso', onClick: cancel_process, data})

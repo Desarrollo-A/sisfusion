@@ -28,7 +28,9 @@ function set_adeudo(data) {
 
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new TextField({ id: 'adeudo', label: 'Adeudo', placeholder: 'Ingresa la cantidad' }),
+        new NumberField({ id: 'adeudoOoam', label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12' }),
+        new NumberField({ id: 'adeudoAdm', label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12' }),
+        new NumberField({ id: 'adeudoGph', label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12' }),
     ]
 
     form.show()
@@ -38,7 +40,13 @@ let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: function(data){
-        return data.adeudoOOAM
+        return data.adOOAM
+    } },
+    { data: function(data){
+        return data.adADM
+    } },
+    { data: function(data){
+        return data.adGPH
     } },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)

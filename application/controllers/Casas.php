@@ -1177,21 +1177,19 @@ class Casas extends BaseController {
     public function ingresar_adeudo(){
         $form = $this->form();
 
-        if(!isset($form->id) || !isset($form->adeudo)){
+        if(!isset($form->id) || !isset($form->adeudoOoam) || !isset($form->adeudoAdm) || !isset($form->adeudoGph)){
             http_response_code(400);
         }
 
         $id_rol = 2;
 
-        $column = 'adeudoOOAM';
-
         $proceso = $this->CasasModel->getProceso($form->id);
 
-        if($proceso && isset($column)){
-            $is_ok = $this->CasasModel->setAdeudo($proceso->idProcesoCasas, $column, $form->adeudo);
+        if($proceso /* && isset($column) */){
+            $is_ok = $this->CasasModel->setAdeudo($proceso->idProcesoCasas, $form->adeudoOoam, $form->adeudoAdm, $form->adeudoGph);
 
             if($is_ok){
-                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modifico adeudo: $column");
+                $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se modifico adeudo");
 
                 $this->json([]);
             }else{
@@ -1248,6 +1246,7 @@ class Casas extends BaseController {
         $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta);
 
         if($is_ok){
+            
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono propuesta: $form->idPropuesta");
 
             $this->json([]);

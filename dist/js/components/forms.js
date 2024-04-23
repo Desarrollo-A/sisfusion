@@ -60,7 +60,7 @@ class HiddenField{
 }
 
 class SelectField{
-    constructor({id, label, placeholder, data=[], value}){
+    constructor({id, label, placeholder, data=[], value, width, style}){
         this.id = id
 
         let options = []
@@ -80,7 +80,7 @@ class SelectField{
         }
 
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width} col-md-12`)
         .append(
             $('<div />')
             .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
@@ -94,7 +94,7 @@ class SelectField{
                 .addClass('selectpicker select-gral m-0')
                 .attr('id', id)
                 .attr('name', id)
-                .data('style', 'btn')
+                .data('style', 'btnSelect')
                 .data('show-subtext', 'true')
                 .data('live-search', 'true')
                 .data('size', '7')
@@ -122,7 +122,7 @@ class FileField{
         this.id = id
 
         this.field = $('<div />')
-        .addClass('col-md-12 mt-1')
+        .addClass('col-md-12')
         .append(
             $('<div />')
             .addClass('file-gph')
@@ -173,7 +173,7 @@ class FileField{
             )
             .append(
                 $('<label />')
-                .addClass('upload-btn m-0')
+                .addClass('upload-btn')
                 .attr('for', id)
                 .attr('type', 'text')
                 .append(
@@ -199,10 +199,10 @@ class FileField{
 }
 
 class TextField{
-    constructor({id, label, placeholder}){
+    constructor({id, label, placeholder, width}){
         this.id = id
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width} mt-1`)
         .append(
             $('<label />')
             .addClass('control-label')
@@ -229,10 +229,10 @@ class TextField{
 }
 
 class NumberField{
-    constructor({id, label, placeholder, value}){
+    constructor({id, label, placeholder, value, width=12}){
         this.id = id
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width}`)
         .append(
             $('<label />')
             .addClass('control-label')
@@ -247,6 +247,7 @@ class NumberField{
             .attr('type', 'number')
             .attr('placeholder', placeholder)
             .val(value)
+            .on('keypress', this.onlyNumbers)
         )
 
         this.value = () => {
@@ -257,6 +258,23 @@ class NumberField{
     get(){
         return this.field
     }
+
+    onlyNumbers(e) {
+        var key = e.keyCode || e.which;
+        var tecla = String.fromCharCode(key);
+        var letras = "0123456789";
+        var especiales = [8, 37, 39, 46];
+
+        var tecla_especial = false;
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) return false;
+    }
 }
 
 class OptionField{
@@ -266,7 +284,7 @@ class OptionField{
         let options = []
         for (const option of data) {
             options.push(
-                $('<div />')
+                $('<div /><br>')
                 .addClass('container boxChecks p-0')
                 .append(
                     $('<label />')
@@ -283,9 +301,27 @@ class OptionField{
                         $('<span />')
                         .addClass('w-100 d-flex justify-between')
                         .append(
+                            $('<b />')
+                            .addClass('m-0')
+                            .text(option.title)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
                             $('<p />')
                             .addClass('m-0')
-                            .text(option.label)
+                            .text(option.subtitle)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
+                            $('<p />')
+                            .addClass('m-0')
+                            .text(option.description)
                         )
                     )
                 )
@@ -293,7 +329,7 @@ class OptionField{
         }
 
         this.field = $('<div />')
-        .addClass('col-12 lotePropuesto')
+        .addClass('col-12 lotePropuesto checkDS')
         .append(
             $('<label />')
             .text(label)

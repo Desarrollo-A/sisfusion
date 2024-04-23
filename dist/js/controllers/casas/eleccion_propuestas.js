@@ -5,16 +5,16 @@ function show_propuestas(proceso) {
     })
 
     form.onSubmit = function(data){
-        // console.log(data)
+        console.log(data)
         
         $.ajax({
             type: 'POST',
-            url: `${general_base_url}/casas/set_propuesta`,
+            url: `${general_base_url}casas/set_propuesta`,
             data: data,
             contentType: false,
             processData: false,
             success: function (response) {
-                // console.log(response)
+               // console.log(response)
 
                 table.reload()
 
@@ -41,8 +41,8 @@ function show_propuestas(proceso) {
     })
 
     form.fields = [
-        new HiddenField({ id: 'idProcesoCasas',      value: proceso.idProcesoCasas }),
-        new OptionField({id: 'idPropuesta', label: 'Propuestas', data: propuestas}),
+        new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
+        new OptionField({id: 'idPropuesta', label: '', data: propuestas}),
     ]
 
     form.show()
@@ -55,7 +55,7 @@ function sendToNext(data){
         type: 'POST',
         url: `to_validacion_contraloria?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de validacion de contraloria.", "success");
+            alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloria.", "success");
 
             table.reload()
         },
@@ -68,7 +68,7 @@ function sendToNext(data){
 pass_to_validacion_contraloria = function(data) {
     let ask = new AskDialog({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion de contraloria"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de contraloria"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
@@ -147,7 +147,7 @@ function sendToCargaTitulos(data) {
 back_to_carga_titulos = function(data) {
     let ask = new AskDialog({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Carga de titulos"</b>?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Carga de títulos"</b>?`,
         onOk: () => sendToCargaTitulos(data),
         //onCancel: sayNo,
     })
@@ -184,9 +184,9 @@ let columns = [
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             if(data.idPropuesta){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_validacion_contraloria, data})
             }
         }
 
