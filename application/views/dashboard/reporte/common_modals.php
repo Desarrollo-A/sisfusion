@@ -213,7 +213,7 @@
                       <th>DÍAS EN ESTATUS 9</th>
                       <th>ESTATUS DEL LOTE</th>
                       <th>APARTADO</th>
-                      <th>VENTA</th>
+                      <th>MODALIDAD</th>
                     </tr>
                 </thead>
             </table>
@@ -265,6 +265,7 @@
                         <th>FECHA DE LIBERACIÓN</th>
                         <th>MOTIVO</th>
                         <th>APARTADO</th>
+                        <th>MODALIDAD</th>
                     </tr>
                 </thead>
             </table>
