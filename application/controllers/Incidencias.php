@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) {
 }
  
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+ 
 class Incidencias extends CI_Controller
 {
   private $gph;
