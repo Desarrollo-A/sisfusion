@@ -22,7 +22,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,

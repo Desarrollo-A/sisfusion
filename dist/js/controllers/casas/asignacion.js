@@ -13,7 +13,7 @@ form.onSubmit = function (data) {
         contentType: false,
         processData: false,
         success: function (response) {
-            console.log(response)
+            alerts.showNotification("top", "right", "Se asigno el asesor correctamente.", "success");
 
             table.reload()
 
@@ -57,7 +57,7 @@ select_asesor = function (data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/to_carta_auth`,
+                url: `${general_base_url}casas/to_carta_auth`,
                 data: data,
                 contentType: false,
                 processData: false,

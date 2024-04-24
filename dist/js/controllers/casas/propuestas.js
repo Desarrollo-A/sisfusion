@@ -2,7 +2,7 @@ let notarias = []
 
 $.ajax({
     type: 'GET',
-    url: `${general_base_url}/casas/options_notarias`,
+    url: `${general_base_url}casas/options_notarias`,
     async: false,
     success: function (response) {
         notarias = response
@@ -23,13 +23,13 @@ function show_form(propuesta) {
 
         $.ajax({
             type: 'POST',
-            url: `${general_base_url}/casas/save_propuesta`,
+            url: `${general_base_url}casas/save_propuesta`,
             data: data,
             contentType: false,
             processData: false,
             success: function (response) {
                 // console.log(response)
-
+                alerts.showNotification("top", "right", "Propuesta ingresada correctamente.", "success");
                 table.reload()
 
                 form.hide()
@@ -59,6 +59,10 @@ function new_propuesta() {
     show_form({})
 }
 
+backPage = function() {
+    window.location.href = `${general_base_url}casas/carga_titulos`
+}
+
 let columns = [
     { data: 'idPropuesta' },
     { data: 'notaria' },
@@ -80,6 +84,17 @@ let buttons = [
         attr: {
             class: 'btn btn-azure',
             style: 'position: relative; float: right',
+        }
+    },
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
         }
     },
 ]

@@ -22,7 +22,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -49,6 +49,24 @@ function show_upload(data) {
     form.show()
 }
 
+backPage = function() {
+    window.location.href = `${general_base_url}casas/valida_comite`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
@@ -72,5 +90,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_documentos_comite/${idProcesoCasas}`,
+    buttons: buttons,
     columns,
 })

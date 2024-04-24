@@ -14,7 +14,8 @@ function set_adeudo(data) {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response)
+
+                alerts.showNotification("top", "right", "Adeudo ingresado correctamente.", "success");
 
                 table.reload()
 

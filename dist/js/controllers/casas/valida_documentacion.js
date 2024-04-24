@@ -12,6 +12,24 @@ function show_preview(data) {
     });
 }
 
+backPage = function() {
+    window.location.href = `${general_base_url}casas/validacion_contraloria`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
@@ -30,5 +48,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_valida_documentacion/${idProcesoCasas}`,
+    buttons: buttons,
     columns,
 })

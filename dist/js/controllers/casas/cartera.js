@@ -85,7 +85,7 @@ select_lote = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/to_asignacion`,
+                url: `${general_base_url}casas/to_asignacion`,
                 data: data,
                 contentType: false,
                 processData: false,
