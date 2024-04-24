@@ -89,3 +89,10 @@
 
     var id_rol_global = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
 </script>
+
+<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
+
+<script src="<?= base_url() ?>dist/js/components/components.js"></script>
+<script src="<?= base_url() ?>dist/js/components/table.js"></script>
+<script src="<?= base_url() ?>dist/js/components/dialogs.js"></script>
+<script src="<?= base_url() ?>dist/js/components/forms.js"></script>

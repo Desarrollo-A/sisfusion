@@ -96,7 +96,8 @@ function fillTable() {
                 data: function (d) {
                     let btnAceptar = `<button class="btn-data btn-green btn-avanzar" data-toggle="tooltip" 
                     data-placement="top" title= "Aceptar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" 
-                    data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1" data-precioFinal="${d.precioFinal}">
+                    data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="1" data-precioFinal="${d.precioFinal}"
+                    data-tipoTramite="${d.idTipoTramite}" data-escrituraNotariada="${d.escrituraNotariada}">
                         <i class="fas fa-thumbs-up"></i>
                     </button>`;
                     let btnRechazar = `<button class="btn-data btn-warning btn-avanzar" data-toggle="tooltip" data-placement="top" title= "Rechazar" data-idLote="${d.idLote}" data-idCliente="${d.idCliente}" data-tipoTransaccion="${d.estatusCambioNombre}" data-tipo="0"><i class="fas fa-thumbs-down"></i></button>`;
@@ -141,6 +142,7 @@ function fillTable() {
 // });
 
 $(document).on('click', '.btn-avanzar', function () {
+    console.log('avance');
     let tipoTransaccion = $(this).attr('data-tipo');
     let precioFinal = $(this).attr('data-precioFinal');
     let precioFinalCrudo = $(this).attr('data-precioFinal');
@@ -148,19 +150,23 @@ $(document).on('click', '.btn-avanzar', function () {
     var options = { style: 'currency', currency: 'MXN' };
     var numberFormat = new Intl.NumberFormat('es-MX', options);
     precioFinal = numberFormat.format(precioFinal);
+
     $('#idLoteA').val($(this).attr('data-idLote'));
     $('#idClienteA').val($(this).attr('data-idCliente'));
     $('#tipoTransaccionA').val($(this).attr('data-tipoTransaccion'));
     $('#tipo').val(tipoTransaccion);
     $('#comentarioAvanzar').val('');
-    if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null'){
+    $('#tipoTramiteA').val($(this).attr('data-tipoTransaccion'));
+    $('#valorTramite').val($(this).attr('data-tipoTramite'));
+
+
+    if(precioFinalCrudo == '' || precioFinalCrudo == null || precioFinalCrudo == ' ' || precioFinalCrudo == 'null' || precioFinalCrudo == '.00' ){
         inputEditar = '<div class="col-lg-12">\n' +
             '                  <label class="control-label">Precio Final</label>\n' +
             '                  <input class="form-control input-gral mb-1" data-type="currency" ' +
             '                   name="precioFinal" autocomplete="off" id="precioFinal" step="any"\n' +
             '                  style="margin-top: 0px;" >' +
             '            </div><script>$("input[data-type=\'currency\']").on({keyup: function() {formatCurrencyG($(this));},blur: function() { formatCurrencyG($(this), "blur");} });</script>';
-
     }
     else{
         inputEditar = '<div class="col-lg-12">\n' +
@@ -188,6 +194,22 @@ $(document).on('click', '.btn-avanzar', function () {
         $('#divTotalNeto').html('');
         $('#divTotalNeto').addClass('hide');
     }
+
+    if($(this).attr('data-tipoTramite') == 6){
+        let escrituraNotariadaDiv = document.getElementById('escrituraNotariadaDiv');
+        let contenidoHTML = '<h5>Escritura notariada</h5><hr>';
+        contenidoHTML    += '<iframe src="'+general_base_url+'static/documentos/cliente/escrituraNotariada/'+$(this).attr('data-escrituraNotariada')+'" width="100%" height="250px"></iframe>\n';
+        contenidoHTML    += '<input type="hidden" name="escrituraNotariada" value="'+$(this).attr('data-escrituraNotariada')+'">';
+
+        escrituraNotariadaDiv.innerHTML = contenidoHTML;
+        escrituraNotariadaDiv.classList.remove('hide');
+    }else{
+        let escrituraNotariadaDiv = document.getElementById('escrituraNotariadaDiv');
+        escrituraNotariadaDiv.innerHTML = '';
+        escrituraNotariadaDiv.classList.add('hide');
+    }
+
+
 
     $('#avance').modal();
 })

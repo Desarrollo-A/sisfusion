@@ -23,6 +23,9 @@
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>
                                                 <th>ID LOTE</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>TOTAL NETO</th>
+                                                <th>PRECION M2</th>
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
@@ -32,6 +35,8 @@
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
+                                                <th>ID DESTINO</th>
+                                                <th>SUPERFICIE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
