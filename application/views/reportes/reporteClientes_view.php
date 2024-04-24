@@ -24,13 +24,13 @@
                                     <div class="nav-tabs-custom">
                                         <div class="tab-content p-2">
                                             <div class="tab-pane active" id="tabClientesTotal">
-                                                <div class="row">
+                                                <div class="card">
                                                     <div class="col-md-12">
                                                         <div class="card card-plain">
                                                             <div class="card-content">
                                                                 <div class="material-datatables">
                                                                     <div class="form-group">
-                                                                        <table id="tablaHistorialLotes" class="table">
+                                                                        <table class="table-striped table-hover" id="tablaHistorialLotes" name="tablaHistorialLotes" >
                                                                             <thead>
                                                                                 <tr>
                                                                                     <th>ID CLIENTE</th>
@@ -86,23 +86,23 @@
                                 <div class="tab-content p-2">
                                     <div class="tab-pane active" id="tabClientesTotal2">
                                         <div class="card">
-                                            <div class="card-content">
-                                                <h3 class="card-title center-align">Reporte de lote por cliente individual</h3>
-                                                <div class="material-datatables">
+                                            <div class="card card-plain">
+                                                <div class="card-content">
+                                                    <h3 class="card-title center-align">Reporte de lote por cliente individual</h3>
                                                     <div class="material-datatables">
-                                                        <div class="form-group">
-                                                            <table class="table-striped table-hover" id="lotesClientesIndividual" name="lotesClientesIndividual">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>ID CLIENTE</th>
-                                                                        <th>NOMBRE CLIENTE</th>
-                                                                        <th>NOMBRE COPROPIETARIO</th>
-                                                                        <th>NUMERO LOTES</th>
-                                                                        <th>ACCIONES</th>
-                                                                    </tr>
-                                                                </thead>
-                                                            </table>
-                                                        </div>
+                                                            <div class="form-group">
+                                                                <table class="table-striped table-hover" id="lotesClientesIndividual" name="lotesClientesIndividual">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>ID CLIENTE</th>
+                                                                            <th>NOMBRE CLIENTE</th>
+                                                                            <th>NOMBRE COPROPIETARIO</th>
+                                                                            <th>NUMERO LOTES</th>
+                                                                            <th>ACCIONES</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
                                                     </div>
                                                 </div>
                                             </div>
