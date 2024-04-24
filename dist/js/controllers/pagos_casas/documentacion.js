@@ -1,3 +1,31 @@
+function sendToNext(data){
+    //console.log(data)
+
+    $.ajax({
+        type: 'POST',
+        url: `to_validacion?id=${data.idProcesoPagos}`,
+        success: function (response) {
+            alerts.showNotification("top", "right", "El lote ha sido enviado a validacion.", "success");
+
+            table.reload()
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    })
+}
+
+pass_to_validacion = function(data) {
+    let ask = new AskDialog({
+        title: 'Enviar a validacion', 
+        text: `¿Enviar documentacion del lote ${data.nombreLote} a validacion por contraloria?`,
+        onOk: () => sendToNext(data),
+        //onCancel: sayNo,
+    })
+
+    ask.show()
+}
+
 function edit_montos(data) {
     let form = new Form({
         title: 'Editar montos',
@@ -77,8 +105,8 @@ let columns = [
         let montos_button = new RowButton({icon: 'edit', label: 'Editar montos', onClick: edit_montos, data})
 
         let pass_button = ''
-        if(data.montoDepositado && data.costoConstruccion){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Iniciar proceso', onClick: go_to_documentos, data})
+        if(data.montoDepositado && data.costoConstruccion && data.documentos >= 6){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a validar documentos', onClick: pass_to_validacion, data})
         }
 
         return `<div class="d-flex justify-center">${docu_button}${montos_button}${pass_button}</div>`

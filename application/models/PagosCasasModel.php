@@ -24,6 +24,19 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
+    public function setProcesoTo($idProcesoPagos, $proceso){
+        $query = "UPDATE proceso_pagos
+        SET
+            proceso = $proceso,
+            fechaProceso = GETDATE(),
+            fechaModificacion = GETDATE(),
+            idModificacion = $this->idUsuario
+        WHERE
+            idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query);
+    }
+
     public function getListaIniciarProceso(){
         $query = "SELECT
             pc.*,
@@ -145,6 +158,32 @@ class PagosCasasModel extends CI_Model
         WHERE
             idProcesoPagos = $idProcesoPagos
         AND tipo IN (1,2,3,4,5,6)";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaValidaDocumentacion(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        WHERE
+            pp.proceso = 2
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaValidarDeposito(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        WHERE
+            pp.proceso = 3
+        AND pp.status = 1";
 
         return $this->db->query($query)->result();
     }

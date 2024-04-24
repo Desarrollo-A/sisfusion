@@ -30,6 +30,27 @@ class PagosCasas extends BaseController {
         $this->load->view("pagos_casas/subir_documentacion", $data);
     }
 
+    public function valida_documentos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/valida_documentos");
+    }
+
+    public function lista_valida_documentos($proceso){
+        $lote = $this->PagosCasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/lista_valida_documentos", $data);
+    }
+
+    public function validar_deposito(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_deposito");
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -167,6 +188,58 @@ class PagosCasas extends BaseController {
 
     public function lista_subir_documentos($proceso){
         $lotes = $this->PagosCasasModel->getListaSubirDcoumentos($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function to_validacion(){
+        $idProcesoPagos = $this->input->get('id');
+
+        if(!isset($idProcesoPagos)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($idProcesoPagos);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 2);
+
+        if($is_ok){
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_valida_documentacion(){
+        $lotes = $this->PagosCasasModel->getListaValidaDocumentacion();
+
+        $this->json($lotes);
+    }
+
+    public function to_validar_deposito(){
+        $idProcesoPagos = $this->input->get('id');
+
+        if(!isset($idProcesoPagos)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($idProcesoPagos);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 3);
+
+        if($is_ok){
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_validar_deposito(){
+        $lotes = $this->PagosCasasModel->getListaValidarDeposito();
 
         $this->json($lotes);
     }
