@@ -219,8 +219,7 @@ class Reestructura extends CI_Controller{
         $loteAOcupar = $clienteAnterior->idLote;
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($loteAOcupar);
-        $fechaCambio = "09/03/2024";
-        $fechaCambio = date("Y-m-d", strtotime("09/03/2024") );
+        $fechaCambio = "2024-03-09";
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         if( $fechaUltimoEstatus2 >= $fechaCambio){
@@ -854,8 +853,7 @@ class Reestructura extends CI_Controller{
         $idLider = $this->session->userdata('id_lider');
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
-        $fechaCambio = "09/03/2024";
-        $fechaCambio = date("Y-m-d", strtotime("09/03/2024") );
+        $fechaCambio = "2024-03-09";
 
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
