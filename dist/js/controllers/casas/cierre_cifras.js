@@ -49,32 +49,39 @@ function show_upload(data) {
     form.show()
 }
 
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_vobo_cifras?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_vobo_cifras = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Visto bueno"</b>?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_vobo_cifras`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
 
 let columns = [

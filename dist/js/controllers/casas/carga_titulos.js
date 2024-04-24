@@ -1,29 +1,37 @@
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_propuestas?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_propuestas = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_propuestas`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
+
 }
 
 function show_preview(data) {
@@ -77,32 +85,46 @@ function show_upload(data) {
     form.show()
 }
 
-function sendToConcentrarAdeudos(data) {
-    // console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_documentos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 back_to_adeudos = function(data) {
-    let ask = new AskDialog({
+    /* let ask = new AskDialog({
         title: 'Regresar proceso', 
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
         onOk: () => sendToConcentrarAdeudos(data),
         //onCancel: sayNo,
     })
 
-    ask.show()
+    ask.show() */
+
+    let form = new Form({
+        title: 'Regresar proceso', 
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_documentos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
+        
+                    table.reload()
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 go_to_propuestas = function(data) {
@@ -134,9 +156,12 @@ let columns = [
 
         let view_button = ''
         let pass_button = ''
+        
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
+            if(data.propuestas > 0){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
+            }
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_adeudos, data})

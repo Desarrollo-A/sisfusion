@@ -228,6 +228,35 @@ class TextField{
     }
 }
 
+class TextAreaField{
+    constructor({id, label, placeholder, width}){
+        this.id = id
+        this.field = $('<div />')
+        .addClass(`col-lg-${width} mt-1`)
+        .append(
+            $('<label />')
+            .addClass('control-label')
+            .attr('for', id)
+            .text(label)
+        )
+        .append(
+            $('<textarea />')
+            .addClass(`text-modal`)
+            .attr('id', id)
+            .attr('name', id)
+            .attr('placeholder', placeholder)
+        )
+
+        this.value = () => {
+            return $(`#${id}`).val()
+        }
+    }
+
+    get(){
+        return this.field
+    }
+}
+
 class NumberField{
     constructor({id, label, placeholder, value, width=12}){
         this.id = id
@@ -354,9 +383,9 @@ class Form{
         this.fields = fields || []
         this.onSubmit = onSubmit || undefined
 
-        if(!text){
+        /* if(!text){
             $('#text-form-modal').hide()
-        }
+        } */
     }
 
     show(){
