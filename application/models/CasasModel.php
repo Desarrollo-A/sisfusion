@@ -31,12 +31,13 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
-    public function setProcesoTo($idProcesoCasas, $proceso){
+    public function setProcesoTo($idProcesoCasas, $proceso, $comentario){
         $idModificacion = $this->session->userdata('id_usuario');
 
         $query = "UPDATE proceso_casas
         SET
             proceso = $proceso,
+            comentario = '$comentario',
             fechaProceso = GETDATE(),
             fechaModificacion = GETDATE(),
             idModificacion = $idModificacion
@@ -141,14 +142,14 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function addLoteToAsignacion($idLote){
+    public function addLoteToAsignacion($idLote, $comentario){
         $query = "INSERT INTO proceso_casas
         (
-            idLote
+            idLote, comentario
         )
         VALUES
         (
-            $idLote
+            $idLote, '$comentario'
         )";
 
         $result = $this->db->query($query);
@@ -230,10 +231,11 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function cancelProcess($idProcesoCasas){
+    public function cancelProcess($idProcesoCasas, $comentario){
         $query = "UPDATE proceso_casas
         SET
-            status = 0
+            status = 0,
+            comentario = '$comentario'
         WHERE
             idProcesoCasas = $idProcesoCasas";
 
@@ -399,13 +401,18 @@ class CasasModel extends CI_Model
             lo.nombreLote,
             doc.archivo,
             doc.documento,
-            doc.idDocumento
-        FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
-        WHERE
-            pc.proceso = 5
-        AND pc.status = 1";
+            doc.idDocumento,
+            pro.propuestas
+            FROM proceso_casas pc
+            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+            LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
+            LEFT JOIN 
+                (SELECT COUNT(*) AS propuestas, idProcesoCasas 
+                FROM propuestas_proceso_casas 
+                GROUP BY idProcesoCasas) pro ON pro.idProcesoCasas = pc.idProcesoCasas
+            WHERE
+                pc.proceso = 5
+            AND pc.status = 1";
 
         return $this->db->query($query)->result();
     }

@@ -1,57 +1,71 @@
-function sendToDocumentacion(data) {
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_documentos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a documentación del cliente.`, "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 back_to_documentos = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a documentación del cliente?`,
-        onOk: () => sendToDocumentacion(data),
-        //onCancel: sayNo,
-    })
+        onSubmit: function(data){
+            //console.log(data)
 
-    ask.show()
-}
+            $.ajax({
+                type: 'POST',
+                url: `back_to_documentos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a documentación del cliente.`, "success");
+        
+                    table.reload()
 
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_titulacion?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
-
-            table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
         },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    });
+
+    form.show()
 }
 
 pass_to_titulacion = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
-    })
+        onSubmit: function(data){
+            //console.log(data)
 
-    ask.show()
+            $.ajax({
+                type: 'POST',
+                url: `to_titulacion`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    });
+
+    form.show()
 }
 
 go_to_documentos = function(data) {

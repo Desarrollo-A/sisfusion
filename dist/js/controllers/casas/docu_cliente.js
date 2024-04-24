@@ -30,7 +30,7 @@ go_to_documentos = function(data) {
     window.location.href = `documentacion/${data.idProcesoCasas}`;
 }
 
-function sendToNext(data){
+/* function sendToNext(data){
     //console.log(data)
 
     $.ajax({
@@ -45,17 +45,49 @@ function sendToNext(data){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     })
-}
+} */
 
 pass_to_proyecto_ejecutivo = function(data) {
-    let ask = new AskDialog({
+    /* let ask = new AskDialog({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
 
-    ask.show()
+    ask.show() */
+
+    let form = new Form({
+        title: 'Continuar proceso', 
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_valida_comite`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite técnico.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 let columns = [
