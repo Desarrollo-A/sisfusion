@@ -12,6 +12,24 @@ function show_preview(data) {
     });
 }
 
+backPage = function() {
+    window.location.href = `${general_base_url}casas/proyecto_ejecutivo`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 function show_upload(data) {
     //console.log(data)
 
@@ -22,7 +40,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -69,5 +87,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_documentos_proyecto_ejecutivo/${idProcesoCasas}`,
+    buttons: buttons,
     columns,
 })

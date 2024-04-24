@@ -15,6 +15,7 @@ function show_propuestas(proceso) {
             processData: false,
             success: function (response) {
                // console.log(response)
+               alerts.showNotification("top", "right", `Propuesta seleccionada correctamente.`, "success");
 
                 table.reload()
 
@@ -30,7 +31,7 @@ function show_propuestas(proceso) {
 
     $.ajax({
         type: 'GET',
-        url: `${general_base_url}/casas/options_propuestas?id=${proceso.idProcesoCasas}`,
+        url: `${general_base_url}casas/options_propuestas?id=${proceso.idProcesoCasas}`,
         async: false,
         success: function (response) {
             propuestas = response
@@ -107,7 +108,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
