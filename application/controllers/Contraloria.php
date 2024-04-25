@@ -1697,6 +1697,7 @@ class Contraloria extends CI_Controller {
         $totalNeto2 = $this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
+        $sedeRecepcion = $this->input->post('sedeRecepcion');
 
         $mensualidades = $this->input->post('mensualidades');
 
@@ -1741,7 +1742,7 @@ class Contraloria extends CI_Controller {
         
         if($validate == 1) {
             if ($this->Contraloria_model->updateSt($idLote, $arreglo, $arreglo2, $arregloMensualidades) == TRUE) {
-                $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
+                $this->db->query("UPDATE clientes SET rl = $rl, tipo_nc = $residencia, sedeRecepcion = $sedeRecepcion, modificado_por = $id_usuario WHERE idLote = $idLote AND status = 1");
                 if ($this->input->post('lugar_prospeccion') == 47) { // ES UN CLIENTE CUYO PROSPECTO SE CAPTURÓ A TRAVÉS DE ARCUS 
                     $arcusData = array(
                         "id" => $this->input->post('id_prospecto'),
@@ -2748,7 +2749,10 @@ class Contraloria extends CI_Controller {
     }
 
     public function fillSelectsForV9() {
-        echo json_encode($this->Contraloria_model->getCatalogs()->result_array());
+        $catalogos = $this->Contraloria_model->getCatalogs()->result_array();
+        $sedes = $this->Contraloria_model->get_sede()->result_array();
+        $data = array_merge($catalogos, $sedes);
+        echo json_encode($data);
     }
 
     function todasAutorizacionesMSI(){
