@@ -69,10 +69,6 @@
         .textoDeshacer {
             font-size: 1.5rem;
         }
-
-        .foot {
-            margin-top: 10em;
-        }
     </style>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>

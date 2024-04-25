@@ -613,10 +613,7 @@ $(document).on('click', '.btn-informacion-cliente', async function (){
         sedesList.forEach((sedes)=>{
             const id = sedes.id_sede;
             const name = sedes.nombre;
-            console.log('id', id);
-            console.log('cliente.impresionen', cliente.impresionEn);
             if (id === cliente.impresionEn){
-
                 $("#impresoEn").append($('<option selected>').val(id).text(name.toUpperCase()));
             } else {
                 $("#impresoEn").append($('<option>').val(id).text(name.toUpperCase()));
@@ -728,7 +725,7 @@ $(document).on('click', '.btn-reubicar', async function () {
     const tr = $(this).closest('tr');
     const row = $('#reubicacionClientes').DataTable().row(tr);
     const nombreCliente = row.data().cliente;
-    const idProyecto = $(this).attr("data-idproyecto");
+    const idProyecto = $(this).attr("data-idProyecto");
     const idLoteOriginal = row.data().idLote;
     const statusPreproceso = $(this).attr("data-statusPreproceso");
     const idCliente = $(this).attr("data-idCliente");
@@ -915,19 +912,6 @@ $(document).on("change", "#loteAOcupar", function(e){
     let mensajeMaxLotes = '';
     // let sumatoriaLS = 0; //lotes seleccionados(propuestas)
 
-    if(idProyecto == 21 || idProyecto==14 || idProyecto==22 || idProyecto==25){//si es norte limitamos a una sola propuesta
-        arrayProyIdProp.push(idProyectoRE);
-
-        numeroMaximoLotes = 2; //se pone 0 porque esta igualado con un array, 0 contaria como un 1
-        mensajeMaxLotes = ' más de tres lotes';
-    }else{
-        mensajeMaxLotes = ' ';
-    }
-
-    if ($itself.val() === '') {
-        alerts.showNotification("top", "right", "Debe seleccionar un lote", "danger");
-        return;
-    }
 
     const numberLotes = $('#infoLotesSeleccionados .lotePropuesto').length;
     const idLotes = document.getElementsByClassName('idLotes');
@@ -946,30 +930,6 @@ $(document).on("change", "#loteAOcupar", function(e){
     if (numberLotes > numeroMaximoLotes) {
         alerts.showNotification("top", "right", "No puedes seleccionar "+ mensajeMaxLotes, "danger");
             return;
-    }else{
-        let conteoRepeticiones = contarRepeticiones('21', idProyectoConteo);
-        if(conteoRepeticiones > 2 && idProyectoCO==21){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de norte ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones2 = contarRepeticiones('14', idProyectoConteo);
-        if(conteoRepeticiones2>=2 && idProyectoCO==14){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Montaña San Luis ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones3 = contarRepeticiones('22', idProyectoConteo);
-        if(conteoRepeticiones3>=2 && idProyectoCO==22){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de un lote de Cañada León ", "danger");
-            return;
-        }
-
-        let conteoRepeticiones4 = contarRepeticiones('25', idProyectoConteo);
-        if(conteoRepeticiones4>=2 && idProyectoCO==25){
-            alerts.showNotification("top", "right", "No puedes seleccionar más de Privada Península ", "danger");
-            return;
-        }
     }
 
     if (statusPreproceso != 1) {
@@ -1284,7 +1244,6 @@ $(document).on('click', '.btn-avanzar', async function () {
             const dataFusionDes = await totalSuperficieFusion(idLote, 3);
             //AA: Obtenemos la superfices de origen y destino de la fusión.
             let separador=', ';
-            console.log(dataFusionDes);
             dataFusionDes.data.forEach((fusionLotes, index) => {
                 separador = (index==0) ? '' : ', ';
                 if(fusionLotes.origen == 1){
@@ -1388,7 +1347,6 @@ $(document).on("submit", "#formAvanzarEstatus", function(e) {
         }
     });
 });
-
 
 /**
  * @return {boolean}
@@ -1505,7 +1463,6 @@ const botonesAccionReubicacion = (d) => {
         <i class="fas fa-thumbs-up"></i>
     </button>`;
 
-
     const BTN_INFOCLIENTE =  `<button class="btn-data btn-green btn-informacion-cliente"
                     data-toggle="tooltip" 
                     data-placement="left"
@@ -1556,7 +1513,7 @@ const botonesAccionReubicacion = (d) => {
                     >
                     <i class="fas fa-thumbs-down"></i>
                 </button>`;
-                
+
     const BTN_REUBICACION = `
         <button class="btn-data btn-sky btn-reubicar"
                 data-toggle="tooltip" 
@@ -1577,11 +1534,12 @@ const botonesAccionReubicacion = (d) => {
             data-toggle="tooltip" 
             data-placement="left"
             title="${tooltipCF}"
+            data-bucket="${d.bucket}"
             data-idCliente="${d.idCliente}"
             data-idLote="${d.idLote}"
             data-nombreLote="${d.nombreLote}"
             data-estatusLoteArchivo="${d.status}"
-            data-editar="${d.contratoFirmado == null ? 0 : 1}"   
+            data-editar="${editarContratoFirmado}"
             data-rescision="${(d.idLotePvOrigen != 0 && d.idLotePvOrigen != null) ? d.rescision : d.rescisioncl}"
             data-idDocumento="${d.idContratoFirmado}"   
             data-idCondominio="${d.idCondominio}"   
@@ -1619,7 +1577,7 @@ let BUTTONREGRESO = '';
 
 
     if (idEstatusPreproceso === 0 && ROLES_PROPUESTAS.includes(id_rol_general)) // Gerente / Subdirector: PENDIENTE CARGA DE PROPUESTAS;
-        return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASANLUIS) ? (flagFusion == 1) ? BTN_PROPUESTAS : BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
+    return (d.idProyecto == PROYECTO.NORTE || d.idProyecto == PROYECTO.PRIVADAPENINSULA || d.idProyecto == PROYECTO.CANADA || d.idProyecto == PROYECTO.MONTANASANLUIS) ? (flagFusion == 1) ? BTN_PROPUESTAS + BTN_AVANCE: BTN_PROPUESTAS_REES + BTN_PROPUESTAS : BTN_PROPUESTAS;
     if (idEstatusPreproceso === 1 && ROLES_PROPUESTAS.includes(id_rol_general)) { // Gerente/Subdirector: REVISIÓN DE PROPUESTAS
         if (d.idLoteXcliente == null && d.idStatusLote != 17)
             return BTN_PROPUESTAS + BTN_INFOCLIENTE + BTN_REGRESO_PREPROCESO;
@@ -1666,8 +1624,6 @@ let BUTTONREGRESO = '';
         return d.idStatusLote == 17 ? BTN_REESTRUCTURA + BTN_REGRESO_PREPROCESO : BTN_REUBICACION + BTN_REGRESO_PREPROCESO;
     if(id_usuario_general === 13733) // ES EL USUARIO DE CONTROL JURÍDICO PARA REASIGNACIÓN DE EXPEDIENTES
         return BTN_REASIGNAR_EXPEDIENTE_JURIDICO ;
-    // if(idEstatusPreproceso > 0 && id_rol_general == 7)
-    //     return BTN_REGRESO_PREPROCESO;
     return '';
 }
 
@@ -1933,7 +1889,6 @@ const obtenerSedesLista = () =>{
         });
     });
 }
-
 
 $(document).on('click', '.regreso-preproceso', function(){
     arrayDeshacerRees = [];
