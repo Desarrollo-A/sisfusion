@@ -637,11 +637,10 @@ class Dashboard_model extends CI_Model {
         ISNULL(e.totalApartados, 0) totalApartados, --TOTAL PROSPECTOS C/APARTADO
         ISNULL(f.prospectosNoInteresados, 0) prospectosNoInteresados, --TOTAL PROSPECTOS NO INTERESADOS
         --porcentajes
-        
-        CASE WHEN a.totalProspectos = 0 THEN 0 ELSE CAST(ISNULL(CAST(b.totalProspectosCita * 100 AS float) / NULLIF(CAST(a.totalProspectos AS float), 0), 0) AS decimal(10,2)) END AS porcentaje_prospectosCita,
-        CASE WHEN a.totalProspectos = 0 THEN 0 ELSE CAST(ISNULL(CAST(c.totalProspectosCitaSeguimiento * 100 AS float) / NULLIF(CAST(a.totalProspectos AS float), 0), 0) AS decimal(10, 2)) END AS porcentaje_prospectosSeguimiento,
-        CASE WHEN a.totalProspectos = 0 THEN 0 ELSE CAST(ISNULL(CAST(e.totalApartados * 100 AS float) / NULLIF(CAST(a.totalProspectos AS float), 0), 0) AS decimal(10,2)) END AS porcentaje_prospectosApartados, 
-        CASE WHEN a.totalProspectos = 0 THEN 0 ELSE CAST(ISNULL(CAST(f.prospectosNoInteresados * 100 AS float) / NULLIF(CAST(a.totalProspectos AS float), 0), 0) AS decimal(10, 2)) END AS porcentaje_prospectosNoInteresado
+        CAST(isNULL(CAST(b.totalProspectosCita*100 as float) / CAST(a.totalProspectos as float),0)as decimal (10,2)) porcentaje_prospectosCita,
+        CAST(isNULL(CAST(c.totalProspectosCitaSeguimiento*100 as float) / CAST(a.totalProspectos as float),0) as decimal(10,2)) porcentaje_prospectosSeguimiento,
+        CAST(isNULL(CAST(e.totalApartados*100 as float) / CASt(a.totalProspectos as float),0)as decimal(10,2)) porcentaje_prospectosApartados,
+        CAST(isNULL(CAST(f.prospectosNoInteresados*100 as float) / CAST(a.totalProspectos as float),0)as decimal(10,2)) porcentaje_prospectosNoInteresado
 
         from(
         --TOTAL PROSPECTOS
