@@ -754,6 +754,12 @@ class Reestructura_model extends CI_Model
         return $this->db->query("UPDATE propuestas_x_lote SET estatus = 1, modificado_por = $id_usuario where idLote = $idLote and id_lotep = $idLoteSelected");
     }
 
+    public function setNoSeleccionPropuesta($idLote, $idLoteSelected){
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        return $this->db->query("UPDATE propuestas_x_lote SET estatus = 2, modificado_por = $id_usuario where idLote = $idLote and id_lotep != $idLoteSelected");
+    }
+
     public function getNotSelectedLotes($idLote){
         $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso 
 		FROM propuestas_x_lote pxl
@@ -1472,10 +1478,20 @@ class Reestructura_model extends CI_Model
 
     public function getReporteEstatus() {
 
-        return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
+        return $this->db->query("WITH UltimoValor AS (
+		SELECT 
+			idLote,
+			modificado,
+			ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY modificado DESC) AS uf
+			FROM 
+			historial_lotes hl
+)
+
+SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
         re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, CAST(lo.referencia AS VARCHAR (250)) referenciaOrigen, CAST(lo.idLote AS VARCHAR (250)) idLoteOrigen,
             STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
-            STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso
+            STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
+			STRING_AGG(FORMAT(u.modificado, 'HH:MM , d/MMMM/yyyy','es-MX'), ', ' ) as ultimaModificacion
             FROM propuestas_x_lote pxl
             INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera IN (1,0) AND lo.solicitudCancelacion != 2
             INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
@@ -1484,10 +1500,11 @@ class Reestructura_model extends CI_Model
             LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
             LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
             INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
+			LEFT JOIN UltimoValor u ON u.idLote = lo.idLote AND u.uf = 1
             GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre
             UNION ALL
     SELECT 
-      'Reubicación' tipo_proceso,
+      'Fusión' tipo_proceso,
       STRING_AGG(tb2.nombreResidencialOrigen, ', ') nombreResidencialOrigen, 
       STRING_AGG(tb2.nombreCondominioOrigen, ', ') nombreCondominioOrigen, 
       STRING_AGG(tb2.nombreLoteOrigen, ', ') nombreLoteOrigen, 
@@ -1500,7 +1517,8 @@ class Reestructura_model extends CI_Model
       tb2.idLoteDestino, 
       tb2.validacionAdministracion, 
       2 tipo, 
-      tb2.estatusProceso 
+      tb2.estatusProceso,
+	  STRING_AGG(tb2.ultiModificacion, ', ') ultimaModificacion
     FROM  (
       SELECT 
         tb.nombreResidencialOrigen, 
@@ -1514,7 +1532,8 @@ class Reestructura_model extends CI_Model
         STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
         STRING_AGG(lo2.idLote, ', ') idLoteDestino, 
         tb.validacionAdministracion, 
-        STRING_AGG(oxc0.nombre, ', ') estatusProceso 
+        STRING_AGG(oxc0.nombre, ', ') estatusProceso,
+		tb.ultiModificacion
       FROM 
         (
           SELECT 
@@ -1523,7 +1542,8 @@ class Reestructura_model extends CI_Model
             co.nombre nombreCondominioOrigen, 
             lo.nombreLote nombreLoteOrigen, 
             lo.referencia referenciaOrigen, 
-            lo.idLote idLoteOrigen, 
+            lo.idLote idLoteOrigen,
+			FORMAT(u.modificado, 'HH:MM , d/MMMM/yyyy','es-MX') as ultiModificacion,
             CASE WHEN (
               lo.validacionEnganche = 'NULL' 
               OR lo.validacionEnganche IS NULL
@@ -1533,6 +1553,7 @@ class Reestructura_model extends CI_Model
             INNER JOIN lotes lo ON lo.idLote = lf1.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2 
             INNER JOIN condominios co ON lo.idCondominio = co.idCondominio 
             INNER JOIN residenciales re ON co.idResidencial = re.idResidencial 
+			LEFT JOIN UltimoValor u ON u.idLote = lo.idLote AND u.uf = 1
           WHERE 
             lf1.origen = 1 
             AND lf1.destino = 0
@@ -1548,7 +1569,8 @@ class Reestructura_model extends CI_Model
         tb.nombreLoteOrigen, 
         tb.referenciaOrigen, 
         tb.idLoteOrigen, 
-        tb.validacionAdministracion 
+        tb.validacionAdministracion,
+		tb.ultiModificacion
     ) tb2
     GROUP BY 
       tb2.nombreResidencialDestino, 
@@ -1557,7 +1579,7 @@ class Reestructura_model extends CI_Model
       tb2.referenciaDestino, 
       tb2.idLoteDestino,
       tb2.validacionAdministracion,
-      tb2.estatusProceso 
+      tb2.estatusProceso
     ORDER BY 
         nombreLoteDestino")->result_array();
     }
@@ -1845,11 +1867,11 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    // public function checkLotesFusion($idLotes){
-    //     $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
+    public function checkLotesFusion($idLotes){
+        $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
 
-    //     return $query;
-    // }
+        return $query;
+    }
 
     public function updateLotesFusion($idLote, $idStatusLote, $idUsuario){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, $idUsuario, $idLote));
@@ -1919,4 +1941,114 @@ class Reestructura_model extends CI_Model
         WHERE pxl.idLote IN ($idLote)");
         return $query->result_array();
     }
+    public function getLotesOrigen($idLotePv){
+        $query = $this->db->query("SELECT lf.idLote, lo.idCliente FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote  where lf.idLotePvOrigen = ? AND lf.origen = 1", array($idLotePv));
+
+        return $query;
+    }
+
+    
+    public function getLotesDestino($idLotePv){
+        $query = $this->db->query("SELECT lf.*, lo.tipo_estatus_regreso FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote where idLotePvOrigen = ? AND destino = 1", $idLotePv);
+
+        return $query;
+    }
+    
+
+    public function getFlagCJ($idLotePv){
+        $query = $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM datos_x_cliente where idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function deleteFusionDestinos($lotesDelete, $idLotePv){
+        $query = $this->db->query("DELETE FROM lotesFusion WHERE idLote IN( ? ) AND idLotePvOrigen = ?", array($lotesDelete, $idLotePv));
+
+        return $query;
+    }
+
+    public function deleteDatos($idLotePv){
+        $query = $this->db->query("DELETE FROM datos_x_cliente WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getLotesOrigenRe($idLotePv){
+        $query = $this->db->query("SELECT TOP 1 lo.idLote, lo.idCliente FROM propuestas_x_lote pxl INNER JOIN lotes lo ON lo.idLote = pxl.idLote WHERE lo.idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getLotesDestinoRe($idLotePv){
+        $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso FROM propuestas_x_lote pxl INNER JOIN lotes lo ON lo.idLote = pxl.idLote where lo.idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function deletePropuestasDestinos($lotesDelete, $idLotePv){
+        $query = $this->db->query("DELETE FROM propuestas_x_lote WHERE id_lotep IN ?  AND idLote = ?", array($lotesDelete, $idLotePv));
+
+        return $query;
+    }
+
+    public function deleteCopropietario($idLotePv){
+        $query = $this->db->query("DELETE FROM datos_x_copropietario WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function updateRescision($idLotePv, $idCliente){
+        $query = $this->db->query("UPDATE datos_x_cliente SET rescision = NULL WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getClienteAnterior($idLote, $idCliente){
+        $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior FROM clientes cl1 INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2 where cl1.idLote = ? AND cl1.id_cliente = ? ", array($idLote, $idCliente));
+
+        return $query;
+    }
+
+    public function updateDocumentoAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE historial_documento SET status = 1 WHERE idLote = ? AND idCliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateDocumentoNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE historial_documento SET status = 0 WHERE idLote = ? AND idCliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function updateHistorialAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE historial_lotes SET status = 1 WHERE idLote = ? AND idCliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateHistorialNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE historial_lotes SET status = 0 WHERE idLote = ? AND idCliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function updateClienteAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE clientes SET status = 1 WHERE idLote = ? AND id_cliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateClienteNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE clientes SET status = 0 WHERE idLote = ? AND id_cliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function getStatusLote($idLotePv){
+        $query = $this->db->query("SELECT TOP 1 anterior FROM auditoria WHERE id_parametro = ? AND col_afect = 'idStatusLote' ORDER BY fecha_creacion DESC", $idLotePv);
+
+        return $query;
+    }
+    
 }

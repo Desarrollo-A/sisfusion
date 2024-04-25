@@ -1,9 +1,10 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <body>
     <style>
-        #clienteConsulta .form-group{
-            margin: 0px!important;
+        #clienteConsulta .form-group {
+            margin: 0px !important;
         }
 
         #checkDS .boxChecks {
@@ -13,11 +14,13 @@
             box-shadow: none;
             padding: 5px !important;
         }
+
         #checkDS .boxChecks .checkstyleDS {
             cursor: pointer;
             user-select: none;
             display: block;
         }
+
         #checkDS .boxChecks .checkstyleDS span {
             display: flex;
             justify-content: center;
@@ -29,39 +32,50 @@
             margin: 0;
             font-weight: 100;
         }
+
         #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
             margin: 0 3px;
         }
+
         #checkDS .boxChecks .checkstyleDS span:hover {
             box-shadow: none;
         }
+
         #checkDS .boxChecks .checkstyleDS input {
             pointer-events: none;
             display: none;
         }
-        #checkDS .boxChecks .checkstyleDS input:checked + span {
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span {
             transition: 0.3s;
             font-weight: 400;
             color: #0a548b;
         }
-        #checkDS .boxChecks .checkstyleDS input:checked + span:before {
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span:before {
             font-family: FontAwesome !important;
             content: "\f00c";
             color: #0a548b;
             font-size: 18px;
             margin-right: 5px;
         }
-        .tituloDeshacer{
+
+        .tituloDeshacer {
             font-weight: 500;
             font-size: 1.4em;
 
         }
-        .textoDeshacer{
+
+        .textoDeshacer {
             font-size: 1.5rem;
+        }
+
+        .foot {
+            margin-top: 10em;
         }
     </style>
     <div class="wrapper">
-        <?php  $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
         <div class="modal fade" id="archivosReestructura" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -74,13 +88,11 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
-                                        <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
-                                            aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
+                                        <h5 role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">COPROPIETARIO (S) <i id="copropietario-icono" class="fa fa-angle-down"></i></h5>
                                     </div>
                                 </div>
 
-                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel"
-                                     aria-labelledby="headingOne">
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
                                     <div id="contenedorCoprop" role="tablist" aria-multiselectable="true">
 
                                     </div>
@@ -108,12 +120,16 @@
                         <h5 id="txtTituloCF"></h5>
                         <p id="secondaryLabelDetail"></p>
                         <div class="row" id="info-cliente-modal-cf"></div>
-                        <b><h5 id="mainLabelTextcf" class="bold"></h5></b>
+                        <b>
+                            <h5 id="mainLabelTextcf" class="bold"></h5>
+                        </b>
                         <div id="formularioArchivoscf"></div>
                     </div>
-                    <div class="modal-footer mt-2" >
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="sendRequestButtoncf" class="btn btn-primary <?php if(!in_array($this->session->userdata('id_rol'), [17, 70])){echo'hidden'; } ?>">Guardar</button>
+                    <div class="modal-footer mt-2">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="sendRequestButtoncf" class="btn btn-primary <?php if (!in_array($this->session->userdata('id_rol'), [17, 70])) {
+                                                                                                    echo 'hidden';
+                                                                                                } ?>">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -140,17 +156,24 @@
             </div>
         </div>
 
-        <div class="modal fade" id="deshacerPreproceso" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog modal-sm">
+        <div class="modal fade" id="regresoPreproceso" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header"></div>
-                    <div class="modal-body text-center">
-                        <h4 id="tituloDeshacer" class="tituloDeshacer"></h4><br>
-                        <p id="textDeshacer" class="textoDeshacer"></p>
+                    <div class="modal-body text-center pt-0">
+                        <h4 id="tituloRegreso" class="tituloDeshacer"></h4>
+                        <h4 id="preProcesoActual" class="textoDeshacer"></h4>
+                        <div class="col-md-12">
+                            <label class="control-label">Motivo del rechazo (opcional)</label>
+                            <input class="text-modal mb-1" id="comentarioRegreso" name="comentarioRegreso" autocomplete="off">                   
+                        </div>
+                        <div class="container-fluid">
+                            <div class="row" id="opcionesRegreso"></div>
+                        </div>
                     </div>
-                    <div class="modal-footer mt-2" >
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="deshacerPreprocesoOK" class="btn btn-primary">Guardar</button>
+                        <button type="button" class="btn btn-primary" id="btnRegreso">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -206,12 +229,12 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
 </body>
-<?php $this->load->view('template/footer');?>
-<link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
-<script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
-<script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/reestructura/reubicacionClientes.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/reestructura/subirArchivosReestructura.js"></script>
+<?php $this->load->view('template/footer'); ?>
+<link rel="stylesheet" type="text/css" href="<?= base_url() ?>dist/css/shadowbox.css">
+<script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/reestructura/reubicacionClientes.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/reestructura/subirArchivosReestructura.js"></script>
