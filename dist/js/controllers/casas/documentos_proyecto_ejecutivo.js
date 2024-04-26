@@ -51,10 +51,29 @@ let buttons = [
 function show_upload(data) {
     console.log(data)
 
-    let accept = ['application/pdf']
+    let accept = '';
 
-    if(data.tipo === 14){
-        accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    switch (data.tipo) {
+
+        case 3:
+        case 5:
+        case 7:
+        case 11:
+        case 12:
+        case 18:
+            accept = ['image/png','image/jpeg','application/pdf']
+        break;
+
+        case 14:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        break;
+
+        case 25:
+            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
+        break;
+
+        default:
+            accept = ['application/pdf'];
     }
 
     let form = new Form({

@@ -119,7 +119,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Originación de cartera",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
