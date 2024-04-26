@@ -22,7 +22,7 @@ function show_upload(data) {
 
     let form = new Form({
         title: 'Subir cierre de cifras',
-        onSubmit: function(data){
+        onSubmit: function (data) {
             //console.log(data)
 
             $.ajax({
@@ -44,22 +44,22 @@ function show_upload(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
-            new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
+            new HiddenField({ id: 'id_proceso', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id_documento', value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'] }),
+            new FileField({ id: 'file_uploaded', label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf'] }),
         ],
     })
 
     form.show()
 }
 
-pass_to_vobo_cifras = function(data) {
+pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
-        title: 'Continuar proceso', 
+        title: 'Continuar proceso',
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Visto bueno"</b>?`,
-        onSubmit: function(data){
+        onSubmit: function (data) {
             //console.log(data)
 
             $.ajax({
@@ -70,7 +70,7 @@ pass_to_vobo_cifras = function(data) {
                 processData: false,
                 success: function (response) {
                     alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo.", "success");
-        
+
                     table.reload()
 
                     form.hide();
@@ -82,7 +82,7 @@ pass_to_vobo_cifras = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
@@ -95,7 +95,7 @@ let buttons = [
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo excel',
-        title:"Cierre de cifras",
+        title: "Cierre de cifras",
         exportOptions: {
             columns: [0, 1, 2],
             format: {
@@ -113,43 +113,48 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
-    { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 1)
-        let today = new Date()
+    {
+        data: function (data) {
+            let vigencia = new Date(data.fechaProceso)
+            vigencia.setDate(vigencia.getDate() + 1)
+            let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+            let difference = vigencia.getTime() - today.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+            let days = Math.round(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
-
-        return text
-    } },
-    { data: function(data){
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data})
-
-        let view_button = ''
-        let pass_button = ''
-        let parts = data.archivo.split('.');
-        let extension = parts.pop();
-
-        if(data.archivo){
-
-            if(extension == 'xlsx'){
-                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
-            }else{
-                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            let text = `Quedan ${days} dia(s)`
+            if (days < 0) {
+                text = 'El tiempo establecido ha pasado'
             }
 
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_vobo_cifras, data})
+            return text
         }
+    },
+    {
+        data: function (data) {
+            let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data })
 
-        return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
-    } },
+            let view_button = ''
+            let pass_button = ''
+
+            if (data.archivo) {
+
+                let parts = data.archivo.split('.');
+                let extension = parts.pop();
+
+                if (extension == 'xlsx') {
+                    view_button = new RowButton({ icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data })
+                } else {
+                    view_button = new RowButton({ icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data })
+                }
+
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_vobo_cifras, data })
+            }
+
+            return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`
+        }
+    },
 ]
 
 let table = new Table({
