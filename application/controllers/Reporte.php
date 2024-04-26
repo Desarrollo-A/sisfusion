@@ -88,6 +88,12 @@ class Reporte extends CI_Controller {
         $vcArray = array_filter($data, function($element){
             return $element['tipo'] == 'vc';
         });
+        $sum = 0;
+        foreach($vcArray as $key => $elemento) {
+            $total = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
+            $sum += $total;
+        }
+        //echo json_encode($sum);
 
         //Obtenemos solo array de ventas apartadas
         $vaArray = array_filter($data, function($element){
@@ -97,6 +103,8 @@ class Reporte extends CI_Controller {
         //Reindexamos el filtro obtenido anteriormente
         $vcArray = array_values($vcArray);
         $vaArray = array_values($vaArray);
+        $sumApt = 0;
+        $sumCompleta = 0;
 
         //Recorremos uno de los arrays obtenido anteriormente y sumamos en cada uno de los puntos para obtener cantidad y total
         if( $general == "1" || $tipoChart == "vt"){
@@ -106,7 +114,7 @@ class Reporte extends CI_Controller {
             foreach( $vcArray as $key => $elemento ){
                 $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
                 $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
-                
+                $sumApt = $tot1 + $tot2;
                 //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes.
                 $data[] = array(
                     'total' => "$" . number_format(($tot1 + $tot2), 2),
@@ -116,11 +124,15 @@ class Reporte extends CI_Controller {
                     'tipo' => 'vt',
                     'rol' => $elemento['rol']
                 ); 
+                
             }
+            
         }
+        
 
         if($data != null)
             echo json_encode($data);
+            
         else
             echo json_encode(array());
     }
