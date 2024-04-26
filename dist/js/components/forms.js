@@ -273,7 +273,7 @@ class NumberField{
             .addClass(`form-control input-gral`)
             .attr('id', id)
             .attr('name', id)
-            .attr('type', 'number')
+            .attr('type', 'text')
             .attr('placeholder', placeholder)
             .val(value)
             .on('keypress', this.onlyNumbers)
@@ -291,9 +291,9 @@ class NumberField{
     onlyNumbers(e) {
         var key = e.keyCode || e.which;
         var tecla = String.fromCharCode(key);
-        var letras = "0123456789";
+        var letras = "0123456789.";
         var especiales = [8, 37, 39, 46];
-
+    
         var tecla_especial = false;
         for (var i in especiales) {
             if (key == especiales[i]) {
@@ -301,8 +301,17 @@ class NumberField{
                 break;
             }
         }
-
+    
         if (letras.indexOf(tecla) == -1 && !tecla_especial) return false;
+    
+        // Permitir solo un punto decimal
+        if (tecla == '.' && e.target.value.indexOf('.') !== -1) return false;
+    
+        // Limitar a dos decimales
+        var parts = e.target.value.split('.');
+        if (parts.length > 1 && parts[1].length >= 2) return false;
+    
+        return true;
     }
 }
 

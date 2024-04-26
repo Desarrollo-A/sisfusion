@@ -418,6 +418,7 @@ class Casas extends BaseController {
 
         if(!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)){
             http_response_code(400);
+            $this->json([]);
         }
 
         $proceso = $this->CasasModel->getProceso($id_proceso);

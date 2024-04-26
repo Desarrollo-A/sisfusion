@@ -39,6 +39,27 @@ pass_to_envio_a_firma = function(data) {
     form.show()
 }
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Ingreso de expediente de cliente",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -70,5 +91,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_expediente_cliente',
+    buttons:buttons,
     columns,
 })
