@@ -395,7 +395,7 @@
                                                                 <th>ID PAGO</th>
                                                                 <th>PROYECTO</th>
                                                                 <th>LOTE</th>
-                                                                <th>PRECIO DEL LOTE</th>
+                                                                <th>PRECIO DEL SEGURO</th>
                                                                 <th>TOTAL DE LA COMISIÓN</th>
                                                                 <th>PAGADO DEL CLIENTE</th>
                                                                 <th>DISPERSADO</th>
@@ -432,7 +432,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>PRECIO DEL SEGURO</th>
                                                         <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>PAGADO DEL CLIENTE</th>
                                                         <th>DISPERSADO</th>
@@ -467,7 +467,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>PRECIO DEL SEGURO</th>
                                                         <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>PAGADO DEL CLIENTE</th>
                                                         <th>DISPERSADO</th>
@@ -502,7 +502,7 @@
                                                         <th>ID PAGO</th>
                                                         <th>PROYECTO</th>
                                                         <th>LOTE</th>
-                                                        <th>PRECIO DEL LOTE</th>
+                                                        <th>PRECIO DEL SEGURO</th>
                                                         <th>TOTAL DE LA COMISIÓN</th>
                                                         <th>PAGADO DEL CLIENTE</th>
                                                         <th>DISPERSADO</th>

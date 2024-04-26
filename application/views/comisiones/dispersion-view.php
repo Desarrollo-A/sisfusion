@@ -369,10 +369,12 @@
                                                     <th>MODALIDAD</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>
+
                                                     <th>PRECIO FINAL LOTE</th>
                                                     <th>% COMISION TOTAL</th>
                                                     <th>IMPORTE COMISION PAGADA</th>
                                                     <th>IMPORTE COMISION PENDIENTE</th>
+                                                    
                                                     <th>DETALLES</th>
                                                     <th>FECHA ACTUALIZACIÓN</th>
                                                     <th>ACCIONES</th>
