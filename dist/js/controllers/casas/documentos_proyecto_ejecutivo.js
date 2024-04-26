@@ -12,6 +12,11 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
 backPage = function() {
     window.location.href = `${general_base_url}casas/proyecto_ejecutivo`
 }
@@ -117,8 +122,14 @@ let columns = [
     { data: 'fechaModificacion' },
     { data: function(data){
         let view_button = ''
+        let parts = data.archivo.split('.');
+        let extension = parts.pop();
         if(data.archivo != 'Sin archivo' || data.archivo == null){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+            }else{
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            }
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
