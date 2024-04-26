@@ -12,6 +12,11 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
 backPage = function() {
     window.location.href = `${general_base_url}casas/validacion_contraloria`
 }
@@ -54,9 +59,17 @@ let columns = [
     { data: 'archivo' },
     { data: 'fechaModificacion' },
     { data: function(data){
-        let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+
+        let parts = data.archivo.split('.');
+        let extension = parts.pop();
+
+        if(extension == 'xlsx'){
+            view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+        }
         if(!data.archivo){
             view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
+        }else{
+            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
         return `<div class="d-flex justify-center">${view_button}</div>`

@@ -12,8 +12,37 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
 function show_upload(data) {
-    //console.log(data)
+
+    let accept = '';
+
+    switch (data.tipo) {
+
+        case 3:
+        case 5:
+        case 7:
+        case 11:
+        case 12:
+        case 18:
+            accept = ['image/png','image/jpeg','application/pdf']
+        break;
+
+        case 14:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        break;
+
+        case 25:
+            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
+        break;
+
+        default:
+            accept = ['application/pdf'];
+    }
 
     let form = new Form({
         title: `Subir ${data.documento}`,
@@ -42,7 +71,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept }),
         ],
     })
 
@@ -91,9 +120,18 @@ let columns = [
     { data: 'archivo' },
     { data: 'fechaModificacion' },
     { data: function(data){
-        let view_button = ''
+        let view_button = '';
+        let parts = data.archivo.split('.');
+        let extension = parts.pop();
+
         if(data.archivo != 'Sin archivo'){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+            }else{
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            }
+
         }else{
             if([13,14,15].includes(data.tipo)){
                 view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
