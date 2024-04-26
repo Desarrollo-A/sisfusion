@@ -31,7 +31,13 @@ let buttons = [
 ]
 
 function show_upload(data) {
-    //console.log(data)
+    console.log(data)
+
+    let accept = ['application/pdf']
+
+    if(data.tipo === 14){
+        accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    }
 
     let form = new Form({
         title: `Subir ${data.documento}`,
@@ -60,7 +66,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept }),
         ],
     })
 

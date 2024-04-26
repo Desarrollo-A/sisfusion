@@ -24,10 +24,11 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->row();
     }
 
-    public function setProcesoTo($idProcesoPagos, $proceso){
+    public function setProcesoTo($idProcesoPagos, $proceso, $comentario){
         $query = "UPDATE proceso_pagos
         SET
             proceso = $proceso,
+            comentario = '$comentario',
             fechaProceso = GETDATE(),
             fechaModificacion = GETDATE(),
             idModificacion = $this->idUsuario
@@ -53,18 +54,22 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function addLoteToProcesoPagos($idLote, $idProcesoCasas){
+    public function addLoteToProcesoPagos($idLote, $idProcesoCasas, $comentario){
         $query = "INSERT INTO proceso_pagos
         (
             idLote,
             idProcesoCasas,
-            idCreacion
+            idCreacion,
+            comentario,
+            fechaProceso
         )
         VALUES
         (
             $idLote,
             $idProcesoCasas,
-            $this->idUsuario
+            $this->idUsuario,
+            '$comentario',
+            GETDATE()
         )";
 
         $result = $this->db->query($query);
@@ -183,6 +188,19 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         WHERE
             pp.proceso = 3
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaConfirmarPago(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        WHERE
+            pp.proceso = 4
         AND pp.status = 1";
 
         return $this->db->query($query)->result();

@@ -51,6 +51,16 @@ class PagosCasas extends BaseController {
         $this->load->view("pagos_casas/validar_deposito");
     }
 
+    public function confirmar_pago(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/confirmar_pago");
+    }
+
+    public function carga_complemento(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/carga_complemento");
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -127,15 +137,16 @@ class PagosCasas extends BaseController {
     }
 
     public function to_documentacion(){
-        $idProcesoCasas = $this->input->get('id');
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
 
-        if(!isset($idProcesoCasas)){
+        if(!isset($id)){
             http_response_code(400);
         }
 
-        $proceso = $this->CasasModel->getProceso($idProcesoCasas);
+        $proceso = $this->CasasModel->getProceso($id);
 
-        $result = $this->PagosCasasModel->addLoteToProcesoPagos($proceso->idLote, $idProcesoCasas);
+        $result = $this->PagosCasasModel->addLoteToProcesoPagos($proceso->idLote, $id, $comentario);
 
         if($result){
             $documentos = $this->PagosCasasModel->getDocumentos([1,2,3,4,5,6]);
@@ -193,15 +204,16 @@ class PagosCasas extends BaseController {
     }
 
     public function to_validacion(){
-        $idProcesoPagos = $this->input->get('id');
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
 
-        if(!isset($idProcesoPagos)){
+        if(!isset($id)){
             http_response_code(400);
         }
 
-        $proceso = $this->PagosCasasModel->getProceso($idProcesoPagos);
+        $proceso = $this->PagosCasasModel->getProceso($id);
 
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 2);
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 2, $comentario);
 
         if($is_ok){
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
@@ -219,15 +231,16 @@ class PagosCasas extends BaseController {
     }
 
     public function to_validar_deposito(){
-        $idProcesoPagos = $this->input->get('id');
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
 
-        if(!isset($idProcesoPagos)){
+        if(!isset($id)){
             http_response_code(400);
         }
 
-        $proceso = $this->PagosCasasModel->getProceso($idProcesoPagos);
+        $proceso = $this->PagosCasasModel->getProceso($id);
 
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 3);
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 3, $comentario);
 
         if($is_ok){
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
@@ -242,6 +255,75 @@ class PagosCasas extends BaseController {
         $lotes = $this->PagosCasasModel->getListaValidarDeposito();
 
         $this->json($lotes);
+    }
+
+    public function back_to_documentacion(){
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 1, $comentario);
+
+        if($is_ok){
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function to_confirmar_pago(){
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
+
+        if($is_ok){
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_confirmar_pago(){
+        $lotes = $this->PagosCasasModel->getListaConfirmarPago();
+
+        $this->json($lotes);
+    }
+
+    public function to_carga_complemento(){
+        $id = $this->form('id');
+        $comentario = $this->form('comentario');
+
+        if(!isset($id)){
+            http_response_code(400);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id);
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 5, $comentario);
+
+        if($is_ok){
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
     }
 
 }

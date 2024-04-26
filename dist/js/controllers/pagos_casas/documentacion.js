@@ -1,29 +1,35 @@
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_validacion?id=${data.idProcesoPagos}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha sido enviado a validacion.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_validacion = function(data) {
-    let ask = new AskDialog({
+    let form = new Form({
         title: 'Enviar a validacion', 
-        text: `¿Enviar documentacion del lote ${data.nombreLote} a validacion por contraloria?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
+        text: `¿Enviar documentacion del lote <b>${data.nombreLote}</b> a validacion por contraloria?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_validacion`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha sido enviado a validacion.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoPagos }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
 
 function edit_montos(data) {

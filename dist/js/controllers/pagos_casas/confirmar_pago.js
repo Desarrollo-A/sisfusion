@@ -1,18 +1,18 @@
-pass_to_confirmar_pago = function(data) {
+pass_to_carga_complemento = function(data) {
     let form = new Form({
-        title: 'Validar deposito', 
-        text: `¿Validar el deposito del lote <b>${data.nombreLote}</b>?`,
+        title: 'Confirmar pago', 
+        text: `¿Confirmar pago del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
 
             $.ajax({
                 type: 'POST',
-                url: `to_confirmar_pago`,
+                url: `to_carga_complemento`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El deposito del lote ha sido validado.", "success");
+                    alerts.showNotification("top", "right", "El pago del lote ha sido confirmado.", "success");
         
                     table.reload()
 
@@ -35,20 +35,6 @@ pass_to_confirmar_pago = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
-    { data: function(data) {
-        if(data.costoConstruccion){
-            return `$ ${data.costoConstruccion.toFixed(2)}`
-        }else{
-            return ''
-        }
-    } },
-    { data: function(data) {
-        if(data.montoDepositado){
-            return `$ ${data.montoDepositado.toFixed(2)}`
-        }else{
-            return ''
-        }
-    } },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 3)
@@ -66,18 +52,18 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
+        // let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar deposito', onClick: pass_to_confirmar_pago, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar deposito', onClick: pass_to_carga_complemento, data})
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
+        // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
         
-        return `<div class="d-flex justify-center">${docu_button}${pass_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}</div>`
     } },
 ]
 
 let table = new Table({
     id: '#tableDoct',
-    url: 'pagoscasas/lista_validar_deposito',
+    url: 'pagoscasas/lista_confirmar_pago',
     columns,
 })

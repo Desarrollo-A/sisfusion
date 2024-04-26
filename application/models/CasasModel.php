@@ -352,7 +352,8 @@ class CasasModel extends CI_Model
                 ELSE archivo
             END AS archivo,
             documento,
-            fechaModificacion
+            fechaModificacion,
+            tipo
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas

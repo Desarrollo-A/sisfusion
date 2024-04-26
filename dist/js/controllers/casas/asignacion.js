@@ -138,8 +138,28 @@ let columns = [
     },
 ]
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Inventario disponible reubicación',
+        title:"Inventario disponible reubicación",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    //console.log($(d).attr('placeholder'))
+                    return $(d).attr('placeholder');
+                }
+            }
+        }
+    }
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_asignacion',
     columns,
+    buttons,
 })

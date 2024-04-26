@@ -75,8 +75,23 @@ let columns = [
     } },
 ]
 
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            window.location.href = `${general_base_url}pagoscasas/documentacion`
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: `pagoscasas/lista_subir_documentos/${idProcesoPagos}`,
     columns,
+    buttons,
 })

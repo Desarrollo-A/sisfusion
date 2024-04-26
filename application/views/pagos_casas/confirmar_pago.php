@@ -16,17 +16,16 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentación del lote: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Confirmar pago</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID DOC</th>
-                                            <th>DOCUMENTO</th>
-                                            <th>ARCHIVO</th>
-                                            <th>FECHA SUBIDO</th>
+                                            <th>ID LOTE</th>
+                                            <th>NOMBRE LOTE</th>
+                                            <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -44,8 +43,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script type="text/javascript">
-        const idProcesoPagos = <?php echo $lote->idProcesoPagos ?>
-    </script>
-    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/subir_documentacion.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/confirmar_pago.js"></script>
 </body>
