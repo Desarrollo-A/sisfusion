@@ -67,6 +67,27 @@ back_to_firma_contrato = function(data) {
     form.show()
 }
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Recepcion de contrato",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -98,5 +119,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_recepcion_contrato',
+    buttons:buttons,
     columns,
 })

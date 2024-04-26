@@ -78,6 +78,27 @@ go_to_documentos = function(data) {
     window.location.href = `valida_documentacion/${data.idProcesoCasas}`;
 }
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Validacion de documentación",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -111,5 +132,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_validacion_contraloria',
+    buttons: buttons,
     columns,
 })

@@ -97,6 +97,25 @@ let buttons = [
             title: 'Regresar'
         }
     },
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Propuestas de firma",
+        exportOptions: {
+            columns: [0, 1, 2, 3],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+
 ]
 
 let table = new Table({
@@ -104,4 +123,5 @@ let table = new Table({
     url: `casas/lista_propuestas/${idProcesoCasas}`,
     buttons: buttons,
     columns,
+    buttons: buttons,
 })

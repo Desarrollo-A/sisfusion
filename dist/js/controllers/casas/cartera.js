@@ -111,6 +111,24 @@ select_lote = function(data) {
 
 }
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Originación de cartera",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        }
+    }
+]
+
 let columns = [
     { data: 'idLote' },
     { data: function(data){
@@ -126,5 +144,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lotes',
+    buttons:buttons,
     columns,
 })

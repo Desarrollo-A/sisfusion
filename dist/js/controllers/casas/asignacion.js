@@ -51,7 +51,7 @@ function choose_asesor(data) {
 select_asesor = function (data) {
 
     let form = new Form({
-        title: 'Continuar proceso', 
+        title: 'Continuar proceso',
         text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
         onSubmit: function (data) {
 
@@ -99,7 +99,7 @@ cancel_process = function (data) {
                 processData: false,
                 success: function (response) {
                     alerts.showNotification("top", "right", `El proceso del lote ha sido cancelado.`, "success");
-        
+
                     table.reload()
                     form.hide();
                 },
@@ -117,6 +117,25 @@ cancel_process = function (data) {
 
     form.show()
 }
+
+
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Asignación de cartera",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        }
+    }
+]
 
 let columns = [
     { data: 'idLote' },
@@ -141,5 +160,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_asignacion',
+    buttons: buttons,
     columns,
 })
