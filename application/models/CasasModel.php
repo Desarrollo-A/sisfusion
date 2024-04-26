@@ -685,7 +685,11 @@ class CasasModel extends CI_Model
 
     public function getPropuestas($idProcesoCasas){
 
-        $query = "SELECT ppc.idPropuesta, oxc.nombre AS notaria, ppc.fechaFirma, CONCAT('$', ppc.costo) AS costo
+        $query = "SELECT
+            ppc.idPropuesta, 
+            oxc.id_opcion AS id_notaria,
+            oxc.nombre AS notaria,
+            ppc.fechaFirma, CONCAT('$', ppc.costo) AS costo
         FROM propuestas_proceso_casas ppc
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 128
         WHERE ppc.idProcesoCasas = $idProcesoCasas";
