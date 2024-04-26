@@ -605,9 +605,11 @@ $(document).ready(function () {
                                 
                                 if(procesoReestructura != 0 && estatusLote < 15 && ooamDispersion == 1 ){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
+                                console.log(1);
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM 50%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 3; //[2,4,7].includes(parseInt(procesoReestructura)) ? 4 : 3;
                                 } else if(procesoReestructura != 0 && estatusLote >= 15 && ooamDispersion == 1){
+                                    console.log(2);
                                     // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                         bandera_anticipo = 4;
@@ -615,12 +617,15 @@ $(document).ready(function () {
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 0;
+                                    console.log(3);
                                 }else if(total>=(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% / se dispersa la mitad
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                     bandera_anticipo = 1;
+                                    console.log(4);
                                 } else if(total>=(cincoporciento-1) && total<(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 5% y menor al 8% se dispersará la 4° parte de la comisión
+                                    console.log(5);    
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo entre 5% - 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 2;
                                 } 
@@ -682,6 +687,7 @@ $(document).ready(function () {
                                 const datosPlan8P = plan_comision == 66 ? datosPlan8PAnterior : datosPlan8PNuevo;
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
+                                    console.log(78)
                                     resultArr = JSON.parse(resultArr);
                                     console.log(resultArr)
                                     $.each( resultArr, function( i, v){
@@ -693,7 +699,7 @@ $(document).ready(function () {
                                             v.porcentaje_decimal = busqueda != undefined ? v.porcentaje_decimal + busqueda.porcentaje : v.porcentaje_decimal;
                                             v.comision_total = busqueda != undefined ? (v.comision_total + ((busqueda.porcentaje/100)) * totalNeto2Cl) : v.comision_total;
                                         }
-
+                                        
                                         let porcentajeAse = v.porcentaje_decimal;
                                         let total_comision1 = 0;
                                         total_comision1 = totalNeto2 * (porcentajeAse / 100);
@@ -719,7 +725,7 @@ $(document).ready(function () {
                                         console.log(total);
                                         total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? total  : total;
                                         total = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (data[0].Aplicado-abonadoAnterior) <= 0) ? 0 : total;
-
+                                        console.log(bandera_anticipo)
                                         switch(bandera_anticipo){
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                             operacionValidar = (total*(0.125*v.porcentaje_decimal));
@@ -923,19 +929,36 @@ $(document).ready(function () {
                                                 //ENTRA AQUI AL CERO
                                                 saldo = 0;
                                             }
-
+                                            console.log('veces que se repite')
                                             $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                            <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                            <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                            <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
+                                            <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}">
+                                            <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}">
+                                            <input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}">
+                                            <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                                            <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                            <input type="hidden" name="pending" id="pending" value="${pending}">
+                                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                            <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}">
+                                            <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}">
+                                            <input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                             <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                             <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b></div>
-                                            <div class="col-md-1"><input class="form-control input-gral" required readonly="true" style="padding: 10px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}"></div>
-                                            <div class="col-md-2"><input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control input-gral abono_nuevo" readonly="true"  name="abono_nuevo[]" value="${saldo}" type="hidden">
-                                            <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}"></div></div>`);
+                                            <div class="col-md-1">
+                                                <input class="form-control input-gral" required readonly="true" style="padding: 10px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control input-gral abono_nuevo" readonly="true"  name="abono_nuevo[]" value="${saldo}" type="hidden">
+                                                <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}">
+                                            </div></div>`);
                                             counts++
                                         });
                                     });

@@ -147,7 +147,7 @@ class Descuentos_model extends CI_Model {
     }
 
 
-    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user){
+    function update_descuento($id_pago_i,$monto, $comentario, $saldo_comisiones, $usuario,$valor,$user,$insertar_descuento,$tipo){
         $estatus = 0;
         $uni='DESCUENTO';
         if($valor == 2){
@@ -165,6 +165,15 @@ class Descuentos_model extends CI_Model {
             $respuesta = $this->db->query("UPDATE pago_comision_ind SET estatus = $estatus, descuento_aplicado=1, modificado_por='$usuario', fecha_pago_intmex = GETDATE(), fecha_abono = GETDATE(), abono_neodata = $monto, comentario='$uni' WHERE id_pago_i=$id_pago_i");
         }
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($id_pago_i, $usuario, GETDATE(), 1, 'MOTIVO DESCUENTO: ".$comentario."')");
+        
+        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente,evidenciaDocs) VALUES ($user, $monto, 1, $monto,  '$comentarios', 2, 0, $user, GETDATE(), $user, GETDATE(), 1,  $tipo, 0,'$insertar_descuento')");
+        $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
+
+
+        $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $id_pago_i, 1, $user, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
+
+
+
 
         if (! $respuesta ) {
             return 0;
@@ -174,7 +183,7 @@ class Descuentos_model extends CI_Model {
     }
 
 
-    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor,$insertar_descuento,$tipo){
+    function insertar_descuento($usuarioid,$monto,$ide_comision,$comentario,$usuario,$pago_neodata,$valor){
         $estatus = $monto < 1 ? 0 : 1;
         if($valor == 2){
             $estatus = $monto < 1 ? 0 : 4;
@@ -190,11 +199,11 @@ class Descuentos_model extends CI_Model {
         $insert_id = $this->db->insert_id();
 
 
-        $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto,  '$comentarios', 2, 0, $usuario, GETDATE(), $usuario, GETDATE(), 1,  $tipo, 0,'$insertar_descuento')");
-        $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
+        // $respuesta = $this->db->query("INSERT INTO prestamos_aut (id_usuario, monto, num_pagos, pago_individual, comentario, estatus, pendiente, creado_por, fecha_creacion, modificado_por, fecha_modificacion, n_p, tipo, id_cliente,evidenciaDocs) VALUES ($usuarioid, $monto, 1, $monto,  '$comentarios', 2, 0, $usuario, GETDATE(), $usuario, GETDATE(), 1,  $tipo, 0,'$insertar_descuento')");
+        // $insert_id_4 = $this->db->insert_id(); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
 
 
-        $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $usuario, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
+        // $respuesta = $this->db->query("INSERT INTO relacion_pagos_prestamo (id_prestamo, id_pago_i, estatus, creado_por, fecha_creacion, modificado_por, fecha_modificacion, np) VALUES($insert_id_4, $insert_id, 1, $usuario, GETDATE(), $user, GETDATE(), 1)"); //REPLICAR EN AMBOS TIPOS DE DESCUENTO
 
 
         $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
@@ -459,4 +468,46 @@ class Descuentos_model extends CI_Model {
                 return 1;
                 }
             }
+
+            public function  insertAdelanto($insert){
+                $respuesta = $this->db->insert('anticipo',$insert);
+                return  $this->db->insert_id();
+            }
+            
+            public function  insertAdelantoGenerico($insert,$tabla){
+                $respuesta = $this->db->insert($tabla,$insert);
+                if($respuesta)
+                {
+                    return TRUE;
+                }else{
+                    return FALSE;
+                }    
+            }
+            
+
+            public function  historial_anticipo_avance($insert){
+                $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
+                $query = $this->db->query($cmd );
+                return  $query->result_array();
+            }
+            public function  todos_los_pasos(){
+                
+                $usuario =  $this->session->userdata('id_usuario');
+                $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
+                $query = $this->db->query($cmd );   
+                $datos["TODOS"] = $query->result_array();
+                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo
+                FROM  opcs_x_cats opcx 
+                INNER  JOIN historial_anticipo ha ON ha.proceso = opcx.id_opcion  and opcx.id_catalogo = 128
+                where ha.id_usuario = $usuario";
+                $datos["USUARIO"]  = $this->db->query($cmd2  )->result_array();   
+                
+                $CMD_anticipos="SELECT * FROM anticipo WHERE id_usuario = $usuario";
+                $datos["ANTICIPOS"] = $this->db->query($CMD_anticipos)->result_array();   
+                
+                return  $datos;
+
+
+            }
+
 }
