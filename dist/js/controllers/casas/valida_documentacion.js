@@ -59,17 +59,16 @@ let columns = [
     { data: 'archivo' },
     { data: 'fechaModificacion' },
     { data: function(data){
-
-        let parts = data.archivo.split('.');
-        let extension = parts.pop();
-
-        if(extension == 'xlsx'){
-            view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
-        }
-        if(!data.archivo){
-            view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
-        }else{
+        if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            let parts = data.archivo ? data.archivo.split('.') : [];
+            let extension = parts.pop();
+
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+            }
+        }else{
+            view_button = new RowButton({icon: 'visibility_off', color: 'yellow',  label: `Archivo no subido`})
         }
 
         return `<div class="d-flex justify-center">${view_button}</div>`
