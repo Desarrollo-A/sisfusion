@@ -372,6 +372,9 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
                     $filtroSede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";

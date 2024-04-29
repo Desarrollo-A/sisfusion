@@ -3539,6 +3539,9 @@
 				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
 					$id_lider = $id_lider . ', 80, 664';
 					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 7435';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

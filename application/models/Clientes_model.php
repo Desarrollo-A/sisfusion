@@ -518,6 +518,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 6661)";
             else if ($id_usuario == 15466) // LAURA CAROLINA GUTIERREZ SANCHEZ
                 $where = "pr.id_gerente IN ($id_lider, 80, 664)";
+            else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
+                $where = "pr.id_gerente IN ($id_lider, 7435)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
