@@ -21,17 +21,51 @@ $('#ano_historial').change(function(){
     });
 });
 
-$('#catalogo_historial').change(function(){
-    proyecto = $('#ano_historial').val();
-    condominio = $('#catalogo_historial').val();
-    $('#tabla_historialGral').removeClass('hide');
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
+$('#ano_historial').change(function(){
+    $("#tipo_historial").empty().selectpicker('refresh');
+    $.ajax({
+        url: general_base_url+'Contratacion/nombreTipo/',
+        type: 'post',
+        dataType: 'json',
+        success:function(response){
+            var len = response.length;
+            for( var i = 0; i<len; i++){
+                var id = response[i]['tipo'];
+                var name = response[i]['nombre_tipo'];
+                $("#tipo_historial").append($('<option>').val(id).text(name));
+            }
+            $("#tipo_historial").selectpicker('refresh');
+        }
+    });
+});
+
+$('#catalogo_historial, #tipo_historial').change(function(){
+
+    var catalogoSeleccionado = $('#catalogo_historial').val() !== '';
+    var tipoSeleccionado = $('#tipo_historial').val() !== '';
+
+    if (catalogoSeleccionado && tipoSeleccionado) {
+        proyecto = $('#ano_historial').val();
+        condominio = $('#catalogo_historial').val();
+        tipo = $('#tipo_historial').val();
+        console.log(tipo, "asdf");
+
+        $('#tabla_historialGral').removeClass('hide');
+
+        if (condominio == '' || condominio == null || condominio == undefined) {
+            condominio = 0;
+        }
+
+        if (tipo == '' || tipo == null || tipo == undefined) {
+            tipo = 0;
+        }
+
+        if (tabla_historialGral2) {
+            tabla_historialGral2.destroy();
+        }
+        getAssimilatedCommissions(proyecto, condominio, tipo);
+
     }
-    if(tabla_historialGral2){
-        tabla_historialGral2.destroy();
-    }
-    getAssimilatedCommissions(proyecto, condominio);
 });
 
 $('#ano_canceladas').change(function(){
@@ -97,7 +131,24 @@ function modalHistorial(){
     showModal();
 }
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getAssimilatedCommissions(proyecto, condominio, tipo){
+
+    var Comisiones;
+
+    if(tipo == 1 || tipo == 2){
+        
+        Comisiones = "Comisiones/getDatosHistorialPago/";
+
+    }else if(tipo == 4){
+
+        Comisiones = "SegurosComision/getDatosHistorialPago/";
+
+    }else{
+        alerts.showNotification("top", "right", "Tipo aún no existente en el sistema.", "alert");
+        return false;p
+    }
+
+
     asignarValorColumnasDT("tabla_historialGral");
     $('#tabla_historialGral thead tr:eq(0) th').each( function (i) {
         var title = $(this).text();
@@ -288,7 +339,7 @@ function getAssimilatedCommissions(proyecto, condominio){
             },
         }],
         ajax: {
-            "url": general_base_url + "Comisiones/getDatosHistorialPago/" + proyecto + "/" + condominio,
+            "url": general_base_url + Comisiones + proyecto + "/" + condominio + "/" + tipo,
             "type": "POST",
             cache: false,
             "data": function( d ){}

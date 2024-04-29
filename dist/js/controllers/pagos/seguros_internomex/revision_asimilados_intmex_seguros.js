@@ -477,7 +477,7 @@ $("#form_interes_seguros").submit( function(e) {
 });
 
 function CloseModalDelete2Intmex_seguros(){
-    document.getElementById("form_multiples").reset();
+    document.getElementById("form_multiples_seguros").reset();
     a = document.getElementById('borrarProyect');
     padre = a.parentNode;
     padre.removeChild(a);
@@ -637,7 +637,7 @@ $(document).ready( function(){
     });
 });
 
-$("#form_multiples").submit( function(e) {
+$("#form_multiples_seguros").submit( function(e) {
     $('#spiner-loader').removeClass('hidden');
     e.preventDefault();
 }).validate({

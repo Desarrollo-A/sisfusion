@@ -341,8 +341,11 @@ class Comisiones_model extends CI_Model {
         return $query->result();
     }
 
-    function getDatosHistorialPago($anio,$proyecto) {
+    function getDatosHistorialPago($anio,$proyecto,$tipo) {
         ini_set('memory_limit', -1);
+
+        $tipo = "AND u.tipo = '" . $tipo . "'";
+
         $filtro_02 = '';
         $filtro_00 = ' re.idResidencial = '.$proyecto.' AND YEAR(pci1.fecha_abono) = '.$anio.' ';
 
@@ -375,7 +378,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN lotes lo ON lo.idLote = com.id_lote AND lo.status = 1 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario
+        INNER JOIN usuarios u ON u.id_usuario = com.id_usuario $tipo
         INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status = 1 AND lo.idStatusContratacion > 8
         INNER JOIN opcs_x_cats oprol ON oprol.id_opcion = com.rol_generado AND oprol.id_catalogo = 1
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
