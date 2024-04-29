@@ -1477,7 +1477,7 @@ function checkBudgetInfo($idSolicitud){
                 cxl.apellido_materno amCteNuevo,
                 cxl.tipoTramite idTipoTramite,
                 CONVERT(varchar, lo.fecha_modst, 120) fechaUltimoEstatus,
-                lo.comentario, lo.totalNeto2 as precioFinal
+                lo.comentario, lo.totalNeto2 as precioFinal, cxl.escrituraNotariada, lo.idCondominio
             FROM 
                 lotes lo 
                 INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
@@ -1591,6 +1591,16 @@ function checkBudgetInfo($idSolicitud){
         } else {
             return $finalAnswer = 1;
         }
+    }
+
+    function getEscrituraNotariada($idCliente, $idLote){
+        $query = $this->db->query("SELECT * FROM clientes_x_lote WHERE idCliente=".$idCliente." AND idLote=".$idLote);
+        return $query->row();
+    }
+
+    function getCopropsActuales($id_cliente){
+        $query = $this->db->query("SELECT * FROM copropietarios WHERE id_cliente = ".$id_cliente);
+        return $query->result_array();
     }
     
 }

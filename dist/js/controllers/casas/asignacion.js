@@ -25,21 +25,21 @@ form.onSubmit = function(data){
     })
 }
 
+let items = []
+
+$.ajax({
+    type: 'GET',
+    url: 'options_asesores',
+    async: false,
+    success: function (response) {
+        items = response
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
 function choose_asesor(data) {
-    let items = []
-
-    $.ajax({
-        type: 'GET',
-        url: 'options_asesores',
-        async: false,
-        success: function (response) {
-            items = response
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
         new SelectField({ id: 'asesor', label: 'Asesor',  placeholder: 'Selecciona una opcion', data: items }),

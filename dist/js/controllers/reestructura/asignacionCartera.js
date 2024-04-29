@@ -1,5 +1,7 @@
 var arrayValores = [];
 const ROLES_SIN_ACCIONES = [4, 6];
+if (id_usuario_general == 13575) // ZULEYMMA IBARRA TENORIO	permiso como gerente
+    id_rol_general = 3;
 
 $(document).ready(function () {
     if (!ROLES_SIN_ACCIONES.includes(id_rol_general)) {

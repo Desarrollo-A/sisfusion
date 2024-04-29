@@ -96,14 +96,14 @@ class Contraloria_model extends CI_Model {
         return $valida;
     }
 
-    public function updateSt($idLote, $arreglo, $arreglo2,$arregloMensualidades){
+    public function updateSt($idLote, $arreglo, $arreglo2){
         $this->db->trans_begin();
         $this->db->where("idLote",$idLote);
         $this->db->update('lotes',$arreglo);
 
         $this->db->insert('historial_lotes',$arreglo2);
 
-        $this->db->insert('mensualidadesXlote',$arregloMensualidades);
+        //$this->db->insert('mensualidadesXlote',$arregloMensualidades);
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -741,7 +741,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
     public function val_ub($idLote){
         $this->db->select('ubicacion');
         $this->db->where("idLote",$idLote);
-        $this->db->where_in('ubicacion', array('1', '2', '4', '5', '3', '15', '16', '6', '8'));
+        $this->db->where_in('ubicacion', array('1', '2', '4', '5', '3', '15', '16', '6', '8', '11'));
         $query = $this->db->get('lotes');
         $valida = (empty($query->result())) ? array(0 => array('ubicacion' => 0)) : $query->result_array();
         return $valida;
@@ -1899,8 +1899,6 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '1', '3', '11', '10')";
         else  if($id_usuario == 12554) // MJ: MINERVA GARCIA MEDIANA VE MONTERREY Y TEXAS USA
             $filtroSede = "AND l.ubicacion IN ('$id_sede', '10')";
-        else  if($id_usuario == 14283) // MJ: JOSE RODRIGO HERMOCILLO GARCIA VE AGUASCALIENTES, MONTERREY Y TEXAS USA
-            $filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '11', '5')";
 		else if ($id_sede == 3) // CONTRALORÍA PENÍNSULA TAMBIÉN VE EXPEDIENTES DE CANCÚN
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '6')";
 		else if ($id_sede == 5) // CONTRALORÍA LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
@@ -1913,6 +1911,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '13', '14')";
         else if ($id_sede == 1) // CONTRALORÍA SAN LUIS POTOSÍ TAMBIÉN VE EXPEDIENTES DE MORELIA
 			$filtroSede = "AND l.ubicacion IN ('$id_sede', '18')";
+        else if ($id_sede == 8) // CONTRALORÍA TIJUANA TAMBIÉN VE EXPEDIENTES DE MIAMI
+			$filtroSede = "AND l.ubicacion IN ('$id_sede', '19')";
 		else
 			$filtroSede = "AND l.ubicacion IN ('$id_sede')";
 

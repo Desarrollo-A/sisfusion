@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Listado general de clientes Marketing Arcus</h3>
+                                    <h3 class="card-title center-align">Listado general de clientes Maderas Rewards</h3>
                                 </div>
                                 <table id="tablaClientesArcus" name="tablaClientesArcus" class="table-striped table-hover">
                                     <thead>
@@ -39,6 +39,7 @@
                                             <th>DIRECTOR REGIONAL 2</th>
                                             <th>ESTATUS LOTE</th>
                                             <th>ESTATUS CONTRATACIÓN</th>
+                                            <th>ID MADERAS REWARDS</th>
                                         </tr>
                                     </thead>
                                 </table>

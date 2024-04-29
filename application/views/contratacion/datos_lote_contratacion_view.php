@@ -248,6 +248,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>VENTA COMPARTIDA</th><!--30-->
                                                 <th>UBICACIÓN DE LA VENTA</th>
                                                 <th>TIPO DE PROCESO</th>
+                                                <th>SEDE</th>
 
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO-->
                                                 <th>FOLIO</th>
@@ -355,6 +356,7 @@ if(in_array($this->session->userdata('id_rol'), array( 17, 70, 71, 73))) {
                                                 <th>TIPO PROCESO</th>
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
+                                                <th>SEDE</th>
                                             </tr>
                                             </thead>
                                         </table>

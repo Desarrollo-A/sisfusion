@@ -154,6 +154,34 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="modal fade " id="regRevA7" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center"><label>Registro estatus 6 - <b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="control-label">Comentario</label>
+                                <textarea class="text-modal" name="comentario2" id="comentario2" rows="3"></textarea>
+                                <br>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="control-label" id="tvLbl">Enganche</label>
+                                <input class="form-control input-gral" name="totalNeto" id="totalNetoRevA7" oncopy="return false" onpaste="return false" type="tel" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" data-type="currency" autocomplete="off">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" onClick="closeWindow()" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="save2" class="btn btn-primary"> Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<!-- END MODALS -->
 
 		<div class="content boxContent">

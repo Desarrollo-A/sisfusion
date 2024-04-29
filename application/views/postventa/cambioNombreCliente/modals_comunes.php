@@ -19,7 +19,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Nombre (<small style="color: red;">*</small>)</label>
-                                        <input id="txtNombre" name="txtNombre" class="form-control input-gral" type="text">
+                                        <input id="txtNombre" name="txtNombre" class="form-control input-gral" type="text" autocomplete="off">
                                     </div>
                                 </div>
                             </div>
@@ -27,15 +27,17 @@
                                 <div class="col-md-6">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Apellido paterno</label>
-                                        <input id="txtApellidop" name="txtApellidop" class="form-control input-gral" type="text">
+                                        <input id="txtApellidop" name="txtApellidop" class="form-control input-gral" type="text" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group text-left m-0">
                                         <label class="control-label label-gral">Apellido materno</label>
-                                        <input id="txtApellidom" name="txtApellidom" class="form-control input-gral" type="text">
+                                        <input id="txtApellidom" name="txtApellidom" class="form-control input-gral" type="text" autocomplete="off">
                                     </div>
                                 </div>
+
+                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 hide p-3" id="fileEscrituraSellos"></div>
                             </div>
 
                             <hr>
@@ -53,6 +55,7 @@
                         <input type="hidden" id="tipoTransaccion" name="tipoTransaccion">
                         <input type="hidden" id="idRegistro" name="idRegistro">
                         <input type="hidden" id="banderaCoprop" name="banderaCoprop">
+                        <input type="hidden" id="tituloDocumentoInput" name="tituloDocumentoInput">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         <button type="submit" class="btn btn-primary">Aceptar</button>
                     </div>
@@ -81,11 +84,13 @@
                                 <label class="control-label">Comentario</label>
                                 <input class="form-control input-gral text-modal mb-1" name="comentario" autocomplete="off" id="comentarioAvanzar">
                             </div>
+                            <div id="escrituraNotariadaDiv" class="hide"></div>
                             <div class="modal-footer">
                                 <input type="hidden" id="idLoteA" name="idLoteA">
                                 <input type="hidden" id="idClienteA" name="idClienteA">
                                 <input type="hidden" id="tipoTransaccionA" name="tipoTransaccionA">
                                 <input type="hidden" id="tipo" name="tipo">
+                                <input type="hidden" id="valorTramite" name="valorTramite">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                                 <button type="submit" class="btn btn-primary">Aceptar</button>
                             </div>

@@ -103,7 +103,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -612,7 +612,6 @@ class Reestructura_model extends CI_Model
             $id_sede = $this->session->userdata('id_sede');
         if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
             $filtroSede = "AND sede_residencial IN ($id_sede)";
-
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -1898,5 +1897,25 @@ class Reestructura_model extends CI_Model
         descripcion");
 
       return $query->result_array();
+    }
+
+    public function checkFechaApartado02($idLote){
+        $query = $this->db->query("SELECT 
+        pxl.id_lotep idLoteDestino,
+        re.nombreResidencial,
+        co.nombre,
+        lo.nombreLote,
+        lo.idLote,
+        CONVERT (NVARCHAR (10), hpl.fechaUltimoEstatus2, 120) fechaUltimoEstatus2,
+        lo.id_usuario_asignado,
+        lo.id_gerente_asignado,
+        lo.id_subdirector_asignado
+        FROM propuestas_x_lote pxl 
+        INNER JOIN lotes lo ON lo.idLote = pxl.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio    
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN (SELECT idLote, MAX(fecha_modificacion) fechaUltimoEstatus2 FROM historial_preproceso_lote WHERE id_preproceso = 2 GROUP BY idLote) hpl ON hpl.idLote = pxl.idLote
+        WHERE pxl.idLote IN ($idLote)");
+        return $query->result_array();
     }
 }

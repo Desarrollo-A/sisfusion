@@ -391,7 +391,7 @@ class Casas extends BaseController {
 
         $lote = str_replace("-", "_", $lote);
 
-        $filename = $documento . "_" . $lote . "_" . $proceso . ".pdf";
+        $filename = $documento . "_" . $lote . "_" . $proceso . '.' . $file_ext;
 
         return $filename;
     }

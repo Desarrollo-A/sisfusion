@@ -169,6 +169,10 @@ class Login extends CI_Controller
 						{
 							$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
 						}
+						elseif ($dataRol[0]->nombre=="Originación")
+						{
+							$perfil = ($dataRol[0]->nombre=="Originación") ? "Originacion" : $dataRol[0]->nombre;
+						}
 
 					}
 					/*get ubicacion*/

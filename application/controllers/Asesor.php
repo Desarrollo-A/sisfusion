@@ -3288,6 +3288,7 @@ class Asesor extends CI_Controller {
     }
     public function intExpAsesor() {
 
+
         $idLote = $this->input->post('idLote');
         $nombreLote = $this->input->post('nombreLote');
         $id_cliente = $this->input->post('idCliente');
@@ -3303,6 +3304,8 @@ class Asesor extends CI_Controller {
             return;
         }
 
+        /*
+         * //QUITAR COMENTARIO CUANOD SE ACEBE DE EDITAR ESTE PEDO
         if ($this->session->userdata('id_rol') != 17) {
            $cliente = $this->Clientes_model->clienteAutorizacion($id_cliente);
             if (intval($cliente->autorizacion_correo) !== AutorizacionClienteOpcs::VALIDADO || intval($cliente->autorizacion_sms) !== AutorizacionClienteOpcs::VALIDADO) {
@@ -3310,7 +3313,7 @@ class Asesor extends CI_Controller {
                 echo json_encode($data);
                 return;
             }
-        }
+        }*/
 
         $valida_tventa = $this->Asesor_model->getTipoVenta($idLote);//se valida el tipo de venta para ver si se va al nuevo status 3 (POSTVENTA)
 
@@ -3321,7 +3324,8 @@ class Asesor extends CI_Controller {
         exit;*/
 
         switch($idMovimientoPost){
-            case in_array($idMovimientoPost, [31, 85, 102, 104, 107, 108, 109, 111]):
+            //case in_array($idMovimientoPost, [31, 85, 102, 104, 107, 108, 109, 111]):
+            case in_array($idMovimientoPost, [31, 73, 85, 102, 104, 107, 108, 109, 111]) :
 
                 if($valida_tventa[0]['tipo_venta'] == 1 && $valida_tventa[0]['tipo_proceso'] <= 1) {
                     if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 104 || $valida_tventa[0]['idStatusContratacion'] == 2 && $valida_tventa[0]['idMovimiento'] == 108) {
@@ -3351,11 +3355,15 @@ class Asesor extends CI_Controller {
                         $idMovimiento = 98;
                     }
                 }
-                else {
-                    $statusContratacion = 2;
-                    $idMovimiento = 84;
+                else{//se repiten porque se comparte este estatus con el TV:1-2
+                    if($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 73){
+                        $statusContratacion = 2;
+                        $idMovimiento = 74;
+                    }elseif ($valida_tventa[0]['idStatusContratacion'] == 1 && $valida_tventa[0]['idMovimiento'] == 31){
+                        $statusContratacion = 2;
+                        $idMovimiento  = 84;
+                    }
                 }
-
                 break;
 
             case 20:
@@ -3366,7 +3374,7 @@ class Asesor extends CI_Controller {
 
                 break;
 
-            case 63:
+                case 63:
                 if($valida_tventa[0]['tipo_venta'] != 1){
                     $statusContratacion = 2;
                     $idMovimiento  = 62;
@@ -3395,6 +3403,11 @@ class Asesor extends CI_Controller {
             case 96:
                 $statusContratacion = 6;
                 $idMovimiento  = 97;
+                break;
+
+            case 31:
+                $statusContratacion = 2;
+                $idMovimiento  = 84;
                 break;
         }
 
@@ -3594,7 +3607,12 @@ class Asesor extends CI_Controller {
                 'comentario' => $comentario
             ], true));
         }
-    
+
+        /*print_r($arreglo);
+        echo '<br>';
+        print_r($arreglo2);
+        exit;*/
+
         if ($validate == 1) {
             if ($this->Asesor_model->updateSt($idLote, $arreglo, $arreglo2) == TRUE) {
                 if ($idMovimiento == 84 && in_array($valida_tventa[0]['tipo_venta'], [2, 3, 4])) { // SOLO CUANDO AVANZA LA PRIMERA VEZ AL ESTATUS 5

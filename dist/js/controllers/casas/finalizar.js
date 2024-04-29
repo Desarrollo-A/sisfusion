@@ -106,7 +106,7 @@ filtro_proceso.onChange(function(option){
 })
 
 let status_option = [
-    {value: 'all', label: 'Todos'},
+    {value: -1, label: 'Todos'},
     {value: 1, label: 'Finalizado'},
     {value: 0, label: 'No finalizado'},
 ]
