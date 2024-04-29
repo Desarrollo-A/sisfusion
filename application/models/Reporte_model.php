@@ -402,7 +402,7 @@ class Reporte_model extends CI_Model {
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
         list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol);
 
-        $query = $this->db->query("SELECT s
+        $query = $this->db->query("SELECT 
         
             FORMAT(ISNULL(contratadas.sumaConT, 0), 'C') sumaConT, ISNULL(contratadas.totalConT, 0) totalConT, --VENDIDO CONTRATADO
             FORMAT(ISNULL(apartadas.sumaAT, 0), 'C') sumaAT, ISNULL(apartadas.totalAT, 0) totalAT, --VENDIDO APARTADO
