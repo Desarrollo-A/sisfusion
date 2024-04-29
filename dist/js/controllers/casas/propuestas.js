@@ -43,9 +43,9 @@ function show_form(propuesta) {
     form.fields = [
         new HiddenField({ id: 'idPropuesta', value: propuesta.idPropuesta }),
         new HiddenField({ id: 'idProcesoCasas', value: idProcesoCasas }),
-        new SelectField({ id: 'notaria', label: 'Notaria',  placeholder: 'Selecciona una opcion', data: notarias, value: propuesta.id_notaria, width:'6' }),
-        new DateField({ id: 'fecha', label: 'Fecha de firma',  placeholder: 'Elige una fecha', value: propuesta.fechaFirma, width:'6' }),
-        new NumberField({ id: 'costo', label: 'Costo',  placeholder: 'Ingresa el dato', value: propuesta.costo })
+        new SelectField({ id: 'notaria', label: 'Notaria',  placeholder: 'Selecciona una opcion', data: notarias, value: propuesta.id_notaria, width:'6', required:'required' }),
+        new DateField({ id: 'fecha', label: 'Fecha de firma',  placeholder: 'Elige una fecha', value: propuesta.fechaFirma, width:'6', required:'required' }),
+        new NumberField({ id: 'costo', label: 'Costo',  placeholder: 'Ingresa el dato', value: propuesta.costo, required:'required' })
     ]
 
     form.show()

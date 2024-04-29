@@ -1,5 +1,5 @@
 class DateField{
-    constructor({id, label, placeholder, value}){
+    constructor({id, label, placeholder, value, required}){
         this.id = id
 
         this.field = $('<div />')
@@ -13,6 +13,7 @@ class DateField{
         .append(
             $('<input />')
             .addClass('form-control input-gral datepicker')
+            .attr(required, required )
             .attr('type', 'text')
             .attr('name', id)
             .attr('id', id)
@@ -60,7 +61,7 @@ class HiddenField{
 }
 
 class SelectField{
-    constructor({id, label, placeholder, data=[], value, width, style}){
+    constructor({id, label, placeholder, data=[], value, width, required}){
         this.id = id
 
         let options = []
@@ -100,6 +101,7 @@ class SelectField{
                 .data('size', '7')
                 .data('container', 'body')
                 .attr('title', placeholder)
+                .attr(required, required )
                 .append(options)
             )
         )
@@ -199,7 +201,7 @@ class FileField{
 }
 
 class TextField{
-    constructor({id, label, placeholder, width}){
+    constructor({id, label, placeholder, width, required}){
         this.id = id
         this.field = $('<div />')
         .addClass(`col-lg-${width} mt-1`)
@@ -215,6 +217,7 @@ class TextField{
             .attr('id', id)
             .attr('name', id)
             .attr('type', 'text')
+            .attr(required, required )
             .attr('placeholder', placeholder)
         )
 
@@ -229,7 +232,7 @@ class TextField{
 }
 
 class TextAreaField{
-    constructor({id, label, placeholder, width}){
+    constructor({id, label, placeholder, width, required}){
         this.id = id
         this.field = $('<div />')
         .addClass(`col-lg-${width} mt-1`)
@@ -244,6 +247,7 @@ class TextAreaField{
             .addClass(`text-modal`)
             .attr('id', id)
             .attr('name', id)
+            .attr(required, required )
             .attr('placeholder', placeholder)
         )
 
@@ -258,7 +262,7 @@ class TextAreaField{
 }
 
 class NumberField{
-    constructor({id, label, placeholder, value, width=12}){
+    constructor({id, label, placeholder, value, width=12, required}){
         this.id = id
         this.field = $('<div />')
         .addClass(`col-lg-${width}`)
@@ -275,6 +279,7 @@ class NumberField{
             .attr('name', id)
             .attr('type', 'text')
             .attr('placeholder', placeholder)
+            .attr(required, required )
             .val(value)
             .on('keypress', this.onlyNumbers)
         )
