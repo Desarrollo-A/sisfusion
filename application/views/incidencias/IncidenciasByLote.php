@@ -105,12 +105,45 @@ hr {
             </div>
         </div>
 
+        <div class="modal fade modal-alertas" id="modal_mensualidades" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-lg">
+                
+                <div class="modal-content">
+                    <form method="post" id="modal_mensualidades_form">
+                        <div class="modal-header bg-red">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="seleccionar">
+                            <h4 class="col-xs-12 text-center"><b>En esta opción podrás editar el tipo mensualidad:</b></h4>
+                            <div class="text-center">
+                                <p><b>Mensualidad anterior:</b> <span id="mensualidad_anterior"></span></p>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0 overflow-hidden">
+                                        <input type="hidden" id="idLote" name="idLote" value="">
+                                        <input type="hidden" id="idCliente" name="idCliente" value="">
+                                        <label class="control-label" for="proyecto">Mensualidad</label>
+                                        <select name="mensualidad9" id="mensualidad9" class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA MENSUALIDAD" data-size="7" data-container="body" required></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR">CANCELAR</button>
+                            <button type="submit" id="mensualidadTipoBoton" class="btn btn-primary">ENVIAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas"  id="addEmpresa" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
+                            <i class="material-ico  ns">clear</i>
                         </button>   
                     </div>
                     <form method="post" id="form_empresa">

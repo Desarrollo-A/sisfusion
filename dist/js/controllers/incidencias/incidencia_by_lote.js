@@ -1,4 +1,15 @@
- 
+var mensualidad = [];
+
+$(document).ready(function () {
+    $.getJSON(general_base_url + "Incidencias/fillMensualidades").done(function(data) {
+        mensualidad = data;
+        for (let i = 0; i < mensualidad.length; i++) {
+            $("#mensualidad9").append($('<option>').val(mensualidad[i]['id_opcion']).text(mensualidad[i]['nombre']));
+        }
+        $('#mensualidad9').selectpicker('refresh');
+    });
+});
+
  
 $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     var len = data.length;
@@ -683,6 +694,7 @@ function saveTipo(id){
     }
 }
 
+/*
 function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
     let precioLote = parseFloat(precio);
@@ -1081,6 +1093,7 @@ $(".find_doc").click( function() {
                         BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
+                        BtnStats += '<button class="btn-data btn-green mensualidadTipo" title="Cambiar Mensualidad" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-mensualidad="'+data.opcion+'"><i class="fas fa-cog"></i></button>';
 
                     }
                     else {
@@ -1217,6 +1230,82 @@ $(".find_doc").click( function() {
             $("#modal_avisitos").modal();
         }                      
     }); 
+
+    $(document).on("click", ".mensualidadTipo", function(e) {
+        e.preventDefault(); 
+    
+        var idLote = $(this).val();
+        var idCliente = $(this).attr("data-cliente");
+        var mensualidadT = $(this).attr("data-mensualidad");
+    
+        $("#idLote").val(idLote);
+        $("#idCliente").val(idCliente);
+    
+        $("#mensualidad9").val(mensualidadT);
+        $("#mensualidad9").selectpicker("refresh");
+    
+        var mensualidadNombre = '';
+        for (let i = 0; i < mensualidad.length; i++) {
+            if (mensualidad[i]['id_opcion'] == mensualidadT) {
+                mensualidadNombre = mensualidad[i]['nombre'];
+                break;
+            }
+        }
+    
+        $("#mensualidad_anterior").text(mensualidadNombre);
+    
+        $("#modal_mensualidades").modal();
+    });
+    
+    $("#modal_mensualidades_form").on("submit", function(e) {
+        e.preventDefault();
+        
+        var idCliente = $("#idCliente").val();
+        var idLote = $("#idLote").val();
+        var id_usuario = $("#id_usuario").val();
+        var tipoMensualidad = $("#mensualidad9").val();
+
+        var dataAnticipo = new FormData();
+    
+        dataAnticipo.append("idCliente", idCliente);
+        dataAnticipo.append("idLote", idLote);
+        dataAnticipo.append("id_usuario", id_usuario);
+        dataAnticipo.append("tipoMensualidad", tipoMensualidad);
+    
+        $.ajax({
+            url: general_base_url + 'Incidencias/updateMensualidades',
+            data: dataAnticipo,
+            type: 'POST',
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data) {
+                if (data == 1) {
+                    $('#modal_mensualidades').modal("hide");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                }
+            },
+            error: function() {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+    
+    
+
+
+    // function fillMensualidades() {
+    //     $.getJSON(general_base_url + "Incidencias/fillMensualidades").done(function(data) {
+    //         for (let i = 0; i < data.length; i++) {
+    //             $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+    //         }
+    //         $('#mensualidad9').selectpicker('refresh');
+    //     });
+    // }
+    
 
 
 /**--------------------------AGREGAR EMPRESA---------------------------- */
