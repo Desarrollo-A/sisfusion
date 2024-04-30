@@ -12,7 +12,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-upload fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
