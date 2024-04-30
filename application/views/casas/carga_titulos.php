@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-archive fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Carga de titulos y cotizaciones</h3>
+                                    <h3 class="card-title center-align">Carga de títulos y cotizaciones</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -43,5 +43,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/carga_titulos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/carga_titulos.js?v=3"></script>
 </body>

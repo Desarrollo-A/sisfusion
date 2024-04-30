@@ -1,5 +1,5 @@
 class DateField{
-    constructor({id, label, placeholder, value}){
+    constructor({id, label, placeholder, value, required}){
         this.id = id
 
         this.field = $('<div />')
@@ -13,6 +13,7 @@ class DateField{
         .append(
             $('<input />')
             .addClass('form-control input-gral datepicker')
+            .attr(required, required )
             .attr('type', 'text')
             .attr('name', id)
             .attr('id', id)
@@ -60,7 +61,7 @@ class HiddenField{
 }
 
 class SelectField{
-    constructor({id, label, placeholder, data=[], value}){
+    constructor({id, label, placeholder, data=[], value, width, required}){
         this.id = id
 
         let options = []
@@ -80,7 +81,7 @@ class SelectField{
         }
 
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width} col-md-12`)
         .append(
             $('<div />')
             .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
@@ -94,12 +95,13 @@ class SelectField{
                 .addClass('selectpicker select-gral m-0')
                 .attr('id', id)
                 .attr('name', id)
-                .data('style', 'btn')
+                .data('style', 'btnSelect')
                 .data('show-subtext', 'true')
                 .data('live-search', 'true')
                 .data('size', '7')
                 .data('container', 'body')
                 .attr('title', placeholder)
+                .attr(required, required )
                 .append(options)
             )
         )
@@ -122,7 +124,7 @@ class FileField{
         this.id = id
 
         this.field = $('<div />')
-        .addClass('col-md-12 mt-1')
+        .addClass('col-md-12')
         .append(
             $('<div />')
             .addClass('file-gph')
@@ -140,7 +142,7 @@ class FileField{
                 .attr('type', 'file')
                 .attr('accept', accept)
                 .change(function(e) { 
-                    console.log(e.target.files[0])
+                    //console.log(e.target.files[0])
 
                     let name = e.target.files[0].name
                     let size = e.target.files[0].size / 1024
@@ -154,7 +156,9 @@ class FileField{
                     $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
 
                     if(accept){
-                        if(accept !== e.target.files[0].type){
+                        // console.log(e.target.files[0].type)
+
+                        if(!accept.includes(e.target.files[0].type)){
                             alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
                             $(`#${id}-name`).val('')
                         }
@@ -171,7 +175,7 @@ class FileField{
             )
             .append(
                 $('<label />')
-                .addClass('upload-btn m-0')
+                .addClass('upload-btn')
                 .attr('for', id)
                 .attr('type', 'text')
                 .append(
@@ -197,10 +201,10 @@ class FileField{
 }
 
 class TextField{
-    constructor({id, label, placeholder}){
+    constructor({id, label, placeholder, width, required}){
         this.id = id
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width} mt-1`)
         .append(
             $('<label />')
             .addClass('control-label')
@@ -213,6 +217,37 @@ class TextField{
             .attr('id', id)
             .attr('name', id)
             .attr('type', 'text')
+            .attr(required, required )
+            .attr('placeholder', placeholder)
+        )
+
+        this.value = () => {
+            return $(`#${id}`).val()
+        }
+    }
+
+    get(){
+        return this.field
+    }
+}
+
+class TextAreaField{
+    constructor({id, label, placeholder, width, required}){
+        this.id = id
+        this.field = $('<div />')
+        .addClass(`col-lg-${width} mt-1`)
+        .append(
+            $('<label />')
+            .addClass('control-label')
+            .attr('for', id)
+            .text(label)
+        )
+        .append(
+            $('<textarea />')
+            .addClass(`text-modal`)
+            .attr('id', id)
+            .attr('name', id)
+            .attr(required, required )
             .attr('placeholder', placeholder)
         )
 
@@ -227,10 +262,10 @@ class TextField{
 }
 
 class NumberField{
-    constructor({id, label, placeholder, value}){
+    constructor({id, label, placeholder, value, width=12, required}){
         this.id = id
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width}`)
         .append(
             $('<label />')
             .addClass('control-label')
@@ -242,9 +277,11 @@ class NumberField{
             .addClass(`form-control input-gral`)
             .attr('id', id)
             .attr('name', id)
-            .attr('type', 'number')
+            .attr('type', 'text')
             .attr('placeholder', placeholder)
+            .attr(required, required )
             .val(value)
+            .on('keypress', this.onlyNumbers)
         )
 
         this.value = () => {
@@ -255,6 +292,32 @@ class NumberField{
     get(){
         return this.field
     }
+
+    onlyNumbers(e) {
+        var key = e.keyCode || e.which;
+        var tecla = String.fromCharCode(key);
+        var letras = "0123456789.";
+        var especiales = [8, 37, 39, 46];
+    
+        var tecla_especial = false;
+        for (var i in especiales) {
+            if (key == especiales[i]) {
+                tecla_especial = true;
+                break;
+            }
+        }
+    
+        if (letras.indexOf(tecla) == -1 && !tecla_especial) return false;
+    
+        // Permitir solo un punto decimal
+        if (tecla == '.' && e.target.value.indexOf('.') !== -1) return false;
+    
+        // Limitar a dos decimales
+        var parts = e.target.value.split('.');
+        if (parts.length > 1 && parts[1].length >= 2) return false;
+    
+        return true;
+    }
 }
 
 class OptionField{
@@ -264,7 +327,7 @@ class OptionField{
         let options = []
         for (const option of data) {
             options.push(
-                $('<div />')
+                $('<div /><br>')
                 .addClass('container boxChecks p-0')
                 .append(
                     $('<label />')
@@ -281,9 +344,27 @@ class OptionField{
                         $('<span />')
                         .addClass('w-100 d-flex justify-between')
                         .append(
+                            $('<b />')
+                            .addClass('m-0')
+                            .text(option.title)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
                             $('<p />')
                             .addClass('m-0')
-                            .text(option.label)
+                            .text(option.subtitle)
+                        )
+                    )
+                    .append(
+                        $('<span />')
+                        .addClass('w-100 d-flex justify-between')
+                        .append(
+                            $('<p />')
+                            .addClass('m-0')
+                            .text(option.description)
                         )
                     )
                 )
@@ -291,7 +372,7 @@ class OptionField{
         }
 
         this.field = $('<div />')
-        .addClass('col-12 lotePropuesto')
+        .addClass('col-12 lotePropuesto checkDS')
         .append(
             $('<label />')
             .text(label)
@@ -316,9 +397,9 @@ class Form{
         this.fields = fields || []
         this.onSubmit = onSubmit || undefined
 
-        if(!text){
+        /* if(!text){
             $('#text-form-modal').hide()
-        }
+        } */
     }
 
     show(){

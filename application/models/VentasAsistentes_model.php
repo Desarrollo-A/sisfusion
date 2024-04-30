@@ -357,9 +357,6 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
                     $filtroSede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 3111)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
                     $filtroSede = "";
@@ -368,6 +365,15 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10251, 455)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

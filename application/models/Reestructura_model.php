@@ -1438,7 +1438,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
+        INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep AND lo2.idStatusContratacion IN (9, 10, 13, 14, 15)
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 
@@ -1471,7 +1471,7 @@ class Reestructura_model extends CI_Model
         WHERE lf1.estatusTraspaso = 0 AND lf1.origen = 1 AND lf1.destino = 0
         GROUP BY lf1.idLotePvOrigen) tb
         INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen AND lf2.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1
+        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1 AND lo2.idStatusContratacion IN (9, 10, 13, 14, 15)
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lf2.idLote AND cl.status = 1 AND cl.proceso IN (5, 6)

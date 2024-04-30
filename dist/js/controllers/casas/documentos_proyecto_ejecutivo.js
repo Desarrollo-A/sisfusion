@@ -12,8 +12,74 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
+backPage = function() {
+    window.location.href = `${general_base_url}casas/proyecto_ejecutivo`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Ingresar adeudo",
+        exportOptions: {
+            columns: [0, 1, 2, 3],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 function show_upload(data) {
-    //console.log(data)
+    console.log(data)
+
+    let accept = '';
+
+    switch (data.tipo) {
+
+        case 3:
+        case 5:
+        case 7:
+        case 11:
+        case 12:
+        case 18:
+            accept = ['image/png','image/jpeg','application/pdf']
+        break;
+
+        case 14:
+            accept = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        break;
+
+        case 25:
+            accept = ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/pdf']
+        break;
+
+        default:
+            accept = ['application/pdf'];
+    }
 
     let form = new Form({
         title: `Subir ${data.documento}`,
@@ -22,7 +88,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -42,7 +108,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept }),
         ],
     })
 
@@ -56,8 +122,14 @@ let columns = [
     { data: 'fechaModificacion' },
     { data: function(data){
         let view_button = ''
-        if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+        let parts = data.archivo.split('.');
+        let extension = parts.pop();
+        if(data.archivo != 'Sin archivo' || data.archivo == null){
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+            }else{
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            }
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
@@ -69,5 +141,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_documentos_proyecto_ejecutivo/${idProcesoCasas}`,
+    buttons: buttons,
     columns,
 })

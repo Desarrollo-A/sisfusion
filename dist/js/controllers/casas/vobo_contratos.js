@@ -12,6 +12,25 @@ function show_preview(data) {
     });
 }
 
+
+backPage = function() {
+    window.location.href = `${general_base_url}casas/recepcion_contratos`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
@@ -30,5 +49,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_contratos/${idProcesoCasas}`,
+    buttons:buttons,
     columns,
 })

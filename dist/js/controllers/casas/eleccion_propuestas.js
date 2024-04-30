@@ -5,16 +5,17 @@ function show_propuestas(proceso) {
     })
 
     form.onSubmit = function(data){
-        // console.log(data)
+        console.log(data)
         
         $.ajax({
             type: 'POST',
-            url: `${general_base_url}/casas/set_propuesta`,
+            url: `${general_base_url}casas/set_propuesta`,
             data: data,
             contentType: false,
             processData: false,
             success: function (response) {
-                // console.log(response)
+               // console.log(response)
+               alerts.showNotification("top", "right", `Propuesta seleccionada correctamente.`, "success");
 
                 table.reload()
 
@@ -30,7 +31,7 @@ function show_propuestas(proceso) {
 
     $.ajax({
         type: 'GET',
-        url: `${general_base_url}/casas/options_propuestas?id=${proceso.idProcesoCasas}`,
+        url: `${general_base_url}casas/options_propuestas?id=${proceso.idProcesoCasas}`,
         async: false,
         success: function (response) {
             propuestas = response
@@ -41,39 +42,46 @@ function show_propuestas(proceso) {
     })
 
     form.fields = [
-        new HiddenField({ id: 'idProcesoCasas',      value: proceso.idProcesoCasas }),
-        new OptionField({id: 'idPropuesta', label: 'Propuestas', data: propuestas}),
+        new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
+        new OptionField({id: 'idPropuesta', label: '', data: propuestas}),
     ]
 
     form.show()
 }
 
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_validacion_contraloria?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso de validacion de contraloria.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_validacion_contraloria = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion de contraloria"</b>?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de contraloria"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_validacion_contraloria`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloria.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
 
 function show_preview(data) {
@@ -100,7 +108,7 @@ function show_upload(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -120,40 +128,68 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',      value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',    value: data.idDocumento }),
             new HiddenField({ id: 'name_documento',  value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['image/png','image/jpeg','application/pdf'] }),
         ],
     })
 
     form.show()
 }
 
-function sendToCargaTitulos(data) {
-    // console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_carga_titulos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a carga de titulos.`, "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 back_to_carga_titulos = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Carga de titulos"</b>?`,
-        onOk: () => sendToCargaTitulos(data),
-        //onCancel: sayNo,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Carga de títulos"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_carga_titulos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a carga de titulos.`, "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
+
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Elección de propuestas",
+        exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
 
 let columns = [
     { data: 'idLote' },
@@ -184,9 +220,9 @@ let columns = [
         let view_button = ''
         let pass_button = ''
         if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorizacion', onClick: show_preview, data})
+            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             if(data.idPropuesta){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptacion de propuestas', onClick: pass_to_validacion_contraloria, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_validacion_contraloria, data})
             }
         }
 
@@ -199,5 +235,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_eleccion_propuestas',
+    buttons:buttons,
     columns,
 })

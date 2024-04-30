@@ -84,6 +84,8 @@ class Usuarios_modelo extends CI_Model
                     $id_sede = "(usuarios.id_sede IN ('1', '8', '10', '11', '19'))";
                 else if (in_array($this->session->userdata('id_usuario'), [6627])) // 30 JUANA GUZMAN
                     $id_sede = "(usuarios.id_sede IN ('6', '12')) AND";
+                else if (in_array($this->session->userdata('id_usuario'), [7097, 7096, 13094])) // 30 GRISSEL, SAMANTHA Y LEONARDO
+                    $id_sede = "(usuarios.id_sede IN ('4', '13', '14')) AND";
                 else 
                     $id_sede = "(usuarios.id_sede LIKE('%".$this->session->userdata('id_sede')."%'))";
 
@@ -163,9 +165,6 @@ class Usuarios_modelo extends CI_Model
                     } else if ($this->session->userdata('id_usuario') == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
                         $id_lider = $this->session->userdata('id_lider') . ', 13295';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 3111';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 13348) { // VIRIDIANA ZAMORA ORTIZ
                         $id_lider = $this->session->userdata('id_lider') . ', 10063';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
@@ -174,6 +173,15 @@ class Usuarios_modelo extends CI_Model
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
                         $id_lider = $this->session->userdata('id_lider') . ', 10251, 455';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 6661';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 80, 664';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
+                        $id_lider = $this->session->userdata('id_lider') . ', 7435';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     }
                     else

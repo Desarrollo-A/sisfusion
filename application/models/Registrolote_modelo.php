@@ -3527,9 +3527,6 @@
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295';
 					$sede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-					$id_lider = $id_lider . ', 3111';
-					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
 					$sede = "";
@@ -3538,6 +3535,15 @@
 					$sede = "";
 				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
 					$id_lider = $id_lider . ', 10251, 455';
+					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+					$id_lider = $id_lider . ', 80, 664';
+					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 7435';
 					$sede = "";
 				}
 

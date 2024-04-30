@@ -1,62 +1,103 @@
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_solicitud_contratos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso para solicitar contratos.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_solicitud_contratos = function(data) {
-    let ask = new AskDialog({
-        title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Solicitud de contratos"</b>?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
-    })
 
-    ask.show()
-}
+    let form = new Form({
+        title: 'Continuar proceso',
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
 
-function sendToConcentrarAdeudos(data) {
-    // console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_documentos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
-
-            table.reload()
+            $.ajax({
+                type: 'POST',
+                url: `to_solicitud_contratos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para solicitar contratos.", "success");
+        
+                    table.reload();
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
         },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
+
+    form.show()
 }
 
 back_to_adeudos = function(data) {
-    let ask = new AskDialog({
+    /* let ask = new AskDialog({
         title: 'Regresar proceso', 
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentracion de adeudos"</b>?`,
         onOk: () => sendToConcentrarAdeudos(data),
         //onCancel: sayNo,
     })
 
-    ask.show()
+    ask.show() */
+
+    let form = new Form({
+        title: 'Regresar proceso', 
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentracion de adeudos"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_documentos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a concentracion de adeudos.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 go_to_documentos = function(data) {
     window.location.href = `valida_documentacion/${data.idProcesoCasas}`;
 }
+
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Validacion de documentación",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
 
 let columns = [
     { data: 'idLote' },
@@ -91,5 +132,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_validacion_contraloria',
+    buttons: buttons,
     columns,
 })
