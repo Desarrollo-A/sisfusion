@@ -3319,7 +3319,6 @@ public $controller = 'Postventa';
                 $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
 
                 if ($movement) {
-                    //echo 'se subió correctamente '.$folder.$documentName;
                     $dataParaInsertar['escrituraNotariada'] = $documentName;
                 }
             }
@@ -3447,7 +3446,6 @@ public $controller = 'Postventa';
                 $movement = move_uploaded_file($file['tmp_name'], $folder . $documentName);
 
                 if ($movement) {
-                    //echo 'se subió correctamente '.$folder.$documentName;
                     $dataParaActualizar['escrituraNotariada'] = $documentName;
                 }
             }
