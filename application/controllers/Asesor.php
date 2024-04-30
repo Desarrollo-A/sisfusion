@@ -92,15 +92,12 @@ class Asesor extends CI_Controller {
         $data_casa = ($objDatos->tipo_casa==null) ? null : $objDatos->tipo_casa;
         $cd = json_decode(str_replace("'", '"', $data[0]['casasDetail']));
         $total_construccion = 0; // MJ: AQUÍ VAMOS A GUARDAR EL TOTAL DE LA CONSTRUCCIÓN + LOS EXTRAS
+
+
         if($data[0]['casasDetail']!=null){
             if(count($cd->tipo_casa) >= 1){
                 foreach($cd->tipo_casa as $value) {
-//                    print_r($data_casa);
-//                    echo '<br>';
-//                    print_r($value->id);
-//                    echo '<br>';
-//                    echo '<br>';
-                    if($data_casa === $value->id){
+                    if($data_casa->id === $value->id){
                         $total_construccion = $value->total_const; // MJ: SE EXTRAE EL TOTAL DE LA CONSTRUCCIÓN POR TIPO DE CASA
                         foreach($value->extras as $v) {
                             $total_construccion += $v->techado;
@@ -962,6 +959,7 @@ class Asesor extends CI_Controller {
             $data[$i]['telefono'] = $query[0]->telefono2;
             $data[$i]['tipo_proceso'] = $query[0]->tipo_proceso;
             $data[$i]['proceso'] = $query[0]->proceso;
+            $data[$i]['tipo_estatus_regreso'] = $query[0]->tipo_estatus_regreso;
         }
         if ($data != null) {
             echo json_encode($data);

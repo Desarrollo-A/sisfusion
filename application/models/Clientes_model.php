@@ -496,6 +496,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
                 $where = "pr.id_gerente IN ($id_lider, 1916, 11196) AND pr.id_sede IN (10, 8)";
+            else if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
+                $where = "pr.id_gerente IN ($id_lider, 12688, 495) AND pr.id_sede IN (12)";
             else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
                 $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
             else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
@@ -508,14 +510,18 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 694, 4509) AND pr.id_sede IN (14)";
             else if ($id_usuario == 14952) // GUILLERMO HELI IZQUIERDO VIEYRA
                 $where = "pr.id_gerente IN ($id_lider, 13295) AND pr.id_sede IN (14)";
-            else if ($id_usuario == 12292) // REYNALDO HERNÁNDEZ SANCHEZ
-                $where = "pr.id_gerente IN ($id_lider, 3111) AND pr.id_sede IN (4)";
             else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
                 $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
                 $where = "pr.id_gerente IN ($id_lider, 10251, 455)";
+            else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 6661)";
+            else if ($id_usuario == 15466) // LAURA CAROLINA GUTIERREZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 80, 664)";
+            else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
+                $where = "pr.id_gerente IN ($id_lider, 7435)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }

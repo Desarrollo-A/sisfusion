@@ -5,7 +5,7 @@ function sendToAdeudos(data) {
         type: 'POST',
         url: `back_to_adeudos?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
+            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
 
             table.reload()
         },
@@ -18,7 +18,7 @@ function sendToAdeudos(data) {
 back_to_adeudos = function(data) {
     let ask = new AskDialog({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentración de adeudos?`,
         onOk: () => sendToAdeudos(data),
         //onCancel: sayNo,
     })
@@ -30,14 +30,14 @@ go_to_documentos = function(data) {
     window.location.href = `documentacion/${data.idProcesoCasas}`;
 }
 
-function sendToNext(data){
+/* function sendToNext(data){
     //console.log(data)
 
     $.ajax({
         type: 'POST',
         url: `to_valida_comite?id=${data.idProcesoCasas}`,
         success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite tecnico.", "success");
+            alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite técnico.", "success");
 
             table.reload()
         },
@@ -45,17 +45,49 @@ function sendToNext(data){
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     })
-}
+} */
 
 pass_to_proyecto_ejecutivo = function(data) {
-    let ask = new AskDialog({
+    /* let ask = new AskDialog({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
 
-    ask.show()
+    ask.show() */
+
+    let form = new Form({
+        title: 'Continuar proceso', 
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_valida_comite`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite técnico.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
 
 let columns = [
@@ -82,7 +114,7 @@ let columns = [
 
         let pass_button = ''
         if(data.documentos >= 13){
-             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validacion de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
+             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
         // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
@@ -91,8 +123,30 @@ let columns = [
     } },
 ]
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Documentación del cliente",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_proceso_documentos',
+    buttons: buttons,
     columns,
 })

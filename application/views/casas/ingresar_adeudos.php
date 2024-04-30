@@ -12,7 +12,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-money fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
@@ -26,6 +26,8 @@
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
                                             <th>ADEUDO OOAM</th>
+                                            <th>ADEUDO ADM</th>
+                                            <th>ADEUDO GPH</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>
@@ -44,5 +46,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js?=v1"></script>
 </body>

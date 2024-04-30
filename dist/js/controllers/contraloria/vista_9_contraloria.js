@@ -225,10 +225,12 @@ $(document).on('click', '#save1', function (e) {
     var totalNeto2 = $("#totalNeto2").val();
     var rl = $("#rl").val();
     var residencia = $("#residencia").val();
+    var sedeRecepcion = $("#sedeRecepcion").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
     var validaRL = ($("#rl").val().length == 0) ? 0 : 1;
     var validaResidencia = ($("#residencia").val().length == 0) ? 0 : 1;
+    var validaSedeRecepcion = ($("#sedeRecepcion").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("idCondominio", getInfo1[3]);
@@ -239,13 +241,14 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("totalNeto2", totalNeto2);
     dataExp1.append("rl", rl);
     dataExp1.append("residencia", residencia);
+    dataExp1.append("sedeRecepcion", sedeRecepcion);
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0)
+    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || validaSedeRecepcion == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
-    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1) {
+    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && validaSedeRecepcion == 1) {
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso9`,
@@ -369,12 +372,15 @@ function SoloNumeros(evt) {
 function fillSelectsForV9() {
     $.getJSON("fillSelectsForV9").done(function (data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 77) // REPRESENTABTE LEGAL SELECT
+            if (data[i]['id_catalogo'] == 77) // REPRESENTANTE LEGAL SELECT
                 $("#rl").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 78) // RESIDENCIA SELECT
                 $("#residencia").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            if (data[i]['id_sede'])
+                $("#sedeRecepcion").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
         }
         $('#rl').selectpicker('refresh');
         $('#residencia').selectpicker('refresh');
+        $('#sedeRecepcion').selectpicker('refresh');
     });
 }

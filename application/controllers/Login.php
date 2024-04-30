@@ -236,7 +236,7 @@ class Login extends CI_Controller
 						else if ($check_user[0]->tipo == 3 && $check_user[0]->id_rol == 5)
 							$id_rol = 97;
 						else if ($check_user[0]->tipo == 4)
-							$id_rol = 95;
+							$id_rol = 98;
 						else
 							$id_rol = $check_user[0]->id_rol;
 						$datos = $this->get_menu->get_menu_data($id_rol, $check_user[0]->id_usuario, $check_user[0]->estatus);
