@@ -109,8 +109,9 @@
       $desc =  $this->input->post("montoaDescontar");
       $usuario = $this->input->post("usuarioId");
       $comentario = $this->input->post("comentario");
-
-      $cuantosLotes = count($datos);
+      $id_descuento = $this->input->post("descuento");
+      
+      $cuantosLotes = count($datos);  
       $comentario = 0;
       for($i=0; $i <$cuantosLotes ; $i++) 
       { 
@@ -124,13 +125,19 @@
 
       $cuantos = count($datos); 
       if($cuantos > 1){
+        // 
         $sumaMontos = 0;
         for($i=0; $i <$cuantos ; $i++) { 
           if($i == $cuantos-1){
             $formatear = explode(",",$datos[$i]);
-            $id = $formatear[0]; 
+            $id = $formatear[0];
+            // id_del pago
             $monto = $formatear[1];
+            // abono neodata.
             $pago_neodata = $formatear[2];
+            // pago neodata
+            $pago_neodata = $formatear[3];
+            // nombre
             $montoAinsertar = $descuento - $sumaMontos;
             $Restante = $monto - $montoAinsertar;
             $comision = $this->Universidad_model->obtenerID($id)->result_array();
@@ -138,8 +145,8 @@
             $num = $i +1;
             $nameLote = $formatear[3];
             $comentario = "DESCUENTO UNIVERSIDAD MADERAS LOTES INVOLUCRADOS:  $LotesInvolucrados (TOTAL DESCUENTO: $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').", DESCUENTO DE: $".number_format(floatval($montoAinsertar), 2, '.', ',').", RESTANTE: $".number_format(floatval($Restante), 2, '.', ',')."    ";
-            $dat =  $this->Universidad_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario);
-            $dat =  $this->Universidad_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata);
+            $dat =  $this->Universidad_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
+            $dat =  $this->Universidad_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$id_descuento);
           
           }else{
             $formatear = explode(",",$datos[$i]);
@@ -149,7 +156,7 @@
             $nameLote = $formatear[3];
             $num = $i +1;
             $comentario = "DESCUENTO UNIVERSIDAD MADERAS LOTES INVOLUCRADOS:  $LotesInvolucrados ( TOTAL DESCUENTO $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').", DESCUENTO DE: $".number_format(floatval($monto), 2, '.', ',').", RESTANTE: $".number_format(floatval(0), 2, '.', ',')." ";
-            $dat = $this->Universidad_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario);
+            $dat = $this->Universidad_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
             $sumaMontos = $sumaMontos + $monto;
           }
         }
@@ -161,8 +168,8 @@
           $montoAinsertar = $monto - $descuento;
           $Restante = $monto - $montoAinsertar;
           $comision = $this->Universidad_model->obtenerID($id)->result_array();
-            $dat =  $this->Universidad_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario);
-            $dat =  $this->Universidad_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata);
+            $dat =  $this->Universidad_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
+            $dat =  $this->Universidad_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata, $id_descuento);
       }
       echo json_encode($dat);    
     }
@@ -312,4 +319,8 @@
       $respuesta['data']  = $this->Universidad_model->getReporteDevoluciones($condicion);
       echo json_encode($respuesta);
     }
+
+
+
+    
 }

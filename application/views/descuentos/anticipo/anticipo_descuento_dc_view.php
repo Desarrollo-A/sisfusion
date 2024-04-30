@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="material-datatables">
-                                <table id="tabla_anticipo_revision" name="tabla_anticipo_revision" class="table-striped table-hover">
+                                <table id="tabla_anticipo_revision_dc" name="tabla_anticipo_revision_dc" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             
@@ -91,7 +91,7 @@
 
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <?php $this->load->view('template/footer');?>
-<script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/solicitudes.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/solicitudes_dc.js"></script>
 <script type="text/javascript">
 		Shadowbox.init();
 	</script>

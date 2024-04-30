@@ -9,6 +9,17 @@
         <?php $this->load->view('descuentos/complementos/estilosPrestamos_comple'); ?>
         <?php $this->load->view('descuentos/anticipo/complementos/estilosAdelantos'); ?>
         <div class="content boxContent">
+            
+        <div class="modal fade modal-alertas" id="myModalAceptar_subir" role="dialog">
+			<div class="modal-dialog modal-md">
+				<div class="modal-content">
+					<form method="post" id="form_subir">
+						<div class="modal-body"></div>
+						<div class="modal-footer"></div>
+					</form>
+				</div>
+			</div>
+		</div>
             <div class="container-fluid">
                 <div class="row " style="margin-bottom: 2px">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 m-0">
@@ -19,6 +30,8 @@
                                     <p class="card-title pl-1">
                                         (Seleccionar una opción para iniciar tu proceso de solicitud o mostrar tus procesos)
                                     </p>
+                                    <div class="col-lg-2">
+                                </div>
                                 </div>
                                 <?php $this->load->view('descuentos/anticipo/complementos/anticipo_descuento_botones_comple'); ?>
                                 <div class="toolbar">
