@@ -178,7 +178,7 @@ class CasasModel extends CI_Model
         $query = "SELECT oxc.nombre AS label, oxc.id_opcion AS value
         FROM catalogos c 
         INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = c.id_catalogo 
-        WHERE c.estatus = 1 AND c.id_catalogo = 128";
+        WHERE c.estatus = 1 AND c.id_catalogo = 126";
 
         return $this->db->query($query)->result();
     }
@@ -187,7 +187,7 @@ class CasasModel extends CI_Model
         $query = "SELECT idPropuesta AS value, CONCAT('Notaria: ',oxc.nombre) AS title, CONCAT('Fecha de firma: ',ppc.fechaFirma) AS subtitle, 
         CONCAT('Consto: $', ppc.costo) AS description  
         FROM propuestas_proceso_casas ppc
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 128
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 126
         WHERE idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
@@ -439,7 +439,7 @@ class CasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 128
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 126
         WHERE
             pc.proceso = 6
         AND pc.status = 1";
@@ -469,7 +469,7 @@ class CasasModel extends CI_Model
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 128
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 126
         WHERE
             pc.proceso > 6
         AND pc.proceso < 8
@@ -691,7 +691,7 @@ class CasasModel extends CI_Model
             oxc.nombre AS notaria,
             ppc.fechaFirma, CONCAT('$', ppc.costo) AS costo
         FROM propuestas_proceso_casas ppc
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 128
+        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 126
         WHERE ppc.idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query)->result();
