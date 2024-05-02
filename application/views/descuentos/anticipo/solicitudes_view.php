@@ -39,6 +39,19 @@
 				</div>
 			</div>
 		</div>
+
+        <div class="modal fade modal-alertas" id="modal_multiples" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header"></div>
+                    <form method="post" id="form_multiples">
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
     <!--END MODALS-->
 
     <!--Contenido de la página-->
@@ -92,6 +105,8 @@
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/solicitudes.js"></script>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
+
 <script type="text/javascript">
 		Shadowbox.init();
 	</script>

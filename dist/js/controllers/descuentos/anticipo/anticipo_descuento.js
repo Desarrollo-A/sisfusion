@@ -1,5 +1,28 @@
 $(document).ready(function () {
+    
+        // Selecciona todos los elementos con la clase "buttons_adelanto"
+        let linea = document.getElementById('linea_proceso');
+        linea.innerHTML =  '';
+        var botones = document.querySelectorAll(".buttons_adelanto");
+        
+        // Itera sobre cada botón y agrega un evento de clic
+        botones.forEach(function(boton) {
+        boton.addEventListener("click", function() {
+            // Remueve la clase "clicked" de todos los botones
+            botones.forEach(function(b) {
+                b.classList.remove("clicked");
+            });
+            
+            // Agrega la clase "clicked" al botón actual
+            this.classList.add("clicked");
+        });
+        });
+        
+        cargaLinea();
 
+});
+
+function cargaLinea(){
     $.ajax({
         url: 'todos_los_pasos',
         type: 'post',
@@ -88,10 +111,7 @@ $(document).ready(function () {
             // linea.innerHTML = ``;
         }
     });
-
-});
-
-
+}
 $("#form_subir").on('submit', function (e) {
     
     e.preventDefault();
@@ -127,13 +147,13 @@ $("#form_subir").on('submit', function (e) {
     });
 }); 
 // r
+
+
 document.getElementById('solicitud_btn').addEventListener('click', function() {
     // Esta función se ejecutará cuando se haga clic en el botón
     console.log('¡Se hizo clic en el botón solicitud_btn!');
-    
     $("#preceso_aticipo").addClass("hide");
     $("#cartSolicitar_aticipo").removeClass("hide");
-    
     // Puedes agregar aquí cualquier otra acción que desees que ocurra cuando se haga clic en el botón
 });
 
@@ -142,6 +162,7 @@ document.getElementById('preceso_btn').addEventListener('click', function() {
     console.log('¡Se hizo clic en el botón preceso_btn!');
     $("#cartSolicitar_aticipo").addClass("hide");
     $("#preceso_aticipo").removeClass("hide");
+
     // Puedes agregar aquí cualquier otra acción que desees que ocurra cuando se haga clic en el botón
 });
 //   $("#save").addClass("hide");
@@ -170,6 +191,9 @@ $("#anticipo_nomina").submit(function (e) {
             dataType: 'JSON',
             success: function (data) {
                 console.log(data);
+                let linea = document.getElementById('linea_proceso');
+                linea.innerHTML =  '';
+                cargaLinea();
                 alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
                 $('#btn_alta').prop('disabled', true);
                 clickbotonProceso();
@@ -193,25 +217,27 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     const Modalbody_subir = $('#myModalAceptar_subir .modal-body');
     const Modalfooter_subir = $('#myModalAceptar_subir .modal-footer');
     Modalbody_subir.html('');
+    prioridad = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
     Modalbody_subir.append(`
         <input type="hidden" value="${ID}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
-        <h4>¿Ésta seguro que desea aceptar el préstamo de ${ID}?</h4>
-
-        <div class="form-group col-md-12 ">
-            <label class="label control-label">Monto confirmado</label>
-            <input class="form-control input-gral" readonly type="number" value="${monto}" name="monto" id="monto">
-        </div>
+        <h4 class=" center-align">¿Ésta seguro que desea aceptar el Descuento de ${ID}?</h4>
         <br>
-
+        <p class=" card-title text-muted pl-1  center-align"> Monto autorizado :    ${formatMoney(monto)}     </p>
         <br>
+        <p class=" card-title text-muted pl-1  center-align"> Prioridad :    ${ prioridad}     </p>
+        
         <div class="form-group">
             <input type="hidden" value="0" name="bandera_a" id="bandera_a">
+        </div>
+        <div class="form-group">
+            <input type="hidden" value="${monto}" name="monto" id="monto">
         </div>
         <div class="form-group">
             <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
         </div>
         <div class="form-group">
+
             <input type="hidden" value="${prioridad}" name="seleccion" id="seleccion">
         </div>
         <div class="form-group col-md-12 ">
@@ -226,3 +252,65 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
 
 } 
 
+    $("#tabla_anticipo_revision tbody").on("click", ".consultar_logs", function(e){
+        $('#spiner-loader').removeClass('hide');
+        const idAnticipo = $(this).val();
+        const nombreUsuario = $(this).attr("data-name");
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        // $("#nombreLote").html('');
+        // $("#comentariosAsimilados").html('');
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul>
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
+        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
+        $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
+            console.log(data)
+            $.each( data, function(i, v){
+                console.log(i);
+                console.log(v.comentario);
+                $("#comentariosAsimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a> Comentario : ' +v.comentario + '</a>\n' +
+                '      </div>\n' +
+
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
+            });
+            $('#spiner-loader').addClass('hide');
+        });
+    });

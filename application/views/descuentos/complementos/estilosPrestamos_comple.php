@@ -27,7 +27,7 @@
 		height: 100%;
 		width: 0;
 		border-radius: 27px;
-		background-color: #1B61B2;
+		background-color: #4794EC;
 		z-index: -1;
 		-webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
 		box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
