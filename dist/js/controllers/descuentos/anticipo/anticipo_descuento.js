@@ -217,7 +217,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     const Modalbody_subir = $('#myModalAceptar_subir .modal-body');
     const Modalfooter_subir = $('#myModalAceptar_subir .modal-footer');
     Modalbody_subir.html('');
-    prioridad = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
+    prioridad_nombre = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
     Modalbody_subir.append(`
         <input type="hidden" value="${ID}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
@@ -225,7 +225,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
         <br>
         <p class=" card-title text-muted pl-1  center-align"> Monto autorizado :    ${formatMoney(monto)}     </p>
         <br>
-        <p class=" card-title text-muted pl-1  center-align"> Prioridad :    ${ prioridad}     </p>
+        <p class=" card-title text-muted pl-1  center-align"> Prioridad :    ${ prioridad_nombre}     </p>
         
         <div class="form-group">
             <input type="hidden" value="0" name="bandera_a" id="bandera_a">
@@ -240,6 +240,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
 
             <input type="hidden" value="${prioridad}" name="seleccion" id="seleccion">
         </div>
+
         <div class="form-group col-md-12 ">
             <label class="label control-label">Aceptar comentario</label>
             <textarea id="motivoDescuento_aceptar" name="motivoDescuento_aceptar" class="text-modal" rows="3" required></textarea>
