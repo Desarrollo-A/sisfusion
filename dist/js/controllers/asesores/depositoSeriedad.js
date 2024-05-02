@@ -314,6 +314,26 @@ $(document).on("click", ".getInfo2", function (e) {
     $('#modal1').modal('show');
 });
 
+$(document).on("click", ".getInfoRe", function (e) {
+    e.preventDefault();
+    getInfoData[0] = $(this).attr("data-idCliente");
+    getInfoData[1] = $(this).attr("data-nombreResidencial");
+    getInfoData[2] = $(this).attr("data-nombreCondominio");
+    getInfoData[3] = $(this).attr("data-idCondominio");
+    getInfoData[4] = $(this).attr("data-nombreLote");
+    getInfoData[5] = $(this).attr("data-idLote");
+    getInfoData[6] = $(this).attr("data-fechavenc");
+    getInfoData[7] = $(this).attr("data-idMov");
+    getInfoData[8] = $(this).attr("data-EstatusRegreso");
+
+    titulo_modal = 'Regresión del lote - ';
+
+    $(".lote").html(getInfoData[4]);
+    $(".titulo_modal").html(titulo_modal);
+    tipo_comprobante = $(this).attr('data-ticomp');
+    $('#modalRegreso').modal('show');
+});
+
 function fillDataTable(idCondominio) {
     tabla_valores_ds = $("#tabla_deposito_seriedad").DataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -623,6 +643,7 @@ function fillDataTable(idCondominio) {
                             }
                         }
                     
+
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
             }
@@ -658,6 +679,7 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
                 data-toggle="tooltip" data-placement="top" 
                 title="${titulo}"> <i class="fas fa-check"></i></button>`;
 }
+
 
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
