@@ -1,10 +1,10 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <body>
     <div class="wrapper">
-        <?php  $this->load->view('template/sidebar'); ?>
-        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <?php $this->load->view('template/sidebar'); ?>
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -50,6 +50,25 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalRegreso" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="regresoLo">
+                        <h4 class="modal-title"><label><span class="titulo_modal">Regresión del lote - </span><b><span class="lote"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="text-modal scroll-styles" id="comentarioRegreso" rows="3" placeholder="Comentario"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -67,12 +86,12 @@
                                                 <th>TIPO DE PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
-                                                <th>LOTE</th>                                                
+                                                <th>LOTE</th>
                                                 <th>ID LOTE</th>
                                                 <th>LOTE(S) ORIGEN</th>
                                                 <th>TOTAL NETO ORIGENES</th>
                                                 <th>SUPERFICIE DE ORIGEN</th>
-                                                <th>PRECIO M2</th>                                
+                                                <th>PRECIO M2</th>
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
@@ -93,9 +112,9 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend');?>
+        <?php $this->load->view('template/footer_legend'); ?>
     </div>
 </body>
-<?php $this->load->view('template/footer');?>
-<script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/reestructura/reporteVentas.js"></script>
+<?php $this->load->view('template/footer'); ?>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/reestructura/reporteVentas.js"></script>
