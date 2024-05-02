@@ -3445,8 +3445,8 @@ class Reestructura extends CI_Controller{
     public function regresoProcesoVenta(){
         $loteNuevo = $this->input->post('idLote', true);
         $clienteNuevo = $this->input->post('idCliente', true); // se guarda id y cliente nuevo
-        $tipoRegresoOrigen = $this->input->post('estatusRegreso');
-        $comentario = $this->input->post('comentario');
+        $tipoRegresoOrigen = $this->input->post('estatusRegreso', true);
+        $comentario = $this->input->post('comentario', true);
 
         $flagOk = true;
         $msg = '';
@@ -3458,23 +3458,25 @@ class Reestructura extends CI_Controller{
         $clienteAnterior = $getCliente[0]->clienteAnterior; // se guarda id y cliente anterior
         $loteAnterior = $getCliente[0]->loteAnterior;
         $statusLoteAnterior = $getCliente[0]->statusAnterior;
+        $statusLoteAnterior2 = $getCliente[0]->statusAnterior2;
+        $statusNuevo = $getCliente[0]->statusNuevo;
         $nombreLoteNuevo = $getCliente[0]->nombreLoteNuevo;
         $precioNuevo = $getCliente[0]->precioAnterior; // datos para el insert de historial regreso
         $statusLoteNuevo = $getCliente[0]->statusNuevo;
         $tipoProceso = $getCliente[0]->procesoDestino;
         $comisionNuevo = $getCliente[0]->comisionNuevo;
         $clienteReubicacion = $getCliente[0]->id_cliente_reubicacion_2;
-        $statusNuevo = $getCliente[0]->statusNuevo;
+
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
-        // aplicarLiberacion funcion 
+        // aplicarLiberacion funcion
         // preguntar por las clausulas set clausulas  status = 0 solo si es diferente a fusion - listo
         // insertar en historial liberacion - listo
         // preguntar correo de liberacion a postventa -- pendiente pero listo
         // verificar si se ocupa el lote una vez que paso el 6 checar si se puede - idStatus lote 0 - desocupado y idMovimiento = 0 - listo
 
         // paso 0 se verifica si el lote de origen esta libre antes de regresar
-        if($statusLoteAnterior > 0 && $loteNuevo != $loteAnterior && $statusNuevo > 6) {$flagOk = false; $msg = 'error 0'; var_dump('Estatus: ' . $statusLoteAnterior . ' - ' . 'LoteNuevo: ' .$loteNuevo . ' - ' . 'LoteAnterior: ' . $loteAnterior); }
+        if($statusNuevo > 6 && !in_array($statusLoteAnterior2, array(1, 2, 15, 21)) && $loteNuevo != $loteAnterior) {$flagOk = false; $msg = 'error 0'; }
 
         // paso 1 - insert en tabla de regreso
         $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion);
@@ -3611,7 +3613,7 @@ class Reestructura extends CI_Controller{
             }
         }
         
-        if($getLotesDestino->num_rows() > 1){
+        if($getLotesDestino->num_rows() > 0){
             foreach($destinos as $lote){
                 if($lote->id_lotep != $loteAnterior){
                     $lotesDestinoUpdate[] = array(
@@ -3625,10 +3627,14 @@ class Reestructura extends CI_Controller{
 
             $deleteDestinos = $this->Reestructura_model->deletePropuestasDestinos($lotesDelete, $loteAnterior);
 
+            if(!$deleteDestinos){
+                $flag = false;
+            }
+
             if(!empty($lotesDestinoUpdate)){
                 $updateLotes = $this->General_model->updateBatch('lotes', $lotesDestinoUpdate, 'idLote');
 
-                if(!$updateLotes || !$deleteDestinos){
+                if(!$updateLotes){
                     $flag = false;
                 }
             }   

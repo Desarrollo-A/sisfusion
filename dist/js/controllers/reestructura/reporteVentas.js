@@ -219,7 +219,7 @@ function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '',
 
 $(document).on('click', '#saveRegreso', function(e) { // accion para el botón de regreso del procesos y preproceso
     e.preventDefault();
-    const comentario = $("#comentario").val();
+    var comentario = $("#comentarioRe").val();
     var validaComent = (document.getElementById("comentarioRe").value.trim() == '') ? 0 : 1;
 
     let dataExp1 = new FormData();
@@ -234,6 +234,8 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
     dataExp1.append('tipo_comprobante', tipo_comprobante);
     dataExp1.append('idMovimiento', getInfoData[7]);
     dataExp1.append('estatusRegreso', getInfoData[8]);
+    dataExp1.append('comentario', comentario);
+    console.log(dataExp1);
 
     if (validaComent == 0) {
         alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
@@ -243,10 +245,7 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
         $('#spiner-loader').removeClass('hide');
         $.ajax({
             url : general_base_url + 'Reestructura/regresoProcesoVenta',
-            data: {
-                dataExp1, 
-                comentario
-            },
+            data: dataExp1, 
             dataType: 'json',
             cache: false,
             contentType: false,
@@ -256,7 +255,7 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
                 if(result.result) {
                     $('#saveRegreso').prop('disabled', false);
                     $('#modal1').modal('hide');
-                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
+                    $('#tablaReporteVentas').DataTable().ajax.reload();
                     alerts.showNotification("top", "right", result.message, "success");
                     $('#modalRegreso').modal('hide');
                 }

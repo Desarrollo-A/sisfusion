@@ -2011,7 +2011,7 @@ class Reestructura_model extends CI_Model
 
     public function getClienteAnterior($idLote, $idCliente){
         $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
-                                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
+                                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
                                     lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2
                                     FROM clientes cl1
                                     INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2

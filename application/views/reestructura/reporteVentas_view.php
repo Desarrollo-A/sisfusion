@@ -58,7 +58,7 @@
                         <h4 class="modal-title"><label><span class="titulo_modal">Regresión del lote - </span><b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <textarea class="text-modal scroll-styles" id="comentarioRegreso" rows="3" placeholder="Comentario"></textarea>
+                        <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
                         <br>
                     </div>
                     <div class="modal-footer">
