@@ -586,4 +586,20 @@ class Descuentos_model extends CI_Model {
                 $query = $this->db->query($cmd);
                 return $query->result_array();
             } 
+
+    function getComments($id){
+        $cmd = "SELECT DISTINCT(hc.comentario) as comentario_general , hc.id_ha,hc.proceso ,
+		opcx.nombre, pci.comentario as comentario_anticipo,
+		hc.id_anticipo, hc.id_usuario
+        FROM historial_anticipo hc 
+        INNER JOIN anticipo pci ON pci.id_anticipo = hc.id_anticipo
+		INNER JOIN opcs_x_cats opcx ON opcx.id_opcion = hc.proceso and opcx.id_catalogo = 128
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_anticipo = $id
+        ORDER BY hc.proceso DESC";
+        $query = $this->db->query($cmd);
+        return $query->result();
+    }
+
+
 }

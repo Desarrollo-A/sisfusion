@@ -92,6 +92,7 @@
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/solicitudes_dc.js"></script>
+<script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script type="text/javascript">
 		Shadowbox.init();
 	</script>

@@ -79,10 +79,10 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 </button>`;
                 
             }
-                botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas detalle-prestamo" title="Historial">
-                    <i class="fas fa-info"></i>
-                </button>`;
+            botonesModal += `
+            <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+                <i class="fas fa-info"></i>
+            </button>`;
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
         }
@@ -119,7 +119,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalfooter.html('');
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo" id="idAnticipo"> 
-            <h4>¿Ésta seguro que desea borrar el préstamo de ${nombreUsuario}?</h4>
+            <h4>¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
@@ -143,7 +143,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el préstamo de ${nombreUsuario}?</h4>
+            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Prioridad</label>
 
@@ -198,7 +198,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         Modalbody_subir.append(`
             <input type="hidden" value="${idAnticipo1}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el préstamo de ${nombreUsuario1}?</h4>
+            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
             <div class="form-group">
                 <label class="label control-label">Prioridad</label>
 
@@ -250,7 +250,69 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 				<button  type="submit" name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
         $("#myModalAceptar_subir").modal();
     });
-    
+    $("#tabla_anticipo_revision_dc tbody").on("click", ".consultar_logs", function(e){
+        $('#spiner-loader').removeClass('hide');
+        const idAnticipo = $(this).val();
+        const nombreUsuario = $(this).attr("data-name");
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        // $("#nombreLote").html('');
+        // $("#comentariosAsimilados").html('');
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul>
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
+        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
+        $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
+            console.log(data)
+            $.each( data, function(i, v){
+                console.log(i);
+                console.log(v.comentario);
+                $("#comentariosAsimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a> Comentario : ' +v.comentario + '</a>\n' +
+                '      </div>\n' +
+
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
+            });
+            $('#spiner-loader').addClass('hide');
+        });
+    });
+
 });
 
 function obtenerModoSeleccionado() {

@@ -90,7 +90,7 @@ class Descuentos extends CI_Controller
             $this->load->view("descuentos/anticipo/anticipo_descuento_view");
             break;
             case '2':
-                
+            case '5':
                 // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
                 $this->load->view("descuentos/anticipo/solicitudes_view");
             break;
@@ -106,7 +106,10 @@ class Descuentos extends CI_Controller
         }
     }
     
-
+    public function getComments($id){
+        // $id_pago = $this->input->post("id_pago");
+        echo json_encode($this->Descuentos_model->getComments($id));
+    }
 
     // 
     // 
@@ -863,7 +866,7 @@ class Descuentos extends CI_Controller
                 $insertArray = array(
                     'monto'         => $monto,
                     'estatus'       => $this->input->post('estatus'),
-                    'evidencia'     => $expediente,
+                    // 'evidencia'     => $expediente,
                     'proceso'       => $this->input->post('proceso'),
                     'prioridad'     => $this->input->post('seleccion')
                     );
