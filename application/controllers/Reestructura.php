@@ -3391,7 +3391,61 @@ class Reestructura extends CI_Controller{
 
     public function verificarComisiones($idLote,$idCliente){
         $data = $this->Reestructura_model->buscarPagos($idLote,$idCliente);    
-        if(count($data)){}
-        
+        if(count($data) == 0){ //NO SE ENCONTRARON PAGOS
+            return 1;
+        }else if($data[0]['Dispersadas'] > 0){ //HAY PAGOS PAGADOS, SE MATIENE LA COMISIÓN, SE REALIZARA EL TRASPASO EN LA NUEVA SELECCIÓN FINAL
+            return 2;
+        }else if($data[0]['Dispersadas'] == 0 && $data[0]['Nuevas'] > 0){ //COMISIÓN DISPERSADA, SOLO PAGOS NUEVOS, SE PUEDEN BORRAR
+           $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLote,$idCliente);
+           if($result){
+                return 3;
+           }else{
+                return 0;
+           }
+        }     
+    }
+    
+    public function traspasoComisiones($idClienteReubicacion,$idLoteActual){
+        $dataClienteAnterior = json_decode($this->Reestructura_model->getDataClienteAnterior($idClienteReubicacion));
+        $dataClienteDestino = json_decode($this->Reestructura_model->getDataClienteActual($idLoteActual));
+
+
+
+        //PROCESOS PARA BANDERA EN 2
+        /*CONSULTAR SI ES EL MISMO PLAN, SI ES EL MISMO PLAN SE VERIFICA 
+        EL PRECIO ORIGEN Y DESTINO, SE TOMA EL MENOR, SI SE TOMA EL DE ORIGEN SOLO ACTUALIZAR LOTE Y CLIENTE DE COMSIONES.
+        SI ES EL DIFERENTE EL PRECIO LLAMAR FUNCIÓN DE PORCENTAJES Y RECALCULAR LOS TOTALES COMISIÓN DE CADA COMISIONISTA*/
+        if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){//COMPARAMOS EL PLAN COMISIÓN, SI ES EL MISMO:
+            // SE PROCEDE A COMPARAR EL PRECIO DEL LOTE ORIGEN CON EL DESTINO
+            //REESTRUCTURA TRATAR IGUAL, EXCDENTE MANDAR NUEVO TOTAL8P  
+            if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){//REUBICACIÓN Y REESTRUCTURA
+               // $recalculoComision = $this->Comisiones_model->porcentajes();
+            }else{//REUBICACIÓN EXCEDENTE
+
+
+            }
+            if($dataClienteDestino->precioOrigen < $dataClienteDestino->precioDestino){// SI PRECIO ORIGEN ES MENOR, 
+
+            }else{
+
+            }
+
+        }
+        /* SI ES DIFERENTE PLAN COMISIÓN, SE LLAMA FUNCIÓN DE PORCENTAJES CON EL PRECIO MENOR DE LOS DOS LOTES(ORIGEN Y DESTINO)
+        REESTRUCTURA A REUBICACIÓN 
+        REESTRUCTURA A REUBICACIÓN EXCEDENTE
+        REUBICACIÓN A REESTRUCTURA
+        REUBICACIÓN A REUBICACIÓN EXCEDENTE
+        ---
+        REUBICACIÓN EXCEDENTE A REUBICACIÓN
+        REUBICACIÓN EXCEDENTE A REUBICACIÓN
+        (PARA ESTOS ULTIMOS CASOS TOMAR COMISIONISTAS QUE NO CORRESPONDEN AL NUEVO PLAN)
+        */
+
+        /* POSIBLE SOLUCIÓN: HACER EL LLAMADO A LA FUNCIÓN  PORCENTAJES, SI ES EXCEDENTE MANDAR EL TOTAL8P Y CALCULAR EL PRECIO MENOR CON EL 1%
+           INSERTAR SOLO A COMISIONES,  */
+
+        var_dump($dataClienteAnterior);
+        var_dump($dataClienteDestino);
     }
 }

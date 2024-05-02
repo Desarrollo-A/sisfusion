@@ -1917,4 +1917,31 @@ class Reestructura_model extends CI_Model
         WHERE pxl.idLote IN ($idLote)");
         return $query->result_array();
     }
+    
+    public function buscarPagos($idLote,$idCliente){
+        return $this->db->query("SELECT COUNT(*) Dispersadas,(SELECT COUNT(*) Nuevas FROM pago_comision_ind pci
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
+        WHERE co.id_lote=$idLote AND co.idCliente=$idCliente AND pci.estatus IN(1))Nuevas FROM pago_comision_ind pci
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
+        WHERE co.id_lote=$idLote AND co.idCliente=$idCliente AND pci.estatus NOT IN(6,1)")->result_array();
+    }
+
+    public function pausarPagos($idLote,$idCliente,$idUser){
+        $sql = "UPDATE pago_comision_ind SET estatus = 6, modificado_por = ? WHERE id_comision IN(SELECT id_comision FROM comisiones WHERE id_lote = ? AND idCliente = ? AND estatus = 1)";
+        return $this->db->query($sql, [$idUser,$idLote, $idCliente]);  
+    }
+
+    public function getDataClienteAnterior($idClienteReubicacion){
+        $query = "SELECT idLote,idCliente,planComision FROM historial_regreso WHERE clienteReubicacion2 = ? ;";
+        return json_encode($this->db->query($query,[$idClienteReubicacion])->row(),JSON_NUMERIC_CHECK);
+    }
+
+    public function getDataClienteActual($idLoteActual){
+        $query = "SELECT lo.idLote,lo.nombreLote,lo.idCliente,cl.plan_comision,lo.totalNeto2 precioDestino,cl.id_cliente_reubicacion_2,clOrigen.totalNeto2Cl precioOrigen,cl.total8P
+        FROM lotes lo 
+        INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente and cl.status=1
+        INNER JOIN clientes clOrigen ON clOrigen.id_cliente = cl.id_cliente_reubicacion_2
+        WHERE lo.idLote = ? ;";
+        return json_encode($this->db->query($query,[$idLoteActual])->row(),JSON_NUMERIC_CHECK);
+    }
 }
