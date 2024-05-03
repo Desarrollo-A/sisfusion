@@ -3455,6 +3455,7 @@ class Reestructura extends CI_Controller{
 
         $getCliente = $this->Reestructura_model->getClienteAnterior($loteNuevo, $clienteNuevo)->result(); // para obtener el cliente anterior y el lote origen
         
+        
         $clienteAnterior = $getCliente[0]->clienteAnterior; // se guarda id y cliente anterior
         $loteAnterior = $getCliente[0]->loteAnterior;
         $statusLoteAnterior = $getCliente[0]->statusAnterior;
@@ -3467,6 +3468,9 @@ class Reestructura extends CI_Controller{
         $comisionNuevo = $getCliente[0]->comisionNuevo;
         $clienteReubicacion = $getCliente[0]->id_cliente_reubicacion_2;
 
+        $getTotalNeto2 = $this->Reestructura_model->getTotalNeto2($loteAnterior)->result();
+        $totalNetoAnterior = $getTotalNeto2[0]->anterior;
+        var_dump($totalNetoAnterior);
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
         // aplicarLiberacion funcion
@@ -3515,13 +3519,13 @@ class Reestructura extends CI_Controller{
 
 
         //paso 9 - regresar origen
-        $updateOrigen = $this->updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario);
+        $updateOrigen = $this->updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario, $totalNetoAnterior);
         if(!$updateOrigen) { $flagOk = false; $msg = 'regresar los origenes';}
 
 
         // último paso, confirmación de que los procesos han sido correctos
         if($flagOk){
-            $this->db->trans_commit();
+            //$this->db->trans_commit();
             $response["result"] = true;
             $response["message"] = 'Se ha regresado el proceso del lote';
         }
@@ -3643,7 +3647,7 @@ class Reestructura extends CI_Controller{
         return $flag;
     }
 
-    public function updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario){
+    public function updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario, $totalNetoAnterior){
         $flag = true;
 
         $updateLoteOrigen = array(
@@ -3651,7 +3655,10 @@ class Reestructura extends CI_Controller{
             'id_juridico_preproceso' => 0,
             'estatus_preproceso' => 0,
             'idCliente' => $clienteAnterior,
-            'idStatusLote' => 2
+            'idStatusLote' => 2,
+            'idStatusContratacion' => 15,
+            'idMovimiento' => 45,
+            'totalNeto2' => $totalNetoAnterior
             // 'idStatusLote' => 1
         );
 

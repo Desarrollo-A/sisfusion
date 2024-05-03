@@ -2070,5 +2070,22 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    public function getTotalNeto2($loteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+            SELECT
+                anterior,
+                aud.fecha_creacion, 
+                id_parametro,
+                ROW_NUMBER() OVER (PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
+                FROM auditoria aud
+                WHERE col_afect = 'totalNeto2'
+        )
+        SELECT u.anterior FROM lotes lo INNER JOIN UltimoValor u ON u.id_parametro = lo.idLote and u.rn = 1
+        where idLote = ?", $loteAnterior);
+
+        return $query;
+    }
     
 }
