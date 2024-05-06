@@ -2832,6 +2832,7 @@ class RegistroLote extends CI_Controller
 			$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
 			$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
 			$datos[$i]['nombreCliente'] = $data[$i]->nombreCliente;
+			$datos[$i]['nombreSedeRecepcion'] = $data[$i]->nombreSedeRecepcion;
 			$datos[$i]['comentario'] = $data[$i]->comentario;
 			$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
 			$datos[$i]['gerente'] = ($data[$i]->gerente == " ") ? "NO APLICA" : $data[$i]->gerente;

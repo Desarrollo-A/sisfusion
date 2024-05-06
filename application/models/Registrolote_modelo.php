@@ -856,10 +856,12 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,lotes.observacionContratoUrgente, hl.modificado as modificado_historial,Upper( st.nombre) as estatus_lote, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, 
 		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
+		cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
+		LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede $where
         LEFT JOIN usuarios AS us ON cl.id_asesor=us.id_usuario
@@ -880,7 +882,7 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, 
 		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado, hl3.modificado,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), cl.sedeRecepcion, sed.nombre");
 		return $query->result();
 	}
 	

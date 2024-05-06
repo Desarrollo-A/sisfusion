@@ -178,6 +178,7 @@ function fillTable(sede, residencial) {
                 }
             },
             { data: 'nombreCliente'}, // NOMBRE CLIENTE
+            { data: 'nombreSedeRecepcion'}, // NOMBRE SEDE RECEPCIÓN
             { data: // LIBERACIÓN
                 function(data) {
                     let labelAlc = '';

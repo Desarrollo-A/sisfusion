@@ -53,6 +53,7 @@
                                                     <th>ESTATUS DE FECHA</th>
                                                     <th>FECHA DE APARTADO</th>
                                                     <th>CLIENTE</th>
+                                                    <th>SEDE RECEPCIÓN</th>
                                                     <th>LIBERACIÓN</th>
                                                     <th>ÚLTIMO MOVIMIENTO</th>
                                                     <th>ESTATUS DEL LOTE</th>
