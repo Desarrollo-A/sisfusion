@@ -1583,10 +1583,12 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
 				ISNULL(hd.expediente, 0) documentoCargado, 
-				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta 
+				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta,
+				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
 			FROM lotes lo 
 				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
 				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+				LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 				INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
 				LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
@@ -1634,7 +1636,8 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
 				hd.expediente, 
-				tv.tipo_venta"
+				tv.tipo_venta,
+				cl.sedeRecepcion, sed.nombre"
 		)->result();
     }
 
