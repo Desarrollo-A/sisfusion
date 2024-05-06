@@ -74,6 +74,7 @@
                                                 <th>SUPERFICIE DE ORIGEN</th>
                                                 <th>PRECIO M2</th>                                
                                                 <th>CLIENTE</th>
+                                                <th>SEDE RECEPCIÓN</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
                                                 <th>SUBDIRECTOR</th>
