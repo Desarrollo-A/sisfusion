@@ -254,9 +254,9 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("id_salesforce", getInfo1[11]); // salesforce
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || validaSedeRecepcion == 0)
+    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || validaSedeRecepcion == 0 || mensaValida == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
-    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && validaSedeRecepcion == 1) {
+    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && validaSedeRecepcion == 1 && mensaValida == 1) {
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso9`,
@@ -391,6 +391,15 @@ function fillSelectsForV9() {
         $('#rl').selectpicker('refresh');
         $('#residencia').selectpicker('refresh');
         $('#sedeRecepcion').selectpicker('refresh');
+    });
+}
+
+function fillMensualidades() {
+    $.getJSON("fillMensualidades").done(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $('#mensualidad9').selectpicker('refresh');
     });
 }
 

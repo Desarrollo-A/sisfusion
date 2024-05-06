@@ -174,6 +174,7 @@
                             </div>
                                 <input class="form-control" type="hidden" id="usuarioId" name="usuarioId" value="">
                                 <input class="form-control" type="hidden" id="saldoComisiones" name="saldoComisiones">
+                                <input class="form-control" type="hidden" id="descuento" name="descuento">
                                 <select id="arrayLotes" name="arrayLotes[]" class="hide" multiple></select>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

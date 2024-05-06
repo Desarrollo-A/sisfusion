@@ -11,11 +11,19 @@
                         <h4 class="modal-title text-center"><label>Registro estatus 15 - <b><span class="lote"></span></b></label></h4>
                     </div>
                     <div class="modal-body">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                            <label>Comentario</label>
-                            <textarea class="text-modal" id="comentario" rows="3"></textarea>
-                            <br>
-                        </div>
+                        <row>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="proyecto">Mensualidad</label>
+                                    <select name="mensualidad15" id="mensualidad15"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pb-2">
+                                <label>Comentario</label>
+                                <textarea class="text-modal" id="comentario" rows="3"></textarea>
+                                <br>
+                            </div>
+                        </row>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>

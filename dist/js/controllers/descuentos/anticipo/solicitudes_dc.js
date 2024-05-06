@@ -1,19 +1,19 @@
 let titulosInventario = [];
-$('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
-    if (i != 0) {
+$('#tabla_anticipo_revision_dc thead tr:eq(0) th').each(function (i) {
+
         var title = $(this).text();
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($('#tabla_anticipo_revision').DataTable().column(i).search() !== this.value)
-                $('#tabla_anticipo_revision').DataTable().column(i).search(this.value).draw();
+            if ($('#tabla_anticipo_revision_dc').DataTable().column(i).search() !== this.value)
+                $('#tabla_anticipo_revision_dc').DataTable().column(i).search(this.value).draw();
         });
-    }
+
 });
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
-$("#tabla_anticipo_revision").ready(function () {
-    tabla_9 = $("#tabla_anticipo_revision").DataTable({
+$("#tabla_anticipo_revision_dc").ready(function () {
+    tabla_9 = $("#tabla_anticipo_revision_dc").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [{
@@ -61,35 +61,28 @@ $("#tabla_anticipo_revision").ready(function () {
             data: function (d) {    
             var botonesModal = '';
             
-            if(d.id_proceso ==2 ){
+            if(d.id_proceso == 3 )
+            {
+                
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-name="${d.nombre}"   data-monto="${d.monto}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
+                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                data-monto="${d.monto}"
+                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
+                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                data-monto="${d.monto}"
+                data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
+                class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
                 <i class="fas fa-stop"></i>
                 </button>`;
-            }else if(d.id_proceso == 3 )
-            {
                 
-                // botonesModal += `
-                // <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
-                // <i class="fas fa-stop"></i>
-                // </button>`;
-              
-            }else if(d.id_proceso == 4 ){
-                botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-name="${d.nombre}"
-                data-monto="${d.monto}"
-                class="btn-data btn-sky aceptar_anticipo_confirmar" title="Continuar Anticipo confirmar información">
-                <i class="fas fa-address-card"></i>
-                </button>`;
             }
-                botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
-                    <i class="fas fa-info"></i>
-                </button>`;
+            botonesModal += `
+            <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+                <i class="fas fa-info"></i>
+            </button>`;
                     return '<div class="d-flex justify-center">' + botonesModal + '<div>';
             }
         }
@@ -102,7 +95,7 @@ $("#tabla_anticipo_revision").ready(function () {
             orderable: false
         }],
         ajax: {
-            url: `${general_base_url}Descuentos/solicitudes_por_aticipo`,
+            url: `${general_base_url}Descuentos/solicitudes_generales_dc`,
             dataSrc: "",
             type: "POST",
             cache: false,
@@ -112,12 +105,12 @@ $("#tabla_anticipo_revision").ready(function () {
         order: [[1, 'asc']]
     });
 
-    $('#tabla_anticipo_revision').on('draw.dt', function () {
+    $('#tabla_anticipo_revision_dc').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-    $('#tabla_anticipo_revision tbody').on('click', '.delete-anticipo', function () {
+    $('#tabla_anticipo_revision_dc tbody').on('click', '.delete-anticipo', function () {
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
         const Modalbody = $('#myModalDelete .modal-body');
@@ -138,76 +131,12 @@ $("#tabla_anticipo_revision").ready(function () {
         $("#myModalDelete").modal();
     });
 
-    $("#tabla_anticipo_revision tbody").on("click", ".consultar_logs", function(e){
-        $('#spiner-loader').removeClass('hide');
-        const idAnticipo = $(this).val();
-        const nombreUsuario = $(this).attr("data-name");
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        // $("#nombreLote").html('');
-        // $("#comentariosAsimilados").html('');
-        id_pago = $(this).val();
-        lote = $(this).attr("data-value");
-
-        changeSizeModal('modal-md');
-        appendBodyModal(`<div class="modal-body">
-                <div role="tabpanel">
-                    <ul>
-                        <div id="nombreLote"></div>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="card card-plain">
-                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
-                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
-            </div>`);
-        showModal();
-
-        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
-        $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
-            console.log(data)
-            $.each( data, function(i, v){
-                console.log(i);
-                console.log(v.comentario);
-                $("#comentariosAsimilados").append('<li>\n' +
-                '  <div class="container-fluid">\n' +
-                '    <div class="row">\n' +
-                '      <div class="col-md-6">\n' +
-                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
-                '      </div>\n' +
-                '      <div class="float-end text-right">\n' +
-                '        <a> Comentario : ' +v.comentario_general + '</a>\n' +
-                '      </div>\n' +
-
-                '    <h6>\n' +
-                '    </h6>\n' +
-                '    </div>\n' +
-                '  </div>\n' +
-                '</li>');
-            });
-            $('#spiner-loader').addClass('hide');
-        });
-    });
-
-
-    $('#tabla_anticipo_revision tbody').on('click', '.aceptar_anticipo', function () {
+    $('#tabla_anticipo_revision_dc tbody').on('click', '.aceptar_anticipo', function () {
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
         const id_usuario = $(this).attr("data-id_usuario");
-        const monto1 = $(this).attr("data-monto");
         const Modalbody = $('#myModalAceptar .modal-body');
+        const monto1 = $(this).attr("data-monto");
         const Modalfooter = $('#myModalAceptar .modal-footer');
         Modalbody.html('');
         Modalfooter.html('');
@@ -234,8 +163,8 @@ $("#tabla_anticipo_revision").ready(function () {
                 
             </div>
             <div class="form-group col-md-12 ">
-                
-                <input  type="hidden" value="${monto1}" name="monto" id="monto">
+                <label class="label control-label">Confirmar monto</label>
+                <input class="form-control input-gral" type="number" value="${monto1}" name="monto" id="monto">
             </div>
             <div class="form-group">
                 <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
@@ -243,6 +172,7 @@ $("#tabla_anticipo_revision").ready(function () {
             <div class="form-group">
                 <input type="hidden" value="0" name="bandera_a" id="bandera_a">
             </div>
+
             <div class="form-group">
                 <label class="label control-label">Aceptar comentario</label>
                 <textarea id="motivoDescuento_aceptar" name="motivoDescuento_aceptar" class="text-modal" rows="3" required></textarea>
@@ -255,7 +185,7 @@ $("#tabla_anticipo_revision").ready(function () {
     });
 
 
-    $('#tabla_anticipo_revision tbody').on('click', '.aceptar_anticipo_confirmar', function () {
+    $('#tabla_anticipo_revision_dc tbody').on('click', '.aceptar_anticipo_confirmar', function () {
         
         const idAnticipo1 = $(this).val();
         const nombreUsuario1 = $(this).attr("data-name");
@@ -320,7 +250,69 @@ $("#tabla_anticipo_revision").ready(function () {
 				<button  type="submit" name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
         $("#myModalAceptar_subir").modal();
     });
-    
+    $("#tabla_anticipo_revision_dc tbody").on("click", ".consultar_logs", function(e){
+        $('#spiner-loader').removeClass('hide');
+        const idAnticipo = $(this).val();
+        const nombreUsuario = $(this).attr("data-name");
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        // $("#nombreLote").html('');
+        // $("#comentariosAsimilados").html('');
+        id_pago = $(this).val();
+        lote = $(this).attr("data-value");
+
+        changeSizeModal('modal-md');
+        appendBodyModal(`<div class="modal-body">
+                <div role="tabpanel">
+                    <ul>
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+        showModal();
+
+        $("#nombreLote").append('<p><h5">HISTORIAL DEL ANTICIPO DE: <b>'+nombreUsuario+'</b></h5></p>');
+        $.getJSON(general_base_url+"Descuentos/getComments/"+idAnticipo).done( function( data ){
+            console.log(data)
+            $.each( data, function(i, v){
+                console.log(i);
+                console.log(v.comentario);
+                $("#comentariosAsimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a> Comentario : ' +v.comentario + '</a>\n' +
+                '      </div>\n' +
+
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
+            });
+            $('#spiner-loader').addClass('hide');
+        });
+    });
+
 });
 
 function obtenerModoSeleccionado() {
@@ -343,7 +335,7 @@ $("#form_aceptar").on('submit', function (e) {
     
     let formData = new FormData(document.getElementById("form_aceptar"));
     var seleccion = obtenerModoSeleccionado();
-    formData.append("proceso", 3);
+    formData.append("proceso", 4);
     formData.append("seleccion", seleccion);
     $.ajax({
         url: 'anticipo_update_generico',
@@ -357,7 +349,7 @@ $("#form_aceptar").on('submit', function (e) {
             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
             $('#myModalAceptar').modal('hide')
             document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
+            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
@@ -379,7 +371,7 @@ $("#form_subir").on('submit', function (e) {
     let formData = new FormData(document.getElementById("form_subir"));
     var seleccion = obtenerModoSeleccionado();
     // let uploadedDocument = $("#"+boton)[0].files[0];
-    formData.append("proceso", 5);
+    formData.append("proceso", 4);
     formData.append("seleccion", seleccion);
     $.ajax({
         url: 'anticipo_update_generico',
@@ -391,9 +383,9 @@ $("#form_subir").on('submit', function (e) {
         dataType: 'JSON',
         success: function (data) {
             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-            $('#myModalAceptar_subir').modal('hide')
+            $('#myModalAceptar').modal('hide')
             document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
+            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
@@ -412,40 +404,3 @@ function changeName(e){
     let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
     relatedTarget[0].value = fileName;
 }
-
-$("#form_aceptar").on('submit', function (e) {
-
-    e.preventDefault();
-    
-    let formData = new FormData(document.getElementById("form_aceptar"));
-    var seleccion = obtenerModoSeleccionado();
-    formData.append("proceso", 3);
-    formData.append("seleccion", seleccion);
-    $.ajax({
-        url: 'anticipo_update_generico',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        dataType: 'JSON',
-        success: function (data) {
-            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-            $('#myModalAceptar').modal('hide')
-            document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
-            $('#form_aceptar').trigger('reset');
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            document.getElementById("form_aceptar").reset();
-            $('#myModalAceptar').modal('hide')
-            $('#form_aceptar').trigger('reset');
-            $("#usuarioid").selectpicker('refresh');
-
-            
-        }
-    });
-});
-
-

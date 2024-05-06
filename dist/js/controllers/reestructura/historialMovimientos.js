@@ -50,3 +50,4 @@ function emptyLog() {
             </div>
         </div>
     </li>`);
+}

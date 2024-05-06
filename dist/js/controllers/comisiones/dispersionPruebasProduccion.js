@@ -26,7 +26,7 @@ $(document).ready(function () {
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
-        scrollX: true,
+        scrollX: true, 
         bAutoWidth:true,
         buttons:[{
             extend: 'excelHtml5',
@@ -35,7 +35,7 @@ $(document).ready(function () {
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
             title: 'Reporte Comisiones Dispersión',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -162,7 +162,7 @@ $(document).ready(function () {
                 
                 return fechaActualizacion;
             }},
-            
+            {data: 'nombreMensualidad'},
             { data: function (d) {
                 var BtnStats = '';
 
@@ -354,6 +354,8 @@ $(document).ready(function () {
                             data-abonadoAnterior = "${d.abonadoAnterior}"
                             data-procesoReestructura = "${d.proceso}"
                             data-code = "${d.cbbtton}"
+                            data-opcionMensualidad = "${d.opcionMensualidad}"
+                            data-nombreMensualidad = "${d.nombreMensualidad}"
                             class = "btn-data ${varColor} verify_neodata" data-toggle="tooltip" data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                             
                             BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
@@ -490,6 +492,11 @@ $(document).ready(function () {
         estatusLote = $(this).attr("data-estatusLote");
         abonadoAnterior = $(this).attr("data-abonadoAnterior");
         procesoReestructura = $(this).attr("data-procesoReestructura");
+
+        opcionMensualidad = $(this).attr("data-opcionMensualidad");
+        nombreMensualidad = $(this).attr("data-nombreMensualidad");
+
+
         // alert(idLote);
         // alert(totalNeto2);
         // alert(total8P);
@@ -519,6 +526,8 @@ $(document).ready(function () {
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+               // var tipoMensualidad = data[0].opcion !== null ? data[0].opcion : "No hay mensualidad";
+
                 // alert("entra a get");
                 if(data.length > 0){
                     switch (data[0].Marca) {
@@ -561,7 +570,7 @@ $(document).ready(function () {
                                     `;
                                 } else{
                                     cadena = 
-                                    `<div class="col-md-3 p-0">
+                                    `<div class="col-12">
                                         <h5>Bonificación: <b style="color:#D84B16;">${formatMoney(bonificadoTotal)}</b></h5>
                                     </div>
                                     `;
@@ -576,8 +585,11 @@ $(document).ready(function () {
                                                 <h3>Lote: <b>${nombreLote}${labelPenalizacion}</b></h3>
                                             </div>
                                         </div>
-                                        <div class="row">
-
+                                       
+                                            <div class="col-md-3 pl-2">
+                                                <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
+                                            </div>
+                                    
                                             <div class="col-md-3 p-0">
                                                 <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
                                             </div>
@@ -589,10 +601,12 @@ $(document).ready(function () {
                                             <div class="col-md-3 p-0">
                                                 <h5>Pagado: <b style="color:'black;">${formatMoney(abonadoAnterior)}</b></h5>
                                             </div>
+                                            
 
-                                            <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
-                                            </div>
+                                                <div class="col-md-3 p-0">
+                                                    <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
+                                                </div>
+                                            
                                                     ${cadena}
                                         </div>`);
 
@@ -832,7 +846,7 @@ $(document).ready(function () {
                             }
                             else{
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
-                                    
+
                                     let total0 = [2,3,4,7].includes(parseInt(procesoReestructura)) ? parseFloat((data[0].Aplicado - abonadoAnterior)) : parseFloat((data[0].Aplicado));
                                     let total = 0;
                                     if(total0 > 0){
@@ -846,7 +860,17 @@ $(document).ready(function () {
                                     // data1[0].abonado
                                     if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
                                     $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0-(data1[0].abonado)))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div><div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonadoAnterior)}</b></div><div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div></div>`);
+                                    $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <div class="col-md-4 pl-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div>
+                                            <div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonadoAnterior)}</b></div>
+                                            <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
+                                        </div>
+                                        <div class="col-md-3 pl-2">
+                                            <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
+                                        </div>
+
+                                    `);
 
                                     if(parseFloat(data[0].Bonificado) > 0){
                                         cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';

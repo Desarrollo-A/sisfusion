@@ -483,7 +483,20 @@ class Descuentos_model extends CI_Model {
                     return FALSE;
                 }    
             }
-            
+            public function update_generico_aticipo($clave,$llave,$tabla,$data){
+                try {
+                    $this->db->WHERE($llave, $clave);
+                    if($this->db->update($tabla, $data))
+                    {
+                        return TRUE;
+                    }else{
+                        return FALSE;
+                    }               
+                }
+                catch(Exception $e) {
+                    return $e->getMessage();
+                }      
+            }
 
             public function  historial_anticipo_avance($insert){
                 $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
@@ -502,12 +515,91 @@ class Descuentos_model extends CI_Model {
                 where ha.id_usuario = $usuario";
                 $datos["USUARIO"]  = $this->db->query($cmd2  )->result_array();   
                 
-                $CMD_anticipos="SELECT * FROM anticipo WHERE id_usuario = $usuario";
+                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,
+                ant.comentario,ant.estatus,ant.proceso,ant.impuesto,ant.fecha_registro,
+                ant.prioridad,ant.evidencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre_usuario
+                FROM anticipo ant
+                INNER JOIN usuarios us  ON us.id_usuario = ant.id_usuario
+                 WHERE ant.id_usuario = $usuario";
                 $datos["ANTICIPOS"] = $this->db->query($CMD_anticipos)->result_array();   
+
                 
                 return  $datos;
 
 
             }
+
+
+            public function solicitudes_por_aticipo (){
+                $usuario =  $this->session->userdata('id_usuario');
+
+                $cmd = "DECLARE @user INT 
+                SELECT @user = $usuario 
+                SELECT u.id_usuario, u.id_rol, UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+        
+                where u.id_rol in(1,2,3,7,9) 
+                AND ant.proceso in (1,2,3,4)
+                AND (u.id_lider = @user  
+                OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )
+                OR u.id_lider in (select u2.id_usuario from usuarios u2 where id_lider in (select u2.id_usuario from usuarios u2 where id_lider = @user )))
+                ORDER BY u.id_rol"; 
+                $query = $this->db->query($cmd );   
+                return $query->result_array();
+                
+            }
+
+
+            public function solicitudes_generales_dc(){
+                $cmd = "SELECT u.id_usuario, u.id_rol, 
+				UPPER(opcs_x_cats.nombre) AS puesto, 
+				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre, 
+				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+                where u.id_rol in(1,2,3,7,9) 
+                AND ant.proceso in (3)";
+
+                $query = $this->db->query($cmd);
+                return $query->result_array();
+            } 
+
+    function getComments($id){
+        $cmd = "SELECT DISTINCT(hc.comentario) as comentario_general , hc.id_ha,hc.proceso ,
+		opcx.nombre, pci.comentario as comentario_anticipo,
+		hc.id_anticipo, hc.id_usuario
+        FROM historial_anticipo hc 
+        INNER JOIN anticipo pci ON pci.id_anticipo = hc.id_anticipo
+		INNER JOIN opcs_x_cats opcx ON opcx.id_opcion = hc.proceso and opcx.id_catalogo = 128
+        INNER JOIN usuarios u ON u.id_usuario = hc.id_usuario 
+        WHERE hc.id_anticipo = $id
+        ORDER BY hc.proceso DESC";
+        $query = $this->db->query($cmd);
+        return $query->result();
+    }
+
 
 }

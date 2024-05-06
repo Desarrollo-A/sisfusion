@@ -5,7 +5,7 @@
         </div>
         <div class="card-content">
             <div class="encabezadoBox">
-                <h3 class="card-title center-align">Fromulario para alta de adelanto</h3>
+                <h3 class="card-title center-align">Formulario para alta de adelanto</h3>
                 <p class="card-title pl-1">
                     (Infroamción necesaria para el adelanto de pagos)
                 </p>

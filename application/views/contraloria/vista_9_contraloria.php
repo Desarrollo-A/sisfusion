@@ -31,11 +31,22 @@
                             </div>
                         </div>
                         </div>
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <div class="form-group m-0 overflow-hidden">
-                                <label class="control-label " for="proyecto">Representante legal</label>
-                                <select name="rl" id="rl"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="proyecto">Residencia cliente</label>
+                                    <select name="residencia" id="residencia"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
                             </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="proyecto">Mensualidad</label>
+                                    <select name="mensualidad9" id="mensualidad9"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <label class="control-label">Comentario</label>
+                                <textarea class="text-modal" id="comentario" rows="3"></textarea>
                         </div>
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -54,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer pt-3">
                     <button type="button" class="btn btn-danger btn-simple btn-simple" data-dismiss="modal">Cancelar</button>
                     <button type="button" id="save1" class="btn btn-primary">Registrar</button>
                 </div>
