@@ -1793,8 +1793,6 @@ function fillTableReport(dataObject) {
                     
                     "type": dataObject.type,
                     "sede": dataObject.sede,
-                   // "aptid": dataObject.aptid,
-                    //"contid":dataObject.contid,
                     "canaptid":dataObject.canaptid,
                     "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,

@@ -200,7 +200,7 @@ class Reporte extends CI_Controller {
             echo json_encode(array());
         }
     }
-
+    
     public function getLotesInformation(){
         if (isset($_POST) && !empty($_POST)) {
             $type = $this->input->post("type");
