@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-check-square fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Documentacion del lote: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Documentación del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -47,5 +47,5 @@
     <script type="text/javascript">
         const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/casas/comite_documentos.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/comite_documentos.js?=v3"></script>
 </body>

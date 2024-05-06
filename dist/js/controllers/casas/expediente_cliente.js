@@ -1,30 +1,64 @@
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_envio_a_firma?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha pasado al siguiente proceso.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 pass_to_envio_a_firma = function(data) {
-    let ask = new AskDialog({
+    /* let ask = new AskDialog({
         title: 'Continuar proceso', 
         text: `¿Marcar como recibido el expediente del cliente ${data.nombreLote}?`,
         onOk: () => sendToNext(data),
         //onCancel: sayNo,
     })
 
-    ask.show()
+    ask.show() */
+    let form = new Form({
+        title: 'Continuar proceso', 
+        text: `¿Marcar como recibido el expediente del cliente ${data.nombreLote}?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_envio_a_firma`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El lote ha pasado al siguiente proceso.", "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
 }
+
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Ingreso de expediente de cliente",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
 
 let columns = [
     { data: 'idLote' },
@@ -57,5 +91,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_expediente_cliente',
+    buttons:buttons,
     columns,
 })

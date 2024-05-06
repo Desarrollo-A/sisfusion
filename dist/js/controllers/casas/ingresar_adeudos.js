@@ -14,7 +14,8 @@ function set_adeudo(data) {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response)
+
+                alerts.showNotification("top", "right", "Adeudo ingresado correctamente.", "success");
 
                 table.reload()
 
@@ -28,7 +29,9 @@ function set_adeudo(data) {
 
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new TextField({ id: 'adeudo', label: 'Adeudo', placeholder: 'Ingresa la cantidad' }),
+        new NumberField({ id: 'adeudoOoam', label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoAdm', label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoGph', label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
     ]
 
     form.show()
@@ -38,7 +41,13 @@ let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: function(data){
-        return data.adeudoOOAM
+        return data.adOOAM
+    } },
+    { data: function(data){
+        return data.adADM
+    } },
+    { data: function(data){
+        return data.adGPH
     } },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
@@ -63,8 +72,27 @@ let columns = [
     } },
 ]
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Ingresar adeudo",
+        exportOptions: {
+            columns: [0, 1, 2, 3, 5],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        }
+    }
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_adeudos',
+    buttons:buttons,
     columns,
 })

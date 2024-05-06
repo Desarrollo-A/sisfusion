@@ -1,57 +1,69 @@
-function sendToNext(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `finalizar_proceso?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El proceso del lote ha finzalizado.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 finalizar = function(data) {
-    let ask = new AskDialog({
+    
+    let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Finalizar proceso del lote ${data.nombreLote}?`,
-        onOk: () => sendToNext(data),
-        //onCancel: sayNo,
-    })
+        onSubmit: function(data){
+            //console.log(data)
 
-    ask.show()
-}
-
-function sendToBack(data) {
-    // console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_firma_contrato?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado.`, "success");
-
-            table.reload()
+            $.ajax({
+                type: 'POST',
+                url: `finalizar_proceso`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El proceso del lote ha finzalizado.", "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
         },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
+
+    form.show()
 }
 
 back_to_firma_contrato = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
-        onOk: () => sendToBack(data),
-        //onCancel: sayNo,
+        onSubmit: function(data){
+            //console.log(data)
+            
+            $.ajax({
+                type: 'POST',
+                url: `back_to_firma_contrato`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
 
 let columns = [
@@ -90,10 +102,32 @@ let columns = [
     } },
 ]
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Finzalizar proceso",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_finalizar',
     columns,
+    buttons:buttons
 })
 
 let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opcion'})
