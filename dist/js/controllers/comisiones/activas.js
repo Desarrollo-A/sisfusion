@@ -588,7 +588,7 @@ $(document).on('click', '.update_bandera', function(e){
     $("#myUpdateBanderaModal .modal-body").html('');
     $("#myUpdateBanderaModal .modal-header").html('');
     $("#myUpdateBanderaModal .modal-header").append('<h4 class="modal-title">Enviar a dispersion de comisiones: <b>'+nombreLote+'</b></h4>');
-    $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');
+    $("#myUpdateBanderaModal .modal-body").append('<input type="hidden" name="id_pagoc" id="id_pagoc"><input type="hidden" name="param" id="param">');  
     $("#myUpdateBanderaModal").modal();
     $("#id_pagoc").val(id_pagoc);
     $("#param").val(0);
