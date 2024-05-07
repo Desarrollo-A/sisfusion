@@ -109,35 +109,84 @@ class CasasModel extends CI_Model
     }
 
     public function getCarteraLotes($idCondominio){
-        $query = "SELECT
-            lo.idLote,
-            lo.nombreLote,
-            pc.status
+        $query = "SELECT 
+        lo.idLote,
+        lo.nombreLote,
+        pc.status,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        CASE
+        WHEN cli.id_asesor IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_ases.nombre, ' ', us_ases.apellido_paterno, ' ', us_ases.apellido_materno)
+        END AS asesor,
+        CASE
+        WHEN cli.id_coordinador IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_coord.nombre, ' ', us_coord.apellido_paterno, ' ', us_coord.apellido_materno)
+        END AS coordinador,
+        CASE
+        WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente,
+        CASE
+        WHEN cli.id_subdirector IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_sub.nombre, ' ', us_sub.apellido_paterno, ' ', us_sub.apellido_materno)
+        END AS subdirector,
+        CASE
+        WHEN cli.id_regional IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_regi.nombre, ' ', us_regi.apellido_paterno, ' ', us_regi.apellido_materno)
+        END AS regional,
+        CASE
+        WHEN cli.id_regional_2 IS NULL THEN 'SIN ESPECIFICAR'
+        ELSE CONCAT(us_regi2.nombre, ' ', us_regi2.apellido_paterno, ' ', us_regi2.apellido_materno)
+        END AS regional2
         FROM lotes lo
         LEFT JOIN proceso_casas pc ON pc.idLote = lo.idLote AND pc.status = 1
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_ases ON us_ases.id_usuario = cli.id_asesor  
+        LEFT JOIN usuarios us_coord ON us_coord.id_usuario = cli.id_coordinador 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_sub ON us_sub.id_usuario = cli.id_subdirector 
+        LEFT JOIN usuarios us_regi On us_regi.id_usuario = cli.id_regional 
+        LEFT JOIN usuarios us_regi2 On us_regi2.id_usuario = cli.id_regional_2
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         WHERE
-            lo.idMovimiento = 45
+        lo.idMovimiento = 45
         AND lo.idStatusContratacion = 15
         AND lo.idCondominio = $idCondominio
-        AND pc.status IS NULL";
+        AND pc.status IS NULL
+        AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaAsignacion(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            (CASE
-                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-                ELSE 'Sin asignar'
-            END) AS nombreAsesor
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente
         FROM proceso_casas pc
-        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         WHERE
             pc.proceso = 0
-        AND pc.status = 1";
+            AND pc.status = 1
+            AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -235,17 +284,34 @@ class CasasModel extends CI_Model
 
     public function getListaCartaAuth(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.archivo,
-            doc.documento,
-            doc.idDocumento
+        pc.*,
+        lo.nombreLote,
+        doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente
         FROM proceso_casas pc
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 1
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         WHERE
             pc.proceso = 1
-        AND pc.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -277,22 +343,38 @@ class CasasModel extends CI_Model
 
     public function getListaConcentradoAdeudos(){
         $query = "SELECT pc.*,
-                    CASE
-                        WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
-                        ELSE CONCAT('$', pc.adeudoOOAM) 
-                    END AS adOOAM,
-                    CASE
-                        WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
-                        ELSE CONCAT('$', pc.adeudoADM) 
-                    END AS adADM,
-                    CASE
-                        WHEN pc.adeudoGPH IS NULL THEN 'Sin registro'
-                        ELSE CONCAT('$', pc.adeudoGPH) 
-                    END AS adGPH,
-                    lo.nombreLote
-                    FROM proceso_casas pc
-                    LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-                    WHERE pc.proceso = 2 AND pc.status = 1";
+        CASE
+            WHEN pc.adeudoOOAM IS NULL THEN 'Sin registro'
+            ELSE CONCAT('$', pc.adeudoOOAM) 
+        END AS adOOAM,
+        CASE
+            WHEN pc.adeudoADM IS NULL THEN 'Sin registro'
+            ELSE CONCAT('$', pc.adeudoADM) 
+        END AS adADM,
+        CASE
+            WHEN pc.adeudoGPH IS NULL THEN 'Sin registro'
+            ELSE CONCAT('$', pc.adeudoGPH) 
+        END AS adGPH,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        WHERE pc.proceso = 2 AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -315,15 +397,31 @@ class CasasModel extends CI_Model
 
     public function getListaProcesoDocumentos(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.documentos
+        pc.*,
+        lo.nombreLote,
+        doc.documentos,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 3
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -349,15 +447,31 @@ class CasasModel extends CI_Model
 
     public function getListaProyectoEjecutivo(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.documentos
+        pc.*,
+        lo.nombreLote,
+        doc.documentos,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 3
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -383,15 +497,31 @@ class CasasModel extends CI_Model
 
     public function getListaValidaComite(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.documentos
+        pc.*,
+        lo.nombreLote,
+        doc.documentos,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (16) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 4
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -417,22 +547,38 @@ class CasasModel extends CI_Model
 
     public function getListaCargaTitulos(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.archivo,
-            doc.documento,
-            doc.idDocumento,
-            pro.propuestas
-            FROM proceso_casas pc
-            LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-            LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
-            LEFT JOIN 
-                (SELECT COUNT(*) AS propuestas, idProcesoCasas 
-                FROM propuestas_proceso_casas 
-                GROUP BY idProcesoCasas) pro ON pro.idProcesoCasas = pc.idProcesoCasas
-            WHERE
-                pc.proceso = 5
-            AND pc.status = 1";
+        pc.*,
+        lo.nombreLote,
+        doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        pro.propuestas,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
+        FROM proceso_casas pc
+        LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 17
+        LEFT JOIN 
+            (SELECT COUNT(*) AS propuestas, idProcesoCasas 
+            FROM propuestas_proceso_casas 
+            GROUP BY idProcesoCasas) pro ON pro.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        WHERE
+            pc.proceso = 5
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -453,15 +599,31 @@ class CasasModel extends CI_Model
         CASE
 			 WHEN pro.costo IS NULL THEN ''
 			 ELSE CONCAT('$', pro.costo)
-		END AS costo
+		END AS costo,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 6
-        AND pc.status = 1";
+        	AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -479,33 +641,65 @@ class CasasModel extends CI_Model
 
     public function getListaPropuestaFirma(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            pro.idPropuesta,
-            oxc.nombre AS notaria,
-            pro.fechaFirma,
-            pro.costo
+        pc.*,
+        lo.nombreLote,
+        pro.idPropuesta,
+        oxc.nombre AS notaria,
+        pro.fechaFirma,
+        pro.costo,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso > 6
         AND pc.proceso < 8
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaValidaContraloria(){
-        $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        $query = " SELECT
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 7
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -538,15 +732,31 @@ class CasasModel extends CI_Model
 
     public function getListaSolicitarContratos(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.documentos
+        pc.*,
+        lo.nombreLote,
+        doc.documentos,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 8
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -572,113 +782,241 @@ class CasasModel extends CI_Model
 
     public function getListaRecepcionContratos(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+         con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso IN (8,9)
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaCierreCifras(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.archivo,
-            doc.documento,
-            doc.idDocumento
+        pc.*,
+        lo.nombreLote,
+        doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 25
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
         WHERE
             pc.proceso = 10
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaVoBoCifras(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote,
-            doc.archivo,
-            doc.documento,
-            doc.idDocumento
+        pc.*,
+        lo.nombreLote,
+        doc.archivo,
+        doc.documento,
+        doc.idDocumento,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 25
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
+         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 11
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaExpedienteCliente(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 12
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaEnvioAFirma(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+        (CASE
+            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+            ELSE 'Sin asignar'
+        END) AS nombreAsesor,
+        CASE
+             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+        END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 13
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaFirmaContrato(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+	        resi.descripcion AS proyecto,
+	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+	    INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+	    INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+	    LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 14
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaRecepcionContrato(){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+	    resi.descripcion AS proyecto,
+	    CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+	        (CASE
+	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+	            ELSE 'Sin asignar'
+	        END) AS nombreAsesor,
+	        CASE
+				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+	    INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+	    INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+	    LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 15
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
 
     public function getListaFinalizar($in){
         $query = "SELECT
-            pc.*,
-            lo.nombreLote
+        pc.*,
+        lo.nombreLote,
+        con.nombre AS condominio,
+        resi.descripcion AS proyecto,
+        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            (CASE
+                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                ELSE 'Sin asignar'
+            END) AS nombreAsesor,
+            CASE
+                 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+            END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
+        INNER JOIN clientes cli ON cli.idLote = lo.idLote 
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 16
         AND pc.finalizado IN ($in)
-        AND pc.status = 1";
+        AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }

@@ -140,7 +140,11 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
     { data: 'nombreAsesor' },
+    { data: 'gerente' },
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })

@@ -146,8 +146,12 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: function(data){
-        return `Lote: ${data.nombreLote}`
+        return `${data.nombreLote}`
     } },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'gerente' },
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignacion', onClick: select_lote, data})
 

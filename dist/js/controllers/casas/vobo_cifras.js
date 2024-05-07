@@ -112,6 +112,11 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 1)
@@ -129,8 +134,6 @@ let columns = [
         return text
     } },
     { data: function(data){
-
-        console.log(data)
 
         let parts = data.archivo.split('.');
         let extension = parts.pop();

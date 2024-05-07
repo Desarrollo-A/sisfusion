@@ -40,6 +40,11 @@ function set_adeudo(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         return data.adOOAM
     } },

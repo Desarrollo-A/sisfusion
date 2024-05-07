@@ -69,6 +69,11 @@ back_to_firma_contrato = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 1)
