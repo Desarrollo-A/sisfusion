@@ -19,6 +19,8 @@
                                     <h3 class="card-title center-align">Propuestas de firma: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
+
+                                <input class="hidden" id="lote" name="lote" value="<?php echo $lote->tipoCredito ?>"></input>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
@@ -26,7 +28,6 @@
                                             <th>ID</th>
                                             <th>NOTARIA</th>
                                             <th>FECHA FIRMA</th>
-                                            <th>COSTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

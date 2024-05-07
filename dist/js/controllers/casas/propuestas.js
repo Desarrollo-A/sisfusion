@@ -15,7 +15,7 @@ $.ajax({
 function show_form(propuesta) {
     let form = new Form({
         title: 'Propuesta de firma',
-        //text: 'Descripcion del formulario',
+        text: $('#lote').val() == 1 ? 'Terreno + construcción (Notaria 26)  ' : 'Construcción (Notaria 30)',
     })
 
     form.onSubmit = function(data){
@@ -43,16 +43,16 @@ function show_form(propuesta) {
     form.fields = [
         new HiddenField({ id: 'idPropuesta', value: propuesta.idPropuesta }),
         new HiddenField({ id: 'idProcesoCasas', value: idProcesoCasas }),
-        new SelectField({ id: 'notaria', label: 'Notaria',  placeholder: 'Selecciona una opcion', data: notarias, value: propuesta.id_notaria, width:'6', required:'required' }),
-        new DateField({ id: 'fecha', label: 'Fecha de firma',  placeholder: 'Elige una fecha', value: propuesta.fechaFirma, width:'6', required:'required' }),
-        new NumberField({ id: 'costo', label: 'Costo',  placeholder: 'Ingresa el dato', value: propuesta.costo, required:'required' })
+        new HiddenField({ id: 'notaria', value: $('#lote').val() }),
+        new DateField({ id: 'fecha', label: 'Fecha de firma',  placeholder: 'Elige una fecha', value: propuesta.fechaFirma, width:'12', required:'required' }),
     ]
 
-    form.show()
+    form.show();
 }
 
 function edit_propuesta(data) {
     show_form(data)
+    console.log(data)
 }
 
 function new_propuesta() {
@@ -67,7 +67,6 @@ let columns = [
     { data: 'idPropuesta' },
     { data: 'notaria' },
     { data: 'fechaFirma' },
-    { data: 'costo' },
     { data: function(data){
         let edit_button = new RowButton({icon: 'edit', label: 'Editar prpopuesta', onClick: edit_propuesta, data})
 

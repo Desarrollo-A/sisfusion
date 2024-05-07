@@ -125,7 +125,7 @@ class CasasModel extends CI_Model
         ELSE CONCAT(us_coord.nombre, ' ', us_coord.apellido_paterno, ' ', us_coord.apellido_materno)
         END AS coordinador,
         CASE
-        WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+        WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
         ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente,
         CASE
@@ -145,7 +145,7 @@ class CasasModel extends CI_Model
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_ases ON us_ases.id_usuario = cli.id_asesor  
         LEFT JOIN usuarios us_coord ON us_coord.id_usuario = cli.id_coordinador 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         LEFT JOIN usuarios us_sub ON us_sub.id_usuario = cli.id_subdirector 
         LEFT JOIN usuarios us_regi On us_regi.id_usuario = cli.id_regional 
         LEFT JOIN usuarios us_regi2 On us_regi2.id_usuario = cli.id_regional_2
@@ -173,14 +173,14 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         WHERE
@@ -297,7 +297,7 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
         FROM proceso_casas pc
@@ -305,7 +305,7 @@ class CasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 1
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         WHERE
@@ -364,13 +364,13 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -408,14 +408,14 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -458,14 +458,14 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-			 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+			 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 			 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 		END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -508,14 +508,14 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
              ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (16) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -561,7 +561,7 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
@@ -572,7 +572,7 @@ class CasasModel extends CI_Model
             FROM propuestas_proceso_casas 
             GROUP BY idProcesoCasas) pro ON pro.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -608,7 +608,7 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
@@ -617,7 +617,7 @@ class CasasModel extends CI_Model
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -655,7 +655,7 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
@@ -663,7 +663,7 @@ class CasasModel extends CI_Model
         LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -687,13 +687,13 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -743,14 +743,14 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -792,13 +792,13 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
              ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -824,13 +824,13 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -857,14 +857,14 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND doc.tipo = 25
-         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -887,13 +887,13 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -916,13 +916,13 @@ class CasasModel extends CI_Model
             ELSE 'Sin asignar'
         END) AS nombreAsesor,
         CASE
-             WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+             WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
              ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
         END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -945,13 +945,13 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
 	    INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
 	    INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
 	    LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -974,13 +974,13 @@ class CasasModel extends CI_Model
 	            ELSE 'Sin asignar'
 	        END) AS nombreAsesor,
 	        CASE
-				 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
 				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
 			END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
 	    INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
 	    INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
 	    LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -1003,13 +1003,13 @@ class CasasModel extends CI_Model
                 ELSE 'Sin asignar'
             END) AS nombreAsesor,
             CASE
-                 WHEN cli.id_gerente IS NULL THEN 'SIN ESPECIFICAR'
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
                  ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
-        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = cli.id_gerente
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
@@ -1054,7 +1054,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function addPropuesta($idProcesoCasas, $notaria, $fechaFirma, $costo){
+    public function addPropuesta($idProcesoCasas, $notaria, $fechaFirma){
         $idModificacion = $this->session->userdata('id_usuario');
 
         $query = "INSERT INTO propuestas_proceso_casas
@@ -1062,7 +1062,6 @@ class CasasModel extends CI_Model
             idProcesoCasas,
             notaria,
             fechaFirma,
-            costo,
             idCreacion,
             idModificacion,
             fechaModificacion
@@ -1072,7 +1071,6 @@ class CasasModel extends CI_Model
             $idProcesoCasas,
             $notaria,
             '$fechaFirma',
-            $costo,
             $idModificacion,
             $idModificacion,
             GETDATE()
@@ -1081,12 +1079,11 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function updatePropuesta($idPropuesta, $notaria, $fechaFirma, $costo){
+    public function updatePropuesta($idPropuesta, $notaria, $fechaFirma){
         $query = "UPDATE propuestas_proceso_casas
         SET
             notaria = $notaria,
-            fechaFirma = '$fechaFirma',
-            costo = $costo
+            fechaFirma = '$fechaFirma'
         WHERE
             idPropuesta = $idPropuesta";
 

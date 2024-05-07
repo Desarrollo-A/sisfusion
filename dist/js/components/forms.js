@@ -1,9 +1,9 @@
 class DateField{
-    constructor({id, label, placeholder, value, required}){
+    constructor({id, label, placeholder, value, width, required}){
         this.id = id
 
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
+        .addClass(`col-lg-${width} col-md-12`)
         .append(
             $('<label />')
             .addClass('control-label label-gral')
@@ -125,6 +125,7 @@ class FileField{
 
         this.field = $('<div />')
         .addClass('col-md-12')
+        .append(`<label class='control-label label-gral'>${label}</label>`)
         .append(
             $('<div />')
             .addClass('file-gph')
