@@ -561,10 +561,21 @@ class Reestructura extends CI_Controller{
 
                     $idClientesOrigen .= "'". $dataLote['idCliente'] ."', ";
                     array_push($arrayLotesOrigen, $arrayLoteOrigen);
+
+                    $insertData[] = array(
+                        "idLote" => $dataLote['idLote'],
+                        "idCliente" => $idCliente,
+                        "id_preproceso" => 0,
+                        "comentario" => 'ASIGNACIÓN DE PROPUESTAS',
+                        "estatus" => 1,
+                        "modificado_por" => $this->session->userdata('id_usuario'),
+                        "fecha_modificacion" => date('Y-m-d h:i:s')
+                    );
                 }
                 
                 $idCliente = substr($idClientesOrigen, 0, -2);
                 $lotesOrigenUpdated = $this->General_model->updateBatch('lotes', $arrayLotesOrigen, 'idLote');
+                $insert = $this->General_model->insertBatch("historial_preproceso_lote", $insertData); // insert de 0 en historial preproceso de lotes
             }
             else{
                 $updateLoteOriginal = array(
@@ -572,10 +583,34 @@ class Reestructura extends CI_Controller{
                     'usuario' => $this->session->userdata('id_usuario')
                 );
 
+                $insertData = array(
+                    "idLote" => $idLoteOriginal,
+                    "idCliente" => $idCliente,
+                    "id_preproceso" => 0,
+                    "comentario" => 'ASIGNACIÓN DE PROPUESTAS',
+                    "estatus" => 1,
+                    "modificado_por" => $this->session->userdata('id_usuario'),
+                    "fecha_modificacion" => date('Y-m-d h:i:s')
+                );
+                
                 $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
+                $insert = $this->General_model->addRecord("historial_preproceso_lote", $insertData); // insert de 0 en historial preproceso de lotes
             }
+            
+            
 
             if (!$lotesOrigenUpdated) {
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error al actualizar en apartado los lotes',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
+            if (!$insert) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
                     'titulo' => 'ERROR',
