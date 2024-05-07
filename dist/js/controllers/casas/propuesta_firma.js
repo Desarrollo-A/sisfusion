@@ -1,6 +1,11 @@
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: 'notaria' },
     { data: 'fechaFirma' },
     { data: 'costo' },
