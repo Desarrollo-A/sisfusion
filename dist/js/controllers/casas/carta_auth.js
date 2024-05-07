@@ -81,6 +81,11 @@ function show_upload(data) {
     form.show()
 }
 
+let tipos = [
+    { value: 1, label: 'Terreno + Construcción' },
+    { value: 2, label: 'Construcción' },
+]
+
 pass_to_adeudos = function (data) {
 
     let form = new Form({
@@ -108,6 +113,7 @@ pass_to_adeudos = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opcion', width: '12', data: tipos }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

@@ -142,14 +142,18 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function addLoteToAsignacion($idLote, $comentario){
+    public function addLoteToAsignacion($idLote, $idGerente, $comentario){
         $query = "INSERT INTO proceso_casas
         (
-            idLote, comentario
+            idLote,
+            idGerente,
+            comentario
         )
         VALUES
         (
-            $idLote, '$comentario'
+            $idLote,
+            $idGerente,
+            '$comentario'
         )";
 
         $result = $this->db->query($query);
@@ -160,6 +164,21 @@ class CasasModel extends CI_Model
         }else{
             return null;
         }
+    }
+
+    public function getGerentesOptions(){
+        $query = "SELECT
+            concat(nombre, ' ', apellido_paterno) AS label,
+            id_usuario AS value
+        FROM usuarios
+        WHERE
+            estatus = 1
+        AND id_rol = 3
+        AND tipo = 2";
+
+        // Cambiar por tipo 3
+
+        return $this->db->query($query)->result();
     }
 
     public function getAsesoresOptions(){
@@ -740,6 +759,16 @@ class CasasModel extends CI_Model
         $query = "UPDATE proceso_casas
         SET
             idPropuesta = $idPropuesta
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function setTipoCredito($idProcesoCasas, $tipoCredito){
+        $query = "UPDATE proceso_casas
+        SET
+            tipoCredito = $tipoCredito
         WHERE
             idProcesoCasas = $idProcesoCasas";
 

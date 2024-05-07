@@ -99,7 +99,7 @@ class BaseController extends CI_Controller {
         $file = $this->bucket->upload(
             fopen($path, 'r'),
             [
-                'name' => $name,
+                'name' => $filename,
             ]
         );
 

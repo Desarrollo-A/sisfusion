@@ -29,9 +29,9 @@ function set_adeudo(data) {
 
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new NumberField({ id: 'adeudoOoam', label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
-        new NumberField({ id: 'adeudoAdm', label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
-        new NumberField({ id: 'adeudoGph', label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoOoam', value: data.adeudoOOAM, label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoAdm', value: data.adeudoADM, label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoGph', value: data.adeudoGPH, label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
     ]
 
     form.show()

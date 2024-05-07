@@ -66,6 +66,19 @@ let filtros = new Filters({
         }
     })
 } */
+let gerentes = []
+
+$.ajax({
+    type: 'GET',
+    url: 'options_gerentes',
+    async: false,
+    success: function (response) {
+        gerentes = response
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
 
 select_lote = function(data) {
     /* let ask = new AskDialog({
@@ -103,6 +116,7 @@ select_lote = function(data) {
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opcion', width: '12', data: gerentes }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

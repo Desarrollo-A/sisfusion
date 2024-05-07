@@ -223,6 +223,12 @@ class Casas extends BaseController {
         $this->json($condominios);
     }
 
+    public function options_gerentes(){
+        $asesores = $this->CasasModel->getGerentesOptions();
+
+        $this->json($asesores);
+    }
+
     public function options_asesores(){
         $asesores = $this->CasasModel->getAsesoresOptions();
 
@@ -267,20 +273,23 @@ class Casas extends BaseController {
 
         $idLote = $this->form('idLote');
         $comentario = $this->form('comentario');
+        $gerente = $this->form('gerente');
 
-        if(!isset($idLote)){
+        if(!isset($idLote) || !isset($gerente)){
             http_response_code(400);
+
+            $this->json([]);
         }
 
-        $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $comentario);
+        $proceso = $this->CasasModel->addLoteToAsignacion($idLote, $gerente, $comentario);
 
         if($proceso){
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, 'NULL', 0, 'Se inicio proceso | Comentario: '.$proceso->comentario);
-
-            $this->json([]);
         }else{
             http_response_code(404);
         }
+
+        $this->json([]);
     }
 
     public function asignar(){
@@ -455,29 +464,32 @@ class Casas extends BaseController {
     }
 
     public function to_concentrar_adeudos(){
-
-        $this->form();
-
         $id = $this->form('id');
+        $tipo = $this->form('tipo');
         $comentario = $this->form('comentario');
 
-        if(!isset($id)){
+        if(!isset($id) || !isset($tipo)){
             http_response_code(400);
+            $this->json([]);
         }
 
         $new_status = 2;
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo);
 
         if($is_ok){
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
 
-            $this->json([]);
-        }else{
-            http_response_code(404);
+            if($is_ok){
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
+            }else{
+                http_response_code(404);
+            }
         }
+
+        $this->json([]);
     }
 
     public function lista_adeudos(){
