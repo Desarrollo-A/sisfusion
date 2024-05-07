@@ -2081,7 +2081,10 @@ class Reestructura_model extends CI_Model
     }
 
     public function getDataClienteAnterior($idClienteReubicacion){
-        $query = "SELECT idLoteOrigen idLote,idClienteOrigen idCliente,planComision,estatusComisiones FROM historial_regreso_reestructura WHERE clienteReubicacion2 = ? ;";
+        $query = "SELECT hrr.idLoteOrigen idLote,hrr.idClienteOrigen idCliente,hrr.planComision,hrr.estatusComisiones,cl2.totalNeto2Cl precioOrigen
+        FROM historial_regreso_reestructura hrr
+        INNER JOIN clientes cl2 ON cl2.id_cliente = hrr.clienteReubicacion2
+        WHERE hrr.clienteReubicacion2 = ? ;";
         return json_encode($this->db->query($query,[$idClienteReubicacion])->row(),JSON_NUMERIC_CHECK);
     }
 
