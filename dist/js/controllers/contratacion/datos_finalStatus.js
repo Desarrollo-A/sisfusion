@@ -70,7 +70,7 @@ function fillTable(sede, residencial) {
             titleAttr: 'Estatus actuales de terrenos al ' +dateTime ,
             title: 'Estatus actuales de terrenos al '+dateTime ,
             exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -178,7 +178,6 @@ function fillTable(sede, residencial) {
                 }
             },
             { data: 'nombreCliente'}, // NOMBRE CLIENTE
-            { data: 'nombreSedeRecepcion'}, // NOMBRE SEDE RECEPCIÓN
             { data: // LIBERACIÓN
                 function(data) {
                     let labelAlc = '';
@@ -217,7 +216,8 @@ function fillTable(sede, residencial) {
                     else
                         return 'NO APLICA';
                 }
-            }
+            },
+            { data: 'nombreSedeRecepcion'}, // NOMBRE SEDE RECEPCIÓN
         ],
         ajax: {
             url: `${general_base_url}registroLote/getFinalStatus/`,

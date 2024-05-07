@@ -74,7 +74,6 @@
                                                 <th>SUPERFICIE DE ORIGEN</th>
                                                 <th>PRECIO M2</th>                                
                                                 <th>CLIENTE</th>
-                                                <th>SEDE RECEPCIÓN</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
                                                 <th>SUBDIRECTOR</th>
@@ -83,6 +82,7 @@
                                                 <th>ESTATUS CONTRATACIÓN</th>
                                                 <th>FECHA ESTATUS 2</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
+                                                <th>SEDE RECEPCIÓN</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
