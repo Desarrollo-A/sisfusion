@@ -430,7 +430,7 @@ class Casas extends BaseController {
     }
 
     public function upload_documento(){
-        $form = $this->form();
+        $this->form();
 
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
@@ -1324,11 +1324,11 @@ class Casas extends BaseController {
         $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
 
         if(isset($form->idPropuesta)){
-            $is_ok = $this->CasasModel->updatePropuesta($form->idPropuesta, $form->notaria, $form->fecha, $form->costo);
+            $is_ok = $this->CasasModel->updatePropuesta($form->idPropuesta, $form->notaria, $form->fecha);
 
             $descripcion = "Se actualizo propuesta: $form->idPropuesta";
         }else{
-            $is_ok = $this->CasasModel->addPropuesta($form->idProcesoCasas, $form->notaria, $form->fecha, $form->costo);
+            $is_ok = $this->CasasModel->addPropuesta($form->idProcesoCasas, $form->notaria, $form->fecha);
 
             $descripcion = "Se agrego propuesta";
         }
