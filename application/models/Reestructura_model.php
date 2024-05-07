@@ -103,7 +103,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.idLote=70263 AND lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -637,7 +637,7 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = lo.estatus_preproceso AND oxc1.id_catalogo = 106
         LEFT JOIN usuarios u6 ON u6.id_usuario = id_usuario_asignado
         LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN (0, 1) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
+        WHERE lo.idLote=70263 AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.estatus_preproceso IN (0, 1) $filtroSede AND lo.solicitudCancelacion != 2")->result_array();
     }
 
     public function getListaUsuariosParaAsignacion() {
@@ -923,6 +923,7 @@ class Reestructura_model extends CI_Model
                             JOIN UltimoValor u ON lo2.idLote = u.id_parametro AND u.rn = 1
                         WHERE lo.status = 1
                         AND oxc0.id_opcion IN(2, 3, 4)
+                        AND lo.idLote=70263
                         UNION ALL
                         SELECT
                         DISTINCT
@@ -1978,7 +1979,7 @@ class Reestructura_model extends CI_Model
     public function getClienteAnterior($idLote, $idCliente){
         $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
                                     lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
-                                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2
+                                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2,lo.idStatusContratacion
                                     FROM clientes cl1
                                     INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2
                                     INNER JOIN lotes lo ON lo.idLote = cl2.idLote
@@ -2036,12 +2037,42 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
-    public function buscarPagos($idLote,$idCliente){
-        return $this->db->query("SELECT COUNT(*) Dispersadas,(SELECT COUNT(*) Nuevas FROM pago_comision_ind pci
+    public function checkFechaApartado02($idLote){
+        $query = $this->db->query("SELECT 
+        pxl.id_lotep idLoteDestino,
+        re.nombreResidencial,
+        co.nombre,
+        lo.nombreLote,
+        lo.idLote,
+        CONVERT (NVARCHAR (10), hpl.fechaUltimoEstatus2, 120) fechaUltimoEstatus2,
+        lo.id_usuario_asignado,
+        lo.id_gerente_asignado,
+        lo.id_subdirector_asignado
+        FROM propuestas_x_lote pxl 
+        INNER JOIN lotes lo ON lo.idLote = pxl.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio    
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN (SELECT idLote, MAX(fecha_modificacion) fechaUltimoEstatus2 FROM historial_preproceso_lote WHERE id_preproceso = 1 GROUP BY idLote) hpl ON hpl.idLote = pxl.idLote
+        WHERE pxl.idLote IN ($idLote)");
+        return $query->result_array();
+    }
+    public function buscarPagos($idLoteActual,$idClienteActual,$idClienteReubicacion){
+        return $this->db->query("SELECT COUNT(*) pagadasGeneral,
+		(SELECT COUNT(*) Nuevas FROM pago_comision_ind pci
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
-        WHERE co.id_lote=$idLote AND co.idCliente=$idCliente AND pci.estatus IN(1))Nuevas FROM pago_comision_ind pci
+        WHERE co.id_lote=$idLoteActual AND co.idCliente=$idClienteActual AND pci.estatus IN(1)) nuevasDestino,
+		(SELECT COUNT(*) NuevasOrigen FROM pago_comision_ind pci
         INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
-        WHERE co.id_lote=$idLote AND co.idCliente=$idCliente AND pci.estatus NOT IN(6,1)")->result_array();
+        WHERE co.id_lote=$idLoteActual AND co.idCliente=$idClienteReubicacion AND pci.estatus IN(1)) nuevasOrigen,
+		(SELECT COUNT(*) pagadasDestino FROM pago_comision_ind pci
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus = 1
+        WHERE co.id_lote=$idLoteActual AND co.idCliente=$idClienteActual AND pci.estatus NOT IN(1,6)) pagadasDestino,
+        (SELECT COUNT(*) pagadasOrigen FROM pago_comision_ind pci
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus IN(1)
+        WHERE co.id_lote=$idLoteActual AND co.idCliente=$idClienteReubicacion AND pci.estatus NOT IN(1,6)) pagadasOrigen
+        FROM pago_comision_ind pci
+        INNER JOIN comisiones co ON co.id_comision = pci.id_comision AND co.estatus=1
+        WHERE co.id_lote=$idLoteActual AND pci.estatus NOT IN(6,1)")->result_array();
     }
 
     public function pausarPagos($idLote,$idCliente,$idUser){
@@ -2050,7 +2081,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getDataClienteAnterior($idClienteReubicacion){
-        $query = "SELECT idLote,idCliente,planComision FROM historial_regreso WHERE clienteReubicacion2 = ? ;";
+        $query = "SELECT idLoteOrigen idLote,idClienteOrigen idCliente,planComision,estatusComisiones FROM historial_regreso_reestructura WHERE clienteReubicacion2 = ? ;";
         return json_encode($this->db->query($query,[$idClienteReubicacion])->row(),JSON_NUMERIC_CHECK);
     }
 
@@ -2061,5 +2092,10 @@ class Reestructura_model extends CI_Model
         INNER JOIN clientes clOrigen ON clOrigen.id_cliente = cl.id_cliente_reubicacion_2
         WHERE lo.idLote = ? ;";
         return json_encode($this->db->query($query,[$idLoteActual])->row(),JSON_NUMERIC_CHECK);
+    }
+
+    public function trasposoComisionesReu($idLoteOriginal,$idClienteOriginal,$idLoteActual,$user){
+        $sql = "UPDATE comisiones SET id_lote = ?,modificado_por = ? WHERE id_lote = ? AND idCliente = ? ";
+        return $this->db->query($sql, [$idLoteActual,$user,$idLoteOriginal, $idClienteOriginal]);  
     }
 }

@@ -3524,6 +3524,7 @@ class Reestructura extends CI_Controller{
         $tipoProceso = $getCliente[0]->procesoDestino;
         $comisionNuevo = $getCliente[0]->comisionNuevo;
         $clienteReubicacion = $getCliente[0]->id_cliente_reubicacion_2;
+        $idStatusContratacion = $getCliente[0]->idStatusContratacion;
 
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
@@ -3536,8 +3537,11 @@ class Reestructura extends CI_Controller{
         // paso 0 se verifica si el lote de origen esta libre antes de regresar
         if($statusNuevo > 6 && !in_array($statusLoteAnterior2, array(1, 2, 15, 21)) && $loteNuevo != $loteAnterior) {$flagOk = false; $msg = 'error 0'; }
 
+        $estatusComisiones = in_array($idStatusContratacion,array(9,10,13,14,15)) ? $this->verificarComisiones($loteNuevo,$clienteNuevo,$clienteReubicacion) : 1;
+        if($estatusComisiones == 0){ $flagOk = false; $msg = 'Error  al pausar pagos de comisiones'; }
+
         // paso 1 - insert en tabla de regreso
-        $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion);
+        $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones);
         if(!$insertRegresoLote){ $flagOk = false; $msg = 'guardar, el lote de origen ya ha sido ocupado';}
 
         
@@ -3575,6 +3579,7 @@ class Reestructura extends CI_Controller{
         //paso 9 - regresar origen
         $updateOrigen = $this->updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario);
         if(!$updateOrigen) { $flagOk = false; $msg = 'regresar los origenes';}
+        
 
 
         // último paso, confirmación de que los procesos han sido correctos
@@ -3709,7 +3714,9 @@ class Reestructura extends CI_Controller{
             'id_juridico_preproceso' => 0,
             'estatus_preproceso' => 0,
             'idCliente' => $clienteAnterior,
-            'idStatusLote' => 2
+            'idStatusLote' => 2,
+            'idStatusContratacion' => 15,
+            'idMovimiento' => 45
             // 'idStatusLote' => 1
         );
 
@@ -3763,7 +3770,7 @@ class Reestructura extends CI_Controller{
 
         $update = $this->General_model->addRecord('historial_liberacion', $insertData);
 
-        $this->email
+       /* $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista34@ciudadmaderas.com')
@@ -3775,7 +3782,7 @@ class Reestructura extends CI_Controller{
                 'tipoCancelacion' => 1 // $tipoCancelacionNombre
             ], true));
 
-        $this->email->send();
+        $this->email->send();*/
 
         return $update;
     }
@@ -3790,7 +3797,7 @@ class Reestructura extends CI_Controller{
         return $update;
     }
 
-    public function insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion){
+    public function insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones){
         $insertData = array(
             'idClienteOrigen' => $clienteAnterior,
             'idClienteDestino' => $clienteNuevo,
@@ -3800,54 +3807,86 @@ class Reestructura extends CI_Controller{
             'planComision' => $comisionNuevo,
             'clienteReubicacion2' => $clienteReubicacion,
             'fechaCreacion' => date('Y-m-d H:i:s'),
-            'creadoPor' => $this->session->userdata('id_usuario')
+            'creadoPor' => $this->session->userdata('id_usuario'),
+            'estatusComisiones' => $estatusComisiones
         );
         
         $insert = $this->General_model->addRecord('historial_regreso_reestructura', $insertData);
 
         return $insert;
     }
-    public function verificarComisiones($idLote,$idCliente){
-        $data = $this->Reestructura_model->buscarPagos($idLote,$idCliente);    
+    public function verificarComisiones($idLoteActual,$idClienteActual,$idClienteReubicacion){
+        $data = $this->Reestructura_model->buscarPagos($idLoteActual,$idClienteActual,$idClienteReubicacion);    
         if(count($data) == 0){ //NO SE ENCONTRARON PAGOS
             return 1;
-        }else if($data[0]['Dispersadas'] > 0){ //HAY PAGOS PAGADOS, SE MATIENE LA COMISIÓN, SE REALIZARA EL TRASPASO EN LA NUEVA SELECCIÓN FINAL
-            return 2;
-        }else if($data[0]['Dispersadas'] == 0 && $data[0]['Nuevas'] > 0){ //COMISIÓN DISPERSADA, SOLO PAGOS NUEVOS, SE PUEDEN BORRAR
-           $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLote,$idCliente);
-           if($result){
-                return 3;
-           }else{
-                return 0;
-           }
-        }     
+        }else{
+                if($data[0]['pagadasGeneral'] == 0){
+                    if($data[0]['nuevasDestino'] == 0 && $data[0]['nuevasOrigen'] > 0){ //SOLO SE HAN PAGADO LAS COMISIONES DE ORIGEN, SOLO SE ACTUALIZA ID LOTE
+
+                    }else if($data[0]['nuevasDestino'] > 0 && $data[0]['nuevasOrigen'] == 0){ // SE PAUSAN LOS NUEVOS PAGOS DE DESTINO
+                        $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLoteActual,$idClienteActual);
+                        if(!$result){
+                            return 0;
+                       }
+                    }else{ // SE PAUSAN LOS PAGOS NUEVOS DE DESTINO Y LOS DE ORIGEN SE LES CAMBIARA EL ID LOTE
+                        $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLoteActual,$idClienteActual);
+                        if(!$result){
+                            return 0;
+                       }
+                    }   
+                    return 2;
+                }else{
+                    if(($data[0]['pagadasOrigen'] > 0 && ($data[0]['nuevasOrigen'] > 0 || $data[0]['nuevasOrigen'] == 0)) && ($data[0]['nuevasDestino'] == 0 && $data[0]['pagadasDestino'] == 0)){
+                        //SOLO HAY PAGADAS DEL ORIGEN SE CAMBIAR EL ID DEL LOTE
+                        return 2;
+                    }else if(($data[0]['pagadasOrigen'] == 0 && $data[0]['nuevasOrigen'] == 0) && ($data[0]['pagadasDestino'] > 0 && ($data[0]['nuevasDestino'] > 0 || $data[0]['nuevasDestino'] == 0))){
+                        //SOLO HAY PAGADAS DE DESTINO(UPGRADE) SE REALIZA EL RECALCULO
+                        return 3;
+                    }else if( $data[0]['pagadasOrigen'] > 0 && $data[0]['pagadasDestino'] > 0){ // YA SE PAGARON COMISIONES DE ORIGEN Y DESTINO, LA DE ORIGEN SE ACTUALIZA EL LOTE Y LAS DE DESTINO SE RECALCULAN
+                        return 3;
+                    }
+                }
+        }   
     }
     
     public function traspasoComisiones($idClienteReubicacion,$idLoteActual){
         $dataClienteAnterior = json_decode($this->Reestructura_model->getDataClienteAnterior($idClienteReubicacion));
         $dataClienteDestino = json_decode($this->Reestructura_model->getDataClienteActual($idLoteActual));
-
-
-
+        $user = $this->session->userdata('id_usuario');
         //PROCESOS PARA BANDERA EN 2
         /*CONSULTAR SI ES EL MISMO PLAN, SI ES EL MISMO PLAN SE VERIFICA 
         EL PRECIO ORIGEN Y DESTINO, SE TOMA EL MENOR, SI SE TOMA EL DE ORIGEN SOLO ACTUALIZAR LOTE Y CLIENTE DE COMSIONES.
         SI ES EL DIFERENTE EL PRECIO LLAMAR FUNCIÓN DE PORCENTAJES Y RECALCULAR LOS TOTALES COMISIÓN DE CADA COMISIONISTA*/
+        if($dataClienteAnterior->estatusComisiones == 3){ // SE RECALCULAN LAS COMISIONES
+            if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){ //ES EL MISMO PLAN SOLO SE RECALCULAN LAS COMISIONES CON EL MENOR PRECIO DEL LOTE
+                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
+                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
+            }else{
+                //SI EL PLAN COMISIÓN CAMBIA, SE HACE EL RECALCULO DE LAS COMISIONES Y SE REALIZA EL TRASPASO DE LAS ANTERIORES SI ES QUE HAY
+                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
+                if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){//REUBICACIÓN Y REESTRUCTURA, NO SE TOPAN LOS COMISIONISTAS, SOLO SE RECALCULAN LOS MONTOS CON EL NUEVO PRECIO SI ES QUE ESTE ES MENOR
+                    if(precioNuevo < precioAnterior){ // SE HACE EL RECALCULO, YA QUE EL PRECIO CAMBIO
+
+                    }else{ // SE MANTIENE TODO IGUAL Y SOLO SE ACTUALIZA EL LOTE Y CLIENTE PARA LAS NUEVAS COMISIONES
+
+                    }
+                 }else{//REUBICACIÓN EXCEDENTE
+     
+                 }
+            }
+
+        }else{ // SOLO SE ACTUALIZAN LAS COMOSIONES DE ORIGEN(ID_LOTE)
+           $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user);
+        }
         if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){//COMPARAMOS EL PLAN COMISIÓN, SI ES EL MISMO:
             // SE PROCEDE A COMPARAR EL PRECIO DEL LOTE ORIGEN CON EL DESTINO
             //REESTRUCTURA TRATAR IGUAL, EXCDENTE MANDAR NUEVO TOTAL8P  
-            if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){//REUBICACIÓN Y REESTRUCTURA
-               // $recalculoComision = $this->Comisiones_model->porcentajes();
-            }else{//REUBICACIÓN EXCEDENTE
-
-
-            }
+            
             if($dataClienteDestino->precioOrigen < $dataClienteDestino->precioDestino){// SI PRECIO ORIGEN ES MENOR, 
 
             }else{
 
             }
-
         }
         /* SI ES DIFERENTE PLAN COMISIÓN, SE LLAMA FUNCIÓN DE PORCENTAJES CON EL PRECIO MENOR DE LOS DOS LOTES(ORIGEN Y DESTINO)
         REESTRUCTURA A REUBICACIÓN 
