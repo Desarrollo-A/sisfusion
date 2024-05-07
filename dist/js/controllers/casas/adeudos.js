@@ -86,6 +86,11 @@ back_to_carta_auth = function (data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: 'adeudoOOAM' },
     { data: 'adADM' },
     { data: 'adGPH' },
