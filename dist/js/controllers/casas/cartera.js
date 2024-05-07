@@ -50,22 +50,6 @@ let filtros = new Filters({
     ],
 })
 
-/* function sendToAsignacion(data){
-    //console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `to_asignacion?lote=${data.idLote}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", "El lote ha sido enviado a asignacion.", "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-} */
 let gerentes = []
 
 $.ajax({

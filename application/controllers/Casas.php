@@ -235,6 +235,12 @@ class Casas extends BaseController {
         $this->json($asesores);
     }
 
+    public function options_tipos_credito(){
+        $notarias = $this->CasasModel->getTiposCreditoOptions();
+
+        $this->json($notarias);
+    }
+
     public function options_notarias(){
         $notarias = $this->CasasModel->getNotariasOptions();
 
@@ -533,7 +539,7 @@ class Casas extends BaseController {
             http_response_code(400);
         }
 
-        $documentos = $this->CasasModel->getDocumentos([2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+        $documentos = $this->CasasModel->getDocumentos([2,3,4,5,6,7,8,9,10,11,12,13,14,15,23,26,27]);
 
         $is_ok = true;
         foreach ($documentos as $key => $documento) {

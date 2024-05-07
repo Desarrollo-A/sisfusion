@@ -193,11 +193,26 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    public function getTiposCreditoOptions(){
+        $query = "SELECT
+            oxc.nombre AS label,
+            oxc.id_opcion AS value
+        FROM opcs_x_cats oxc
+        WHERE
+            oxc.estatus = 1
+        AND oxc.id_catalogo = 130";
+
+        return $this->db->query($query)->result();
+    }
+
     public function getNotariasOptions(){
-        $query = "SELECT oxc.nombre AS label, oxc.id_opcion AS value
-        FROM catalogos c 
-        INNER JOIN opcs_x_cats oxc ON oxc.id_catalogo = c.id_catalogo 
-        WHERE c.estatus = 1 AND c.id_catalogo = 129";
+        $query = "SELECT
+            oxc.nombre AS label,
+            oxc.id_opcion AS value
+        FROM opcs_x_cats oxc
+        WHERE
+            oxc.estatus = 1
+        AND oxc.id_catalogo = 129";
 
         return $this->db->query($query)->result();
     }
@@ -342,7 +357,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15)";
+        AND tipo IN (2,3,4,5,6,7,8,9,10,11,12,13,14,15,26,23,27)";
 
         return $this->db->query($query)->result();
     }

@@ -81,10 +81,19 @@ function show_upload(data) {
     form.show()
 }
 
-let tipos = [
-    { value: 1, label: 'Terreno + Construcción' },
-    { value: 2, label: 'Construcción' },
-]
+let tipos = []
+
+$.ajax({
+    type: 'GET',
+    url: 'options_tipos_credito',
+    async: false,
+    success: function (response) {
+        tipos = response
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
 
 pass_to_adeudos = function (data) {
 
