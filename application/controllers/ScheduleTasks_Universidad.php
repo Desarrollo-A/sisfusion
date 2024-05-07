@@ -14,7 +14,7 @@ class ScheduleTasks_Universidad extends CI_Controller
         $this->load->database('default');
         $this->load->library('email');
         $this->load->model('Comisiones_model');
-        $this->load->model('Universidad_model');
+        $this->load->model('Universidad_function_model');
     }
 
     public function index(){
@@ -76,7 +76,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                         // aqui viene por segundo pago
                         $viene_por_pagos = $data[$contador_de_consulta]['ultimo_pago_automatico'];
                     }
-                    $datos_de_pagos = $this->Universidad_model->getLotesDescuentosUniversidad($data[$contador_de_consulta]['id_usuario'],$data[$contador_de_consulta]['pago_individual']);
+                    $datos_de_pagos = $this->Universidad_function_model->getLotesDescuentosUniversidad($data[$contador_de_consulta]['id_usuario'],$data[$contador_de_consulta]['pago_individual']);
                     // echo json_encode($datos_de_pagos);
                     // echo json_encode($datos_de_pagos[0]);
                     $cuantosLotes = count($datos_de_pagos);
@@ -124,14 +124,14 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 
                                 if( !is_null($id) || $id != '' )
                                 {
-                                    $comision  = $this->Universidad_model->obtenerID($id);
+                                    $comision  = $this->Universidad_function_model->obtenerID($id);
                                 }else{
                                     echo('error');
                                 }
                                 $comentario = 'prueba desdes automatización 1';
                                 echo('<br>'); 
-                                // $dat =  $this->Universidad_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
-                                // $dat =  $this->Universidad_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$id_descuento);
+                                // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
+                                // $dat =  $this->Universidad_function_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$id_descuento);
                                 
                                 echo('<br>');
                                 $cmd = "UPDATE descuentos_universidad 
@@ -145,7 +145,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 $cmd_relacion_universidad = "INSERT INTO realcion_universidad_pago  
                                 values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
 
-                                $this->Universidad_model->updateCMD($cmd);
+                                $this->Universidad_function_model->updateCMD($cmd);
                                 
                                 if($montoAinsertar == 0 ){
                                     $cmd_pago_comision_ind="UPDATE pago_comision_ind 
@@ -167,17 +167,17 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     WHERE id_pago_i=$id";
                                     // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
                                 } 
-                                $this->Universidad_model->updateCMD($cmd_pago_comision_ind);
-                                // $dat =  $this->Universidad_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento);
+                                $this->Universidad_function_model->updateCMD($cmd_pago_comision_ind);
+                                // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento);
                                 $cmd_inserPago ="INSERT INTO pago_comision_ind
                                 (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) 
                                 VALUES ($comision->id_comision, $usuario_por_CONTADOR, $Restante, GETDATE(), GETDATE(), $monto, 1, 1, 'DESCUENTO NUEVO PAGO', 0 ,null, null)";
                                 $insert_id = $this->db->insert_id();
 
-                                $this->Universidad_model->updateCMD($cmd_inserPago);
+                                $this->Universidad_function_model->updateCMD($cmd_inserPago);
 
                                 $cmd_historial = "INSERT INTO historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
-                                $this->Universidad_model->updateCMD($cmd_historial);
+                                $this->Universidad_function_model->updateCMD($cmd_historial);
                                 
                             }else{
                             // llave final 232332
@@ -202,7 +202,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 WHERE id_descuento = $id_descuento 
                                 AND estatus IN (1, 0)";
 
-                                $this->Universidad_model->updateCMD($cmd);
+                                $this->Universidad_function_model->updateCMD($cmd);
 
                                 $cmd_relacion_universidad = "INSERT INTO realcion_universidad_pago  
                                 values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
@@ -216,7 +216,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     id_pago_i=$id";
                                     $cmd_historial = "INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
                                     $sumaMontos = $sumaMontos + $monto;
-                                $this->Universidad_model->updateCMD($cmd_relacion_universidad);
+                                $this->Universidad_function_model->updateCMD($cmd_relacion_universidad);
 
                                     
                             }
@@ -246,7 +246,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                             $Restante = $monto - $montoAinsertar;
                             if( !is_null($id) || $id != '' )
                             {
-                                $comision = $this->Universidad_model->obtenerID($id);
+                                $comision = $this->Universidad_function_model->obtenerID($id);
                             }else{
                                 echo('error');
                             }
@@ -260,12 +260,12 @@ class ScheduleTasks_Universidad extends CI_Controller
                             WHERE id_descuento = $id_descuento 
                             AND estatus IN (1, 0)";
                             
-                            $this->Universidad_model->updateCMD($cmd);
+                            $this->Universidad_function_model->updateCMD($cmd);
 
                             $cmd_relacion_universidad = "INSERT INTO realcion_universidad_pago  
                             values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
                             
-                            $this->Universidad_model->updateCMD($cmd_relacion_universidad);
+                            $this->Universidad_function_model->updateCMD($cmd_relacion_universidad);
                             
                             if($montoAinsertar == 0 ){
                                 echo('es 0 ');
@@ -292,11 +292,11 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
                             }
 
-                            $this->Universidad_model->updateCMD($cmd_pago_comision_ind);
+                            $this->Universidad_function_model->updateCMD($cmd_pago_comision_ind);
 
                             $cmd_historial = "INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
                             
-                            $this->Universidad_model->updateCMD($cmd_historial);
+                            $this->Universidad_function_model->updateCMD($cmd_historial);
                             
                             $cmd_inserPago ="INSERT INTO pago_comision_ind
                             (id_comision, id_usuario, abono_neodata, fecha_abono,
@@ -309,15 +309,15 @@ class ScheduleTasks_Universidad extends CI_Controller
                             'DESCUENTO NUEVO PAGO_ automatizado', 0 ,null, null)";
                             // $insert_id = $this->db->insert_id();
                             // $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
-                            $this->Universidad_model->updateCMD($cmd_inserPago);
+                            $this->Universidad_function_model->updateCMD($cmd_inserPago);
 
                         }else{
 
                         }
-                        // $dat =  $this->Universidad_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento,$cmd);
+                        // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento,$cmd);
 
-                        // $dat =  $this->Universidad_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
-                        // $dat =  $this->Universidad_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata, $id_descuento);
+                        // $dat =  $this->Universidad_function_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$usuario,$id_descuento);
+                        // $dat =  $this->Universidad_function_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata, $id_descuento);
                     }
                     // if ($this->db->trans_status() === TRUE)
                     //     {
