@@ -1122,7 +1122,7 @@ function mostrar(id){
                                     Para ver el cambio, es necesario que se cierre el modal y se vuelva abrir.
                             </span>
 							</div>
-                            <div class="col-md-8 hide" id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
+                            <div class="col-md-8 " id="evidenciaNuevadiv_${idx.id_motivo}" name="evidenciaNuevadiv_${idx.id_motivo}" style="padding-top:30px;" >
 								<div class="file-gph">
 									<input class="d-none" type="file" id="evidenciaNueva_${idx.id_motivo}" onchange="changeName(this)" name="evidenciaNueva_${idx.id_motivo}"  >
 									<input class="file-name overflow-text" id="evidenciaNueva_${idx.id_motivo}" type="text" placeholder="No has seleccionada nada aún" readonly="">

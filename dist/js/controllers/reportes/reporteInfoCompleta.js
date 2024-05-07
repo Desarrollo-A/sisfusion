@@ -22,7 +22,7 @@ LotesPorClienteAll = [];
                 titleAttr: 'Registro lotes total',
                 title: "Registro lotes total",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11   , 12, 13, 14, 15, 16],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + LotesPorClienteAll[columnIdx] + ' ';

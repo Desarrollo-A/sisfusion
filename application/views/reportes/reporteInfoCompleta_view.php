@@ -1,3 +1,6 @@
+
+
+
 <div class="tab-pane" id="tabLotesCompletos">
     <div class="col-md-12">
         <div class="card card-plain">
@@ -7,7 +10,7 @@
                 <div class="material-datatables">
                     <div class="material-datatables">
                         <div class="form-group">
-                            <table id="tablaHistorialCompleta" class="table">
+                            <table class="table-striped table-hover" id="tablaHistorialCompleta" name="tablaHistorialCompleta">
                                 <thead>
                                     <tr>
                                         <th>ID CLIENTE</th>

@@ -8,7 +8,7 @@ class Incidencias_model extends CI_Model {
     }
     
     public function getInCommissions($idlote){
-        $query = $this->db-> query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede,sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata
+        $query = $this->db-> query("(SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede,sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
         FROM  lotes l
         INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
@@ -23,9 +23,11 @@ class Incidencias_model extends CI_Model {
         LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
         LEFT JOIN  usuarios su ON su.id_usuario = cl.id_subdirector
         LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+		LEFT JOIN mensualidad_cliente mc ON mc.id_cliente = l.idCliente
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 AND l.idLote = $idlote)
         UNION
-        (SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede, sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ', cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata
+        (SELECT DISTINCT(l.idLote), l.idStatusContratacion, l.registro_comision, cl.id_cliente, cl.id_sede, sd.nombre, CONCAT(cl.nombre,' ',cl.apellido_paterno,' ', cl.apellido_materno) nombre_cliente, l.nombreLote, l.idStatusContratacion, res.nombreResidencial, cond.nombre AS nombreCondominio, l.tipo_venta, l.referencia, vc.id_cliente AS compartida, l.totalNeto, l.totalNeto2, l.plan_enganche, plane.nombre AS enganche_tipo, cl.lugar_prospeccion, ae.id_usuario AS id_asesor, CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, co.id_usuario AS id_coordinador, CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador, ge.id_usuario AS id_gerente, CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, su.id_usuario AS id_subdirector, CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, di.id_usuario AS id_director, CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, pc.fecha_modificacion, (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, convert(nvarchar, pc.fecha_modificacion, 6) date_final, convert(nvarchar, pc.fecha_modificacion, 6)  fecha_sistema, convert(nvarchar, pc.fecha_neodata, 6) fecha_neodata, mc.opcion
         FROM  lotes l
         INNER JOIN  clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN  condominios cond ON l.idCondominio=cond.idCondominio
@@ -40,6 +42,8 @@ class Incidencias_model extends CI_Model {
         LEFT JOIN  usuarios ge ON ge.id_usuario = cl.id_gerente
         LEFT JOIN  usuarios su ON su.id_usuario = cl.id_subdirector
         LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
+        LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+		LEFT JOIN mensualidad_cliente mc ON mc.id_cliente = l.idCliente
         WHERE l.idStatusContratacion BETWEEN 9 AND 15 AND cl.status = 1 AND l.status = 1 AND l.idLote = $idlote AND l.registro_comision IN (0,8))");
         return $query->result();
     }
@@ -972,9 +976,18 @@ class Incidencias_model extends CI_Model {
             }
         }
 
-        public function FunctionName() {
-            
+        public function getMensualidades() {
+            return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (126) AND estatus = 1");
         }
-        
 
+        public function updateMensualidades($mensualidad, $idCliente, $idLote, $idUsuarioM) {
+            $query = $this->db->query("UPDATE mensualidad_cliente SET opcion=$mensualidad, modificado_por=$idUsuarioM, fecha_modificacion=GETDATE() WHERE id_cliente = $idCliente  AND id_lote= $idLote");
+            
+            if ($query) {
+                return 1;
+            } else {
+                return 0;
+            }
+
+        }
     }
