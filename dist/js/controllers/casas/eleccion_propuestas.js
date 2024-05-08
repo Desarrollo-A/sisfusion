@@ -27,14 +27,19 @@ function show_propuestas(proceso) {
         })
     }
 
-    let propuestas = []
+    let cotizaciones = []
+    let fechas = [
+        { value: 1, title: 'Fecha', subtitle: proceso.fechaFirma1 },
+        ...proceso.fechaFirma2 ? [{ value: 2, title: 'Fecha', subtitle: proceso.fechaFirma2 }] : [],
+        ...proceso.fechaFirma3 ? [{ value: 3, title: 'Fecha', subtitle: proceso.fechaFirma3 }] : [],
+    ]
 
     $.ajax({
         type: 'GET',
-        url: `${general_base_url}casas/options_propuestas?id=${proceso.idProcesoCasas}`,
+        url: `${general_base_url}casas/get_cotizaciones?id=${proceso.idProcesoCasas}`,
         async: false,
         success: function (response) {
-            propuestas = response
+            cotizaciones = response
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
@@ -43,7 +48,8 @@ function show_propuestas(proceso) {
 
     form.fields = [
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
-        new OptionField({id: 'idPropuesta', label: '', data: propuestas}),
+        new OptionField({id: 'cotizacion', label: '', data: cotizaciones}),
+        new OptionField({id: 'fecha', label: '', data: fechas}),
     ]
 
     form.show()
@@ -102,7 +108,7 @@ function show_upload(data) {
     //console.log(data)
 
     let form = new Form({
-        title: `Subir deposito de anticipo`,
+        title: `Subir depósito de anticipo`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -113,7 +119,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -135,22 +141,22 @@ function show_upload(data) {
     form.show()
 }
 
-back_to_carga_titulos = function(data) {
+back_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Carga de títulos"</b>?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Propuestas para firma"</b>?`,
         onSubmit: function(data){
             //console.log(data)
 
             $.ajax({
                 type: 'POST',
-                url: `back_to_carga_titulos`,
+                url: `back_to_propuesta_firma`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a carga de titulos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a propuestas para firma.`, "success");
         
                     table.reload()
 
@@ -163,7 +169,7 @@ back_to_carga_titulos = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+            new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
 
@@ -199,6 +205,24 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
+    { data: 'notaria' },
+    { data: function(data){
+        let fecha = 'No escogida'
+
+        switch(data.fechaElegida){
+        case 1:
+            fecha = data.fechaFirma1
+            break
+        case 2:
+            fecha = data.fechaFirma2
+            break
+        case 3:
+            fecha = data.fechaFirma3
+            break
+        }
+
+        return fecha
+    } },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 2)
@@ -215,9 +239,6 @@ let columns = [
 
         return text
     } },
-    { data: 'notaria' },
-    { data: 'fechaFirma' },
-    { data: 'costo' },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: show_propuestas, data})
         let upload_button = new RowButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
@@ -226,12 +247,12 @@ let columns = [
         let pass_button = ''
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
-            if(data.idPropuesta){
+            if(data.fechaElegida && data.cotizacionElegida){
                 pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_validacion_contraloria, data})
             }
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_titulos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_propuesta_firma, data})
 
         return `<div class="d-flex justify-center">${propuestas_button}${view_button}${upload_button}${pass_button}${back_button}</div>`
     } },

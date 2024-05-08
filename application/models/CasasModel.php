@@ -2,10 +2,14 @@
 
 class CasasModel extends CI_Model
 {
+    private $idUsuario;
+
     function __construct(){
         parent::__construct();
 
         $this->load->library(['session']);
+
+        $this->idUsuario = $this->session->userdata('id_usuario');
     }
 
     public function getProceso($idProcesoCasas){
@@ -266,12 +270,15 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function getPropuestasOptions($idProcesoCasas){
-        $query = "SELECT idPropuesta AS value, CONCAT('Notaria: ',oxc.nombre) AS title, CONCAT('Fecha de firma: ',ppc.fechaFirma) AS subtitle, 
-        CONCAT('Consto: $', ppc.costo) AS description  
-        FROM propuestas_proceso_casas ppc
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 129
-        WHERE idProcesoCasas = $idProcesoCasas";
+    public function getCotizacionesOptions($idProcesoCasas){
+        $query = "SELECT
+            'Cotizacion' AS title,
+            cpc.nombre AS subtitle,
+            cpc.idCotizacion AS value
+        FROM cotizacion_proceso_casas cpc
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -560,6 +567,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
+    /*
     public function getListaCargaTitulos(){
         $query = "SELECT
         pc.*,
@@ -597,6 +605,7 @@ class CasasModel extends CI_Model
 
         return $this->db->query($query)->result();
     }
+    */
 
     public function getListaEleccionPropuestas(){
         $query = "SELECT
@@ -606,15 +615,12 @@ class CasasModel extends CI_Model
         doc.documento,
         doc.idDocumento,
         pro.idPropuesta,
-        CASE
-			 WHEN oxc.nombre IS NULL THEN 'Sin elegir'
-			 ELSE oxc.nombre
-		END AS notaria,
-        pro.fechaFirma,
-        CASE
-			 WHEN pro.costo IS NULL THEN ''
-			 ELSE CONCAT('$', pro.costo)
-		END AS costo,
+        oxc.nombre AS notaria,
+        pro.fechaElegida,
+        pro.fechaFirma1,
+        pro.fechaFirma2,
+        pro.fechaFirma3,
+        cpc.idCotizacion AS cotizacionElegida,
         con.nombre AS condominio,
 	        resi.descripcion AS proyecto,
 	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
@@ -629,8 +635,9 @@ class CasasModel extends CI_Model
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
-        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
+        LEFT JOIN cotizacion_proceso_casas cpc ON cpc.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1 AND elegida = 1
+        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.notaria AND oxc.id_catalogo = 129
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
@@ -659,32 +666,32 @@ class CasasModel extends CI_Model
         pc.*,
         lo.nombreLote,
         pro.idPropuesta,
-        oxc.nombre AS notaria,
-        pro.fechaFirma,
-        pro.costo,
+        pro.fechaFirma1,
+        pro.fechaFirma2,
+        pro.fechaFirma3,
+        CASE WHEN cpc.archivos_faltantes > 0 THEN 0 ELSE 1 END AS cotizaciones,
         con.nombre AS condominio,
-	        resi.descripcion AS proyecto,
-	        CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
-	        (CASE
-	            WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
-	            ELSE 'Sin asignar'
-	        END) AS nombreAsesor,
-	        CASE
-				 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
-				 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
-			END AS gerente
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            (CASE
+                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                ELSE 'Sin asignar'
+            END) AS nombreAsesor,
+            CASE
+                    WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                    ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+            END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN propuestas_proceso_casas pro ON pro.idPropuesta = pc.idPropuesta AND pro.status = 1
-        LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pro.notaria AND oxc.id_catalogo = 129
+        LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
         WHERE
-            pc.proceso > 6
-        AND pc.proceso < 8
+            pc.proceso = 5
         AND pc.status = 1 AND cli.status = 1";
 
         return $this->db->query($query)->result();
@@ -1055,28 +1062,38 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function getPropuestas($idProcesoCasas){
+    public function getCotizaciones($idProcesoCasas){
 
         $query = "SELECT
-            ppc.idPropuesta, 
-            oxc.id_opcion AS id_notaria,
-            oxc.nombre AS notaria,
-            ppc.fechaFirma, CONCAT('$', ppc.costo) AS costo
-        FROM propuestas_proceso_casas ppc
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = ppc.notaria AND oxc.id_catalogo = 129
-        WHERE ppc.idProcesoCasas = $idProcesoCasas";
+            cpc.idCotizacion,
+            cpc.idProcesoCasas,
+            cpc.archivo,
+            CASE
+                 WHEN cpc.nombre IS NULL THEN 'COTIZACION NO SUBIDA'
+                 ELSE cpc.nombre
+            END AS nombre
+        FROM cotizacion_proceso_casas cpc
+        WHERE
+            cpc.idProcesoCasas = $idProcesoCasas
+        AND status = 1";
 
         return $this->db->query($query)->result();
     }
 
-    public function addPropuesta($idProcesoCasas, $notaria, $fechaFirma){
-        $idModificacion = $this->session->userdata('id_usuario');
+    public function addPropuesta($idProcesoCasas){
+        $query = "UPDATE propuestas_proceso_casas
+        SET
+            status = 0,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        $this->db->query($query);
 
         $query = "INSERT INTO propuestas_proceso_casas
         (
             idProcesoCasas,
-            notaria,
-            fechaFirma,
             idCreacion,
             idModificacion,
             fechaModificacion
@@ -1084,8 +1101,39 @@ class CasasModel extends CI_Model
         VALUES
         (
             $idProcesoCasas,
-            $notaria,
-            '$fechaFirma',
+            $this->idUsuario,
+            $this->idUsuario,
+            GETDATE()
+        )";
+
+        return $this->db->query($query);
+    }
+
+    public function removeCotizaciones($idProcesoCasas){
+        $query = "UPDATE cotizacion_proceso_casas
+        SET
+            status = 0,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        $this->db->query($query);
+    }
+
+    public function addCotizacion($idProcesoCasas){
+        $idModificacion = $this->session->userdata('id_usuario');
+
+        $query = "INSERT INTO cotizacion_proceso_casas
+        (
+            idProcesoCasas,
+            idCreacion,
+            idModificacion,
+            fechaModificacion
+        )
+        VALUES
+        (
+            $idProcesoCasas,
             $idModificacion,
             $idModificacion,
             GETDATE()
@@ -1094,33 +1142,55 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function updatePropuesta($idPropuesta, $notaria, $fechaFirma){
+    public function updatePropuesta($idPropuesta, $fechaFirma1, $fechaFirma2, $fechaFirma3){
         $query = "UPDATE propuestas_proceso_casas
         SET
-            notaria = $notaria,
-            fechaFirma = '$fechaFirma'
+            fechaFirma1 = NULLIF('$fechaFirma1', ''),
+            fechaFirma2 = NULLIF('$fechaFirma2', ''),
+            fechaFirma3 = NULLIF('$fechaFirma3', '')
         WHERE
             idPropuesta = $idPropuesta";
 
         return $this->db->query($query);
     }
 
-    public function setPropuesta($idProcesoCasas, $idPropuesta){
+    public function setPropuesta($idProcesoCasas, $idCotizacion, $fechaElegida){
+        $query = "UPDATE cotizacion_proceso_casas
+        SET
+            elegida = 1
+        WHERE
+            idCotizacion = $idCotizacion";
+
+        $this->db->query($query);
+
+        $query = "UPDATE propuestas_proceso_casas
+        SET
+            fechaElegida = $fechaElegida
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND status = 1";
+
+        return $this->db->query($query);
+    }
+
+    public function setTipoCredito($idProcesoCasas, $tipoCredito, $notaria){
         $query = "UPDATE proceso_casas
         SET
-            idPropuesta = $idPropuesta
+            tipoCredito = $tipoCredito,
+            notaria = $notaria
         WHERE
             idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }
 
-    public function setTipoCredito($idProcesoCasas, $tipoCredito){
-        $query = "UPDATE proceso_casas
+    public function updateCotizacion($idCotizacion, $nombre, $archivo){
+        $query = "UPDATE cotizacion_proceso_casas
         SET
-            tipoCredito = $tipoCredito
+            nombre = '$nombre',
+            archivo = NULLIF('$archivo', '')
         WHERE
-            idProcesoCasas = $idProcesoCasas";
+            idCotizacion = $idCotizacion";
 
         return $this->db->query($query);
     }

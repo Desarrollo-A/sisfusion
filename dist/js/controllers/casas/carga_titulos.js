@@ -93,7 +93,7 @@ function show_upload_coti(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/upload_documento`,
+                url: `${general_base_url}casas/upload_cotizaciones`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -111,11 +111,9 @@ function show_upload_coti(data) {
         },
         fields: [
             new HiddenField({ id: 'id_proceso',      value: data.idProcesoCasas }),
-            new HiddenField({ id: 'id_documento',    value: data.idDocumento }),
-            new HiddenField({ id: 'name_documento',  value: data.documento }),
-            new FileField({   id: 'file_uploaded_cotizacion',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }),
+            new FileField({   id: 'file_cotizacion1',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }),
             data.tipoCredito == 2 ?
-            new FileField({   id: 'file_uploaded_cotizacion2',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] })
+            new FileField({   id: 'file_cotizacion2',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] })
             : ''
         ],
     })

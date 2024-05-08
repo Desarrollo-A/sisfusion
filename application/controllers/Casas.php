@@ -180,7 +180,7 @@ class Casas extends BaseController {
         $this->load->view("casas/ingresar_adeudos");
     }
 
-    public function propuestas($proceso){
+    public function cotizaciones($proceso){
         $lote = $this->CasasModel->getProceso($proceso);
 
         $data = [
@@ -188,7 +188,7 @@ class Casas extends BaseController {
         ];
 
         $this->load->view('template/header');
-        $this->load->view("casas/propuestas", $data);
+        $this->load->view("casas/cotizaciones", $data);
     }
 
     public function archivo($name){
@@ -247,12 +247,12 @@ class Casas extends BaseController {
         $this->json($notarias);
     }
 
-    public function options_propuestas(){
+    public function get_cotizaciones(){
         $id = $this->input->get('id');
 
-        $propuestas = $this->CasasModel->getPropuestasOptions($id);
+        $cotizaciones = $this->CasasModel->getCotizacionesOptions($id);
 
-        $this->json($propuestas);
+        $this->json($cotizaciones);
     }
 
     public function lotes(){
@@ -430,8 +430,6 @@ class Casas extends BaseController {
     }
 
     public function upload_documento(){
-        $this->form();
-
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
@@ -483,7 +481,13 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo);
+        // Aqui se asignara notaria si mas adelante nos piden poner mas notarias
+        $notaria = 1;
+        if($tipo == 2){
+            $notaria = 2;
+        }
+
+        $is_ok = $this->CasasModel->setTipoCredito($id, $tipo, $notaria);
 
         if($is_ok){
             $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
@@ -530,8 +534,6 @@ class Casas extends BaseController {
     }
 
     public function to_documentacion_cliente(){
-        $this->form();
-
         $id = $this->form('id');
         $comentario = $this->form('comentario');
 
@@ -552,6 +554,7 @@ class Casas extends BaseController {
 
         if(!$is_ok){
             http_response_code(500);
+            $this->json([]);
         }
 
         $new_status = 3;
@@ -691,7 +694,7 @@ class Casas extends BaseController {
         $this->json($lotes);
     }
 
-    public function to_titulacion(){
+    public function to_propuesta_firma(){
         $this->form();
 
         $id = $this->form('id');
@@ -699,39 +702,47 @@ class Casas extends BaseController {
 
         if(!isset($id)){
             http_response_code(400);
-        }
-
-        $documentos = $this->CasasModel->getDocumentos([17]);
-
-        $is_ok = true;
-        foreach ($documentos as $key => $documento) {
-            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
-
-            if(!$is_ok){
-                break;
-            }
+            $this->json([]);
         }
 
         $new_status = 5;
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $cotizaciones = 1;
+        if($proceso->tipoCredito == 2){
+            $cotizaciones = 2;
+        }
+
+        $is_ok = $this->CasasModel->addPropuesta($id);
+        
+        $this->CasasModel->removeCotizaciones($id);
+        for ($i = 1; $i <= $cotizaciones; $i++) {
+            $is_ok = $this->CasasModel->addCotizacion($id);
+        }
 
         if($is_ok){
-            $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
-            
-            $this->json([]);
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+
+            if($is_ok){
+                $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
+            }else{
+                http_response_code(404);
+            }
         }else{
-            http_response_code(404);
+            http_response_code(500);
         }
+
+        $this->json([]);
     }
 
+    /*
     public function lista_carga_titulos(){
         $lotes = $this->CasasModel->getListaCargaTitulos();
 
         $this->json($lotes);
     }
+    */
 
     public function to_propuestas(){
         $this->form();
@@ -775,7 +786,7 @@ class Casas extends BaseController {
         $this->json($lotes);
     }
 
-    public function back_to_carga_titulos(){
+    public function back_to_propuesta_firma(){
         $this->form();
 
         $id = $this->form('id');
@@ -1308,58 +1319,87 @@ class Casas extends BaseController {
         http_response_code(404);
     }
 
-    public function lista_propuestas($proceso){
-        $propuestas = $this->CasasModel->getPropuestas($proceso);
+    public function lista_cotizaciones($proceso){
+        $propuestas = $this->CasasModel->getCotizaciones($proceso);
 
         $this->json($propuestas);
     }
 
-    public function save_propuesta(){
-        $form = $this->form();
+    public function save_propuestas(){
+        $idProcesoCasas = $this->form('idProcesoCasas');
+        $idPropuesta = $this->form('idPropuesta');
+        $fechaFirma1 = $this->form('fechaFirma1');
+        $fechaFirma2 = $this->form('fechaFirma2');
+        $fechaFirma3 = $this->form('fechaFirma3');
 
-        if(!$form->idProcesoCasas || !$form->notaria || !$form->fecha){
+        if(!$idProcesoCasas || !$idPropuesta || !$fechaFirma1){
             http_response_code(400);
+            $this->json([]);
         }
 
-        $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
+        $proceso = $this->CasasModel->getProceso($idProcesoCasas);
 
-        if(isset($form->idPropuesta)){
-            $is_ok = $this->CasasModel->updatePropuesta($form->idPropuesta, $form->notaria, $form->fecha);
-
-            $descripcion = "Se actualizo propuesta: $form->idPropuesta";
-        }else{
-            $is_ok = $this->CasasModel->addPropuesta($form->idProcesoCasas, $form->notaria, $form->fecha);
-
-            $descripcion = "Se agrego propuesta";
-        }
+        $is_ok = $this->CasasModel->updatePropuesta($idPropuesta, $fechaFirma1, $fechaFirma2, $fechaFirma3);
 
         if($is_ok){
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, $descripcion);
-
-            $this->json([]);
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se actualizo propuesta: $idPropuesta");
         }else{
             http_response_code(404);
         }
+
+        $this->json([]);
     }
 
     public function set_propuesta(){
         $form = $this->form();
 
-        if(!$form->idProcesoCasas || !$form->idPropuesta){
+        if(!$form->idProcesoCasas || !$form->cotizacion || !$form->fecha){
             http_response_code(400);
+            $this->json([]);
         }
 
         $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
 
-        $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta);
+        $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->cotizacion, $form->fecha);
 
-        if($is_ok){
-            
-            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono propuesta: $form->idPropuesta");
-
-            $this->json([]);
+        if($is_ok){            
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono cotizacion: $form->cotizacion");
         }else{
             http_response_code(404);
         }
+
+        $this->json([]);
+    }
+
+    public function save_cotizacion(){
+        $form = $this->form();
+
+        if(!$form->idCotizacion || !$form->nombre){
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
+
+        $file = $this->file('archivo');
+        $filename = '';
+
+        if($file){
+            $name_documento = "COTIZACION $form->idCotizacion";
+
+            $filename = $this->generateFileName($name_documento, $proceso->nombreLote, $proceso->idProcesoCasas, $file->name);
+
+            $uploaded = $this->upload($file->tmp_name, $filename);
+        }
+
+        $is_ok = $this->CasasModel->updateCotizacion($form->idCotizacion, $form->nombre, $filename);
+
+        if($is_ok){
+            $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se guardo cotizacion: $form->idCotizacion");
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
     }
 }

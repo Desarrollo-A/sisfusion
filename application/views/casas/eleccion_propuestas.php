@@ -30,10 +30,9 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>VIGENCIA</th>
-                                            <th>NOTARIA ELEGIDA</th>
+                                            <th>NOTARIA</th>
                                             <th>FECHA DE FIRMA</th>
-                                            <th>COSTO</th>
+                                            <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

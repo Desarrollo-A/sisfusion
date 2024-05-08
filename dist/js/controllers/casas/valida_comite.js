@@ -33,7 +33,7 @@ back_to_documentos = function(data) {
     form.show()
 }
 
-pass_to_titulacion = function(data) {
+pass_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
@@ -43,7 +43,7 @@ pass_to_titulacion = function(data) {
 
             $.ajax({
                 type: 'POST',
-                url: `to_titulacion`,
+                url: `to_propuesta_firma`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -122,7 +122,7 @@ let columns = [
 
         let pass_button = ''
         if(data.documentos >= 1){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_propuesta_firma, data})
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
