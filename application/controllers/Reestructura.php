@@ -523,7 +523,7 @@ class Reestructura extends CI_Controller{
                     //Reubicación en los mismos proyectos
                     $statusLote = 20;
                 }
-                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] == 14 || $dataLoteDis[$index]['idResidencial'] == 25 || $dataLoteDis[$index]['idResidencial'] == 22) ){
+                else if( $proceso == 2 && ($dataLoteDis[$index]['idResidencial'] != 21 || $dataLoteDis[$index]['idResidencial'] != 14 || $dataLoteDis[$index]['idResidencial'] != 25 || $dataLoteDis[$index]['idResidencial'] != 22) ){
                     //Reubicación normal
                     $statusLote = 16;
                 }
