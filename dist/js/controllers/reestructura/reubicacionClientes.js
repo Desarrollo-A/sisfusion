@@ -1606,7 +1606,7 @@ let BUTTONREGRESO = '';
         }
 
     }
-    if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+    if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0 && FLAGPROCESOCONTRALORIA === 1) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
 
         if(contratoFirmadoFile===null)
             botonJuridico = '';
