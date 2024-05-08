@@ -602,8 +602,6 @@ class Reestructura extends CI_Controller{
                 $lotesOrigenUpdated = $this->General_model->updateRecord("lotes", $updateLoteOriginal, "idLote", $idLoteOriginal);
                 $insert = $this->General_model->addRecord("historial_preproceso_lote", $insertData); // insert de 0 en historial preproceso de lotes
             }
-            
-            
 
             if (!$lotesOrigenUpdated) {
                 $this->db->trans_rollback();
@@ -2328,7 +2326,6 @@ class Reestructura extends CI_Controller{
     public function setLoteDisponible()
     {
         $tipoEstatusRegreso = $this->input->post('tipoEstatusRegreso');
-        $id_usuario = $this->input->post('id_usuario');
         $tipoProceso = $this->input->post('tipoProceso');
         $idLote = $this->input->post('idLote');
         $id_pxl = $this->input->post('id_pxl');
@@ -2338,7 +2335,7 @@ class Reestructura extends CI_Controller{
         $idProyecto = $getProyecto[0]['idProyecto'];
 
         if($tipoEstatusRegreso == 1){
-            if($idProyecto != 21){
+            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
                 $statusLote = 15;
             }
             else{
@@ -2346,7 +2343,7 @@ class Reestructura extends CI_Controller{
             }
         }
         else{
-            if($idProyecto != 21){
+            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
                 $statusLote = 1;
             }
             else{
@@ -2356,8 +2353,8 @@ class Reestructura extends CI_Controller{
 
         $dataUpdateLote = array(
             'idStatusLote' => $statusLote,
-            'usuario' => $id_usuario,
-            'estatus_preproceso' => ($tipoProceso == 3) ? 0 : 1
+            'usuario' => $this->session->userdata('id_usuario'),
+            'estatus_preproceso' => 0
         );
 
         $responseUpdateLote = $this->General_model->updateRecord("lotes", $dataUpdateLote, "idLote", $idLote);
@@ -3100,8 +3097,8 @@ class Reestructura extends CI_Controller{
         echo json_encode($registros, JSON_NUMERIC_CHECK);
     }
 
-    public function getHistorialPorLote($idLote) {
-        echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote));
+    public function getHistorialPorLote($idLote, $flagFusion) {
+        echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote, $flagFusion));
     }
     
     public function quitarLoteFusion(){
