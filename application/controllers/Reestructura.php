@@ -3098,7 +3098,8 @@ class Reestructura extends CI_Controller{
     }
 
     public function getHistorialPorLote($idLote, $flagFusion) {
-        echo json_encode($this->Reestructura_model->getHistorialPorLote($idLote, $flagFusion));
+        $arrayIdLote = ( explode( ',', $idLote ));
+        echo json_encode($this->Reestructura_model->getHistorialPorLote($arrayIdLote[0], $flagFusion));
     }
     
     public function quitarLoteFusion(){
