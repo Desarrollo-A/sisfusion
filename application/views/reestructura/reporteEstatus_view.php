@@ -58,6 +58,7 @@
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th>
                                                 <th>FECHA ÚLTIMO MOVIMIENTO</th>
+                                                <th>FECHA ESTATUS 2</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
