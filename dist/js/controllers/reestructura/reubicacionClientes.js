@@ -1398,7 +1398,6 @@ const botonesAccionReubicacion = (d) => {
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
     const contratoFirmadoFile =  d.contratoFirmado;    //funciona para fusion y no funcion
 
-
     let editar = 0;
     let btnShow = 'fa-upload';
     let btnContratoFirmado = 'fa-file-upload';

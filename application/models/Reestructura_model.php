@@ -858,6 +858,9 @@ class Reestructura_model extends CI_Model
                     WHERE col_afect = 'totalNeto2'
             )
                         SELECT
+                            tipoV = 1,
+                            cl.id_cliente,
+                            lo.tipo_estatus_regreso,
                             oxc0.nombre tipoProceso,
                             UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
                             co.nombre nombreCondominio,
@@ -902,7 +905,8 @@ class Reestructura_model extends CI_Model
                             END fechaEstatus2,
                             ( SELECT TOP 1 modificado FROM historial_lotes WHERE idLote = lo.idLote ORDER BY idHistorialLote DESC ) as ultiModificacion 
                         FROM( 
-                            SELECT lot. idLote, lot.nombreLote, lot.sup, aud.anterior, lot.idCliente, lot.idCondominio, lot.idStatusLote, lot.idStatusContratacion, lot.idMovimiento, lot.status FROM lotes lot 
+                            SELECT lot. idLote, lot.nombreLote, lot.sup, aud.anterior, lot.idCliente, lot.idCondominio, lot.idStatusLote, lot.idStatusContratacion, lot.idMovimiento, 
+                            lot.status, lot.tipo_estatus_regreso FROM lotes lot 
                             LEFT JOIN ( SELECT TOP 1 anterior, aud.fecha_creacion, id_parametro FROM auditoria aud INNER JOIN lotes lot ON lot.idLote = aud.id_parametro WHERE col_afect = 'totalNeto2' AND id_parametro = lot.idLote order by aud.fecha_creacion desc ) aud ON aud.id_parametro = lot.idLote 
                         ) lo
                             INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
@@ -923,6 +927,9 @@ class Reestructura_model extends CI_Model
                         UNION ALL
                         SELECT
                         DISTINCT
+                            tipoV = 2,
+                            cl.id_cliente,
+                            lo.tipo_estatus_regreso,
                             oxc0.nombre tipoProceso,
                             UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
                             co.nombre nombreCondominio,
@@ -968,7 +975,7 @@ class Reestructura_model extends CI_Model
                             LEFT JOIN (
                                 SELECT 
                                     ltf.idLotePvOrigen,
-                                    STRING_AGG(ltf.nombreLotes, ', ') lotesOrigen, 
+                                    STRING_AGG(lo2.nombreLote, ', ') lotesOrigen, 
                                     STRING_AGG(lo2.sup, ', ') supLoteOrigen,
                                     SUM(lo2.sup) supSumLoteOrigen,
                                     STRING_AGG(CONVERT(numeric, ltf.totalNeto2), ', ') totalNeto2Sep,
@@ -1494,8 +1501,8 @@ class Reestructura_model extends CI_Model
             STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
             STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
 			CASE 
-                WHEN STRING_AGG(FORMAT(u.modificado, 'd/MMMM/yyyy HH:MM ','es-MX'), ', ' ) IS NULL THEN 'SIN FECHA'
-                ELSE STRING_AGG(FORMAT(u.modificado, 'd/MMMM/yyyy HH:MM ','es-MX'), ', ' ) 
+                WHEN STRING_AGG(FORMAT(u.modificado, 'd/MMMM/yyyy HH:mm ','es-MX'), ', ' ) IS NULL THEN 'SIN FECHA'
+                ELSE STRING_AGG(FORMAT(u.modificado, 'd/MMMM/yyyy HH:mm ','es-MX'), ', ' ) 
             END fechaUltimoMovimiento
             FROM propuestas_x_lote pxl
             INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera IN (1,0) AND lo.solicitudCancelacion != 2
@@ -1549,8 +1556,8 @@ class Reestructura_model extends CI_Model
             lo.referencia referenciaOrigen, 
             lo.idLote idLoteOrigen,
             CASE 
-                WHEN FORMAT(u.modificado, ' d/MMMM/yyyy HH:MM ','es-MX') IS NULL THEN 'SIN FECHA'
-                ELSE FORMAT(u.modificado, ' d/MMMM/yyyy HH:MM ','es-MX') 
+                WHEN FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ','es-MX') IS NULL THEN 'SIN FECHA'
+                ELSE FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ','es-MX') 
             END ultiModificacion,
             CASE WHEN (
               lo.validacionEnganche = 'NULL' 
@@ -2012,8 +2019,16 @@ class Reestructura_model extends CI_Model
     }
 
     public function getClienteAnterior($idLote, $idCliente){
-        $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior FROM clientes cl1 INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2 where cl1.idLote = ? AND cl1.id_cliente = ? ", array($idLote, $idCliente));
-
+        $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
+                                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
+                                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2
+                                    FROM clientes cl1
+                                    INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2
+                                    INNER JOIN lotes lo ON lo.idLote = cl2.idLote
+                                    INNER JOIN lotes lo2 ON lo2.idLote = cl1.idLote
+                                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = cl1.idLote
+                                    LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = cl2.idLote                                
+                                    WHERE cl1.idLote = ? AND cl1.id_cliente = ? ", array($idLote, $idCliente));
         return $query;
     }
 
@@ -2042,7 +2057,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function updateClienteAnterior($idLoteAnterior, $idClienteAnterior){
-        $query = $this->db->query("UPDATE clientes SET status = 1 WHERE idLote = ? AND id_cliente = ?", array($idLoteAnterior, $idClienteAnterior));
+        $query = $this->db->query("UPDATE clientes SET status = 1, proceso = 0 WHERE idLote = ? AND id_cliente = ?", array($idLoteAnterior, $idClienteAnterior));
 
         return $query;
     }
@@ -2055,6 +2070,29 @@ class Reestructura_model extends CI_Model
 
     public function getStatusLote($idLotePv){
         $query = $this->db->query("SELECT TOP 1 anterior FROM auditoria WHERE id_parametro = ? AND col_afect = 'idStatusLote' ORDER BY fecha_creacion DESC", $idLotePv);
+
+        return $query;
+    }
+
+    public function checkLoteOrigen($loteAnterior){
+        $query = $this->db->query('SELECT *FROM lotes WHERE idLote = ');
+
+        return $query;
+    }
+
+    public function getTotalNeto2($loteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+            SELECT
+                anterior,
+                aud.fecha_creacion, 
+                id_parametro,
+                ROW_NUMBER() OVER (PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
+                FROM auditoria aud
+                WHERE col_afect = 'totalNeto2'
+        )
+        SELECT u.anterior FROM lotes lo INNER JOIN UltimoValor u ON u.id_parametro = lo.idLote and u.rn = 1
+        where idLote = ?", $loteAnterior);
 
         return $query;
     }
