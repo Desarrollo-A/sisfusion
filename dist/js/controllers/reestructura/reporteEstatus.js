@@ -21,7 +21,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         titleAttr: 'Lotes para reubicar',
         title: "Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -38,7 +38,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -92,6 +92,11 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         {
             data: function(d) {
                 return `${d.fechaUltimoMovimiento}`;
+            }
+        },
+        {
+            data: function(d) {
+                return `${d.fechaEstatus2}`;
             }
         },
         {
