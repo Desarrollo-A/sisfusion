@@ -3860,7 +3860,20 @@ class Reestructura extends CI_Controller{
         if($dataClienteAnterior->estatusComisiones == 3){ // SE RECALCULAN LAS COMISIONES
             if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){ //ES EL MISMO PLAN SOLO SE RECALCULAN LAS COMISIONES CON EL MENOR PRECIO DEL LOTE
                 $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
-                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
+                if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){
+                    if($dataClienteDestino->totalNeto2 < $dataClienteAnterior->precioOrigen){ // SE HACE EL RECALCULO, YA QUE EL PRECIO CAMBIO
+                        $dataNuevosCalculos = $this->recalculoComision($dataClienteDestino->idCliente, $dataClienteDestino->totalNeto2,$dataClienteDestino->plan_comisio,1);
+                        //RECORRER DATA, MANDAR COMISIÓN TOTAL PARA EL SET DEL UPDATE Y EL ID USUARIO PARA EL WHERE DEL UPDATE, DE IGUAL FORMA EL LOTE Y ID DE CLEINTE DESTINO ANTERIOR PARA REASIGNAR
+
+
+
+                    }else{ // SE MANTIENE TODO IGUAL Y SOLO SE ACTUALIZA EL LOTE Y CLIENTE PARA LAS NUEVAS COMISIONES
+                        $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
+                    }
+                }else{ //REUBICACIÓN EXCEDENTE
+                    $precioLote = $dataClienteDestino->totalNeto2 < $dataClienteAnterior->precioOrigen ? $dataClienteDestino->totalNeto2 :  $dataClienteAnterior->precioOrigen;
+                    $dataNuevosCalculos = $this->recalculoComision($dataClienteDestino->idCliente, $dataClienteDestino->total8P,$dataClienteDestino->plan_comisio,1,$precioLote);
+                }
             }else{
                 //SI EL PLAN COMISIÓN CAMBIA, SE HACE EL RECALCULO DE LAS COMISIONES Y SE REALIZA EL TRASPASO DE LAS ANTERIORES SI ES QUE HAY
                 $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
@@ -3906,7 +3919,9 @@ class Reestructura extends CI_Controller{
         var_dump($dataClienteDestino);
     }
 
-    public function recalculoComision($plan,){
+    public function recalculoComision($idCliente, $totalNeto2, $planComision,$ooamDispersion,$precioParaExcedente = 0){
+        //echo $precioParaExcedente;
+        $dataComisiones = $this->Comisiones_model->porcentajes($idCliente, $totalNeto2, $planComision,$ooamDispersion)->result_array();
         $datosPlan8PAnterior =          
         [
             array(
@@ -3948,7 +3963,47 @@ class Reestructura extends CI_Controller{
                 "porcentaje"=>0.1
             )
         ];
-        porcentajes($idCliente, $totalNeto2, $planComision,$ooamDispersion)
 
+        //echo "----------------------------- <br>";
+        $datosPlan8P =  $planComision == 66 ? $datosPlan8PAnterior : $datosPlan8PNuevo;
+        //var_dump($datosPlan8P);
+        //echo "----------------------------- <br>";
+        for ($i=0; $i < count($dataComisiones) ; $i++) { 
+            if($planComision == 66 || $planComision == 86){
+                $dataComisiones[$i]['id_rol'] = $planComision == 86 && $dataComisiones[$i]['id_usuario'] == 13546 ? 59 : $dataComisiones[$i]['id_rol'];
+                $busqueda =[];
+                for ($j=0; $j < count($datosPlan8P) ; $j++) { 
+                    if($datosPlan8P[$j]['idRol'] == $dataComisiones[$i]['id_rol']){
+              //          echo "zxcz";
+                        $busqueda = $datosPlan8P[$j];
+            //            var_dump($busqueda);
+                        //echo $busqueda['idRol'];
+                        $dataComisiones[$i]['porcentaje_decimal'] = count($busqueda) > 0 ? $dataComisiones[$i]['porcentaje_decimal'] + $busqueda['porcentaje'] : $dataComisiones[$i]['porcentaje_decimal'];
+                        $dataComisiones[$i]['comision_total'] = count($busqueda) > 0 ? ($dataComisiones[$i]['comision_total'] + (($busqueda['porcentaje']/100)) * $precioParaExcedente) : $dataComisiones[$i]['comision_total'];
+                    }
+                }
+          //      echo "----------------------------- <br>";
+            }   
+        }
+       // var_dump($dataComisiones);
+        return $dataComisiones;
+    }
+
+    public function traspasarComisiones($idLote,$idCliente,$planComision,$dataNuevosCalculos,$banderaCambioPlan){
+        $creadoPor = $this->session->userdata('id_usuario');
+
+
+        if($banderaCambioPlan == 1){ //HUBO CAMBIO DE PLAN, SE TOPAN O SE INSERTAN LAS COMISONES
+
+        }else{// SI NO SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
+            for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
+                $this->Reestructura_model->actualizarComisiones($idLote,$idCliente,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
+            }
+        }
+        if(in_array($planComision,array(64,65,84,85))){ 
+
+        }else{//
+
+        }
     }
 }

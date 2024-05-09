@@ -2101,4 +2101,8 @@ class Reestructura_model extends CI_Model
         $sql = "UPDATE comisiones SET id_lote = ?,modificado_por = ? WHERE id_lote = ? AND idCliente = ? ";
         return $this->db->query($sql, [$idLoteActual,$user,$idLoteOriginal, $idClienteOriginal]);  
     }
+    public function actualizarComisiones($idLote,$idCliente,$idComisionista,$comisionTotal,$creadoPor){
+        $sql = "UPDATE comisones SET comision_total= ?,modificado_por= ? WHERE id_lote = ? AND idCliente = ? AND id_usuario  = ?";
+        return $this->db->query($sql, [$comisionTotal,$creadoPor, $idLote,$idCliente,$idComisionista]); 
+    }
 }
