@@ -5,6 +5,7 @@ let form = new Form({
 
 form.onSubmit = function (data) {
     //console.log(data)
+    form.loading(true)
 
     $.ajax({
         type: 'POST',
@@ -13,7 +14,7 @@ form.onSubmit = function (data) {
         contentType: false,
         processData: false,
         success: function (response) {
-            alerts.showNotification("top", "right", "Se asigno el asesor correctamente.", "success");
+            alerts.showNotification("top", "right", "Se asignó el asesor correctamente.", "success");
 
             table.reload()
 
@@ -21,6 +22,8 @@ form.onSubmit = function (data) {
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+            form.loading(false)
         }
     })
 }
@@ -42,7 +45,7 @@ $.ajax({
 function choose_asesor(data) {
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new SelectField({ id: 'asesor', label: 'Asesor', placeholder: 'Selecciona una opcion', data: items }),
+        new SelectField({ id: 'asesor', label: 'Asesor', placeholder: 'Selecciona una opción', data: items }),
     ]
 
     form.show()
@@ -54,6 +57,7 @@ select_asesor = function (data) {
         title: 'Continuar proceso',
         text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -62,7 +66,7 @@ select_asesor = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido puesto para ingresar carta de autorizacion.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido puesto para ingresar carta de autorización.", "success");
 
                     table.reload();
 
@@ -70,6 +74,8 @@ select_asesor = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
 
@@ -90,6 +96,7 @@ cancel_process = function (data) {
         title: 'Cancelar proceso',
         text: `Desea cancelar el proceso del lote ${data.nombreLote}`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -105,6 +112,8 @@ cancel_process = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
 

@@ -5,7 +5,8 @@ function show_propuestas(proceso) {
     })
 
     form.onSubmit = function(data){
-        console.log(data)
+        // console.log(data)
+        form.loading(true)
         
         $.ajax({
             type: 'POST',
@@ -23,6 +24,8 @@ function show_propuestas(proceso) {
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                form.loading(false)
             }
         })
     }
@@ -66,6 +69,7 @@ pass_to_validacion_contraloria = function(data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de contraloria"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -82,6 +86,8 @@ pass_to_validacion_contraloria = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -120,6 +126,7 @@ function show_upload(data) {
         title: `Subir depósito de anticipo`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -136,6 +143,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -157,6 +166,7 @@ back_to_propuesta_firma = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Propuestas para firma"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -173,6 +183,8 @@ back_to_propuesta_firma = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

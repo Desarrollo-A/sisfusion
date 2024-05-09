@@ -5,6 +5,7 @@ pass_to_recepcion_contrato = function(data) {
         text: `¿Marcar contrato del lote ${data.nombreLote} como firmado?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -21,6 +22,8 @@ pass_to_recepcion_contrato = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

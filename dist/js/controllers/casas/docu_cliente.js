@@ -2,9 +2,10 @@ back_to_adeudos = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
+        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentración de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -13,13 +14,15 @@ back_to_adeudos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a concentracion de adeudos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a concentración de adeudos.`, "success");
         
                     table.reload()
                     form.hide();
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -39,9 +42,10 @@ go_to_documentos = function(data) {
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validacion por comite tecnico"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación por comité técnico"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -50,7 +54,7 @@ pass_to_proyecto_ejecutivo = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comite técnico.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comité técnico.", "success");
         
                     table.reload()
 
@@ -58,6 +62,8 @@ pass_to_proyecto_ejecutivo = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -102,7 +108,7 @@ let columns = [
              pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de proyecto', onClick: pass_to_proyecto_ejecutivo, data})
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentracion de adeudos', onClick: back_to_adeudos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
 
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },

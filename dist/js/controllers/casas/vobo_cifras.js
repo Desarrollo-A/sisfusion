@@ -24,6 +24,7 @@ pass_to_expediente_cliente = function(data) {
         text: `¿Aprobar el cierre de cifras del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -40,6 +41,8 @@ pass_to_expediente_cliente = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -60,6 +63,7 @@ back_to_cierre_cifras = function(data) {
         text: `¿Desea regresar el proceso del lote a <b>"Cierre de cifras"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -76,6 +80,8 @@ back_to_cierre_cifras = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

@@ -642,6 +642,8 @@ class Form {
         /* if(!text){
             $('#text-form-modal').hide()
         } */
+
+        $("#ok-button-form-modal").prop('disabled', false)
     }
 
     show() {
@@ -684,5 +686,13 @@ class Form {
 
     hide() {
         $("#form-modal").modal('hide')
+    }
+
+    loading(load){
+        if(load){
+            $("#ok-button-form-modal").prop('disabled', true)
+        }else{
+            $("#ok-button-form-modal").prop('disabled', false)
+        }
     }
 }

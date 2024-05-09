@@ -5,6 +5,7 @@ back_to_adeudos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -20,6 +21,8 @@ back_to_adeudos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

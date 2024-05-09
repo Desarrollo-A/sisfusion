@@ -5,6 +5,7 @@ pass_to_finalizar = function(data) {
         text: `¿Enviar el lote ${data.nombreLote} a para finalizar proceso?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -21,6 +22,8 @@ pass_to_finalizar = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -40,6 +43,7 @@ back_to_firma_contrato = function(data) {
         text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -55,6 +59,8 @@ back_to_firma_contrato = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
