@@ -122,10 +122,10 @@ let columns = [
 
         let pass_button = ''
         if(data.documentos >= 1){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_propuesta_firma, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulación', onClick: pass_to_propuesta_firma, data})
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentación cliente', onClick: back_to_documentos, data})
 
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },

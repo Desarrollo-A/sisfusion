@@ -1,5 +1,5 @@
-let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opcion' })
-let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opcion' })
+let filtro_proyectos = new SelectFilter({ id: 'proyecto', label: 'Proyecto',  placeholder: 'Selecciona una opción' })
+let filtro_condominios = new SelectFilter({ id: 'condominio', label: 'Condominio',  placeholder: 'Selecciona una opción' })
 
 $.ajax({
     type: 'GET',
@@ -87,7 +87,7 @@ select_lote = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignacion.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido enviado a asignación.", "success");
         
                     table.reload();
 
@@ -100,7 +100,7 @@ select_lote = function(data) {
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
-            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opcion', width: '12', data: gerentes }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -137,7 +137,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'gerente' },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignacion', onClick: select_lote, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
 
         return '<div class="d-flex justify-center">' + pass_button + '</div>'
     } },

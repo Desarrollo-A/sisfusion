@@ -135,7 +135,7 @@ let table = new Table({
     buttons:buttons
 })
 
-let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opcion'})
+let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opción'})
 
 filtro_proceso.onChange(function(option){
     // console.log(option)
