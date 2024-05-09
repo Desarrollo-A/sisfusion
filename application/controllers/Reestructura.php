@@ -3995,8 +3995,9 @@ class Reestructura extends CI_Controller{
 
         if($banderaCambioPlan == 1){ //HUBO CAMBIO DE PLAN, SE TOPAN O SE INSERTAN LAS COMISONES
 
-        }else{// SI NO SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
+        }else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
             for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
+                $this->Reestructura_model->actualizarRegistroComision($idLote,$creadoPor);
                 $this->Reestructura_model->actualizarComisiones($idLote,$idCliente,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
             }
         }
