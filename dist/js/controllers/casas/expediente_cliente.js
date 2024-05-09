@@ -12,6 +12,7 @@ pass_to_envio_a_firma = function(data) {
         text: `¿Marcar como recibido el expediente del cliente ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -27,6 +28,8 @@ pass_to_envio_a_firma = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

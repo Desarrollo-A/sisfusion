@@ -4,6 +4,7 @@ back_process = function (data) {
         title: 'Regresar proceso',
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a asignación de cartera?`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -19,6 +20,8 @@ back_process = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -51,6 +54,7 @@ function show_upload(data) {
     let form = new Form({
         title: 'Subir carta de autorización',
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -67,6 +71,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -101,6 +107,7 @@ pass_to_adeudos = function (data) {
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Concentrar adeudos"</b>?`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -117,6 +124,8 @@ pass_to_adeudos = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

@@ -7,6 +7,7 @@ function edit_cotizacion(cotizacion) {
 
     form.onSubmit = function(data){
         //console.log(data)
+        form.loading(true)
 
         $.ajax({
             type: 'POST',
@@ -23,6 +24,8 @@ function edit_cotizacion(cotizacion) {
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                form.loading(false)
             }
         })
     }

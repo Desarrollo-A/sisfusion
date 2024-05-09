@@ -5,6 +5,7 @@ pass_to_solicitud_contratos = function(data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -20,6 +21,8 @@ pass_to_solicitud_contratos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -47,6 +50,7 @@ back_to_adeudos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Documentación del cliente"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -62,6 +66,8 @@ back_to_adeudos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

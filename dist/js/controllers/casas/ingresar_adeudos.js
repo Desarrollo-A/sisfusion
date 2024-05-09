@@ -6,6 +6,7 @@ function set_adeudo(data) {
 
     form.onSubmit = function(data){
         //console.log(data)
+        form.loading(true)
 
         $.ajax({
             type: 'POST',
@@ -23,6 +24,8 @@ function set_adeudo(data) {
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                form.loading(false)
             }
         })
     }

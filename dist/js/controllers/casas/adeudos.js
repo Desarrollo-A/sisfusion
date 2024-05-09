@@ -22,6 +22,7 @@ pass_to_docu_cliente = function (data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -37,6 +38,8 @@ pass_to_docu_cliente = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -56,6 +59,7 @@ back_to_carta_auth = function (data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a carta de autorización?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -71,6 +75,8 @@ back_to_carta_auth = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

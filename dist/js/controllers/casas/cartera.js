@@ -78,7 +78,8 @@ select_lote = function(data) {
         title: 'Iniciar proceso', 
         text: `Iniciar proceso de asignación del lote ${data.nombreLote}`,
         onSubmit: function(data){
-            //console.log(data)
+            // console.log(data)
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -95,6 +96,8 @@ select_lote = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

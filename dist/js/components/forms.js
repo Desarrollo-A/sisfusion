@@ -339,6 +339,7 @@ class OptionField{
                         .attr('type', 'radio')
                         .attr('id', id)
                         .attr('name', id)
+                        .attr('checked', true)
                         .val(option.value)
                     )
                     .append(
@@ -401,6 +402,8 @@ class Form{
         /* if(!text){
             $('#text-form-modal').hide()
         } */
+
+        $("#ok-button-form-modal").prop('disabled', false)
     }
 
     show(){
@@ -444,5 +447,13 @@ class Form{
 
     hide(){
         $("#form-modal").modal('hide')
+    }
+
+    loading(load){
+        if(load){
+            $("#ok-button-form-modal").prop('disabled', true)
+        }else{
+            $("#ok-button-form-modal").prop('disabled', false)
+        }
     }
 }

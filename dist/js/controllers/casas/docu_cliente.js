@@ -5,6 +5,7 @@ back_to_adeudos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentración de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -20,6 +21,8 @@ back_to_adeudos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -42,6 +45,7 @@ pass_to_proyecto_ejecutivo = function(data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación por comité técnico"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -58,6 +62,8 @@ pass_to_proyecto_ejecutivo = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

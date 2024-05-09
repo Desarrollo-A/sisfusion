@@ -5,6 +5,7 @@ let form = new Form({
 
 form.onSubmit = function (data) {
     //console.log(data)
+    form.loading(true)
 
     $.ajax({
         type: 'POST',
@@ -21,6 +22,8 @@ form.onSubmit = function (data) {
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+            form.loading(false)
         }
     })
 }
@@ -54,6 +57,7 @@ select_asesor = function (data) {
         title: 'Continuar proceso',
         text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -70,6 +74,8 @@ select_asesor = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
 
@@ -90,6 +96,7 @@ cancel_process = function (data) {
         title: 'Cancelar proceso',
         text: `Desea cancelar el proceso del lote ${data.nombreLote}`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -105,6 +112,8 @@ cancel_process = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
 
