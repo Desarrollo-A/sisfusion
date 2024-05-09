@@ -29,7 +29,7 @@ class ScheduleTasks_Universidad extends CI_Controller
         $hoy = date("Y-m-d");
         $arrayCorreo = array();
         $arrayDatosCorreo = array();
-
+        $comentarioA = 'prueba desdes automatización 1';
         /*CONSULTAMOS LOS PRÉSTAMOS*/
         // $data = $this->db->query("SELECT * FROM vista_Descuentos_Universidad order by id_usuario")->result_array();
         $data = $this->db->query("SELECT * FROM vista_saldo_universidad  order by id_usuario")->result_array();
@@ -161,7 +161,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     descuento_aplicado=1, 
                                     modificado_por= 1, 
                                     fecha_pago_intmex = GETDATE(), 
-                                    comentario= $comentario
+                                    comentario= $comentarioA
                                     WHERE 
                                     id_pago_i=$id";
                                 }else{
@@ -171,7 +171,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     modificado_por=1, 
                                     fecha_pago_intmex = GETDATE(), 
                                     abono_neodata = $montoAinsertar, 
-                                    comentario='$comentario' 
+                                    comentario='$comentarioA' 
                                     WHERE id_pago_i=$id";
                                     // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
                                 } 
@@ -181,13 +181,13 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento);
                                 $cmd_inserPago ="INSERT INTO pago_comision_ind
                                 (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) 
-                                VALUES ($comision->id_comision, $usuario_por_CONTADOR, $Restante, GETDATE(), GETDATE(), $monto, 1, 1, 'DESCUENTO NUEVO PAGO', 0 ,null, null)";
+                                VALUES ($comision->id_comision, $usuario_por_CONTADOR, $Restante, GETDATE(), GETDATE(), $monto, 1, 1, 'DESCUENTO NUEVO PAGO comentario Automatico', 0 ,null, null)";
                                 $insert_id = $this->db->insert_id();
                                 echo('cmd insertPago 186');
                                 echo($cmd_inserPago);
                                 $this->Universidad_function_model->updateCMD($cmd_inserPago);
 
-                                $cmd_historial = "INSERT INTO historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
+                                $cmd_historial = "INSERT INTO historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentarioA')";
                                 $this->Universidad_function_model->updateCMD($cmd_historial);
                                 
                             }else{
@@ -206,7 +206,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 $pago_neodata = $formatear[2];
                                 $num = $i +1;
                                 // inicio
-                                $comentario = 'prueba desdes automatización 1';
+                                
                                 
                                 $cmd = "UPDATE descuentos_universidad 
                                 SET saldo_comisiones = $saldo_comisiones ,  
@@ -227,7 +227,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     descuento_aplicado=1, 
                                     modificado_por= 1, 
                                     fecha_pago_intmex = GETDATE(), 
-                                    comentario= $comentario
+                                    comentario= $comentarioA
                                     WHERE 
                                     id_pago_i=$id";
                                     $cmd_historial = "INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
@@ -300,7 +300,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 descuento_aplicado=1, 
                                 modificado_por= 1, 
                                 fecha_pago_intmex = GETDATE(), 
-                                comentario= $comentario
+                                comentario= $comentarioA
                                 WHERE 
                                 id_pago_i=$id";
                             }else{
@@ -312,7 +312,7 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 modificado_por= 1, 
                                 fecha_pago_intmex = GETDATE(), 
                                 abono_neodata = $montoAinsertar, 
-                                comentario='$comentario' 
+                                comentario='$comentarioA' 
                                 WHERE id_pago_i=$id";
                                 // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
                             }
