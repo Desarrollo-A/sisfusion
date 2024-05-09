@@ -29,9 +29,9 @@ function show_propuestas(proceso) {
 
     let cotizaciones = []
     let fechas = [
-        { value: 1, title: 'Fecha', subtitle: proceso.fechaFirma1 },
-        ...proceso.fechaFirma2 ? [{ value: 2, title: 'Fecha', subtitle: proceso.fechaFirma2 }] : [],
-        ...proceso.fechaFirma3 ? [{ value: 3, title: 'Fecha', subtitle: proceso.fechaFirma3 }] : [],
+        { value: 1, title: proceso.fechaFirma1},
+        ...proceso.fechaFirma2 ? [{ value: 2, title: proceso.fechaFirma2 }] : [],
+        ...proceso.fechaFirma3 ? [{ value: 3, title: proceso.fechaFirma3  }] : [],
     ]
 
     $.ajax({
@@ -46,10 +46,14 @@ function show_propuestas(proceso) {
         }
     })
 
+
     form.fields = [
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
-        new OptionField({id: 'cotizacion', label: '', data: cotizaciones}),
-        new OptionField({id: 'fecha', label: '', data: fechas}),
+        new HiddenField({ id: 'idPropuesta', value: proceso.idPropuesta }),
+        new title({ text: 'Cotizaciones' }),
+        new OptionFieldAndView({ id: 'cotizacion', label: '', data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones' }),
+        new title({ text: fechas.length == 1 ? 'Fecha de firma' : 'Fechas de firma' }),
+        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', data: fechas, style: 'height: 45px' }),
     ]
 
     form.show()
@@ -102,6 +106,11 @@ function show_preview(data) {
         width: 985,
         height: 660
     });
+}
+
+function download_file(archivo) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${archivo}`
 }
 
 function show_upload(data) {

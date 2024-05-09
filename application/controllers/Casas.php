@@ -1353,14 +1353,14 @@ class Casas extends BaseController {
     public function set_propuesta(){
         $form = $this->form();
 
-        if(!$form->idProcesoCasas || !$form->cotizacion || !$form->fecha){
+        if(!$form->idProcesoCasas || !$form->cotizacion || !$form->fecha || !$form->idPropuesta){
             http_response_code(400);
             $this->json([]);
         }
 
         $proceso = $this->CasasModel->getProceso($form->idProcesoCasas);
 
-        $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->cotizacion, $form->fecha);
+        $is_ok = $this->CasasModel->setPropuesta($proceso->idProcesoCasas, $form->idPropuesta, $form->fecha, $form->cotizacion);
 
         if($is_ok){            
             $this->CasasModel->addHistorial($proceso->idProcesoCasas, $proceso->proceso, $proceso->proceso, "Se selecciono cotizacion: $form->cotizacion");
