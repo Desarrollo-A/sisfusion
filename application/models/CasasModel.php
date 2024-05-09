@@ -274,7 +274,8 @@ class CasasModel extends CI_Model
         $query = "SELECT
             'Cotizacion' AS title,
             cpc.nombre AS subtitle,
-            cpc.idCotizacion AS value
+            cpc.idCotizacion AS value,
+            cpc.archivo AS archivo
         FROM cotizacion_proceso_casas cpc
         WHERE
             idProcesoCasas = $idProcesoCasas
@@ -636,7 +637,7 @@ class CasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
         LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
-        LEFT JOIN cotizacion_proceso_casas cpc ON cpc.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1 AND elegida = 1
+        LEFT JOIN cotizacion_proceso_casas cpc ON cpc.idProcesoCasas = pc.idProcesoCasas AND cpc.status = 1 AND elegida = 1
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.notaria AND oxc.id_catalogo = 129
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
@@ -645,7 +646,8 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         WHERE
             pc.proceso = 6
-        	AND pc.status = 1 AND cli.status = 1";
+        	AND pc.status = 1 
+            AND cli.status = 1";
 
         return $this->db->query($query)->result();
     }
@@ -1154,7 +1156,7 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setPropuesta($idProcesoCasas, $idCotizacion, $fechaElegida){
+    public function setPropuesta($idProcesoCasas, $idPropuesta, $fechaElegida, $idCotizacion ){
         $query = "UPDATE cotizacion_proceso_casas
         SET
             elegida = 1
@@ -1168,6 +1170,7 @@ class CasasModel extends CI_Model
             fechaElegida = $fechaElegida
         WHERE
             idProcesoCasas = $idProcesoCasas
+        AND idPropuesta = $idPropuesta
         AND status = 1";
 
         return $this->db->query($query);
