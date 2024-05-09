@@ -104,16 +104,23 @@ class ScheduleTasks_Universidad extends CI_Controller
                     $descuento = $pago_individual;
                     $cuantos = count($datos_de_pagos); 
                     
+                    
+
                     if($cuantos > 1){
-                        // validamos que sea mayor que 1
-                                // ´primero
+                        // 
+                        // PRIMER PASO
+                        // 
                         $sumaMontos = 0;
                         for($contador_insert=0;  $contador_insert < $cuantos; $contador_insert++ )
                         {
                             // contador_para saber cuantos pagos llemaos
                             if($contador_insert == ($cuantos-1))
                             {
-                                // 2 segunda
+                                // 
+                                // 
+                                // PRIMER PASO 1.25
+                                // 
+                                // 
                                 $texto = implode(", ", $datos_de_pagos[$contador_insert]);
                                 $formatear = explode(",",$texto);
                                 $id = $formatear[3];
@@ -146,7 +153,8 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
 
                                 $this->Universidad_function_model->updateCMD($cmd);
-                                
+                                echo('cmd 156');
+                                echo($cmd);
                                 if($montoAinsertar == 0 ){
                                     $cmd_pago_comision_ind="UPDATE pago_comision_ind 
                                     SET estatus = 17, 
@@ -167,20 +175,27 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     WHERE id_pago_i=$id";
                                     // $respuesta = $this->db->query("INSERT INTO realcion_universidad_pago  values ( $id_descuento , $id_pago_i , 1 , 1, GETDATE(), 1 )"); 
                                 } 
+                                echo('cmd pago_comision_ind 178');
+                                echo($cmd_pago_comision_ind);
                                 $this->Universidad_function_model->updateCMD($cmd_pago_comision_ind);
                                 // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento);
                                 $cmd_inserPago ="INSERT INTO pago_comision_ind
                                 (id_comision, id_usuario, abono_neodata, fecha_abono, fecha_pago_intmex, pago_neodata, estatus, modificado_por, comentario, descuento_aplicado,abono_final,aply_pago_intmex) 
                                 VALUES ($comision->id_comision, $usuario_por_CONTADOR, $Restante, GETDATE(), GETDATE(), $monto, 1, 1, 'DESCUENTO NUEVO PAGO', 0 ,null, null)";
                                 $insert_id = $this->db->insert_id();
-
+                                echo('cmd insertPago 186');
+                                echo($cmd_inserPago);
                                 $this->Universidad_function_model->updateCMD($cmd_inserPago);
 
                                 $cmd_historial = "INSERT INTO historial_comisiones VALUES ($insert_id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
                                 $this->Universidad_function_model->updateCMD($cmd_historial);
                                 
                             }else{
-                            // llave final 232332
+                                // 
+                                // 
+                                // PRIMER PASO 1.5
+                                // 
+                                // 
                                 echo('<br>'); 
                                 $texto = implode(", ", $datos_de_pagos[$contador_insert]);
                                 $formatear = explode(",",$texto);
@@ -203,7 +218,8 @@ class ScheduleTasks_Universidad extends CI_Controller
                                 AND estatus IN (1, 0)";
 
                                 $this->Universidad_function_model->updateCMD($cmd);
-
+                                echo('cmd cmd 221');
+                                echo($cmd);
                                 $cmd_relacion_universidad = "INSERT INTO realcion_universidad_pago  
                                 values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
                                     $cmd_pago_comision_ind="UPDATE pago_comision_ind 
@@ -217,12 +233,19 @@ class ScheduleTasks_Universidad extends CI_Controller
                                     $cmd_historial = "INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
                                     $sumaMontos = $sumaMontos + $monto;
                                 $this->Universidad_function_model->updateCMD($cmd_relacion_universidad);
-
+                                echo('cmd cmd_relacion_universidad 236');
+                                echo($cmd_relacion_universidad);
                                     
                             }
                         }
 
                     }   else{
+
+                        // 
+                        // 
+                        // SEGUNDO PASO
+                        // 
+                        // 
                         $sumaMontos = 0;
                         $texto = implode(", ", $datos_de_pagos[0]);
                         $formatear = explode(",",$texto);
@@ -261,12 +284,14 @@ class ScheduleTasks_Universidad extends CI_Controller
                             AND estatus IN (1, 0)";
                             
                             $this->Universidad_function_model->updateCMD($cmd);
-
+                            echo('cmd cmd 287');
+                            echo($cmd);
                             $cmd_relacion_universidad = "INSERT INTO realcion_universidad_pago  
                             values ( $id_descuento , $id , 1 , 1, GETDATE(), 1 )"; 
                             
                             $this->Universidad_function_model->updateCMD($cmd_relacion_universidad);
-                            
+                            echo('cmd cmd_relacion_universidad 287');
+                            echo($cmd_relacion_universidad);
                             if($montoAinsertar == 0 ){
                                 echo('es 0 ');
 
@@ -293,7 +318,8 @@ class ScheduleTasks_Universidad extends CI_Controller
                             }
 
                             $this->Universidad_function_model->updateCMD($cmd_pago_comision_ind);
-
+                            echo('cmd cmd_pago_comision_ind 321');
+                            echo($cmd_pago_comision_ind);
                             $cmd_historial = "INSERT INTO historial_comisiones VALUES ($id, 1, GETDATE(), 1, 'MOTIVO DESCUENTO: $comentario')";
                             
                             $this->Universidad_function_model->updateCMD($cmd_historial);
@@ -310,9 +336,11 @@ class ScheduleTasks_Universidad extends CI_Controller
                             // $insert_id = $this->db->insert_id();
                             // $respuesta = $this->db->query("INSERT INTO historial_comisiones VALUES ($insert_id, $usuario, GETDATE(), 1, 'NUEVO PAGO, DISPONIBLE PARA COBRO')");
                             $this->Universidad_function_model->updateCMD($cmd_inserPago);
+                            echo('cmd cmd_inserPago 339');
+                            echo($cmd_inserPago);
 
                         }else{
-
+                            echo('cmd no entro a nada  343');
                         }
                         // $dat =  $this->Universidad_function_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, 1,$data[$contador_de_consulta]['id_usuario'],$id_descuento,$cmd);
 
@@ -347,7 +375,7 @@ class ScheduleTasks_Universidad extends CI_Controller
 
                 }   else{
                     
-
+                    echo('cmd no ha pasado el mes 378');
                     // echo ($pagosDescontar);
                     // echo json_encode($abonado, $pagos_que_se_llevan );
                 }
