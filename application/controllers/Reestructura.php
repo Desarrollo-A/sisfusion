@@ -3185,7 +3185,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado el lote al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado el lote al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -3261,7 +3261,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado la fusión al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado la fusión al preproceso ';
         }
         else{
             $this->db->trans_rollback();
