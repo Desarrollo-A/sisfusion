@@ -47,7 +47,10 @@
                 </div>
                 <div class="modal-footer" >
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >cerrar</button>
-                    <button id="ok-button-form-modal" type="submit" class="btn btn-primary" >enviar</button>
+                    <button id="ok-button-form-modal" type="submit" class="btn btn-primary" >
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        enviar
+                    </button>
                 </div>
             </form>
         </div>

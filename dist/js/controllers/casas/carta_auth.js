@@ -4,6 +4,7 @@ back_process = function (data) {
         title: 'Regresar proceso',
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a asignación de cartera?`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -19,6 +20,8 @@ back_process = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -51,15 +54,16 @@ function show_upload(data) {
     let form = new Form({
         title: 'Subir carta de autorización',
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}casas/upload_documento`,
+                url: `upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -67,6 +71,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -81,12 +87,27 @@ function show_upload(data) {
     form.show()
 }
 
+let tipos = []
+
+$.ajax({
+    type: 'GET',
+    url: 'options_tipos_credito',
+    async: false,
+    success: function (response) {
+        tipos = response
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
 pass_to_adeudos = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Concentrar adeudos"</b>?`,
         onSubmit: function (data) {
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -103,11 +124,14 @@ pass_to_adeudos = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -118,6 +142,11 @@ pass_to_adeudos = function (data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     {
         data: function (data) {
             let vigencia = new Date(data.fechaProceso)

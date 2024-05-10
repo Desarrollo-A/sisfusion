@@ -24,6 +24,7 @@ function show_upload(data) {
         title: 'Subir cierre de cifras',
         onSubmit: function (data) {
             //console.log(data)
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -40,6 +41,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -61,6 +64,7 @@ pass_to_vobo_cifras = function (data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Visto bueno"</b>?`,
         onSubmit: function (data) {
             //console.log(data)
+            form.loading(true)
 
             $.ajax({
                 type: 'POST',
@@ -77,6 +81,8 @@ pass_to_vobo_cifras = function (data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -113,6 +119,11 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     {
         data: function (data) {
             let vigencia = new Date(data.fechaProceso)

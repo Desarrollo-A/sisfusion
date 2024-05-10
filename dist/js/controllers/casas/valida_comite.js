@@ -5,6 +5,7 @@ back_to_documentos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a documentación del cliente?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -21,6 +22,8 @@ back_to_documentos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -33,17 +36,18 @@ back_to_documentos = function(data) {
     form.show()
 }
 
-pass_to_titulacion = function(data) {
+pass_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `to_titulacion`,
+                url: `to_propuesta_firma`,
                 data: data,
                 contentType: false,
                 processData: false,
@@ -56,6 +60,8 @@ pass_to_titulacion = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -96,6 +102,11 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 5)
@@ -117,10 +128,10 @@ let columns = [
 
         let pass_button = ''
         if(data.documentos >= 1){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_titulacion, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a propuesta de firma', onClick: pass_to_propuesta_firma, data})
         }
 
-        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentacion cliente', onClick: back_to_documentos, data})
+        let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentación cliente', onClick: back_to_documentos, data})
 
         return `<div class="d-flex justify-center">${docu_button}${pass_button}${back_button}</div>`
     } },

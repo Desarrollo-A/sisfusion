@@ -1,67 +1,71 @@
-class DateField{
-    constructor({id, label, placeholder, value, required}){
+class DateField {
+    constructor({ id, label, placeholder, value, width, required }) {
         this.id = id
 
         this.field = $('<div />')
-        .addClass('col-lg-6 col-md-12')
-        .append(
-            $('<label />')
-            .addClass('control-label label-gral')
-            .attr('for', id)
-            .text(label)
-        )
-        .append(
-            $('<input />')
-            .addClass('form-control input-gral datepicker')
-            .attr(required, required )
-            .attr('type', 'text')
-            .attr('name', id)
-            .attr('id', id)
-            .attr('placeholder', placeholder.toUpperCase())
-            .val(value)
-            .datetimepicker({
-                format: 'YYYY-MM-DD',
-                icons: {
-                    time: "fa fa-clock-o",
-                    date: "fa fa-calendar",
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down",
-                    previous: 'fa fa-chevron-left',
-                    next: 'fa fa-chevron-right',
-                    today: 'fa fa-screenshot',
-                    clear: 'fa fa-trash',
-                    close: 'fa fa-remove',
-                    inline: true
-                }
-            })
-        )
+            .addClass(`col-lg-${width} col-md-12`)
+            .append(
+                $('<label />')
+                    .addClass('control-label label-gral')
+                    .attr('for', id)
+                    .text(label)
+            )
+            .append(
+                $('<input />')
+                    .addClass('form-control input-gral datepicker')
+                    .attr(required, required)
+                    .attr('type', 'text')
+                    .attr('name', id)
+                    .attr('id', id)
+                    .attr('placeholder', placeholder.toUpperCase())
+                    .val(value)
+                    .datetimepicker({
+                        format: 'YYYY-MM-DD',
+                        icons: {
+                            time: "fa fa-clock-o",
+                            date: "fa fa-calendar",
+                            up: "fa fa-chevron-up",
+                            down: "fa fa-chevron-down",
+                            previous: 'fa fa-chevron-left',
+                            next: 'fa fa-chevron-right',
+                            today: 'fa fa-screenshot',
+                            clear: 'fa fa-trash',
+                            close: 'fa fa-remove',
+                            inline: true
+                        }
+                    })
+            )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class HiddenField{
-    constructor({id, value}){
+class HiddenField {
+    constructor({ id, value }) {
         this.id = id
-        this.value = () => {return value}
+        this.value = () => { return value }
 
         this.field = $('<input />')
-        .attr('type', 'hidden')
+            .attr('type', 'hidden')
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class SelectField{
-    constructor({id, label, placeholder, data=[], value, width, required}){
+class SelectField {
+    constructor({ id, label, placeholder, data = [], value, width, required }) {
         this.id = id
 
         let options = []
@@ -73,7 +77,7 @@ class SelectField{
                 text: item.label
             })
 
-            if(value === item.value){
+            if (value === item.value) {
                 option.attr("selected", true)
             }
 
@@ -81,30 +85,30 @@ class SelectField{
         }
 
         this.field = $('<div />')
-        .addClass(`col-lg-${width} col-md-12`)
-        .append(
-            $('<div />')
-            .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
+            .addClass(`col-lg-${width} col-md-12`)
             .append(
-                $('<label />')
-                .addClass('control-label m-1')
-                .text(label)
+                $('<div />')
+                    .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
+                    .append(
+                        $('<label />')
+                            .addClass('control-label m-1')
+                            .text(label)
+                    )
+                    .append(
+                        $('<select />')
+                            .addClass('selectpicker select-gral m-0')
+                            .attr('id', id)
+                            .attr('name', id)
+                            .data('style', 'btnSelect')
+                            .data('show-subtext', 'true')
+                            .data('live-search', 'true')
+                            .data('size', '7')
+                            .data('container', 'body')
+                            .attr('title', placeholder)
+                            .attr(required, required)
+                            .append(options)
+                    )
             )
-            .append(
-                $('<select />')
-                .addClass('selectpicker select-gral m-0')
-                .attr('id', id)
-                .attr('name', id)
-                .data('style', 'btnSelect')
-                .data('show-subtext', 'true')
-                .data('live-search', 'true')
-                .data('size', '7')
-                .data('container', 'body')
-                .attr('title', placeholder)
-                .attr(required, required )
-                .append(options)
-            )
-        )
 
         //$(`#${id}`).trigger("change")
         //$(`#${id} option[value='${value}']`).prop('selected', true);
@@ -114,191 +118,202 @@ class SelectField{
         }
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class FileField{
-    constructor({id, label, placeholder, accept}){
+class FileField {
+    constructor({ id, label, placeholder, accept }) {
         this.id = id
 
         this.field = $('<div />')
-        .addClass('col-md-12')
-        .append(
-            $('<div />')
-            .addClass('file-gph')
+            .addClass('col-md-12')
+            .append(`<label class='control-label label-gral'>${label}</label>`)
             .append(
-                $('<input />')
-                .attr('id', `file-${id}`)
-                .attr('name', `file-${id}`)
-                .attr('type', 'hidden')
+                $('<div />')
+                    .addClass('file-gph')
+                    .append(
+                        $('<input />')
+                            .attr('id', `file-${id}`)
+                            .attr('name', `file-${id}`)
+                            .attr('type', 'hidden')
+                    )
+                    .append(
+                        $('<input />')
+                            .addClass('d-none')
+                            .attr('id', id)
+                            .attr('name', id)
+                            .attr('type', 'file')
+                            .attr('accept', accept)
+                            .change(function (e) {
+                                //console.log(e.target.files[0])
+
+                                let name = e.target.files[0].name
+                                let size = e.target.files[0].size / 1024
+                                let prefix = 'KB'
+
+                                if (size > 1024) {
+                                    size = size / 1024
+                                    prefix = 'MB'
+                                }
+
+                                $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
+
+                                if (accept) {
+                                    // console.log(e.target.files[0].type)
+
+                                    if (!accept.includes(e.target.files[0].type)) {
+                                        alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
+                                        $(`#${id}-name`).val('')
+                                    }
+                                }
+                            })
+                    )
+                    .append(
+                        $('<input />')
+                            .addClass('file-name')
+                            .attr('id', `${id}-name`)
+                            .attr('type', 'text')
+                            .attr('placeholder', placeholder)
+                            .attr('readOnly', true)
+                    )
+                    .append(
+                        $('<label />')
+                            .addClass('upload-btn')
+                            .attr('for', id)
+                            .attr('type', 'text')
+                            .append(
+                                $('<span />')
+                                    .text('Seleccionar')
+                            )
+                            .append(
+                                $('<i />')
+                                    .addClass('fas fa-folder-open')
+                            )
+                    )
             )
-            .append(
-                $('<input />')
-                .addClass('d-none')
-                .attr('id', id)
-                .attr('name', id)
-                .attr('type', 'file')
-                .attr('accept', accept)
-                .change(function(e) { 
-                    //console.log(e.target.files[0])
-
-                    let name = e.target.files[0].name
-                    let size = e.target.files[0].size / 1024
-                    let prefix = 'KB'
-
-                    if(size > 1024){
-                        size = size / 1024
-                        prefix = 'MB'
-                    }
-
-                    $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
-
-                    if(accept){
-                        // console.log(e.target.files[0].type)
-
-                        if(!accept.includes(e.target.files[0].type)){
-                            alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
-                            $(`#${id}-name`).val('')
-                        }
-                    }
-                })
-            )
-            .append(
-                $('<input />')
-                .addClass('file-name')
-                .attr('id', `${id}-name`)
-                .attr('type', 'text')
-                .attr('placeholder', placeholder)
-                .attr('readOnly', true)
-            )
-            .append(
-                $('<label />')
-                .addClass('upload-btn')
-                .attr('for', id)
-                .attr('type', 'text')
-                .append(
-                    $('<span />')
-                    .text('Seleccionar')
-                )
-                .append(
-                    $('<i />')
-                    .addClass('fas fa-folder-open')
-                )
-            )
-        )
 
         this.value = () => {
             return $(`#${id}`)[0].files[0]
         }
-        
+
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class TextField{
-    constructor({id, label, placeholder, width, required}){
+class TextField {
+    constructor({ id, label, placeholder, width, required }) {
         this.id = id
         this.field = $('<div />')
-        .addClass(`col-lg-${width} mt-1`)
-        .append(
-            $('<label />')
-            .addClass('control-label')
-            .attr('for', id)
-            .text(label)
-        )
-        .append(
-            $('<input />')
-            .addClass(`form-control input-gral`)
-            .attr('id', id)
-            .attr('name', id)
-            .attr('type', 'text')
-            .attr(required, required )
-            .attr('placeholder', placeholder)
-        )
+            .addClass(`col-lg-${width} mt-1`)
+            .append(
+                $('<label />')
+                    .addClass('control-label')
+                    .attr('for', id)
+                    .text(label)
+            )
+            .append(
+                $('<input />')
+                    .addClass(`form-control input-gral`)
+                    .attr('id', id)
+                    .attr('name', id)
+                    .attr('type', 'text')
+                    .attr(required, required)
+                    .attr('placeholder', placeholder)
+            )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class TextAreaField{
-    constructor({id, label, placeholder, width, required}){
+class TextAreaField {
+    constructor({ id, label, placeholder, width, required }) {
         this.id = id
         this.field = $('<div />')
-        .addClass(`col-lg-${width} mt-1`)
-        .append(
-            $('<label />')
-            .addClass('control-label')
-            .attr('for', id)
-            .text(label)
-        )
-        .append(
-            $('<textarea />')
-            .addClass(`text-modal`)
-            .attr('id', id)
-            .attr('name', id)
-            .attr(required, required )
-            .attr('placeholder', placeholder)
-        )
+            .addClass(`col-lg-${width} mt-1`)
+            .append(
+                $('<label />')
+                    .addClass('control-label')
+                    .attr('for', id)
+                    .text(label)
+            )
+            .append(
+                $('<textarea />')
+                    .addClass(`text-modal`)
+                    .attr('id', id)
+                    .attr('name', id)
+                    .attr(required, required)
+                    .attr('placeholder', placeholder)
+            )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 }
 
-class NumberField{
-    constructor({id, label, placeholder, value, width=12, required}){
+class NumberField {
+    constructor({ id, label, placeholder, value, width = 12, required }) {
         this.id = id
         this.field = $('<div />')
-        .addClass(`col-lg-${width}`)
-        .append(
-            $('<label />')
-            .addClass('control-label')
-            .attr('for', id)
-            .text(label)
-        )
-        .append(
-            $('<input />')
-            .addClass(`form-control input-gral`)
-            .attr('id', id)
-            .attr('name', id)
-            .attr('type', 'text')
-            .attr('placeholder', placeholder)
-            .attr(required, required )
-            .val(value)
-            .on('keypress', this.onlyNumbers)
-        )
+            .addClass(`col-lg-${width}`)
+            .append(
+                $('<label />')
+                    .addClass('control-label')
+                    .attr('for', id)
+                    .text(label)
+            )
+            .append(
+                $('<input />')
+                    .addClass(`form-control input-gral`)
+                    .attr('id', id)
+                    .attr('name', id)
+                    .attr('type', 'text')
+                    .attr('placeholder', placeholder)
+                    .attr(required, required)
+                    .val(value)
+                    .on('keypress', this.onlyNumbers)
+            )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
     }
 
-    get(){
+    get() {
         return this.field
     }
+
+    load(){}
 
     onlyNumbers(e) {
         var key = e.keyCode || e.which;
         var tecla = String.fromCharCode(key);
         var letras = "0123456789.";
         var especiales = [8, 37, 39, 46];
-    
+
         var tecla_especial = false;
         for (var i in especiales) {
             if (key == especiales[i]) {
@@ -306,65 +321,72 @@ class NumberField{
                 break;
             }
         }
-    
+
         if (letras.indexOf(tecla) == -1 && !tecla_especial) return false;
-    
+
         // Permitir solo un punto decimal
         if (tecla == '.' && e.target.value.indexOf('.') !== -1) return false;
-    
+
         // Limitar a dos decimales
         var parts = e.target.value.split('.');
         if (parts.length > 1 && parts[1].length >= 2) return false;
-    
+
         return true;
     }
 }
 
-class OptionField{
-    constructor({id, label, placeholder, data, value}){
+class OptionField {
+    constructor({ id, label, placeholder, data, value, style, check }) {
         this.id = id
+        this.selected = value
 
         let options = []
         for (const option of data) {
             options.push(
-                $('<div /><br>')
-                .addClass('container boxChecks p-0')
+                $('<div />')
+                .addClass('col-lg-12')
                 .append(
-                    $('<label />')
-                    .addClass('m-0 checkstyleDS')
+                    $('<div /><br>')
+                    .addClass('container boxChecks p-0')
+                    .attr('style', style)
                     .append(
-                        $('<input />')
-                        //.addClass('hide')
-                        .attr('type', 'radio')
-                        .attr('id', id)
-                        .attr('name', id)
-                        .val(option.value)
-                    )
-                    .append(
-                        $('<span />')
-                        .addClass('w-100 d-flex justify-between')
+                        $('<label />')
+                        .addClass('m-0 checkstyleDS')
+                        .attr('id', `${this.id}_${this.selected}_label`)
                         .append(
-                            $('<b />')
-                            .addClass('m-0')
-                            .text(option.title)
+                            $('<input/>')
+                            //.addClass('hide')
+                            .attr('type', 'radio')
+                            .attr('id', id)
+                            .attr('name', id)
+                            .val(option.value)
                         )
-                    )
-                    .append(
-                        $('<span />')
-                        .addClass('w-100 d-flex justify-between')
                         .append(
-                            $('<p />')
-                            .addClass('m-0')
-                            .text(option.subtitle)
+                            $('<span />')
+                            .addClass('w-100 d-flex justify-between')
+                            .append(
+                                $('<b />')
+                                    .addClass('m-0')
+                                    .text(option.title)
+                            )
                         )
-                    )
-                    .append(
-                        $('<span />')
-                        .addClass('w-100 d-flex justify-between')
                         .append(
-                            $('<p />')
-                            .addClass('m-0')
-                            .text(option.description)
+                            $('<span />')
+                            .addClass('w-100 d-flex justify-between')
+                            .append(
+                                $('<p />')
+                                    .addClass('m-0')
+                                    .text(option.subtitle)
+                            )
+                        )
+                        .append(
+                            $('<span />')
+                            .addClass('w-100 d-flex justify-between')
+                            .append(
+                                $('<p />')
+                                    .addClass('m-0')
+                                    .text(option.description)
+                            )
                         )
                     )
                 )
@@ -372,12 +394,12 @@ class OptionField{
         }
 
         this.field = $('<div />')
-        .addClass('col-12 lotePropuesto checkDS')
-        .append(
-            $('<label />')
-            .text(label)
-        )
-        .append(options)
+            .addClass('col-12 lotePropuesto checkDS')
+            .append(
+                $('<label />')
+                    .text(label)
+            )
+            .append(options)
 
         this.value = () => {
             //return $(`#${id}`).val()
@@ -385,13 +407,242 @@ class OptionField{
         }
     }
 
-    get(){
+    get() {
         return this.field
+    }
+
+    load(){
+        $(`#${this.id}_${this.selected}_label`).trigger('click')
     }
 }
 
-class Form{
-    constructor({title, text, fields, onSubmit}) {
+class OptionFieldAndView {
+    constructor({ id, label, placeholder, data, value, style, onClick, title }) {
+        this.id = id
+        this.selected = value
+
+        let options = []
+        for (const option of data) {
+            options.push(
+                $('<div /><br>')
+                .addClass('col-lg-12')
+                .append(
+                    $('<div />')
+                    .addClass('d-flex justify-content-between align-items-center mb-3')
+                    .append(
+                        $('<div />')
+                        .addClass('container boxChecks p-0')
+                        .attr('style', style)
+                        .append(
+                            $('<label />')
+                            .addClass('m-0 checkstyleDS')
+                            .attr('id', `${id}_${option.value}_label`)
+                            .append(
+                                $('<input/>')
+                                .attr('type', 'radio')
+                                .attr('id', `${id}_${option.value}`)
+                                .attr('name', id)
+                                //.attr('checked', 'checked')
+                                .val(option.value)
+                            )
+                            .append(
+                                $('<span />')
+                                .addClass('w-100 d-flex justify-between')
+                                .append(
+                                    $('<p />')
+                                    .addClass('m-0')
+                                    .text(option.subtitle.toUpperCase())
+                                )
+                            )
+                        )
+                    )
+                    .append(
+                        $('<button />')
+                        .addClass('btn-data btn-blueMaderas m-0 ml-1')
+                        .attr('id', 'uno')
+                        .attr('style', 'padding:15px')
+                        .attr('type', 'button')
+                        .attr('title', title)
+                        .attr('onClick', `${onClick.name}(${JSON.stringify(option.archivo)})`)
+                        .append(
+                            $('<i class="">file_upload</i></button>')
+                            .addClass('material-icons')
+                            .text('file_download')
+                        )
+                    )
+                )
+
+            )
+        }
+
+        this.field = $('<div />')
+            .addClass('col-12 lotePropuesto checkDS')
+            .append(
+                $('<label />')
+                    .text(label)
+            )
+            .append(options)
+
+        this.value = () => {
+            //return $(`#${id}`).val()
+            return $(`input[name="${id}"]:checked`).val()
+        }
+    }
+
+    get() {
+        return this.field
+    }
+
+    load(){
+        $(`#${this.id}_${this.selected}_label`).trigger('click')
+    }
+}
+
+
+class DateDelete {
+    constructor({ id, label, placeholder, value, width, required }) {
+        this.id = id
+
+        this.field = $('<div />')
+        .addClass(`col-lg-${width} col-md-12`)
+        .append(
+            $('<label />')
+            .addClass('control-label label-gral')
+            .attr('for', id)
+            .text(label)
+        )
+        .append(
+            $('<div />')
+            .addClass('d-flex justify-content-between align-items-center mb-1')
+            .append(
+                $('<input />')
+                .addClass('form-control input-gral datepicker')
+                .attr(required, required)
+                .attr('type', 'text')
+                .attr('name', id)
+                .attr('id', id)
+                .attr('placeholder', placeholder.toUpperCase())
+                .val(value)
+                .datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    icons: {
+                        time: "fa fa-clock-o",
+                        date: "fa fa-calendar",
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down",
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-screenshot',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-remove',
+                        inline: true
+                    }
+                })
+            )
+            .append(
+                $('<button />')
+                    .addClass('btn-data btn-warning m-0 ml-1')
+                    .attr('id', 'uno')
+                    //.attr('style', 'padding:0px')
+                    .attr('type', 'button')
+                    .attr('title', 'Borrar')
+                    .click(function () {
+                        // Aquí borramos los valores de los campos de fecha
+                        $(`#${id}`).val('');
+                    })
+                    .append(
+                        $('<i class="">file_upload</i></button>')
+                            .addClass('material-icons')
+                            .text('close')
+                    )
+            )
+        )
+
+        this.value = () => {
+            return $(`#${id}`).val()
+        }
+    }
+
+    get() {
+        return this.field
+    }
+
+    load(){}
+}
+
+class inputText {
+    constructor({ id, label, placeholder, value, width, required }) {
+        this.id = id
+
+        this.field =
+            $('<div /><br>')
+                .addClass('col-lg-12 checkDft')
+                .append(
+                    $('<div />')
+                        .addClass('container boxChecksDft p-0')
+                        .attr('style', 'height: 45px')
+                        .append(
+                            $('<label />')
+                                .addClass('m-0 checkstyleDft')
+                                .append(
+                                    $('<input checked/>')
+                                        .attr('type', 'button')
+                                        .attr('id', id)
+                                        .attr('name', id)
+                                        .val(value)
+                                )
+                                .append(
+                                    $('<span />')
+                                        .addClass('w-100 d-flex justify-between')
+                                        .append(
+                                            $('<i />')
+                                                .addClass('material-icons')
+                                                .text('done')
+                                        )
+                                        .append(
+                                            $('<p />')
+                                                .addClass('m-0')
+                                                .text(label)
+                                        )
+                                )
+                        )
+                )
+
+        this.value = () => {
+            return $(`#${id}`).val()
+        }
+    }
+
+    get() {
+        return this.field
+    }
+
+    load(){}
+}
+
+class title {
+    constructor({ text }) {
+        this.field = $('<div />')
+
+            .append(
+                $('<label/> ')
+                    .addClass('control-label')
+                    .text(text)
+            )
+        this.value = () => {
+            return $(``).val()
+        }
+    }
+
+    get() {
+        return this.field
+    }
+
+    load(){}
+}
+
+class Form {
+    constructor({ title, text, fields, onSubmit }) {
         this.title = title || ''
         this.text = text || ''
         this.fields = fields || []
@@ -400,18 +651,21 @@ class Form{
         /* if(!text){
             $('#text-form-modal').hide()
         } */
+
+        $("#ok-button-form-modal").prop('disabled', false)
     }
 
-    show(){
+    show() {
         $('#fields-form-modal').html('')
 
         for (var i = 0; i < this.fields.length; i++) {
 
             let field = this.fields[i]
 
-            if(field)
-            {
+            if (field) {
                 $('#fields-form-modal').append(field.get())
+
+                field.load()
             }
         }
 
@@ -426,14 +680,14 @@ class Form{
         $("#form-modal").modal();
     }
 
-    submit(event){
+    submit(event) {
         event.preventDefault()
 
         let data = new FormData()
         for (var i = 0; i < this.fields.length; i++) {
             let field = this.fields[i]
 
-            if(field.value()){
+            if (field.value()) {
                 data.append(field.id, field.value())
             }
         }
@@ -441,7 +695,15 @@ class Form{
         this.onSubmit(data)
     }
 
-    hide(){
+    hide() {
         $("#form-modal").modal('hide')
+    }
+
+    loading(load){
+        if(load){
+            $("#ok-button-form-modal").prop('disabled', true)
+        }else{
+            $("#ok-button-form-modal").prop('disabled', false)
+        }
     }
 }
