@@ -85,6 +85,7 @@ function show_upload(data) {
         title: `Subir ${data.documento}`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -101,6 +102,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },

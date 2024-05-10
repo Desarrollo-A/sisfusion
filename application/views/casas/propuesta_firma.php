@@ -25,9 +25,13 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
-                                            <th>NOTARIA ELEGIDA</th>
-                                            <th>FECHA DE FIRMA</th>
-                                            <th>COSTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>VIGENCIA</th>
+                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>

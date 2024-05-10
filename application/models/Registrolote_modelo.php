@@ -856,7 +856,7 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,lotes.observacionContratoUrgente, hl.modificado as modificado_historial,Upper( st.nombre) as estatus_lote, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, 
 		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, cl.sedeRecepcion
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede

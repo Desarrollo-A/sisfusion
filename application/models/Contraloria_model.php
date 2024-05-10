@@ -103,7 +103,6 @@ class Contraloria_model extends CI_Model {
 
         $this->db->insert('historial_lotes',$arreglo2);
 
-        //$this->db->insert('mensualidadesXlote',$arregloMensualidades);
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
@@ -485,7 +484,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno) as gerente,
 		cond.idCondominio, l.observacionContratoUrgente as vl, se.nombre as nombreSede,
         CONVERT(VARCHAR(23), GETDATE(), 23) as fecha_arcus, cl.id_prospecto, l.totalNeto2, pro.id_arcus,
-        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion, res.idResidencial
+        ISNULL(oxc0.nombre, 'Normal') tipo_proceso, pro.lugar_prospeccion, res.idResidencial, mc.opcion
 		FROM lotes l
 		INNER JOIN clientes cl ON cl.id_cliente = l.idCliente AND cl.idLote = l.idLote
 		INNER JOIN condominios cond ON l.idCondominio=cond.idCondominio
@@ -497,7 +496,8 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		LEFT JOIN tipo_venta tv ON tv.id_tventa = l.tipo_venta
         LEFT JOIN prospectos pro ON cl.id_prospecto = pro.id_prospecto
         LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-		WHERE l.status = 1 AND l.idStatusContratacion IN (14) AND l.idMovimiento IN (44, 69, 80) AND cl.status = 1 $filtroSede
+		LEFT JOIN mensualidad_cliente mc ON mc.id_cliente = l.idCliente
+		WHERE l.status = 1 AND l.idStatusContratacion IN (14) AND l.idMovimiento IN (44, 69, 80) AND cl.status = 1 
 		GROUP BY l.idLote, cl.id_cliente, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
 		l.nombreLote, l.idStatusContratacion, l.idMovimiento, l.modificado, cl.rfc,
 		CAST(l.comentario AS varchar(MAX)), l.fechaVenc, l.perfil, cond.nombre, res.nombreResidencial, l.ubicacion,
@@ -506,7 +506,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 		concat(coordinador.nombre,' ', coordinador.apellido_paterno, ' ', coordinador.apellido_materno),
 		concat(gerente.nombre,' ', gerente.apellido_paterno, ' ', gerente.apellido_materno),
 		cond.idCondominio, l.observacionContratoUrgente, se.nombre, cl.id_prospecto, l.totalNeto2, pro.id_arcus, ISNULL(oxc0.nombre, 'Normal'),
-        pro.lugar_prospeccion, res.idResidencial
+        pro.lugar_prospeccion, res.idResidencial, mc.opcion
 		ORDER BY l.nombreLote");
         return $query->result();
     }
@@ -1918,4 +1918,51 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
 
         return $filtroSede;
     }
+    
+    public function getMensualidades() {
+        return $this->db->query("SELECT id_catalogo, id_opcion, UPPER(nombre) nombre FROM opcs_x_cats WHERE id_catalogo IN (126) AND estatus = 1");
+    }
+
+    public function updateMensualidad($mensualidades, $idLote, $idCliente, $mensualidadesGuardadas){
+
+        $this->db->query("UPDATE mensualidad_cliente SET opcion = ".$mensualidades.", ultima_mensualidad = ".$mensualidades." WHERE id_lote = ".$idLote." AND id_cliente = ".$idCliente);
+
+    }
+
+    public function insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, $estatus, $mensualidadesGuardadas) {
+
+        $data = array(
+            'id_lote' => $idLote,
+            'id_cliente' => $idCliente,
+            'opcion' => $mensualidades,
+            'comentario' => $comentario,
+            'estatus' => $estatus,
+            'ultima_mensualidad' => $mensualidadesGuardadas
+        );
+
+        $this->db->insert('mensualidad_cliente', $data);
+        
+        if ($this->db->affected_rows() > 0) {
+            return true; 
+        } else {
+            return false;
+        }
+    }
+
+    public function validarMensualidad($idLote, $idCliente){
+        $cmd = "SELECT * FROM mensualidad_cliente WHERE id_lote = $idLote AND id_cliente = $idCliente";
+        $query= $this->db->query($cmd);
+        return  $query->num_rows() > 0 ? TRUE : FALSE ; 
+    }
+
+    public function validarYActualizarMensualidad($idLote, $idCliente, $mensualidades, $comentario, $mensualidadesGuardadas) {
+        if ($this->validarMensualidad($idLote, $idCliente)) {
+            $this->updateMensualidad($mensualidades, $idLote, $idCliente, $mensualidadesGuardadas);
+        } else {
+            $this->insertMensualidad($idLote, $idCliente, $mensualidades, $comentario, 1, $mensualidadesGuardadas);
+        }
+    }
+
+    
+
 }

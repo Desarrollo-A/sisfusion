@@ -216,6 +216,11 @@ function fillTable(sede, residencial) {
                     else
                         return 'NO APLICA';
                 }
+            },
+            {
+                data: function (d) {
+                    return d.sedeRecepcion;
+                }
             }
         ],
         ajax: {

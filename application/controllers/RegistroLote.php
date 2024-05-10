@@ -2863,6 +2863,7 @@ class RegistroLote extends CI_Controller
 			$datos[$i]['status8Flag'] = $data[$i]->status8Flag;
 			$datos[$i]['id_cliente_reubicacion'] = $data[$i]->id_cliente_reubicacion;
 			$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
+			$datos[$i]['sedeRecepcion'] = $data[$i]->sedeRecepcion;
 		}
 		if ($datos != null) {
 			$result['data'] = $datos;
