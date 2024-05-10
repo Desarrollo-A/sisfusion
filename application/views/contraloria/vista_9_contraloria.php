@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <div class="form-group m-0">
-                                <label class="control-label" for="sedeRecepcion">Sede recepción</label>
+                                <label class="control-label" for="sedeRecepcion">Sede recepción contrato</label>
                                 <select name="sedeRecepcion" id="sedeRecepcion"  class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                             </div>
                         </div>

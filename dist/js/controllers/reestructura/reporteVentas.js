@@ -22,7 +22,7 @@ $('#tablaReporteVentas').DataTable({
         titleAttr: 'Reporte de ventas',
         title: "Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -86,12 +86,13 @@ $('#tablaReporteVentas').DataTable({
                 return `${d.ultiModificacion}`;
             }
         },
+        { data: "nombreSedeRecepcion" },
         {
             data: function (d) {
                 if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + `</div>`;
                 if(d.tipoV == 2) return `<center>` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</center>`;
             }
-        }
+        },
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteVentas`,
