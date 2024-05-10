@@ -826,7 +826,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5, 691))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -1411,7 +1411,7 @@
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
         WHEN us.id_lider = 7092 THEN 3 
-        WHEN us.id_lider IN (9471, 681, 609, 2411, 9783) THEN 607 
+        WHEN us.id_lider IN (9471, 681, 609, 2411, 9783, 896) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
         WHEN us.id_lider = 7886 THEN 5

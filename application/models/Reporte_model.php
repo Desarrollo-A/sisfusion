@@ -1467,6 +1467,10 @@ class Reporte_model extends CI_Model {
         $id_lider = $this->session->userdata('id_lider');
         $id_rol = $this->session->userdata('id_rol');
         $filtroRol = "";
+
+        if ($id_usuario == 13418)
+            $id_lider = $id_lider . ', 5604';
+
         if ($id_rol == 7) // CONSULTA UN ASESOR
             $filtroRol = "AND cl.id_asesor = $id_usuario";
         else if ($id_rol == 9) // CONSULTA UN COORDINADOR
@@ -1497,7 +1501,8 @@ class Reporte_model extends CI_Model {
                 sl.nombre estatusLote,
                 sl.color coloStatusLote, sl.background_sl as fondoStatuslote,
                 CASE WHEN lo.idMovimiento IN (31, 85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) THEN 'Sí' ELSE 'No' END estaConAsesor,
-                CASE WHEN lo.idMovimiento IN (85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) THEN 'Rechazado' WHEN lo.idMovimiento IN (31) THEN 'Nuevo' ELSE 'No aplica' END detalleEstatus
+                CASE WHEN lo.idMovimiento IN (85, 20, 63, 73, 82, 92, 96, 99, 102, 104, 107, 108, 109, 111) THEN 'Rechazado' WHEN lo.idMovimiento IN (31) THEN 'Nuevo' ELSE 'No aplica' END detalleEstatus,
+                lo.comentario
             FROM lotes lo
             INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.fechaApartado BETWEEN '$beginDate 00:00:00' AND '$endDate 23:59:59' $filtroRol
             INNER JOIN condominios co ON co.idCondominio = lo.idCondominio

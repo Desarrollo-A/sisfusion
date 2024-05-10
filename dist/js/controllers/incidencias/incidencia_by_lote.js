@@ -1479,7 +1479,7 @@ $(".find_doc").click( function() {
                                         // boton guardar
                                         let boton = `
                                         <button type="button" id="btn_${i}" 
-                                        ${(parseInt(banderaPermisos) != 1) ? 'style="display:none" ' : 'style="display:show" '} 
+                                        ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
                                          data-toggle="tooltip" disabled
                                         data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
@@ -1514,18 +1514,47 @@ $(".find_doc").click( function() {
 
 
                                         $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                        <div class="col-md-2"><input id="id_disparador" type="hidden" name="id_disparador" value="1">
-                                        <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                        <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
-                                        <input type="hidden" name="pending" id="pending" value="${pending}">
-                                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                        <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
-                                        <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
-                                        <input class="form-control ng-invalid ng-invalid-required" required readonly="true" value="${v.colaborador}" 
-                                            style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
-                                            <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
-                                            <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
-                                            font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
+                                            
+                                            <input id="id_disparador" type="hidden" name="id_disparador" value="1">
+                                            <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                            <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
+                                            <input type="hidden" name="pending" id="pending" value="${pending}">
+                                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                            <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
+                                            <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
+                                            
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral"  readonly="true" value="${v.colaborador}" 
+                                                style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
+                                                <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
+                                                <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
+                                                font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
+                                                <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${parseFloat(v.porcentaje_decimal).toFixed(3)}">
+                                                <b id="msj_${i}" style="color:red;"></b>
+                                            </div>
+
+                                            <div class="col-md-2"> 
+                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}">
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}">
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}">
+                                            </div>
+
+                                            <div class="col-md-2 botones">
+                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? '' : boton}  
+                                                ${boton_topar}
+                                                ${boton_pago}
+                                                ${boton_regresar}
+                                            </div> 
                                         </div>
                                         <div class="col-md-1">
                                         <input class="form-control ng-invalid ng-invalid-required" ${(parseInt(banderaPermisos) != 1) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">

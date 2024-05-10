@@ -29,7 +29,7 @@ class Api extends CI_Controller
             if ($data->id == "")
                 echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado."), JSON_UNESCAPED_UNICODE);
             else {
-                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099,7070,9187)))
+                if (!in_array($data->id, array(9860, 8134, 5918, 6489, 9347, 2099, 7070, 9187, 6352)))
                     echo json_encode(array("status" => -1, "message" => "Sistema no reconocido."), JSON_UNESCAPED_UNICODE);
                 else {
                     if ($data->id == 9860) // DRAGON
@@ -38,18 +38,18 @@ class Api extends CI_Controller
                         $arrayData = array("username" => "1NT43506MX", "password" => "BWII239.9DEJDINT3N@");
                     else if ($data->id == 5918) // ARCUS
                         $arrayData = array("username" => "9m1%6n7DfR", "password" => "7%5bea3K&B^fMhfOw8Rj");
-                    else if ($data->id == 9347) // OOAM COMISIONES
-                        $arrayData = array("username" => "004M_COM502", "password" => "2235&832SDVW");
-                    else if($data->id == 7070) 
-                        $arrayData = array("username" => "seguros_cm", "password" => "2afe3b96cddda4dd6cd22e88455e70a6");
                     else if ($data->id == 6489) // CAJA
                         $arrayData = array("username" => "caja");
                     else if ($data->id == 9347) // OOAM COMISIONES
                         $arrayData = array("username" => "004M_COM502", "password" => "2235&832SDVW");
                     else if ($data->id == 2099) // INVENTARIO VIRTUAL
                         $arrayData = array("username" => "Z72js34$99", "password" => "@HJgHuLP682asfd#");
+                    else if($data->id == 7070) // SEGURO MADERAS
+                        $arrayData = array("username" => "seguros_cm", "password" => "2afe3b96cddda4dd6cd22e88455e70a6");
                     else if ($data->id == 9187) // SALESFORCE
                         $arrayData = array("username" => "xPmR71zA9!", "password" => "E4n@t2LsF#U7jWb");
+                    else if ($data->id == 6352) // POSTVENTA
+                        $arrayData = array("username" => "PV5VNT4MD2", "password" => "2IODKKLSN42--Q_WR2");
                     $time = time();
                     $JwtSecretKey = $this->jwt_actions->getSecretKey($data->id);
                     $data = array(
@@ -1903,4 +1903,53 @@ class Api extends CI_Controller
         }
     }
 
-        } // llave del final
+    function getInformacionClientesPorCondominio() {
+        if (!isset(apache_request_headers()["Authorization"]))
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        else {
+            if (apache_request_headers()["Authorization"] == "")
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            else {
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(6352);
+                $valida_token = json_decode($this->validateToken($token, 6352));
+                if ($valida_token->status !== 200)
+                    echo json_encode($valida_token);
+                else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token))
+                        $valida_token = true;
+                    if(!empty($result->data) && $valida_token)
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    else {
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if (!isset($data->nombreCondominio))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->nombreCondominio == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $responseConsulta = $this->Api_model->getInformacionClientesPorCondominio($data->nombreCondominio);
+                                if (count($responseConsulta) > 0) // SÍ HAY INFORMACIÓN
+                                    echo json_encode(array("status" => 1, "message" => 'Petición realizada con éxito.', "data" => $responseConsulta), JSON_UNESCAPED_UNICODE);
+                                else // NO SE ENCONTRÓ INFORMACIÓN
+                                    echo json_encode(array("status" => 1, "message" => "Petición realizada con éxito, sin información que mostrar."), JSON_UNESCAPED_UNICODE); 
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+}

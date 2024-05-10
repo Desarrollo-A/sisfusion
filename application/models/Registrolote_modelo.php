@@ -3399,7 +3399,7 @@
 						'1' venta_compartida 
 					FROM 
 						lotes lo
-						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+						INNER JOIN clientes cl ON cl.idLote = lo.idLote AND cl.status = 1 AND (cl.id_asesor = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
 					WHERE 
 						lo.status = 1 
 						AND lo.idCondominio = $condominio 
@@ -3413,7 +3413,7 @@
 					FROM 
 						lotes lo
 						INNER JOIN clientes cl ON cl.idLote = lo.idLote 
-						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
+						INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND cl.status = 1 AND (cl.id_asesor = $id_usuario OR cl.id_subdirector = $id_usuario OR cl.id_regional = $id_usuario OR cl.id_regional_2 = $id_usuario) --AND cl.id_sede = $id_sede
 					WHERE 
 						vc.estatus = 1 
 						AND lo.status = 1 
@@ -3527,14 +3527,23 @@
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295';
 					$sede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-					$id_lider = $id_lider . ', 3111';
-					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
 					$sede = "";
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
 					$id_lider = $id_lider . ', 6942';
+					$sede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+					$id_lider = $id_lider . ', 10251, 455';
+					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+					$id_lider = $id_lider . ', 80, 664';
+					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 7435';
 					$sede = "";
 				}
 

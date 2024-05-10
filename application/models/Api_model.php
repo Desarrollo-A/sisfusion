@@ -185,7 +185,7 @@ class Api_model extends CI_Model
         CONCAT (u4.nombre,' ', u4.apellido_paterno,' ', u4.apellido_materno) director, (st.nombre) estatus, cl.fechaApartado, cl.fechaEnganche
         FROM lotes l
         INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
-        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial AND res.idResidencial = $idResidencial
+        INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial AND res.idResidencial NOT IN (21, 22, 14, 25) AND res.idResidencial = $idResidencial
         LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
         LEFT JOIN usuarios AS u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_coordinador
@@ -395,4 +395,26 @@ class Api_model extends CI_Model
             WHERE u0.id_rol = 7 AND u0.estatus = 1 AND u0.tipo=4 AND u0.id_lider != 1980
         ")->result_array();
     }
+
+    function getInformacionClientesPorCondominio($nombreCondominio) {
+        return $this->db->query(
+            "SELECT
+                re.nombreResidencial,
+                co.nombre nombreCondominio,
+                lo.nombreLote,
+                lo.idLote,
+                lo.referencia,
+                re.empresa,
+                CASE WHEN cl.id_cliente	IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno,  ' ', cl.apellido_materno)) END nombreCliente,
+                ISNULL(oxc0.nombre, 'Normal') tipoProcesoVenta
+            FROM lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.nombre = '$nombreCondominio'
+            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+            LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
+            LEFT JOIN opcs_x_cats oxc0  ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+            WHERE
+                lo.status = 1
+        ")->result_array();
+    }
+    
 }
