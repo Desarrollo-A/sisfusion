@@ -54,9 +54,9 @@ function show_propuestas(proceso) {
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
         new HiddenField({ id: 'idPropuesta', value: proceso.idPropuesta }),
         new title({ text: 'Cotizaciones' }),
-        new OptionFieldAndView({ id: 'cotizacion', label: '', data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones' }),
+        new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones' }),
         new title({ text: fechas.length == 1 ? 'Fecha de firma' : 'Fechas de firma' }),
-        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', data: fechas, style: 'height: 45px' }),
+        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', value: proceso.fechaElegida, data: fechas, style: 'height: 45px' }),
     ]
 
     form.show()
