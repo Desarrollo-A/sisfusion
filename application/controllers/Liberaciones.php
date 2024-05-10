@@ -48,30 +48,31 @@ class Liberaciones extends CI_Controller{
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
-    public function iniciaLiberacionLote(){
+    public function actualizaLiberacionLote(){
         // Datos a insertar en
         $data = array(
-            'idLote' => $this->input->post('idLote'),
-            'id_cliente' => $this->input->post('id_cliente'),
-            'rescision' => $this->input->post('rescision'),
-            'autorizacion_DG' => $this->input->post('autorizacion_DG'),
-            'proceso_lib' => $this->input->post('proceso_lib'), // Con que area se encuentra, 1 postventa, 2 contraloria, y asi
-            'estatus_lib' => $this->input->post('estatus_lib'), // 1 avance, 2 rechazo, 3 correccion
-            'concepto' => $this->input->post('concepto'), // 1 particulaes, 2 bloqueo, 3 etc..
-            'comentario' => $this->input->post('comentario'),
-            'comentario' => $this->input->post('comentario'),
-            'estatus' => 1,
-            'creado_por' => $this->session->userdata('id_usuario'),
-            'fecha_creacion' => date('Y-m-d h:i:s'),
-            'modificado_por' => $this->session->userdata('id_usuario'),
+            'idLote'             => $this->input->post('idLote'),
+            'id_cliente'         => $this->input->post('id_cliente'),
+            'rescision'          => $this->input->post('rescision'),
+            'autorizacion_DG'    => $this->input->post('autorizacion_DG'),
+            'proceso_lib'        => $this->input->post('proceso_lib'), // Con que area se encuentra, 1 postventa, 2 contraloria, y asi
+            'estatus_lib'        => $this->input->post('estatus_lib'), // 1 avance, 2 rechazo, 3 correccion
+            'concepto'           => $this->input->post('concepto'),    // 1 particulaes, 2 bloqueo, 3 etc..
+            'comentario'         => $this->input->post('comentario'),
+            'precioLiberacion'   => $this->input->post('precioLiberacion'),
+            'plazo'              => $this->input->post('plazo'),
+            'estatus'            => 1,
+            'creado_por'         => $this->session->userdata('id_usuario'),
+            'fecha_creacion'     => date('Y-m-d h:i:s'),
+            'modificado_por'     => $this->session->userdata('id_usuario'),
             'fecha_modificacion' => date('Y-m-d h:i:s'),
         );
 
         $result = $this->General_model->addRecord('proceso_liberaciones', $data);
         if ($result){
-            echo json_encode(array("status" => 200, "error" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+            echo json_encode(array("status" => 200, "msg" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
         }else {
-            echo json_encode(array("status" => 400, "error" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            echo json_encode(array("status" => 400, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
         }
     }
 

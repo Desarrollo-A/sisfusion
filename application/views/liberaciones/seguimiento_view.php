@@ -1,46 +1,102 @@
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <body>
+    <style>
+        #clienteConsulta .form-group {
+            margin: 0px !important;
+        }
+
+        #checkDS .boxChecks {
+            background-color: #eeeeee;
+            width: 100%;
+            border-radius: 27px;
+            box-shadow: none;
+            padding: 5px !important;
+        }
+
+        #checkDS .boxChecks .checkstyleDS {
+            cursor: pointer;
+            user-select: none;
+            display: block;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 31px;
+            border-radius: 9999px;
+            overflow: hidden;
+            transition: linear 0.3s;
+            margin: 0;
+            font-weight: 100;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span:nth-child(2) {
+            margin: 0 3px;
+        }
+
+        #checkDS .boxChecks .checkstyleDS span:hover {
+            box-shadow: none;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input {
+            pointer-events: none;
+            display: none;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span {
+            transition: 0.3s;
+            font-weight: 400;
+            color: #0a548b;
+        }
+
+        #checkDS .boxChecks .checkstyleDS input:checked+span:before {
+            font-family: FontAwesome !important;
+            content: "\f00c";
+            color: #0a548b;
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .form-group > input[name="costoM2"] {
+            margin-top: -10px !important;
+        }
+        
+        .tituloDeshacer {
+            font-weight: 500;
+            font-size: 1.4em;
+        }
+
+        .textoDeshacer {
+            font-size: 1.5rem;
+        }
+
+    </style>
     <div class="wrapper">
         <?php  $this->load->view('documentacion/documentosModales'); ?> <!--Modales para el manejo de los documentos-->
         <?php  $this->load->view('template/sidebar'); ?>
 
-        <div class="modal fade" id="modal-proceso-liberacion" data-keyboard="false" data-backdrop="static">
+        <!-- MODAL DE AVANCE O RECHAZO DE CONTRALORÍA A POSTVENTA -->
+        <div class="modal fade" id="accion-modal" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header"></div>
-                    <div class="modal-body" id='modal-liberacion'>
-                        <div class="container-fluid">
-                            <div class="row">
-                                <div class="col-12 text-center">
-                                    <h6 class="m-0">Envíar lote <b id="nombreLoteLiberar"></b> a liberación</i></b></h6>
-                                </div>
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 overflow-hidden">
-                                    <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*)</label>
-                                    <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-                                </div>
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-2">
-                                    <div id="selectFileSection">
-                                        <div class="file-gph">
-                                            <input type="file" accept="application/pdf" id="archivo_liberacion">
-                                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                                            <label class="upload-btn m-0" for="archivo_liberacion">
-                                                <span>Seleccionar</span>
-                                                <i class="fas fa-folder-open"></i>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 overflow-hidden">
-                                    <label class="control-label" for="id_usuario">Comentario</label>
-                                    <input class="text-modal mb-1" name="comentario" id="comentario" autocomplete="off">
-                                </div>
-                            </div>
-                        </div>
+                    <div class="modal-header text-center" id="labelHeaderAccionModal">
+                        <!-- <h4>¿Está seguro de <b>rechazar</b> el expediente de <b>'+nombreLote+'</b>?</h4> -->
                     </div>
-                    <div class="modal-footer mt-2" >
+                    <div class="modal-body pt-0">
+                        <div id="extra-content-accion-modal"></div>
+                        <div class="col-md-12 mb-2 text-center comment">
+                            <label class="control-label" id="labelComentarioAccionModal">
+                                <!-- Motivo del rechazo (opcional) -->
+                            </label>
+                            <input class="text-modal mb-1" id="comentarioAccionModal" name="comentarioAccionModal" autocomplete="off">                   
+                        </div>
+                        <div id="data-modal"></div>
+                    </div> 
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
-                        <button type="button" id="btn-proceso-liberacion" class="btn btn-primary">Aceptar</button>
+                        <button type="button" class="btn btn-primary" id="btn-accion">Aceptar</button>
                     </div>
                 </div>
             </div>
@@ -60,6 +116,8 @@
                                     <table id="liberacionesDataTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
+                                                <th>MOVIMIENTO</th>
+                                                <th>PROCESO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
@@ -87,6 +145,7 @@
             </div>
         </div>
 
+        <!-- ANIMACIÓN DE CARGA EN TODA LA VISTA -->
         <div class="spiner-loader hide" id="spiner-loader">
             <div class="backgroundLS">
                 <div class="contentLS">
