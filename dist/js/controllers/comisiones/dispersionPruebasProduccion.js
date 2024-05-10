@@ -26,7 +26,7 @@ $(document).ready(function () {
     dispersionDataTable = $('#tabla_dispersar_comisiones').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
-        scrollX: true,
+        scrollX: true, 
         bAutoWidth:true,
         buttons:[{
             extend: 'excelHtml5',
@@ -35,7 +35,7 @@ $(document).ready(function () {
             titleAttr: 'DESCARGAR ARCHIVO DE EXCEL',
             title: 'Reporte Comisiones Dispersión',
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulos_intxt[columnIdx] + ' ';
@@ -117,6 +117,18 @@ $(document).ready(function () {
                 }
                 return labelEstatus;
             }},
+                { data: function (d) {
+                return formatMoney(d.Precio_Total);
+            }},
+            { data: function (d) {
+                return d.Comision_total ? `${parseFloat(d.Comision_total)}%`: 'SIN ESPECIFICAR';
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_Pagadas);
+            }},
+            { data: function (d) {
+                return formatMoney(d.Comisiones_pendientes);
+            }},
             { data: function (d) {
                 var rescisionLote;
                 var reactivo;
@@ -150,7 +162,7 @@ $(document).ready(function () {
                 
                 return fechaActualizacion;
             }},
-            
+            {data: 'nombreMensualidad'},
             { data: function (d) {
                 var BtnStats = '';
 
@@ -342,6 +354,8 @@ $(document).ready(function () {
                             data-abonadoAnterior = "${d.abonadoAnterior}"
                             data-procesoReestructura = "${d.proceso}"
                             data-code = "${d.cbbtton}"
+                            data-opcionMensualidad = "${d.opcionMensualidad}"
+                            data-nombreMensualidad = "${d.nombreMensualidad}"
                             class = "btn-data ${varColor} verify_neodata" data-toggle="tooltip" data-placement="top" title="${ Mensaje }"><span class="material-icons">verified_user</span></button> ${RegresaActiva}`;
                             
                             BtnStats += `<button href="#" value="${d.idLote}" data-value="${d.nombreLote}" class="btn-data btn-blueMaderas btn-detener btn-warning" data-toggle="tooltip"  data-placement="top" title="Detener"> <i class="material-icons">block</i> </button>`;
@@ -478,6 +492,11 @@ $(document).ready(function () {
         estatusLote = $(this).attr("data-estatusLote");
         abonadoAnterior = $(this).attr("data-abonadoAnterior");
         procesoReestructura = $(this).attr("data-procesoReestructura");
+
+        opcionMensualidad = $(this).attr("data-opcionMensualidad");
+        nombreMensualidad = $(this).attr("data-nombreMensualidad");
+
+
         // alert(idLote);
         // alert(totalNeto2);
         // alert(total8P);
@@ -507,6 +526,8 @@ $(document).ready(function () {
             $("#modal_NEODATA .modal-footer").html("");
             $.getJSON( general_base_url + "ComisionesNeo/getStatusNeodata/"+idLote).done( function( data ){
                 var AplicadoGlobal = data.length > 0 ? data[0].Aplicado : 0;
+               // var tipoMensualidad = data[0].opcion !== null ? data[0].opcion : "No hay mensualidad";
+
                 // alert("entra a get");
                 if(data.length > 0){
                     switch (data[0].Marca) {
@@ -549,7 +570,7 @@ $(document).ready(function () {
                                     `;
                                 } else{
                                     cadena = 
-                                    `<div class="col-md-3 p-0">
+                                    `<div class="col-12">
                                         <h5>Bonificación: <b style="color:#D84B16;">${formatMoney(bonificadoTotal)}</b></h5>
                                     </div>
                                     `;
@@ -564,8 +585,11 @@ $(document).ready(function () {
                                                 <h3>Lote: <b>${nombreLote}${labelPenalizacion}</b></h3>
                                             </div>
                                         </div>
-                                        <div class="row">
-
+                                       
+                                            <div class="col-md-3 pl-2">
+                                                <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
+                                            </div>
+                                    
                                             <div class="col-md-3 p-0">
                                                 <h5>Precio Lote: <b>${formatMoney(totalNeto2)}</b></h5>
                                             </div>
@@ -577,10 +601,12 @@ $(document).ready(function () {
                                             <div class="col-md-3 p-0">
                                                 <h5>Pagado: <b style="color:'black;">${formatMoney(abonadoAnterior)}</b></h5>
                                             </div>
+                                            
 
-                                            <div class="col-md-3 p-0">
-                                                <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
-                                            </div>
+                                                <div class="col-md-3 p-0">
+                                                    <h5>Disponible: <b style="color:green;">${formatMoney(total0)}</b></h5>
+                                                </div>
+                                            
                                                     ${cadena}
                                         </div>`);
 
@@ -593,9 +619,11 @@ $(document).ready(function () {
                                 
                                 if(procesoReestructura != 0 && estatusLote < 15 && ooamDispersion == 1 ){
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
+                                console.log(1);
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM 50%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 3; //[2,4,7].includes(parseInt(procesoReestructura)) ? 4 : 3;
                                 } else if(procesoReestructura != 0 && estatusLote >= 15 && ooamDispersion == 1){
+                                    console.log(2);
                                     // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Dispersión OOAM</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                         bandera_anticipo = 4;
@@ -603,12 +631,15 @@ $(document).ready(function () {
                                 // *********Si el monto es menor al 5% se dispersará solo lo proporcional
                                 $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo menor al 5%</b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 0;
+                                    console.log(3);
                                 }else if(total>=(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 8% se dispensará lo proporcional al 12.5% / se dispersa la mitad
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo mayor/igual al 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`); 
                                     bandera_anticipo = 1;
+                                    console.log(4);
                                 } else if(total>=(cincoporciento-1) && total<(ochoporciento) && (disparador != 3 || ooamDispersion == 2) ){
                                 // *********Si el monto el igual o mayor a 5% y menor al 8% se dispersará la 4° parte de la comisión
+                                    console.log(5);    
                                     $("#modal_NEODATA .modal-body").append(`<div class="row mb-1"><div class="col-md-6"><h5><i class="fa fa-info-circle" style="color:gray;"></i><b style="color:blue;">Anticipo entre 5% - 8% </b></h5></div><div class="col-md-6"><h5>Plan de venta <i>${descripcion_plan}</i></h5></div></div>`);
                                     bandera_anticipo = 2;
                                 } 
@@ -670,6 +701,7 @@ $(document).ready(function () {
                                 const datosPlan8P = plan_comision == 66 ? datosPlan8PAnterior : datosPlan8PNuevo;
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
+                                    console.log(78)
                                     resultArr = JSON.parse(resultArr);
                                     console.log(resultArr)
                                     $.each( resultArr, function( i, v){
@@ -681,7 +713,7 @@ $(document).ready(function () {
                                             v.porcentaje_decimal = busqueda != undefined ? v.porcentaje_decimal + busqueda.porcentaje : v.porcentaje_decimal;
                                             v.comision_total = busqueda != undefined ? (v.comision_total + ((busqueda.porcentaje/100)) * totalNeto2Cl) : v.comision_total;
                                         }
-
+                                        
                                         let porcentajeAse = v.porcentaje_decimal;
                                         let total_comision1 = 0;
                                         total_comision1 = totalNeto2 * (porcentajeAse / 100);
@@ -707,7 +739,7 @@ $(document).ready(function () {
                                         console.log(total);
                                         total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? total  : total;
                                         total = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (data[0].Aplicado-abonadoAnterior) <= 0) ? 0 : total;
-
+                                        console.log(bandera_anticipo)
                                         switch(bandera_anticipo){
                                             case 0:// monto < 5% se dispersará solo lo proporcional
                                             operacionValidar = (total*(0.125*v.porcentaje_decimal));
@@ -814,7 +846,7 @@ $(document).ready(function () {
                             }
                             else{
                                 $.getJSON( general_base_url + "Comisiones/getDatosAbonadoSuma11/"+idLote+"/"+ooamDispersion).done( function( data1 ){
-                                    
+
                                     let total0 = [2,3,4,7].includes(parseInt(procesoReestructura)) ? parseFloat((data[0].Aplicado - abonadoAnterior)) : parseFloat((data[0].Aplicado));
                                     let total = 0;
                                     if(total0 > 0){
@@ -828,7 +860,17 @@ $(document).ready(function () {
                                     // data1[0].abonado
                                     if(penalizacion == 1){labelPenalizacion = ' <b style = "color:orange">Lote con Penalización + 90 días</b>';}
                                     $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-12"><h3><i class="fa fa-info-circle" style="color:gray;"></i> Saldo diponible para <i>${row.data().nombreLote}</i>: <b>${formatMoney([2,3,4,7].includes(parseInt(procesoReestructura)) ? total0 : (total0-(data1[0].abonado)))}</b><br>${labelPenalizacion}</h3></div></div><br>`);
-                                    $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div><div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonadoAnterior)}</b></div><div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div></div>`);
+                                    $("#modal_NEODATA .modal-body").append(`
+                                        <div class="row">
+                                            <div class="col-md-4 pl-4">Total pago: <b style="color:blue">${formatMoney(data1[0].total_comision)}</b></div>
+                                            <div class="col-md-4">Total abonado: <b style="color:green">${formatMoney(abonadoAnterior)}</b></div>
+                                            <div class="col-md-4">Total pendiente: <b style="color:orange">${formatMoney((data1[0].total_comision)-(data1[0].abonado))}</b></div>
+                                        </div>
+                                        <div class="col-md-3 pl-2">
+                                            <h5>Tipo Mensualidad: <b><span class="card-title">${nombreMensualidad}</span></b></h5>
+                                        </div>
+
+                                    `);
 
                                     if(parseFloat(data[0].Bonificado) > 0){
                                         cadena = '<h4>Bonificación: <b style="color:#D84B16;">$'+formatMoney(data[0].Bonificado)+'</b></h4>';
@@ -911,19 +953,36 @@ $(document).ready(function () {
                                                 //ENTRA AQUI AL CERO
                                                 saldo = 0;
                                             }
-
+                                            console.log('veces que se repite')
                                             $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                            <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}"><input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}"><input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}"><input type="hidden" name="idCliente" id="idCliente" value="${idCliente}"><input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                            <input type="hidden" name="pending" id="pending" value="${pending}"><input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                            <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}"><input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}"><input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
+                                            <div class="col-md-3"><input id="id_disparador" type="hidden" name="id_disparador" value="${disparador}">
+                                            <input type="hidden" name="penalizacion" id="penalizacion" value="${penalizacion}">
+                                            <input type="hidden" name="nombreLote" id="nombreLote" value="${nombreLote}">
+                                            <input type="hidden" name="idCliente" id="idCliente" value="${idCliente}">
+                                            <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                            <input type="hidden" name="pending" id="pending" value="${pending}">
+                                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                            <input id="id_comision" type="hidden" name="id_comision[]" value="${v.id_comision}">
+                                            <input id="id_usuario" type="hidden" name="id_usuario[]" value="${v.id_usuario}">
+                                            <input id="id_rol" type="hidden" name="id_rol[]" value="${v.rol_generado}">
                                             <input class="form-control input-gral" required readonly="true" value="${v.colaborador}" style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">
                                             <b><p style="font-size:12px;${v.descuento == 1 ? 'color:red;' : ''}">${v.descuento != "1" ?  v.rol : v.rol +' Incorrecto' }</p></b></div>
-                                            <div class="col-md-1"><input class="form-control input-gral" required readonly="true" style="padding: 10px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}"></div>
-                                            <div class="col-md-2"><input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}"></div>
-                                            <div class="col-md-2"><input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control input-gral abono_nuevo" readonly="true"  name="abono_nuevo[]" value="${saldo}" type="hidden">
-                                            <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}"></div></div>`);
+                                            <div class="col-md-1">
+                                                <input class="form-control input-gral" required readonly="true" style="padding: 10px; ${v.descuento == 1 ? 'color:red;' : ''}" value="${parseFloat(v.porcentaje_decimal)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.comision_total)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required readonly="true" style="${v.descuento == 1 ? 'color:red;' : ''}" value="${formatMoney(v.abono_pagado)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-control input-gral" required style="${pending < 0 ? 'color:red' : ''}" readonly="true" value="${formatMoney(pending)}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input id="abono_nuevo${counts}" onkeyup="nuevo_abono(${counts});" class="form-control input-gral abono_nuevo" readonly="true"  name="abono_nuevo[]" value="${saldo}" type="hidden">
+                                                <input class="form-control input-gral decimals"  data-old="" id="inputEdit" readonly="true"  value="${formatMoney(saldo)}">
+                                            </div></div>`);
                                             counts++
                                         });
                                     });

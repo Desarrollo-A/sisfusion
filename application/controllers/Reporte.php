@@ -88,6 +88,12 @@ class Reporte extends CI_Controller {
         $vcArray = array_filter($data, function($element){
             return $element['tipo'] == 'vc';
         });
+        $sum = 0;
+        foreach($vcArray as $key => $elemento) {
+            $total = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
+            $sum += $total;
+        }
+        //echo json_encode($sum);
 
         //Obtenemos solo array de ventas apartadas
         $vaArray = array_filter($data, function($element){
@@ -97,6 +103,8 @@ class Reporte extends CI_Controller {
         //Reindexamos el filtro obtenido anteriormente
         $vcArray = array_values($vcArray);
         $vaArray = array_values($vaArray);
+        $sumApt = 0;
+        $sumCompleta = 0;
 
         //Recorremos uno de los arrays obtenido anteriormente y sumamos en cada uno de los puntos para obtener cantidad y total
         if( $general == "1" || $tipoChart == "vt"){
@@ -106,7 +114,7 @@ class Reporte extends CI_Controller {
             foreach( $vcArray as $key => $elemento ){
                 $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
                 $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
-                
+                $sumApt = $tot1 + $tot2;
                 //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes.
                 $data[] = array(
                     'total' => "$" . number_format(($tot1 + $tot2), 2),
@@ -116,11 +124,15 @@ class Reporte extends CI_Controller {
                     'tipo' => 'vt',
                     'rol' => $elemento['rol']
                 ); 
+                
             }
+            
         }
+        
 
         if($data != null)
             echo json_encode($data);
+            
         else
             echo json_encode(array());
     }
@@ -326,6 +338,11 @@ class Reporte extends CI_Controller {
 		$this->load->view("reportes/lotesXStatus_view");
     }
 
+    public function reporteLotesCliente(){        
+		$this->load->view('template/header');
+		$this->load->view("reportes/reporteClientes_view");
+    }
+
     public function lotesContrato(){
         $this->load->view('template/header');
         $this->load->view("reportes/reporteLotesContrato");
@@ -353,6 +370,38 @@ class Reporte extends CI_Controller {
         $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $result['data'] = $this->Reporte_model->getListadoDeVentas($beginDate, $endDate);
         echo json_encode($result, JSON_NUMERIC_CHECK);
+    }
+
+    public function getAllLotes(){
+
+        $nombreCliente = $this->input->post("nombreCliente");
+
+        $data = $this->Reporte_model->getAllLotes($nombreCliente)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesUnicos(){
+
+        $data = $this->Reporte_model->getLotesUnicos()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesTotal(){
+
+        $data = $this->Reporte_model->getLotesTotal()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 
 }

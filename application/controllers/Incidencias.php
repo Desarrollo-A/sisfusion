@@ -4,7 +4,7 @@ if (!defined('BASEPATH')) {
 }
  
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-
+ 
 class Incidencias extends CI_Controller
 {
   private $gph;
@@ -458,5 +458,22 @@ class Incidencias extends CI_Controller
         }
         echo json_encode ($respuesta);
     }
+
+    public function fillMensualidades() {
+      echo json_encode($this->Incidencias_model->getMensualidades()->result_array());
+    }
+
+    public function updateMensualidades() {
+      $idUsuarioM =  $this->session->userdata('id_usuario');
+      $mensualidad = $this->input->post('tipoMensualidad');
+      $idCliente = $this->input->post('idCliente');
+      $idLote = $this->input->post('idLote');
+  
+      $result = $this->Incidencias_model->updateMensualidades($mensualidad, $idCliente, $idLote ,$idUsuarioM);
+      
+      echo json_encode ($result);
+
+    }
+  
 
 }

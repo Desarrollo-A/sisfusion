@@ -643,7 +643,6 @@ function fillDataTable(idCondominio) {
                             }
                         }
                     
-                    buttons += construiBotonRegreso(d, d.fechaVenc, 'getInfoRe');
 
                     return '<div class="d-flex justify-center">'+buttons+'</div>';
                 }
@@ -681,23 +680,6 @@ function construirBotonEstatus(data, fechaVenc, classButton, atributoButton = ''
                 title="${titulo}"> <i class="fas fa-check"></i></button>`;
 }
 
-function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
-    return `<button href='#' ${atributoButton} 
-                data-tiComp='${data.tipo_comprobanteD}' 
-                data-nomLote='${data.nombreLote}' 
-                data-idCliente='${data.id_cliente}'
-                data-nombreResidencial='${data.nombreResidencial}' 
-                data-nombreCondominio='${data.nombreCondominio}' 
-                data-nombreLote='${data.nombreLote}' 
-                data-idCondominio='${data.idCondominio}' 
-                data-idLote='${data.idLote}' 
-                data-fechavenc='${fechaVenc}'
-                data-idMov='${data.idMovimiento}'
-                data-EstatusRegreso='${data.tipo_estatus_regreso}' 
-                class="btn-data btn-warning ${classButton}" 
-                data-toggle="tooltip" data-placement="top" 
-                title="${titulo}"> <i class="fas fa-rotate-left"></i></button>`;
-}
 
 function generarBotonesAutorizacion(clienteData) {
     let botones = '';
@@ -725,58 +707,6 @@ function generarBotonesAutorizacion(clienteData) {
 function openLink(id_cliente){
         window.open(general_base_url+'Asesor/deposito_seriedad/'+ id_cliente+'/0', '_blank');
 }
-
-$(document).on('click', '#saveRegreso', function(e) { // accion para el botón de regreso del procesos y preproceso
-    e.preventDefault();
-    const comentario = $("#comentario").val();
-    var validaComent = (document.getElementById("comentarioRe").value.trim() == '') ? 0 : 1;
-
-    let dataExp1 = new FormData();
-    dataExp1.append("idCliente", getInfoData[0]);
-    dataExp1.append("nombreResidencial", getInfoData[1]);
-    dataExp1.append("nombreCondominio", getInfoData[2]);
-    dataExp1.append("idCondominio", getInfoData[3]);
-    dataExp1.append("nombreLote", getInfoData[4]);
-    dataExp1.append("idLote", getInfoData[5]);
-    dataExp1.append("comentario", comentario);
-    dataExp1.append("fechaVenc", getInfoData[6]);
-    dataExp1.append('tipo_comprobante', tipo_comprobante);
-    dataExp1.append('idMovimiento', getInfoData[7]);
-    dataExp1.append('estatusRegreso', getInfoData[8]);
-
-    if (validaComent == 0) {
-        alerts.showNotification("top", "right", "Ingresa un comentario.", "danger");
-    }
-    else {
-        $('#saveRegreso').prop('disabled', true);
-        $.ajax({
-            url : general_base_url + 'Reestructura/regresoProcesoVenta',
-            data: dataExp1,
-            dataType: 'json',
-            cache: false,
-            contentType: false,
-            processData: false,
-            type: 'POST',
-            success: function(result){
-                if(result.result) {
-                    $('#saveRegreso').prop('disabled', false);
-                    $('#modal1').modal('hide');
-                    $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                    alerts.showNotification("top", "right", result.message, "success");
-                }
-                else{
-                    alerts.showNotification("top", "right", result.message, "danger");
-                }
-            },
-            error: function(){
-                $('#saveRegreso').prop('disabled', false);
-                $('#modal1').modal('hide');
-                $('#tabla_deposito_seriedad').DataTable().ajax.reload();
-                alerts.showNotification("top", "right", "Error al enviar la solicitud de regreso.", "danger");
-            }
-        });
-    }
-});
 
 $(document).on('click', '#save1', function(e) {
     e.preventDefault();

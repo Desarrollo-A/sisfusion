@@ -1,8 +1,9 @@
 $(document).on('click', '.btn-historial', function () {
     let idLoteOrigen = $(this).attr("data-idLote");
+    let flagFusion = $(this).attr("data-flagFusion");
     $('#historialLine').html('');
     $("#spiner-loader").removeClass('hide');
-    $.post(`getHistorialPorLote/${idLoteOrigen}`).done(function (data) {
+    $.post(`getHistorialPorLote/${idLoteOrigen}/${flagFusion}`).done(function (data) {
         $("#modal_historial").modal();
         if (JSON.parse(data).length > 0) {
             $.each(JSON.parse(data), function (i, v) {
@@ -50,3 +51,4 @@ function emptyLog() {
             </div>
         </div>
     </li>`);
+}
