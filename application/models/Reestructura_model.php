@@ -1487,7 +1487,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getReporteEstatus() {
-
+    ini_set('memory_limit', -1);
     return $this->db->query("WITH UltimoValor AS (
                 SELECT 
                     idLote,
