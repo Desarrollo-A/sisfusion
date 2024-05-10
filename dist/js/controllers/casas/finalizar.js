@@ -5,6 +5,7 @@ finalizar = function(data) {
         text: `¿Finalizar proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -20,6 +21,8 @@ finalizar = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -39,6 +42,7 @@ back_to_firma_contrato = function(data) {
         text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
             
             $.ajax({
                 type: 'POST',
@@ -54,6 +58,8 @@ back_to_firma_contrato = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -69,6 +75,11 @@ back_to_firma_contrato = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 1)
@@ -130,7 +141,7 @@ let table = new Table({
     buttons:buttons
 })
 
-let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opcion'})
+let filtro_proceso = new SelectFilter({ id: 'proceso', label: 'Proceso',  placeholder: 'Selecciona una opción'})
 
 filtro_proceso.onChange(function(option){
     // console.log(option)

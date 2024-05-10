@@ -46,7 +46,7 @@ class Descuentos extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("descuentos/descuentos_contraloria_view");
         }
-    public function panel_descuentos(){
+    public function panel_descfuentos(){
         $datos["descuentos"] =  $this->Descuentos_model->lista_estatus_descuentos()->result_array();
         $this->load->view('template/header');
         $this->load->view("descuentos/panel_descuentos", $datos);
@@ -73,6 +73,49 @@ class Descuentos extends CI_Controller
         $this->load->view('template/header');
         $this->load->view("descuentos/descuentos_historial_view");
     }
+    
+
+    // 
+    // 
+    // aqui vamos 
+    
+    public function anticipo()
+    {
+        $this->load->view('template/header');
+        switch($this->session->userdata('id_rol')){
+            case '7':
+            case '9':
+            case '3':
+            // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+            $this->load->view("descuentos/anticipo/anticipo_descuento_view");
+            break;
+            case '2':
+            case '5':
+                // $datos["controversias"] = $this->Comisiones_model->getMotivosControversia();
+                $this->load->view("descuentos/anticipo/solicitudes_view");
+            break;
+            case '4':
+            case '1':    
+                $this->load->view("descuentos/anticipo/anticipo_descuento_dc_view");
+            break;
+                
+            default:
+                
+        
+        break;
+        }
+    }
+    
+    public function getComments($id){
+        // $id_pago = $this->input->post("id_pago");
+        echo json_encode($this->Descuentos_model->getComments($id));
+    }
+
+    // 
+    // 
+
+
+
 
     // vistas fin de las vistas de este controlador
 
@@ -331,8 +374,8 @@ class Descuentos extends CI_Controller
                     }else{
                         $comentario = $this->input->post("comentario");
                     }
-                    $dat3 =  $this->Descuentos_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
-                    $dat4 =  $this->Descuentos_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor,$expediente,$tipo);
+                    $dat3 =  $this->Descuentos_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli,$expediente,$tipo);
+                    $dat4 =  $this->Descuentos_model->insertar_descuento($usuario,$Restante,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor);
                     if($dat4 == 1 && $dat3 == 1 ){
                         $respuesta =  array(
                             "valor" => 1, 
@@ -357,7 +400,7 @@ class Descuentos extends CI_Controller
                     $num = $i +1;
                     $comentario = "DESCUENTO UNIVERSIDAD MADERAS LOTES INVOLUCRADOS:  $LotesInvolucrados ( TOTAL DESCUENTO $desc ), ".$num."° LOTE A DESCONTAR $nameLote, MONTO DISPONIBLE: $".number_format(floatval($monto), 2, '.', ',').", DESCUENTO DE: $".number_format(floatval($monto), 2, '.', ',').", RESTANTE: $".number_format(floatval(0), 2, '.', ',')." ";
                 }else{ $comentario = $this->input->post("comentario"); }
-                    $dat = $this->Descuentos_model->update_descuento($id,0,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario, $pagos_apli);
+                    $dat =  $this->Descuentos_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli,$expediente,$tipo);
                     $sumaMontos = $sumaMontos + $monto;
                 }
                 }
@@ -387,7 +430,7 @@ class Descuentos extends CI_Controller
                     }
 
                 }else{
-                    $dat7 =  $this->Descuentos_model->update_descuento($id,$descuento,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli);
+                    $dat7 =  $this->Descuentos_model->update_descuento($id,$montoAinsertar,$comentario, $saldo_comisiones, $this->session->userdata('id_usuario'),$valor,$usuario,$pagos_apli,$expediente,$tipo);
                     $dat8 =  $this->Descuentos_model->insertar_descuento($usuario,$montoAinsertar,$comision[0]['id_comision'],$comentario,$this->session->userdata('id_usuario'),$pago_neodata,$valor,$expediente,$tipo);
                     if($dat8 == 1 && $dat7 == 1 ){
                         $respuesta =  array(
@@ -711,6 +754,160 @@ class Descuentos extends CI_Controller
         }
 
 
+// 
+// anticipo de pagos
 
+        public function anticipo_pago_insert(){
+            $insertArray = array(
+                'id_usuario' => $this->session->userdata('id_usuario'),
+                'monto'    =>   $this->input->post('montoSolicitado'),
+                'comentario' => $this->input->post('descripcionMotivo'),
+                'estatus'    => 1,
+                'proceso'    => 2,
+                'impuesto'    => 0,
+                'fecha_registro' => date("Y-m-d H:i:s"),
+                'prioridad'    => 1,
+                'prioridad'    => ''
+                );
+                
+                $idAnticipo = $this->Descuentos_model->insertAdelanto($insertArray);
+                // nace un anticipo
+            
+                $insertArrayHistorial = array(
+                'id_anticipo' => $idAnticipo,
+                'id_usuario'  => $this->session->userdata('id_usuario'),
+                'proceso'     => 1,
+                'comentario'  => $this->input->post('descripcionMotivo')            
+                );
+                $tablaHistorial = 'historial_anticipo' ;
+                $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+                $insertArrayHistorial = array(
+                    'id_anticipo' => $idAnticipo,
+                    'id_usuario'  => $this->session->userdata('id_usuario'),
+                    'proceso'     => 2,
+                    'comentario'  => $this->input->post('descripcionMotivo')            
+                    );
+                    $tablaHistorial = 'historial_anticipo' ;
+                    $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+                if($respuestaHistorial){
+                    $respuesta =  array(
+                        "response_code" => 200, 
+                        "response_type" => 'success',
+                        "message" => "Se ha dado de alta el anticipo puedes revisar el avance apartado  PROCESOS");
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 400, 
+                        "response_type" => 'danger',
+                        "message" => "Error NO se ha dado el alta del anticipo");
+                }
+                echo json_encode($respuesta);
+
+
+        }
+
+
+        public function historial_anticipo_avance()
+        {
+            $respuestaHistorial = $this->Descuentos_model->historial_anticipo_avance($insertArrayHistorial,$tablaHistorial);
+        }
+
+        public function todos_los_pasos()
+        {
+            $todos_los_pasos = $this->Descuentos_model->todos_los_pasos();
+            echo json_encode($todos_los_pasos);
+        }
+        // public function 
+        public function solicitudes_por_aticipo()
+        {
+            $todos_los_pasos = $this->Descuentos_model->solicitudes_por_aticipo();
+            echo json_encode($todos_los_pasos);
+        }
+        public function solicitudes_generales_dc()
+        {
+            $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_dc();
+            echo json_encode($todos_los_pasos);
+        }
+// anticipo de pagos
+// 
+
+
+        public function anticipo_update_generico(){
+            $monto =  $this->input->post('monto');
+            $id_anticipo =  $this->input->post('idAnticipo_Aceptar');
+            $bandera= 1;
+            
+            if($this->input->post('bandera_a') == 1 ){  
+                $file = $_FILES["evidenciaNueva"];
+                if($_FILES["evidenciaNueva"]["name"] != '' && $_FILES["evidenciaNueva"]["name"] != null){
+                $aleatorio = rand(100,1000);
+                $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidenciaNueva"]["name"]); 
+                $date = date('dmYHis');
+                $expediente = $date."_".$aleatorio."_".$namedoc;
+                $ruta = "static/documentos/solicitudes_anticipo/";
+                if(move_uploaded_file($_FILES["evidenciaNueva"]["tmp_name"], $ruta.$expediente)){
+                    $bandera = 1;
+                    
+                }else{
+                    $bandera = 0;
+                    $respuesta =  array(
+                        "response_code" => 800, 
+                        "response_type" => 'error',
+                        "message" => "Error Al subir el documento, inténtalo más tarde ");
+                    }
+            }else if($banderaEvidencia == 0){
+                $bandera = 2;
+                $expediente = '';
+                
+            }}else{
+                $expediente = '';
+            }
+
+            if($this->input->post('proceso') ==6){
+                $insertArray = array(
+                    'monto'         => $monto,
+                    'estatus'       => $this->input->post('estatus'),
+                    // 'evidencia'     => $expediente,
+                    'proceso'       => $this->input->post('proceso'),
+                    'prioridad'     => $this->input->post('seleccion')
+                    );
+            }else{
+                $insertArray = array(
+                    'monto'         => $monto,
+                    'evidencia'     => $expediente,
+                    'proceso'       => $this->input->post('proceso'),
+                    'prioridad'     => $this->input->post('seleccion')
+                    );
+            }
+          
+                
+            $clave =  $id_anticipo;
+            $llave = 'id_anticipo';
+            $tabla = 'anticipo';
+            $tabla_insert = 'historial_anticipo';
+            
+            $insertHistorial = array(
+                'id_anticipo'   => intval( $id_anticipo),
+                'id_usuario'    =>  intval($this->input->post('id_usuario')),
+                'proceso'       =>  intval($this->input->post('proceso')),
+                'comentario'    =>  $this->input->post('motivoDescuento_aceptar')
+                );
+
+                $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$insertArray);
+                
+
+                $respuestaHistorial2 = $this->Descuentos_model->insertAdelantoGenerico($insertHistorial, $tabla_insert);
+                if($respuestaHistorial){
+                    $respuesta =  array(
+                        "response_code" => 200, 
+                        "response_type" => 'success',
+                        "message" => "Se cambio el estatus del anticipo");
+                }else{
+                    $respuesta =  array(
+                        "response_code" => 400, 
+                        "response_type" => 'danger',
+                        "message" => "Error NO se ha dado el alta del anticipo");
+                }
+                echo json_encode($respuesta);
+        }
 
 }

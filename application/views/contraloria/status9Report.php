@@ -69,7 +69,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>REUBICACIÓN</th>
                                                 <th>FECHA DE REUBICACIÓN</th>
-                                                <th>SEDE RECEPCIÓN</th>
+                                                <th>RECEPCIÓN CONTRATO</th>
                                             </tr>
                                         </thead>
                                     </table>

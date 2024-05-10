@@ -1398,7 +1398,6 @@ const botonesAccionReubicacion = (d) => {
     const totalResicionNumero = parseInt( banderaFusion == 1 ? d.totalRescisionFusionNumero : 1);
     const contratoFirmadoFile =  d.contratoFirmado;    //funciona para fusion y no funcion
 
-
     let editar = 0;
     let btnShow = 'fa-upload';
     let btnContratoFirmado = 'fa-file-upload';
@@ -1607,7 +1606,7 @@ let BUTTONREGRESO = '';
         }
 
     }
-    if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
+    if (idEstatusPreproceso === 2 && id_rol_general == 15 && id_usuario_general != 13733 && FLAGPROCESOJURIDICO === 0 && FLAGPROCESOCONTRALORIA === 1) { // Jurídico: ELABORACIÓN DE CONTRATO Y RESICISIÓN
 
         if(contratoFirmadoFile===null)
             botonJuridico = '';

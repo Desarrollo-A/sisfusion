@@ -5,6 +5,7 @@ back_to_adeudos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -20,6 +21,8 @@ back_to_adeudos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -67,6 +70,11 @@ pass_to_proyecto_ejecutivo = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 5)

@@ -16,17 +16,18 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Propuestas de firma: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Cotizaciones: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
+
+                                <input class="hidden" id="lote" name="lote" value="<?php echo $lote->tipoCredito ?>"></input>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>NOTARIA</th>
-                                            <th>FECHA FIRMA</th>
-                                            <th>COSTO</th>
+                                            <th>NOMBRE</th>
+                                            <th>ARCHIVO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -47,5 +48,5 @@
     <script type="text/javascript">
         const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
     </script>
-    <script src="<?= base_url() ?>dist/js/controllers/casas/propuestas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/cotizaciones.js"></script>
 </body>
