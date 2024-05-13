@@ -276,6 +276,16 @@ class Reestructura extends CI_Controller{
 			'comentario' => 'OK',
 			'status' => 1
         );
+
+        $dataInsertPreprocesoLote = array(
+            'idLote' => $loteAOcupar,
+            'idCliente' => $idClienteInsert,
+            'id_preproceso' => 6,
+            'comentario' => 'SELECCIÓN FINAL EEC',
+            'estatus' => 1,
+            'modificado_por' => $this->session->userdata('id_usuario'),
+			'fecha_modificacion' => date('Y-m-d h:i:s'),
+        );
         
         if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
             $this->db->trans_rollback();
@@ -284,6 +294,18 @@ class Reestructura extends CI_Controller{
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+        if (!$this->General_model->addRecord('historial_preproceso_lote', $dataInsertPreprocesoLote)) {
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al guardar el registro del lote.',
                 'color' => 'danger'
             ));
             return;
@@ -1126,7 +1148,7 @@ class Reestructura extends CI_Controller{
                 'comentario' => 'OK',
                 'status' => 1
             );
-    
+
             if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
                 $this->db->trans_rollback();
     
@@ -3387,7 +3409,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado el lote al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado el lote al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -3463,7 +3485,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado la fusión al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado la fusión al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -3999,5 +4021,10 @@ class Reestructura extends CI_Controller{
         $insert = $this->General_model->addRecord('historial_regreso_reestructura', $insertData);
 
         return $insert;
+    }
+
+    public function cambioComision(){
+        $this->load->view('template/header');
+        $this->load->view('reestructura/cambioComision_view');
     }
 }

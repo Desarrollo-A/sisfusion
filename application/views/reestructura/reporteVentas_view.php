@@ -68,6 +68,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="modalCambio" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="regresoLo">
+                        <h4 class="modal-title"><label><span class="titulo_modal_2"></span><b><span class="lote_2"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="content boxContent">
             <div class="container-fluid">
@@ -102,6 +120,8 @@
                                                 <th>FECHA ESTATUS 2</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
                                                 <th>RECEPCIÓN CONTRATO</th>
+                                                <th>ASESOR</th>
+                                                <th>GERENTE</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
