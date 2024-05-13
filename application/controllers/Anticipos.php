@@ -27,9 +27,18 @@ class Anticipos extends CI_Controller {
     }
 
     public function historial_Anticipo(){
-		$this->load->view('template/header');
-		$this->load->view("anticipos/anticipos_view");
-	}
+        switch($this->session->userdata('id_rol')){
+        case '31':
+          $this->load->view('template/header');
+          $this->load->view("anticipos/anticipos_internomex_view");
+        break;
+    
+        default:
+          $this->load->view('template/header');
+          $this->load->view("anticipos/anticipos_view");
+        break;
+        }
+    }
 
     public function getAnticipos(){
 
@@ -48,10 +57,45 @@ class Anticipos extends CI_Controller {
         $id_anticipo = $this->input->post('id_anticipo');
         $procesoAnt = $this->input->post('procesoAnt');
         $monto = $this->input->post('monto');
+        $numeroPagos = $this->input->post('numeroPagos');
+        $procesoTipo = $this->input->post('procesoTipo');
+        $pago = $this->input->post('pago');
+        $creado_por = $this->session->userdata("id_rol");
+    
+        $result_2 = null;
+        $result_3 = null;
+        $success = false;
+    
+        if ($this->session->userdata('id_rol') == 31) {
+            $procesoAntInternomex = $this->input->post('procesoAntInternomex');
+            $result = $this->Anticipos_model->updateEstatus($procesoAntInternomex, $id_usuario);
+            $success = ($result != null); 
+        } else {
 
-        $result = $this->Anticipos_model->updateEstatus($procesoAnt, $id_usuario);
-        $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
-        
-        echo json_encode ($result,$result_2);
+            $result = $this->Anticipos_model->updateEstatus($procesoAnt, $id_usuario);
+
+            $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+            
+            if ($numeroPagos == '' && $pago == '') {
+                $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+            } else {
+                $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
+                $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+            }
+            $success = ($result != null && $result_2 != null && $result_3 != null); 
+        }
+    
+        $response = array(
+            'success' => $success,
+            'result' => $result,
+            'result_2' => $result_2,
+            'result_3' => $result_3
+        );
+    
+        echo json_encode($response);
     }
+    
+    
+    
+
 }

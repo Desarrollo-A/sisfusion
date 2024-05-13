@@ -29,6 +29,18 @@
                                 </div>
                             </div>
 
+                            <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center">
+                                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                                    <div class="form-group m-0 overflow-hidden">
+                                        <label class="control-label" for="proyecto">Tipo:</label>
+                                        <select class="selectpicker select-gral m-0" name="procesoTipo" id="procesoTipo" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body">
+                                            <option value="1">Préstamo</option>
+                                            <option value="0">Apoyo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                     <div class="form-group overflow-hidden">
@@ -39,12 +51,18 @@
                                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                     <div class="form-group overflow-hidden">
                                         <label class="control-label" for="proyecto">Número de pagos</label>
-                                        <select class="selectpicker select-gral m-0 input-gral" name="numeroPagos" id="numeroPagos" data-style="btn" data-show-subtext="true"  title="SELECCIONA UN NÚMERO" data-size="7" data-live-search="true" data-container="body" required>
-                                            <?php
-                                                for ($i = 1; $i <= 11; $i++) {
-                                                    echo "<option value='$i'>$i</option>";
-                                                }
-                                            ?>
+                                        <select class="selectpicker select-gral m-0 input-gral" name="numeroPagos" id="numeroPagos" data-style="btn" data-show-subtext="true"  title="SELECCIONA UN NÚMERO" data-size="7" data-live-search="true" data-container="body">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
                                         </select>
                                     </div>
                                 </div>
@@ -92,6 +110,10 @@
                                                         <th>PROCESO</th>
                                                         <th>COMENTARIO</th>
                                                         <th>PRIORIDAD</th>
+                                                        <th>IMPUESTO</th>
+                                                        <th>SEDE</th>
+                                                        <th>ESQUEMA</th>
+                                                        <th>MONTO</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>

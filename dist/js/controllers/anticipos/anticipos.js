@@ -28,7 +28,7 @@ $("#tabla_anticipos").ready(function () {
                 titleAttr: 'Reporte Anticipo',
                 title: "Reporte Anticipo",
                 exportOptions: {
-                    columns: [0, 1, 2, 3],
+                    columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + anticiposReporte[columnIdx] + ' ';
@@ -60,6 +60,10 @@ $("#tabla_anticipos").ready(function () {
             { data: 'proceso' },
             { data: 'comentario' },
             { data: 'prioridad' },
+            { data: 'impuesto' },
+            { data: 'sede' },
+            { data: 'esquema' },
+            { data: 'monto' },
             {
                 data: function (d) {
                     var botonesModal = '';
@@ -72,9 +76,13 @@ $("#tabla_anticipos").ready(function () {
                         </button>`;
                     }
                     
-                    var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="VER ESTATUS DE USUARIOS"><i class="fas fa-history"></i></button></center>`;
+                    var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
                     
-                    return '<div class="d-flex justify-center">' + botonesModal + botonEstatus + '</div>';
+                    
+                    var botonFactura = `<center><button class="btn-data btn-blueMaderas anticiposFacturas" data-factura="${d.factura}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="VER FACTURA"><i class="far fa-money-bill-alt"></i></button></center>`;
+
+                    
+                    return '<div class="d-flex justify-center">' + botonesModal + botonEstatus + botonFactura + '</div>';
                 }
             }
         ],
@@ -152,6 +160,8 @@ $("#tabla_anticipos").ready(function () {
         var id_anticipo = $("#id_anticipo").val();
         var monto = $("#montoPrestado").val();
         var numeroPagos = $("#numeroPagos").val();
+        var procesoTipo = $("#procesoTipo").val();
+        var pago = $("#pago").val();
     
         var anticipoData = new FormData();
         anticipoData.append("comentario", comentario);
@@ -160,6 +170,8 @@ $("#tabla_anticipos").ready(function () {
         anticipoData.append("procesoAnt", procesoAnt);
         anticipoData.append("monto", monto);
         anticipoData.append("numeroPagos", numeroPagos);
+        anticipoData.append("procesoTipo", procesoTipo);
+        anticipoData.append("pago", pago);
     
         $.ajax({
             url: general_base_url + 'Anticipos/actualizarEstatus',
@@ -168,8 +180,9 @@ $("#tabla_anticipos").ready(function () {
             contentType: false,
             cache: false,
             processData: false,
-            success: function(data) {
-                if (data == 1) {
+            success: function(response) {
+                var jsonResponse = JSON.parse(response);
+                if (jsonResponse.success) {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();
@@ -182,19 +195,26 @@ $("#tabla_anticipos").ready(function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
+        
     });
-    
 
-    $("#procesoAnt").on("change", function() {
-        var proceso = $(this).val();
-        mostrarOcultarCampos(proceso);
+    $("#procesoAnt, #procesoTipo").on("change", function() {
+        var proceso = $("#procesoAnt").val();
+        var tipo = $("#procesoTipo").val();
+        mostrarOcultarCampos(proceso, tipo);
     });
     
-    function mostrarOcultarCampos(proceso) {
+    function mostrarOcultarCampos(proceso, tipo) {
         if (proceso === "6") {
+            $("#procesoTipo").parent().parent().hide();
             $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
         } else {
-            $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').show();
+            $("#procesoTipo").parent().parent().show();
+            if (tipo === "0") {
+                $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
+            } else {
+                $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').show();
+            }
         }
     }
     
