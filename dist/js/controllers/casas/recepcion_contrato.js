@@ -2,7 +2,7 @@ pass_to_finalizar = function(data) {
     
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Enviar el lote ${data.nombreLote} a para finalizar proceso?`,
+        text: `¿Enviar el lote ${data.nombreLote} a finalizar proceso?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

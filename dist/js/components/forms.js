@@ -352,12 +352,12 @@ class OptionField {
                     .append(
                         $('<label />')
                         .addClass('m-0 checkstyleDS')
-                        .attr('id', `${this.id}_${this.selected}_label`)
+                        .attr('id', `${id}_${option.value}_label`)
                         .append(
                             $('<input/>')
                             //.addClass('hide')
                             .attr('type', 'radio')
-                            .attr('id', id)
+                            .attr('id', `${id}_${option.value}`)
                             .attr('name', id)
                             .val(option.value)
                         )
@@ -412,6 +412,8 @@ class OptionField {
     }
 
     load(){
+        // console.log(`#${this.id}_${this.selected}_label`)
+
         $(`#${this.id}_${this.selected}_label`).trigger('click')
     }
 }
