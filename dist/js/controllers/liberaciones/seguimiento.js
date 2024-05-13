@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    console.log("JS loaded...");
+    console.log("JS file loaded...");
 });
 
 /**
@@ -345,6 +345,10 @@ $(document).on("click", "#btn-accion", function (e) {
         rescision = proceso === 1 ? 0 : d.rescision; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
         autorizacionDG = proceso === 1 ? 0 : d.autorizacion_DG; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
         concepto = d.concepto;
+        if ( d.enProcesoLiberacion >=  4 ) {
+            precioLiberacion = d.precioLiberacion;
+            plazo = d.plazo;
+        }
     }
 
     // Loading y disables mientras hace la carga
@@ -382,4 +386,51 @@ $(document).on("click", "#btn-accion", function (e) {
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
+const fillChangelog = (i, v) => {
+    let liberacionTexto = v.id_proceso === 1 ? 'RESCISIÓN' : 'DEVOLUCIÓN';
+    let accion = '<b>ENVIADO A: </b>'
+    if (v.proceso_realizado == '1') {
+        accion = '<b>REGRESADO A: </b>'
+    }
+    if (i === 1 ) {
+        console.log('v', typeof v, v);
+    }
+    $("#changelog").append('<li>\n' +
+  '            <a><b>Campo: </b>PROCESO</a>\n' +
+  '            <a style="float: right">'+v.fecha_modificacion+'</a><br>\n' +
+  '            <a><b>Tipo de liberación:</b> '+ v.nombreConceptoLiberacion + '</a> \n' +
+  '            <br>\n' + 
+  '            <a><b>Estatus: </b> '+accion+v.nombreProcesoLiberacion.toUpperCase()+' </a>\n' +
+  '            <br>\n' +  
+  '            <a><b>Modificado por: </b> '+(v.nombreMod+' '+v.ap1_mod+ ' '+ v.ap2_mod).toUpperCase()+' </a>\n' +
+  '            <br>\n' +
+  '            <a><b>Comentario: </b> '+v.comentario+' </a>\n' +
+      '</li>');
+}
+
+$(document).on('click', '.historico', async function(){
+
+    // Leemos los datos del registro
+    const d = JSON.parse($(this).attr("data-data"));
+    $("#changelog").html('');
+
+    // ACTION
+    $.ajax({
+        url: general_base_url + 'Liberaciones/historialLiberacionLote',
+        type: 'POST',
+        data: {
+          "idLote": d.idLote,
+        },
+        dataType: 'JSON',
+        success: function (res) {
+          $.each( res, function(i, v){
+            fillChangelog(i, v);
+          });
+          $("#seeInformationModal").modal('show')
+        },
+        error: function () {},
+        catch: function () {},
+    });
 });

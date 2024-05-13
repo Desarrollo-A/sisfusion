@@ -102,6 +102,31 @@
             </div>
         </div>
 
+        <!-- Modal de cambios -->
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Bitácora de cambios</h4>
+                        </div>
+                        <div class="modal-body">                      
+                            <div class="container-fluid" id="changelogTab">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                        <ul class="timeline-3" id="changelog">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">

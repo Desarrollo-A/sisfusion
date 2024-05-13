@@ -91,4 +91,15 @@ class Liberaciones extends CI_Controller{
         $expediente=  $composicion.'_'.$idCliente.'_'.$aleatorio.'.'.$extension;
         return $expediente;
     }
+
+    public function historialLiberacionLote()
+    {
+        if (isset($_POST) && !empty($_POST)) {
+            $idLote = $_POST['idLote'];
+            $response = $this->Liberaciones_model->historialLiberacionLote($idLote)->result_array();
+            echo json_encode($response);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
