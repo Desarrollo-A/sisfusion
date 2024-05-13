@@ -515,7 +515,7 @@ class Descuentos_model extends CI_Model {
                 where ha.id_usuario = $usuario";
                 $datos["USUARIO"]  = $this->db->query($cmd2  )->result_array();   
                 
-                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,
+                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,us.forma_pago,
                 ant.comentario,ant.estatus,ant.proceso,ant.impuesto,ant.fecha_registro,
                 ant.prioridad,ant.evidencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre_usuario
                 FROM anticipo ant
@@ -535,7 +535,9 @@ class Descuentos_model extends CI_Model {
 
                 $cmd = "DECLARE @user INT 
                 SELECT @user = $usuario 
-                SELECT u.id_usuario, u.id_rol, UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                SELECT u.id_usuario, u.id_rol,
+                FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+                UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
                 AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
@@ -566,7 +568,7 @@ class Descuentos_model extends CI_Model {
                 $cmd = "SELECT u.id_usuario, u.id_rol, 
 				UPPER(opcs_x_cats.nombre) AS puesto, 
 				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
-                AS nombre, 
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
 				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
@@ -602,4 +604,78 @@ class Descuentos_model extends CI_Model {
     }
 
 
+
+
+
+        function leerxml( $xml_leer, $cargar_xml ){
+            $str = '';
+            if( $cargar_xml ){
+                rename( $xml_leer, "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                $str = file_get_contents( "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                if( substr ( $str, 0, 3 ) == 'o;?' ){
+                    $str = str_replace( "o;?", "", $str );
+                    file_put_contents( './UPLOADS/XML_Anticipo/documento_temporal.txt', $str );
+                }
+                rename( "./UPLOADS/XML_Anticipo/documento_temporal.txt", $xml_leer );
+            }
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_file( $xml_leer, null, true );
+            $datosxml = array(
+                "version" => $xml ->xpath('//cfdi:Comprobante')[0]['Version'],
+                "regimenFiscal" => $xml ->xpath('//cfdi:Emisor')[0]['RegimenFiscal'],
+                "formaPago" => $xml -> xpath('//cfdi:Comprobante')[0]['FormaPago'],
+                "usocfdi" => $xml -> xpath('//cfdi:Receptor')[0]['UsoCFDI'],
+                "metodoPago" => $xml -> xpath('//cfdi:Comprobante')[0]['MetodoPago'],
+                "claveUnidad" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveUnidad'],
+                "unidad" => $xml -> xpath('//cfdi:Concepto')[0]['Unidad'],
+                "claveProdServ" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveProdServ'],
+                "descripcion" => $xml -> xpath('//cfdi:Concepto')[0]['Descripcion'],
+                "subTotal" => $xml -> xpath('//cfdi:Comprobante')[0]['SubTotal'],
+                "total" => $xml -> xpath('//cfdi:Comprobante')[0]['Total'],
+                "rfcemisor" => $xml -> xpath('//cfdi:Emisor')[0]['Rfc'],
+                "nameEmisor" => $xml -> xpath('//cfdi:Emisor')[0]['Nombre'],
+                "rfcreceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Rfc'],
+                "namereceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Nombre'],
+                "TipoRelacion"=> $xml->xpath('//@TipoRelacion'),
+                "uuidV" =>$xml->xpath('//@UUID')[0],
+                "fecha"=> $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'],
+                "folio"=> $xml -> xpath('//cfdi:Comprobante')[0]['Folio'],
+            );
+            $datosxml["textoxml"] = $str;
+            return $datosxml;
+        }
+
+
+        function verificar_uuid( $uuid ){
+            return $this->db->query("SELECT * FROM facturas_anticipos WHERE uuid = '".$uuid."'");
+        }
+
+
+
+        function insertar_factura( $id_anticipo, $datos_factura,$usuarioid){
+            $VALOR_TEXT = $datos_factura['textoxml'];
+            $data = array(
+                "fecha_factura"  => $datos_factura['fecha'],
+                "folio_factura"  => $datos_factura['folio'],
+                "descripcion" => $datos_factura['descripcion'],
+                "subtotal" => $datos_factura['subTotal'],
+                "total"  => $datos_factura['total'],
+                "metodo_pago"  => $datos_factura['metodoPago'],
+                "uuid" => $datos_factura['uuidV'],
+                "nombre_archivo" => $datos_factura['nombre_xml'],
+                "id_usuario" => $usuarioid,
+                "id_anticipo" => $id_anticipo,
+                "forma_pago" => $datos_factura['formaPago'],
+                "cfdi" => $datos_factura['usocfdi'],
+                "unidad" => $datos_factura['claveUnidad'],
+                "claveProd" => $datos_factura['claveProdServ'],
+                "fecha_creacion"  => date("Y-m-d H:i:s"),
+                "fecha_ingreso"  => date("Y-m-d H:i:s"),
+                "regimen" => $datos_factura['regimenFiscal'],
+                "bandera" => 0
+                
+                
+            );
+            return $this->db->insert("facturas_anticipos", $data);
+        }
 }

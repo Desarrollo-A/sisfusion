@@ -69,6 +69,9 @@
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
 
+    
+    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
+
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");
 

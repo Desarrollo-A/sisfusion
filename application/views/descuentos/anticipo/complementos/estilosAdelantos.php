@@ -142,6 +142,26 @@
     justify-content: center;
     background-color: #AEB2B9
 }
+/* color NEGATIV */
+.timeline-steps .timeline-content .inner-circle_negativp:before {
+    content: "";
+    background-color: #DA0101;
+    display: inline-block;
+    height: 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    border-radius: 6.25rem;
+    opacity: .5
+}
+.timeline-steps .timeline-content .inner-circle_negativp {
+    border-radius: 1.5rem;
+    height: 1rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FF0101
+}
 
 /* 
 @media (min-device-width: 320px) and (max-device-width: 700px)
@@ -384,4 +404,15 @@ body {
 .buttons_adelanto.clicked::before {
   width: 100%;
 }
+
+
+
+
+
+
+
+
+/* nuevvo prueba de un boton mamonb  */
+
+/* preuba de un bptpm mamon */
   </style>

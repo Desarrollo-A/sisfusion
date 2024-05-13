@@ -760,11 +760,11 @@ class Descuentos extends CI_Controller
         public function anticipo_pago_insert(){
             $insertArray = array(
                 'id_usuario' => $this->session->userdata('id_usuario'),
-                'monto'    =>   $this->input->post('montoSolicitado'),
+                'monto'    =>   $this->input->post('limpioMonto'),
                 'comentario' => $this->input->post('descripcionMotivo'),
                 'estatus'    => 1,
                 'proceso'    => 2,
-                'impuesto'    => 0,
+                'impuesto'    => 3,
                 'fecha_registro' => date("Y-m-d H:i:s"),
                 'prioridad'    => 1,
                 'prioridad'    => ''
@@ -835,58 +835,108 @@ class Descuentos extends CI_Controller
             $monto =  $this->input->post('monto');
             $id_anticipo =  $this->input->post('idAnticipo_Aceptar');
             $bandera= 1;
+            $usuarioid = $this->session->userdata('id_usuario');
+            if($this->input->post('proceso') != 0 ){
             
-            if($this->input->post('bandera_a') == 1 ){  
-                $file = $_FILES["evidenciaNueva"];
-                if($_FILES["evidenciaNueva"]["name"] != '' && $_FILES["evidenciaNueva"]["name"] != null){
-                $aleatorio = rand(100,1000);
-                $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidenciaNueva"]["name"]); 
-                $date = date('dmYHis');
-                $expediente = $date."_".$aleatorio."_".$namedoc;
-                $ruta = "static/documentos/solicitudes_anticipo/";
-                if(move_uploaded_file($_FILES["evidenciaNueva"]["tmp_name"], $ruta.$expediente)){
-                    $bandera = 1;
+                if($this->input->post('bandera_a') == 1 ){  
+                    $file = $_FILES["evidenciaNueva"];
+                    if($_FILES["evidenciaNueva"]["name"] != '' && $_FILES["evidenciaNueva"]["name"] != null){
+                    $aleatorio = rand(100,1000);
+                    $namedoc  = preg_replace('[^A-Za-z0-9]', '',$_FILES["evidenciaNueva"]["name"]); 
+                    $date = date('dmYHis');
+                    $expediente = $date."_".$aleatorio."_".$namedoc;
+                    $ruta = "static/documentos/solicitudes_anticipo/";
+                    if(move_uploaded_file($_FILES["evidenciaNueva"]["tmp_name"], $ruta.$expediente)){
+                        $bandera = 1;
+                        
+                    }else{
+                        $bandera = 0;
+                        $respuesta =  array(
+                            "response_code" => 800, 
+                            "response_type" => 'error',
+                            "message" => "Error Al subir el documento, inténtalo más tarde ");
+                        }
+                }else if($banderaEvidencia == 0){
+                    $bandera = 2;
+                    $expediente = '';
                     
+                }
                 }else{
-                    $bandera = 0;
-                    $respuesta =  array(
-                        "response_code" => 800, 
-                        "response_type" => 'error',
-                        "message" => "Error Al subir el documento, inténtalo más tarde ");
-                    }
-            }else if($banderaEvidencia == 0){
-                $bandera = 2;
-                $expediente = '';
-                
-            }}else{
-                $expediente = '';
-            }
+                    $expediente = '';
+                }
+    
+                if($this->input->post('proceso') ==6){
+                    if($this->session->userdata('forma_pago') == 2){
+                        // si aqui mero ocupamos la factura
+                        if( isset( $_FILES ) && !empty($_FILES) ){
+                            $config['upload_path'] = './UPLOADS/XML_Anticipo/';
+                            $config['allowed_types'] = 'xml';
+                            $this->load->library('upload', $config);
+                            $resultado = $this->upload->do_upload("xmlfile");
+                            
+                            if( $resultado ){
+                                $xml_subido = $this->upload->data();
+                                $datos_xml = $this->Descuentos_model->leerxml( $xml_subido['full_path'], TRUE );
+                                //var_dump($datos_xml['rfcreceptor'][0]);
+                                //var_dump($datos_xml);
+                                $nuevo_nombre = date("my")."_";
+                                $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                                $nuevo_nombre .= date("Hms")."_";
+                                $nuevo_nombre .= rand(4, 100)."_";
+                                $nuevo_nombre .= substr($datos_xml["uuidV"], -5)."_REFACTURA".".xml";
+                                rename( $xml_subido['full_path'], "./UPLOADS/XML_Anticipo/".$nuevo_nombre );
+                                $datos_xml['nombre_xml'] = $nuevo_nombre;
+                                $this->Descuentos_model->insertar_factura($id_anticipo, $datos_xml,$usuarioid);
 
-            if($this->input->post('proceso') ==6){
-                $insertArray = array(
-                    'monto'         => $monto,
-                    'estatus'       => $this->input->post('estatus'),
-                    // 'evidencia'     => $expediente,
-                    'proceso'       => $this->input->post('proceso'),
-                    'prioridad'     => $this->input->post('seleccion')
-                    );
+                            }
+
+                        }
+                        // $datos_xml = $this->Descuentos_model->leerxml( $xml_subido, TRUE );
+
+
+
+                    }else{
+                        // solo nos llevamos los pagos normales
+
+                    }
+
+                    
+                    $insertArray = array(
+                        'monto'         => $monto,
+                        'estatus'       => $this->input->post('estatus'),
+                        // 'evidencia'     => $expediente,
+                        'proceso'       => $this->input->post('proceso'),
+                        'prioridad'     => $this->input->post('seleccion')
+                        );
+                }else{
+                    $insertArray = array(
+                        'monto'         => $monto,
+                        'evidencia'     => $expediente,
+                        'proceso'       => $this->input->post('proceso'),
+                        'prioridad'     => $this->input->post('seleccion')
+                        );
+                }
             }else{
-                $insertArray = array(
-                    'monto'         => $monto,
-                    'evidencia'     => $expediente,
-                    'proceso'       => $this->input->post('proceso'),
-                    'prioridad'     => $this->input->post('seleccion')
-                    );
-            }
-          
+                // cancelado
                 
+                $insertArray = array(
+                    'estatus'       => 0,
+                    // 'evidencia'     => $expediente,
+                    'proceso'       => 0);
+
+                    
+            }
+            
+                
+            
             $clave =  $id_anticipo;
             $llave = 'id_anticipo';
             $tabla = 'anticipo';
             $tabla_insert = 'historial_anticipo';
-            
+
+
             $insertHistorial = array(
-                'id_anticipo'   => intval( $id_anticipo),
+                'id_anticipo'   =>  intval( $id_anticipo),
                 'id_usuario'    =>  intval($this->input->post('id_usuario')),
                 'proceso'       =>  intval($this->input->post('proceso')),
                 'comentario'    =>  $this->input->post('motivoDescuento_aceptar')
@@ -909,5 +959,170 @@ class Descuentos extends CI_Controller
                 }
                 echo json_encode($respuesta);
         }
+
+
+        public function cargaxml2($id_user = ''){
+
+            $user =   $usuarioid =$this->session->userdata('id_usuario');
+            $this->load->model('Usuarios_modelo');
+            if(empty($id_user)){
+                $RFC = $this->Usuarios_modelo->getPersonalInformation()->result_array();
+            }else{
+                $RFC = $this->Usuarios_modelo->getPersonalInformation2($id_user)->result_array();
+            }
+            
+            $respuesta = array( "respuesta" => array( FALSE, "HA OCURRIDO UN ERROR") );
+            if( isset( $_FILES ) && !empty($_FILES) ){
+                $config['upload_path'] = './UPLOADS/XML_Anticipo';
+                $config['allowed_types'] = 'xml';
+              //CARGAMOS LA LIBRERIA CON LAS CONFIGURACIONES PREVIAS -----$this->upload->display_errors()
+                $this->load->library('upload', $config);
+            if( $this->upload->do_upload("xmlfile") ){
+                $xml_subido = $this->upload->data()['full_path'];
+                $datos_xml = $this->Descuentos_model->leerxml( $xml_subido, TRUE );
+                    if( $datos_xml['version'] >= 3.3){
+                    $responsable_factura = $this->Descuentos_model->verificar_uuid( $datos_xml['uuidV'] );
+                    if($responsable_factura->num_rows()>=1){
+                        $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA YA SE SUBIÓ ANTERIORMENTE AL SISTEMA");
+                    }
+                    else{
+                        if($datos_xml['rfcreceptor'][0]=='ICE211215685'){//VALIDAR UNIDAD
+                        if($datos_xml['claveProdServ'][0]=='80131600' || (($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['claveProdServ'][0]=='83121703')){//VALIDAR UNIDAD
+                            $diasxmes = date('t');
+                            $fecha1 = date('Y-m-').'0'.(($diasxmes - $diasxmes) +1);
+                            $fecha2 = date('Y-m-').$diasxmes;
+                        if($datos_xml['fecha'][0] >= $fecha1 && $datos_xml['fecha'][0] <= $fecha2){
+                        if($datos_xml['rfcemisor'][0] == $RFC[0]['rfc']){
+                        if($datos_xml['regimenFiscal'][0]=='612' || ( ($user == 6578 || $user == 11180 || $user == 11759) && $datos_xml['regimenFiscal'][0]=='601')){//VALIDAR REGIMEN FISCAL
+                        if($datos_xml['formaPago'][0]=='03' || $datos_xml['formaPago'][0]=='003'){//VALIDAR FORMA DE PAGO Transferencia electrónica de fondos
+                        if($datos_xml['usocfdi'][0]=='G03'){//VALIDAR USO DEL CFDI
+                        if($datos_xml['metodoPago'][0]=='PUE'){//VALIDAR METODO DE PAGO
+                        if($datos_xml['claveUnidad'][0]=='E48'){//VALIDAR UNIDAD
+                        $respuesta['respuesta'] = array( TRUE );
+                        $respuesta['datos_xml'] = $datos_xml;
+                        }else{
+                            $respuesta['respuesta'] = array( FALSE, "LA UNIDAD NO ES 'E48 (UNIDAD DE SERVICIO)', VERIFIQUE SU FACTURA.");
+                        }//FINAL DE UNIDAD
+                        }else{
+                            $respuesta['respuesta'] = array( FALSE, "EL METODO DE PAGO NO ES 'PAGO EN UNA SOLA EXHIBICIÓN (PUE)', VERIFIQUE SU FACTURA.");
+                        }//FINAL DE METODO DE PAGO
+                        }else{
+                            $respuesta['respuesta'] = array( FALSE, "EL USO DEL CFDI NO ES 'GASTOS EN GENERAL (G03)', VERIFIQUE SU FACTURA.");
+                        }//FINAL DE USO DEL CFDI
+                        }else{
+                            $respuesta['respuesta'] = array( FALSE, "LA FORMA DE PAGO NO ES 'TRANSFERENCIA ELECTRÓNICA DE FONDOS (03)', VERIFIQUE SU FACTURA.");
+                        }//FINAL DE FORMA DE PAGO
+                        }else{
+                            $respuesta['respuesta'] = array( FALSE, "EL REGIMEN NO ES, 'PERSONAS FÍSICAS CON ACTIVIDADES EMPRESARIALES (612)");
+                        }//FINAL DE REGIMEN FISCAL
+                        }else{
+                        $respuesta['respuesta'] = array( FALSE, "ESTA FACTURA NO CORRESPONDE A TU RFC.");
+                        }//FINAL DE RFC VALIDO
+                    }else{
+                        $respuesta['respuesta'] = array( FALSE, "FECHA INVALIDA, SOLO SE ACEPTAN FACTURAS CON FECHA DE ESTE MES, VERIFICA TU XML");
+                    }          
+                    }else{
+                        $respuesta['respuesta'] = array( FALSE, "LA CLAVE DE TU FACTURA NO CORRESPONDE A 'VENTA DE PROPIEDADES Y EDIFICIOS' (80131600).");
+                    }
+                    }else{
+                        $respuesta['respuesta'] = array( FALSE, "EL RFC NO CORRESPONDE A INTERNOMEX, DEBE SER ICE211215685");
+                    }
+                    
+                    }
+                    }else{
+                    $respuesta['respuesta'] = array( FALSE, "LA VERSION DE LA FACTURA ES INFERIOR A LA 3.3, SOLICITE UNA REFACTURACIÓN");
+                    }
+                    unlink( $xml_subido );
+                }
+                else{
+                $respuesta['respuesta'] = array( FALSE, $this->upload->display_errors());
+                }
+            }
+            echo json_encode( $respuesta );
+            }
+
+
+
+
+            public function guardar_solicitud2($usuario = ''){
+                if($usuario != ''){
+                    $usuarioid = $usuario;
+                }else{
+                    $usuarioid = $this->session->userdata('id_usuario');
+                }
+                $validar_sede =  $this->session->userdata('id_sede');
+                $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
+            
+                $consultaTipoUsuario = $this->db->query("SELECT (CASE WHEN tipo = 2 THEN 1 ELSE 0 END) tipo FROM usuarios WHERE id_usuario IN (".$usuarioid.")")->result_array();
+                $consultaFechasCorte = $this->db->query("SELECT * FROM fechasCorte WHERE estatus = 1 AND corteOoam = ".$consultaTipoUsuario[0]['tipo']." AND YEAR(GETDATE()) = YEAR(fechaInicio) /*AND DAY(GETDATE()) = DAY(fechaInicio)*/ AND mes = $mesActual")->result_array();
+            
+                $obtenerFechaSql = $this->db->query("select FORMAT(CAST(FORMAT(SYSDATETIME(), N'yyyy-MM-dd HH:mm:ss') AS datetime2), N'yyyy-MM-dd HH:mm:ss') as sysdatetime")->row()->sysdatetime;   
+                $fecha_actual = strtotime($obtenerFechaSql);
+                $fechaInicio = strtotime($consultaFechasCorte[0]['fechaInicio']);
+                $fechaFin = $validar_sede == 8 ? strtotime($consultaFechasCorte[0]['fechaTijuana']) : strtotime($consultaFechasCorte[0]['fechaFinGeneral']) ;
+                
+                if(($fecha_actual >= $fechaInicio && $fecha_actual <= $fechaFin) ) {
+
+                  $datos = explode(",",$this->input->post('pagos'));
+                  $resultado = array("resultado" => TRUE);
+                  if((isset($_POST) && !empty($_POST)) || ( isset( $_FILES ) && !empty($_FILES) ) ){
+                    $this->db->trans_begin();
+                    $resultado = TRUE;
+                    
+                    if( isset( $_FILES ) && !empty($_FILES) ){
+                      $config['upload_path'] = './UPLOADS/XMLS/';
+                      $config['allowed_types'] = 'xml';
+                      $this->load->library('upload', $config);
+                      $resultado = $this->upload->do_upload("xmlfile");
+                      
+                      if( $resultado ){
+                        $xml_subido = $this->upload->data();
+                        $datos_xml = $this->Comisiones_model->leerxml( $xml_subido['full_path'], TRUE );
+                        $total = (float)$this->input->post('total');
+                        $totalXml = (float)$datos_xml['total'];
+                        
+                        if (($total + .50) >= $totalXml && ($total - .50) <= $totalXml) {
+                          $nuevo_nombre = date("my")."_";
+                          $nuevo_nombre .= str_replace( array(",", ".", '"'), "", str_replace( array(" ", "/"), "_", limpiar_dato($datos_xml["nameEmisor"]) ))."_";
+                          $nuevo_nombre .= date("Hms")."_";
+                          $nuevo_nombre .= rand(4, 100)."_";
+                          $nuevo_nombre .= substr($datos_xml["uuidV"], -5).".xml";
+                          rename( $xml_subido['full_path'], "./UPLOADS/XMLS/".$nuevo_nombre );
+                          $datos_xml['nombre_xml'] = $nuevo_nombre;
+                          ini_set('max_execution_time', 0);
+                          for ($i=0; $i <count($datos) ; $i++) { 
+                            if(!empty($datos[$i])){
+                              $id_com =  $datos[$i];
+                              $this->Comisiones_model->insertar_factura($id_com, $datos_xml,$usuarioid);
+                              $this->Comisiones_model->update_acepta_solicitante($id_com);
+                              $this->db->query("INSERT INTO historial_comisiones VALUES (".$id_com.", ".$this->session->userdata('id_usuario').", GETDATE(), 1, 'COLABORADOR ENVÍO FACTURA A CONTRALORÍA')");
+                            }
+                          }
+                        } else {
+                          $this->db->trans_rollback();
+                          echo json_encode(4);
+                          return;
+                        }
+                      } else{
+                        $resultado["mensaje"] = $this->upload->display_errors();
+                      }
+                    }
+                    
+                    if($resultado === FALSE || $this->db->trans_status() === FALSE){
+                      $this->db->trans_rollback();
+                      $resultado = array("resultado" => FALSE);
+                    }else{
+                      $this->db->trans_commit();
+                      $resultado = array("resultado" => TRUE);
+                    }
+                  }
+                  $this->Usuarios_modelo->Update_OPN($this->session->userdata('id_usuario'));
+                  echo json_encode( $resultado );
+                }else{
+                  echo json_encode(3);
+                }
+              }
+
+
 
 }

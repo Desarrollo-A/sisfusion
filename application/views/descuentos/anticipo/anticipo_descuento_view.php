@@ -60,6 +60,7 @@
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/funcionesGeneralesComisiones.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/anticipo_descuento.js"></script>
+    <!-- <script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/prueba_boton_subida.js"></script> -->
 
     <script type="text/javascript">
         Shadowbox.init();
