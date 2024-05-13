@@ -14,7 +14,7 @@ function asDirector(userType){
     // 69: Dirección general
     //  2: Subidrector
     //  72: Dirección biofísica
-    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72'){
+    if (userType == '1' || userType == '18' || userType == '4' || userType == '63' || userType == '33' || userType == '69' || userType == '2' || userType == '72' || userType == '54'){
         rolOnReport = '1';
         idUserOnReport = '2';
     }
@@ -206,18 +206,19 @@ function createAccordions(option, render, rol){
                         <tr>
                             <th class="detail">MÁS</th>
                             <th class="encabezado text-center">`+option.toUpperCase()+`</th>
-                            <th>GRAN TOTAL</th>
-                            <th class="text-center">SEDE</th>
+                            <th>GRAN TOTAL</th>        
                             <th>MONTO</th>
                             <th>NÚMERO DE LOTES APARTADOS</th>
                             <th>APARTADO</th>
+                            <th>SEDE APARTADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
                             <th>NÚMERO DE LOTES CONTRATADOS</th>
                             <th>CONTRATADOS</th>
+                            <th>SEDE CONTRATADOS</th>
                             <th>CANCELADOS</th>
                             <th>PORCENTAJE DE CANCELADOS</th>
-                            <th>ACCIONES</th>
+                            <th>ACCIONES</th>                            
                         </tr>
                     </thead>
                 </table>
@@ -226,8 +227,8 @@ function createAccordions(option, render, rol){
     $(".boxAccordions").append(html);
 }
 
-function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters){
-    if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888 && idUser == 29 && idUser == 7401))
+function fillBoxAccordions(option, rol, id_usuario, render, transaction, leadersList, filters, aptId  = null, contId = null, canConId = null, canApt = null){
+    if( rol == 5 && (idUser == 28 && idUser == 30 && idUser == 4888))
         rolEspecial = 59;
     else if( rol == 5 && (idUser != 28 && idUser != 30 && idUser != 4888 && idUser != 29 && idUser != 7401))
         rolEspecial = 2;
@@ -274,7 +275,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 titleAttr: 'Descargar archivo de Excel',
                 title: 'Reporte de ventas por '+option ,
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
                     format: {
                         header: function (d, columnIdx) {
                             switch (columnIdx) {
@@ -285,16 +286,16 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'GRAN TOTAL'
                                     break;
                                 case 3:
-                                    return 'SEDE'
-                                    break;    
-                                case 4:
                                     return 'MONTO';
                                     break;
-                                case 5:
+                                case 4:
                                     return 'NÚMERO DE LOTES APARTADOS';
                                     break;
-                                case 6:
+                                case 5:
                                     return 'APARTADO';
+                                    break;
+                                case 6:
+                                    return 'SEDE APARTADOS'
                                     break;
                                 case 7:
                                     return 'CANCELADOS';
@@ -309,9 +310,12 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                                     return 'CONTRATADOS';
                                     break;
                                 case 11:
-                                    return 'CANCELADOS';
+                                    return 'SEDE CONTRATADOS';
                                     break;
                                 case 12:
+                                    return 'CANCELADOS';
+                                    break;
+                                case 13:
                                     return 'PORCENTAJE DE CANCELADOS';
                                     break;
                             }
@@ -339,7 +343,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function(d){
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                    return `<button type="btn" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnSub"  data-toggle="tooltip" data-placement="bottom" title="DESGLOSE A DETALLE"><i class="fas fa-sitemap" ></i></button>`;
+                   
                 }
             },
             {
@@ -350,13 +355,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
-                }
-            },
-            {
-                width:"20vw",
-                data: function (d) {
-                    return `<p class="m-0" style="white-space: normal">${d.sedeNombre}<p>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="5" data-sede=0  data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" class="btnModalDetails">${(d.totalAT + d.totalConT).toLocaleString('es-MX')}</button>`;
+                    
                 }
             },
             {
@@ -367,7 +367,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="1" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-option="${option}" data-cancontid="${d.cancon_arr}" data-contId="${d.cont_arr}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-aptid="${d.apt_arr}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalAT).toLocaleString('es-MX')}</button>`;
                 }
             },
             {
@@ -376,9 +376,14 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 }
             },
             {
+                data: function(d) {
+                    return d.apartadasSede;
+                }
+            },
+            {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="4" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-contId="${d.cont_arr}" data-aptid="${d.apt_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanA).toLocaleString('es-MX')}</button>`; //# CANCELADOS APARTADOS;
                 }
             },
             {
@@ -389,7 +394,7 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede = 0 data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="2" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalConT).toLocaleString('es-MX')}</button>`; //# CONTRATADOS;
                 }
             },
             {
@@ -399,8 +404,13 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             },
             {
                 data: function (d) {
+                    return d.contratadasSede;
+                }
+            },
+            {
+                data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario); 
-                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede = 0 data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
+                    return `<button style="background-color: #d8dde2; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-sede=0 data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" data-type="3" data-option="${option}" data-transaction="${transaction}" data-rol="${newRol}" data-render="${render}" data-idUser="${d.userID}" id="details-${d.userID}" data-leader="${id_usuario}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" class="btnModalDetails">${(d.totalCanC).toLocaleString('es-MX')}</button>`; //# CANCELADOS CONTRATADOS;
                 }
             },
             {
@@ -411,8 +421,8 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
             {
                 data: function (d) {
                     let leaders = getLeadersLine(leadersList, d.userID, id_usuario);                    
-                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
-                }
+                    return  rol == 7 || (rol == 9 && render == 1) ? '' : `<div class="d-flex justify-center"><button class="btn-data btn-blueMaderas update-dataTable" data-transaction="${transaction}" data-type="${rol}" data-render="${render}" data-aptid="${d.apt_arr}" data-contid="${d.cont_arr}" data-canaptid="${d.canapar_arr}" data-cancontid="${d.cancon_arr}" value="${d.userID}" data-as="${leaders[1]}" data-co="${leaders[2]}" data-ge="${leaders[3]}" data-su="${leaders[4]}" data-dr="${leaders[5]}" data-aptid="${d.apt_arr}" data-toggle="tooltip" data-placement="bottom" title = "ACCIONES "><i class="fas fa-sign-in-alt"></i></button></div>`;
+                },
             },
         ],
         columnDefs: [{
@@ -436,12 +446,17 @@ function fillBoxAccordions(option, rol, id_usuario, render, transaction, leaders
                 "gerente": leadersList[3],
                 "subdirector": leadersList[4],
                 "regional": leadersList[5],
-                "filters" : filters
-            }
+                "filters" : filters,
+                "aptid":aptId,
+                "contid": contId,
+                "cancontid": canConId,
+                "canaptid": canApt,
+            },
         },
+        
         initComplete: function() {
-            $('[data-toggle="tooltip"]').tooltip()
-        }
+            $('[data-toggle="tooltip"]').tooltip();
+        }, 
     });
 }
 
@@ -520,6 +535,10 @@ $(document).on('click', '.update-dataTable', function (e) {
     const type = $(this).attr("data-type");
     const render = $(this).data("render");
     const transaction = $(this).data("transaction");
+    const aptid = $(this).attr("data-aptid");
+    const contid = $(this).attr("data-contid");
+    const cancontid = $(this).attr("data-cancontid");
+    const canaptid = $(this).attr("data-canaptid");
     closestChild = $(this).closest('.childTable');
     closestChild = closestChild.length == 0 ?  $(this).closest('.parentTable'):$(this).closest('.childTable');
     closestChild.nextAll().remove();
@@ -529,37 +548,37 @@ $(document).on('click', '.update-dataTable', function (e) {
     if (type == 2 ) { // MJ: #sub->ger->coord
         if (render == 1) {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); 
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); 
         } else {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS GERENTES
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS GERENTES
         }
     } else if (type == 3 || type == 6 ) { // MJ: #gerente->coord->asesor
         if (render == 1) {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters);
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
             const table = "coordinador";
-            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
+            fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
         }
     } else if (type == 9) { // MJ: #coordinatorTable -> asesor
         if (render == 1) {
         } else {
             const table = "asesor";
-            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS ASESORES
+            fillBoxAccordions(table, 7, $(this).val(), 2, transaction, [7, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid, canaptid, cancontid); // VA POR LOS ASESORES
         }
     } else if (type == 59) { // MJ: #DirRegional->subdir->ger
         if (render == 1) {
             const table = "gerente";
-            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters);
+            fillBoxAccordions(table, 3, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid);
         } else {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [59, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
         }
     } else if (type == 1 || type == 4 || type == 33 || type == 58 || type == 63 || type == 69) {
         if (render == 1) {
             const table = "subdirector";
-            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES
+            fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [2, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES
         } else {
             const table = "regional";
             fillBoxAccordions(table, 59, $(this).val(), 2, transaction, dates);
@@ -569,11 +588,11 @@ $(document).on('click', '.update-dataTable', function (e) {
         if (render == 1) {
             if(idUser == 28 || idUser == 30 || idUser == 4888 || idUser == 29 || idUser == 7401){
                 const table = "gerente";
-                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
+                fillBoxAccordions(table, 2, $(this).val(), 2, transaction, [3, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS SUBDIRECTORES: CONSULTA REGIONAL
             }
             else{
                 const table = "coordinador";
-                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters); // VA POR LOS COORDINADORES
+                fillBoxAccordions(table, 9, $(this).val(), 2, transaction, [9, asesor, coordinador, gerente, subdirector, regional, type], filters, aptid, contid,canaptid, cancontid); // VA POR LOS COORDINADORES
             }
         } 
     }
@@ -694,9 +713,15 @@ $(document).on('click', '.btnSub', function () {
         coordinador: $(this).data("co"),
         gerente: $(this).data("ge"),
         subdirector: $(this).data("su"),
-        regional: $(this).data("dr")
+        regional: $(this).data("dr"),
+        sede:  $(this).data("sede"),
+        aptid : $(this).data('aptid'),
+        contid: $(this).data('contid'),
+        canaptid : $(this).data('canaptid'),
+        cancontid: $(this).data('cancontid')
     }
-    initDetailRow(data);
+    //initDetailRow(data);
+    initDetailRow($(this).closest('tr'), data);
 });
 
 $(document).on('click', '#filterAction', async function (e) {
@@ -1099,23 +1124,18 @@ function accordionToRemove(rol){
     }
 }
 
-function initDetailRow(dataObj){
+function initDetailRow(tr,dataObj){
     var detailRows = [];
-    var tr = $(`#details-${dataObj.user}`).closest('tr');
-    // var table = $(`#details-${dataObj.user}`).closest('table');
     var row = $(`#table${dataObj.option}`).DataTable().row(tr);
     var idx = $.inArray(tr.attr('id'), detailRows);
     if (row.child.isShown()) {
         tr.removeClass('details');
         row.child.hide();
-
-        // Remove from the 'open' array
         detailRows.splice(idx, 1);
     } else {
         $('#spiner-loader').removeClass('hide');
         tr.addClass('details');
         createDetailRow(row, tr, dataObj);
-        // Add to the 'open' array
         if (idx === -1) {
             detailRows.push(tr.attr('id'));
         }
@@ -1135,10 +1155,15 @@ function createDetailRow(row, tr, dataObj){
         gerente: dataObj.gerente,
         subdirector: dataObj.subdirector,
         regional: dataObj.regional,
-        filters: filters
+        filters: filters,
+        sede:dataObj.sede,
+        contid: dataObj.contid,
+        aptid: dataObj.aptid,
+        canaptid: dataObj.canaptid,
+        cancontid: dataObj.cancontid
+        
     }).done(function (response) {
         row.data().sedesData = JSON.parse(response);
-        
         $(`#table${dataObj.option}`).DataTable().row(tr).data(row.data());
         row = $(`#table${dataObj.option}`).DataTable().row(tr);
         row.child(buildTableDetail(row.data().sedesData, dataObj)).show();
@@ -1169,18 +1194,18 @@ function buildTableDetail(data, dataObj) {
         sedes += '<tr>';
         sedes += '<td> ' + (i + 1) + ' </td>';
         sedes += '<td> ' + v.sede + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="55" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}" data-contid="${[v.cont_arr]}" data-canaptid="${[v.canapar_arr]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" data-leader="${dataObj.leader}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" id="details-${dataObj.user}" class="btnModalDetails">${(v.totalAT + v.totalConT).toLocaleString('es-MX')}</button>`;
         sedes += '<td> ' + v.gran_total + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="11" data-sede="${[v.id_sede]}" data-aptid="${[v.apt_arr]}"  data-rol="${dataObj.rol}"  data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalAT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalAT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaAT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="44" data-sede="${[v.id_sede]}" data-canaptid="${[v.canapar_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanA).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanA).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanA + '% </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="22" data-sede="${[v.id_sede]}" data-contid="${[v.cont_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalConT).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalConT).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.sumaConT + ' </td>';
-        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${v.id_sede}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
+        sedes += `<td><button style="background-color: #cfcdcd; border: none; border-radius: 30px; width: 70px; height: 27px; font-weight: 600;" type="btn" data-type="33" data-sede="${[v.id_sede]}" data-cancontid="${[v.cancon_arr]}" data-rol="${dataObj.rol}" data-render="${dataObj.render}" data-idUser="${dataObj.user}" id="details-${dataObj.user}" data-as="${dataObj.asesor}" data-co="${dataObj.coordinador}" data-ge="${dataObj.gerente}" data-su="${dataObj.subdirector}" data-dr="${dataObj.regional}" class="btnModalDetails">${(v.totalCanC).toLocaleString('es-MX')}</button>`;
         //sedes += '<td> ' + (v.totalCanC).toLocaleString('es-MX') + ' </td>';
         sedes += '<td> ' + v.porcentajeTotalCanC + '% </td>';
         sedes += '</tr>';
@@ -1285,6 +1310,10 @@ $(document).on('click', '.btnModalDetails', function () {
     let dataObject = {
         type: $(this).data("type"),
         sede: $(this).data("sede"),
+        aptid : $(this).attr("data-aptid"),
+        contid : $(this).attr("data-contid"),
+        cancontid : $(this).attr("data-cancontid"),
+        canaptid : $(this).attr("data-canaptid"),
         leader: $(this).data("leader"),
         transaction: $(this).data("transaction"),
         user: $(this).data("iduser"),
@@ -1331,7 +1360,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,20, 21],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1399,7 +1428,7 @@ function fillTableReport(dataObject) {
                                         return 'APARTADO';
                                         break;
                                     case 21:
-                                        return 'VENTA';
+                                        return 'MODALIDAD';
                                         break;
                                 }
                             }
@@ -1460,7 +1489,12 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                     }
                 },
-                { data: 'venta_extranjero' }
+                {
+                    data: function (d) {
+                        return d.modalidad;
+                    }
+                }
+                
             ],
             columnDefs: [{
                 visible: false,
@@ -1473,6 +1507,10 @@ function fillTableReport(dataObject) {
                 data: {
                     "type": dataObject.type,
                     "sede": dataObject.sede,
+                    "aptid":dataObject.aptid,
+                    "contid":dataObject.contid,
+                  //  "canaptid":dataObject.canaptid,
+                    //"cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,
@@ -1515,7 +1553,7 @@ function fillTableReport(dataObject) {
                     className: 'btn buttons-excel',
                     titleAttr: 'Descargar archivo de Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
                         format: {
                             header: function (d, columnIdx) {
                                 switch (columnIdx) {
@@ -1585,11 +1623,15 @@ function fillTableReport(dataObject) {
                                     case 21:
                                         return 'APARTADO';
                                         break;
-                                    }
+                                    case 22:
+                                        return 'MODALIDAD';
+                                        break;
+                                    
                                 }
                             }
                         }
                     }
+                }
             ],
             pagingType: "full_numbers",
             lengthMenu: [
@@ -1622,6 +1664,7 @@ function fillTableReport(dataObject) {
                         return d.nombreLote;
                     }
                 },
+                
                 {
                     data: function (d) {
                         return d.sup;
@@ -1731,6 +1774,11 @@ function fillTableReport(dataObject) {
                             return 'ESTÁNDAR';
                         }
                     }
+                },
+                {
+                    data: function(d) {
+                        return d.modalidad;
+                    }
                 }
             ],
             columnDefs: [{
@@ -1742,8 +1790,13 @@ function fillTableReport(dataObject) {
                 type: "POST",
                 cache: false,
                 data: {
+                    
                     "type": dataObject.type,
                     "sede": dataObject.sede,
+                   // "aptid": dataObject.aptid,
+                    //"contid":dataObject.contid,
+                    "canaptid":dataObject.canaptid,
+                    "cancontid":dataObject.cancontid,
                     "leader": dataObject.leader,
                     "transaction": dataObject.transaction,
                     "user": dataObject.user,

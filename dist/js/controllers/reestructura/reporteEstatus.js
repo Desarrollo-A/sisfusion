@@ -21,7 +21,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         titleAttr: 'Lotes para reubicar',
         title: "Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -38,7 +38,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -96,12 +96,19 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         {
             data: function(d) {
+                return `${d.fechaEstatus2}`;
+            }
+        },
+        {
+            data: function (d) {
                 return `<div class="d-flex justify-center">
                     <button class="btn-data btn-blueMaderas btn-historial"
                         data-toggle="tooltip" 
                         data-placement="left"
                         title="Consultar historial de movimientos"
-                        data-idLote="${d.idLoteOrigen}" data-comentario="${d.comentario}">
+                        data-idLote="${d.idLoteOrigen}" 
+                        data-comentario="${d.comentario}"
+                        data-flagFusion="${d.tipo_proceso == "Fusión" ? 1 : 0}>
                         <i class="fas fa-info"></i>
                     </button>
                 </div>`;

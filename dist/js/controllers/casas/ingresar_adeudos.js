@@ -6,6 +6,7 @@ function set_adeudo(data) {
 
     form.onSubmit = function(data){
         //console.log(data)
+        form.loading(true)
 
         $.ajax({
             type: 'POST',
@@ -23,15 +24,17 @@ function set_adeudo(data) {
             },
             error: function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                form.loading(false)
             }
         })
     }
 
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new NumberField({ id: 'adeudoOoam', label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
-        new NumberField({ id: 'adeudoAdm', label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
-        new NumberField({ id: 'adeudoGph', label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoOoam', value: data.adeudoOOAM, label: 'Adeudo OOAM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoAdm', value: data.adeudoADM, label: 'Adeudo ADM', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+        new NumberField({ id: 'adeudoGph', value: data.adeudoGPH, label: 'Adeudo GPH', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
     ]
 
     form.show()
@@ -40,6 +43,11 @@ function set_adeudo(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         return data.adOOAM
     } },

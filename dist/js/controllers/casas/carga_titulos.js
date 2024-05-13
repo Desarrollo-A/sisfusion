@@ -5,6 +5,7 @@ pass_to_propuestas = function(data) {
         text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -21,6 +22,8 @@ pass_to_propuestas = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -54,6 +57,7 @@ function show_upload(data) {
         title: `Subir título de propiedad`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -70,6 +74,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -78,6 +84,46 @@ function show_upload(data) {
             new HiddenField({ id: 'id_documento',    value: data.idDocumento }),
             new HiddenField({ id: 'name_documento',  value: data.documento }),
             new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/pdf'] }),
+        ],
+    })
+
+    form.show()
+}
+
+function show_upload_coti(data) {
+
+    let form = new Form({
+        title: `Subir cotización`,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `${general_base_url}casas/upload_cotizaciones`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
+
+                    table.reload()
+
+                    form.hide()
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id_proceso',      value: data.idProcesoCasas }),
+            new FileField({   id: 'file_cotizacion1',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] }),
+            data.tipoCredito == 2 ?
+            new FileField({   id: 'file_cotizacion2',   label: 'Archivo', placeholder: 'Selecciona un archivo',  accept: ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'] })
+            : ''
         ],
     })
 
@@ -99,6 +145,7 @@ back_to_adeudos = function(data) {
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
@@ -114,6 +161,8 @@ back_to_adeudos = function(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -154,6 +203,11 @@ let buttons = [
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 3)
@@ -173,6 +227,7 @@ let columns = [
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: go_to_propuestas, data})
         let upload_button = new RowButton({icon: 'file_upload', label: 'Subir título de propiedad', onClick: show_upload, data})
+        let upload_cotizacion = new RowButton({icon: 'file_upload', label: 'Subir cotización', onClick: show_upload_coti, data})
 
         let view_button = ''
         let pass_button = ''
@@ -186,7 +241,7 @@ let columns = [
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_adeudos, data})
 
-        return `<div class="d-flex justify-center">${propuestas_button}${view_button}${upload_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${propuestas_button}${view_button}${upload_button}${upload_cotizacion}${pass_button}${back_button}</div>`
     } },
 ]
 

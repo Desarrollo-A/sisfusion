@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Validacion de documentación</h3>
+                                    <h3 class="card-title center-align">Validación de documentación</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -25,6 +25,11 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>

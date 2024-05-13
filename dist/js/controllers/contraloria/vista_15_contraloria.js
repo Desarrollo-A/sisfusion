@@ -1,4 +1,6 @@
 jQuery(document).ready(function () {
+    fillMensualidades();
+
     jQuery('#editReg').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario').val('');
@@ -108,7 +110,7 @@ $("#tabla_ingresar_15").ready(function () {
                     if (d.vl == '1')
                         cntActions = 'EN PROCESO DE LIBERACIÓN';
                     else
-                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-fechaArcus="${d.fecha_arcus}" data-idProspecto="${d.id_prospecto}" data-idArcus="${d.id_arcus}" data-totalNeto2="${d.totalNeto2}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idResidencial="${d.idResidencial}" class="btn-data btn-green editReg"  data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-fechaArcus="${d.fecha_arcus}" data-idProspecto="${d.id_prospecto}" data-idArcus="${d.id_arcus}" data-totalNeto2="${d.totalNeto2}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idResidencial="${d.idResidencial}" data-opcion="${d.opcion}" class="btn-data btn-green editReg"  data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                     return '<div class="d-flex justify-center">' + cntActions + '</div>';
                 }
             }
@@ -197,8 +199,16 @@ $("#tabla_ingresar_15").ready(function () {
         getInfo1[12] = $(this).attr("data-lugarProspeccion");
         getInfo1[13] = $(this).attr("data-idResidencial");
         nombreLote = $(this).data("nomlote");
+        let opcion = $(this).attr("data-opcion");
+
+        opcion = (opcion==null || opcion=='') ? 1 : opcion;
+
         $(".lote").html(nombreLote);
         $('#editReg').modal('show');
+
+        $("#mensualidad15").val(opcion);
+        $("#mensualidad15").selectpicker('refresh');
+
     });
 
 });
@@ -207,6 +217,10 @@ $(document).on('click', '#save1', function (e) {
     e.preventDefault();
     var comentario = $("#comentario").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
+    var mensualidad15 = $("#mensualidad15").val();
+    var mensaVerificacion = ($("#mensualidad15").val() === null || $("#mensualidad15").val().length === 0) ? 0 : 1;
+    console.log(mensaVerificacion);
+
     var dataExp1 = new FormData();
     let dataArcus = {};
     dataExp1.append("idCliente", getInfo1[0]);
@@ -215,6 +229,7 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("idCondominio", getInfo1[3]);
     dataExp1.append("nombreLote", getInfo1[4]);
     dataExp1.append("idLote", getInfo1[5]);
+    dataExp1.append("mensualidad15", mensualidad15);
     dataExp1.append("comentario", comentario);
     dataExp1.append("fechaVenc", getInfo1[6]);
     dataExp1.append("idResidencial", getInfo1[13]);
@@ -228,8 +243,8 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("estatus", 1); // SE CONSUME SERVICIO CUANDO SE REGISTRA ESTATUS 15 (15. Acuse entregado (Contraloría)) Y SE ENVÍA LA INFORMACIÓN DE LA VENTA
     dataExp1.append("lugar_prospeccion", parseInt(getInfo1[12])); // lugar_prospeccion
 
-    if (validaComent == 0)
-        alerts.showNotification('top', 'right', 'Ingresa un comentario.', 'danger')
+    if (validaComent == 0 || mensaVerificacion == 0)
+        alerts.showNotification('top', 'right', 'Llena todos los campos.', 'danger')
     else {
         $('#save1').prop('disabled', true);
         $.ajax({
@@ -267,3 +282,12 @@ $(document).on('click', '#save1', function (e) {
         });
     }
 });
+
+function fillMensualidades() {
+    $.getJSON("fillMensualidades").done(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            $("#mensualidad15").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $('#mensualidad15').selectpicker('refresh');
+    });
+}

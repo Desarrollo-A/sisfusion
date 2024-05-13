@@ -86,7 +86,8 @@ $('#tablaReporteReubicaciones').DataTable({
                 data-toggle="tooltip" 
                 data-placement="left"
                 title="Consultar historial de movimientos"
-                data-idLote="${d.idLote}">
+                data-idLote="${d.idLote}"
+                data-flagFusion="${d.tipo_proceso == "FUSIÓN" ? 1 : 0}">
                 <i class="fas fa-info"></i>
                 </button></div>`;
             }

@@ -46,8 +46,18 @@ class Reporte extends CI_Controller {
             $typeConstruccion = $this->input->post("filters")[0]["typeConstruccion"];
             $estatus = $this->input->post("filters")[0]["estatus"]; 
             /* Filtros grales*/
+            $aptArr = trim($this->input->post('aptid'));
+            $aptArr = empty($aptArr) ? ['0'] : explode(',', $aptArr);
+            $contArr = trim($this->input->post('contid'));
+            $contArr = empty($contArr) ? ['0'] : explode(',', $contArr);
+            $canaparArr = trim($this->input->post('canaptid'));
+            $canaparArr = empty($canaparArr) ? ['0'] : explode(',', $canaparArr);
+            $canconArr = trim($this->input->post('cancontid'));
+            $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
+            $generalArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
 
-            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction)->result_array();
+
+            $data['data'] = $this->Reporte_model->getGeneralInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, [$asesor, $coordinador, $gerente, $subdirector, $regional], $typeTransaction, $generalArr, $aptArr, $contArr, $canaparArr, $canconArr)->result_array();
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             json_encode(array());
@@ -78,6 +88,12 @@ class Reporte extends CI_Controller {
         $vcArray = array_filter($data, function($element){
             return $element['tipo'] == 'vc';
         });
+        $sum = 0;
+        foreach($vcArray as $key => $elemento) {
+            $total = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
+            $sum += $total;
+        }
+        //echo json_encode($sum);
 
         //Obtenemos solo array de ventas apartadas
         $vaArray = array_filter($data, function($element){
@@ -87,6 +103,8 @@ class Reporte extends CI_Controller {
         //Reindexamos el filtro obtenido anteriormente
         $vcArray = array_values($vcArray);
         $vaArray = array_values($vaArray);
+        $sumApt = 0;
+        $sumCompleta = 0;
 
         //Recorremos uno de los arrays obtenido anteriormente y sumamos en cada uno de los puntos para obtener cantidad y total
         if( $general == "1" || $tipoChart == "vt"){
@@ -96,7 +114,7 @@ class Reporte extends CI_Controller {
             foreach( $vcArray as $key => $elemento ){
                 $tot1 = floatval(preg_replace('/[^\d\.]/', '', $elemento['total']));
                 $tot2 = floatval(preg_replace('/[^\d\.]/', '', $vaArray[$key]['total']));
-                
+                $sumApt = $tot1 + $tot2;
                 //Hacemos push a nuevo array de ventas generales ya con la sumatoria de va y vc por mes.
                 $data[] = array(
                     'total' => "$" . number_format(($tot1 + $tot2), 2),
@@ -106,11 +124,15 @@ class Reporte extends CI_Controller {
                     'tipo' => 'vt',
                     'rol' => $elemento['rol']
                 ); 
+                
             }
+            
         }
+        
 
         if($data != null)
             echo json_encode($data);
+            
         else
             echo json_encode(array());
     }
@@ -157,8 +179,21 @@ class Reporte extends CI_Controller {
         $gerente = $this->input->post("gerente");
         $subdirector = $this->input->post("subdirector");
         $regional = $this->input->post("regional");
+        $sede = $this->input->post("sede");
+        /*$generalArr = trim($this->input->post('idarr'));
+        $generalArr = empty($generalArr) ? ['0'] : explode(',', $generalArr);*/
+        $aptArr = trim($this->input->post('aptid'));
+        $aptArr = empty($aptArr) ? ['0'] : explode(',', $aptArr);
+        $contArr = trim($this->input->post('contid'));
+        $contArr = empty($contArr) ? ['0'] : explode(',', $contArr);
+        $canaparArr = trim($this->input->post('canaptid'));
+        $canaparArr = empty($canaparArr) ? ['0'] : explode(',', $canaparArr);
+        $canconArr = trim($this->input->post('cancontid'));
+        $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
+        $generalArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
+        
 
-        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+        $data = $this->Reporte_model->getDetails($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional], $sede, $generalArr, $aptArr, $contArr, $canaparArr, $canconArr,$leader)->result_array();
         if($data != null) {
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
@@ -187,9 +222,27 @@ class Reporte extends CI_Controller {
             $gerente = $this->input->post("gerente");
             $subdirector = $this->input->post("subdirector");
             $regional = $this->input->post("regional");
+            /*$idArr = trim($this->input->post('idarr'), ',');
+            $idArr = empty($idArr) ? ['0'] : explode(',', $idArr);
+            */
+            
+            $aptArr = trim($this->input->post('aptid'));
+            $aptArr = empty($aptArr) ? ['0'] : explode(',', $aptArr);
+            $contArr = trim($this->input->post('contid'));
+            $contArr = empty($contArr) ? ['0'] : explode(',', $contArr);
+            $canaparArr = trim($this->input->post('canaptid'));
+            $canaparArr = empty($canaparArr) ? ['0'] : explode(',', $canaparArr);
+            $canconArr = trim($this->input->post('cancontid'));
+            $canconArr = empty($canconArr) ? ['0'] : explode(',', $canconArr);
+            $idArr = array_merge($aptArr, $contArr, $canaparArr, $canconArr);
             
 
-            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
+
+            
+            ini_set('max_execution_time', 900);
+            set_time_limit(900);
+            ini_set('memory_limit','2048M');
+            $data['data'] = $this->Reporte_model->getGeneralLotesInformation($beginDate, $endDate, $typeSale, $typeLote, $typeConstruccion, $estatus, $rol, $id_usuario, $render, $type, $sede, $idArr,$leader, [$asesor, $coordinador, $gerente, $subdirector, $regional])->result_array();
             for ( $x = 0; $x < count($data['data']); $x++ ){
                 $fechaUltimoStatus = $data['data'][$x]['fechaUltimoStatus'];
                 $fechaApartado = $data['data'][$x]['fechaApartado'];
@@ -204,6 +257,7 @@ class Reporte extends CI_Controller {
 
                 $data['data'][$x]['diasUltimoStatus'] = $diasUltimoStatus;
                 $data['data'][$x]['diasStatus9'] = $diasStatus9;
+                
             }
             echo json_encode($data, JSON_NUMERIC_CHECK);
         } else
@@ -284,6 +338,11 @@ class Reporte extends CI_Controller {
 		$this->load->view("reportes/lotesXStatus_view");
     }
 
+    public function reporteLotesCliente(){        
+		$this->load->view('template/header');
+		$this->load->view("reportes/reporteClientes_view");
+    }
+
     public function lotesContrato(){
         $this->load->view('template/header');
         $this->load->view("reportes/reporteLotesContrato");
@@ -311,6 +370,38 @@ class Reporte extends CI_Controller {
         $endDate = date("Y-m-d", strtotime("{$fechaFin[2]}-{$fechaFin[1]}-{$fechaFin[0]}"));
         $result['data'] = $this->Reporte_model->getListadoDeVentas($beginDate, $endDate);
         echo json_encode($result, JSON_NUMERIC_CHECK);
+    }
+
+    public function getAllLotes(){
+
+        $nombreCliente = $this->input->post("nombreCliente");
+
+        $data = $this->Reporte_model->getAllLotes($nombreCliente)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesUnicos(){
+
+        $data = $this->Reporte_model->getLotesUnicos()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    public function getLotesTotal(){
+
+        $data = $this->Reporte_model->getLotesTotal()->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 
 }

@@ -471,3 +471,55 @@ div #lblDataCl2
 	transform: translateX(-56px);
   }
   
+
+
+.checkDft .boxChecksDft {
+  	background-color: #eeeeee;
+  	width: 100%;
+  	border-radius: 27px;
+  	box-shadow: none;
+  	padding: 5px !important;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft {
+  	cursor: pointer;
+  	user-select: none;
+  	display: block;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft span {
+  	display: flex;
+  	justify-content: center;
+  	align-items: center;
+  	height: 31px;
+  	border-radius: 9999px;
+  	overflow: hidden;
+  	transition: linear 0.3s;
+  	margin: 0;
+  	font-weight: 400;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft span:nth-child(2) {
+  	margin: 0 3px;
+  }
+
+  .boxChecksDft .boxChecksDft .checkstyleDft span:hover {
+  	box-shadow: none;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft input {
+  	pointer-events: none;
+  	display: none;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft {
+  	transition: 0.3s;
+  	font-weight: 400;
+  	color: #143860;
+  }
+
+  .checkDft .boxChecksDft .checkstyleDft {
+  	content: "\f00c";
+  	color: #143860;
+  	margin-right: 5px;
+  }
