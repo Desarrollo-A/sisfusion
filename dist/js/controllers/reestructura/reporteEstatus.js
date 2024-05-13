@@ -110,7 +110,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                         title="Consultar historial de movimientos"
                         data-idLote="${d.idLoteOrigen}" 
                         data-comentario="${d.comentario}"
-                        data-flagFusion="${d.tipo_proceso == "Fusión" ? 1 : 0}>
+                        data-flagFusion="${ (d.tipo_proceso == "Fusión" || d.tipo_proceso == "FUSIÓN" ) ? 1 : 0}">
                         <i class="fas fa-info"></i>
                     </button>
                 </div>`;
