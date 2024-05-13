@@ -291,7 +291,7 @@ $(document).on('click', '.btn-accion', async function(){
 });
 
 // FUNCIONALIDAD DEL BOTÓN DE ACEPTAR DEL MODAL
-$(document).on("click", "#btn-accion", function (e) {
+$(document).on("click", "#btn-accion", async function (e) {
     e.preventDefault();
 
     // Obteniendo los valores para su proceso
@@ -386,6 +386,54 @@ $(document).on("click", "#btn-accion", function (e) {
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
+
+    // En caso de ser el ultimo proceso, ya se libera.
+    if (d.enProcesoLiberacion === 4 && proceso === 5) {
+        // Generamos el token para liberar el lote
+        let res = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Api/getToken`,
+            data: JSON.stringify({"id": 6489}),
+            contentType: 'application/json',
+            cache: false,
+            processData: false,
+        });
+
+        res = JSON.parse(res);
+
+        // Realizamos la acción de la función que libera el lote!
+        let data = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Caja_outside/caja_modules`,
+            headers: {
+                'Authorization': res.id_token
+            },
+            data: JSON.stringify({
+                "accion": 3,
+                "activeLE": false,
+                "activeLP": false,
+                "id_proy": d.idResidencial,
+                "idCondominio": d.idCondominio,
+                "id_usuario": id_usuario_general,
+                "tipo": "1",
+                "lotes": [
+                    {
+                        "nombreLote": d.nombreLote,
+                        "idLote": d.idLote,
+                        "precio": precioLiberacion,
+                        "tipo_lote": "1"
+                    }
+                ]
+            }),
+            contentType: 'application/json',
+            cache: false,
+            processData: false,
+        });
+
+        // Notificamos al usuario
+        data = JSON.parse(data);
+        alerts.showNotification("top", "right", data.message === 'SUCCESS' ? 'La liberación se ha completado' : 'Surgió un error al intentar liberar el lote', data.message === 'SUCCESS' ? "success" : "warning");
+    }
 });
 
 const fillChangelog = (i, v) => {
@@ -411,7 +459,6 @@ const fillChangelog = (i, v) => {
 }
 
 $(document).on('click', '.historico', async function(){
-
     // Leemos los datos del registro
     const d = JSON.parse($(this).attr("data-data"));
     $("#changelog").html('');

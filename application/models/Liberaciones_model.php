@@ -9,8 +9,9 @@ class Liberaciones_model extends CI_Model {
     {
         $query = $this->db->query(
         "WITH proceso_liberacion_temp AS (SELECT *, ROW_NUMBER() OVER(PARTITION BY idLote ORDER BY fecha_creacion DESC) AS rn FROM proceso_liberaciones)
-        SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, lo.idCliente,  CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
-            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
+        SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,
+			CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente,
+			lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
             CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
             CASE WHEN u1.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)) END nombreCoordinador,
             CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
@@ -36,8 +37,7 @@ class Liberaciones_model extends CI_Model {
 			LEFT JOIN opcs_x_cats AS oxc2 ON pl.estatus_lib = oxc2.id_opcion AND oxc2.id_catalogo = 108
 			LEFT JOIN opcs_x_cats AS oxc3 ON pl.concepto = oxc3.id_opcion AND oxc3.id_catalogo = 132
         WHERE lo.tipo_venta = 1 AND cl.status = 1 AND lo.idStatusContratacion IN (9,10,13,14,15)
-        ORDER BY enProcesoLiberacion DESC;"
-        );
+        ORDER BY enProcesoLiberacion DESC;");
         return $query->result_array();
     }
 
@@ -50,7 +50,7 @@ class Liberaciones_model extends CI_Model {
     public function historialLiberacionLote($idLote) 
     {
         $query = $this->db->query(
-            "SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, lo.idCliente,  CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
+            "SELECT re.nombreResidencial, co.nombre AS nombreCondominio, lo.nombreLote, lo.idLote, co.idCondominio, re.idResidencial, lo.idCliente,  CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado,
             UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, lo.sup, (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
             CASE WHEN pl.idLote IS NOT NULL THEN pl.proceso_lib ELSE '0' END enProcesoLiberacion, CASE WHEN oxc.nombre IS NOT NULL THEN oxc.nombre ELSE 'Lote por liberar' END nombreProcesoLiberacion, 
             pl.id_proceso_lib,  pl.rescision, pl.autorizacion_DG, pl.estatus_lib, CASE WHEN oxc2.nombre IS NOT NULL THEN oxc2.nombre ELSE 'Nuevo' END nombreEstatusLiberacion,
@@ -71,4 +71,6 @@ class Liberaciones_model extends CI_Model {
         ORDER BY pl.id_proceso_lib DESC;", $idLote);
         return $query;
     }
+
+    
 }
