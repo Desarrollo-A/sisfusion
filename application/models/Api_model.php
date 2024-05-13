@@ -176,9 +176,9 @@ class Api_model extends CI_Model
     }
 
     public function getInventarioVirtual($idResidencial, $idCondominio) {
-        $andCondominio = $idCondominio != 0 ? "AND cond.idCondominio = $idCondominio" : "";
+        $andCondominio = $idCondominio != 0 ? "AND co.idCondominio = $idCondominio" : "";
         return $this->db->query(
-            "SELECT 
+            "SELECT
                 co.nombre condominio, 
                 lo.nombreLote lote, 
                 lo.idLote, 

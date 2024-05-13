@@ -14,7 +14,7 @@ finalizar = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El proceso del lote ha finzalizado.", "success");
+                    alerts.showNotification("top", "right", "El proceso del lote ha finalizado.", "success");
         
                     table.reload()
                     form.hide();
