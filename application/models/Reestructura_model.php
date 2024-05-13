@@ -1504,6 +1504,12 @@ class Reestructura_model extends CI_Model
           historial_preproceso_lote hl 
         WHERE 
           id_preproceso = 2
+      ),
+	  usuario AS (
+		SELECT
+			id_usuario,
+			CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno ) nombre 
+		FROM usuarios
       ) 
       SELECT 
         CASE WHEN CAST(
@@ -1556,14 +1562,14 @@ class Reestructura_model extends CI_Model
           ', '
         ) END fechaEstatus2,
 		CASE
-			WHEN SUM(cl.id_gerente + 0) IS NULL THEN SUM(cl2.id_gerente + 0) 
-			WHEN SUM(cl.id_gerente + 0) < 1 THEN SUM(cl2.id_gerente + 0) 
-			ELSE SUM(cl.id_gerente + 0)
+			WHEN SUM(cl.id_gerente + 0) IS NULL THEN usG2.nombre 
+			WHEN SUM(cl.id_gerente + 0) < 1 THEN usG2.nombre
+			ELSE usG.nombre
 		END gerente,
 		CASE
-			WHEN SUM(cl.id_asesor + 0) IS NULL THEN SUM(cl2.id_asesor + 0) 
-			WHEN SUM(cl.id_asesor + 0) < 1 THEN SUM(cl2.id_asesor + 0) 
-			ELSE SUM(cl.id_asesor + 0)
+			WHEN SUM(cl.id_asesor + 0) IS NULL THEN usA2.nombre
+			WHEN SUM(cl.id_asesor + 0) < 1 THEN usA2.nombre
+			ELSE usA.nombre
 		END asesor
       FROM
         propuestas_x_lote pxl 
@@ -1578,7 +1584,11 @@ class Reestructura_model extends CI_Model
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso
         AND oxc0.id_catalogo = 106
 		LEFT JOIN clientes cl on cl.idLote = lo.idLote AND cl.status in(0, 1) AND cl.id_cliente = lo.idCliente	
-		LEFT JOIN clientes cl2 on cl2.idLote = lo2.idLote AND cl2.status in(1) AND cl2.id_cliente = lo2.idCliente	
+		LEFT JOIN clientes cl2 on cl2.idLote = lo2.idLote AND cl2.status in(1) AND cl2.id_cliente = lo2.idCliente
+		LEFT JOIN usuario usA on usA.id_usuario = cl.id_asesor
+		LEFT JOIN usuario usG on usG.id_usuario = cl.id_gerente
+		LEFT JOIN usuario usA2 on usA2.id_usuario = cl2.id_asesor
+		LEFT JOIN usuario usG2 on usG2.id_usuario = cl2.id_gerente
         LEFT JOIN UltimoValor u ON u.idLote = lo.idLote 
         AND u.uf = 1 
         LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = lo.idLote 
@@ -1591,7 +1601,11 @@ class Reestructura_model extends CI_Model
         lo.idLote, 
         pxl.idLote, 
         lo2.validacionEnganche, 
-        oxc0.nombre
+        oxc0.nombre,
+		usG2.nombre,
+		usA2.nombre,
+		usA.nombre,
+		usG.nombre
       UNION ALL
       SELECT
         'Fusión' tipo_proceso, 
@@ -1615,14 +1629,14 @@ class Reestructura_model extends CI_Model
         STRING_AGG(tb2.ultiModificacion, ', ') fechaUltimoMovimiento, 
         STRING_AGG(tb2.estatus2, ', ') fechaEstatus2,
 		CASE
-			WHEN SUM(tb2.gerenteAnterior + 0) IS NULL THEN SUM(gerente + 0) 
-			WHEN SUM(tb2.gerenteAnterior + 0) < 1 THEN	   SUM(gerente + 0) 
-			ELSE SUM(tb2.gerenteAnterior + 0)
+			WHEN SUM(tb2.gerenteAnterior + 0) IS NULL THEN STRING_AGG(CONCAT(gNuevoNombre, ''), '')
+			WHEN SUM(tb2.gerenteAnterior + 0) < 1 THEN STRING_AGG(CONCAT(gNuevoNombre, ''), '') 
+			ELSE STRING_AGG(CONCAT(gAnteriorNombre, ''), '')
 		END gerente,
 		CASE
-			WHEN SUM(tb2.asesorAnterior + 0) IS NULL THEN SUM(asesor + 0) 
-			WHEN SUM(tb2.asesorAnterior + 0) < 1 THEN SUM(asesor + 0) 
-			ELSE SUM(tb2.asesorAnterior + 0)
+			WHEN SUM(tb2.asesorAnterior + 0) IS NULL THEN STRING_AGG(CONCAT(aNuevoNombre, ''), '') 
+			WHEN SUM(tb2.asesorAnterior + 0) < 1 THEN STRING_AGG(CONCAT(aNuevoNombre, ''), '') 
+			ELSE STRING_AGG(CONCAT(aAnteriorNombre, ''), '') 
 		END asesor
       FROM 
         (
@@ -1644,7 +1658,11 @@ class Reestructura_model extends CI_Model
 			SUM(tb.id_gerente + 0) gerenteAnterior,
 			SUM(tb.id_asesor + 0) asesorAnterior,
 			SUM(cl2.id_gerente + 0) gerente,
-			SUM(cl2.id_asesor + 0) asesor
+			SUM(cl2.id_asesor + 0) asesor,
+			usG.nombre gAnteriorNombre,
+			usA.nombre aAnteriorNombre,
+			usG2.nombre gNuevoNombre,
+			usA2.nombre aNuevoNombre
           FROM 
             (
               SELECT 
@@ -1689,7 +1707,7 @@ class Reestructura_model extends CI_Model
                 AND u2.uf = 1 
                 left JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso 
                 AND oxc0.id_catalogo = 106
-				LEFT JOIN clientes cl on cl.idLote = lo.idLote AND cl.status in(0, 1) AND cl.id_cliente = lo.idCliente		
+				LEFT JOIN clientes cl on cl.idLote = lo.idLote AND cl.status in(0, 1) AND cl.id_cliente = lo.idCliente	
               WHERE 
                 lf1.origen = 1 
                 AND lf1.destino = 0
@@ -1700,7 +1718,11 @@ class Reestructura_model extends CI_Model
             AND lf2.destino = 1 
             INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio 
             INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial 
-			LEFT JOIN clientes cl2 on cl2.idLote = lo2.idLote AND cl2.status in(1) AND cl2.id_cliente = lo2.idCliente	
+			LEFT JOIN clientes cl2 on cl2.idLote = lo2.idLote AND cl2.status in(1) AND cl2.id_cliente = lo2.idCliente
+			LEFT JOIN usuario usA on usA.id_usuario = tb.id_asesor
+			LEFT JOIN usuario usG on usG.id_usuario = tb.id_gerente
+			LEFT JOIN usuario usA2 on usA2.id_usuario = cl2.id_asesor
+			LEFT JOIN usuario usG2 on usG2.id_usuario = cl2.id_gerente
           GROUP BY 
             tb.nombreResidencialOrigen, 
             tb.nombreCondominioOrigen, 
@@ -1710,7 +1732,11 @@ class Reestructura_model extends CI_Model
             tb.validacionAdministracion, 
             tb.ultiModificacion, 
             tb.estatus2, 
-            tb.estatusProceso
+            tb.estatusProceso,
+			usG2.nombre,
+		usA2.nombre,
+		usA.nombre,
+		usG.nombre
         ) tb2 
       GROUP BY 
         tb2.nombreResidencialDestino, 
