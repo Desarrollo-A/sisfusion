@@ -175,27 +175,26 @@ class Api_model extends CI_Model
         return $this->db->query("SELECT * FROM prospectos WHERE telefono = '$telefono' OR telefono_2 = '$telefono' OR correo = '$email'")->result_array();
     }
 
-    public function getInventarioVirtual($idResidencial)
-    {
-        $query = $this->db->query("SELECT (cond.nombre) condominio, (l.nombreLote) lote, l.idLote, (res.descripcion) proyecto, (l.sup) superficie, (l.total) precioLista, (l.precio) m2, l.msi,
+    public function getInventarioVirtual($idResidencial, $idCondominio) {
+        $andCondominio = $idCondominio != 0 ? "AND cond.idCondominio = $idCondominio" : "";
+        
+        return $this->db->query("SELECT (cond.nombre) condominio, (l.nombreLote) lote, l.idLote, (res.descripcion) proyecto, (l.sup) superficie, (l.total) precioLista, (l.precio) m2, l.msi,
         CASE WHEN u0.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u0.nombre,' ', u0.apellido_paterno,' ', u0.apellido_materno) END asesor,
         CASE WHEN u1.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u1.nombre,' ', u1.apellido_paterno,' ', u1.apellido_materno) END coordinador,
         CASE WHEN u2.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u2.nombre,' ', u2.apellido_paterno,' ', u2.apellido_materno) END gerente,
         CASE WHEN u3.nombre IS NULL THEN 'SIN ESPECIFICAR' ELSE CONCAT(u3.nombre,' ', u3.apellido_paterno,' ', u3.apellido_materno) END subDirector,
         CONCAT (u4.nombre,' ', u4.apellido_paterno,' ', u4.apellido_materno) director, (st.nombre) estatus, cl.fechaApartado, cl.fechaEnganche
         FROM lotes l
-        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio
+        INNER JOIN condominios AS cond ON l.idCondominio = cond.idCondominio $andCondominio 
         INNER JOIN residenciales AS res ON cond.idResidencial = res.idResidencial AND res.idResidencial NOT IN (21, 22, 14, 25) AND res.idResidencial = $idResidencial
-        LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente
+        LEFT JOIN clientes AS cl ON cl.id_cliente = l.idCliente AND cl.proceso IN (0, 1)
         LEFT JOIN usuarios AS u0 ON u0.id_usuario = cl.id_asesor
         LEFT JOIN usuarios AS u1 ON u1.id_usuario = cl.id_coordinador
         LEFT JOIN usuarios AS u2 ON u2.id_usuario = cl.id_gerente
         LEFT JOIN usuarios AS u3 ON u3.id_usuario = cl.id_subdirector
         LEFT JOIN usuarios AS u4 ON u4.id_usuario = 2
         LEFT JOIN statuslote AS st ON st.idStatusLote = l.idStatusLote
-        WHERE l.status = 1");
-        
-        return $query->result_array();
+        WHERE l.status = 1 AND lo.idStatusLote NOT IN (15, 16, 17, 18, 19, 20, 21)")->result_array();
     }
 
     public function getListaResidenciales() {
@@ -415,6 +414,10 @@ class Api_model extends CI_Model
             WHERE
                 lo.status = 1
         ")->result_array();
+    }
+
+    public function getListaCondominios($idResidencial) {
+        return $this->db->query("SELECT idResidencial, idCondominio, nombre FROM condominios WHERE status = 1 AND idResidencial NOT IN (21, 22, 14, 25) AND idResidencial = $idResidencial")->result_array();
     }
     
 }

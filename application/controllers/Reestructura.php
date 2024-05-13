@@ -3152,7 +3152,11 @@ class Reestructura extends CI_Controller{
             $registrosFusion[$i]['nombreResidencialOrigen'] = implode(', ', array_unique(explode(', ', $registrosFusion[$i]['nombreResidencialOrigen'])));
             $registrosFusion[$i]['nombreCondominioOrigen'] = implode(', ', array_unique(explode(', ', $registrosFusion[$i]['nombreCondominioOrigen'])));
         }
-        echo json_encode(array_merge($registrosNormales, $registrosFusion), JSON_NUMERIC_CHECK);
+        $finalArrayData = array_merge($registrosNormales, $registrosFusion);
+        for ($m = 0; $m < count ($finalArrayData); $m ++) {
+            $finalArrayData[$m]['fechaVencimiento'] = $this->sumarDiaSinFestivosNiFinDeSemana($finalArrayData[$m]['fechaEstatus9']);
+        }
+        echo json_encode($finalArrayData, JSON_NUMERIC_CHECK);
     }
 
     public function reporteEstatus(){
@@ -3390,4 +3394,27 @@ class Reestructura extends CI_Controller{
 			echo json_encode(0);
 		} 
     }
+
+    function sumarDiaSinFestivosNiFinDeSemana($fecha) {
+        $currentYear = date("Y");
+        $festivos = array(
+            // Agrega aquí los días festivos en el formato 'YYYY-MM-DD'
+            $currentYear . '-01-01',
+            $currentYear . '-03-21',
+            $currentYear . '-05-01',
+            $currentYear . '-09-16',
+            $currentYear . '-11-20',
+            $currentYear . '-12-25'
+        );
+    
+        $fechaObj = new DateTime($fecha);
+        $fechaObj->modify('+1 day');
+    
+        while (in_array($fechaObj->format('Y-m-d'), $festivos) || $fechaObj->format('N') >= 6) {
+            $fechaObj->modify('+1 day');
+        }
+
+        return $fechaObj->format('Y-m-d');
+    }
+
 }

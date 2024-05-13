@@ -375,6 +375,12 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
                     $filtroSede = "";
+				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
+                    $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";

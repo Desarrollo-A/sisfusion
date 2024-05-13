@@ -436,6 +436,9 @@ class Api extends CI_Controller
                             $data2[$i]['propiedad']['empresa'] = $dbTransaction[$i]['empresa'];
                             $data2[$i]['propiedad']['fechaEstatus9'] = $dbTransaction[$i]['fecha_estatus9'];
                             $data2[$i]['propiedad']['fechaEstatus7'] = $dbTransaction[$i]['fecha_estatus7'];
+                            $data2[$i]['propiedad']['notaria']['nombre_notaria'] = $dbTransaction[$i]['nombre_notaria'];
+                            $data2[$i]['propiedad']['notaria']['nombre_notario'] = $dbTransaction[$i]['nombre_notario'];
+                            $data2[$i]['propiedad']['notaria']['direccion_notaria'] = $dbTransaction[$i]['direccion_notaria'];
                             $data2[$i]['pagos']['instrumento_monetario'] = $dbTransaction[$i]['instrumento_monetario'];
                             $data2[$i]['pagos']['moneda_divisa'] = $dbTransaction[$i]['moneda_divisa'];
                             $data2[$i]['pagos']['forma_pago_enganche'] = $dbTransaction[$i]['forma_pago_enganche'];
@@ -443,7 +446,7 @@ class Api extends CI_Controller
                             $data2[$i]['pagos']['fecha_pago_enganche'] = $dbTransaction[$i]['fecha_pago'];
                             $data2[$i]['pagos']['total_pagos_enganche'] = 1;
                             $data2[$i]['pagos']['concepto_pago'] = $dbTransaction[$i]['concepto_pago'];
-                            //$data2[$i]['pagos']['monto_pago'] = $dbTransaction[$i]['monto_pago'];
+                            $data2[$i]['pagos']['plan_pago'] = $dbTransaction[$i]['plan_pago'];
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago_comisionista'])));
@@ -460,7 +463,7 @@ class Api extends CI_Controller
         }
     }
 
-    function getInventarioVirtual($idResidencial) { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
+    function getInventarioVirtual() { //SE RECIBE EL PARÁMETRO POR PARTE DEL USUARIO 
         if (!isset(apache_request_headers()["Authorization"])){
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
         }else{
@@ -488,15 +491,22 @@ class Api extends CI_Controller
                         $checkSingup = null;
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
-                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
-                        $dbTransaction = $this->Api_model->getInventarioVirtual($idResidencial); // DAMOS DE ALTA LA FUNCIÓN A UTILIZAR "getInventarioList" Y USAMOS EL PARÁMETRO DEL INICIO PARA QUE CARGUE LA INFORMACIÓN SOLICITADA
-                            
-                        if ($dbTransaction){// SUCCESS TRANSACTION
-                            echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
-                        }else{ // ERROR TRANSACTION
-                            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
+                        $data = json_decode(file_get_contents("php://input"));
+                        if (!isset($data->idResidencial) || !isset($data->idCondominio))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->idResidencial == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $dbTransaction = $this->Api_model->getInventarioVirtual($data->idResidencial, $data->idCondominio); 
+                                if ($dbTransaction)
+                                    echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                                else
+                                    echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+                            }
                         }
-                    }else{
+                    } else {
                         echo json_encode($checkSingup);
                     }
                 }
@@ -1912,7 +1922,7 @@ class Api extends CI_Controller
                         $checkSingup = null;
                         echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
                     }
-                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                    if (!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
                         $data = json_decode(file_get_contents("php://input"));
                         if (!isset($data->nombreCondominio))
                             echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
@@ -1925,6 +1935,56 @@ class Api extends CI_Controller
                                     echo json_encode(array("status" => 1, "message" => 'Petición realizada con éxito.', "data" => $responseConsulta), JSON_UNESCAPED_UNICODE);
                                 else // NO SE ENCONTRÓ INFORMACIÓN
                                     echo json_encode(array("status" => 1, "message" => "Petición realizada con éxito, sin información que mostrar."), JSON_UNESCAPED_UNICODE); 
+                            }
+                        }
+                    } else
+                        echo json_encode($checkSingup);
+                }
+            }
+        }
+    }
+
+    function getListaCondominios() { 
+        if (!isset(apache_request_headers()["Authorization"])){
+            echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+        }else{
+            if (apache_request_headers()["Authorization"] == ""){
+                echo json_encode(array("status" => -1, "message" => "Token no especificado dentro del encabezado Authorization."), JSON_UNESCAPED_UNICODE);
+            }else{
+                $token = apache_request_headers()["Authorization"];
+                $JwtSecretKey = $this->jwt_actions->getSecretKey(2099); 
+                $valida_token = json_decode($this->validateToken($token, 2099));
+                if ($valida_token->status !== 200){
+                    echo json_encode($valida_token);
+                }else {
+                    $result = JWT::decode($token, $JwtSecretKey, array('HS256'));
+                    $valida_token = Null;
+                    foreach ($result->data as $key => $value) {
+                        if(($key == "username" || $key == "password") && (is_null($value) || str_replace(" ","",$value) == '' || empty($value)))
+                            $valida_token = false;
+                    }
+                    if(is_null($valida_token)){
+                        $valida_token = true;
+                    }
+                    if(!empty($result->data) && $valida_token){
+                        $checkSingup = $this->jwt_actions->validateUserPass($result->data->username, $result->data->password);
+                    }else{
+                        $checkSingup = null;
+                        echo json_encode(array("status" => -1, "message" => "Algún parámetro (usuario y/o contraseña) no vienen informados. Verifique que ambos parámetros sean incluidos."), JSON_UNESCAPED_UNICODE);
+                    }
+                    if(!empty($checkSingup) && json_decode($checkSingup)->status == 200){
+                        $data = json_decode(file_get_contents("php://input"));
+                        if (!isset($data->idResidencial))
+                            echo json_encode(array("status" => -1, "message" => "Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición."), JSON_UNESCAPED_UNICODE);
+                        else {
+                            if ($data->idResidencial == '')
+                                echo json_encode(array("status" => -1, "message" => "Algún parámetro no tiene un valor especificado. Verifique que todos los parámetros contengan un valor especificado."), JSON_UNESCAPED_UNICODE);
+                            else {
+                                $dbTransaction = $this->Api_model->getListaCondominios($data->idResidencial); 
+                                if ($dbTransaction)
+                                    echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $dbTransaction), JSON_UNESCAPED_UNICODE);
+                                else
+                                    echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
                             }
                         }
                     } else
