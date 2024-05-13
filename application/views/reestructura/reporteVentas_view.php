@@ -119,7 +119,6 @@
                                                 <th>ESTATUS CONTRATACIÓN</th>
                                                 <th>FECHA ESTATUS 2</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
-                                                <th>RECEPCIÓN CONTRATO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
