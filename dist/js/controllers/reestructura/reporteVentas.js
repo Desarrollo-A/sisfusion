@@ -88,7 +88,7 @@ $('#tablaReporteVentas').DataTable({
         },
         {
             data: function (d) {
-                if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + `</div>`;
+                if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') +`</div>`;
                 if(d.tipoV == 2) return `<center>` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</center>`;
             }
         }
@@ -199,6 +199,26 @@ $(document).on("click", ".getInfoRe", function (e) {
     $('#modalRegreso').modal('show');
 });
 
+$(document).on("click", ".getInfoRe2", function (e) {
+    e.preventDefault();
+    getInfoData[0] = $(this).attr("data-idCliente");
+    getInfoData[1] = $(this).attr("data-nombreResidencial");
+    getInfoData[2] = $(this).attr("data-nombreCondominio");
+    // getInfoData[3] = $(this).attr("data-idCondominio");
+    getInfoData[4] = $(this).attr("data-nombreLote");
+    getInfoData[5] = $(this).attr("data-idLote");
+    // getInfoData[6] = $(this).attr("data-fechavenc");
+    // getInfoData[7] = $(this).attr("data-idMov");
+    getInfoData[8] = $(this).attr("data-EstatusRegreso");
+
+    titulo_modal = 'Cambio de plan de comisión del lote - ';
+    
+    $(".lote_2").html(getInfoData[4]);
+    $(".titulo_modal_2").html(titulo_modal);
+    tipo_comprobante = $(this).attr('data-ticomp');
+    $('#modalCambio').modal('show');
+});
+
 function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
     return `<button href='#' ${atributoButton} 
                 data-tiComp='${data.tipo_comprobanteD}' 
@@ -215,6 +235,23 @@ function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '',
                 class="btn-data btn-warning ${classButton}" 
                 data-toggle="tooltip" data-placement="top" 
                 title="${titulo}"> <i class="fas fa-rotate-left"></i></button>`;
+}
+
+function construirBotonCambio(data, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
+    return `<button href='#' ${atributoButton} 
+                data-tiComp='${data.tipo_comprobanteD}' 
+                data-nomLote='${data.nombreLote}' 
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}' 
+                data-nombreCondominio='${data.nombreCondominio}' 
+                data-nombreLote='${data.nombreLote}' 
+                data-idCondominio='${data.idCondominio}' 
+                data-idLote='${data.idLote}' 
+                data-idMov='${data.idMovimiento}'
+                data-EstatusRegreso='${data.tipo_estatus_regreso}' 
+                class="btn-data btn-warning ${classButton}" 
+                data-toggle="tooltip" data-placement="top" 
+                title="${titulo}"> <i class="fa fa-money-bill-wave"></i></button>`;
 }
 
 $(document).on('click', '#saveRegreso', function(e) { // accion para el botón de regreso del procesos y preproceso

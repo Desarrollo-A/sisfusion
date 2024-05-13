@@ -3813,4 +3813,9 @@ class Reestructura extends CI_Controller{
 
         return $insert;
     }
+
+    public function cambioComision(){
+        $this->load->view('template/header');
+        $this->load->view('reestructura/cambioComision_view');
+    }
 }
