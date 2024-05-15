@@ -3117,8 +3117,8 @@ class Reestructura extends CI_Controller{
 
     public function regresoPreproceso(){
         $preproceso = $this->input->post("preproceso");
-        $juridico = $this->input->post("juridico");
-        $contraloria = $this->input->post("contraloria");
+        $juridico = $this->input->post("juridico"); // banderas de si solo juridico o contraloria
+        $contraloria = $this->input->post("contraloria"); // banderas de si solo juridico o contraloria
         $idLotePv = $this->input->post("idLote");
         $idCliente = $this->input->post("idCliente");
         $comentario = $this->input->post("comentario");
@@ -3814,8 +3814,55 @@ class Reestructura extends CI_Controller{
         return $insert;
     }
 
-    public function cambioComision(){
-        $this->load->view('template/header');
-        $this->load->view('reestructura/cambioComision_view');
+    public function bloqueoRegreso(){
+        $bandera = $this->input->post("bandera");
+        $idLote = $this->input->post("idLoteBandera");
+        $idCliente = $this->input->post("idCliente");
+        $flagFusion = 0;
+        $flagRe = 0;
+        $flagPass = true;
+        $flagFusion = 0;
+        $flagRe = 0;
+        $idLotePvOrigen = $this->input->post("idLoteBandera");;
+
+        $dataUpdate = array(
+            "liberaBandera" => 0
+        );
+
+        $checkFusion = $this->Reestructura_model->checkFusion($idLote); // revisar si es fusión
+        $checkRe = $this->Reestructura_model->checkReubicacion($idLote); // revisar si es reubicación 
+        $checkRee = $this->Reestructura_model->checkReestructura($idLote); // o reestructura
+
+        $this->db->trans_begin();
+
+        if($checkRe->num_rows() > 0 || $checkRee->num_rows() > 0){
+            $flagRe = 1;
+        }
+        else if($checkFusion->num_rows() > 0){
+            $flagFusion = 1;
+
+            $fusionResult = $checkFusion->result();
+            $idLotePvOrigen = $fusionResult[0]->idLotePvOrigen;
+        }
+
+        $updateBandera = $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+        if(!$updateBandera) $flagPass = false;
+
+        if($flagPass){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["flagRe"] = $flagRe;
+            $response["flagFusion"] = $flagFusion;
+            $response["idLotePvOrigen"] = $idLotePvOrigen;
+            $response["message"] = "Se ha bloqueado el lote correctamente";
+        }
+        else{
+            $this->db->trans_rollback();
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al bloquear el lote";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));        
     }
 }

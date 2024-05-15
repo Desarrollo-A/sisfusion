@@ -131,6 +131,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="text" class="form-control input-gral letrasCaracteres" name="procesoDS" id="procesoDS" type="text" <?php echo $readOnly; ?> required="true" value="<?=$cliente[0]->proceso?>"/>
                 <!-- radios 1 -->
                 <div class="row pt-1 persona-fisica-div" id="checkDS">
                     <div class="col-12 col-sm-12 col-md-12 col-lg-12">
