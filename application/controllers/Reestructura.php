@@ -2354,23 +2354,16 @@ class Reestructura extends CI_Controller{
         $flagFusion = $this->input->post('flagFusion');
 
         $getProyecto = $this->Reestructura_model->getProyectoIdByLote($idLote);
-        $idProyecto = $getProyecto[0]['idProyecto'];
+        $idProyecto = (int) $getProyecto[0]['idProyecto'];
 
         if($tipoEstatusRegreso == 1){
-            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
-                $statusLote = 15;
-            }
-            else{
-                $statusLote = 21;
-            }
+            $statusLote = 15;
         }
-        else{
-            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
-                $statusLote = 1;
-            }
-            else{
+        else if($tipoEstatusRegreso == 2 && in_array($idProyecto, [14,21,22,25])){
                 $statusLote = 21;
-            }
+        }
+        else if($tipoEstatusRegreso == 0 && !in_array($idProyecto, [14,21,22,25])){
+            $statusLote = 1;
         }
 
         $dataUpdateLote = array(
