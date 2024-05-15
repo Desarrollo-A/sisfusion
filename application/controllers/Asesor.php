@@ -2974,7 +2974,7 @@ class Asesor extends CI_Controller {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
                         $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
-                                                            ladaTel = '" . $ladatelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
+                                                            ladaTel = '" . $ladaTelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
                                                             telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
                                                             nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
                                                             domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',
