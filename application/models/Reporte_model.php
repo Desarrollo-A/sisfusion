@@ -488,7 +488,7 @@ class Reporte_model extends CI_Model {
 
 
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
-        list($nombreUsuario, $total, $precioDescuento, $totalChart,$nombreUsuarioTotal) = $this->amountShare($id_rol);
+        list($nombreUsuario, $total, $precioDescuento, $totalChart,$nombreUsuarioTotal) = $this->amountShare($id_rol, $id_usuario);
 
         $query = $this->db->query("
         WITH contCte AS (
@@ -500,6 +500,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
+            $comodin2  JOIN usuarios u1 ON u1.id_usuario = vc.$comodin
             INNER JOIN (
 				SELECT COUNT(vc.id_cliente) cuenta, cl.id_cliente , cl.fechaApartado from clientes cl
 				INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
@@ -512,7 +513,7 @@ class Reporte_model extends CI_Model {
             GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, 
             cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
             CONVERT(VARCHAR, cl.fechaApartado, 103),  vc.id_cliente,sede.nombre, sede.id_sede, cl.id_cliente, vc.id_cliente, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2
-            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)
         ),
         aptCte AS (
             SELECT cl.id_cliente, sede.id_sede,
@@ -523,6 +524,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
+            $comodin2  JOIN usuarios u1 ON u1.id_usuario = vc.$comodin
             INNER JOIN (
 				SELECT COUNT(vc.id_cliente) cuenta, cl.id_cliente , cl.fechaApartado from clientes cl
 				INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
@@ -535,7 +537,7 @@ class Reporte_model extends CI_Model {
             GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, 
             cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
             CONVERT(VARCHAR, cl.fechaApartado, 103),  vc.id_cliente,sede.nombre, sede.id_sede, cl.id_cliente, vc.id_cliente, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2
-            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)
         ), 
         cancontCte AS (
             SELECT cl.id_cliente, sede.id_sede,
@@ -546,6 +548,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
+            $comodin2  JOIN usuarios u1 ON u1.id_usuario = vc.$comodin
             INNER JOIN (
 				SELECT COUNT(vc.id_cliente) cuenta, cl.id_cliente , cl.fechaApartado from clientes cl
 				INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
@@ -558,7 +561,7 @@ class Reporte_model extends CI_Model {
             GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, 
             cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno,
             vc.id_cliente, sede.id_sede, sede.nombre, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2
-            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)
         ), 
         canaptCte AS (
             SELECT cl.id_cliente, sede.id_sede,
@@ -569,6 +572,7 @@ class Reporte_model extends CI_Model {
             INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
             $comodin2  JOIN usuarios u ON u.id_usuario = cl.$comodin
+            $comodin2  JOIN usuarios u1 ON u1.id_usuario = vc.$comodin
             INNER JOIN (
 				SELECT COUNT(vc.id_cliente) cuenta, cl.id_cliente , cl.fechaApartado from clientes cl
 				INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
@@ -581,7 +585,7 @@ class Reporte_model extends CI_Model {
             GROUP BY lo.idLote, lo.nombreLote, cl.id_asesor, 
             cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
             CONVERT(VARCHAR, cl.fechaApartado, 103),sede.id_sede, sede.nombre, vc.id_cliente, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2
-            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+            ,cl.id_cliente, sede.id_sede,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno),CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)
         )
         SELECT      
             FORMAT(ISNULL(contratadas.sumaConT, 0), 'C') sumaConT, ISNULL(contratadas.totalConT, 0) totalConT, --VENDIDO CONTRATADO
@@ -610,7 +614,6 @@ class Reporte_model extends CI_Model {
                     ELSE $nombreUsuarioTotal,
                     u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, 
 					cl.id_subdirector, cl.id_regional, cl.nombre, cl.apellido_paterno, cl.apellido_materno, 
-					
                     SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16, 2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) total
 					,COALESCE(sede.id_sede, 0) id_sede
                     FROM clientes cl
@@ -619,6 +622,7 @@ class Reporte_model extends CI_Model {
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente and vc.estatus = 1
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
 					$comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
+                    $comodin2  JOIN usuarios u1 ON u1.id_usuario = vc.$comodin
 					INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
                     $filtroSt
                     
@@ -627,7 +631,8 @@ class Reporte_model extends CI_Model {
                     $loteFiltro
 					GROUP BY u.id_rol, lo.idLote, lo.nombreLote, cl.id_asesor, cl.id_coordinador, cl.id_gerente, cl.id_subdirector, cl.id_regional, 
 					cl.nombre, cl.apellido_paterno, cl.apellido_materno,CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), sede.id_sede
-                    ,vc.id_cliente, cl.id_cliente, u.id_lider,  vc.id_cliente, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2
+                    ,vc.id_cliente, cl.id_cliente, u.id_lider,  vc.id_cliente, vc.id_asesor , vc.id_coordinador, vc.id_gerente, vc.id_subdirector, vc.id_regional, vc.id_regional_2,
+                    CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno)
 				) tmpTotal GROUP BY $comodin, tmpTotal.id_rol, tmpTotal.nombreUsuario, tmpTotal.id_sede
 			) general
             LEFT JOIN (
@@ -1740,7 +1745,7 @@ class Reporte_model extends CI_Model {
         )->result_array();
     }
 
-    public function amountShare($id_rol){
+    public function amountShare($id_rol, $id_usuario = null){
         $nombreUsuario = "";
         $total = "";
         $precioDescuento = "";
@@ -1758,7 +1763,7 @@ class Reporte_model extends CI_Model {
             
             $filtroChart = "(CASE WHEN vc.id_regional = cl.id_regional AND vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_regional) OVER (PARTITION BY vc.id_regional, vc.id_cliente, cl.id_cliente)ELSE
             COUNT(vc.id_regional) OVER (PARTITION BY cl.id_cliente, vc.id_regional,vc.id_cliente)END))END total";
-            $filter = "vc.id_regional = cl.id_regional";
+            $filter = "cl.id_regional = $id_usuario ";
         }
         if($id_rol == 2) {
             $filtroTotal = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_subdirector) OVER(PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente)ELSE
@@ -1767,7 +1772,7 @@ class Reporte_model extends CI_Model {
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_subdirector,vc.id_cliente) END) AS precioDescuento";
             $filtroChart = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COIUNT(vc.id_subdirector) OVER (PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente) ELSE
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_regional)END))END total";
-            $filter = "vc.id_subdirector = cl.id_subdirector";
+            $filter = "cl.id_subdirector = $id_usuario";
         }
         if ($id_rol == 5 && ($id_usuario == 28 || $id_usuario == 30 || $id_usuario == 4888)) { 
             $filtroTotal = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_subdirector) OVER(PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente)ELSE
@@ -1776,7 +1781,7 @@ class Reporte_model extends CI_Model {
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_subdirecto,vc.id_clienter) END) AS precioDescuento";
             $filtroChart = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COIUNT(vc.id_subdirector) OVER (PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente) ELSE
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_regional)END))END total";
-            $filter = "vc.id_subdirector = cl.id_subdirector";
+            $filter = "cl.id_subdirector = $id_usuario";
         }
         if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30 || $id_usuario != 4888)) { 
             $filtroTotal = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_subdirector) OVER(PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente)ELSE
@@ -1785,25 +1790,25 @@ class Reporte_model extends CI_Model {
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_subdirector,vc.id_cliente) END) AS precioDescuento";
             $filtroChart = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COIUNT(vc.id_subdirector) OVER (PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente) ELSE
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_regional)END))END total";
-            $filter = "vc.id_subdirector = cl.id_subdirector";
+            $filter = "cl.id_subdirector = $id_usuario";
         }
         if($id_rol == 3 || $id_rol == 6) {
             $filtroTotal = "(CASE WHEN vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_gerente) OVER(PARTITION BY vc.id_gerente, vc.id_cliente)ELSE COUNT(vc.id_gerente) OVER(PARTITION BY vc.id_gerente, cl.id_cliente, vc.id_cliente) END)END AS total";
             $filtroPrecio = "(CASE WHEN vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_gerente) OVER(PARTITION BY vc.id_gerente, vc.id_cliente) ELSE COUNT(vc.id_gerente) OVER(PARTITION BY vc.id_gerente, cl.id_cliente, vc.id_cliente) END) AS precioDescuento";
             $filtroChart = "(CASE WHEN vc.id_gerente = cl.id_gerente AND vc.id_subdirector = cl.id_subdirector AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_gerente) OVER (PARTITION BY vc.id_cliente, vc.id_gerente, cl.id_cliente)ELSE COUNT(vc.id_gerente) OVER(PARTITION BY vc.id_cliente, cl.id_cliente, vc.id_gerente)END))END total";
-            $filter = "vc.id_gerente = cl.id_gerente";
+            $filter = "cl.id_gerente = $id_usuario";
         }
         if($id_rol == 7) {
             $filtroTotal = "(COUNT(vc.id_cliente)) END AS total";
             $filtroPrecio = "(COUNT(vc.id_cliente) ) AS precioDescuento";
             $filtroChart  = "(COUNT(vc.id_cliente))) END AS total";
-            $filter = "vc.id_asesor = cl.id_asesor";
+            $filter = "cl.id_asesor = $id_usuario";
         }
         if($id_rol == 9) {
             $filtroTotal = "(COUNT(vc.id_cliente)) END AS total";
             $filtroPrecio = "(COUNT(vc.id_cliente) ) AS precioDescuento";
             $filtroChart  = "(COUNT(vc.id_cliente))) END AS total";
-            $filter = "vc.id_coordinador = cl.id_coordinador";
+            $filter = "cl.id_coordinador = $id_usuario";
         }
         if($id_rol == 59) {
             $filtroTotal = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COUNT(vc.id_subdirector) OVER(PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente)ELSE
@@ -1812,10 +1817,17 @@ class Reporte_model extends CI_Model {
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_subdirector, vc.id_cliente) END) AS precioDescuento";
             $filtroChart = "(CASE WHEN vc.id_subdirector = cl.id_subdirector AND vc.id_gerente = cl.id_gerente AND vc.id_coordinador = cl.id_coordinador THEN 1 + COIUNT(vc.id_subdirector) OVER (PARTITION BY vc.id_subdirector, vc.id_cliente,cl.id_cliente) ELSE
             COUNT(vc.id_subdirector) OVER(PARTITION BY cl.id_cliente, vc.id_regional)END))END total";
-            $filter = "vc.id_subdirector = vc.id_subdirector";
+            $filter = "cl.id_subdirector = $id_usuario";
         }
-        $nombreUsuario = "CASE WHEN vc.id_cliente IS NOT NULL THEN CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END ELSE 'ACUMULADO SIN ESPECIFICAR (COMPARTIDO)' END END AS nombreUsuario";
-        $nombreUsuarioTotal = "CASE WHEN vc.id_cliente IS NOT NULL THEN CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END ELSE 'ACUMULADO SIN ESPECIFICAR (COMPARTIDO)' END END END AS nombreUsuario";
+        //$nombreUsuario = "CASE WHEN vc.id_cliente IS NOT NULL THEN CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END ELSE 'ACUMULADO SIN ESPECIFICAR (COMPARTIDO)' END END AS nombreUsuario";
+        //$nombreUsuarioTotal = "CASE WHEN vc.id_cliente IS NOT NULL THEN CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END ELSE 'ACUMULADO SIN ESPECIFICAR (COMPARTIDO)' END END END AS nombreUsuario";
+        $nombreUsuario = "CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)END
+        ELSE CASE WHEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) END END as nombreUsuario";
+        
+        $nombreUsuarioTotal = "CASE WHEN vc.id_cliente IS NULL THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno,  ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END ELSE
+        CASE WHEN $filter THEN CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END ELSE
+        CASE WHEN CONCAT(u1.nombre, ' ', u1.apellido_paterno, ' ', u1.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u1.nombre, ' ', u1.apellido_paterno,  ' ', u1.apellido_materno) END END END END AS nombreUsuario";
+        
         $total = "CASE WHEN vc.id_cliente IS NULL THEN SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END) ELSE SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END ) / (MAX(vc2.cuenta) + COUNT(cl.id_cliente)) * $filtroTotal";
         $precioDescuento = "SUM(CASE WHEN (lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) / (MAX(vc2.cuenta) + COUNT(cl.id_cliente))* $filtroPrecio";
         $totalChart = "CASE WHEN vc.id_cliente IS NULL THEN CASE WHEN(lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup)ELSE lo.totalNeto2 END ELSE
