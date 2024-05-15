@@ -46,7 +46,7 @@
  })();
 
 var breakCards = true;
-
+$sidebar = '';
 var searchVisible = 0;
 var transparent = true;
 
