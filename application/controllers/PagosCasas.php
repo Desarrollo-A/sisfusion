@@ -61,6 +61,21 @@ class PagosCasas extends BaseController {
         $this->load->view("pagos_casas/carga_complemento");
     }
 
+    public function validar_pago(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_pago");
+    }
+
+    public function solicitar_avance(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/solicitar_avance");
+    }
+
+    public function validar_avance(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_avance");
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -291,6 +306,8 @@ class PagosCasas extends BaseController {
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
+            $this->PagosCasasModel->insertarAvance($proceso->idProcesoPagos, 0);
+
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
             http_response_code(404);

@@ -679,6 +679,7 @@ class Form {
 
         $('#title-form-modal').text(this.title)
         $('#text-form-modal').html(this.text)
+        $("#ok-button-form-modal").prop('disabled', false)
         $("#form-modal").modal();
     }
 

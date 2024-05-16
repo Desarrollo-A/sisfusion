@@ -142,6 +142,20 @@ let columns = [
             return text
         }
     },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     {
         data: function (data) {
             let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir cierre de cifras', onClick: show_upload, data })

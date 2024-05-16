@@ -123,6 +123,20 @@ let columns = [
 
         return text
     } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 

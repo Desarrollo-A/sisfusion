@@ -138,7 +138,6 @@ let columns = [
     { data: 'condominio' },
     { data: 'proyecto' },
     { data: 'cliente' },
-    { data: 'gerente' },
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
 

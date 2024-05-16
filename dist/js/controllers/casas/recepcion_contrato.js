@@ -118,6 +118,20 @@ let columns = [
 
         return text
     } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a finalizar proceso', onClick: pass_to_finalizar, data})
 

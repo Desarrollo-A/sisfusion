@@ -97,7 +97,7 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: 'adeudoOOAM' },
+    { data: 'adOOAM' },
     { data: 'adADM' },
     { data: 'adGPH' },
     {
@@ -118,6 +118,20 @@ let columns = [
             return text
         }
     },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     {
         data: function (data) {
             // console.log(data)
