@@ -1993,7 +1993,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                             <label class="m-0 checkstyleDS">
                                 <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 2 +`)" id=`+ i + 'j' +` name=`+ i + 'j'+` data-idLote = `+ id_lote +`/>
                                 <span class="w-100 d-flex justify-between">
-                                    <p class="m-0">Preproceso <b>${ 3 + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
+                                    <p class="m-0">Preproceso <b>${ 2.1 + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
                                 </span>
                             </label>
                         </div>
@@ -2024,7 +2024,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                         <label class="m-0 checkstyleDS">
                             <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 0 +`)" id=`+ i +` name=`+ i +` data-idLote = `+ id_lote +`/>
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Preproceso <b>${ i == 3 ? (4 + ' (' + procesosNombre[i] + ')') : (i + ' (' + procesosNombre[i] + ')')}</b></p>
+                                <p class="m-0">Preproceso <b>${ i == 3 ? (3 + ' (' + procesosNombre[i] + ')') : (i + ' (' + procesosNombre[i] + ')')}</b></p>
                             </span>
                         </label>
                     </div>

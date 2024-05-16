@@ -234,7 +234,7 @@ $(document).on('click', '#borrarOp', function () {
                 $('#tableCatalogo').DataTable().ajax.reload(null, false);
                 $("#spiner-loader").addClass('hide');
                 $('#modalBorrar').modal('hide');
-                alerts.showNotification("top", "right", "Opción Eliminada.", "success");
+                alerts.showNotification("top", "right", "Opción eliminada.", "success");
             }
         },
         error: function () {
@@ -498,7 +498,7 @@ $(document).on('click', '.liberarBandera', function () {
             $('#banderaLiberar').modal('toggle');
         },
         error: (a, b, c) => {
-            alerts.showNotification("top", "right", "Lote No actualizado .", "warning");
+            alerts.showNotification("top", "right", "Lote no actualizado .", "warning");
         }
     });
 
@@ -510,7 +510,7 @@ $(document).on('click', '.bloquearBandera', function () { // proceso para bloque
     var idLoteBandera = document.getElementById('idLoteBloqueo').value;
     var idCliente = document.getElementById('clienteBloqueo').value;
     var preproceso = document.getElementById('preprocesoBloqueo').value;
-
+    $("#spiner-loader").removeClass('hide');
     $.ajax({
         url: 'bloqueoRegreso',
         type: 'POST',
@@ -527,6 +527,7 @@ $(document).on('click', '.bloquearBandera', function () { // proceso para bloque
                     regresarLote(response.flagRe, response.flagFusion, idCliente, preproceso, idLoteBandera, response.idLotePvOrigen);
                 }
                 else{
+                    $("#spiner-loader").addClass('hide');
                     alerts.showNotification("top", "right", response.message, "success");
                     $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
                     $('#banderaRegresar').modal('toggle');
@@ -541,6 +542,7 @@ $(document).on('click', '.bloquearBandera', function () { // proceso para bloque
             }
         },
         error: function(){
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
             document.getElementById('bloquearBandera').disabled = false;
         }
@@ -571,11 +573,18 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
                 contraloria: 1,
                 idLote: lote,
                 idCliente: idCliente,
-                comentario: 'Regreso de preproceso por bloqueo del lote'
+                comentario: 'Regreso de pre-proceso por bloqueo del lote'
             },
         success: function (response) {
-            if(response.result)
-                alerts.showNotification("top", "right", response.message, "success");
+            if(response.result){
+                if(flagFusion > 0){
+                    deshacerFusion(idLotePvOrigen);
+                }
+                else if(flagRe > 0){
+                    $("#spiner-loader").addClass('hide');
+                    alerts.showNotification("top", "right", response.message, "success");
+                }
+            }
             else
                 alerts.showNotification("top", "right", response.message, "danger");
 
@@ -585,6 +594,34 @@ function regresarLote(flagRe, flagFusion, idCliente, preproceso, idLote, idLoteP
             document.getElementById('bloquearBandera').disabled = false;
         },
         error: function(){
+            $("#spiner-loader").addClass('hide');
+            alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
+            document.getElementById('bloquearBandera').disabled = false;
+        }
+    });
+}
+
+function deshacerFusion(idLotePvOrigen){
+    $.ajax({
+        url: 'deshacerFusion',
+        type: 'POST',
+        dataType: "json",
+        data: {
+            idLotePvOrigen 
+        },
+        success: function (response) {
+            if(response.result){
+                alerts.showNotification("top", "right", response.message, "success");
+                $('#tabla_clientes_liberar').DataTable().ajax.reload(null, false);
+            }
+            else
+                alerts.showNotification("top", "right", response.message, "danger");
+
+            document.getElementById('bloquearBandera').disabled = false;
+            $("#spiner-loader").addClass('hide');
+        },
+        error: function(){
+            $("#spiner-loader").addClass('hide');
             alerts.showNotification("top", "right", "Error al actualizar el lote .", "danger");
             document.getElementById('bloquearBandera').disabled = false;
         }
@@ -613,7 +650,7 @@ $(document).on('click', '.regresarBandera', function () {
     preproceso = $(this).attr("data-preproceso");
     
     if(preproceso > 0)
-        bandera = '¿Estás seguro de BLOQUEAR Y DESHACER el preproceso del lote?';
+        bandera = '¿Estás seguro de BLOQUEAR y DESHACER el pre-proceso del lote?';
 
     //asignar 
     document.getElementById("tituloBloqueo").innerHTML = bandera;

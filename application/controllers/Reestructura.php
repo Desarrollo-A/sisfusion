@@ -3865,4 +3865,40 @@ class Reestructura extends CI_Controller{
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response));        
     }
+
+    public function deshacerFusion(){
+        $idLotePv = $this->input->post('idLotePvOrigen');
+
+        $checkFusion = $this->Reestructura_model->checkFusion($idLotePv); // revisar si es fusión
+        $data = $checkFusion->result();
+
+        // una vez que se comprueba que haya resultados de la consulta, se guardan los lotes en un arreglo
+        foreach ($data as $d) {
+            if($d->origen == 1){
+                $lotesOrigenUpdate[] = array(
+                    'idLote' => $d->idLote,
+                    'id_usuario_asignado' => 0,
+                    'id_juridico_preproceso' => 0
+                );
+            }
+            else if($d->origen == 0){
+                $lotesDestino[] = $d->idLote;
+            }
+        }
+        
+        $update = $this->General_model->updateBatch('lotes', $lotesOrigenUpdate, 'idLote');
+        $deleteFusion = $this->Reestructura_model->deshacerFusion($idLotePv);
+
+        if($deleteFusion && $update){
+            $response["result"] = true;
+            $response["message"] = "Se ha bloqueado el lote y eliminado la fusión";
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al deshacer la fusión";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response)); 
+    }
 }

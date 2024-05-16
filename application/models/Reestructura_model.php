@@ -580,7 +580,7 @@ class Reestructura_model extends CI_Model
                 LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status IN (1) AND cl.proceso IN (0, 1) 
             WHERE 
                 lo.status = 1 
-                AND idStatusLote IN (2, 3)
+                AND idStatusLote IN (2, 3, 17)
                 AND lo.solicitudCancelacion != 2"
         )->result();
     }
@@ -2060,6 +2060,12 @@ class Reestructura_model extends CI_Model
 
     public function deleteFusion($id_lote){
         $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ( SELECT idLotePvOrigen FROM lotes WHERE idLote = ? )', $id_lote);
+        
+        return $query;
+    }
+
+    public function deshacerFusion($id_lote){
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', $id_lote);
         
         return $query;
     }
