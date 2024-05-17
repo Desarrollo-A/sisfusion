@@ -82,6 +82,7 @@ pass_to_validar_pago = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
+            new HiddenField({ id: 'id_avance', value: data.idAvance }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

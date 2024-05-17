@@ -25,6 +25,9 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
+                                            <th>AVANCE ACTUAL</th>
+                                            <th>NUEVO AVANCE</th>
+                                            <th>MONTO A PAGAR</th>
                                             <th>VIGENCIA</th>
                                             <th>ACCIONES</th>
                                         </tr>

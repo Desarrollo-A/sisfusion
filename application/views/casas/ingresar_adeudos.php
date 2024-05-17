@@ -33,7 +33,7 @@
                                             <th>ADEUDO OOAM</th>
                                             <th>ADEUDO ADM</th>
                                             <th>ADEUDO GPH</th>
-                                            <th>VIGENCIA</th>
+                                            <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>

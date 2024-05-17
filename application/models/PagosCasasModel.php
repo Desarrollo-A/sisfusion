@@ -208,21 +208,23 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function insertarAvance($idProcesoPagos, $avance){
+    public function insertarAvance($idProcesoPagos, $avance, $monto){
         $query = "INSERT INTO avances_proceso_pagos
         (
             idProcesoPagos,
             avance,
-            idCreacion,
+            monto,
+            idCreacion
         )
         VALUES
         (
             $idProcesoPagos,
             $avance,
+            $monto,
             $this->idUsuario
         )";
 
-        $result = $this->db->query($query);
+        return $this->db->query($query);
     }
 
     public function getListaCargaComplemento(){
@@ -254,5 +256,94 @@ class PagosCasasModel extends CI_Model
             idAvance = $idAvance";
 
         return $this->db->query($query);
+    }
+
+    public function getListaValidarPago(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance,
+            app.complementoPDF,
+            app.complementoXML
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        WHERE
+            pp.proceso = 6
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setPagadoAvance($idAvance){
+        $query = "UPDATE avances_proceso_pagos
+        SET
+            pagado = 1,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idAvance = $idAvance";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaSolicitarAvance(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance AS nuevo_avance,
+            app.monto
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        WHERE
+            pp.proceso = 7
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function updateAvance($idAvance, $avance, $monto){
+        $query = "UPDATE avances_proceso_pagos
+        SET
+            avance = $avance,
+            monto = $monto,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idAvance = $idAvance";
+
+        return $this->db->query($query);
+    }
+
+    public function setAvanceToProceso($idProcesoPagos, $avance){
+        $query = "UPDATE proceso_pagos
+        SET
+            avance = $avance,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaValidarAvance(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance AS nuevo_avance,
+            app.monto
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        WHERE
+            pp.proceso = 8
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
     }
 }
