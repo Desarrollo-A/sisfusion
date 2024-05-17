@@ -163,6 +163,29 @@
     background-color: #FF0101
 }
 
+/* liquidado */
+
+.timeline-steps .timeline-content .inner-circle_succes:before {
+    content: "";
+    background-color: #16F200;
+    display: inline-block;
+    height: 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    border-radius: 6.25rem;
+    opacity: .5
+}
+.timeline-steps .timeline-content .inner-circle_succes {
+    border-radius: 1.5rem;
+    height: 1rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #16F200
+}
+
+
 /* 
 @media (min-device-width: 320px) and (max-device-width: 700px)
   .timeline
@@ -409,8 +432,44 @@ body {
 
 
 
+.ag-courses-item_title {
+  min-height: 87px;
+  margin: 0 0 25px;
+
+  overflow: hidden;
+
+  font-weight: bold;
+  font-size: 30px;
+  color: #000000;
+
+  z-index: 2;
+  position: relative;
+}
 
 
+@media only screen and (max-width: 979px) {
+  .ag-courses_item {
+    -ms-flex-preferred-size: calc(50% - 30px);
+    flex-basis: calc(50% - 30px);
+  }
+  .ag-courses-item_title {
+    font-size: 24px;
+  }
+}
+
+.ag-courses-item_title {
+  min-height: 87px;
+  margin: 0 0 25px;
+
+  overflow: hidden;
+
+  font-weight: bold;
+  font-size: 30px;
+  color: #000000;
+
+  z-index: 2;
+  position: relative;
+}
 
 /* nuevvo prueba de un boton mamonb  */
 

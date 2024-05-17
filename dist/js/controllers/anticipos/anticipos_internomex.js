@@ -54,7 +54,7 @@ $("#tabla_anticipos_internomex").ready(function () {
         ordering: false,
         scrollX: true,
         columns: [
-            
+            { data: 'id_anticipo' },
             { data: 'id_usuario' },
             { data: 'nombreUsuario' },
             { data: 'proceso' },

@@ -11,7 +11,7 @@
         <div class="content boxContent">
             
         <div class="modal fade modal-alertas" id="myModalAceptar_subir" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<form method="post" id="form_subir">
 						<div class="modal-body"></div>

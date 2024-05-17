@@ -530,9 +530,8 @@ class Descuentos_model extends CI_Model {
             }
 
 
-            public function solicitudes_por_aticipo (){
-                $usuario =  $this->session->userdata('id_usuario');
-
+            public function solicitudes_por_aticipo ($bandera){
+                
                 $cmd = "DECLARE @user INT 
                 SELECT @user = $usuario 
                 SELECT u.id_usuario, u.id_rol,
@@ -562,9 +561,41 @@ class Descuentos_model extends CI_Model {
                 return $query->result_array();
                 
             }
+            public function solicitudes_generales_reporte(){
 
+                $usuario =  $this->session->userdata('id_usuario');
+                
+                $cmd = "SELECT u.id_usuario, u.id_rol,forma.nombre as nombre_forma_pago, u.forma_pago ,
+				UPPER(opcs_x_cats.nombre) AS puesto, ha.fecha_movimiento,
+				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+				INNER JOIN opcs_x_cats forma ON forma.id_catalogo  = 16 and forma.id_opcion = u.forma_pago 
+                LEFT  JOIN historial_anticipo ha ON ha.id_anticipo = ant.id_anticipo and ha.proceso = 3 
+				where u.id_rol in(1,2,3,7,9) 
+				order by ha.fecha_movimiento
+                ";
+
+                $query = $this->db->query($cmd);
+                return $query->result_array();
+            } 
 
             public function solicitudes_generales_dc(){
+
+                $usuario =  $this->session->userdata('id_usuario');
+                
                 $cmd = "SELECT u.id_usuario, u.id_rol, 
 				UPPER(opcs_x_cats.nombre) AS puesto, 
 				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
@@ -583,7 +614,8 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
                 where u.id_rol in(1,2,3,7,9) 
-                AND ant.proceso in (3)";
+                AND ant.proceso in (3)
+                ";
 
                 $query = $this->db->query($cmd);
                 return $query->result_array();

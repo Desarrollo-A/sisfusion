@@ -20,7 +20,7 @@
                                     <label class="control-label" for="proyecto">Proceso</label>
                                     <select class="selectpicker select-gral m-0" name="procesoAnt" id="procesoAnt" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
                                         <option value="7">Aceptar</option>
-                                        <option value="6">Rechazar</option>
+                                        <option value="0">Rechazar</option>
                                     </select>
                                     <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                     <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
@@ -105,6 +105,7 @@
                                             <table class="table-striped table-hover" id="tabla_anticipos" name="tabla_anticipos">
                                                 <thead>
                                                     <tr>
+                                                        <th>ID ANTICIPO</th>
                                                         <th>ID USUARIO</th>
                                                         <th>NOMBRE</th>
                                                         <th>PROCESO</th>

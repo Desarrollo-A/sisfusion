@@ -47,24 +47,29 @@
                             <i class="fas fa-box fa-2x"></i>
                         </div>
                         <div class="card-content">
-                            <h3 class="card-title center-align">Reporte de anticipos Internomex</h3>
+                            <h3 class="card-title center-align">Reporte de anticipos</h3>
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
                                     <div class="material-datatables">
                                         <div class="form-group">
-                                            <table class="table-striped table-hover" id="tabla_anticipos_internomex" name="tabla_anticipos_internomex">
+                                            <table class="table-striped table-hover" id="historial_general" name="historial_general">
                                                 <thead>
                                                     <tr>
                                                         <th>ID ANTICIPO</th>
                                                         <th>ID USUARIO</th>
+                                                        
                                                         <th>NOMBRE</th>
-                                                        <th>PROCESO</th>
-                                                        <th>COMENTARIO</th>
-                                                        <th>PRIORIDAD</th>
-                                                        <th>IMPUESTO</th>
                                                         <th>SEDE</th>
-                                                        <th>ESQUEMA</th>
+                                                        
                                                         <th>MONTO</th>
+                                                        <th>COMENTARIO</th>
+
+                                                        <th>FECHA CONTRALORÍA</th>
+                                                        <th>PROCESO ACTUAL</th>
+                                                        
+                                                        <th>PRIORIDAD</th>
+                                                        <th>ESQUEMA</th> 
+
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>
@@ -83,8 +88,9 @@
     <?php $this->load->view('template/footer');?>
     <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/anticipos/anticipos_internomex.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/historial_anticipos.js"></script>
     <script type="text/javascript">
 		Shadowbox.init();
 	</script>

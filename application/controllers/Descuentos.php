@@ -819,12 +819,21 @@ class Descuentos extends CI_Controller
         // public function 
         public function solicitudes_por_aticipo()
         {
+            
+            
             $todos_los_pasos = $this->Descuentos_model->solicitudes_por_aticipo();
             echo json_encode($todos_los_pasos);
         }
         public function solicitudes_generales_dc()
         {
+            
             $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_dc();
+            echo json_encode($todos_los_pasos);
+        }
+        public function solicitudes_generales_reporte()
+        {
+            $bandera = $this->input->post('bandera');
+            $todos_los_pasos = $this->Descuentos_model->solicitudes_generales_reporte($bandera);
             echo json_encode($todos_los_pasos);
         }
 // anticipo de pagos
@@ -936,10 +945,11 @@ class Descuentos extends CI_Controller
 
 
             $insertHistorial = array(
-                'id_anticipo'   =>  intval( $id_anticipo),
-                'id_usuario'    =>  intval($this->input->post('id_usuario')),
-                'proceso'       =>  intval($this->input->post('proceso')),
-                'comentario'    =>  $this->input->post('motivoDescuento_aceptar')
+                'id_anticipo'       =>  intval( $id_anticipo),
+                'id_usuario'        =>  intval($this->input->post('id_usuario')),
+                'proceso'           =>  intval($this->input->post('proceso')),
+                'comentario'        =>  $this->input->post('motivoDescuento_aceptar'),
+                'fecha_movimiento'  =>  date("Y-m-d H:i:s")
                 );
 
                 $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$insertArray);
@@ -1122,6 +1132,40 @@ class Descuentos extends CI_Controller
                   echo json_encode(3);
                 }
               }
+
+            public function descargar_XML(){
+                if( $this->session->userdata('id_rol') == 31 ){
+                    $filtro = " ant.proceso IN (8) ";
+                } else{
+                    $filtro = " ant.proceso  IN (7) ";
+                }
+
+                $facturas_disponibles = array();
+                $facturas_disponibles = $this->db->query("SELECT DISTINCT(fa.nombre_archivo) 
+                from facturas_anticipos fa
+                INNER JOIN anticipo ant ON fa.id_anticipo = ant.id_anticipo
+                WHERE $filtro
+                GROUP BY fa.nombre_archivo
+                ORDER BY fa.nombre_archivo");
+
+                if( $facturas_disponibles->num_rows() > 0 ){
+                    $this->load->library('zip');
+                    $nombre_documento = 'FACTURAS_INTERNOMEX_'.date("YmdHis").'.zip';
+                foreach( $facturas_disponibles->result() as $row ){
+                    $this->zip->read_file( './UPLOADS/XML_Anticipo/'.$row->nombre_archivo );
+                }
+
+                    $this->zip->archive( $nombre_documento );
+                    $this->zip->download( $nombre_documento );
+                }else{
+                    echo 'no entra';
+                }
+            }
+
+
+
+
+
 
 
 

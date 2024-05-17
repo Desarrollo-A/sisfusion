@@ -3,7 +3,14 @@
         <div class="col mr-12">
             <div class="form-group d-flex justify-center align-center" style="padding-top:20px; margin-bottom:2px">
                 <buttons_adelanto Type="button" class="data buttons_adelanto">
-                    <i class="fas fa-cash-register fa-2x " style=" color: #050000;"></i> <br>Solicitud Anticipo de nomina
+                     
+                     <div class="ag-courses-item_title">
+                     <br>
+                     <br>
+                     Solicitud Anticipo de nomina
+                    </div>
+                    <br>
+                    Podras solicitar anticipos de nomina
                 </buttons_adelanto>
             </div>
         </div>
@@ -13,7 +20,14 @@
         <div class="col mr-12">
             <div class="form-group d-flex justify-center align-center" style="padding-top:20px; margin-bottom:2px">
                 <buttons_adelanto Type="button" class="data buttons_adelanto">
-                    <i class="fas fa-cash-register fa-2x " style=" color: #050000;"></i> <br>Procesos
+
+                    <div class="ag-courses-item_title">
+                     <br>
+                     <br>
+                     Procesos Anticipos
+                    </div>
+                    <br>
+                    Podras revisar el proceso de tu anticipo de nomina
                 </buttons_adelanto>
             </div>
         </div>

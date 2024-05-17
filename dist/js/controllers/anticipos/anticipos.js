@@ -35,6 +35,15 @@ $("#tabla_anticipos").ready(function () {
                         }
                     }
                 }
+            },{
+                text: 'XMLS',
+                action: function(){
+                        window.location = general_base_url+'Descuentos/descargar_XML';
+                },
+                attr: {
+                    class: 'btn btn-azure ml-1',
+                    style: 'position: relative;',
+                }
             }
         ],
         language: {
@@ -54,7 +63,7 @@ $("#tabla_anticipos").ready(function () {
         ordering: false,
         scrollX: true,
         columns: [
-            
+            { data: 'id_anticipo' },
             { data: 'id_usuario' },
             { data: 'nombreUsuario' },
             { data: 'proceso' },
@@ -68,21 +77,27 @@ $("#tabla_anticipos").ready(function () {
                 data: function (d) {
                     var botonesModal = '';
                     if (d.evidencia != null) {
+                        
                         botonesModal += `
-                        <button href="#" id="preview" data-doc="${d.evidencia}"  
+                        <button href="#" id="preview" name="preview" data-doc="${d.evidencia}"  
                         data-ruta="static/documentos/solicitudes_anticipo"
                         class="btn-data btn-violetDeep" title="Ver Evidencia">
                             <i class="fas fa-folder-open"></i>
                         </button>`;
                     }
+                    // if(d.forma_pago == 2){
+                    //     botonesModal += `<center>
+                    //         <button  id="preview1" name="preview1" class="btn-data btn-blueMaderas anticiposFacturas" data-factura="${d.factura_nombre}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="VER FACTURA">
+                    //             <i class="far fa-money-bill-alt"></i>
+                    //         </button></center>`;
+  
+                    // }
+                    botonesModal += `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
                     
-                    var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
                     
-                    
-                    var botonFactura = `<center><button class="btn-data btn-blueMaderas anticiposFacturas" data-factura="${d.factura}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="VER FACTURA"><i class="far fa-money-bill-alt"></i></button></center>`;
 
                     
-                    return '<div class="d-flex justify-center">' + botonesModal + botonEstatus + botonFactura + '</div>';
+                    return '<div class="d-flex justify-center">' + botonesModal + '</div>';
                 }
             }
         ],
@@ -144,7 +159,21 @@ $("#tabla_anticipos").ready(function () {
             height: 660
         });
     });
-
+    $(document).on("click", "#preview1", function () {
+        var itself = $(this);
+        Shadowbox.open({
+            content: `<div>
+                        <iframe style="overflow:hidden;width: 100%;height: 100%; 
+                                        position:absolute;z-index:999999!important;" 
+                                        src="${general_base_url}UPLOADS/XML_Anticipo/${itself.attr('data-factura')}">
+                        </iframe>
+                    </div>`,
+            player: "html",
+            title: `Visualizando archivo: evidencia `,
+            width: 985,
+            height: 660
+        });
+    });
     $("#modal_anticipos_form").on("submit", function(e) {
         e.preventDefault();
     
@@ -186,7 +215,7 @@ $("#tabla_anticipos").ready(function () {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();
-                    document.getElementById("form_aceptar").reset();
+                    //document.getElementById("form_aceptar").reset();
                 } else {
                     alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
                 }
@@ -201,6 +230,7 @@ $("#tabla_anticipos").ready(function () {
     $("#procesoAnt, #procesoTipo").on("change", function() {
         var proceso = $("#procesoAnt").val();
         var tipo = $("#procesoTipo").val();
+        
         mostrarOcultarCampos(proceso, tipo);
     });
     
@@ -208,7 +238,9 @@ $("#tabla_anticipos").ready(function () {
         if (proceso === "6") {
             $("#procesoTipo").parent().parent().hide();
             $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
-        } else {
+        } else if (proceso == 0){
+            
+        }else{
             $("#procesoTipo").parent().parent().show();
             if (tipo === "0") {
                 $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();

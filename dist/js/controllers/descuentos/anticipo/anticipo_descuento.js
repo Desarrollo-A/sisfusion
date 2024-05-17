@@ -58,7 +58,8 @@ function cargaLinea(){
                     data['USUARIO'].forEach((elementoUSUARIO , contador) => {
                         
                         if(elementoUSUARIO.id_anticipo == elementANTICIPOS.id_anticipo && elementoUSUARIO.id_opcion == elementTODOS.id_opcion  ){
-                            color = (elementANTICIPOS.estatus == 0 ) ? 'inner-circle_negativp': 'inner-circle' ;
+                            color = (elementANTICIPOS.estatus == 0 ) ? ('inner-circle_negativp')  : ((elementANTICIPOS.estatus == 11 ) ? 'inner-circle_succes':'inner-circle') ;
+                            // color = (elementANTICIPOS.estatus == 0 ) ? 'inner-circle_negativp': 'inner-circle' ;
                             if(elementoUSUARIO.id_opcion == elementTODOS.id_opcion ){
                                 especial =   (elementoUSUARIO.id_opcion == 5 && elementANTICIPOS.estatus ==1) ? `<botton class="epecial boton_confirmar_contraloria" 
                                 id="boton_confirmar_contraloria" 
@@ -242,7 +243,8 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     Modalbody_subir.html('');
     prioridad_nombre = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
-    FACTURAS = forma_de_pago_general == 2 ?  `        <div class="form-group">      
+    FACTURAS = forma_de_pago_general == 2 ?  `
+            <div class="form-group">      
                 <div class="col-md-12 " id="evidenciaNuevadiv" name="evidenciaNuevadiv" style="padding-top:30px;" >
                     <label class="label control-label d-flex justify-left">Facturas</label>
                     <div class="file-gph">
@@ -252,45 +254,57 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
                     </div>
                 </div>
             </div>
+            <br>
+            <br>
             <center><button class="btn btn-warning" type="button" onclick="xml2(${monto})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center>
             <p id="cantidadSeleccionada"></p>
-
-
+            <br>
+            <br>
             <div class="row">
-                <div class="col-lg-3 form-group">
-                    <label for="emisor">Emisor:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="emisor" name="emisor" placeholder="Emisor" value="" required></div>        
-                <div class="col-lg-3 form-group">
-                    <label for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required></div>
-                <div class="col-lg-3 form-group">
-                    <label for="receptor">Receptor:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="receptor" name="receptor" placeholder="Receptor" value="" required></div>
-                <div class="col-lg-3 form-group">
-                    <label for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required></div>
-                <div class="col-lg-3 form-group">
-                    <label for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required></div>
-                <div class="col-lg-3 form-group">
-                    <label for="total">Monto:<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="total" name="total" placeholder="Total" value="" required></div>
-                <div class="col-lg-3 form-group">
-                    <label for="formaPago">Forma Pago:</label>
-                    <input type="text" class="form-control" placeholder="Forma Pago" id="formaPago" name="formaPago" value=""></div>
-                <div class="col-lg-3 form-group">
-                    <label for="cfdi">Uso del CFDI:</label>
-                    <input type="text" class="form-control" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value=""></div>
-                <div class="col-lg-3 form-group">
-                    <label for="metodopago">Método de Pago:</label>
-                    <input type="text" class="form-control" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
-                    </div>
-                <div class="col-lg-3 form-group">
-                    <label for="unidad">Unidad:</label>
-                    <input type="text" class="form-control" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> </div>
-                <div class="col-lg-3 form-group"> 
-                    <label for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> 
-                    <input type="text" class="form-control" id="clave" name="clave" placeholder="Clave" value="" required></div> 
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="emisor">Emisor:<span class="text-danger">*</span></label>
+                    <input type="text" class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0  input-gral" id="emisor" name="emisor" placeholder="Emisor" value="" required>
+                </div>        
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="rfcemisor">RFC Emisor:<span class="text-danger">*</span></label>
+                    <input type="text" class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 input-gral" id="rfcemisor" name="rfcemisor" placeholder="RFC Emisor" value="" required>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label  class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="receptor">Receptor:<span class="text-danger">*</span></label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="receptor" name="receptor" placeholder="Receptor" value="" required>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label  class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="rfcreceptor">RFC Receptor:<span class="text-danger">*</span></label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="rfcreceptor" name="rfcreceptor" placeholder="RFC Receptor" value="" required>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label  class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="regimenFiscal">Régimen Fiscal:<span class="text-danger">*</span></label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="regimenFiscal" name="regimenFiscal" placeholder="Regimen Fiscal" value="" required>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="total">Monto:<span class="text-danger">*</span></label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="total" name="total" placeholder="Total" value="" required>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="formaPago">Forma Pago:</label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" placeholder="Forma Pago" id="formaPago" name="formaPago" value="">
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="cfdi">Uso del CFDI:</label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" placeholder="Uso de CFDI" id="cfdi" name="cfdi" value="">
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="metodopago">Método de Pago:</label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="metodopago" name="metodopago" placeholder="Método de Pago" value="" readonly>
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group">
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="unidad">Unidad:</label>
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="unidad" name="unidad" placeholder="Unidad" value="" readonly> 
+                </div>
+                <div class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0 form-group"> 
+                    <label class="col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" for="clave">Clave Prod/Serv:<span class="text-danger">*</span></label> 
+                    <input type="text" class="input-gral col col-xs-6 col-sm-6 col-md-6 col-lg-6 m-0" id="clave" name="clave" placeholder="Clave" value="" required>
+                </div> 
             </div>` :``; 
 
     Modalbody_subir.append(`
