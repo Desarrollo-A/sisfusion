@@ -628,4 +628,36 @@
     }
 
 
+    function getPlanesPago($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
+        $query = $this->db->query("SELECT res.nombreResidencial, co.nombre, lo.nombreLote, lo.idLote, numeroPeriodos,  pp.* FROM planes_pago pp 
+        INNER JOIN lotes lo ON pp.idLote = lo.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+        INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
+        WHERE pp.estatus = 1 AND pp.idLote = ".$idLote);
+        return $query->result_array();
+    }
+
+    // CONSULTA PARA TRAER LA OPCIONES DEL CATÁLOGO FORMA DE PAGO, INSTRUMENTO MONETARIO Y MONEDA O DIVISA
+    function getCatalogoFormaPago() {
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112, 119, 131)");
+    }
+
+    function catalogosPlanPago(){
+        $query = $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (112, 137, 138)");
+        return $query->result_array();
+    }
+
+    function totalPlanesPago($idLote){
+        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus=1 AND idLote=".$idLote);
+        return $query->result_array();
+    }
+
+    function infoLotePlanPago($idLote){
+        $query = $this->db->query("SELECT lo.idLote, lo.idCliente, lo.nombreLote FROM lotes lo
+        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        WHERE idLote=$idLote");
+        return $query->row();
+    }
 }

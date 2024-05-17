@@ -253,6 +253,7 @@
             $idLote = $this->input->post('txtIdLote');
             $cmbFormaPago = $this->input->post('cmbFormaPago');
             $cdpplote = $this->input->post('cdpplote');
+            $cmbPlanPago = $this->input->post('cmbPlanPago');
             $cmbInsMonetario= $this->input->post('cmbInsMonetario');
             $cmbMonedaDiv = $this->input->post('cmbMonedaDiv');
             $idEnganche = ($this->input->post('idEnganche')=='null') ? 0 : $this->input->post('idEnganche');
@@ -277,6 +278,7 @@
                     "montoPago" => $montoEnganche,
                     "fechaModificacion" => $ahora,
                     "conceptoPago" => $cdpplote,
+                    "PlanPago" => $cmbPlanPago,
                     "idModificacion" => $this->session->userdata('id_usuario')
                 );
                 $respuesta = $this->General_model->updateRecord($table, $dataEnganche, $key, $idEnganche);
@@ -291,6 +293,7 @@
                     "fechaPago" => $newDate,
                     "montoPago" => $montoEnganche,
                     "conceptoPago" =>  $cdpplote, //este es el enganche
+                    "PlanPago" => $cmbPlanPago,
                     "estatus" => 1,
                     "fechaCreacion" => $ahora,
                     "idCreacion" => $this->session->userdata('id_usuario'),

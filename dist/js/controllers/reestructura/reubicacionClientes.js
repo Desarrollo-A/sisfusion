@@ -668,7 +668,6 @@ $(document).on('click', '#guardarCliente', function (){
     if (
         !validateInputArray('nombre[]') ||
         !validateInputArray('apellido_p[]') ||
-        !validateInputArray('apellido_m[]') ||
         !validateInputArray('telefono2[]') ||
         !validateInputArray('correo[]') ||
         !validateInputArray('identificacion[]') ||

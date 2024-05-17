@@ -763,7 +763,7 @@
                                         </div>
                                         <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <!--<div ng-if="checkEngDif">-->
-                                            <div class="col-md-6 form-group" >
+                                            <div class="col-md-5 form-group" >
                                                 <label>Apartado ($):</label>
                                                 <div class="input-group" >
                                                     <span class="input-group-addon" id="basic-addon1">$</span>
@@ -771,7 +771,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6 form-group" >
+                                            <div class="col-md-4 form-group" >
                                                 <label>Meses a diferir:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="basic-addon1">#</span>
@@ -780,19 +780,25 @@
                                                     </select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-3 form-group" >
+                                                <label>MSI:</label>
+                                                <div class="input-group">
+                                                    <input is-number ng-model="mesesSinInteres" type="number"
+                                                           ng-change="revisarInput()"
+                                                           class="form-control" id="mesesSinInteres" >
+                                                </div>
+                                                <!-- ng-blur="ChengecheckEngDif()"-->
+                                            </div>
                                         </div>
-                                        <!--</div>-->
+                                        <!--</div>46 14 95 67 730-->
                                     </div>
-
-
-
-
 
                                 </div>
 
                                 <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <div class=" col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
                                             <div class="col-md-2 form-group col-md-offset-5" id="offsetCnt">
                                                 <label>Fecha:</label>
                                                 <input type="date" ng-model="CurrentDate" class="form-control" value="{{CurrentDate | date:'dd-MM-yyyy'}}" ng-readonly="true">
@@ -1206,6 +1212,7 @@
 
 
 
+
         myApp.directive('stringToNumber', function() {
             return {
                 require: 'ngModel',
@@ -1310,10 +1317,18 @@
                 formatNoMatches: 'No group found'
             };
 
+            $scope.revisarInput = function() {
+                if($scope.mesesSinInteres > $scope.mesessiControl || $scope.mesesSinInteres < 0 ){
+                    $scope.mesesSinInteres = $scope.mesessiControl ;
+                }else{
+                    $scope.msni = $scope.mesesSinInteres;
+                    calcularCF();
+                }
+            }
 
             $scope.mesesdiferir = 0;
 
-            $scope.blurResultCantidad = ()=>{
+            $scope.blurResultCantidad = ()=> {
                 var porcentajeEnganche = angular.element(document.querySelector('#porcentajeEnganche'));
                 var cantidadEnganche  =  angular.element(document.querySelector('#cantidadEnganche'));
                 var r1 = $scope.precioFinal;
@@ -2566,6 +2581,7 @@
 
                         rangEd.push({
                             "fecha" : $scope.dateCf,
+                            "planPago": 1,
                             "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                             "capital" : engd2,
                             "interes" : 0,
@@ -4272,6 +4288,7 @@
                             // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
                             rangEd.push({
                                 "fecha" :  day + '-' + mes + '-' + yearc,
+                                "planPago": 1,
                                 "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                                 "capital" : engd2,
                                 "interes" : 0,
@@ -4433,6 +4450,7 @@
                                     console.log('$scope.mensualidad_con_enganche', $scope.mensualidad_con_enganche);
                                     range.push({
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 2,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "interes" : 0,
@@ -4444,6 +4462,7 @@
                                 else{
                                     range.push({
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 2,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "interes" : 0,
@@ -4456,6 +4475,7 @@
                             else{
                                 range.push({
                                     "fecha" : $scope.dateCf,
+                                    "planPago": 2,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
                                     "interes" : 0,
@@ -4575,6 +4595,7 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 3,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
@@ -4684,6 +4705,7 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 4,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
                                 "interes" : (intereses_4 <= 0) ? Math.abs(intereses_4) : intereses_4,
@@ -4812,6 +4834,7 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
                                 "interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
@@ -4916,6 +4939,7 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
                                 "interes" : (interesFinal <= 0) ? Math.abs(interesFinal) : interesFinal,
@@ -5102,6 +5126,7 @@
                                     range.push({
 
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital + $scope.rangEd[i].capital,
                                         "interes" : 0,
@@ -5113,6 +5138,7 @@
                                     range.push({
 
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "interes" : 0,
@@ -5126,6 +5152,7 @@
                                 range.push({
 
                                     "fecha" : $scope.dateCf,
+                                    "planPago": 1,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
                                     "interes" : 0,
@@ -5263,6 +5290,7 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
@@ -5370,6 +5398,7 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
                                 "interes" : (interes_2 <= 0) ? Math.abs(interes_2) : interes_2,
@@ -5916,6 +5945,7 @@
                                     range.push({
 
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital + $scope.rangEd[i].capital,
                                         "interes" : 0,
@@ -5927,6 +5957,7 @@
                                     range.push({
 
                                         "fecha" : $scope.dateCf,
+                                        "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "interes" : 0,
@@ -5940,6 +5971,7 @@
                                 range.push({
 
                                     "fecha" : $scope.dateCf,
+                                    "planPago": 1,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
                                     "interes" : 0,
@@ -6077,6 +6109,7 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
@@ -6184,6 +6217,7 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
                                 "interes" : (interes_2 <= 0) ? Math.abs(interes_2) : interes_2,
@@ -6285,6 +6319,7 @@
                             range4.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago": 4,
                                 "pago" : i,
                                 "capital" : ($scope.capital4 = ($scope.p4 - $scope.interes_plan4)),
                                 "interes" : (interes_3 <= 0) ? Math.abs(interes_3) : interes_3,
@@ -6645,11 +6680,6 @@
                     // $scope.porcentajeEng = cantidadToGetP;
                     $scope.engancheFinal = cantidadFromPorcnt;
                     $scope.cantidad = cantidadFromPorcnt;
-
-
-
-
-                    console.log('De ',pe,' el cantidad es: ', cantidadFromPorcnt);
                     // $scope.engancheFinal = ef;
                     // $scope.cantidad = ef;
 
@@ -6713,7 +6743,7 @@
                 // loteCont
                 // anioCont
                 let content;
-                let residencial = proyecto.idResidencial;
+                let residencial =  parseInt(proyecto.idResidencial);
                 // console.log('residencial: ', residencial);
                 $('#loteCont').empty();
                 cleanCondominios();
@@ -8340,6 +8370,8 @@
                         $scope.clabe = response.data[0].clabe;
                         $scope.referencia = response.data[0].referencia;
                         $scope.msni = response.data[0].msni;
+                        $scope.mesessiControl = response.data[0].msni;
+                        $scope.mesesSinInteres = response.data[0].msni;
 
                         if(response.data[0].idStatusLote==3){
                             let fecha_pre = new Date(response.data[0].fechaApartado);
@@ -10466,10 +10498,7 @@
             $scope.dtoptions = DTOptionsBuilder;
 
 
-
-
             $scope.dtColumns = [
-                DTColumnBuilder.newColumn('fecha').withTitle('Fechas'),
                 DTColumnBuilder.newColumn('pago').withTitle('Pago #'),
                 DTColumnBuilder.newColumn('capital').withTitle('Capital').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))}),
                 DTColumnBuilder.newColumn('interes').withTitle('Intereses').renderWith(function(data, type, full) {return (data.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' }))}),

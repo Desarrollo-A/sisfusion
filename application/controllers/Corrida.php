@@ -1,8 +1,8 @@
 <?php
-    require_once 'static/autoload.php';//linea debe descomentarse en PROD
+//    require_once 'static/autoload.php';//linea debe descomentarse en PROD
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-//    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+    require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
 class Corrida extends CI_Controller
 {
@@ -3678,5 +3678,97 @@ legend {
         } else {
             echo json_encode(array());
         }
+    }
+
+    public function test(){
+        $this->load->view("corrida/ejemplo");
+    }
+
+    public function planes_pagos(){
+        $datos["residencial"] = $this->Asesor_model->get_proyecto_lista();
+        $this->load->view('template/header');
+        $this->load->view("planesPagos/planes_pagos", $datos);
+    }
+    function getPlanesPago($idLote){
+        $data = $this->Corrida_model->getPlanesPago($idLote);
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+    function catalogosPlanPago(){
+        $idLote = $this->input->post("idLote");
+        $dtoCatalogos = $this->Corrida_model->catalogosPlanPago();
+        $dtoTotalPlanesPago = $this->Corrida_model->totalPlanesPago($idLote);
+        $dtoInfoLote = $this->Corrida_model->infoLotePlanPago($idLote);
+        if(count($dtoCatalogos) > 0)
+            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote);
+        else
+            $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos", "dtoCatalogos"=> []);
+        echo json_encode($response);
+    }
+
+    function guardaPlanPago(){
+        $idLotePP = $this->input->post("idLotePP");
+        $idClientePP = $this->input->post("idClientePP");
+        $nombreLotePP = $this->input->post("nombreLotePP");
+
+        $tipoPP = $this->input->post("tipoPP");
+        $planPago = $this->input->post("planPago");
+        $descripcionPlanPago = $this->input->post("descripcionPlanPago");
+        $montoPP = $this->input->post("montoPP");
+        $monedaPP = $this->input->post("monedaPP");
+        $tazaInteresPP = $this->input->post("tazaInteresPP");
+        $noPeriodosPP = $this->input->post("noPeriodosPP");
+        $periocidadPP= $this->input->post("periocidadPP");
+        $fechaInicioPP = $this->input->post("fechaInicioPP");
+        $ivaPP = $this->input->post("ivaPP");
+        $mensualidadPP = $this->input->post("mensualidadPP");
+        $porcentajeIvaPP = $this->input->post("porcentajeIvaPP");
+        $porcentajeIvaPP = isset($porcentajeIvaPP) ? $porcentajeIvaPP : '';
+        $cantidadIvaPP = $this->input->post("cantidadIvaPP");
+        $cantidadIvaPP = isset($cantidadIvaPP) ? $cantidadIvaPP : '';
+        $tipoPlanTxtPP = $this->input->post("tipoPlanTxtPP");//nombre del tipo de plan
+
+        $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago-1);
+        $fecha_actual = date('Y-m-d H:i:s');
+
+        $ret = "App\Service";
+        $string = str_replace('\\','', $ret);
+
+        $insert_plan = array(
+            "idLote" => $idLotePP,
+            "idCliente" => $idClientePP,
+            "nombreLote" => $nombreLotePP,
+            "nombrePlan" => $nombrePlan, //se compone del plan y el numero del plan
+            "descripcion" => $descripcionPlanPago,
+            "monto" => tr_replace(array('$',','),'', $montoPP),
+            "moneda" => $monedaPP,
+            "tazaInteres" => $tazaInteresPP,
+            "mensualidad" => $mensualidadPP,
+            "numeroPeriodos" => $noPeriodosPP,
+            "periodicidad" => $periocidadPP,
+            "fechaInicioPlan" => $fechaInicioPP,
+            "montoIvaPorcentaje" => $porcentajeIvaPP,
+            "cantidadIva" => $cantidadIvaPP,
+            "dumpPlan" => null,//array del plan de pago
+            "fechaCreacion" => $fecha_actual,
+            "creadoPor" => $this->session->userdata("id_usuario"),
+            "fechaModificacion" => $fecha_actual,
+            "modificadoPor" => null,
+            "estatus" => 1
+        );
+
+        print_r($insert_plan);
+        exit;
+        $insertPlanDB = $this->General_model->addRecord($insert_plan);
+        if ( $insertPlanDB ) {
+            $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
+        } else  {
+            $response = array( "status" => 0, "mensaje"=>"Error al insertar el enganche, inténtalo nuevamente");
+        }
+        echo json_encode($response);
+
     }
 }

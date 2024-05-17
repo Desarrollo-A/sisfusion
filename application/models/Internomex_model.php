@@ -410,16 +410,18 @@ class Internomex_model extends CI_Model {
 
     // CONSULTA PARA TRAER LA OPCIONES DEL CATÁLOGO FORMA DE PAGO, INSTRUMENTO MONETARIO Y MONEDA O DIVISA
     function getCatalogoFormaPago() {
-        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112, 119)");
+        return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo IN (110, 111, 112, 119, 131)");
 	}
 
     // CONSULTA PARA TRAER LOS DATOS DE LOS ENGANCHES DE UN LOTE
     function getEnganches($idLote) {
-        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, opcMonedaD.nombre nombreMonedaDivisa 
+        return $this->db->query("SELECT *, opcFormaP.nombre nombreFormaPago, opcInsMon.nombre nombreInstrumentoMonetario, 
+        opcMonedaD.nombre nombreMonedaDivisa, opcPlanPago.nombre nombrePlanPago
     FROM enganche eng
     INNER JOIN opcs_x_cats opcFormaP ON opcFormaP.id_opcion = eng.formaPago AND opcFormaP.id_catalogo = 110
     INNER JOIN opcs_x_cats opcInsMon ON opcInsMon.id_opcion = eng.instrumentoMonetario AND opcInsMon.id_catalogo = 111
     INNER JOIN opcs_x_cats opcMonedaD ON opcMonedaD.id_opcion = eng.monedaDivisa AND opcMonedaD.id_catalogo = 112
+    INNER JOIN opcs_x_cats opcPlanPago ON opcPlanPago.id_opcion = eng.planPago AND opcPlanPago.id_catalogo = 131
     WHERE eng.idEnganche IN(SELECT idEnganche FROM enganche eng WHERE eng.idLote=$idLote)");
 	}
 
