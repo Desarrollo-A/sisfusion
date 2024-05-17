@@ -319,7 +319,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
                 $filtroGerente = "";
-                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094, 15842))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
                     $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
@@ -374,6 +374,15 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

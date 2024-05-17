@@ -65,17 +65,18 @@ class Juridico_model extends CI_Model {
 				$filtroAsignacion = "AND l.asig_jur = $id_usuario";
 			else
 				$filtroAsignacion = "";
-			
+
 			if($id_sede == 11) // CONTRALORÍA Monterrey TAMBIÉN VE EXPEDIENTES DE Texas USA Y CIUDAD JUÁREZ
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '10', '17')";
-			elseif($id_sede == 4) // CONTRALORÍA Ciudad de México TAMBIÉN VE EXPEDIENTES DE Puebla y lo de Estado de México Norte
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '15', '14')";
-			else if($id_sede == 5) // JURÍDICO LEÓN TAMBIÉN VE EXPEDIENTES DE GUADALAJARA
-				$filtroSede = "AND l.ubicacion IN ('$id_sede', '12')";
 			else if($id_sede == 8) // JURÍDICO TIJUANA TAMBIÉN VE EXPEDIENTES DE MIAMI
 				$filtroSede = "AND l.ubicacion IN ('$id_sede', '19')";
 			else
 				$filtroSede = "AND l.ubicacion IN ('$id_sede')";
+
+			if ($id_usuario == 15563) { // EJECUTIVA EN PUEBLA
+				$filtroAsignacion = "AND (l.asig_jur = $id_usuario OR l.ubicacion IN ('$id_sede'))";
+				$filtroSede = "";
+			}
 
 			$query = $this->db-> query("SELECT l.idLote, cl.id_cliente, cl.fechaApartado, cl.nombre, cl.apellido_paterno, cl.apellido_materno, l.nombreLote, l.idStatusContratacion,
 			l.idMovimiento, l.modificado, cl.rfc, CAST(l.comentario AS varchar(MAX)) as comentario, l.fechaVenc, l.perfil, cond.nombre as nombreCondominio, res.nombreResidencial, l.ubicacion,
@@ -234,7 +235,7 @@ class Juridico_model extends CI_Model {
 		return $this->db->query("SELECT us.id_usuario, CONCAT(UPPER(us.nombre), ' ', UPPER(us.apellido_paterno), ' ', 
 		UPPER(us.apellido_materno), ' (', se.nombre, ')') nombreUsuario FROM usuarios us 
 		INNER JOIN sedes se ON se.id_sede = us.id_sede
-		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 15418, 2764, 6856, 2800, 11258, 12047, 15108, 11097, 14183, 15046, 11125, 10427, 15025, 15433, 11468) AND us.id_rol = 15 AND us.estatus = 1 
+		WHERE us.id_usuario IN (2776, 10463, 2765, 2820, 2876, 10437, 15418, 2764, 6856, 2800, 11258, 12047, 15108, 11097, 14183, 15046, 11125, 10427, 15025, 15433, 11468, 15563) AND us.id_rol = 15 AND us.estatus = 1 
 		ORDER BY us.id_sede, nombreUsuario")->result_array();
 	}
 

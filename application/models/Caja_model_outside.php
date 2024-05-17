@@ -1410,7 +1410,7 @@
     public function getLider($id_gerente) {
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
-        WHEN us.id_lider = 7092 THEN 3 
+        WHEN us.id_lider IN (7092, 15316) THEN 3 
         WHEN us.id_lider IN (9471, 681, 609, 2411, 9783, 896) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
