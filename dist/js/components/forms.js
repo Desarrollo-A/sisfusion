@@ -65,7 +65,7 @@ class HiddenField {
 }
 
 class SelectField {
-    constructor({ id, label, placeholder, data = [], value, width, required }) {
+    constructor({ id, label, placeholder, data = [], value, width, required = false }) {
         this.id = id
 
         let options = []
@@ -88,26 +88,26 @@ class SelectField {
             .addClass(`col-lg-${width} col-md-12`)
             .append(
                 $('<div />')
-                    .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
-                    .append(
-                        $('<label />')
-                            .addClass('control-label m-1')
-                            .text(label)
-                    )
-                    .append(
-                        $('<select />')
-                            .addClass('selectpicker select-gral m-0')
-                            .attr('id', id)
-                            .attr('name', id)
-                            .data('style', 'btnSelect')
-                            .data('show-subtext', 'true')
-                            .data('live-search', 'true')
-                            .data('size', '7')
-                            .data('container', 'body')
-                            .attr('title', placeholder)
-                            .attr(required, required)
-                            .append(options)
-                    )
+                .addClass('form-group select-is-empty overflow-hidden m-0 p-0')
+                .append(
+                    $('<label />')
+                    .addClass('control-label m-1')
+                    .text(label)
+                )
+                .append(
+                    $('<select />')
+                    .addClass('selectpicker select-gral m-0')
+                    .attr('id', id)
+                    .attr('name', id)
+                    .data('style', 'btnSelect')
+                    .data('show-subtext', 'true')
+                    .data('live-search', 'true')
+                    .data('size', '7')
+                    .data('container', 'body')
+                    .attr('title', placeholder)
+                    .prop('required', required)
+                    .append(options)
+                )
             )
 
         //$(`#${id}`).trigger("change")
@@ -679,6 +679,7 @@ class Form {
 
         $('#title-form-modal').text(this.title)
         $('#text-form-modal').html(this.text)
+        $("#ok-button-form-modal").prop('disabled', false)
         $("#form-modal").modal();
     }
 

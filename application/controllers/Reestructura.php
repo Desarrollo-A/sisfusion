@@ -276,6 +276,16 @@ class Reestructura extends CI_Controller{
 			'comentario' => 'OK',
 			'status' => 1
         );
+
+        $dataInsertPreprocesoLote = array(
+            'idLote' => $loteAOcupar,
+            'idCliente' => $idClienteInsert,
+            'id_preproceso' => 6,
+            'comentario' => 'SELECCIÓN FINAL EEC',
+            'estatus' => 1,
+            'modificado_por' => $this->session->userdata('id_usuario'),
+			'fecha_modificacion' => date('Y-m-d h:i:s'),
+        );
         
         if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
             $this->db->trans_rollback();
@@ -284,6 +294,18 @@ class Reestructura extends CI_Controller{
                 'titulo' => 'ERROR',
                 'resultado' => FALSE,
                 'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+
+        if (!$this->General_model->addRecord('historial_preproceso_lote', $dataInsertPreprocesoLote)) {
+            $this->db->trans_rollback();
+
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error al guardar el registro del lote.',
                 'color' => 'danger'
             ));
             return;
@@ -1126,7 +1148,7 @@ class Reestructura extends CI_Controller{
                 'comentario' => 'OK',
                 'status' => 1
             );
-    
+
             if (!$this->General_model->addRecord('historial_lotes', $dataInsertHistorialLote)) {
                 $this->db->trans_rollback();
     
@@ -2332,23 +2354,16 @@ class Reestructura extends CI_Controller{
         $flagFusion = $this->input->post('flagFusion');
 
         $getProyecto = $this->Reestructura_model->getProyectoIdByLote($idLote);
-        $idProyecto = $getProyecto[0]['idProyecto'];
+        $idProyecto = (int) $getProyecto[0]['idProyecto'];
 
         if($tipoEstatusRegreso == 1){
-            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
-                $statusLote = 15;
-            }
-            else{
-                $statusLote = 21;
-            }
+            $statusLote = 15;
         }
-        else{
-            if($idProyecto != 14 || $idProyecto != 21 || $idProyecto != 22 || $idProyecto != 25){
-                $statusLote = 1;
-            }
-            else{
+        else if($tipoEstatusRegreso == 2 && in_array($idProyecto, [14,21,22,25])){
                 $statusLote = 21;
-            }
+        }
+        else if($tipoEstatusRegreso == 0 && !in_array($idProyecto, [14,21,22,25])){
+            $statusLote = 1;
         }
 
         $dataUpdateLote = array(
@@ -3345,8 +3360,8 @@ class Reestructura extends CI_Controller{
 
     public function regresoPreproceso(){
         $preproceso = $this->input->post("preproceso");
-        $juridico = $this->input->post("juridico");
-        $contraloria = $this->input->post("contraloria");
+        $juridico = $this->input->post("juridico"); // banderas de si solo juridico o contraloria
+        $contraloria = $this->input->post("contraloria"); // banderas de si solo juridico o contraloria
         $idLotePv = $this->input->post("idLote");
         $idCliente = $this->input->post("idCliente");
         $comentario = $this->input->post("comentario");
@@ -3413,7 +3428,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado el lote al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado el lote al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -3489,7 +3504,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado la fusión al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado la fusión al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -4025,5 +4040,57 @@ class Reestructura extends CI_Controller{
         $insert = $this->General_model->addRecord('historial_regreso_reestructura', $insertData);
 
         return $insert;
+    }
+
+    public function bloqueoRegreso(){
+        $bandera = $this->input->post("bandera");
+        $idLote = $this->input->post("idLoteBandera");
+        $idCliente = $this->input->post("idCliente");
+        $flagFusion = 0;
+        $flagRe = 0;
+        $flagPass = true;
+        $flagFusion = 0;
+        $flagRe = 0;
+        $idLotePvOrigen = $this->input->post("idLoteBandera");;
+
+        $dataUpdate = array(
+            "liberaBandera" => 0
+        );
+
+        $checkFusion = $this->Reestructura_model->checkFusion($idLote); // revisar si es fusión
+        $checkRe = $this->Reestructura_model->checkReubicacion($idLote); // revisar si es reubicación 
+        $checkRee = $this->Reestructura_model->checkReestructura($idLote); // o reestructura
+
+        $this->db->trans_begin();
+
+        if($checkRe->num_rows() > 0 || $checkRee->num_rows() > 0){
+            $flagRe = 1;
+        }
+        else if($checkFusion->num_rows() > 0){
+            $flagFusion = 1;
+
+            $fusionResult = $checkFusion->result();
+            $idLotePvOrigen = $fusionResult[0]->idLotePvOrigen;
+        }
+
+        $updateBandera = $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
+        if(!$updateBandera) $flagPass = false;
+
+        if($flagPass){
+            $this->db->trans_commit();
+            $response["result"] = true;
+            $response["flagRe"] = $flagRe;
+            $response["flagFusion"] = $flagFusion;
+            $response["idLotePvOrigen"] = $idLotePvOrigen;
+            $response["message"] = "Se ha bloqueado el lote correctamente";
+        }
+        else{
+            $this->db->trans_rollback();
+            $response["result"] = false;
+            $response["message"] = "Ha ocurrido un error al bloquear el lote";
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));        
     }
 }

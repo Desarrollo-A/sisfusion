@@ -36,6 +36,9 @@ let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
     { data: function(data){
+        return `${data.avance} %`
+    } },
+    { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 3)
         let today = new Date()

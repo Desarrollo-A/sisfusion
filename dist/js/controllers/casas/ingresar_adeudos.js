@@ -73,6 +73,20 @@ let columns = [
 
         return text
     } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     { data: function(data){
         let adeudo_button = new RowButton({icon: 'edit', label: 'Ingresar adeudo', onClick: set_adeudo, data})
 
@@ -88,7 +102,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Ingresar adeudo",
         exportOptions: {
-            columns: [0, 1, 2, 3, 5],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');

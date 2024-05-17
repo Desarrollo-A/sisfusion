@@ -139,6 +139,20 @@ let columns = [
 
         return text
     } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
         let upload_button = new RowButton({icon: 'file_upload', label: 'Subir cotizaciones', onClick: go_to_cotizaciones, data})
@@ -163,7 +177,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Propuesta de firma",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');

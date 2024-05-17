@@ -45,7 +45,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Firma de contrato",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -81,6 +81,20 @@ let columns = [
         }
 
         return text
+    } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Confirmar firma', onClick: pass_to_recepcion_contrato, data})

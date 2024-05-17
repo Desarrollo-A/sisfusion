@@ -2071,13 +2071,15 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-
         if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
-            if(!$validacionM2) {//si es diferente a true
-                echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
-                exit;
+            $procesoInt = intval($proceso);
+            if(in_array($procesoInt, array(0, 1))){
+                if(!$validacionM2) {//si es diferente a true
+                    echo json_encode(array('code' => 400, 'message' => 'El costo por m2 final es incorrecto, verifícalo'));
+                    exit;
+                }
             }
         }
 
@@ -2969,7 +2971,7 @@ class Asesor extends CI_Controller {
                 if (count($idCopArray) > 0) {
                     for ($i = 0; $i < sizeof($idCopArray); $i++) {
                         $updCoprop = $this->db->query(" UPDATE copropietarios SET correo = '" . $emailCopArray[$i] . "', telefono = '" . $telefono1CopArray[$i] . "', 
-                                                            ladaTel = '" . $ladatelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
+                                                            ladaTel = '" . $ladaTelCop1[$i] . "', ladaCel = '" . $ladaCelCop2[$i] . "',
                                                             telefono_2 = '" . $telefono2CopArray[$i] . "', fecha_nacimiento = '" . $fNacimientoCopArray[$i] . "',
                                                             nacionalidad = '" . $nacionalidadCopArray[$i] . "', originario_de = '" . $originarioCopArray[$i] . "',
                                                             domicilio_particular = '" . $idParticularCopArray[$i] . "', estado_civil = '" . $eCivilCopArray[$i] . "',

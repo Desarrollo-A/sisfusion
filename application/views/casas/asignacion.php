@@ -30,6 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
