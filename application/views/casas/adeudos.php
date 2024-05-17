@@ -34,6 +34,7 @@
                                             <th>ADEUDO ADM</th>
                                             <th>ADEUDO GPH</th>
                                             <th>VIGENCIA</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

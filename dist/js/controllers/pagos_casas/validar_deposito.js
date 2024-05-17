@@ -1,7 +1,41 @@
+back_to_documentacion = function(data) {
+    let form = new Form({
+        title: 'Regresar proceso', 
+        text: `¿Regresar proceso del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_documentacion`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El proceso del lote ha sido regresado.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoPagos }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
 pass_to_confirmar_pago = function(data) {
     let form = new Form({
         title: 'Validar deposito', 
-        text: `¿Validar el deposito del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -12,7 +46,7 @@ pass_to_confirmar_pago = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El deposito del lote ha sido validado.", "success");
+                    alerts.showNotification("top", "right", "El depósito del lote ha sido validado.", "success");
         
                     table.reload()
 
@@ -35,20 +69,6 @@ pass_to_confirmar_pago = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
-    { data: function(data) {
-        if(data.costoConstruccion){
-            return `$ ${data.costoConstruccion.toFixed(2)}`
-        }else{
-            return ''
-        }
-    } },
-    { data: function(data) {
-        if(data.montoDepositado){
-            return `$ ${data.montoDepositado.toFixed(2)}`
-        }else{
-            return ''
-        }
-    } },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 3)
@@ -66,13 +86,11 @@ let columns = [
         return text
     } },
     { data: function(data){
-        let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
-
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar deposito', onClick: pass_to_confirmar_pago, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_confirmar_pago, data})
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
         
-        return `<div class="d-flex justify-center">${docu_button}${pass_button}${pass_button}</div>`
+        return `<div class="d-flex justify-center">${pass_button}${back_button}</div>`
     } },
 ]
 

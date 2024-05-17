@@ -61,6 +61,21 @@ class PagosCasas extends BaseController {
         $this->load->view("pagos_casas/carga_complemento");
     }
 
+    public function validar_pago(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_pago");
+    }
+
+    public function solicitar_avance(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/solicitar_avance");
+    }
+
+    public function validar_avance(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/validar_avance");
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -75,14 +90,13 @@ class PagosCasas extends BaseController {
     }
 
     public function upload_documento(){
-        $form = $this->form();
-
         $id_proceso = $this->form('id_proceso');
         $id_documento = $this->form('id_documento');
         $name_documento = $this->form('name_documento');
 
         if(!isset($id_proceso) || !isset($id_documento) || !isset($name_documento)){
             http_response_code(400);
+            $this->json([]);
         }
 
         $proceso = $this->PagosCasasModel->getProceso($id_proceso);
@@ -291,6 +305,8 @@ class PagosCasas extends BaseController {
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
+            $this->PagosCasasModel->insertarAvance($proceso->idProcesoPagos, 0);
+
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
             http_response_code(404);
@@ -318,9 +334,56 @@ class PagosCasas extends BaseController {
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 5, $comentario);
 
         if($is_ok){
+            //$is_ok = $this->PagosCasasModel->setPagadoAvance();
+
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
             http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function lista_carga_complemento(){
+        $lotes = $this->PagosCasasModel->getListaCargaComplemento();
+
+        $this->json($lotes);
+    }
+
+    public function upload_complemento(){
+        $id_proceso = $this->form('id_proceso');
+        $id_avance = $this->form('id_avance');
+
+        $file_pdf = $this->file('file_pdf');
+        $file_xml = $this->file('file_xml');
+
+        if(!isset($id_proceso) || !isset($id_avance) || !isset($file_pdf) || !isset($file_xml)){
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id_proceso);
+
+        $name_pdf = "complemento de pago pdf $id_avance";
+        $filename_pdf = $this->generateFileName($name_pdf, $proceso->nombreLote, $id_proceso, $file_pdf->name);
+
+        $uploaded_pdf = $this->upload($file_pdf->tmp_name, $filename_pdf);
+
+        $name_xml = "complemento de pago xml $id_avance";
+        $filename_xml = $this->generateFileName($name_xml, $proceso->nombreLote, $id_proceso, $file_xml->name);
+
+        $uploaded_xml = $this->upload($file_xml->tmp_name, $filename_xml);
+
+        if($uploaded_pdf && $uploaded_xml){
+            $is_ok = $this->PagosCasasModel->setComplementosAvance($id_avance, $filename_pdf, $filename_xml);
+
+            if($is_ok){
+                // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+            }else{
+                http_response_code(404);
+            }
+        }else{
+            http_response_code(500);
         }
 
         $this->json([]);
