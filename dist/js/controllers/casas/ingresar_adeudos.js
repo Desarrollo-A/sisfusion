@@ -102,7 +102,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Ingresar adeudo",
         exportOptions: {
-            columns: [0, 1, 2, 3, 5],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');

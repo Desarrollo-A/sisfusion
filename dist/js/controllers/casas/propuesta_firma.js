@@ -177,7 +177,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Propuesta de firma",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
