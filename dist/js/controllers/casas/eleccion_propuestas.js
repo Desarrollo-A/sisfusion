@@ -205,7 +205,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Elección de propuestas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -259,6 +259,20 @@ let columns = [
         }
 
         return text
+    } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: show_propuestas, data})

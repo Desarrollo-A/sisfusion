@@ -196,13 +196,63 @@ class PagosCasasModel extends CI_Model
     public function getListaConfirmarPago(){
         $query = "SELECT
             pp.*,
-            lo.nombreLote
+            lo.nombreLote,
+            app.avance
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
         WHERE
             pp.proceso = 4
         AND pp.status = 1";
 
         return $this->db->query($query)->result();
+    }
+
+    public function insertarAvance($idProcesoPagos, $avance){
+        $query = "INSERT INTO avances_proceso_pagos
+        (
+            idProcesoPagos,
+            avance,
+            idCreacion,
+        )
+        VALUES
+        (
+            $idProcesoPagos,
+            $avance,
+            $this->idUsuario
+        )";
+
+        $result = $this->db->query($query);
+    }
+
+    public function getListaCargaComplemento(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance,
+            app.complementoPDF,
+            app.complementoXML
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        WHERE
+            pp.proceso = 5
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setComplementosAvance($idAvance, $complementoPDF, $complementoXML){
+        $query = "UPDATE avances_proceso_pagos
+        SET
+            complementoPDF = '$complementoPDF',
+            complementoXML = '$complementoXML',
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idAvance = $idAvance";
+
+        return $this->db->query($query);
     }
 }

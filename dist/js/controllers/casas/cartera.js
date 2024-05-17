@@ -103,7 +103,7 @@ select_lote = function(data) {
         },
         fields: [
             new HiddenField({ id: 'idLote', value: data.idLote }),
-            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes }),
+            new SelectField({   id: 'gerente', label: 'Gerente', placeholder: 'Selecciona una opción', width: '12', data: gerentes, required: true }),
             new TextAreaField({   id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -120,7 +120,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Originación de cartera",
         exportOptions: {
-            columns: [0, 1],
+            columns: [0, 1, 2, 3, 4],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -138,7 +138,6 @@ let columns = [
     { data: 'condominio' },
     { data: 'proyecto' },
     { data: 'cliente' },
-    { data: 'gerente' },
     { data: function(data){
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Seleccionar para asignación', onClick: select_lote, data})
 

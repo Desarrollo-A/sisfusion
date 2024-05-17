@@ -131,7 +131,7 @@ pass_to_adeudos = function (data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-            new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos }),
+            new SelectField({ id: 'tipo', label: 'Tipo de crédito', placeholder: 'Selecciona una opción', width: '12', data: tipos, required: true }),
             new TextAreaField({ id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -165,6 +165,20 @@ let columns = [
             return text
         }
     },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     {
         data: function (data) {
             let upload_button = new RowButton({ icon: 'file_upload', label: 'Subir carta de autorización', onClick: show_upload, data })
@@ -191,7 +205,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Ingresar carta de autorización",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
