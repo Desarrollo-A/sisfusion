@@ -3551,6 +3551,9 @@
 				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
 					$id_lider = $id_lider . ', 13016';
 					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 13059';
+					$sede = "";
 				}
 
                 $query = $this->db->query("SELECT lotes.idLote, nombreLote, idStatusLote, clientes.id_asesor, '1' venta_compartida  FROM lotes

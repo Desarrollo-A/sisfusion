@@ -2790,6 +2790,74 @@ class Caja_outside extends CI_Controller {
         echo json_encode($datos);
     }
 
-
+    function actualizarInformacionPorLoteCondominio() {
+        $data = json_decode(file_get_contents('php://input'));
+        $updateData = array();
+        $commonData = array();
+        if ($data->tipoTransaccion == 1) { // ACTUALIZAR PRECIO POR METRO CUADRADO DE LISTA
+            foreach($data->lotes as $value) {
+                $commonData = array(
+                    "nombreLote" => $value->nombreLote,
+                    "usuario" => $value->nombreUsuario,
+                    "precio" => $value->precio,
+                    "total" => $value->precio * $value->superficie,
+                    "enganche" => ($value->precio * $value->superficie) * 0.1,
+                    "saldo" => ($value->precio * $value->superficie) - (($value->precio * $value->superficie) * 0.1)
+                );
+                array_push($updateData, $commonData);
+            }
+            $updateResponse = $this->General_model->updateBatch("lotes", $commonData, "nombreLote");
+        }
+        else if ($data->tipoTransaccion == 2) { // ACTUALIZAR REFERENCIAS
+            foreach ($data->lotes as $value) {
+                $commonData = array(
+                    "nombreLote" => $value->nombreLote,
+                    "usuario" => $value->nombreUsuario,
+                    "referencia" => $value->referencia            
+                );
+                array_push($updateData, $commonData);
+            }
+            $updateResponse = $this->General_model->updateBatch("lotes", $commonData, "nombreLote");
+        }
+        else if ($data->tipoTransaccion == 3) { // ACTUALIZAR SUPERFICIE
+            foreach ($data->lotes as $value) {
+                $commonData = array(
+                    "nombreLote" => $value->nombreLote,
+                    "usuario" => $value->nombreUsuario,
+                    "superficie" => $value->superficie,
+                    "total" => $value->precio * $value->superficie,
+                    "enganche" => ($value->precio * $value->superficie) * 0.1,
+                    "saldo" => ($value->precio * $value->superficie) - (($value->precio * $value->superficie) * 0.1)
+                );
+                array_push($updateData, $commonData);
+            }
+            $updateResponse = $this->General_model->updateBatch("lotes", $commonData, "nombreLote");
+        }
+        else if ($data->tipoTransaccion == 4) { // ACTUALIZAR NOMBRE DE LOTE
+            foreach ($data->lotes as $value) {
+                $commonData = array(
+                    "nombreLoteActual" => $value->nombreLoteActual,
+                    "nombreLote" => $value->nombreLoteNuevo,
+                    "usuario" => $value->nombreUsuario
+                );
+                array_push($updateData, $commonData);
+            }
+            $updateResponse = $this->General_model->updateBatch("lotes", $commonData, "nombreLoteActual");
+        }
+        else if ($data->tipoTransaccion == 4) { // ACTUALIZAR NOMBRE DE CONDOMINIO
+            foreach ($data->lotes as $value) {
+                $commonData = array(
+                    "idCondominio" => $value->idCondominio,
+                    "nombre" => $value->nombreCondominio
+                );
+                array_push($updateData, $commonData);
+            }
+            $updateResponse = $this->General_model->updateBatch("condominios", $commonData, "idCondominio");
+        }
+        if ($updateResponse)
+            echo json_encode(array("status" => 1, "message" => "Actualización realizada con éxito."), JSON_UNESCAPED_UNICODE);
+        else
+            echo json_encode(array("status" => -1, "message" => "Servicio no disponible. El servidor no está listo para manejar la solicitud. Por favor, inténtelo de nuevo más tarde."), JSON_UNESCAPED_UNICODE);
+    }
 
 }
