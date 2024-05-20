@@ -25,9 +25,14 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
                                             <th>COSTO DE CONSTRUCCION</th>
                                             <th>MONTO DEPOSITADO</th>
-                                            <th>VIGENCIA</th>
+                                            <th>TIEMPO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

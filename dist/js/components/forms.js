@@ -13,7 +13,7 @@ class DateField {
             .append(
                 $('<input />')
                     .addClass('form-control input-gral datepicker')
-                    .attr(required, required)
+                    .prop('required', required)
                     .attr('type', 'text')
                     .attr('name', id)
                     .attr('id', id)
@@ -226,7 +226,7 @@ class TextField {
                     .attr('id', id)
                     .attr('name', id)
                     .attr('type', 'text')
-                    .attr(required, required)
+                    .prop('required', required)
                     .attr('placeholder', placeholder)
             )
 
@@ -258,7 +258,7 @@ class TextAreaField {
                     .addClass(`text-modal`)
                     .attr('id', id)
                     .attr('name', id)
-                    .attr(required, required)
+                    .prop('required', required)
                     .attr('placeholder', placeholder)
             )
 
@@ -292,7 +292,7 @@ class NumberField {
                     .attr('name', id)
                     .attr('type', 'text')
                     .attr('placeholder', placeholder)
-                    .attr(required, required)
+                    .prop('required', required)
                     .val(value)
                     .on('keypress', this.onlyNumbers)
             )
@@ -519,7 +519,7 @@ class DateDelete {
             .append(
                 $('<input />')
                 .addClass('form-control input-gral datepicker')
-                .attr(required, required)
+                .prop('required', required)
                 .attr('type', 'text')
                 .attr('name', id)
                 .attr('id', id)
@@ -537,8 +537,9 @@ class DateDelete {
                         today: 'fa fa-screenshot',
                         clear: 'fa fa-trash',
                         close: 'fa fa-remove',
-                        inline: true
-                    }
+                        inline: true,
+                    },
+                    minDate: new Date()
                 })
             )
             .append(

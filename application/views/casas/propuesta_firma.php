@@ -30,7 +30,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>VIGENCIA</th>
+                                            <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>

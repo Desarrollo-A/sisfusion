@@ -41,10 +41,26 @@ class PagosCasasModel extends CI_Model
     public function getListaIniciarProceso(){
         $query = "SELECT
             pc.*,
-            lo.nombreLote
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            (CASE
+                WHEN us.nombre IS NOT NULL THEN CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)
+                ELSE 'Sin asignar'
+            END) AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
+            END AS gerente
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN proceso_pagos pp ON pp.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio 
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
         WHERE
             pc.proceso = 16
         AND pc.status = 1
@@ -129,9 +145,26 @@ class PagosCasasModel extends CI_Model
         $query = "SELECT
             pp.*,
             lo.nombreLote,
-            doc.documentos
+            doc.documentos,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
         FROM proceso_pagos pp
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoPagos FROM documentos_proceso_pagos WHERE tipo IN (1,2,3,4,5,6) AND archivo IS NOT NULL GROUP BY idProcesoPagos) doc ON doc.idProcesoPagos = pp.idProcesoPagos
         WHERE
             pp.proceso = 1
@@ -170,9 +203,26 @@ class PagosCasasModel extends CI_Model
     public function getListaValidaDocumentacion(){
         $query = "SELECT
             pp.*,
-            lo.nombreLote
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 2
         AND pp.status = 1";
@@ -183,9 +233,26 @@ class PagosCasasModel extends CI_Model
     public function getListaValidarDeposito(){
         $query = "SELECT
             pp.*,
-            lo.nombreLote
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 3
         AND pp.status = 1";
@@ -197,10 +264,28 @@ class PagosCasasModel extends CI_Model
         $query = "SELECT
             pp.*,
             lo.nombreLote,
-            app.avance
+            app.avance,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 4
         AND pp.status = 1";
@@ -208,21 +293,23 @@ class PagosCasasModel extends CI_Model
         return $this->db->query($query)->result();
     }
 
-    public function insertarAvance($idProcesoPagos, $avance){
+    public function insertarAvance($idProcesoPagos, $avance, $monto){
         $query = "INSERT INTO avances_proceso_pagos
         (
             idProcesoPagos,
             avance,
-            idCreacion,
+            monto,
+            idCreacion
         )
         VALUES
         (
             $idProcesoPagos,
             $avance,
+            $monto,
             $this->idUsuario
         )";
 
-        $result = $this->db->query($query);
+        return $this->db->query($query);
     }
 
     public function getListaCargaComplemento(){
@@ -232,10 +319,28 @@ class PagosCasasModel extends CI_Model
             app.idAvance,
             app.avance,
             app.complementoPDF,
-            app.complementoXML
+            app.complementoXML,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 5
         AND pp.status = 1";
@@ -254,5 +359,146 @@ class PagosCasasModel extends CI_Model
             idAvance = $idAvance";
 
         return $this->db->query($query);
+    }
+
+    public function getListaValidarPago(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance,
+            app.complementoPDF,
+            app.complementoXML,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        WHERE
+            pp.proceso = 6
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setPagadoAvance($idAvance){
+        $query = "UPDATE avances_proceso_pagos
+        SET
+            pagado = 1,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idAvance = $idAvance";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaSolicitarAvance(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance AS nuevo_avance,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        WHERE
+            pp.proceso = 7
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function updateAvance($idAvance, $avance, $monto){
+        $query = "UPDATE avances_proceso_pagos
+        SET
+            avance = $avance,
+            monto = $monto,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idAvance = $idAvance";
+
+        return $this->db->query($query);
+    }
+
+    public function setAvanceToProceso($idProcesoPagos, $avance){
+        $query = "UPDATE proceso_pagos
+        SET
+            avance = $avance,
+            idModificacion = $this->idUsuario,
+            fechaModificacion = GETDATE()
+        WHERE
+            idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query);
+    }
+
+    public function getListaValidarAvance(){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance AS nuevo_avance,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        WHERE
+            pp.proceso = 8
+        AND pp.status = 1";
+
+        return $this->db->query($query)->result();
     }
 }
