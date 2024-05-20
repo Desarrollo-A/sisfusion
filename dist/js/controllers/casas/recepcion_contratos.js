@@ -2,7 +2,7 @@ pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Carga de cifras"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Cierre de cifras"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -14,7 +14,7 @@ pass_to_solicitud_contratos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de carga de cifras.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de cierre de cifras.", "success");
         
                     table.reload()
 
@@ -136,7 +136,7 @@ let columns = [
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a cierre de cifras', onClick: pass_to_solicitud_contratos, data})
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
 
