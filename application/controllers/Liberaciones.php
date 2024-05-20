@@ -13,8 +13,8 @@ class Liberaciones extends CI_Controller{
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession() {
@@ -28,19 +28,68 @@ class Liberaciones extends CI_Controller{
 		$this->load->view('template/footer');
 	}
 
-    public function seguimiento(){
+    public function particulares(){
         $this->load->view('template/header');
-        $this->load->view("liberaciones/seguimiento_view");
+        $this->load->view("liberaciones/particulares_view");
+    }
+
+    public function rescision(){
+        $this->load->view('template/header');
+        $this->load->view("liberaciones/rescision_view");
+    }
+
+    public function bloqueados(){
+        $this->load->view('template/header');
+        $this->load->view("liberaciones/bloqueo_view");
+    }
+
+    public function sinContrato(){
+        $this->load->view('template/header');
+        $this->load->view("liberaciones/sin_contrato_view");
     }
 
     /* QUERIES */
+    public function lista_proyecto() {
+        echo json_encode($this->Liberaciones_model->get_proyectos_lista()->result_array());
+    }
+
+    public function lista_condominio($proyecto) {
+        echo json_encode($this->Liberaciones_model->get_condominios_lista($proyecto)->result_array());
+    }
+
+    public function listas_lote($condominio) {
+        $data = $this->Liberaciones_model->get_lotes_lista($condominio)->result_array();
+        if($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
     
     public function getLotesParaLiberacion(){
-        $data = $this->Liberaciones_model->getLotesParaLiberacion();
+        $tipoVenta = $this->input->post('tipoVenta');
+        $lote = $this->input->post('lote');
+        $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
+ 
+        $condicion = '';
+        if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib IN (1, 3)) AND lo.idLote = ".$lote; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (4))"; // CAJAS
+        }
+        if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib IN (1))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib = (3))"; // ADMINISTRACIÓN
+            // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (5))"; // CAJAS
+        }
+        $data = $this->Liberaciones_model->getLotesParaLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion, $lote);
 
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
-
+    
     public function obtenerDocumentacionPorLiberacion(){
         $catalogo = $this->input->post('catalogo');
 
@@ -49,18 +98,31 @@ class Liberaciones extends CI_Controller{
     }
 
     public function actualizaLiberacionLote(){
-        // Datos a insertar en
+        // Datos que se necesitan
+        $idLote           = $this->input->post('idLote');
+        $id_cliente       = $this->input->post('id_cliente');
+        $rescision        = $this->input->post('rescision');
+        $autorizacion_DG  = $this->input->post('autorizacion_DG');
+        $proceso_lib      = $this->input->post('proceso_lib');
+        $estatus_lib      = $this->input->post('estatus_lib');
+        $concepto         = $this->input->post('concepto');
+        $comentario       = $this->input->post('comentario');
+        $precioLiberacion = $this->input->post('precioLiberacion');
+        $plazo            = $this->input->post('plazo');
+
+
+        // Datos a insertar en proce
         $data = array(
-            'idLote'             => $this->input->post('idLote'),
-            'id_cliente'         => $this->input->post('id_cliente'),
-            'rescision'          => $this->input->post('rescision'),
-            'autorizacion_DG'    => $this->input->post('autorizacion_DG'),
-            'proceso_lib'        => $this->input->post('proceso_lib'), // Con que area se encuentra, 1 postventa, 2 contraloria, y asi
-            'estatus_lib'        => $this->input->post('estatus_lib'), // 1 avance, 2 rechazo, 3 correccion
-            'concepto'           => $this->input->post('concepto'),    // 1 particulaes, 2 bloqueo, 3 etc..
-            'comentario'         => $this->input->post('comentario'),
-            'precioLiberacion'   => $this->input->post('precioLiberacion'),
-            'plazo'              => $this->input->post('plazo'),
+            'idLote'             => $idLote,
+            'id_cliente'         => $id_cliente,
+            'rescision'          => $rescision,
+            'autorizacion_DG'    => $autorizacion_DG,
+            'proceso_lib'        => $proceso_lib, // Con que area se encuentra, 1 postventa, 2 contraloria, y asi
+            'estatus_lib'        => $estatus_lib, // 1 avance, 2 rechazo, 3 correccion
+            'concepto'           => $concepto,    // 1 particulaes, 2 bloqueo, 3 etc..
+            'comentario'         => $comentario,
+            'precioLiberacion'   => $precioLiberacion,
+            'plazo'              => $plazo,
             'estatus'            => 1,
             'creado_por'         => $this->session->userdata('id_usuario'),
             'fecha_creacion'     => date('Y-m-d h:i:s'),
@@ -70,33 +132,55 @@ class Liberaciones extends CI_Controller{
 
         $result = $this->General_model->addRecord('proceso_liberaciones', $data);
         if ($result){
-            echo json_encode(array("status" => 200, "msg" => "El registro se ha ingresado de manera exitosa."), JSON_UNESCAPED_UNICODE);
+            echo json_encode(array("code" => 200, "msg" => "El proceso de liberación se ha actualizado de manera exitosa."), JSON_UNESCAPED_UNICODE);
         }else {
-            echo json_encode(array("status" => 400, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+            echo json_encode(array("code" => 500, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
         }
     }
 
-    function generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $archivo){
-        //esta funcion genera un nombre apartir de los parametros de nombreResidencial, $nombreCondominio,
-        //nombreLote y $idCliente quedando como el sig. ejemplo: CMMSLP_MON01_22122020_38479_508.pdf
-        $aleatorio = rand(100,1000);
-        $proyecto = str_replace(' ', '', $nombreResidencial);
-        $condominio = str_replace(' ', '', $nombreCondominio);
-        $condom = substr($condominio, 0, 3);
-        $cond= strtoupper($condom);
-        $numeroLote = preg_replace('/[^0-9]/','', $nombreLote);
-        $date= date('dmY');
-        $composicion = $proyecto."_".$cond.$numeroLote."_".$date;
-        $extension = pathinfo($archivo, PATHINFO_EXTENSION);
-        $expediente=  $composicion.'_'.$idCliente.'_'.$aleatorio.'.'.$extension;
-        return $expediente;
+    public function registrarDocumentoEnArbol(){
+        $movimiento     = $this->input->post('movimiento');
+        $expediente    = $this->input->post('expediente');
+        $idCliente      = $this->input->post('idCliente');
+        $idCondominio   = $this->input->post('idCondominio');
+        $idLote         = $this->input->post('idLote');
+        $tipo_doc       = $this->input->post('tipo_doc');
+
+        
+        $dataII = array(
+            'movimiento'         => $movimiento,
+            'expediente'         => $expediente,
+            'modificado'         => date('Y-m-d h:i:s'),
+            'status'             => 1,
+            'idCliente'          => $idCliente, // Con que area se encuentra, 1 postventa, 2 contraloria, y asi
+            'idCondominio'       => $idCondominio, // 1 avance, 2 rechazo, 3 correccion
+            'idLote'             => $idLote,    // 1 particulaes, 2 bloqueo, 3 etc..
+            'idUser'             => $this->session->userdata('id_usuario'),
+            'tipo_documento'     => 0,
+            'id_autorizacion'    => 0,
+            'tipo_doc'           => $tipo_doc,
+            'estatus_validacion' => 0,
+            'bucket'             => 1,
+        );
+
+        $result = $this->General_model->addRecord('historial_documento', $dataII);
+        $lastId = $this->db->insert_id();
+        
+        if ($result){
+            echo json_encode(array("code" => 200, "msg" => "El registro se ha ingresado de manera exitosa.", "documentId" => $lastId), JSON_UNESCAPED_UNICODE);
+        }else {
+            echo json_encode(array("code" => 500, "msg" => "Oops, algo salió mal. Inténtalo más tarde."), JSON_UNESCAPED_UNICODE);
+        }
     }
 
     public function historialLiberacionLote()
     {
         if (isset($_POST) && !empty($_POST)) {
             $idLote = $_POST['idLote'];
-            $response = $this->Liberaciones_model->historialLiberacionLote($idLote)->result_array();
+            $tipoVenta = $_POST['tipoVenta'];
+            $idProcesoTipoLiberacion = $_POST['idProcesoTipoLiberacion'];
+
+            $response = $this->Liberaciones_model->historialLiberacionLote($idProcesoTipoLiberacion, $tipoVenta, $idLote)->result_array();
             echo json_encode($response);
         } else {
             echo json_encode(array());

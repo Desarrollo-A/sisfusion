@@ -75,9 +75,9 @@
     let sede_usuario_general = (sede_usuario_general_div.length > 1 ?  sede_usuario_general_array[0] : sede_usuario_general_div );
 
     
-	$(document).ready(function() {
-		demo.initDashboardPageCharts();
-	});
+	// $(document).ready(function() {
+	// 	demo.initDashboardPageCharts();
+	// });
 
     function validaCheckSession(){
         if($('#no_mostrar_session:checkbox:checked').length > 0){

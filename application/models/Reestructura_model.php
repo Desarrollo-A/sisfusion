@@ -1697,7 +1697,7 @@ class Reestructura_model extends CI_Model
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
                 cl.fechaApartado,
                 hd.idDocumento,
-                hd.movimiento rama,
+                CASE WHEN hd.movimiento IS NULL THEN 'CONTRATO FIRMADO' ELSE hd.movimiento END rama,
                 hd.expediente nombreDocumento,
                 oxc.nombre estatusPreproceso,
                 CASE WHEN hd.expediente IS NULL THEN 'PENDIENTE' ELSE 'CARGADO' END estatusContratoFirmado,

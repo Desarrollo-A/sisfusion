@@ -27,61 +27,43 @@ const newButton = (btnClass, title, action = '', data, icon) => {
 
 const datatableButtons = (d) => {
     const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P4  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
     const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
-    const BTN_INFO       = newButton('btn-data btn-blueMaderas historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
+    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
     const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
     
     let NO_BTN = '';
 
     if (id_rol_general == 55) { // POSTVENTA
-        if (d.enProcesoLiberacion === 0 ) return BTN_AVANCE_P1 + BTN_INFO ;
+        if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
+        if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
         if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
-        if (d.enProcesoLiberacion === 3 ) return BTN_AVANCE_P3 + BTN_VER_DOC + BTN_INFO ;
         return BTN_INFO;
     }
     if (id_rol_general == 17) { // CONTRALORIA
         if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
         return BTN_INFO;
     }
+    if (id_rol_general == 11 ) { // ADMINISTRACIÓN
+        if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+        return BTN_INFO;
+    }
+    if (id_rol_general == 2) { // VENTAS
+        if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+        return BTN_INFO;
+    }
     if (id_rol_general == 12) { // CAJAS
-        if (d.enProcesoLiberacion === 4) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;
+        if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
         return BTN_INFO;
     }
     return NO_BTN;
 }
 
-const fillInputs = () => {
-    const documentos = Object.freeze({
-        LIB_PARTICULARES: 130,
-    })
-
-    $catalogo = null;
-    switch ( id_rol_general ) {
-        case 130:
-            $catalogo = documentos.LIB_PARTICULARES;
-            break;
-        default:
-            break;
-    }
-
-    $.ajax({
-        url: "obtenerDocumentacionPorLiberacion",
-        type: "POST",
-        data: {catalogo: 31},
-        dataType: "json",
-        success: function(data) {
-            for (let i = 0; i < data.length; i++) {
-                if ([51, 52].includes(data[i]['id_opcion'])) $("#id_documento_liberacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
-            }
-            $('#id_documento_liberacion').selectpicker('refresh');
-        }
-    });
-}
-
+// Función para colocar el nombre del archivo en el input de texto que comparte con el input de archivo
 $(document).on("change", "#archivo_liberacion", function () {
     const target = $(this);
     const relatedTarget = target.siblings(".file-name");
@@ -89,6 +71,7 @@ $(document).on("change", "#archivo_liberacion", function () {
     relatedTarget.val(fileName);
 });
 
+// Función para formatear el input de tipo currency (incluso inputs embebidos con JS)
 $(document).on('keyup', "input[data-type='currency']", function() {
     formatCurrencyG($(this));
 });
@@ -177,11 +160,13 @@ let liberacionesDataTable = $('#liberacionesDataTable').DataTable({
             }
         },
         { data: "nombreProcesoLiberacion" },
+        { data: "movimiento" },
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
         { data: "idLote" },
         { data: "cliente" },
+        { data: "referencia" },
         { data: "nombreAsesor" },
         { data: "nombreCoordinador" },
         { data: "nombreGerente" },
@@ -211,7 +196,8 @@ let liberacionesDataTable = $('#liberacionesDataTable').DataTable({
         dataSrc: "",
         type: "POST",
         cache: false,
-    },
+        data: {"tipoVenta": 2, idProcesoTipoLiberacion: 134},
+    }, 
     initComplete: function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
@@ -226,15 +212,15 @@ $(document).on('click', '.btn-accion', async function(){
     const d = JSON.parse($(this).attr("data-data"));
     const accion = $(this).attr("data-accion");
 
-    // Creamos titulo y titulo comentario
+    // Creamos el label del titulo del modal.
     let titulo = '';
     if (accion === 'AVANCE') titulo = '<h4><b>Avanzar</b> la liberación del lote <b>'+d.nombreLote+'</b></h4>'    
     if (accion === 'RECHAZO') titulo = '<h4>¿Está seguro de <b>rechazar</b> la liberación del lote <b>'+d.nombreLote+'</b>?</h4>'
     if (accion === 'HISTORICO') titulo = '<h4>Historico del proceso de liberación de <b>'+d.nombreLote+'</b>?</h4>'    
 
+    // Creamos el label de comentario
     let comentarioLabel = 'Comentario (opcional)';
     if (accion === 'RECHAZO') comentarioLabel = 'Motivo del rechazo (opcional)';
-    if (d.enProcesoLiberacion === 3 && accion === 'AVANCE') comentarioLabel = 'Plazo: (*)';
 
     // Embebemos contenido a header y comentario.
     $('#labelHeaderAccionModal').html(titulo);
@@ -244,14 +230,10 @@ $(document).on('click', '.btn-accion', async function(){
     let content = ``;
     if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) {
         content = `
-            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 overflow-hidden">
-                <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*)</label>
-                <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
-            </div>
             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
                 <div id="selectFileSection">
                     <div class="file-gph">
-                        <input type="file" accept="application/pdf" id="archivo_liberacion">
+                        <input type="file" accept=".pdf" id="archivo_liberacion">
                         <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
                         <label class="upload-btn m-0" for="archivo_liberacion">
                             <span>Seleccionar</span>
@@ -261,7 +243,7 @@ $(document).on('click', '.btn-accion', async function(){
                 </div>
             </div>`;
     }
-    if (d.enProcesoLiberacion === 3) {
+    if (d.enProcesoLiberacion === 4) {
         content = `
             <div class="col-12 col-sm-12 col-md-12 col-lg-12" id="cambioPrecio">
                 <label class="control-label"> Precio por m<sup>2</sup> (<span class="isRequired">*</span>)</label>
@@ -271,7 +253,6 @@ $(document).on('click', '.btn-accion', async function(){
 
     // Embebemos el contenido extra
     $('#extra-content-accion-modal').html(content);
-    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) fillInputs(); //Cargamos los valores de los inputs
 
     // Limpiamos valores de los campos antes de abrir el modal.
     $('#comentarioAccionModal').val('');
@@ -279,7 +260,7 @@ $(document).on('click', '.btn-accion', async function(){
     // Mostramos el modal y mostramos la info del lote en el modal
     $('#accion-modal').modal('show');
 
-    // Le agregamos la información que vallamos a usar en caso de confirmar el modal
+    // Inputs ocultos para utilizar la información para validar acciones.
     const info = 
         '<input type="hidden" id="accion"></input>' + 
         '<input type="hidden" id="data"></input>' ;
@@ -298,56 +279,46 @@ $(document).on("click", "#btn-accion", async function (e) {
     const accion = $("#accion").val();
     const d = JSON.parse($("#data").val());
     let comentario = $('#comentarioAccionModal').val();
-    let tieneRescision = 0;
-    let tieneAutorizacionDG = 0;
-    let relatedTarget, proceso, estatusLib, rescision, autorizacionDG, concepto, precioLiberacion, plazo;
+    let rescision = 1;
+    let archivo, proceso, estatusLib, concepto, precioLiberacion;
 
     //Validaciones en caso de tener
-    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE O AL COLOCAR PLAZO. 
-        if ($("#id_documento_liberacion").val() ==  51) tieneRescision = 1; // idOpcion en oxc catalogo 31
-        if ($("#id_documento_liberacion").val() ==  52) tieneAutorizacionDG = 1;
-        relatedTarget = $('#archivo_liberacion').siblings(".file-name");
-        
-        // Select de tipo de archivo vacio
-        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Seleccione el tipo de archivo a adjuntar.", "warning");
+    if ((d.enProcesoLiberacion === 1 || d.enProcesoLiberacion === 0)) { // POSTVENTA: LIBERAR LOTE
+        archivo = $("#archivo_liberacion");
         
         // Input sin archivo
-        if (relatedTarget.val() === '') return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
+        if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
+
+        // Archivo incorrecto
+        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
         
     }
-    if ((d.enProcesoLiberacion === 3 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
+    if ((d.enProcesoLiberacion === 4 )) { // VENTAS: Generar las condiciones de venta (precio).
         precioLiberacion = $('#costoM2').val().replace('$', '').replace(',', ''); // El precio del lote
-        plazo = comentario; // El plazo es el input del comentario
-        comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
         
         // Input de precio sin monto
         if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digite el nuevo precio por m<sup>2</sup> del lote.`, "warning");
-
-         // Input de plazo sin valor
-         if (plazo === '') return alerts.showNotification("top", "right", "Digite el plazo.", "warning");
     }
 
     // Asignación de valores dependiendo el proceso
     if (accion === 'AVANCE') {
         proceso = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 2 : d.enProcesoLiberacion + 1; // Avanza proceso
         estatusLib = d.estatus_lib === 2 ? 3 : 1; // 1: avance normal, 2 rechazo y 3 correccion.
-        rescision = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? tieneRescision :d.rescision; // Si esta en el proceso 0 o 1, el valor es el input, si no el que ya habia registrado.
-        autorizacionDG = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? tieneAutorizacionDG : d.autorizacion_DG; // Si esta en el proceso 0 o 1, el valor es el input, si no el que ya habia registrado.
-        concepto = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 1 : d.concepto;
-        if ( d.enProcesoLiberacion >=  4 ) {
+        concepto = d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 ? 3 : d.concepto;
+        if ( d.enProcesoLiberacion >=  5 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
             precioLiberacion = d.precioLiberacion;
-            plazo = d.plazo;
         }
     }
     if (accion === 'RECHAZO') {
-        proceso = d.enProcesoLiberacion  === 4 ? d.enProcesoLiberacion + 2 : d.enProcesoLiberacion - 1; // Rechaza proceso, si proceso = 4 entonces se finaliza y es otro estatus.
-        estatusLib = d.enProcesoLiberacion  === 4 ? 1 : 2; // Estatus de liberacion es rechazo
+        if ( [3, 4, 5].includes(d.enProcesoLiberacion) ) { proceso = 7 } // Si [Administración(3), ventas(4), cajas(5)] rechazan, no se regresa si no se finaliza.
+        else { proceso = d.enProcesoLiberacion - 1 } // Cualquier otro caso si se regresa al paso anterior. 
+
+        if ( [3, 4, 5].includes(d.enProcesoLiberacion) ) { estatusLib = 1 } // Si el proceso se rechaza en esos procesos, no es rechazo ya que se finaliza pero no se libera.
+        else { estatusLib = 2 } // Cualquier otro si es marcado como rechazo
         rescision = proceso === 1 ? 0 : d.rescision; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
-        autorizacionDG = proceso === 1 ? 0 : d.autorizacion_DG; // Si lo regresan para validar doc, se asigna 0 sino el que ya tenia registrado.
         concepto = d.concepto;
-        if ( d.enProcesoLiberacion >=  4 ) {
+        if ( d.enProcesoLiberacion >=  5 ) { // Arrastramos el valor de precio en los registros ya una vez registrado.
             precioLiberacion = d.precioLiberacion;
-            plazo = d.plazo;
         }
     }
 
@@ -360,14 +331,13 @@ $(document).on("click", "#btn-accion", async function (e) {
     data.append("idLote", d.idLote);
     data.append("id_cliente", d.idCliente);
     data.append("rescision", rescision);
-    data.append("autorizacion_DG", autorizacionDG);
+    data.append("autorizacion_DG", 0); // En Rescisión no tenemos autorización por DG
     data.append("proceso_lib", proceso);
     data.append("estatus_lib", estatusLib);
     data.append("concepto", concepto);
     data.append("comentario", comentario);
     if (precioLiberacion) data.append("precioLiberacion", precioLiberacion); // Solo se envia cuando tenga valor o mas bien cuando no sea null, undefined, false, 0, NaN.
-    if (plazo) data.append("plazo", plazo); // Solo se envia cuando tenga valor o mas bien cuando no sea null, undefined, false, 0, NaN.
-    $.ajax({
+    await $.ajax({
         type: 'POST',
         url: 'actualizaLiberacionLote',
         data: data,
@@ -376,19 +346,87 @@ $(document).on("click", "#btn-accion", async function (e) {
         processData: false,
         success: function (data) {
             const res = JSON.parse(data);
-            alerts.showNotification("top", "right", res.msg, res.status === 200 ? "success" : "warning");
+            alerts.showNotification("top", "right", res.msg, res.code === 200 ? "success" : "warning");
         },
         error: function () {
             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
         }
     });
-    liberacionesDataTable.ajax.reload();
-    $('#accion-modal').modal('hide');
-    $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
-    $('#spiner-loader').addClass('hide'); // Quito spinner  
+
+    // Hacemos el registro de en historial_documento
+    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
+        
+        // Borramos el archivo en caso de tener uno y actualizamos los registros de historial_documento 
+        if (d.expediente) {
+            const docData = new FormData();
+            docData.append("idDocumento", d.idDocumento);
+            docData.append("tipoDocumento", d.tipo_doc);
+            let rs1 = await $.ajax({
+                type: 'POST',
+                url: `${general_base_url}Documentacion/eliminarArchivo`,
+                data: docData,
+                contentType: false,
+                cache: false,
+                processData: false,
+            });
+
+            rs1 = JSON.parse(rs1);
+            console.log('Eliminar archivo', rs1);
+            
+            if (rs1.code == 500 ){
+                alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+                return;
+            } 
+        }
+
+        const tipoDocumento = 53;
+        const movimiento = 'RESCICIÓN DE CONTRATO';
+        const expediente = generarTituloDocumento(d.nombreResidencial, d.nombreLote, d.idLote, d.idCliente, tipoDocumento);
+        const ndata = new FormData();
+        ndata.append("movimiento", movimiento); // Nombre del tipo de documento
+        ndata.append("expediente", expediente); // Nombre del archivo CCSPQ-15005-PPYUC-ETC.pdf
+        ndata.append("idCliente", d.idCliente);
+        ndata.append("idCondominio", d.idCondominio);
+        ndata.append("idLote", d.idLote);
+        ndata.append('tipo_doc', tipoDocumento); // TipoDocumento es el id del opc de mis archivos (53, 54)
+
+        let res = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/registrarDocumentoEnArbol`,
+            data: ndata,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+
+        res = JSON.parse(res);
+        console.log('Historial documento', res);
+
+        const xdata = new FormData();
+        xdata.append("idLote", d.idLote);
+        xdata.append("idDocumento", res.documentId);
+        xdata.append("tipoDocumento", tipoDocumento);
+        xdata.append("tituloDocumento", expediente);
+        xdata.append("uploadedDocument", archivo[0].files[0]);
+        let rs = await $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Documentacion/subirArchivo`,
+            data: xdata,
+            contentType: false,
+            cache: false,
+            processData: false,
+        });
+
+        rs = JSON.parse(rs);
+        console.log('Subir archivo', rs);
+        if (rs.code == 500 ){
+            alerts.showNotification("top", "right", 'Surgió un error al registrar el archivo', "warning");
+            return;
+        } 
+    }
 
     // En caso de ser el ultimo proceso, ya se libera.
-    if (d.enProcesoLiberacion === 4 && proceso === 5) {
+    if (d.enProcesoLiberacion === 5 && proceso === 6) {
         // Generamos el token para liberar el lote
         let res = await $.ajax({
             type: 'POST',
@@ -400,6 +438,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         });
 
         res = JSON.parse(res);
+        console.log('getToken', res);
 
         // Realizamos la acción de la función que libera el lote!
         let data = await $.ajax({
@@ -432,52 +471,90 @@ $(document).on("click", "#btn-accion", async function (e) {
 
         // Notificamos al usuario
         data = JSON.parse(data);
+        console.log('Proceso liberación final', data);
         alerts.showNotification("top", "right", data.message === 'SUCCESS' ? 'La liberación se ha completado' : 'Surgió un error al intentar liberar el lote', data.message === 'SUCCESS' ? "success" : "warning");
+        if (data.message != 'SUCCESS') return;
     }
+
+    await liberacionesDataTable.ajax.reload();
+    $('#accion-modal').modal('hide');
+    $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
-const fillChangelog = (i, v) => {
-    let liberacionTexto = v.id_proceso === 1 ? 'RESCISIÓN' : 'DEVOLUCIÓN';
-    let accion = '<b>ENVIADO A: </b>'
-    if (v.proceso_realizado == '1') {
-        accion = '<b>REGRESADO A: </b>'
-    }
-    if (i === 1 ) {
-        console.log('v', typeof v, v);
+const fillChangelog = (i, d) => {
+    let accion = 'Enviado a '
+    if (d.estatus_lib == '2') {
+        accion = 'Se regresó a:'
     }
     $("#changelog").append('<li>\n' +
-  '            <a><b>Campo: </b>PROCESO</a>\n' +
-  '            <a style="float: right">'+v.fecha_modificacion+'</a><br>\n' +
-  '            <a><b>Tipo de liberación:</b> '+ v.nombreConceptoLiberacion + '</a> \n' +
+  '            <a style="float: right">'+d.fecha_modificacion+'</a><br>\n' +
+  '            <a><b>Tipo de liberación:</b> '+ d.nombreConceptoLiberacion + '</a> \n' +
   '            <br>\n' + 
-  '            <a><b>Estatus: </b> '+accion+v.nombreProcesoLiberacion.toUpperCase()+' </a>\n' +
+  '            <a><b>Estatus: </b> '+accion+d.nombreProcesoLiberacion.toLowerCase()+' </a>\n' +
   '            <br>\n' +  
-  '            <a><b>Modificado por: </b> '+(v.nombreMod+' '+v.ap1_mod+ ' '+ v.ap2_mod).toUpperCase()+' </a>\n' +
+  '            <a><b>Modificado por: </b> '+(d.nombreMod+' '+d.ap1_mod+ ' '+ d.ap2_mod).toUpperCase()+' </a>\n' +
   '            <br>\n' +
-  '            <a><b>Comentario: </b> '+v.comentario+' </a>\n' +
+  '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
       '</li>');
 }
 
-$(document).on('click', '.historico', async function(){
+$(document).on('click', '.btn-historico', async function(){
+    $('.btn-historico').attr('disabled', true);  // Lo vuelvo a activar
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
     // Leemos los datos del registro
     const d = JSON.parse($(this).attr("data-data"));
     $("#changelog").html('');
 
     // ACTION
-    $.ajax({
+    await $.ajax({
         url: general_base_url + 'Liberaciones/historialLiberacionLote',
         type: 'POST',
         data: {
-          "idLote": d.idLote,
-        },
+            "idLote": d.idLote,
+            "tipoVenta" : 2,
+            "idProcesoTipoLiberacion": 134
+          },
         dataType: 'JSON',
         success: function (res) {
-          $.each( res, function(i, v){
-            fillChangelog(i, v);
+          $.each( res, function(i, data){
+            fillChangelog(i, data);
           });
           $("#seeInformationModal").modal('show')
+          $('#spiner-loader').addClass('hide'); // Quito spinner  
         },
         error: function () {},
         catch: function () {},
     });
+
+    $('.btn-historico').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
+
+$(document).on('click', '.btn-archivo', function () {
+    $('.btn-archivo').attr('disabled', true);  // Lo vuelvo a activar
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    Shadowbox.init();
+    const d = JSON.parse($(this).attr("data-data"));
+    let filePath = `${general_base_url}Documentacion/archivo/${d.expediente}`;
+    Shadowbox.open({
+        content: `<div><iframe style="overflow:hidden;width: 100%;height: 100%;position:absolute;" src="${filePath}"></iframe></div>`,
+        player: "html",
+        title: `Visualizando archivo: ${d.movimiento}`,
+        width: 985,
+        height: 660
+    });
+    $('.btn-historico').attr('disabled', false);  // Lo vuelvo a activar
+    $('#spiner-loader').addClass('hide'); // Quito spinner  
+});
+
+const generarTituloDocumento = (abreviaturaNombreResidencial, nombreLote, idLote, idCliente, tipoDocumento) => {
+    let rama;
+    if (tipoDocumento === 53) rama = 'RESCICIÓN DE CONTRATO' ;
+    if (tipoDocumento === 54) rama = 'AUTORIZACIÓN DG' ;
+
+    const DATE = new Date();
+    const DATE_STR = [DATE.getMonth() + 1, DATE.getDate(), DATE.getFullYear()].join('-');
+    const TITULO_DOCUMENTO = `${abreviaturaNombreResidencial}_${nombreLote}_${idLote}_${idCliente}_TDOC${tipoDocumento}${rama.slice(0, 4)}_${DATE_STR}`;
+    return TITULO_DOCUMENTO;
+}

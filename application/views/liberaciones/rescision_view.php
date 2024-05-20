@@ -121,7 +121,7 @@
                             <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" onclick="cleanComments()">Cerrar</button>
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
@@ -131,10 +131,18 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <div class="card">
+                        <ul class="nav nav-tabs nav-tabs-cm">
+                            <li class="active">
+                                <a class="nuevas1" href="#nuevas-1" id='nuevas1' role="tab" data-toggle="tab">Liberar lote</a>
+                            </li>
+                            <li>
+                                <a class="proceso2" href="#proceso-1" id='proceso2'  role="tab"  data-toggle="tab">Seguimiento</a>
+                            </li>
+                        </ul>
+                        <div class="card no-shadow m-0">  <!-- card content -->
                             <div class="card-content">
                                 <div class="encabezadoBox">
-                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Particulares)</h3>
+                                    <h3 class="card-title center-align">Proceso de liberación de lotes (Rescisión)</h3>
                                     <p class="card-title pl-1"></p>
                                 </div>
                                 <div class="material-datatables">
@@ -143,11 +151,13 @@
                                             <tr>
                                                 <th>MOVIMIENTO</th>
                                                 <th>PROCESO</th>
+                                                <th>TIPO DOCUMENTO</th>
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>ID LOTE</th>
                                                 <th>CLIENTE</th>
+                                                <th>REFERENCIA</th>
                                                 <th>ASESOR</th>
                                                 <th>COORDINADOR</th>
                                                 <th>GERENTE</th>
@@ -193,5 +203,6 @@
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <script type="text/javascript" src="<?=base_url()?>dist/js/shadowbox.js"></script>
 <script src="<?=base_url()?>dist/js/core/modal-general.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/liberaciones/seguimiento.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/documentacion/manejoArchivos.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/liberaciones/liberacionRescision.js"></script>
 <!-- <script src="<?=base_url()?>dist/js/controllers/liberaciones/subirArchivosLiberaciones.js"></script> -->
