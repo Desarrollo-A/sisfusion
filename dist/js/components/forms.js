@@ -453,7 +453,7 @@ class OptionFieldAndView {
                                 .append(
                                     $('<p />')
                                     .addClass('m-0')
-                                    .text(option.subtitle?.toUpperCase())
+                                    .text(typeof(option.subtitle) === "string" ? option.subtitle.toUpperCase() : option.subtitle)
                                 )
                             )
                         )
