@@ -84,7 +84,7 @@ let columns = [
 
         let days = Math.round(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
+        let text = `Quedan ${days} día(s)`
         if(days < 0){
             text = 'El tiempo establecido ha pasado'
         }
