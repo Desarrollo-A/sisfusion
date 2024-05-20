@@ -23,7 +23,7 @@ $("#historial_general").ready(function () {
             titleAttr: 'Reporte anticipo',
             title: "Reporte anticipo",
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9,10],
+                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx - 1] + ' ';
@@ -55,6 +55,38 @@ $("#historial_general").ready(function () {
 
         { data: 'monto_formateado' },
         { data: 'comentario' },
+        { 
+            data: function( d){         
+                const letras = d.comentario.split(" ");
+                if(letras.length <= 4)
+                {
+                    return '<p class="m-0">'+d.comentario+'</p>';
+                }else{
+                    
+                    letras[2] = undefined ? letras[2] = '' : letras[2];
+                    letras[3] = undefined ? letras[3] = '' : letras[3];
+                    return `    
+                        <div class="muestratexto${d.id_anticipo}" id="muestratexto${d.id_anticipo}">
+                            <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                            <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_anticipo}" 
+                                onclick="esconder(${d.id_anticipo})" aria-expanded="true" aria-controls="collapseOne${d.id_anticipo}">
+                                <span class="lbl-blueMaderas">Ver más</span> 
+                                
+                            </a>
+                        </div>
+                        <div id="collapseOne${d.id_anticipo}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                ${d.comentario}</p> 
+                                <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_anticipo}" 
+                                    onclick="mostrar(${d.id_anticipo})" aria-expanded="true" aria-controls="collapseOne${d.id_anticipo}">
+                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        },
         
         { data: 'fecha_movimiento' },
         { data: 'proceso' },
@@ -76,8 +108,10 @@ $("#historial_general").ready(function () {
 
             ],
         columnDefs: [{
+            
             defaultContent: "Sin especificar",
-            targets: "_all",
+            // targets: "_all",
+            targets: [5], visible: false,
             searchable: true,
             orderable: false
         }],
