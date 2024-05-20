@@ -94,7 +94,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 

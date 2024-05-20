@@ -2,7 +2,7 @@ pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir contratos"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -142,7 +142,7 @@ let columns = [
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a subir contratos', onClick: pass_to_solicitud_contratos, data})
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a documentación del cliente', onClick: back_to_adeudos, data})
 
