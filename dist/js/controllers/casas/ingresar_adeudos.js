@@ -58,18 +58,14 @@ let columns = [
         return data.adGPH
     } },
     { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 2)
+        let inicio = new Date(data.fechaProceso)
         let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+        let difference = today.getTime() - inicio.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+        let days = Math.floor(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
+        let text = `Lleva ${days} día(s)`
 
         return text
     } },

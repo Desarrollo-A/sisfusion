@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de contraloria"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de documentación"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -78,7 +78,7 @@ pass_to_validacion_contraloria = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloria.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloría.", "success");
         
                     table.reload()
 
@@ -245,18 +245,14 @@ let columns = [
         return fecha
     } },
     { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 2)
+        let inicio = new Date(data.fechaProceso)
         let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+        let difference = today.getTime() - inicio.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+        let days = Math.floor(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
+        let text = `Lleva ${days} día(s)`
 
         return text
     } },
@@ -283,7 +279,7 @@ let columns = [
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             if(data.fechaElegida && data.cotizacionElegida){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_validacion_contraloria, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación, onClick: pass_to_validacion_contraloria, data})
             }
         }
 
