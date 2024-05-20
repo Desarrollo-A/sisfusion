@@ -295,9 +295,11 @@ class PagosCasas extends BaseController {
     public function to_confirmar_pago(){
         $id = $this->form('id');
         $comentario = $this->form('comentario');
+        $monto = $this->form('monto');
 
-        if(!isset($id)){
+        if(!isset($id) || !isset($monto)){
             http_response_code(400);
+            $this->json([]);
         }
 
         $proceso = $this->PagosCasasModel->getProceso($id);
@@ -305,7 +307,7 @@ class PagosCasas extends BaseController {
         $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
-            $this->PagosCasasModel->insertarAvance($proceso->idProcesoPagos, 0);
+            $this->PagosCasasModel->insertarAvance($proceso->idProcesoPagos, 0, $monto);
 
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{

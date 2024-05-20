@@ -25,7 +25,12 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
-                                            <th>VIGENCIA</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>TIEMPO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

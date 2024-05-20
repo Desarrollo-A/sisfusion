@@ -40,10 +40,10 @@ go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
 
-back_to_documentos = function(data) {
+back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
+        text: `¿Desea regresar el proceso del lote ${proceso.nombreLote} a <b>"Documentación cliente".</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -55,7 +55,7 @@ back_to_documentos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
         
                     table.reload()
                     form.hide()
@@ -68,7 +68,7 @@ back_to_documentos = function(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id', value: proceso.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })

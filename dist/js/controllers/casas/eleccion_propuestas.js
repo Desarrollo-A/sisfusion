@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de contraloria"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de documentación"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -78,7 +78,7 @@ pass_to_validacion_contraloria = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloria.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloría.", "success");
         
                     table.reload()
 
@@ -279,7 +279,7 @@ let columns = [
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             if(data.fechaElegida && data.cotizacionElegida){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_validacion_contraloria, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación, onClick: pass_to_validacion_contraloria, data})
             }
         }
 
