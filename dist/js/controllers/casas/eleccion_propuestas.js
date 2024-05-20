@@ -279,7 +279,7 @@ let columns = [
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
             if(data.fechaElegida && data.cotizacionElegida){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación, onClick: pass_to_validacion_contraloria, data})
+                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación', onClick: pass_to_validacion_contraloria, data})
             }
         }
 
