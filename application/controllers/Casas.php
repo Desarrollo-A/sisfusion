@@ -757,6 +757,17 @@ class Casas extends BaseController {
             $is_ok = $this->CasasModel->addCotizacion($id);
         }
 
+        $documentos = $this->CasasModel->getDocumentos([17, 28, 29, 30, 31, 32]);
+
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                break;
+            }
+        }
+
         if($is_ok){
             $movimiento = 0;
             if($proceso->tipoMovimiento == 1){
@@ -1524,5 +1535,11 @@ class Casas extends BaseController {
         $asesores = $this->CasasModel->getProcesosOptions();
 
         $this->json($asesores);
+    }
+
+    public function lista_archivos_titulos($proceso){
+        $lotes = $this->CasasModel->getListaArchivosTitulos($proceso);
+
+        $this->json($lotes);
     }
 }

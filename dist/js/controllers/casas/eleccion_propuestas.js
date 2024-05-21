@@ -32,9 +32,9 @@ function show_propuestas(proceso) {
 
     let cotizaciones = []
     let fechas = [
-        { value: 1, title: proceso.fechaFirma1},
-        ...proceso.fechaFirma2 ? [{ value: 2, title: proceso.fechaFirma2 }] : [],
-        ...proceso.fechaFirma3 ? [{ value: 3, title: proceso.fechaFirma3  }] : [],
+        { value: 1, title: proceso.fechaFirma1.substring(0, 16)},
+        ...proceso.fechaFirma2 ? [{ value: 2, title: proceso.fechaFirma2.substring(0, 16) }] : [],
+        ...proceso.fechaFirma3 ? [{ value: 3, title: proceso.fechaFirma3.substring(0, 16)  }] : [],
     ]
 
     $.ajax({
@@ -119,6 +119,7 @@ function download_file(archivo) {
     window.location.href = `${general_base_url}casas/archivo/${archivo}`
 }
 
+/*
 function show_upload(data) {
     //console.log(data)
 
@@ -158,6 +159,7 @@ function show_upload(data) {
 
     form.show()
 }
+*/
 
 back_to_propuesta_firma = function(data) {
 
@@ -272,20 +274,22 @@ let columns = [
     } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas para firma', onClick: show_propuestas, data})
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
+        // let upload_button = new RowButton({icon: 'file_upload', label: 'Subir deposito de anticipo', onClick: show_upload, data})
 
         let view_button = ''
         let pass_button = ''
-        if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
-            if(data.fechaElegida && data.cotizacionElegida){
-                pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación', onClick: pass_to_validacion_contraloria, data})
-            }
+        // if(data.archivo){
+
+        view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
+        if(data.fechaElegida && data.cotizacionElegida){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación', onClick: pass_to_validacion_contraloria, data})
         }
+        
+        // }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_propuesta_firma, data})
 
-        return `<div class="d-flex justify-center">${propuestas_button}${view_button}${upload_button}${pass_button}${back_button}</div>`
+        return `<div class="d-flex justify-center">${propuestas_button}${view_button}${pass_button}${back_button}</div>`
     } },
 ]
 
