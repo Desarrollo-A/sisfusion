@@ -31,7 +31,9 @@
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
                                             <th>PROCESO</th>
-                                            <th>VIGENCIA</th>
+                                            <th>FECHA INICIO</th>
+                                            <th>FECHA MOVIMIENTO</th>
+                                            <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>

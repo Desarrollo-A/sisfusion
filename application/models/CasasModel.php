@@ -444,7 +444,7 @@ class CasasModel extends CI_Model
         oxc.nombre AS movimiento
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
-        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (2,3,4,5,6,7,8,10,11,12,13,14,15,27) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
         INNER JOIN condominios con ON con.idCondominio = lo.idCondominio 
@@ -649,7 +649,7 @@ class CasasModel extends CI_Model
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN documentos_proceso_casas doc ON doc.idProcesoCasas = pc.idProcesoCasas AND tipo = 18
         LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
-        LEFT JOIN cotizacion_proceso_casas cpc ON cpc.idProcesoCasas = pc.idProcesoCasas AND cpc.status = 1 AND elegida = 1
+        LEFT JOIN cotizacion_proceso_casas cpc ON cpc.idProcesoCasas = pc.idProcesoCasas AND cpc.idCotizacion = pc.cotizacionElegida
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = pc.notaria AND oxc.id_catalogo = 129
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
         LEFT JOIN usuarios us_gere ON us_gere.id_usuario = pc.idGerente
@@ -696,7 +696,8 @@ class CasasModel extends CI_Model
                     WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
                     ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente,
-        oxc.nombre AS movimiento
+        oxc.nombre AS movimiento,
+        doc.documentos
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         LEFT JOIN propuestas_proceso_casas pro ON pro.idProcesoCasas = pc.idProcesoCasas AND pro.status = 1
@@ -707,6 +708,7 @@ class CasasModel extends CI_Model
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN (SELECT count(*) AS archivos_faltantes, idProcesoCasas FROM cotizacion_proceso_casas WHERE status = 1 AND archivo IS NULL GROUP BY idProcesoCasas) cpc ON cpc.idProcesoCasas = pc.idProcesoCasas
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (17) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE
             pc.proceso = 5
         AND pc.status = 1 AND cli.status = 1";
@@ -1193,14 +1195,6 @@ class CasasModel extends CI_Model
     }
 
     public function setPropuesta($idProcesoCasas, $idPropuesta, $fechaElegida, $idCotizacion ){
-        $query = "UPDATE cotizacion_proceso_casas
-        SET
-            elegida = 1
-        WHERE
-            idCotizacion = $idCotizacion";
-
-        $this->db->query($query);
-
         $query = "UPDATE propuestas_proceso_casas
         SET
             fechaElegida = $fechaElegida
@@ -1208,6 +1202,14 @@ class CasasModel extends CI_Model
             idProcesoCasas = $idProcesoCasas
         AND idPropuesta = $idPropuesta
         AND status = 1";
+
+        $this->db->query($query);
+
+        $query = "UPDATE proceso_casas
+        SET
+            cotizacionElegida = $idCotizacion
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }
@@ -1289,6 +1291,22 @@ class CasasModel extends CI_Model
         WHERE
             id_catalogo = 135
         AND estatus = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaArchivosTitulos($idProcesoCasas){
+        $query = "SELECT
+            idProcesoCasas,
+            idDocumento,
+            archivo,
+            documento,
+            tipo,
+            fechaModificacion
+        FROM documentos_proceso_casas
+        WHERE
+            idProcesoCasas = $idProcesoCasas
+        AND tipo IN (17, 28, 29, 30, 31, 32)";
 
         return $this->db->query($query)->result();
     }

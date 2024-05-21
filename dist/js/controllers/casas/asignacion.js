@@ -55,7 +55,7 @@ select_asesor = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
+        text: `¿Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -94,7 +94,7 @@ cancel_process = function (data) {
 
     let form = new Form({
         title: 'Cancelar proceso',
-        text: `Desea cancelar el proceso del lote ${data.nombreLote}`,
+        text: `¿Desea cancelar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             form.loading(true)
 

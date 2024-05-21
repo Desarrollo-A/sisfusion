@@ -151,11 +151,11 @@ let columns = [
     } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir cotizaciones', onClick: go_to_cotizaciones, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
 
         let pass_button = ''
         
-        if(data.fechaFirma1 && data.cotizaciones){
+        if(data.fechaFirma1 && data.cotizaciones && data.documentos){
             pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
         }
 
