@@ -106,7 +106,7 @@ class PagosCasasModel extends CI_Model
             nombre
         FROM opcs_x_cats
         WHERE
-            id_catalogo = 121
+            id_catalogo = 140
         AND estatus = 1
         AND id_opcion IN ($documents)";
 

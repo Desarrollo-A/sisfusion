@@ -16,13 +16,32 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Cotizaciones: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Archivos de <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
 
-                                <input class="hidden" id="lote" name="lote" value="<?php echo $lote->tipoCredito ?>"></input>
+                                <div class="toolbar">
+                                    <h4 class="card-title center-align">Cotizaciones</h4>
+                                </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>NOMBRE</th>
+                                            <th>ARCHIVO</th>
+                                            <th>ACCIONES</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <br />
+
+                                <div class="toolbar">
+                                    <h4 class="card-title center-align">Títulos de propiedad</h4>
+                                </div>
+
+                                <table id="tableTitulos" class="table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
