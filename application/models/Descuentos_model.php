@@ -509,7 +509,8 @@ class Descuentos_model extends CI_Model {
                 $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
                 $query = $this->db->query($cmd );   
                 $datos["TODOS"] = $query->result_array();
-                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo
+                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo,
+                ha.comentario as comentario_ha
                 FROM  opcs_x_cats opcx 
                 INNER  JOIN historial_anticipo ha ON ha.proceso = opcx.id_opcion  and opcx.id_catalogo = 128
                 where ha.id_usuario = $usuario";
@@ -530,10 +531,10 @@ class Descuentos_model extends CI_Model {
             }
 
 
-            public function solicitudes_por_aticipo ($bandera){
-                
+            public function solicitudes_por_aticipo ($bandera = ''){
+                $idUsu = intval($this->session->userdata('id_usuario')); 
                 $cmd = "DECLARE @user INT 
-                SELECT @user = $usuario 
+                SELECT @user = $idUsu 
                 SELECT u.id_usuario, u.id_rol,
                 FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
                 UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
@@ -710,4 +711,22 @@ class Descuentos_model extends CI_Model {
             );
             return $this->db->insert("facturas_anticipos", $data);
         }
+
+    public function pausar_prestamo($arrayUpdate, $clave){
+        try {
+            $this->db->WHERE('id_prestamo', $clave);
+            
+            if($this->db->update('prestamos_aut', $arrayUpdate))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }  
+    } 
+
+
 }

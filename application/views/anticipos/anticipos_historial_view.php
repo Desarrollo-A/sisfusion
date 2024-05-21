@@ -55,13 +55,14 @@
                                             <table class="table-striped table-hover" id="historial_general" name="historial_general">
                                                 <thead>
                                                     <tr>
-                                                        <th>ID ANTICIPO</th>
-                                                        <th>ID USUARIO</th>
-                                                        
+                                                        <th>ID ANTICIPO</th> 
                                                         <th>NOMBRE</th>
+
+                                                        <th>PUESTO</th>
                                                         <th>SEDE</th>
                                                         
                                                         <th>MONTO</th>
+                                                        <th>COMENTARIO</th>
                                                         <th>COMENTARIO</th>
 
                                                         <th>FECHA CONTRALORÍA</th>
@@ -90,6 +91,7 @@
     <script src="<?= base_url() ?>dist/js/funciones-generales.js"></script>
     <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/generales/mucho_texto.js "></script>
     <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/historial_anticipos.js"></script>
     <script type="text/javascript">
 		Shadowbox.init();

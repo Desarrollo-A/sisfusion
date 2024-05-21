@@ -23,6 +23,8 @@ $(document).ready(function () {
 });
 
 function cargaLinea(){
+    let linea = document.getElementById('linea_proceso');
+    linea.innerHTML =  '';
     $.ajax({
         url: 'todos_los_pasos',
         type: 'post',
@@ -46,9 +48,14 @@ function cargaLinea(){
                 
                         <p class=" card-title text-muted pl-1">ID anticipo ${elementANTICIPOS.id_anticipo}.</p>
                         <p class=" card-title text-muted pl-1">Motivo ${elementANTICIPOS.comentario}.</p>
-                    </div>
+                    
                     <br>
                 </div>
+
+
+                
+                
+
                 <div class="row ">
                 <div class="col " >
                 <div class="timeline-steps aos-init aos-animate "  data-aos="fade-up">`;
@@ -78,7 +85,9 @@ function cargaLinea(){
                                         <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title=""  >
                                             <div class="${color}"></div> 
                                                 <p class="h6 mt-3 mb-1">${elementoUSUARIO.id_opcion}</p>
-                                                <p class=" mb-0 mb-lg-0">${elementoUSUARIO.nombre}</p>
+                                                <div class="info-wrapper">
+                                                <p data-tooltip="${elementoUSUARIO.comentario_ha}" class="  mb-0 mb-lg-0">${elementTODOS.nombre}</p>
+                                                </div>
                                             </div>
                                     </div>
                                     ${especialfin}
@@ -97,10 +106,16 @@ function cargaLinea(){
                             linea_armada += `
                             <div class="timeline-step mb-0">
                                 <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="">
-                                    <div class="inner-circle_n"></div>
-                                    <p class="h6 mt-3 mb-1">${elementTODOS.id_opcion}</p>
-                                    <p class=" mb-0 mb-lg-0">${elementTODOS.nombre}</p>
+                                    <div class="inner-circle_n">
+                                    </div>
+                                        <p class="h6 mt-3 mb-1">${elementTODOS.id_opcion}</p>
+                                    <div class="info-wrapper">
+                                        <p data-tooltip="En espera del proceso ." class="  mb-0 mb-lg-0">${elementTODOS.nombre}</p>
+                                    </div>
                                 </div>
+
+
+
                             </div>
                             `;
                         }
@@ -123,19 +138,22 @@ function cargaLinea(){
 $("#form_subir").on('submit', function (e) {
     
     e.preventDefault();
-    
-    
+
+
     let formData = new FormData(document.getElementById("form_subir"));
-    // documento_xml = input[0].files[0];
-    var xml = documento_xml;
-    formData.append("evidenciaNueva", documento_xml);
-    console.log(formData)
-    if(forma_de_pago_general == 2)
-    {
+    
+    if(forma_de_pago_general == 2){
+        var xml = documento_xml;
+        formData.append("evidenciaNueva", documento_xml);
         documento_xml = $("#evidenciaNueva")[0].files[0];
         // var xml = documento_xml;
         formData.append("xmlfile", documento_xml); 
     }
+    
+    // documento_xml = input[0].files[0];
+    
+    console.log(formData)
+
     // let uploadedDocument = $("#"+boton)[0].files[0];
     formData.append("proceso", 6);
     formData.append("estatus", 2);
@@ -150,8 +168,12 @@ $("#form_subir").on('submit', function (e) {
             success: function (data) {
                 alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
                 $('#myModalAceptar_subir').modal('hide')
-                document.getElementById("form_aceptar").reset();
+                document.getElementById("form_subir").reset();
                 // $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
+                let linea = document.getElementById('linea_proceso');
+                linea.innerHTML =  '';
+                cargaLinea();
+
                 $('#form_subir').trigger('reset');
             },
             error: function () {
@@ -192,11 +214,15 @@ function clickbotonProceso(){
     $("#preceso_aticipo").removeClass("hide");
 }
 $("#anticipo_nomina").submit(function (e) { 
-    $('#btn_alta').prop('disabled', true);
+    
+
+    
+  
+
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
-
+        $('#btn_alta').prop('disabled', true);
         
         const totalDescuento = replaceAll($('#montoSolicitado').val(), ',' , '');
         const monto = replaceAll(totalDescuento, '$', '');
@@ -243,6 +269,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     Modalbody_subir.html('');
     prioridad_nombre = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
+    bloquear = forma_de_pago_general == 2 ? 'disabled' : ''; 
     FACTURAS = forma_de_pago_general == 2 ?  `
             <div class="form-group">      
                 <div class="col-md-12 " id="evidenciaNuevadiv" name="evidenciaNuevadiv" style="padding-top:30px;" >
@@ -339,7 +366,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
         `);
     Modalfooter_subir.append(`
             <button type="button"  class="btn btn-danger btn-simple "  data-dismiss="modal" >Cerrar</button>
-            <button  type="submit" disabled name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
+            <button  type="submit" ${bloquear} name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
     $("#myModalAceptar_subir").modal();
 
 } 

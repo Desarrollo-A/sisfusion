@@ -89,6 +89,39 @@
 			</div>
 		</div>
 
+
+
+
+		<div class="modal fade" id="ModalPausar" tabindex="-1" role="dialog" aria-labelledby="ModalPausar" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+						<h4 class="modal-title">Préstamos Pausar/Despausar</h4>
+					</div>
+					<form nombre="PausarForma" id="PausarForma" >
+					<div class="modal-body">
+						<div class="form-group row">
+							
+							<div class="col-md-12">
+							
+								<label class="control-label">Descripción(<b class="text-danger">*</b>)</label>
+								<textarea id="descripcionPausar" name="descripcionPausar" class="text-modal" rows="3"></textarea>
+							</div>	
+							<input class="form-control hidden input-gral" name="prestamoIdPausar"  id="prestamoIdPausar" style="display:block;"  readonly>
+							<input class="form-control hidden input-gral" name="estatusP" id="estatusP" style="display:block;"  readonly>
+
+						</div>
+					</div>
+						<div class="modal-footer">     
+							<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>	
+							<button  type="submit" id="addPausar" class="btn btn-primary addPausar">Aceptar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">

@@ -1164,9 +1164,35 @@ class Descuentos extends CI_Controller
 
 
 
+        public function pausar_prestamo(){
+            $estatus = $this->input->post('estatusP') ;    
 
+            if ($estatus == 6){
+                $estatus= 1;
+                }else{
+                    $estatus= 6;
+                }
 
+            $updateArray = array(
+                'estatus'       => $estatus    
+                );
+            $respuesta = $this->Descuentos_model->pausar_prestamo($updateArray , $this->input->post('prestamoIdPausar'));
+                
+            if($respuesta )
+            {
+                $respuesta =  array(
+                    "response_code" => 200, 
+                    "response_type" => 'success',
+                    "message" => "Se pauso correctamente el préstamo");
+            }else{
+                $respuesta =  array(
+                    "response_code" => 401, 
+                    "response_type" => 'error',
+                    "message" => "El préstamo no se ha podido detener, inténtalo más tarde");
+            }
 
-
+                // nace un anticipo
+             echo json_encode($respuesta);
+        }
 
 }

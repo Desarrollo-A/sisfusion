@@ -7,10 +7,10 @@
                      <div class="ag-courses-item_title">
                      <br>
                      <br>
-                     Solicitud Anticipo de nomina
+                     Solicitud Anticipo de nómina
                     </div>
                     <br>
-                    Podras solicitar anticipos de nomina
+                    Podrás solicitar anticipos de nómina
                 </buttons_adelanto>
             </div>
         </div>
@@ -27,7 +27,7 @@
                      Procesos Anticipos
                     </div>
                     <br>
-                    Podras revisar el proceso de tu anticipo de nomina
+                    Podrás revisar el proceso de tu anticipo de nómina
                 </buttons_adelanto>
             </div>
         </div>
