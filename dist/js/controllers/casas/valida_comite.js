@@ -40,7 +40,7 @@ pass_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Propuesta de firma"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -52,7 +52,7 @@ pass_to_propuesta_firma = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de propuesta de firma.", "success");
         
                     table.reload()
 

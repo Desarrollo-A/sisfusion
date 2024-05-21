@@ -524,9 +524,10 @@ class DateDelete {
                 .attr('name', id)
                 .attr('id', id)
                 .attr('placeholder', placeholder.toUpperCase())
-                .val(value)
+                //.val(value.substring(0, 16))
                 .datetimepicker({
-                    format: 'YYYY-MM-DD',
+                    date: value ? value.substring(0, 16): null,
+                    format: 'YYYY-MM-DD HH:mm',
                     icons: {
                         time: "fa fa-clock-o",
                         date: "fa fa-calendar",

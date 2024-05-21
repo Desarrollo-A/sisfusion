@@ -2,7 +2,7 @@
 
 require_once(APPPATH . "/controllers/BaseController.php");
 
-class PagosCasas extends BaseController {
+class Pagoscasas extends BaseController {
     public function __construct() {
         parent::__construct();
 
