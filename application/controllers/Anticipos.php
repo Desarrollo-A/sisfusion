@@ -58,8 +58,9 @@ class Anticipos extends CI_Controller {
         }
     }
 
-    public function actualizarEstatus() {
+    
 
+    public function actualizarEstatus() {
         $comentario = $this->input->post('comentario');
         $id_usuario = $this->input->post('id_usuario');
         $id_anticipo = $this->input->post('id_anticipo');
@@ -69,56 +70,74 @@ class Anticipos extends CI_Controller {
         $procesoTipo = $this->input->post('procesoTipo');
         $pago = $this->input->post('pago');
         $creado_por = $this->session->userdata("id_rol");
-    
+
+        
+
         $result_2 = null;
         $result_3 = null;
         $success = false;
-
-        // aqui se tiene un tema error 
     
+        $result_5 = null;
+        $result_6 = null;
+
+        //parcialidades
+        $nombreSwitch = $this->input->post('nombreSwitch');
+        $catalogo = $this->input->post('tipo_pago_anticipo');
+        $numeroPagosParcialidad = $this->input->post('numeroPagosParcialidad');
+    
+        // Internomex
         if ($this->session->userdata('id_rol') == 31) {
-            // internomex
+
             $comentario = "SE acepta el pago, por parte de internomex";
             $procesoAntInternomex = $this->input->post('procesoAntInternomex');
             $result = $this->Anticipos_model->updateEstatusInterno($procesoAntInternomex, $id_anticipo);
             $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
             
             $success = ($result != null); 
-
             
         } else {
+
+            
+
             $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
             $result_3 = 1;
             $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+    
+            if ($nombreSwitch == "false") {
+                $result_5 = $this->Anticipos_model->parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad);
+            }
+    
             if($procesoAnt == 0){
                 
-            }else{
+            } else {
                 
-            
-                if ($numeroPagos == '' && $pago == '') {
+                if ($procesoTipo == 0 ) {
                     $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
                 } else {
                     $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
                     $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+                    $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagos);
+
                 }
             }
             
-            $success = ($result != null && $result_2 != null && $result_3 != null); 
+            $success = ($result != null && $result_2 != null && $result_3 != null);
         }
-        
-
-
+    
         $response = array(
             'success' => $success,
             'result' => $result,
             'result_2' => $result_2,
-            'result_3' => $result_3
+            'result_3' => $result_3,
+            'result_5' => $result_5,
+            'result_6' => $result_6
         );
     
         echo json_encode($response);
     }
-    
-    
-    
 
+    public function fillAnticipos() {
+        echo json_encode($this->Anticipos_model->getTipoAnticipo()->result_array());
+    }
+    
 }

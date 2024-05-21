@@ -75,17 +75,40 @@ class Anticipos_model extends CI_Model {
             return 0;
         }
     }
-    public function updateEstatusD($procesoAnt, $id_anticipo){
-        $CMD = "UPDATE anticipo SET proceso=$procesoAnt,estatus = 0 WHERE id_anticipo = $id_anticipo";
-        
-        $query = $this->db->query($CMD);
-        
+
+    public function parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad){
+        $query = $this->db->query("INSERT INTO parcialidad_relacion_anticipo (id_anticipo, catalogo, fecha_creacion, mensualidades) VALUES ($id_anticipo, $catalogo, GETDATE(), $numeroPagosParcialidad)");
+
+        if ($query) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public function mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagos){
+        $cmd = "UPDATE anticipo set numero_mensualidades = $numeroPagos WHERE id_anticipo = $id_anticipo and id_usuario = $id_usuario ";
+        $query = $this->db->query($cmd);
         if ($query) {
             return 1;
         }else {
             return 0;
         }
     }
+
+    public function updateEstatusD($procesoAnt, $id_anticipo){
+
+        $estatus = ($procesoAnt == 7) ? 7 : 0;
+
+        $cmd = "UPDATE anticipo SET proceso=$procesoAnt, estatus=$estatus WHERE id_anticipo = $id_anticipo";
+        $query = $this->db->query($cmd);
+        if ($query) {
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
     public function updateEstatusInterno($proceso,$id_anticipo){
         $cmd = "UPDATE anticipo set proceso = $proceso , estatus = 11 WHERE id_anticipo = $id_anticipo ";
         $query = $this->db->query($cmd);
@@ -94,5 +117,9 @@ class Anticipos_model extends CI_Model {
         }else {
             return 0;
         }
+    }
+
+    public function getTipoAnticipo() {
+        return $this->db->query("SELECT * FROM opcs_x_cats where id_catalogo = 139 AND estatus = 1");
     }
 }

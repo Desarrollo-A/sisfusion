@@ -1,8 +1,51 @@
 let anticiposReporte = []
-
 let id_usuario;
 
+$(document).ready(function() {
+
+    $('#anticipoModal').on('hidden.bs.modal', function() {
+        $(this).find('form')[0].reset();
+        $('#procesoAnt').selectpicker('refresh');
+        $('#procesoTipo').selectpicker('refresh');
+        $('#numeroPagos').selectpicker('refresh');
+        $('#numeroPagosParcialidad').selectpicker('refresh');
+    });
+
 $("#tabla_anticipos").ready(function () {
+
+    function updateVisibility() {
+        var isChecked = $('#nombreSwitch').is(':checked');
+    
+        $('#noTexto').toggle(!isChecked);
+        $('#siTexto').toggle(isChecked);
+        $('#evidenciaSwitchDIV').toggle(isChecked);
+    
+        if (isChecked) {
+            $('#noTextoDescripcion').addClass('hide');
+            $('#siTextoDescripcion').removeClass('hide');
+            $('#tipo_pago_anticipo').closest('.form-group').hide();
+            $('#montoPrestadoParcialidad').closest('.form-group').hide();
+            $('#numeroPagosParcialidad').closest('.form-group').hide();
+            $('#tituloParcialidades').hide();
+        } else {
+            $('#noTextoDescripcion').removeClass('hide');
+            $('#siTextoDescripcion').addClass('hide');
+            $('#tipo_pago_anticipo').closest('.form-group').show();
+            $('#montoPrestadoParcialidad').closest('.form-group').show();
+            $('#numeroPagosParcialidad').closest('.form-group').show();
+            $('#tituloParcialidades').show();
+        }
+    }
+    
+    $('#nombreSwitch').change(updateVisibility);
+    
+    updateVisibility();
+    
+    $('#nombreSwitchGeneral').change(function() {
+        var isChecked = $(this).is(':checked');
+        $('#noTextoGeneral').toggle(isChecked);
+        $('#siTextoGeneral').toggle(!isChecked);
+    });
 
     $('#tabla_anticipos thead tr:eq(0) th').each(function (i) {
         
@@ -85,17 +128,8 @@ $("#tabla_anticipos").ready(function () {
                             <i class="fas fa-folder-open"></i>
                         </button>`;
                     }
-                    // if(d.forma_pago == 2){
-                    //     botonesModal += `<center>
-                    //         <button  id="preview1" name="preview1" class="btn-data btn-blueMaderas anticiposFacturas" data-factura="${d.factura_nombre}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="VER FACTURA">
-                    //             <i class="far fa-money-bill-alt"></i>
-                    //         </button></center>`;
-  
-                    // }
+                    
                     botonesModal += `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
-                    
-                    
-
                     
                     return '<div class="d-flex justify-center">' + botonesModal + '</div>';
                 }
@@ -130,9 +164,15 @@ $("#tabla_anticipos").ready(function () {
         var proceso = $(this).attr("data-proceso");
     
         mostrarOcultarCampos(proceso);
+
         calcularPago();
-    
+        calcularPagoParcialidades();
+
         $("#anticipoModal").modal();
+
+        fillPagoAnticipos();
+
+        
     });
 
     function calcularPago() {
@@ -143,6 +183,15 @@ $("#tabla_anticipos").ready(function () {
     }
 
     $('#montoPrestado, #numeroPagos').on('input change', calcularPago);
+
+    function calcularPagoParcialidades() {
+        var montoPrestado = parseFloat($("#montoPrestado").val());
+        var numeroPagos = parseInt($("#numeroPagosParcialidad").val());
+        var pago = montoPrestado / numeroPagos;
+        $("#montoPrestadoParcialidad").val(isNaN(pago) ? '' : pago.toFixed(2));
+    }
+
+    $('#montoPrestado, #numeroPagosParcialidad').on('input change', calcularPagoParcialidades);
 
     $(document).on("click", "#preview", function () {
         var itself = $(this);
@@ -159,37 +208,38 @@ $("#tabla_anticipos").ready(function () {
             height: 660
         });
     });
-    $(document).on("click", "#preview1", function () {
-        var itself = $(this);
-        Shadowbox.open({
-            content: `<div>
-                        <iframe style="overflow:hidden;width: 100%;height: 100%; 
-                                        position:absolute;z-index:999999!important;" 
-                                        src="${general_base_url}UPLOADS/XML_Anticipo/${itself.attr('data-factura')}">
-                        </iframe>
-                    </div>`,
-            player: "html",
-            title: `Visualizando archivo: evidencia `,
-            width: 985,
-            height: 660
-        });
-    });
+    
     $("#modal_anticipos_form").on("submit", function(e) {
         e.preventDefault();
-    
-        var comentario = $("#comentario").val().trim(); 
         
+        var procesoTipo = $("#procesoTipo").val();
+
+        var comentario = $("#comentario").val().trim();
+    
         if (comentario === "") {
             alerts.showNotification("top", "right", "Por favor, ingresa un comentario.", "warning");
-            return; 
+            return;
         }
+
+        var procesoTipo = $("#procesoTipo").val();
+        if (!procesoTipo) { 
+            alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+            return;
+        }
+
+        var numeroPagos = $("#numeroPagos").val();
+        if (!numeroPagos) { 
+            alerts.showNotification("top", "right", "Por favor, selecciona un Número de pagos.", "warning");
+            return;
+        }
+    
+        var nombreSwitchChecked = $("#nombreSwitch").is(":checked");
     
         var id_usuario = $("#id_usuario").val();
         var procesoAnt = $("#procesoAnt").val();
         var id_anticipo = $("#id_anticipo").val();
         var monto = $("#montoPrestado").val();
         var numeroPagos = $("#numeroPagos").val();
-        var procesoTipo = $("#procesoTipo").val();
         var pago = $("#pago").val();
     
         var anticipoData = new FormData();
@@ -201,6 +251,21 @@ $("#tabla_anticipos").ready(function () {
         anticipoData.append("numeroPagos", numeroPagos);
         anticipoData.append("procesoTipo", procesoTipo);
         anticipoData.append("pago", pago);
+        anticipoData.append("nombreSwitch", nombreSwitchChecked ? "true" : "false");
+    
+        if (!nombreSwitchChecked) {
+            var tipoPagoAnticipo = $("#tipo_pago_anticipo").val();
+            var numeroPagosParcialidad = $("#numeroPagosParcialidad").val();
+        
+            if (!tipoPagoAnticipo || !numeroPagosParcialidad) {
+                var mensaje = !tipoPagoAnticipo ? "Monto de Pago" : "número de pagos por parcialidad";
+                alerts.showNotification("top", "right", "Por favor, selecciona " + mensaje + ".", "warning");
+                return;
+            }
+        
+            anticipoData.append("tipo_pago_anticipo", tipoPagoAnticipo);
+            anticipoData.append("numeroPagosParcialidad", numeroPagosParcialidad);
+        }
     
         $.ajax({
             url: general_base_url + 'Anticipos/actualizarEstatus',
@@ -215,7 +280,6 @@ $("#tabla_anticipos").ready(function () {
                     $('#anticipoModal').modal("hide");
                     alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
                     $('#tabla_anticipos').DataTable().ajax.reload();
-                    //document.getElementById("form_aceptar").reset();
                 } else {
                     alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
                 }
@@ -224,7 +288,6 @@ $("#tabla_anticipos").ready(function () {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
             }
         });
-        
     });
 
     $("#procesoAnt, #procesoTipo").on("change", function() {
@@ -235,19 +298,39 @@ $("#tabla_anticipos").ready(function () {
     });
     
     function mostrarOcultarCampos(proceso, tipo) {
+
         if (proceso === "6") {
             $("#procesoTipo").parent().parent().hide();
             $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
-        } else if (proceso == 0){
+            $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').hide();
+
+        } else if (proceso === "0") {
+            $("#procesoTipo").parent().parent().hide();
+            $("#montoPrestado, #numeroPagos, #pago").closest('.row').hide();
+            $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').hide();
             
-        }else{
+        } else {
             $("#procesoTipo").parent().parent().show();
             if (tipo === "0") {
                 $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
             } else {
                 $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').show();
+                $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').show();
+
             }
         }
     }
     
+    function fillPagoAnticipos() {
+        $("#tipo_pago_anticipo").empty();
+
+        $.getJSON("fillAnticipos").done(function (data) {
+            for (let i = 0; i < data.length; i++) {
+                $("#tipo_pago_anticipo").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            }
+            $('#tipo_pago_anticipo').selectpicker('refresh');
+        });
+    }
+    
+  });
 });
