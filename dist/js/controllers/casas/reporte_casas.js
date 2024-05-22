@@ -32,8 +32,12 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: 'procesoNombre' },
-    { data: 'fechaCreacion' },
-    { data: 'fechaProceso' },
+    { data: function(data){
+        return data.fechaCreacion.substring(0, 16)
+    } },
+    { data: function(data){
+        return data.fechaProceso ? data.fechaProceso.substring(0, 16) : ''
+    } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)
         let today = new Date()
