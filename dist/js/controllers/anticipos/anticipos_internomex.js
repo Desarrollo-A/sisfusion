@@ -59,19 +59,21 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'nombreUsuario' },
             { data: 'proceso' },
             { data: 'comentario' },
-            { data: 'prioridad' },
+            { data: 'prioridad_nombre' },
             { data: 'impuesto' },
             { data: 'sede' },
             { data: 'esquema' },
-            { data: 'monto' },
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
+                }
+            },
             {
                 data: function (d) {
                     
+                    console.log(d.monto);
                     
-                    var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
-                    
-                    
-
+                    var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
                     
                     return '<div class="d-flex justify-center">'  + botonEstatus  + '</div>';
                 }
@@ -102,7 +104,8 @@ $("#tabla_anticipos_internomex").ready(function () {
     
         var monto = $(this).attr("data-monto");
         $("#montoPrestado").val(monto);
-    
+
+        $("#montoTitulo").text("Monto: " + formatMoney(monto));
     
         $("#anticipoModalInternomex").modal();
     });

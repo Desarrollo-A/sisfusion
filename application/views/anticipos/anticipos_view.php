@@ -8,6 +8,13 @@
         <?php $this->load->view('template/sidebar'); ?>
         <?php $this->load->view('descuentos/complementos/estilosPrestamos_comple'); ?>
 
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" id="modal-dialog">
+                <div class="modal-content">
+                    <!-- El contenido del modal se agregará dinámicamente -->
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="anticipoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
@@ -90,12 +97,6 @@
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                     <div class="form-group overflow-hidden">
-                                        <label class="control-label" for="proyecto">Monto Pago Parcialidad</label>
-                                        <input class="form-control m-0 input-gral" name="montoPrestadoParcialidad" id="montoPrestadoParcialidad" readonly>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                    <div class="form-group overflow-hidden">
                                         <label class="control-label" for="proyecto">Número de Pagos Parcialidad </label>
                                         <select class="selectpicker select-gral m-0 input-gral" name="numeroPagosParcialidad" id="numeroPagosParcialidad" data-style="btn" data-show-subtext="true"  title="SELECCIONA UN NÚMERO" data-size="7" data-live-search="true" data-container="body" >
                                             <option value="1">1</option>
@@ -110,6 +111,12 @@
                                             <option value="10">10</option>
                                             <option value="11">11</option>
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group overflow-hidden">
+                                        <label class="control-label" for="proyecto">Monto Pago Parcialidad</label>
+                                        <input class="form-control m-0 input-gral" name="montoPrestadoParcialidad" id="montoPrestadoParcialidad" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -130,7 +137,6 @@
                                     </span>
                                 </div>
                             </div>
-
 
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <label class="control-label">Comentario</label>

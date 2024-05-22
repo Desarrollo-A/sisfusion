@@ -7,34 +7,38 @@ class Anticipos_model extends CI_Model {
         parent::__construct();
     }
 
-    public function getAnticipos(){
+    public function getAnticipos() {
         $filtro = "";
-        switch($this->session->userdata('id_rol')){
+        $filtroMonto = "";
+        switch($this->session->userdata('id_rol')) {
             case '31':
                 $filtro = "AND ant.proceso IN (7) ";
-            break;
-                
+                $filtroMonto ="pra.monto_parcialidad";
+                break;
             default:
-                
                 $filtro = "AND ant.proceso IN (6) ";
-            break;
-            }
-
-        $data = $this->db->query("SELECT fa.nombre_archivo as factura,
-        oxc.nombre as esquema, se.nombre as sede, us.forma_pago, fa.nombre_archivo as factura_nombre,
+                $filtroMonto ="ant.monto";
+                break;
+        }
+    
+        $data = $this->db->query("SELECT fa.nombre_archivo AS factura,
+        oxc.nombre AS esquema, se.nombre AS sede, us.forma_pago, fa.nombre_archivo AS factura_nombre,
         ant.evidencia, ant.impuesto, ant.id_anticipo, ant.monto, ant.id_usuario, ant.estatus, 
         UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreUsuario, 
-        ant.proceso,ant.comentario, ant.prioridad 
+        ant.proceso, ant.comentario, CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END AS prioridad_nombre, $filtroMonto as montoParcial
         FROM anticipo ant
-        INNER JOIN usuarios us ON us.id_usuario= ant.id_usuario 
+        INNER JOIN usuarios us ON us.id_usuario = ant.id_usuario 
         LEFT JOIN sedes se ON se.id_sede = us.id_sede 
         LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = us.forma_pago AND oxc.id_catalogo = 23 
         LEFT JOIN facturas_anticipos fa ON fa.id_anticipo = ant.id_anticipo 
-        WHERE  ant.estatus=2
-        $filtro ");
+        LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo AND pra.monto_parcialidad IS NOT NULL, pra.mensualidades
+        WHERE ant.estatus = 2
+        $filtro");
+
         return $data;
     }
 
+    
     public function updateEstatus($procesoAnt, $id_usuario){
         $query = $this->db->query("UPDATE anticipo SET proceso=$procesoAnt WHERE id_usuario = $id_usuario");
         
@@ -76,8 +80,8 @@ class Anticipos_model extends CI_Model {
         }
     }
 
-    public function parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad){
-        $query = $this->db->query("INSERT INTO parcialidad_relacion_anticipo (id_anticipo, catalogo, fecha_creacion, mensualidades) VALUES ($id_anticipo, $catalogo, GETDATE(), $numeroPagosParcialidad)");
+    public function parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad, $montoPEntero){
+        $query = $this->db->query("INSERT INTO parcialidad_relacion_anticipo (id_anticipo, catalogo, fecha_creacion, mensualidades, monto_parcialidad) VALUES ($id_anticipo, $catalogo, GETDATE(), $numeroPagosParcialidad, $montoPEntero)");
 
         if ($query) {
             return 1;
@@ -86,8 +90,8 @@ class Anticipos_model extends CI_Model {
         }
     }
 
-    public function mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagos){
-        $cmd = "UPDATE anticipo set numero_mensualidades = $numeroPagos WHERE id_anticipo = $id_anticipo and id_usuario = $id_usuario ";
+    public function mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagosParcialidad){
+        $cmd = "UPDATE anticipo set numero_mensualidades = $numeroPagosParcialidad WHERE id_anticipo = $id_anticipo and id_usuario = $id_usuario ";
         $query = $this->db->query($cmd);
         if ($query) {
             return 1;
@@ -98,7 +102,7 @@ class Anticipos_model extends CI_Model {
 
     public function updateEstatusD($procesoAnt, $id_anticipo){
 
-        $estatus = ($procesoAnt == 7) ? 7 : 0;
+        $estatus = ($procesoAnt == 7) ? 2 : 0;
 
         $cmd = "UPDATE anticipo SET proceso=$procesoAnt, estatus=$estatus WHERE id_anticipo = $id_anticipo";
         $query = $this->db->query($cmd);
@@ -110,7 +114,7 @@ class Anticipos_model extends CI_Model {
     }
 
     public function updateEstatusInterno($proceso,$id_anticipo){
-        $cmd = "UPDATE anticipo set proceso = $proceso , estatus = 11 WHERE id_anticipo = $id_anticipo ";
+        $cmd = "UPDATE anticipo set proceso = $proceso , estatus = 2 WHERE id_anticipo = $id_anticipo ";
         $query = $this->db->query($cmd);
         if ($query) {
             return 1;
@@ -121,5 +125,15 @@ class Anticipos_model extends CI_Model {
 
     public function getTipoAnticipo() {
         return $this->db->query("SELECT * FROM opcs_x_cats where id_catalogo = 139 AND estatus = 1");
+    }
+
+    public function updateMontoTotal($procesoAnt, $id_usuario){
+        $query = $this->db->query("UPDATE anticipo SET proceso=$procesoAnt WHERE id_usuario = $id_usuario");
+        
+        if ($query) {
+            return 1;
+        }else {
+            return 0;
+        }
     }
 }

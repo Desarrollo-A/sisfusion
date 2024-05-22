@@ -56,9 +56,7 @@ class Anticipos extends CI_Controller {
         } else {
             echo json_encode(array());
         }
-    }
-
-    
+    }    
 
     public function actualizarEstatus() {
         $comentario = $this->input->post('comentario');
@@ -69,9 +67,13 @@ class Anticipos extends CI_Controller {
         $numeroPagos = $this->input->post('numeroPagos');
         $procesoTipo = $this->input->post('procesoTipo');
         $pago = $this->input->post('pago');
-        $creado_por = $this->session->userdata("id_rol");
+        $montoP = $this->input->post('montoPrestadoParcialidad');
+        $montoPEntero = intval($montoP);
+
+       
 
         
+        $creado_por = $this->session->userdata("id_rol");
 
         $result_2 = null;
         $result_3 = null;
@@ -85,7 +87,7 @@ class Anticipos extends CI_Controller {
         $catalogo = $this->input->post('tipo_pago_anticipo');
         $numeroPagosParcialidad = $this->input->post('numeroPagosParcialidad');
     
-        // Internomex
+        // Internomexx
         if ($this->session->userdata('id_rol') == 31) {
 
             $comentario = "SE acepta el pago, por parte de internomex";
@@ -97,26 +99,26 @@ class Anticipos extends CI_Controller {
             
         } else {
 
-            
-
             $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
             $result_3 = 1;
             $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
     
             if ($nombreSwitch == "false") {
-                $result_5 = $this->Anticipos_model->parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad);
+                $result_5 = $this->Anticipos_model->parcialidad_relacion_anticipo($id_anticipo, $catalogo, $numeroPagosParcialidad, $montoPEntero);
             }
     
             if($procesoAnt == 0){
                 
             } else {
+
+                $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagosParcialidad);
                 
                 if ($procesoTipo == 0 ) {
                     $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+
                 } else {
                     $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
                     $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
-                    $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagos);
 
                 }
             }

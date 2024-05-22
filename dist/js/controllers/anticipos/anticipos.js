@@ -1,5 +1,6 @@
 let anticiposReporte = []
 let id_usuario;
+let tipoID;
 
 $(document).ready(function() {
 
@@ -51,7 +52,6 @@ $("#tabla_anticipos").ready(function () {
         
             var title = $(this).text();
             anticiposReporte.push(title);
-            console.log(title);
             $(this).html(`<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
             $('input', this).on('keyup change', function () {
                 if (tabla_anticipos.column(i).search() !== this.value)
@@ -111,26 +111,40 @@ $("#tabla_anticipos").ready(function () {
             { data: 'nombreUsuario' },
             { data: 'proceso' },
             { data: 'comentario' },
-            { data: 'prioridad' },
+            { data: 'prioridad_nombre' },
             { data: 'impuesto' },
             { data: 'sede' },
             { data: 'esquema' },
-            { data: 'monto' },
+            {
+                data: function( d ){
+                    return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
+                }
+            },
             {
                 data: function (d) {
                     var botonesModal = '';
+            
                     if (d.evidencia != null) {
-                        
                         botonesModal += `
-                        <button href="#" id="preview" name="preview" data-doc="${d.evidencia}"  
-                        data-ruta="static/documentos/solicitudes_anticipo"
-                        class="btn-data btn-violetDeep" title="Ver Evidencia">
-                            <i class="fas fa-folder-open"></i>
-                        </button>`;
+                            <button href="#" id="preview" name="preview" data-doc="${d.evidencia}"  
+                            data-ruta="static/documentos/solicitudes_anticipo"
+                            class="btn-data btn-violetDeep" title="Ver Evidencia">
+                                <i class="fas fa-folder-open"></i>
+                            </button>`;
                     }
-                    
-                    botonesModal += `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE"><i class="fas fa-history"></i></button></center>`;
-                    
+
+                    botonesModal += `
+                        <center>
+                            <button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE">
+                                <i class="fas fa-history"></i>
+                            </button>
+                        </center>`;
+            
+                    botonesModal += `
+                        <button href="#" value="${d.id_anticipo}" data-name="${d.nombreUsuario}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
+                            <i class="fas fa-info"></i>
+                        </button>`;
+            
                     return '<div class="d-flex justify-center">' + botonesModal + '</div>';
                 }
             }
@@ -149,6 +163,10 @@ $("#tabla_anticipos").ready(function () {
             trigger: "hover"
         });
     });
+
+    function formatoNumeroConComas(numero) {
+        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
     $(document).on('click', '.anticiposEstatus', function (e) {
 
@@ -213,34 +231,48 @@ $("#tabla_anticipos").ready(function () {
         e.preventDefault();
         
         var procesoTipo = $("#procesoTipo").val();
-
-        var comentario = $("#comentario").val().trim();
-    
-        if (comentario === "") {
-            alerts.showNotification("top", "right", "Por favor, ingresa un comentario.", "warning");
-            return;
-        }
-
-        var procesoTipo = $("#procesoTipo").val();
-        if (!procesoTipo) { 
-            alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
-            return;
-        }
-
-        var numeroPagos = $("#numeroPagos").val();
-        if (!numeroPagos) { 
-            alerts.showNotification("top", "right", "Por favor, selecciona un Número de pagos.", "warning");
-            return;
-        }
-    
         var nombreSwitchChecked = $("#nombreSwitch").is(":checked");
-    
+        var comentario = $("#comentario").val().trim();
+        var numeroPagos = $("#numeroPagos").val();
         var id_usuario = $("#id_usuario").val();
         var procesoAnt = $("#procesoAnt").val();
         var id_anticipo = $("#id_anticipo").val();
         var monto = $("#montoPrestado").val();
         var numeroPagos = $("#numeroPagos").val();
         var pago = $("#pago").val();
+        var montoParcialidad = $("#montoPrestadoParcialidad").val();
+
+        
+
+        console.log(procesoTipo);
+        
+        if (!nombreSwitchChecked) {
+            var tipoPagoAnticipo = $("#tipo_pago_anticipo").val();
+            var numeroPagosParcialidad = $("#numeroPagosParcialidad").val();
+
+            if (!tipoPagoAnticipo || !numeroPagosParcialidad) {
+                var mensaje = !tipoPagoAnticipo ? "Monto de Pago" : "número de pagos por parcialidad";
+                alerts.showNotification("top", "right", "Por favor, selecciona " + mensaje + ".", "warning");
+                return;
+            }
+        }
+
+        if (comentario === "") {
+            alerts.showNotification("top", "right", "Por favor, ingresa un comentario.", "warning");
+            return;
+        }
+
+        if(procesoTipo==1){
+            if (!procesoTipo) { 
+                alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+                return;
+            }
+
+            if (!numeroPagos) { 
+                alerts.showNotification("top", "right", "Por favor, selecciona un Número de pagos.", "warning");
+                return;
+            }   
+        }
     
         var anticipoData = new FormData();
         anticipoData.append("comentario", comentario);
@@ -252,20 +284,9 @@ $("#tabla_anticipos").ready(function () {
         anticipoData.append("procesoTipo", procesoTipo);
         anticipoData.append("pago", pago);
         anticipoData.append("nombreSwitch", nombreSwitchChecked ? "true" : "false");
-    
-        if (!nombreSwitchChecked) {
-            var tipoPagoAnticipo = $("#tipo_pago_anticipo").val();
-            var numeroPagosParcialidad = $("#numeroPagosParcialidad").val();
-        
-            if (!tipoPagoAnticipo || !numeroPagosParcialidad) {
-                var mensaje = !tipoPagoAnticipo ? "Monto de Pago" : "número de pagos por parcialidad";
-                alerts.showNotification("top", "right", "Por favor, selecciona " + mensaje + ".", "warning");
-                return;
-            }
-        
-            anticipoData.append("tipo_pago_anticipo", tipoPagoAnticipo);
-            anticipoData.append("numeroPagosParcialidad", numeroPagosParcialidad);
-        }
+        anticipoData.append("tipo_pago_anticipo", tipoPagoAnticipo);
+        anticipoData.append("numeroPagosParcialidad", numeroPagosParcialidad);
+        anticipoData.append("montoPrestadoParcialidad", montoParcialidad);
     
         $.ajax({
             url: general_base_url + 'Anticipos/actualizarEstatus',
@@ -298,26 +319,22 @@ $("#tabla_anticipos").ready(function () {
     });
     
     function mostrarOcultarCampos(proceso, tipo) {
-
         if (proceso === "6") {
             $("#procesoTipo").parent().parent().hide();
             $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
             $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').hide();
-
         } else if (proceso === "0") {
             $("#procesoTipo").parent().parent().hide();
             $("#montoPrestado, #numeroPagos, #pago").closest('.row').hide();
             $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').hide();
-            
         } else {
             $("#procesoTipo").parent().parent().show();
-            if (tipo === "0") {
-                $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
-            } else {
+            if (tipo === "1") { 
                 $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').show();
-                $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').show();
-
+            } else { 
+                $("#montoPrestado, #numeroPagos, #pago, #comentario").closest('.row').hide();
             }
+            $("#tipo_pago_anticipo, #montoPrestadoParcialidad, #numeroPagosParcialidad, #nombreSwitch").closest('.row').show();
         }
     }
     
@@ -331,6 +348,70 @@ $("#tabla_anticipos").ready(function () {
             $('#tipo_pago_anticipo').selectpicker('refresh');
         });
     }
-    
+
+    $("#tabla_anticipos tbody").on("click", ".consultar_logs", function(e) {
+        $('#spiner-loader').removeClass('hide');
+        const idAnticipo = $(this).val();
+        const nombreUsuario = $(this).attr("data-name");
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        // Cambia el tamaño del modal
+        $('#modal-dialog').removeClass('modal-sm modal-lg modal-xl').addClass('modal-md');
+
+        // Agrega contenido al modal
+        $('#exampleModal .modal-content').html(`
+            <div class="modal-body">
+                <div role="tabpanel">
+                    <ul>
+                        <div id="nombreLote"></div>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="changelogTab">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card card-plain">
+                                        <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                            <ul class="timeline-3" id="comentariosAsimilados"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"><b>Cerrar</b></button>
+            </div>`);
+
+        // Muestra el modal
+        $('#exampleModal').modal('show');
+
+        $("#nombreLote").append('<p><h5>HISTORIAL DEL ANTICIPO DE: <b>' + nombreUsuario + '</b></h5></p>');
+
+        $.getJSON(general_base_url + "Descuentos/getComments/" + idAnticipo).done(function(data) {
+            console.log(data);
+            $.each(data, function(i, v) {
+                console.log(i);
+                console.log(v.comentario);
+                $("#comentariosAsimilados").append('<li>\n' +
+                '  <div class="container-fluid">\n' +
+                '    <div class="row">\n' +
+                '      <div class="col-md-6">\n' +
+                '        <a> Proceso : <b> ' + v.nombre + '</b></a><br>\n' +
+                '      </div>\n' +
+                '      <div class="float-end text-right">\n' +
+                '        <a> Comentario : ' + v.comentario_general + '</a>\n' +
+                '      </div>\n' +
+                '    <h6>\n' +
+                '    </h6>\n' +
+                '    </div>\n' +
+                '  </div>\n' +
+                '</li>');
+            });
+            $('#spiner-loader').addClass('hide');
+        });
+    });
   });
 });
