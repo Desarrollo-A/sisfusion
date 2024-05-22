@@ -197,5 +197,15 @@
 	  #modal_config_motivo{
                 z-index: 99!important;
             }
+
+
+
+	.btn-roundedP {
+		border-radius: 60%;
+		width: 120px;
+		height: 110px;
+		border: none;
+	}
+	
             
 </style>

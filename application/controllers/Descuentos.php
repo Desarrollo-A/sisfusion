@@ -1195,4 +1195,65 @@ class Descuentos extends CI_Controller
              echo json_encode($respuesta);
         }
 
+
+
+        public function descuentos_masivos()
+        {
+                if (!isset($_POST))
+                {    
+                echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+                }
+                else {
+                    
+                    if ($this->input->post("data") == "")
+                    {
+                    echo json_encode(array("status" => 400, "message" => "El archivo viene vacio."), JSON_UNESCAPED_UNICODE);
+                    }   
+                    else {
+
+                        // $decodedData = $this->jwt_actions->decodeData('4582', $data);
+                        $data = $this->input->post("data");
+                        $decodedData = json_decode($data);
+                        // var_dump($decodedData);
+
+                        
+                        if (count($decodedData) > 0) { // SE VALIDA QUE EL ARRAY AL MENOS TENGA DATOS
+                        
+                            echo('general ya entro al primero ');
+                            // $id_usuario = array();
+                            for ($i = 0; $i < count($decodedData); $i++) { 
+                                if(
+                                isset($decodedData[$i]->id_usuario) && 
+                                !empty($decodedData[$i]->id_usuario) && 
+                                isset($decodedData[$i]->monto) && 
+                                !empty($decodedData[$i]->monto) && 
+                                isset($decodedData[$i]->numero_pagos) && 
+                                !empty($decodedData[$i]->numero_pagos) &&
+                                isset($decodedData[$i]->montoConDescuentosSede) && 
+                                !empty($decodedData[$i]->montoConDescuentosSede) && 
+                                isset($decodedData[$i]->montoFinal) && 
+                                !empty($decodedData[$i]->montoFinal) && 
+                                isset($decodedData[$i]->comentario))
+                                {// inicio de llave if
+
+                                
+                                
+                                }// fin  llave del if
+                                else{
+
+
+
+                                }
+                            }
+                        echo json_encode(array("status" => 200, "message" => "Algún parámetro no viene informado."));
+                        }
+
+
+                    }
+                    
+                }
+        }
+
+
+
 }
