@@ -67,6 +67,7 @@ class HiddenField {
 class SelectField {
     constructor({ id, label, placeholder, data = [], value, width, required = false }) {
         this.id = id
+        this.required = required
 
         let options = []
 
@@ -105,17 +106,41 @@ class SelectField {
                     .data('size', '7')
                     .data('container', 'body')
                     .attr('title', placeholder)
-                    .prop('required', required)
+                    // .prop('required', required)
                     .append(options)
+                )
+                .append(
+                    $('<span />')
+                    .attr('id', `${id}_warning`)
+                    .addClass('text-danger h7 ml-1')
+                    .text('Debes escoger un elemento')
+                    .hide()
                 )
             )
 
-        //$(`#${id}`).trigger("change")
-        //$(`#${id} option[value='${value}']`).prop('selected', true);
-
         this.value = () => {
-            return $(`#${id}`).val()
+            return $(`#${this.id}`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`#${this.id}`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -126,80 +151,108 @@ class SelectField {
 }
 
 class FileField {
-    constructor({ id, label, placeholder, accept }) {
+    constructor({ id, label, placeholder, accept, required = false }) {
         this.id = id
+        this.required = required
 
         this.field = $('<div />')
             .addClass('col-md-12')
             .append(`<label class='control-label label-gral'>${label}</label>`)
             .append(
                 $('<div />')
-                    .addClass('file-gph')
+                .addClass('file-gph')
+                .append(
+                    $('<input />')
+                    .attr('id', `file-${id}`)
+                    .attr('name', `file-${id}`)
+                    .attr('type', 'hidden')
+                )
+                .append(
+                    $('<input />')
+                    .addClass('d-none')
+                    .attr('id', id)
+                    .attr('name', id)
+                    .attr('type', 'file')
+                    .attr('accept', accept)
+                    .change(function (e) {
+                        //console.log(e.target.files[0])
+
+                        let name = e.target.files[0].name
+                        let size = e.target.files[0].size / 1024
+                        let prefix = 'KB'
+
+                        if (size > 1024) {
+                            size = size / 1024
+                            prefix = 'MB'
+                        }
+
+                        $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
+
+                        if (accept) {
+                            // console.log(e.target.files[0].type)
+
+                            if (!accept.includes(e.target.files[0].type)) {
+                                alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
+                                $(`#${id}-name`).val('')
+                            }
+                        }
+                    })
+                )
+                .append(
+                    $('<input />')
+                    .addClass('file-name')
+                    .attr('id', `${id}-name`)
+                    .attr('type', 'text')
+                    .attr('placeholder', placeholder)
+                    .attr('readOnly', true)
+                )
+                .append(
+                    $('<label />')
+                    .addClass('upload-btn')
+                    .attr('for', id)
+                    .attr('type', 'text')
                     .append(
-                        $('<input />')
-                            .attr('id', `file-${id}`)
-                            .attr('name', `file-${id}`)
-                            .attr('type', 'hidden')
+                        $('<span />')
+                        .text('Seleccionar')
                     )
                     .append(
-                        $('<input />')
-                            .addClass('d-none')
-                            .attr('id', id)
-                            .attr('name', id)
-                            .attr('type', 'file')
-                            .attr('accept', accept)
-                            .change(function (e) {
-                                //console.log(e.target.files[0])
-
-                                let name = e.target.files[0].name
-                                let size = e.target.files[0].size / 1024
-                                let prefix = 'KB'
-
-                                if (size > 1024) {
-                                    size = size / 1024
-                                    prefix = 'MB'
-                                }
-
-                                $(`#${id}-name`).val(`${name} - ${size.toFixed(2)} ${prefix}`)
-
-                                if (accept) {
-                                    // console.log(e.target.files[0].type)
-
-                                    if (!accept.includes(e.target.files[0].type)) {
-                                        alerts.showNotification("top", "right", "No es admitible el tipo de archivo.", "danger")
-                                        $(`#${id}-name`).val('')
-                                    }
-                                }
-                            })
+                        $('<i />')
+                        .addClass('fas fa-folder-open')
                     )
-                    .append(
-                        $('<input />')
-                            .addClass('file-name')
-                            .attr('id', `${id}-name`)
-                            .attr('type', 'text')
-                            .attr('placeholder', placeholder)
-                            .attr('readOnly', true)
-                    )
-                    .append(
-                        $('<label />')
-                            .addClass('upload-btn')
-                            .attr('for', id)
-                            .attr('type', 'text')
-                            .append(
-                                $('<span />')
-                                    .text('Seleccionar')
-                            )
-                            .append(
-                                $('<i />')
-                                    .addClass('fas fa-folder-open')
-                            )
-                    )
+                )
+            )
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes seleccionar un archivo')
+                .hide()
             )
 
         this.value = () => {
             return $(`#${id}`)[0].files[0]
         }
 
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`#${this.id}`)[0].files[0]
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -210,8 +263,10 @@ class FileField {
 }
 
 class TextField {
-    constructor({ id, label, placeholder, width, required }) {
+    constructor({ id, label, placeholder, width, required = false }) {
         this.id = id
+        this.required = required
+
         this.field = $('<div />')
             .addClass(`col-lg-${width} mt-1`)
             .append(
@@ -229,10 +284,37 @@ class TextField {
                     .prop('required', required)
                     .attr('placeholder', placeholder)
             )
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger un elemento')
+                .hide()
+            )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`#${this.id}`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -275,31 +357,60 @@ class TextAreaField {
 }
 
 class NumberField {
-    constructor({ id, label, placeholder, value, width = 12, required }) {
+    constructor({ id, label, placeholder, value, width = 12, required = false }) {
         this.id = id
+        this.required = required
+
         this.field = $('<div />')
             .addClass(`col-lg-${width}`)
             .append(
                 $('<label />')
-                    .addClass('control-label')
-                    .attr('for', id)
-                    .text(label)
+                .addClass('control-label')
+                .attr('for', id)
+                .text(label)
             )
             .append(
                 $('<input />')
-                    .addClass(`form-control input-gral`)
-                    .attr('id', id)
-                    .attr('name', id)
-                    .attr('type', 'text')
-                    .attr('placeholder', placeholder)
-                    .prop('required', required)
-                    .val(value)
-                    .on('keypress', this.onlyNumbers)
+                .addClass(`form-control input-gral`)
+                .attr('id', id)
+                .attr('name', id)
+                .attr('type', 'text')
+                .attr('placeholder', placeholder)
+                .prop('required', required)
+                .val(value)
+                .on('keypress', this.onlyNumbers)
+            )
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger un elemento')
+                .hide()
             )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`#${this.id}`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -502,11 +613,12 @@ class OptionFieldAndView {
 
 
 class DateDelete {
-    constructor({ id, label, placeholder, value, width, required }) {
+    constructor({ id, label, placeholder, value, width, required = false }) {
         this.id = id
+        this.required = required
 
         this.field = $('<div />')
-        .addClass(`col-lg-${width} col-md-12`)
+        .addClass(`col-lg-${width} col-md-12 mb-1`)
         .append(
             $('<label />')
             .addClass('control-label label-gral')
@@ -515,7 +627,7 @@ class DateDelete {
         )
         .append(
             $('<div />')
-            .addClass('d-flex justify-content-between align-items-center mb-1')
+            .addClass('d-flex justify-content-between align-items-center mb-0')
             .append(
                 $('<input />')
                 .addClass('form-control input-gral datepicker')
@@ -561,10 +673,37 @@ class DateDelete {
                     )
             )
         )
+        .append(
+            $('<span />')
+            .attr('id', `${id}_warning`)
+            .addClass('text-danger h7 ml-1')
+            .text('Debes escoger un elemento')
+            .hide()
+        )
 
         this.value = () => {
             return $(`#${id}`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`#${this.id}`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -688,16 +827,25 @@ class Form {
     submit(event) {
         event.preventDefault()
 
+        let pass = true
         let data = new FormData()
         for (var i = 0; i < this.fields.length; i++) {
             let field = this.fields[i]
+
+            if (typeof field.validate === 'function'){
+                if(!field.validate()){
+                    pass = false
+                }
+            }
 
             if (field.value()) {
                 data.append(field.id, field.value())
             }
         }
 
-        this.onSubmit(data)
+        if(pass){
+            this.onSubmit(data)
+        }
     }
 
     hide() {
