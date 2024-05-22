@@ -40,6 +40,11 @@ function set_adeudo(data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -49,13 +54,22 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        return data.adOOAM
+        if(data.adeudoOOAM){
+            return formatter.format(data.adeudoOOAM)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
-        return data.adADM
+        if(data.adeudoADM){
+            return formatter.format(data.adeudoADM)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
-        return data.adGPH
+        if(data.adeudoGPH){
+            return formatter.format(data.adeudoGPH)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)

@@ -89,6 +89,11 @@ back_to_carta_auth = function (data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -97,9 +102,24 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: 'adOOAM' },
-    { data: 'adADM' },
-    { data: 'adGPH' },
+    { data: function(data){
+        if(data.adeudoOOAM){
+            return formatter.format(data.adeudoOOAM)
+        }
+        return 'Sin ingresar'
+    } },
+    { data: function(data){
+        if(data.adeudoADM){
+            return formatter.format(data.adeudoADM)
+        }
+        return 'Sin ingresar'
+    } },
+    { data: function(data){
+        if(data.adeudoGPH){
+            return formatter.format(data.adeudoGPH)
+        }
+        return 'Sin ingresar'
+    } },
     {
         data: function (data) {
             let inicio = new Date(data.fechaProceso)
