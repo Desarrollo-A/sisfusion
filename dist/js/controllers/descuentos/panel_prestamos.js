@@ -1437,3 +1437,8 @@ function mostrar(id){
     //$(document).on('input', '.monto', function () {
     //     verificar();
     // });
+
+
+
+
+    
