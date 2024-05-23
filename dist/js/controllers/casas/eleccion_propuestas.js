@@ -234,13 +234,13 @@ let columns = [
 
         switch(data.fechaElegida){
         case 1:
-            fecha = data.fechaFirma1
+            fecha = data.fechaFirma1.substring(0, 16)
             break
         case 2:
-            fecha = data.fechaFirma2
+            fecha = data.fechaFirma2.substring(0, 16)
             break
         case 3:
-            fecha = data.fechaFirma3
+            fecha = data.fechaFirma3.substring(0, 16)
             break
         }
 
