@@ -121,7 +121,12 @@ let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
     { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'aun no subido'
+    } },
     { data: function(data){
         let view_button = '';
         let parts = data.archivo.split('.');
