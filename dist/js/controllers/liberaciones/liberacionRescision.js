@@ -25,7 +25,7 @@ const newButton = (btnClass, title, action = '', data, icon) => {
     return CUSTOM_BTN;
 }
 
-const datatableButtons = (d) => {
+const datatableButtons = (d, type) => {
     const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
     const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
@@ -38,28 +38,37 @@ const datatableButtons = (d) => {
     
     let NO_BTN = '';
 
-    if (id_rol_general == 55) { // POSTVENTA
-        if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
-        if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
-        if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+    if (type === 2) {
+        if (d.expediente) return BTN_VER_DOC + BTN_INFO ;
+        if (!d.expediente) return BTN_INFO;
         return BTN_INFO;
     }
-    if (id_rol_general == 17) { // CONTRALORIA
-        if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
-        return BTN_INFO;
+
+    if (type === 1) {
+        if (id_rol_general == 55) { // POSTVENTA
+            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
+            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 17) { // CONTRALORIA
+            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 11 ) { // ADMINISTRACIÓN
+            if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 2) { // VENTAS
+            if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 12) { // CAJAS
+            if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
+            return BTN_INFO;
+        }
     }
-    if (id_rol_general == 11 ) { // ADMINISTRACIÓN
-        if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
-        return BTN_INFO;
-    }
-    if (id_rol_general == 2) { // VENTAS
-        if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
-        return BTN_INFO;
-    }
-    if (id_rol_general == 12) { // CAJAS
-        if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
-        return BTN_INFO;
-    }
+
     return NO_BTN;
 }
 
@@ -187,7 +196,7 @@ let liberacionesDataTable = $('#liberacionesDataTable').DataTable({
         },
         {
             data: function (d) {
-                return `<div class="d-flex justify-center">${datatableButtons(d)}</div>`;
+                return `<div class="d-flex justify-center">${datatableButtons(d, type)}</div>`;
             }
         }
     ],

@@ -133,10 +133,10 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <ul class="nav nav-tabs nav-tabs-cm">
                             <li class="active">
-                                <a class="nuevas1" href="#nuevas-1" id='nuevas1' role="tab" data-toggle="tab">Liberar lote</a>
+                                <a class="liberar" id='liberar' role="tab" data-toggle="tab">Liberar lote</a>
                             </li>
                             <li>
-                                <a class="proceso2" href="#proceso-1" id='proceso2'  role="tab"  data-toggle="tab">Seguimiento</a>
+                                <a class="seguimiento" id='seguimiento'  role="tab"  data-toggle="tab">Seguimiento</a>
                             </li>
                         </ul>
                         <div class="card no-shadow m-0">  <!-- card content -->

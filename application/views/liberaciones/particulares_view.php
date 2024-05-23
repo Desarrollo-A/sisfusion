@@ -86,7 +86,7 @@
                     </div>
                     <div class="modal-body pt-0">
                         <div id="extra-content-accion-modal"></div>
-                        <div class="col-md-12 mb-2 text-center comment">
+                        <div class="col-md-12 mb-2 comment">
                             <label class="control-label" id="labelComentarioAccionModal">
                                 <!-- Motivo del rechazo (opcional) -->
                             </label>
@@ -131,14 +131,21 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <ul class="nav nav-tabs nav-tabs-cm">
-                            <li class="active">
-                                <a class="nuevas1" href="#nuevas-1" id='nuevas1' role="tab" data-toggle="tab">Liberar lote</a>
-                            </li>
-                            <li>
-                                <a class="proceso2" href="#proceso-1" id='proceso2'  role="tab"  data-toggle="tab">Seguimiento</a>
-                            </li>
-                        </ul>
+                        <div class="pl-1">
+                            <ul class="nav nav-tabs nav-tabs-cm">
+                                <?php if($this->session->userdata('id_rol') == 55){?>
+                                <li class="active">
+                                    <a id='liberar' role="tab" data-toggle="tab">LIBERAR LOTE</a>
+                                </li>
+                                <?php } ?>
+                                <li  <?php if($this->session->userdata('id_rol') != 55){?> class="active"<?php } ?>>
+                                    <a id='pendientes'  role="tab"  data-toggle="tab">PENDIENTES</a>
+                                </li>
+                                <li>
+                                    <a id='proceso' role="tab" data-toggle="tab">EN PROCESO</a>
+                                </li>
+                            </ul>
+                        </div>
                         <div class="card no-shadow m-0">  <!-- card content -->
                             <div class="card-content">
                                 <div class="encabezadoBox">
@@ -177,7 +184,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="material-datatables">
+                                <div class="material-datatables hide">
                                     <table id="liberacionesDataTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
@@ -197,9 +204,12 @@
                                                 <th>DIRECTOR REGIONAL</th>
                                                 <th>DIRECTOR REGIONAL 2</th>
                                                 <th>FECHA DE APARTADO</th>
+                                                <th>PRECIO LISTA</th>
                                                 <th>SUPERFICIE</th>
                                                 <th>COSTO M2 FINAL</th>
-                                                <th>TOTAL</th>
+                                                <th>TOTAL CON DESCUENTOS</th>
+                                                <th>PRECIO M2 ASIGNADO</th>
+                                                <th>COMENTARIO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

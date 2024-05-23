@@ -1,254 +1,130 @@
-$(document).ready(function(){
-    $.post(`${general_base_url}Liberaciones/lista_proyecto`, function(data) {
-        for( let i = 0; i<data.length; i++){
-            const id = data[i]['idResidencial'];
-            const name = data[i]['descripcion'];
-            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
-        }
-        $("#proyecto").selectpicker('refresh');
-    }, 'json'); 
+let liberacionesDataTable;
 
-    if (id_rol_general != 55) datatableFn(0);
-    if (id_rol_general != 55) $('.toolbar').addClass('hide'); // Quito spinner  
+$(document).ready(function(){
+    //Manejamos la carga de inputs desde la carga del archivo de JS
+    if (id_rol_general == 55){ // Postventa inicia proceso
+        $.post(`${general_base_url}Liberaciones/lista_proyectos`, function(data) {
+            for( let i = 0; i<data.length; i++){
+                const id = data[i]['idResidencial'];
+                const name = data[i]['descripcion'];
+                $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+            $("#proyecto").selectpicker('refresh');
+        }, 'json');
+    }
+
+    // Pulsamos sobre el tab de proceso
+    if (id_rol_general != 55) {
+       $('#pendientes').click();
+    }
+
+    if (id_rol_general != 55) $('.toolbar').addClass('hide'); // Quito spinner
+    if (id_rol_general != 55) $('.material-datatables').removeClass('hide'); // Quito la tabla
 });
 
-$('#proyecto').change( function() {
-    const index_proyecto = $(this).val();
-    $("#condominio").html("");
-    $(document).ready(function(){
-        $.post(`${general_base_url}Liberaciones/lista_condominio/${index_proyecto}`, function(data) {
-            $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
-            for( let i = 0; i<data.length; i++){
-                const id = data[i]['idCondominio'];
-                const name = data[i]['nombre'];
-                $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#condominio").selectpicker('refresh');
-        }, 'json');
+// Pestaña de liberar lotes desde el primer paso.
+$(document).on("click", "#liberar", function () {
+    if ($('.toolbar').hasClass('hide')) $('.toolbar').removeClass('hide');
+    if (!$('.toolbar').hasClass('hide') && !$("#lote").val()) $('.material-datatables').addClass('hide');
+})
+
+$(document).on("click", "#pendientes", function () {
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    if (!$('.toolbar').hasClass('hide')) $('.toolbar').addClass('hide');
+    if ($('.toolbar').hasClass('hide')) $('.material-datatables').removeClass('hide'); // Quito la tabla
+
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/getLotesPendientesLiberacion`,
+        data: {tipoVenta: 1, idProcesoTipoLiberacion: 133},
+        cache: false,
+        success: function(rs) {
+            const res = JSON.parse(rs);
+            datatableFn(res, 1);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", error);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        }
     });
+})
+
+$(document).on("click", "#proceso", function () {
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    if (!$('.toolbar').hasClass('hide')) $('.toolbar').addClass('hide');
+    if ($('.toolbar').hasClass('hide')) $('.material-datatables').removeClass('hide'); // Quito la tabla
+    
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/getLotesEnProcesoLiberacion`,
+        data: {tipoVenta: 1, idProcesoTipoLiberacion: 133},
+        cache: false,
+        success: function(rs) {
+            const res = JSON.parse(rs);
+            datatableFn(res, 2);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", error);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        }
+    });
+})
+
+$('#proyecto').change(function() {
+    $("#condominio").html("");
+    $.post(`${general_base_url}Liberaciones/lista_condominios/${$('#proyecto').val()}`, function(data) {
+        $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idCondominio'];
+            const name = data[i]['nombre'];
+            $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#condominio").selectpicker('refresh');
+    }, 'json');
 });
 
 $('#condominio').change( function() {
     const index_condominio = $(this).val();
     $("#lote").html("");
-    $(document).ready(function(){
-        $.post(`${general_base_url}Liberaciones/listas_lote/${index_condominio}`, function(data) {
-            $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
-            for( let i = 0; i<data.length; i++){
-                const id = data[i]['idLote'];
-                const name = data[i]['nombreLote'];
-                $("#lote").append($('<option>').val(id).text(name.toUpperCase()));
-            }
-            $("#lote").selectpicker('refresh');
-        }, 'json');
-    });
-});
-
-const datatableFn = (loteValue) => {
-    const liberacionesDataTable = $('#liberacionesDataTable').DataTable({
-        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        width: '100%',
-        scrollX: true,
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'Liberación de lotes (Particulares)',
-            title:"Liberación de lotes (Particulares)",
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTabla[columnIdx] + ' ';
-                    }
-                }
-            }
-        },
-        {
-            extend: 'pdfHtml5',
-            text: '<i class="fa fa-file-pdf" aria-hidden=s"true"></i>',
-            className: 'btn buttons-pdf',
-            titleAttr: 'Liberación de lotes (Particulares)',
-            title:"Liberación de lotes (Particulares)",
-            orientation: 'landscape',
-            pageSize: 'LEGAL',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulosTabla[columnIdx] + ' ';
-                    }
-                }
-            }
-        }],
-        columnDefs: [
-            {
-                searchable: true,
-                visible: true
-            },
-            { 
-                orderable: true, 
-                targets: '_all' 
-            }
-        ],
-        pageLength: 4,
-        bAutoWidth: false,
-        fixedColumns: true,
-        ordering: true,
-        language: {
-            url: general_base_url+"static/spanishLoader_v2.json",
-            paginate: {
-                previous: "<i class='fa fa-angle-left'>",
-                next: "<i class='fa fa-angle-right'>"
-            }
-        },
-        order: [[15, 'DESC']],
-        destroy: true,
-        columns: [
-            {
-                data: (d) => {
-                    if (d.enProcesoLiberacion === 0 || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
-                    if (d.estatus_lib === 2) return `<span class="label" style="color: #B03A2E; background: #B03A2E18;}">RECHAZO</span>`;
-                    if (d.estatus_lib === 3) return `<span class="label" style="color: #DF7314; background: #DF731418;}">CORRECCIÓN</span>`;
-                    return 'SIN ESPECIFICAR';
-                }
-            },
-            { data: "nombreProcesoLiberacion" },
-            { data: "movimiento" },
-            { data: "nombreResidencial" },
-            { data: "nombreCondominio" },
-            { data: "nombreLote" },
-            { data: "idLote" },
-            { data: "cliente" },
-            { data: "referencia" },
-            { data: "nombreAsesor" },
-            { data: "nombreCoordinador" },
-            { data: "nombreGerente" },
-            { data: "nombreSubdirector" },
-            { data: "nombreRegional" },
-            { data: "nombreRegional2" },
-            { data: "fechaApartado" },
-            { data: "sup"},
-            {
-                data: function (d) {
-                    return d.costom2f == 'SIN ESPECIFICAR' ? d.costom2f : `${formatMoney(d.costom2f)}`;
-                }
-            },
-            {
-                data: function (d) {
-                    return `${formatMoney(d.total)}`
-                }
-            },
-            {
-                data: function (d) {
-                    return `<div class="d-flex justify-center">${datatableButtons(d)}</div>`;
-                }
-            }
-        ],
-        ajax: {
-            url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
-            dataSrc: "",
-            type: "POST",
-            cache: false,
-            data: {"tipoVenta": 1, 
-            idProcesoTipoLiberacion: 133, 
-            lote: loteValue},
-        },
-        initComplete: function () {
-            $('[data-toggle="tooltip"]').tooltip({
-                trigger: "hover"
-            });
+    $.post(`${general_base_url}Liberaciones/lista_lotes/${index_condominio}/${1}`, function(data) {
+        $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idLote'];
+            const name = data[i]['nombreLote'];
+            $("#lote").append($('<option>').val(id).text(name.toUpperCase()));
         }
-    });
-}
+        $("#lote").selectpicker('refresh');
+    }, 'json');
+});
 
 $('#lote').change( function() {
-    const loteValue = $(this).val();
-    datatableFn(loteValue);
-});
-
-/**
- * newButton function => Create a custom button with parameters
- *
- * @param {string} btnClass
- * @param {string} title
- * @param {string} action
- * @param {object} data
- * @param {string} icon
- * @returns {string} 
- */
-const newButton = (btnClass, title, action = '', data, icon) => {
-    const CUSTOM_BTN = `<button class='${btnClass}'
-        data-toggle='tooltip' 
-        data-placement='top'
-        title='${title.toUpperCase()}'
-        data-accion='${action}'
-        data-data='${JSON.stringify(data)}'>
-            <i class='${icon}'></i>
-        </button>`;
-
-    return CUSTOM_BTN;
-}
-
-const datatableButtons = (d) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
-    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
-    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
-    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    if ($("#lote").val() != '') {
+        $('#spiner-loader').removeClass('hide'); // Aparece spinner
+        const loteValue = $(this).val();
+        $("#lote").val(loteValue);
+        if ($('.material-datatables').hasClass('hide')) $('.material-datatables').removeClass('hide');
     
-    let NO_BTN = '';
-
-    if (id_rol_general == 55) { // POSTVENTA
-        if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
-        if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
-        if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
-        if (d.enProcesoLiberacion === 3 ) return BTN_AVANCE_P3 + BTN_VER_DOC + BTN_INFO;
-        return BTN_INFO; 
-    }
-    if (id_rol_general == 17) { // CONTRALORIA
-        if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
-        if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
-        return BTN_INFO;
-    }
-    if (id_rol_general == 12) { // CAJAS
-        if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
-        if (d.enProcesoLiberacion === 4) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;
-        return BTN_INFO;
-    }
-    return NO_BTN;
-}
-
-const fillInputs = () => {
-    const documentos = Object.freeze({
-        LIB_PARTICULARES: 130,
-    })
-
-    $catalogo = null;
-    switch ( id_rol_general ) {
-        case 130:
-            $catalogo = documentos.LIB_PARTICULARES;
-            break;
-        default:
-            break;
-    }
-
-    $.ajax({
-        url: "obtenerDocumentacionPorLiberacion",
-        type: "POST",
-        data: {catalogo: 31},
-        dataType: "json",
-        success: function(data) {
-            for (let i = 0; i < data.length; i++) {
-                if ([53, 54].includes(data[i]['id_opcion'])) $("#id_documento_liberacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        const values = { tipoVenta: 1, idProcesoTipoLiberacion: 133, lotes: loteValue }
+        
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+            data: values,
+            cache: false,
+            success: function(rs) {
+                const res = JSON.parse(rs);
+                datatableFn(res, 1);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX:", error);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
             }
-            $('#id_documento_liberacion').selectpicker('refresh');
-        }
-    });
-}
+        });
+    } 
+});
 
 $(document).on("change", "#archivo_liberacion", function () {
     const target = $(this);
@@ -301,7 +177,7 @@ $(document).on('click', '.btn-accion', async function(){
     if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) {
         content = `
             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mt-2 overflow-hidden">
-                <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*)</label>
+                <label class="control-label" for="id_documento_liberacion">Documento a adjuntar (*) ${d.expediente ? '<span style="color: red;">Se sustituirá el archivo previamente cargado</span>' : ''}</label>
                 <select id="id_documento_liberacion" name="id_documento_liberacion" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" title="Selecciona una opción" data-size="7" size="5" data-container="body" required></select>
             </div>
             <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12 mb-1">
@@ -365,13 +241,13 @@ $(document).on("click", "#btn-accion", async function (e) {
         archivo = $("#archivo_liberacion");
         
         // Select de tipo de archivo vacio
-        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Seleccione el tipo de archivo a adjuntar.", "warning");
+        if (tieneRescision === 0 && tieneAutorizacionDG === 0) return alerts.showNotification("top", "right", "Selecciona el tipo de archivo a adjuntar.", "warning");
         
         // Input sin archivo
         if (archivo.val().length === 0) return alerts.showNotification("top", "right", "Seleccione el archivo a adjuntar.", "warning");
 
         // Archivo incorrecto
-        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "El tipo de archivo es incorrecto", "warning");
+        if (!validateExtension(archivo[0].files[0].name.split('.').pop(), 'pdf, PDF')) return alerts.showNotification("top", "right", "Adjunta un archivo con formato correcto", "warning");
         
     }
     if ((d.enProcesoLiberacion === 3 )) { // POSTVENTA: Generar las condiciones de venta (precio, plazo).
@@ -380,10 +256,10 @@ $(document).on("click", "#btn-accion", async function (e) {
         comentario = ''; // El comentario no está habilitado para el proceso de liberación para el proceso 3
         
         // Input de precio sin monto
-        if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digite el nuevo precio por m<sup>2</sup> del lote.`, "warning");
+        if (precioLiberacion === '') return alerts.showNotification("top", "right", `Digita el nuevo precio por m<sup>2</sup> del lote.`, "warning");
 
          // Input de plazo sin valor
-         if (plazo === '') return alerts.showNotification("top", "right", "Digite el plazo.", "warning");
+         if (plazo === '') return alerts.showNotification("top", "right", "Digita el plazo.", "warning");
     }
 
     // Asignación de valores dependiendo el proceso
@@ -435,7 +311,7 @@ $(document).on("click", "#btn-accion", async function (e) {
         processData: false,
         success: function (data) {
             const res = JSON.parse(data);
-            console.log('Actualiza proceso', res)
+            console.log('Actualiza proceso', res);
             alerts.showNotification("top", "right", res.msg, res.code === 200 ? "success" : "warning");
             if (res.code === 500) return;
         },
@@ -570,25 +446,12 @@ $(document).on("click", "#btn-accion", async function (e) {
     $('#accion-modal').modal('hide');
     $('#btn-accion').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
-    liberacionesDataTable.ajax.reload();
-});
-
-const fillChangelog = (i, d) => {
-    let accion = 'Enviado a '
-    if (d.estatus_lib == '2') {
-        accion = 'Se regresó a:'
+    if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1 && proceso === 2) {
+        datatableFn([]);
+    }else {
+        $('#pendientes').click();
     }
-    $("#changelog").append('<li>\n' +
-  '            <a style="float: right">'+d.fecha_modificacion+'</a><br>\n' +
-  '            <a><b>Tipo de liberación:</b> '+ d.nombreConceptoLiberacion + '</a> \n' +
-  '            <br>\n' + 
-  '            <a><b>Estatus: </b> '+accion+d.nombreProcesoLiberacion.toLowerCase()+' </a>\n' +
-  '            <br>\n' +  
-  '            <a><b>Modificado por: </b> '+(d.nombreMod+' '+d.ap1_mod+ ' '+ d.ap2_mod).toUpperCase()+' </a>\n' +
-  '            <br>\n' +
-  '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
-      '</li>');
-}
+});
 
 $(document).on('click', '.btn-historico', async function(){
     $('.btn-historico').attr('disabled', true);  // Desactivo btn
@@ -636,6 +499,240 @@ $(document).on('click', '.btn-archivo', function () {
     $('.btn-archivo').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
+
+// DATATABLE
+const datatableFn = (ndata, type) => {
+    liberacionesDataTable = $('#liberacionesDataTable').DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Liberación de lotes (Particulares)',
+            title:"Liberación de lotes (Particulares)",
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
+                }
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden=s"true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Liberación de lotes (Particulares)',
+            title:"Liberación de lotes (Particulares)",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
+                }
+            }
+        }],
+        columnDefs: [
+            {
+                searchable: true,
+                visible: true
+            },
+            { 
+                orderable: true, 
+                targets: '_all' 
+            }
+        ],
+        pageLength: 4,
+        bAutoWidth: false,
+        fixedColumns: true,
+        ordering: true,
+        language: {
+            url: general_base_url+"static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        order: [[15, 'DESC']],
+        destroy: true,
+        columns: [
+            {
+                data: (d) => {
+                    if (d.enProcesoLiberacion === 0 || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
+                    if (d.estatus_lib === 2) return `<span class="label" style="color: #B03A2E; background: #B03A2E18;}">RECHAZO</span>`;
+                    if (d.estatus_lib === 3) return `<span class="label" style="color: #DF7314; background: #DF731418;}">CORRECCIÓN</span>`;
+                    return 'SIN ESPECIFICAR';
+                }
+            },
+            { data: "nombreProcesoLiberacion" },
+            { data: "movimiento" },
+            { data: "nombreResidencial" },
+            { data: "nombreCondominio" },
+            { data: "nombreLote" },
+            { data: "idLote" },
+            { data: "cliente" },
+            { data: "referencia" },
+            { data: "nombreAsesor" },
+            { data: "nombreCoordinador" },
+            { data: "nombreGerente" },
+            { data: "nombreSubdirector" },
+            { data: "nombreRegional" },
+            { data: "nombreRegional2" },
+            { data: "fechaApartado" },
+            {
+                data: function (d) {
+                    return `${formatMoney(d.precio)}`
+                }
+            },
+            { data: "sup"},
+            {
+                data: function (d) {
+                    return d.costom2f == 'SIN ESPECIFICAR' ? d.costom2f : `${formatMoney(d.costom2f)}`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `${formatMoney(d.total)}`
+                }
+            },
+            {
+                data: function (d) {
+                    return d.precioLiberacion === null ? 'SIN ASIGNAR' : `${formatMoney(d.precioLiberacion)}`;
+                }
+            },
+            { data: "comentario" },
+            {
+                data: function (d) {
+                    return `<div class="d-flex justify-center">${datatableButtons(d, type)}</div>`;
+                }
+            }
+        ],
+        data: ndata, // 4007
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        }
+    });
+}
+
+/**
+ * newButton function => Create a custom button with parameters
+ *
+ * @param {string} btnClass
+ * @param {string} title
+ * @param {string} action
+ * @param {object} data
+ * @param {string} icon
+ * @returns {string} 
+ */
+const newButton = (btnClass, title, action = '', data, icon) => {
+    const CUSTOM_BTN = `<button class='${btnClass}'
+        data-toggle='tooltip' 
+        data-placement='top'
+        title='${title.toUpperCase()}'
+        data-accion='${action}'
+        data-data='${JSON.stringify(data)}'>
+            <i class='${icon}'></i>
+        </button>`;
+
+    return CUSTOM_BTN;
+}
+
+const datatableButtons = (d, type) => {
+    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A POSTVENTA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
+    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
+    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
+    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
+    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    
+    let NO_BTN = '';
+
+    if (type === 2) {
+        if (d.expediente) return BTN_VER_DOC + BTN_INFO ;
+        if (!d.expediente) return BTN_INFO;
+        return BTN_INFO;
+    }
+
+    if (type === 1) {
+        if (id_rol_general == 55) { // POSTVENTA
+            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
+            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+            if (d.enProcesoLiberacion === 3 ) return BTN_AVANCE_P3 + BTN_VER_DOC + BTN_INFO;
+            return BTN_INFO; 
+        }
+        if (id_rol_general == 17) { // CONTRALORIA
+            if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
+            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 12) { // CAJAS
+            if (d.enProcesoLiberacion === 0 || d.enProcesoLiberacion === 1) return BTN_INFO;
+            if (d.enProcesoLiberacion === 4) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;
+            return BTN_INFO;
+        }
+        return NO_BTN;
+    }
+
+    return NO_BTN;
+}
+
+const fillInputs = () => {
+    const documentos = Object.freeze({
+        LIB_PARTICULARES: 130,
+    })
+
+    $catalogo = null;
+    switch ( id_rol_general ) {
+        case 130:
+            $catalogo = documentos.LIB_PARTICULARES;
+            break;
+        default:
+            break;
+    }
+
+    $.ajax({
+        url: "obtenerDocumentacionPorLiberacion",
+        type: "POST",
+        data: {catalogo: 31},
+        dataType: "json",
+        success: function(data) {
+            for (let i = 0; i < data.length; i++) {
+                if ([53, 54].includes(data[i]['id_opcion'])) $("#id_documento_liberacion").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            }
+            $('#id_documento_liberacion').selectpicker('refresh');
+        }
+    });
+}
+
+const fillChangelog = (i, d) => {
+    let accion = 'Enviado a '
+    if (d.estatus_lib == '2') {
+        accion = 'Se regresó a:'
+    }
+    let cambio = '';
+    if (d.estatus_lib == 1 && d.enProcesoLiberacion == 4 && d.concepto == 1) cambio = '<a><b>Cambió: </b> Precio de '+ formatMoney(d.precio) +' a ' + formatMoney(d.precioLiberacion) + ' </a>\n<br>\n';
+    $("#changelog").append('<li>\n' +
+  '            <a style="float: right">'+d.fecha_modificacion+'</a><br>\n' +
+  '            <a><b>Tipo de liberación:</b> '+ d.nombreConceptoLiberacion + '</a> \n' +
+  '            <br>\n' + 
+  '            <a><b>Estatus: </b> '+accion+d.nombreProcesoLiberacion.toLowerCase()+' </a>\n' +
+  '            <br>\n' +  cambio +
+  '            <a><b>Modificado por: </b> '+(d.nombreMod+' '+d.ap1_mod+ ' '+ d.ap2_mod).toUpperCase()+' </a>\n' +
+  '            <br>\n' +
+  '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
+      '</li>');
+}
 
 const generarTituloDocumento = (abreviaturaNombreResidencial, nombreLote, idLote, idCliente, tipoDocumento) => {
     let rama;

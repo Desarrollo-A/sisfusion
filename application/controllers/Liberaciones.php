@@ -13,8 +13,8 @@ class Liberaciones extends CI_Controller{
 
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
-		$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
+		//$rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
+        //$this->permisos_sidebar->validarPermiso($this->session->userdata('datos'),$rutaUrl[1],$this->session->userdata('opcionesMenu'));
     }
 
     public function validateSession() {
@@ -49,16 +49,16 @@ class Liberaciones extends CI_Controller{
     }
 
     /* QUERIES */
-    public function lista_proyecto() {
-        echo json_encode($this->Liberaciones_model->get_proyectos_lista()->result_array());
+    public function lista_proyectos() {
+        echo json_encode($this->Liberaciones_model->lista_proyectos()->result_array());
     }
 
-    public function lista_condominio($proyecto) {
-        echo json_encode($this->Liberaciones_model->get_condominios_lista($proyecto)->result_array());
+    public function lista_condominios($proyecto) {
+        echo json_encode($this->Liberaciones_model->lista_condominios($proyecto)->result_array());
     }
 
-    public function listas_lote($condominio) {
-        $data = $this->Liberaciones_model->get_lotes_lista($condominio)->result_array();
+    public function lista_lotes($condominio, $tipoVenta) {
+        $data = $this->Liberaciones_model->lista_lotes($condominio, $tipoVenta)->result_array();
         if($data != null) {
             echo json_encode($data);
         } else {
@@ -66,26 +66,69 @@ class Liberaciones extends CI_Controller{
         }
     }
     
+    // Solo para los que inician proceso de liberacion.
     public function getLotesParaLiberacion(){
         $tipoVenta = $this->input->post('tipoVenta');
-        $lote = $this->input->post('lote');
+        $lotes = $this->input->post('lotes');
+        $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
+
+        $filtroLotes = '';
+        if (isset($lotes)) $filtroLotes = "AND lo.idLote IN (".$lotes.")";
+ 
+        $condicion = '';
+        if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL)" .$filtroLotes; // POSTVENTA
+        }
+        if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL)" .$filtroLotes; // POSTVENTA
+        }
+        $data = $this->Liberaciones_model->getLotesParaLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion);
+
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    public function getLotesPendientesLiberacion(){
+        $tipoVenta = $this->input->post('tipoVenta');
         $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
  
         $condicion = '';
         if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib IN (1, 3)) AND lo.idLote = ".$lote; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1, 3))"; // POSTVENTA
             if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
             if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (4))"; // CAJAS
         }
         if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NULL OR pl.proceso_lib IN (1))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IN (1))"; // POSTVENTA
             if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib = (2))"; // CONTRALORÍA
             if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib = (3))"; // ADMINISTRACIÓN
             // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
             if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
             if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib = (5))"; // CAJAS
         }
-        $data = $this->Liberaciones_model->getLotesParaLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion, $lote);
+        $data = $this->Liberaciones_model->getLotesPendientesLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion);
+
+        echo json_encode($data, JSON_NUMERIC_CHECK);
+    }
+
+    public function getLotesEnProcesoLiberacion(){
+        $tipoVenta = $this->input->post('tipoVenta');
+        $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
+ 
+        $condicion = '';
+        if ($idProcesoTipoLiberacion == 133) { // Filtro de acuerdo al concepto de liberación: En este caso Particulares.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib NOT IN (1, 3))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (4))"; // CAJAS
+        }
+        if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib IS NULL OR pl.proceso_lib NOT IN (1))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (2))"; // CONTRALORÍA
+            if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (3))"; // ADMINISTRACIÓN
+            // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (4)) AND re.sede_residencial IN (".$this->session->userdata('id_sede').")"; // VENTAS SUBDIRECTOR
+            if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (5))"; // CAJAS
+        }
+        $data = $this->Liberaciones_model->getLotesEnProcesoLiberacion($idProcesoTipoLiberacion, $tipoVenta, $condicion);
 
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
