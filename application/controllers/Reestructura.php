@@ -739,6 +739,7 @@ class Reestructura extends CI_Controller{
             $documentacionOriginal = $this->Reestructura_model->obtenerDocumentacionOriginal($clienteAnterior->personalidad_juridica);
 
             $dataFusion = $this->Reestructura_model->getFusion($idLoteOriginal, 3);
+
             foreach ($dataFusion as $dataLote){
                 if($dataLote['origen'] == 1){
                     $dataUpdateLoteO = array();
@@ -792,20 +793,6 @@ class Reestructura extends CI_Controller{
             else{
                 $metrosGratuitos = $totalSupOrigen * 0.05;
                 $proceso = $totalSupDestino - $totalSupOrigen <= $metrosGratuitos ? 5 : 6;
-            }
-
-            foreach ($clienteAnteriores as $dataCliente){
-                $dataUpdateCliente= array();
-                if ($proceso == 6){
-                    $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
-                    $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
-                }
-
-                $dataUpdateCliente = array(
-                    'id_cliente' => $dataCliente['id_cliente'],
-                    'proceso' => $proceso,
-                );
-                array_push($arrayUpdateCliente, $dataUpdateCliente);
             }
 
             $total8P = floatval(($totalSupDestino - $totalSupOrigen ) - $metrosGratuitos) * ($sumPrecioM2Original / count($clienteAnteriores));
@@ -933,30 +920,6 @@ class Reestructura extends CI_Controller{
                 }
             }
 
-            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')){
-                $this->db->trans_rollback();
-
-                echo json_encode(array(
-                    'titulo' => 'ERROR',
-                    'resultado' => FALSE,
-                    'message' => 'Error al actualizar los clientes anteriores',
-                    'color' => 'danger'
-                ));
-                return;
-            }
-
-            if (!$this->General_model->updateBatch('clientes', $arrayUpdateCliente, 'id_cliente')) {
-                $this->db->trans_rollback();
-    
-                echo json_encode(array(
-                    'titulo' => 'ERROR',
-                    'resultado' => FALSE,
-                    'message' => 'Error al actualizar proceso para clientes del origen',
-                    'color' => 'danger'
-                ));
-                return;
-            }
-
             if (!$this->General_model->updateBatch('lotes', $arrayUpdateLoteO, 'idLote')) {
                 $this->db->trans_rollback();
     
@@ -1018,30 +981,15 @@ class Reestructura extends CI_Controller{
             }
             
             if($esquemaAnterior){
-                $planComision == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66);
+                $planComision = $proceso == 3 ? 64 : (($proceso == 2 || $proceso == 5) ? 65 : 66);
             }
             else{
-                $planComision == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
+                $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
             }
 
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
             $idClienteInsert = $clienteNuevo[0]['lastId'];
             if (!$idClienteInsert) {
-                $this->db->trans_rollback();
-                echo json_encode(array(
-                    'titulo' => 'ERROR',
-                    'resultado' => FALSE,
-                    'message' => 'Error al dar de alta el cliente, por favor verificar la transacción.',
-                    'color' => 'danger'
-                ));
-                return;
-            }
-
-            $dataUpdateCliente = array(
-                'proceso' => $proceso,
-            );
-
-            if (!$this->General_model->updateRecord("clientes", $dataUpdateCliente, "id_cliente", $idClienteAnterior)){
                 $this->db->trans_rollback();
                 echo json_encode(array(
                     'titulo' => 'ERROR',
@@ -3360,8 +3308,8 @@ class Reestructura extends CI_Controller{
 
     public function regresoPreproceso(){
         $preproceso = $this->input->post("preproceso");
-        $juridico = $this->input->post("juridico"); // banderas de si solo juridico o contraloria
-        $contraloria = $this->input->post("contraloria"); // banderas de si solo juridico o contraloria
+        $juridico = $this->input->post("juridico");
+        $contraloria = $this->input->post("contraloria");
         $idLotePv = $this->input->post("idLote");
         $idCliente = $this->input->post("idCliente");
         $comentario = $this->input->post("comentario");
@@ -3428,7 +3376,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado el lote al preproceso ';
+            $response["message"] = 'Se ha regresado el lote al preproceso ' . $preproceso;
         }
         else{
             $this->db->trans_rollback();
@@ -3504,7 +3452,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado la fusión al preproceso ';
+            $response["message"] = 'Se ha regresado la fusión al preproceso ' . $preproceso;
         }
         else{
             $this->db->trans_rollback();
