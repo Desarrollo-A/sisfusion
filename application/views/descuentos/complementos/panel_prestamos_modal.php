@@ -89,6 +89,39 @@
 			</div>
 		</div>
 
+
+
+
+		<div class="modal fade" id="ModalPausar" tabindex="-1" role="dialog" aria-labelledby="ModalPausar" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
+						<h4 class="modal-title">Préstamos Pausar/Despausar</h4>
+					</div>
+					<form nombre="PausarForma" id="PausarForma" >
+					<div class="modal-body">
+						<div class="form-group row">
+							
+							<div class="col-md-12">
+							
+								<label class="control-label">Descripción(<b class="text-danger">*</b>)</label>
+								<textarea id="descripcionPausar" name="descripcionPausar" class="text-modal" rows="3"></textarea>
+							</div>	
+							<input class="form-control hidden input-gral" name="prestamoIdPausar"  id="prestamoIdPausar" style="display:block;"  readonly>
+							<input class="form-control hidden input-gral" name="estatusP" id="estatusP" style="display:block;"  readonly>
+
+						</div>
+					</div>
+						<div class="modal-footer">     
+							<button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>	
+							<button  type="submit" id="addPausar" class="btn btn-primary addPausar">Aceptar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 		<div class="modal fade" id="ModalEdit" tabindex="-1" role="dialog" aria-labelledby="ModalEdit" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content">
@@ -229,5 +262,68 @@
                 </div>
             </div>
         </div>
+
+		
+		<div class="modal fade modal-alertas" id="modal_plantilla_descuentos" name="modal_plantilla_descuentos" role="dialog">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h3 class="modal-title">Platillas de para préstamos.</h3>
+                    </div>
+                    <div class="modal-body">
+						<div class="row botones_plantilla" id="botones_plantilla" name="botones_platilla">
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+                        	    <button class="btn-roundedP fa-5x " style=" color: #0067d4;"  id="downloadFile" name="downloadFile" title="Descargar plantilla">
+									<i class="fas fa-download"></i>
+								</button>
+                        	</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+                        		<button class="btn-roundedP fa-5x " style=" color: #0067d4;" name="uploadFile" id="uploadFile" title="Subir plantilla" data-toggle="modal" data-target="#uploadModal">
+									<i class="fas fa-upload"></i>
+								</button>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+								<br>
+								<br>
+								<div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">Descargar platilla:
+								</div>
+							</div>
+							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+								<br>
+								<br>
+								<div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">
+									Subir platilla:
+								</div>
+							</div>
+						</div>
+						<!-- subir platilla  -->
+						<div class="row hide"  id="subir_platilla_div" name="subir_platilla_div">
+							<form method="post" id="form_prestamo_plantilla">
+								<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+									<label class="label"  style="color: #000;">Platilla de alta de préstamos</label>
+									<span class="small text-gray textDescripcion" id="textDescripcion" name="textDescripcion">
+										Revisar la platilla para evitar errores en la creación, al finalizar puedes revisarlos en la tabla. 
+									</span>
+								</div>
+								<div class="file-gph col-xs-5 col-sm-5 col-md-5 col-lg-5">
+									<input class="d-none" type="file" id="subir_platilla" onchange="changeName(this)" name="subir_platilla"  >
+									<input class="file-name overflow-text" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+									<label class="upload-btn w-auto" for="subir_platilla"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+								</div>
+						</div>
+						<!-- fin de subir factutra -->
+					</div>
+                    <div class="modal-footer" style="padding-top:15px;">
+
+						<button type="button"  class="btn btn-danger btn-simple" data-dismiss="modal" >Cancelar</button>	
+						<button type="submit" id="btn_platilla_sub" class="btn btn-primary">Subir </button>
+
+					</div>
+					</form>
+                </div>
+            </div>
+        </div>
+
 
         

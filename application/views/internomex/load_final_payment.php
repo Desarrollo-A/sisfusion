@@ -133,8 +133,8 @@
                                                     <input class="d-none find-results" type="radio" disabled="true" id="two">
                                                     <label for="two" class="w-50">Consultar</label>
                                                 <?php } else { ?>
-                                                    <input class="d-none" type="radio" name="radio" id="one" disabled>
-                                                    <label for="one" class="w-50" disabled>Cargar</label>
+                                                    <input class="d-none" type="radio" name="radio" id="one" >
+                                                    <label for="one" class="w-50" >Cargar</label>
                                                     <input class="d-none find-results" type="radio" name="radio" id="two">
                                                     <label for="two" class="w-50" checked>Consultar</label>
                                                 <?php } ?>

@@ -509,13 +509,14 @@ class Descuentos_model extends CI_Model {
                 $cmd = "SELECT * FROM opcs_x_cats  WHERE id_catalogo = 128 AND estatus = 1";
                 $query = $this->db->query($cmd );   
                 $datos["TODOS"] = $query->result_array();
-                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo
+                $cmd2 = "SELECT opcx.id_opcion , ha.id_usuario,ha.id_anticipo,opcx.nombre,opcx.estatus  ,opcx.id_catalogo,
+                ha.comentario as comentario_ha
                 FROM  opcs_x_cats opcx 
                 INNER  JOIN historial_anticipo ha ON ha.proceso = opcx.id_opcion  and opcx.id_catalogo = 128
                 where ha.id_usuario = $usuario";
                 $datos["USUARIO"]  = $this->db->query($cmd2  )->result_array();   
                 
-                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,
+                $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,us.forma_pago,
                 ant.comentario,ant.estatus,ant.proceso,ant.impuesto,ant.fecha_registro,
                 ant.prioridad,ant.evidencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre_usuario
                 FROM anticipo ant
@@ -530,12 +531,13 @@ class Descuentos_model extends CI_Model {
             }
 
 
-            public function solicitudes_por_aticipo (){
-                $usuario =  $this->session->userdata('id_usuario');
-
+            public function solicitudes_por_aticipo ($bandera = ''){
+                $idUsu = intval($this->session->userdata('id_usuario')); 
                 $cmd = "DECLARE @user INT 
-                SELECT @user = $usuario 
-                SELECT u.id_usuario, u.id_rol, UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                SELECT @user = $idUsu 
+                SELECT u.id_usuario, u.id_rol,
+                FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+                UPPER(opcs_x_cats.nombre) AS puesto, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
                 AS nombre, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
@@ -560,13 +562,45 @@ class Descuentos_model extends CI_Model {
                 return $query->result_array();
                 
             }
+            public function solicitudes_generales_reporte(){
 
+                $usuario =  $this->session->userdata('id_usuario');
+                
+                $cmd = "SELECT u.id_usuario, u.id_rol,forma.nombre as nombre_forma_pago, u.forma_pago ,
+				UPPER(opcs_x_cats.nombre) AS puesto, ha.fecha_movimiento,
+				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
+				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
+                UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
+                CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
+                ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
+                u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
+                FROM usuarios u
+                INNER JOIN anticipo ant ON u.id_usuario =ant.id_usuario 
+                INNER JOIN opcs_x_cats ON u.id_rol = opcs_x_cats.id_opcion and id_catalogo = 1
+                INNER JOIN sedes s ON CAST(s.id_sede AS VARCHAR(45)) = CAST(u.id_sede AS VARCHAR(45))
+                INNER JOIN usuarios us ON us.id_usuario= u.id_lider
+                INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
+                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+				INNER JOIN opcs_x_cats forma ON forma.id_catalogo  = 16 and forma.id_opcion = u.forma_pago 
+                LEFT  JOIN historial_anticipo ha ON ha.id_anticipo = ant.id_anticipo and ha.proceso = 3 
+				where u.id_rol in(1,2,3,7,9) 
+				order by ha.fecha_movimiento
+                ";
+
+                $query = $this->db->query($cmd);
+                return $query->result_array();
+            } 
 
             public function solicitudes_generales_dc(){
+
+                $usuario =  $this->session->userdata('id_usuario');
+                
                 $cmd = "SELECT u.id_usuario, u.id_rol, 
 				UPPER(opcs_x_cats.nombre) AS puesto, 
 				CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno)
-                AS nombre, 
+                AS nombre,  FORMAT(ant.monto, 'C', 'es-MX') AS monto_formateado,
 				CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS jefe_directo, u.telefono,
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
@@ -581,7 +615,8 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
                 where u.id_rol in(1,2,3,7,9) 
-                AND ant.proceso in (3)";
+                AND ant.proceso in (3)
+                ";
 
                 $query = $this->db->query($cmd);
                 return $query->result_array();
@@ -600,6 +635,98 @@ class Descuentos_model extends CI_Model {
         $query = $this->db->query($cmd);
         return $query->result();
     }
+
+
+
+
+
+        function leerxml( $xml_leer, $cargar_xml ){
+            $str = '';
+            if( $cargar_xml ){
+                rename( $xml_leer, "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                $str = file_get_contents( "./UPLOADS/XML_Anticipo/documento_temporal.txt" );
+                if( substr ( $str, 0, 3 ) == 'o;?' ){
+                    $str = str_replace( "o;?", "", $str );
+                    file_put_contents( './UPLOADS/XML_Anticipo/documento_temporal.txt', $str );
+                }
+                rename( "./UPLOADS/XML_Anticipo/documento_temporal.txt", $xml_leer );
+            }
+            libxml_use_internal_errors(true);
+            $xml = simplexml_load_file( $xml_leer, null, true );
+            $datosxml = array(
+                "version" => $xml ->xpath('//cfdi:Comprobante')[0]['Version'],
+                "regimenFiscal" => $xml ->xpath('//cfdi:Emisor')[0]['RegimenFiscal'],
+                "formaPago" => $xml -> xpath('//cfdi:Comprobante')[0]['FormaPago'],
+                "usocfdi" => $xml -> xpath('//cfdi:Receptor')[0]['UsoCFDI'],
+                "metodoPago" => $xml -> xpath('//cfdi:Comprobante')[0]['MetodoPago'],
+                "claveUnidad" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveUnidad'],
+                "unidad" => $xml -> xpath('//cfdi:Concepto')[0]['Unidad'],
+                "claveProdServ" => $xml -> xpath('//cfdi:Concepto')[0]['ClaveProdServ'],
+                "descripcion" => $xml -> xpath('//cfdi:Concepto')[0]['Descripcion'],
+                "subTotal" => $xml -> xpath('//cfdi:Comprobante')[0]['SubTotal'],
+                "total" => $xml -> xpath('//cfdi:Comprobante')[0]['Total'],
+                "rfcemisor" => $xml -> xpath('//cfdi:Emisor')[0]['Rfc'],
+                "nameEmisor" => $xml -> xpath('//cfdi:Emisor')[0]['Nombre'],
+                "rfcreceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Rfc'],
+                "namereceptor" => $xml -> xpath('//cfdi:Receptor')[0]['Nombre'],
+                "TipoRelacion"=> $xml->xpath('//@TipoRelacion'),
+                "uuidV" =>$xml->xpath('//@UUID')[0],
+                "fecha"=> $xml -> xpath('//cfdi:Comprobante')[0]['Fecha'],
+                "folio"=> $xml -> xpath('//cfdi:Comprobante')[0]['Folio'],
+            );
+            $datosxml["textoxml"] = $str;
+            return $datosxml;
+        }
+
+
+        function verificar_uuid( $uuid ){
+            return $this->db->query("SELECT * FROM facturas_anticipos WHERE uuid = '".$uuid."'");
+        }
+
+
+
+        function insertar_factura( $id_anticipo, $datos_factura,$usuarioid){
+            $VALOR_TEXT = $datos_factura['textoxml'];
+            $data = array(
+                "fecha_factura"  => $datos_factura['fecha'],
+                "folio_factura"  => $datos_factura['folio'],
+                "descripcion" => $datos_factura['descripcion'],
+                "subtotal" => $datos_factura['subTotal'],
+                "total"  => $datos_factura['total'],
+                "metodo_pago"  => $datos_factura['metodoPago'],
+                "uuid" => $datos_factura['uuidV'],
+                "nombre_archivo" => $datos_factura['nombre_xml'],
+                "id_usuario" => $usuarioid,
+                "id_anticipo" => $id_anticipo,
+                "forma_pago" => $datos_factura['formaPago'],
+                "cfdi" => $datos_factura['usocfdi'],
+                "unidad" => $datos_factura['claveUnidad'],
+                "claveProd" => $datos_factura['claveProdServ'],
+                "fecha_creacion"  => date("Y-m-d H:i:s"),
+                "fecha_ingreso"  => date("Y-m-d H:i:s"),
+                "regimen" => $datos_factura['regimenFiscal'],
+                "bandera" => 0
+                
+                
+            );
+            return $this->db->insert("facturas_anticipos", $data);
+        }
+
+    public function pausar_prestamo($arrayUpdate, $clave){
+        try {
+            $this->db->WHERE('id_prestamo', $clave);
+            
+            if($this->db->update('prestamos_aut', $arrayUpdate))
+            {
+                return TRUE;
+            }else{
+                return FALSE;
+            }               
+        }
+        catch(Exception $e) {
+            return $e->getMessage();
+        }  
+    } 
 
 
 }
