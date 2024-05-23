@@ -430,9 +430,10 @@ class NumberField {
 }
 
 class OptionField {
-    constructor({ id, label, placeholder, data, value, style, check }) {
+    constructor({ id, label, placeholder, data, value, style, check, required = false }) {
         this.id = id
         this.selected = value
+        this.required = required
 
         let options = []
         for (const option of data) {
@@ -454,6 +455,7 @@ class OptionField {
                             .attr('id', `${id}_${option.value}`)
                             .attr('name', id)
                             .val(option.value)
+                            .on('change', () => this.validate())
                         )
                         .append(
                             $('<span />')
@@ -494,11 +496,38 @@ class OptionField {
                     .text(label)
             )
             .append(options)
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger una opcion')
+                .hide()
+            )
 
         this.value = () => {
             //return $(`#${id}`).val()
             return $(`input[name="${id}"]:checked`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`input[name="${this.id}"]:checked`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -513,9 +542,10 @@ class OptionField {
 }
 
 class OptionFieldAndView {
-    constructor({ id, label, placeholder, data, value, style, onClick, title }) {
+    constructor({ id, label, placeholder, data, value, style, onClick, title, required = false }) {
         this.id = id
         this.selected = value
+        this.required = required
 
         let options = []
         for (const option of data) {
@@ -540,6 +570,7 @@ class OptionFieldAndView {
                                 .attr('name', id)
                                 //.attr('checked', 'checked')
                                 .val(option.value)
+                                .on('change', () => this.validate())
                             )
                             .append(
                                 $('<span />')
@@ -578,11 +609,38 @@ class OptionFieldAndView {
                     .text(label)
             )
             .append(options)
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger un elemento')
+                .hide()
+            )
 
         this.value = () => {
             //return $(`#${id}`).val()
             return $(`input[name="${id}"]:checked`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`input[name="${this.id}"]:checked`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
