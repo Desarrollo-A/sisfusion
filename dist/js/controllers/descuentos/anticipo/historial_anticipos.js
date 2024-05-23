@@ -1,29 +1,29 @@
 let titulosInventario = [];
-$('#tabla_anticipo_revision_dc thead tr:eq(0) th').each(function (i) {
+$('#historial_general thead tr:eq(0) th').each(function (i) {
 
         var title = $(this).text();
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
         $('input', this).on('keyup change', function () {
-            if ($('#tabla_anticipo_revision_dc').DataTable().column(i).search() !== this.value)
-                $('#tabla_anticipo_revision_dc').DataTable().column(i).search(this.value).draw();
+            if ($('#historial_general').DataTable().column(i).search() !== this.value)
+                $('#historial_general').DataTable().column(i).search(this.value).draw();
         });
 
 });
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
-$("#tabla_anticipo_revision_dc").ready(function () {
-    tabla_9 = $("#tabla_anticipo_revision_dc").DataTable({
+$("#historial_general").ready(function () {
+    tabla_9 = $("#historial_general").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
         buttons: [{
             extend: 'excelHtml5',
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Registro estatus 9',
-            title: "Registro estatus 9",
+            titleAttr: 'Reporte anticipo',
+            title: "Reporte anticipo",
             exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                columns: [0,1, 2, 3, 4, 5, 7, 8, 9,10,11],
                 format: {
                     header: function (d, columnIdx) {
                         return ' ' + titulosInventario[columnIdx - 1] + ' ';
@@ -52,33 +52,52 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 
         { data: 'puesto' },
         { data: 'sede' },
-        { data: 'monto_formateado' },
 
+        { data: 'monto_formateado' },
         { data: 'comentario' },
+        { 
+            data: function( d){         
+                const letras = d.comentario.split(" ");
+                if(letras.length <= 4)
+                {
+                    return '<p class="m-0">'+d.comentario+'</p>';
+                }else{
+                    
+                    letras[2] = undefined ? letras[2] = '' : letras[2];
+                    letras[3] = undefined ? letras[3] = '' : letras[3];
+                    return `    
+                        <div class="muestratexto${d.id_anticipo}" id="muestratexto${d.id_anticipo}">
+                            <p class="m-0">${letras[0]} ${letras[1]} ${letras[2]} ${letras[3]}....</p> 
+                            <a href='#' data-toggle="collapse" data-target="#collapseOne${d.id_anticipo}" 
+                                onclick="esconder(${d.id_anticipo})" aria-expanded="true" aria-controls="collapseOne${d.id_anticipo}">
+                                <span class="lbl-blueMaderas">Ver más</span> 
+                                
+                            </a>
+                        </div>
+                        <div id="collapseOne${d.id_anticipo}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                ${d.comentario}</p> 
+                                <a href='#'  data-toggle="collapse" data-target="#collapseOne${d.id_anticipo}" 
+                                    onclick="mostrar(${d.id_anticipo})" aria-expanded="true" aria-controls="collapseOne${d.id_anticipo}">
+                                    <span class="lbl-blueMaderas">Ver menos</span> 
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+        },
+        
+        { data: 'fecha_movimiento' },
         { data: 'proceso' },
+
         { data: 'prioridad_nombre' },
+        { data: 'nombre_forma_pago' },
+        
+            
         { 
             data: function (d) {    
             var botonesModal = '';
-            
-            if(d.id_proceso == 3 )
-            {
-                
-                botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
-                data-monto="${d.monto}"
-                data-name="${d.nombre}" class="btn-data btn-green aceptar_anticipo" title="Continuar Anticipo">
-                <i class="fas fa-forward"></i>
-                </button>`;
-                botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
-                data-monto="${d.monto}"
-                data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
-                class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
-                <i class="fas fa-stop"></i>
-                </button>`;
-                
-            }
             botonesModal += `
             <button href="#" value="${d.id_anticipo}" data-name="${d.nombre}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
                 <i class="fas fa-info"></i>
@@ -89,28 +108,31 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 
             ],
         columnDefs: [{
+            
             defaultContent: "Sin especificar",
-            targets: "_all",
+            // targets: "_all",
+            targets: [5], visible: false,
             searchable: true,
             orderable: false
         }],
         ajax: {
-            url: `${general_base_url}Descuentos/solicitudes_generales_dc`,
+            url: `${general_base_url}Descuentos/solicitudes_generales_reporte`,
             dataSrc: "",
             type: "POST",
             cache: false,
-            data: function (d) {
+            data :{
+                bandera : 1,
             }
         },
         order: [[1, 'asc']]
     });
 
-    $('#tabla_anticipo_revision_dc').on('draw.dt', function () {
+    $('#historial_general').on('draw.dt', function () {
         $('[data-toggle="tooltip"]').tooltip({
             trigger: "hover"
         });
     });
-    $('#tabla_anticipo_revision_dc tbody').on('click', '.delete-anticipo', function () {
+    $('#historial_general tbody').on('click', '.delete-anticipo', function () {
         const idAnticipo = $(this).val();
         const monto1 = $(this).attr("data-monto");
         const id_usuario = $(this).attr("data-id_usuario");
@@ -140,7 +162,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         $("#myModalDelete").modal();
     });
 
-    $('#tabla_anticipo_revision_dc tbody').on('click', '.aceptar_anticipo', function () {
+    $('#historial_general tbody').on('click', '.aceptar_anticipo', function () {
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
         const id_usuario = $(this).attr("data-id_usuario");
@@ -201,7 +223,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
     });
 
 
-    $('#tabla_anticipo_revision_dc tbody').on('click', '.aceptar_anticipo_confirmar', function () {
+    $('#historial_general tbody').on('click', '.aceptar_anticipo_confirmar', function () {
         
         const idAnticipo1 = $(this).val();
         const nombreUsuario1 = $(this).attr("data-name");
@@ -266,7 +288,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 				<button  type="submit" name="Activo_aceptar_confirmar"  id="Activo_aceptar_confirmar" class="btn btn-primary">Aceptar</button>`);
         $("#myModalAceptar_subir").modal();
     });
-    $("#tabla_anticipo_revision_dc tbody").on("click", ".consultar_logs", function(e){
+    $("#historial_general tbody").on("click", ".consultar_logs", function(e){
         $('#spiner-loader').removeClass('hide');
         const idAnticipo = $(this).val();
         const nombreUsuario = $(this).attr("data-name");
@@ -277,7 +299,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
         id_pago = $(this).val();
         lote = $(this).attr("data-value");
 
-        changeSizeModal('modal-md');
+        // changeSizeModal('modal-md');
         appendBodyModal(`<div class="modal-body">
                 <div role="tabpanel">
                     <ul>
@@ -365,7 +387,7 @@ $("#form_aceptar").on('submit', function (e) {
             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
             $('#myModalAceptar').modal('hide')
             document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
+            $('#historial_general').DataTable().ajax.reload(null, false);
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
@@ -401,7 +423,7 @@ $("#form_subir").on('submit', function (e) {
             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
             $('#myModalAceptar').modal('hide')
             document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
+            $('#historial_general').DataTable().ajax.reload(null, false);
             $('#form_aceptar').trigger('reset');
         },
         error: function () {
@@ -442,7 +464,7 @@ $("#form_delete").on('submit', function (e) {
             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
             $('#myModalDelete').modal('hide')
             document.getElementById("form_delete").reset();
-            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
+            $('#historial_general').DataTable().ajax.reload(null, false);
             $('#form_delete').trigger('reset');
         },
         error: function () {

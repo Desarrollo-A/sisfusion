@@ -1,6 +1,6 @@
 let titulosInventario = [];
 $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
-    if (i != 0) {
+   
         var title = $(this).text();
         titulosInventario.push(title);
         $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
@@ -8,7 +8,7 @@ $('#tabla_anticipo_revision thead tr:eq(0) th').each(function (i) {
             if ($('#tabla_anticipo_revision').DataTable().column(i).search() !== this.value)
                 $('#tabla_anticipo_revision').DataTable().column(i).search(this.value).draw();
         });
-    }
+    
 });
 var getInfo1 = new Array(6);
 var getInfo3 = new Array(6);
@@ -52,8 +52,9 @@ $("#tabla_anticipo_revision").ready(function () {
 
         { data: 'puesto' },
         { data: 'sede' },
-        { data: 'monto' },
+        { data: 'monto_formateado' },
 
+        { data: 'comentario' },
         { data: 'comentario' },
         { data: 'proceso' },
         { data: 'prioridad_nombre' },
@@ -67,7 +68,10 @@ $("#tabla_anticipo_revision").ready(function () {
                 <i class="fas fa-forward"></i>
                 </button>`;
                 botonesModal += `
-                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
+                <button href="#" value="${d.id_anticipo}" data-id_usuario="${d.id_usuario}" 
+                data-anticcipo="${d.id_anticipo}" data-name="${d.nombre}" 
+                data-monto="${d.monto}"
+                class="btn-data btn-warning delete-anticipo" title="Detener Anticipo">
                 <i class="fas fa-stop"></i>
                 </button>`;
             }else if(d.id_proceso == 3 )
@@ -119,22 +123,31 @@ $("#tabla_anticipo_revision").ready(function () {
     });
     $('#tabla_anticipo_revision tbody').on('click', '.delete-anticipo', function () {
         const idAnticipo = $(this).val();
+        const monto1 = $(this).attr("data-monto");
+        const id_usuario = $(this).attr("data-id_usuario");
         const nombreUsuario = $(this).attr("data-name");
         const Modalbody = $('#myModalDelete .modal-body');
         const Modalfooter = $('#myModalDelete .modal-footer');
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
-            <input type="hidden" value="${idAnticipo}" name="idAnticipo" id="idAnticipo"> 
-            <h4>¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
+            <h4 class=" center-align">¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
             </div>
+            <div class="form-group col-md-12 ">
+                    
+                <input  type="hidden" value="${monto1}" name="monto" id="monto">
+            </div>
+            <div class="form-group">
+                <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
+            </div>
             `);
         Modalfooter.append(`
                 <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
+				<button  type="submit" name="disper_btn"  id="detener_adelanto" class="btn btn-primary">Aceptar</button>`);
         $("#myModalDelete").modal();
     });
 
@@ -214,9 +227,9 @@ $("#tabla_anticipo_revision").ready(function () {
         Modalbody.append(`
             <input type="hidden" value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
 
-            <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
+            <h4 class="center-align">¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
-                <label class="label control-label">Prioridad</label>
+                <label class="label  control-label  center-align">Prioridad</label>
 
                 <div class="row aligned-row d-flex align-end pt-3" style="display: flex; justify-content: center"> 
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -270,7 +283,7 @@ $("#tabla_anticipo_revision").ready(function () {
 
             <h4>¿Ésta seguro que desea aceptar el Anticipo de ${nombreUsuario1}?</h4>
             <div class="form-group">
-                <label class="label control-label">Prioridad</label>
+                <label class="label center-align control-label">Prioridad</label>
 
                 <div class="row aligned-row  col-md-12  " style=" justify-content: center"> 
                     <div id="selectorModo" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -413,39 +426,78 @@ function changeName(e){
     relatedTarget[0].value = fileName;
 }
 
-$("#form_aceptar").on('submit', function (e) {
+// $("#form_aceptar").on('submit', function (e) {
 
-    e.preventDefault();
+//     e.preventDefault();
     
-    let formData = new FormData(document.getElementById("form_aceptar"));
-    var seleccion = obtenerModoSeleccionado();
-    formData.append("proceso", 3);
-    formData.append("seleccion", seleccion);
-    $.ajax({
-        url: 'anticipo_update_generico',
-        data: formData,
-        method: 'POST',
-        contentType: false,
-        cache: false,
-        processData: false,
-        dataType: 'JSON',
-        success: function (data) {
-            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
-            $('#myModalAceptar').modal('hide')
-            document.getElementById("form_aceptar").reset();
-            $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
-            $('#form_aceptar').trigger('reset');
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-            document.getElementById("form_aceptar").reset();
-            $('#myModalAceptar').modal('hide')
-            $('#form_aceptar').trigger('reset');
-            $("#usuarioid").selectpicker('refresh');
+//     let formData = new FormData(document.getElementById("form_aceptar"));
+//     var seleccion = obtenerModoSeleccionado();
+//     formData.append("proceso", 3);
+//     formData.append("seleccion", seleccion);
+//     $.ajax({
+//         url: 'anticipo_update_generico',
+//         data: formData,
+//         method: 'POST',
+//         contentType: false,
+//         cache: false,
+//         processData: false,
+//         dataType: 'JSON',
+//         success: function (data) {
+//             alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+//             $('#myModalAceptar').modal('hide')
+//             document.getElementById("form_aceptar").reset();
+//             $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
+//             $('#form_aceptar').trigger('reset');
+//         },
+//         error: function () {
+//             alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+//             document.getElementById("form_aceptar").reset();
+//             $('#myModalAceptar').modal('hide')
+//             $('#form_aceptar').trigger('reset');
+//             $("#usuarioid").selectpicker('refresh');
 
             
-        }
-    });
-});
+//         }
+//     });
+// });
+
+    $("#form_delete").on('submit', function (e) {
+
+        e.preventDefault();
+        let formData = new FormData(document.getElementById("form_delete"));
+
+        // let uploadedDocument = $("#"+boton)[0].files[0];
+        formData.append("proceso", 0);
+        formData.append("estatus", 0);
+
+
+        $.ajax({
+            url: 'anticipo_update_generico',
+            data: formData,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function (data) {
+                alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                $('#myModalDelete').modal('hide')
+                document.getElementById("form_delete").reset();
+                $('#tabla_anticipo_revision').DataTable().ajax.reload(null, false);
+                $('#form_delete').trigger('reset');
+            },
+            error: function () {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                // document.getElementById("form_aceptar").reset();
+                $('#myModalDelete').modal('hide')
+                $('#form_delete').trigger('reset');
+                // $("#usuarioid").selectpicker('refresh');
+
+                
+            }
+        });
+    }); 
+
+
 
 
