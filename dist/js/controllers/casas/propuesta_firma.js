@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Elección de propuestas"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de elección de propuestas.", "success");
         
                     table.reload()
 

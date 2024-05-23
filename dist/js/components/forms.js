@@ -462,8 +462,8 @@ class OptionField {
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<b />')
-                                    .addClass('m-0')
-                                    .text(option.title)
+                                .addClass('m-0')
+                                .text(option.title)
                             )
                         )
                         .append(
@@ -471,8 +471,8 @@ class OptionField {
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<p />')
-                                    .addClass('m-0')
-                                    .text(option.subtitle)
+                                .addClass('m-0')
+                                .text(option.subtitle)
                             )
                         )
                         .append(
@@ -480,8 +480,8 @@ class OptionField {
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<p />')
-                                    .addClass('m-0')
-                                    .text(option.description)
+                                .addClass('m-0')
+                                .text(option.description)
                             )
                         )
                     )
