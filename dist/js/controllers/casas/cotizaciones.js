@@ -97,7 +97,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept }),
+            new FileField({   id: 'file_uploaded',  label: 'Archivo', placeholder: 'Selecciona un archivo', accept, required: true }),
         ],
     })
 
@@ -136,9 +136,9 @@ let buttons = [
         text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
         className: 'btn buttons-excel',
         titleAttr: 'Descargar archivo excel',
-        title:"Propuestas de firma",
+        title:"Cotizaciones",
         exportOptions: {
-            columns: [0, 1, 2, 3],
+            columns: [0, 1, 2],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -182,8 +182,31 @@ let titulos_columns = [
     } },
 ]
 
+let titulos_buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Títulos de propiedad y anexos",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+
+]
+
 let table_titulos = new Table({
     id: '#tableTitulos',
     url: `casas/lista_archivos_titulos/${idProcesoCasas}`,
     columns: titulos_columns,
+    buttons: titulos_buttons,
 })

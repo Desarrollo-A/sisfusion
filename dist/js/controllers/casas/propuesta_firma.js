@@ -55,7 +55,7 @@ back_to_documentos = function(proceso) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a documentación cliente.`, "success");
         
                     table.reload()
                     form.hide()
