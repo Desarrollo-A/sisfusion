@@ -49,7 +49,7 @@ class Anticipos_model extends CI_Model {
     }
 
     public function updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt){
-        
+
         $query = $this->db->query("INSERT INTO historial_anticipo (id_anticipo, id_usuario, proceso, comentario) VALUES ($id_anticipo, $id_usuario, $procesoAnt, '$comentario')");
         
         if ($query) {
@@ -159,14 +159,18 @@ class Anticipos_model extends CI_Model {
         }
     }
 
-    public function regresoInternomex($id_anticipo, $id_usuario) {
-        $this->db->set('proceso', 7);
-        $this->db->where('id_anticipo', $id_anticipo);
-        $this->db->where('id_usuario', $id_usuario);
-        $query = $this->db->update('anticipo');
+    public function regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad) {
+        
+        $estatus = ($procesoParcialidad == 0) ? 0 : 2;
+        $proceso = ($procesoParcialidad == 0) ? 0 : 7;
     
+        $sql = "UPDATE anticipo SET proceso = ?, estatus = ? WHERE id_anticipo = ? AND id_usuario = ?";
+        $this->db->query($sql, array($proceso, $estatus, $id_anticipo, $id_usuario));
+        
         return $this->db->affected_rows() > 0 ? 1 : 0;
     }
+    
+
 
     
 }
