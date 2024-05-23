@@ -6,6 +6,42 @@
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
 
+        <div class="modal fade" id="anticipoModalInternomexFinal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form method="post" id="modal_anticipos_internomex_form_final">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h3 class="card-title center-align">Continuar - Estatus</h3>
+                            <h4 id="montoTituloFinal" class="center-align"></h4>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group m-0 overflow-hidden">
+                                    <label class="control-label" for="proyecto">Proceso - Continuar Estatus</label>
+                                    <select class="selectpicker select-gral m-0" name="procesoAntInternomexFinal" id="procesoAntInternomexFinal" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                        <option value="1">Continuar Proceso</option>
+                                        <option value="0">Rechazar Proceso</option>
+                                    </select>
+                                    <input type="hidden" id="id_usuario" name="id_usuario" value="">
+                                    <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
+                                    <input type="hidden" id="proceso" name="proceso" value="">
+                                    <input type="hidden" id="montoP" name="montoP" value="">
+                                    <input type="hidden" id="numero_mensualidades" name="numero_mensualidades" value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> CERRAR </button>
+                            <button type="submit" id="enviarAnticipoFinal" class="btn btn-primary">ENVIAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="anticipoModalInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -13,19 +49,22 @@
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h3 class="card-title center-align">Pagar - Anticipos</h3>
+                            <h4 id="montoTitulo" class="center-align"></h4>
+
                         </div>
                         <div class="modal-body">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group m-0 overflow-hidden">
                                     <label class="control-label" for="proyecto">Proceso</label>
                                     <select class="selectpicker select-gral m-0" name="procesoAntInternomex" id="procesoAntInternomex" data-style="btn" data-show-subtext="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
-                                        <option value="8">Pagar</option>
+                                        <option value="1">Pagar</option>
                                         <option value="0">Rechazar</option>
                                     </select>
                                     <input type="hidden" id="id_usuario" name="id_usuario" value="">
                                     <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                                     <input type="hidden" id="proceso" name="proceso" value="">
-                                    <input type="hidden" id="monto" name="monto" value="">
+                                    <input type="hidden" id="montoP" name="montoP" value="">
+                                    <input type="hidden" id="numero_mensualidades" name="numero_mensualidades" value="">
                                 </div>
                             </div>
                         </div>
