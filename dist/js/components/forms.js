@@ -6,34 +6,33 @@ class DateField {
             .addClass(`col-lg-${width} col-md-12`)
             .append(
                 $('<label />')
-                    .addClass('control-label label-gral')
-                    .attr('for', id)
-                    .text(label)
+                .addClass('control-label label-gral')
+                .attr('for', id)
+                .text(label)
             )
             .append(
                 $('<input />')
-                    .addClass('form-control input-gral datepicker')
-                    .prop('required', required)
-                    .attr('type', 'text')
-                    .attr('name', id)
-                    .attr('id', id)
-                    .attr('placeholder', placeholder.toUpperCase())
-                    .val(value)
-                    .datetimepicker({
-                        format: 'YYYY-MM-DD',
-                        icons: {
-                            time: "fa fa-clock-o",
-                            date: "fa fa-calendar",
-                            up: "fa fa-chevron-up",
-                            down: "fa fa-chevron-down",
-                            previous: 'fa fa-chevron-left',
-                            next: 'fa fa-chevron-right',
-                            today: 'fa fa-screenshot',
-                            clear: 'fa fa-trash',
-                            close: 'fa fa-remove',
-                            inline: true
-                        }
-                    })
+                .addClass('form-control input-gral datepicker')
+                .prop('required', required)
+                .attr('type', 'text')
+                .attr('name', id)
+                .attr('id', id)
+                .attr('placeholder', placeholder.toUpperCase())
+                .val(value)
+                .datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    icons: {
+                        time: "fa fa-clock-o",
+                        date: "fa fa-calendar",
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down",
+                        previous: 'fa fa-chevron-left',
+                        next: 'fa fa-chevron-right',
+                        today: 'fa fa-screenshot',
+                        clear: 'fa fa-trash',
+                        close: 'fa fa-remove',
+                    },
+                })
             )
 
         this.value = () => {
@@ -634,9 +633,29 @@ class DateDelete {
                         today: 'fa fa-screenshot',
                         clear: 'fa fa-trash',
                         close: 'fa fa-remove',
-                        inline: true,
                     },
-                    minDate: new Date()
+                    minDate: new Date(),
+                    tooltips: {
+                        today: 'Ir a hoy',
+                        clear: 'Borrar seleccion',
+                        close: 'Cerrar el selector',
+                        selectMonth: 'Seleccionar mes',
+                        prevMonth: 'Mes anterior',
+                        nextMonth: 'Siguiente mes',
+                        selectYear: 'Seleccionar año',
+                        prevYear: 'Año anterior',
+                        nextYear: 'Siguiente año',
+                        selectDecade: 'Seleccionar decada',
+                        prevDecade: 'Decada anterior',
+                        nextDecade: 'Siguiente decada',
+                        prevCentury: 'Siglo anterior',
+                        nextCentury: 'Siguiente siglo',
+                        selectTime: 'Seleccionar hora',
+                        incrementHour: 'Incrementar hora',
+                        incrementMinute: 'Incrementar minutos',
+                        decrementHour: 'Disminuir hora',
+                        decrementMinute: 'Disminuir minutos',
+                    },
                 })
                 .on('dp.change', () => this.validate())
             )
