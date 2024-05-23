@@ -1450,10 +1450,19 @@ const botonesAccionReubicacion = (d) => {
         ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
     </button>`;
 
+    var tooltipEspecial = ESTATUS_PREPROCESO[idEstatusPreproceso + 1];
+
+    if((idEstatusPreproceso + 1) == 2 && FLAGPROCESOCONTRALORIA == 0){
+        tooltipEspecial = "ELABORACIÓN DE CORRIDAS";
+    }
+    else if(idEstatusPreproceso == 2 && FLAGPROCESOCONTRALORIA == 0 ){
+        tooltipEspecial = "ELABORACIÓN DE CONTRATO Y RESCISIÓN";
+    }
+
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
         data-toggle="tooltip" 
         data-placement="left"
-        title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
+        title="ENVIAR A ${tooltipEspecial}"
         data-idCliente="${d.idCliente}"
         data-tipoTransaccion="${idEstatusPreproceso}"
         data-idEstatusMovimiento="${d.id_estatus_modificacion}"
@@ -1947,7 +1956,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                             <label class="m-0 checkstyleDS">
                                 <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 2 +`)" id=`+ i + 'j' +` name=`+ i + 'j'+` data-idLote = `+ id_lote +`/>
                                 <span class="w-100 d-flex justify-between">
-                                    <p class="m-0">Preproceso <b>${ 3 + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
+                                    <p class="m-0">Preproceso <b>${ 2.1 + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
                                 </span>
                             </label>
                         </div>
@@ -1978,7 +1987,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                         <label class="m-0 checkstyleDS">
                             <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 0 +`)" id=`+ i +` name=`+ i +` data-idLote = `+ id_lote +`/>
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Preproceso <b>${ i == 3 ? (4 + ' (' + procesosNombre[i] + ')') : (i + ' (' + procesosNombre[i] + ')')}</b></p>
+                                <p class="m-0">Preproceso <b>${ i == 3 ? (3 + ' (' + procesosNombre[i + 1] + ')') : (i + ' (' + procesosNombre[i] + ')')}</b></p>
                             </span>
                         </label>
                     </div>
