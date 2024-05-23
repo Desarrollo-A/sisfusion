@@ -357,9 +357,24 @@ class TextAreaField {
 }
 
 class NumberField {
-    constructor({ id, label, placeholder, value, width = 12, required = false }) {
+    constructor({ id, label, placeholder, value, width = 12, required = false, mask }) {
         this.id = id
         this.required = required
+
+        let input = $('<input />')
+            .addClass(`form-control input-gral`)
+            .attr('id', id)
+            .attr('name', id)
+            .attr('type', 'text')
+            .attr('placeholder', placeholder)
+            .prop('required', required)
+            .val(value)
+
+        if(mask){
+            input.mask(mask, {
+                reverse: true
+            })
+        }
 
         this.field = $('<div />')
             .addClass(`col-lg-${width}`)
@@ -369,17 +384,7 @@ class NumberField {
                 .attr('for', id)
                 .text(label)
             )
-            .append(
-                $('<input />')
-                .addClass(`form-control input-gral`)
-                .attr('id', id)
-                .attr('name', id)
-                .attr('type', 'text')
-                .attr('placeholder', placeholder)
-                .prop('required', required)
-                .val(value)
-                .on('keypress', this.onlyNumbers)
-            )
+            .append(input)
             .append(
                 $('<span />')
                 .attr('id', `${id}_warning`)
@@ -389,7 +394,8 @@ class NumberField {
             )
 
         this.value = () => {
-            return $(`#${id}`).val()
+            let val = $(`#${id}`).val()
+            return parseFloat(val.replace(/,/g, ''))
         }
     }
 
