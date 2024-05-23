@@ -325,23 +325,30 @@ $("#tabla_anticipos").ready(function () {
             return;
         }
 
-        if(procesoTipo == ''){
-            alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
-            return;
+        // if(procesoTipo == ''){
+        //     alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+        //     return;
 
-        }
+        // }
 
-        if(procesoTipo==1){
+        if (procesoTipo == 1) {
             if (!procesoTipo) { 
                 alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
                 return;
             }
-
+        
             if (!numeroPagos) { 
                 alerts.showNotification("top", "right", "Por favor, selecciona un Número de pagos.", "warning");
                 return;
             }   
+        } else {
+            if (!procesoTipo) { 
+                alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+                return;
+            }
+             
         }
+        
     
         var anticipoData = new FormData();
         anticipoData.append("comentario", comentario);

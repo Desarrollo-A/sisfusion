@@ -75,15 +75,12 @@ $("#tabla_anticipos_internomex").ready(function () {
                     if(d.mensualidadesBoton==0){
 
                         var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatusFinal" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
-
                         
                     }else{
 
                         var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
 
                     }
-
-                    // var botonEstatus = `<center><button class="btn-data btn-blueMaderas anticiposEstatus" data-mensualidades="${d.mensualidades}" data-numero_mensualidades="${d.mensualidadesBoton}" data-montoParcialidad="${d.montoParcial}" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="PAGAR"><i class="fas fa-history"></i></button></center>`;
 
                     return '<div class="d-flex justify-center">'  + botonEstatus  + '</div>';
                 }
