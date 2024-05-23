@@ -11,7 +11,7 @@
         <div class="content boxContent">
             
         <div class="modal fade modal-alertas" id="myModalAceptar_subir" role="dialog">
-			<div class="modal-dialog modal-md">
+			<div class="modal-dialog modal-lg">
 				<div class="modal-content">
 					<form method="post" id="form_subir">
 						<div class="modal-body"></div>
@@ -60,6 +60,7 @@
     <script type="text/javascript" src="<?= base_url() ?>dist/js/shadowbox.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/comisiones/general/funcionesGeneralesComisiones.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/descuentos/anticipo/anticipo_descuento.js"></script>
+    <!-- <script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/prueba_boton_subida.js"></script> -->
 
     <script type="text/javascript">
         Shadowbox.init();

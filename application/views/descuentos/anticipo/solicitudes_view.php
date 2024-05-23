@@ -85,6 +85,7 @@
                                             <th>MONTO</th>
 
                                             <th>COMENTARIO</th>
+                                            <th>COMENTARIO</th>
                                             <!-- <th>ESTATUS</th> -->
                                             <th>PROCESO</th>
                                             <th>PRIORIDAD</th>

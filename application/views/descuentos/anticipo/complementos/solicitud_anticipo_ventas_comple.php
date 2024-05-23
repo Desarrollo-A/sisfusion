@@ -16,8 +16,17 @@
                         <div class="form-group">
                             <div class="col-md-5 form-group m-0">
                                 <label class="control-label">Monto </label>
-                                <input class="form-control input-gral" id="montoSolicitado" type="number" min="1" name="montoSolicitado" required>
+                                <input type="text" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$" id="montoSolicitado"  name="montoSolicitado"  class="form-control input-gral"
+
+                                data-type="currency" maxlength="10" 
+                                oncopy="return false" 
+                                onpaste="return false"
+                                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                                onkeypress="return onlyNumbers(event)"
+                                required>
                             </div>
+                            
+                                
                             <div class="col-lg-6 form-group m-0">
                                 <label class="control-label">Descripción del motivo</label>
                                 <textarea class="text-modal" type="text" name="descripcionMotivo" id="descripcionMotivo" onkeyup="javascript:this.value=this.value.toUpperCase();" required></textarea>

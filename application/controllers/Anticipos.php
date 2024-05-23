@@ -19,7 +19,15 @@ class Anticipos extends CI_Controller {
     public function index(){
         redirect(base_url());
     }
-      
+
+
+    public function anticipos_historial(){
+
+            $this->load->view('template/header');
+            $this->load->view("anticipos/anticipos_historial_view");
+    
+        }
+
     public function validateSession(){
         if($this->session->userdata('id_usuario')=="" || $this->session->userdata('id_rol')==""){
             redirect(base_url() . "index.php/login");
@@ -27,9 +35,18 @@ class Anticipos extends CI_Controller {
     }
 
     public function historial_Anticipo(){
-		$this->load->view('template/header');
-		$this->load->view("anticipos/anticipos_view");
-	}
+        switch($this->session->userdata('id_rol')){
+        case '31':
+          $this->load->view('template/header');
+          $this->load->view("anticipos/anticipos_internomex_view");
+        break;
+    
+        default:
+          $this->load->view('template/header');
+          $this->load->view("anticipos/anticipos_view");
+        break;
+        }
+    }
 
     public function getAnticipos(){
 
@@ -48,10 +65,60 @@ class Anticipos extends CI_Controller {
         $id_anticipo = $this->input->post('id_anticipo');
         $procesoAnt = $this->input->post('procesoAnt');
         $monto = $this->input->post('monto');
+        $numeroPagos = $this->input->post('numeroPagos');
+        $procesoTipo = $this->input->post('procesoTipo');
+        $pago = $this->input->post('pago');
+        $creado_por = $this->session->userdata("id_rol");
+    
+        $result_2 = null;
+        $result_3 = null;
+        $success = false;
 
-        $result = $this->Anticipos_model->updateEstatus($procesoAnt, $id_usuario);
-        $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+        // aqui se tiene un tema error 
+    
+        if ($this->session->userdata('id_rol') == 31) {
+            // internomex
+            $comentario = "SE acepta el pago, por parte de internomex";
+            $procesoAntInternomex = $this->input->post('procesoAntInternomex');
+            $result = $this->Anticipos_model->updateEstatusInterno($procesoAntInternomex, $id_anticipo);
+            $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAntInternomex);
+            
+            $success = ($result != null); 
+
+            
+        } else {
+            $result = $this->Anticipos_model->updateEstatusD($procesoAnt, $id_anticipo);
+            $result_3 = 1;
+            $result_2 = $this->Anticipos_model->updateHistorial($id_anticipo, $id_usuario, $comentario, $procesoAnt);
+            if($procesoAnt == 0){
+                
+            }else{
+                
+            
+                if ($numeroPagos == '' && $pago == '') {
+                    $result_3 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+                } else {
+                    $result_3 = $this->Anticipos_model->autPrestamoAnticipo($id_usuario, $monto, $numeroPagos, $pago, $comentario, $pago, $creado_por, $procesoTipo);
+                    $result_4 = $this->Anticipos_model->relacion_anticipo_prestamo($id_anticipo, $procesoTipo);
+                }
+            }
+            
+            $success = ($result != null && $result_2 != null && $result_3 != null); 
+        }
         
-        echo json_encode ($result,$result_2);
+
+
+        $response = array(
+            'success' => $success,
+            'result' => $result,
+            'result_2' => $result_2,
+            'result_3' => $result_3
+        );
+    
+        echo json_encode($response);
     }
+    
+    
+    
+
 }
