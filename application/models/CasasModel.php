@@ -810,10 +810,7 @@ class CasasModel extends CI_Model
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
-            CASE
-                WHEN archivo IS NULL THEN 'Sin archivo'
-                ELSE archivo
-            END AS archivo,
+            archivo,
             documento,
             tipo,
             fechaModificacion

@@ -105,7 +105,7 @@ let columns = [
     } },
     { data: function(data){
         let view_button = ''
-        if(data.archivo != 'Sin archivo'){
+        if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 
