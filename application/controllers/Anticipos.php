@@ -137,7 +137,9 @@ class Anticipos extends CI_Controller {
                 
             } else {
 
-                $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagosParcialidad);
+                if ($nombreSwitch != "true") {
+                    $result_6 = $this->Anticipos_model->mensualidadesNumero($id_anticipo, $id_usuario, $numeroPagosParcialidad);
+                }
                 
                 if ($procesoTipo == 0 ) {
 
@@ -172,9 +174,9 @@ class Anticipos extends CI_Controller {
         $procesoParcialidad = intval($this->input->post('procesoParcialidad'));
     
         if ($procesoParcialidad == 1) {
-            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario);
+            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
         } else {
-            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario);
+            $result = $this->Anticipos_model->regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad);
         }
     
         echo json_encode(['result' => $result]);
