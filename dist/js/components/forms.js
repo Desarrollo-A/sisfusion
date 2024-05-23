@@ -106,8 +106,8 @@ class SelectField {
                     .data('size', '7')
                     .data('container', 'body')
                     .attr('title', placeholder)
-                    // .prop('required', required)
                     .append(options)
+                    .on('change', () => this.validate())
                 )
                 .append(
                     $('<span />')
@@ -197,6 +197,7 @@ class FileField {
                             }
                         }
                     })
+                    .on('change', () => this.validate())
                 )
                 .append(
                     $('<input />')
@@ -271,18 +272,19 @@ class TextField {
             .addClass(`col-lg-${width} mt-1`)
             .append(
                 $('<label />')
-                    .addClass('control-label')
-                    .attr('for', id)
-                    .text(label)
+                .addClass('control-label')
+                .attr('for', id)
+                .text(label)
             )
             .append(
                 $('<input />')
-                    .addClass(`form-control input-gral`)
-                    .attr('id', id)
-                    .attr('name', id)
-                    .attr('type', 'text')
-                    .prop('required', required)
-                    .attr('placeholder', placeholder)
+                .addClass(`form-control input-gral`)
+                .attr('id', id)
+                .attr('name', id)
+                .attr('type', 'text')
+                .prop('required', required)
+                .attr('placeholder', placeholder)
+                .on('keyup', () => this.validate())
             )
             .append(
                 $('<span />')
@@ -368,7 +370,9 @@ class NumberField {
             .attr('type', 'text')
             .attr('placeholder', placeholder)
             .prop('required', required)
+            .attr('maxlength', 20)
             .val(value)
+            .on('keyup', this.validate)
 
         if(mask){
             input.mask(mask, {
@@ -424,32 +428,6 @@ class NumberField {
     }
 
     load(){}
-
-    onlyNumbers(e) {
-        var key = e.keyCode || e.which;
-        var tecla = String.fromCharCode(key);
-        var letras = "0123456789.";
-        var especiales = [8, 37, 39, 46];
-
-        var tecla_especial = false;
-        for (var i in especiales) {
-            if (key == especiales[i]) {
-                tecla_especial = true;
-                break;
-            }
-        }
-
-        if (letras.indexOf(tecla) == -1 && !tecla_especial) return false;
-
-        // Permitir solo un punto decimal
-        if (tecla == '.' && e.target.value.indexOf('.') !== -1) return false;
-
-        // Limitar a dos decimales
-        var parts = e.target.value.split('.');
-        if (parts.length > 1 && parts[1].length >= 2) return false;
-
-        return true;
-    }
 }
 
 class OptionField {
@@ -642,7 +620,7 @@ class DateDelete {
                 .attr('name', id)
                 .attr('id', id)
                 .attr('placeholder', placeholder.toUpperCase())
-                //.val(value.substring(0, 16))
+                //.on('change', () => this.validate())
                 .datetimepicker({
                     date: value ? value.substring(0, 16): null,
                     format: 'YYYY-MM-DD HH:mm',
@@ -660,6 +638,7 @@ class DateDelete {
                     },
                     minDate: new Date()
                 })
+                .on('dp.change', () => this.validate())
             )
             .append(
                 $('<button />')
