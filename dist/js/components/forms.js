@@ -618,6 +618,7 @@ class DateDelete {
                 .attr('type', 'text')
                 .attr('name', id)
                 .attr('id', id)
+                .prop('readOnly', true)
                 .attr('placeholder', placeholder.toUpperCase())
                 //.on('change', () => this.validate())
                 .datetimepicker({
@@ -656,6 +657,7 @@ class DateDelete {
                         decrementHour: 'Disminuir hora',
                         decrementMinute: 'Disminuir minutos',
                     },
+                    ignoreReadonly: true,
                 })
                 .on('dp.change', () => this.validate())
             )
