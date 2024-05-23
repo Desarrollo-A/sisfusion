@@ -134,7 +134,7 @@ $("#tabla_anticipos").ready(function () {
                     }
 
                     var botonParcialidad= d.mensualidadesBoton;
-                    console.log(botonParcialidad);
+
 
                     if (botonParcialidad === null) {
                         botonesModal += `
@@ -323,6 +323,12 @@ $("#tabla_anticipos").ready(function () {
         if (comentario === "") {
             alerts.showNotification("top", "right", "Por favor, ingresa un comentario.", "warning");
             return;
+        }
+
+        if(procesoTipo == ''){
+            alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+            return;
+
         }
 
         if(procesoTipo==1){
