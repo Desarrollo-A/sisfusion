@@ -91,8 +91,18 @@ function show_upload(data) {
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'no subido'
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo != 'Sin archivo'){

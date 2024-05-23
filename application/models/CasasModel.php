@@ -840,7 +840,8 @@ class CasasModel extends CI_Model
                  WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
                  ELSE CONCAT(us_gere.nombre, ' ', us_gere.apellido_paterno, ' ', us_gere.apellido_materno)
             END AS gerente,
-            oxc.nombre AS movimiento
+            oxc.nombre AS movimiento,
+            doc.documentos
         FROM proceso_casas pc
         LEFT JOIN lotes lo ON lo.idLote = pc.idLote
         INNER JOIN clientes cli ON cli.idLote = lo.idLote 
@@ -849,6 +850,7 @@ class CasasModel extends CI_Model
         INNER JOIN residenciales resi ON resi.idResidencial = con.idResidencial 
         LEFT JOIN usuarios us ON us.id_usuario = pc.idAsesor
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
+        LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE
             pc.proceso IN (8,9)
         AND pc.status = 1 AND cli.status = 1";
