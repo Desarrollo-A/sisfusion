@@ -133,12 +133,25 @@ $("#tabla_anticipos").ready(function () {
                             </button>`;
                     }
 
-                    botonesModal += `
-                        <center>
-                            <button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE">
-                                <i class="fas fa-history"></i>
-                            </button>
-                        </center>`;
+                    var botonParcialidad= d.mensualidadesBoton;
+                    console.log(botonParcialidad);
+
+                    if (botonParcialidad === null) {
+                        botonesModal += `
+                            <center>
+                                <button class="btn-data btn-blueMaderas anticiposEstatus" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="REPORTE">
+                                    <i class="fas fa-history"></i>
+                                </button>
+                            </center>`;
+                    } else {
+                        botonesModal += `
+                            <center>
+                                <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="CONTINUAR PARCIALIDAD">
+                                <i class="fas fa-address-card"></i>
+                                </button>
+                            </center>`;
+                        // alert("nuevo boton");
+                    }
             
                     botonesModal += `
                         <button href="#" value="${d.id_anticipo}" data-name="${d.nombreUsuario}" data-id_usuario="${d.id_usuario}" class="btn-data btn-blueMaderas consultar_logs" title="Historial">
@@ -164,10 +177,6 @@ $("#tabla_anticipos").ready(function () {
         });
     });
 
-    function formatoNumeroConComas(numero) {
-        return numero.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
     $(document).on('click', '.anticiposEstatus', function (e) {
 
         var id_usuario = $(this).attr("data-usuario");
@@ -190,6 +199,25 @@ $("#tabla_anticipos").ready(function () {
 
         fillPagoAnticipos();
 
+        
+    });
+
+    $(document).on('click', '.continuarParcialidad', function (e) {
+
+        var id_usuario = $(this).attr("data-usuario");
+        $("#id_usuario").val(id_usuario);
+    
+        var id_anticipo = $(this).attr("data-anticipo");
+        $("#id_anticipo").val(id_anticipo);
+    
+        var monto = $(this).attr("data-monto");
+        $("#montoPrestado").val(monto);
+    
+        var proceso = $(this).attr("data-proceso");
+    
+        mostrarOcultarCampos(proceso);
+
+        $("#parcialidadModal").modal();
         
     });
 
@@ -226,6 +254,45 @@ $("#tabla_anticipos").ready(function () {
             height: 660
         });
     });
+
+    $("#modal_parcialidad_form").on("submit", function(e) {
+        e.preventDefault();
+        var id_usuario = $("#id_usuario").val();
+        var id_anticipo = $("#id_anticipo").val();
+        var procesoParcialidad = $("#procesoParcialidad").val();
+
+        var anticipoPData = new FormData();
+        anticipoPData.append("id_usuario", id_usuario);
+        anticipoPData.append("id_anticipo", id_anticipo);
+        anticipoPData.append("procesoParcialidad", procesoParcialidad);
+
+        $.ajax({
+            url: general_base_url + 'Anticipos/regresoInternomex',
+            data: anticipoPData,
+            type: 'POST',
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(response) {
+                var jsonResponse = JSON.parse(response);
+
+                if (jsonResponse.result == 1) {
+                    $('#parcialidadModal').modal("hide");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_anticipos').DataTable().ajax.reload();
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                }
+            },
+            error: function() {
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+
+
+    });
+
+
     
     $("#modal_anticipos_form").on("submit", function(e) {
         e.preventDefault();
@@ -241,10 +308,6 @@ $("#tabla_anticipos").ready(function () {
         var numeroPagos = $("#numeroPagos").val();
         var pago = $("#pago").val();
         var montoParcialidad = $("#montoPrestadoParcialidad").val();
-
-        
-
-        console.log(procesoTipo);
         
         if (!nombreSwitchChecked) {
             var tipoPagoAnticipo = $("#tipo_pago_anticipo").val();
@@ -356,10 +419,8 @@ $("#tabla_anticipos").ready(function () {
         e.preventDefault();
         e.stopImmediatePropagation();
 
-        // Cambia el tamaño del modal
         $('#modal-dialog').removeClass('modal-sm modal-lg modal-xl').addClass('modal-md');
 
-        // Agrega contenido al modal
         $('#exampleModal .modal-content').html(`
             <div class="modal-body">
                 <div role="tabpanel">

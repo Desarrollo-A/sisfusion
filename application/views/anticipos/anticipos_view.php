@@ -8,11 +8,40 @@
         <?php $this->load->view('template/sidebar'); ?>
         <?php $this->load->view('descuentos/complementos/estilosPrestamos_comple'); ?>
 
+        <div class="modal fade" id="parcialidadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <form method="post" id="modal_parcialidad_form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h3 class="modal-title text-center" id="myModalLabel">Estatus - Mensualidades Parcialidades</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="control-label" for="procesoParcialidad">Proceso</label>
+                                <select class="selectpicker select-gral m-0" name="procesoParcialidad" id="procesoParcialidad" data-style="btn" data-show-subtext="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-live-search="true" data-container="body" required>
+                                    <option value="1">Aceptar</option>
+                                    <option value="0">Rechazar</option>
+                                </select>
+                                <input type="hidden" id="id_usuario" name="id_usuario" value="">
+                                <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+                            <button type="submit" id="enviarAnticipoParcialidad" class="btn btn-primary">ENVIAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-md" id="modal-dialog">
-                <div class="modal-content">
-                    <!-- El contenido del modal se agregará dinámicamente -->
-                </div>
+                <div class="modal-content"></div>
             </div>
         </div>
 
