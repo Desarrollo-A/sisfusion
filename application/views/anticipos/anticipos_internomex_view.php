@@ -28,6 +28,7 @@
                                     <input type="hidden" id="id_anticipo" name="id_anticipo" value="">
                                     <input type="hidden" id="proceso" name="proceso" value="">
                                     <input type="hidden" id="montoP" name="montoP" value="">
+                                    <input type="hidden" id="monto" name="monto" value="">
                                     <input type="hidden" id="numero_mensualidades" name="numero_mensualidades" value="">
                                 </div>
                             </div>

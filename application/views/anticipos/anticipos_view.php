@@ -16,7 +16,7 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <h3 class="modal-title text-center" id="myModalLabel">Estatus - Mensualidades Parcialidades</h3>
+                            <h3 id="modalTitle" class="modal-title text-center" id="myModalLabel">Estatus - Mensualidades Parcialidades</h3>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">

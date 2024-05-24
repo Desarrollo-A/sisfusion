@@ -63,8 +63,9 @@ $("#tabla_anticipos_internomex").ready(function () {
             { data: 'sede' },
             { data: 'esquema' },
             {
-                data: function( d ){
-                    return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
+                data: function(d) {
+                    var montoAMostrar = (d.montoParcial !== null) ? d.montoParcial : d.monto;
+                    return '<p class="m-0">' + formatMoney(montoAMostrar) + '</p>';
                 }
             },
             {
@@ -115,7 +116,11 @@ $("#tabla_anticipos_internomex").ready(function () {
         var numero_mensualidades = $(this).attr("data-numero_mensualidades");
         $("#numero_mensualidades").val(numero_mensualidades);
 
-        $("#montoTituloFinal").text("Monto Restante: " + formatMoney(montoP*numero_mensualidades));
+        if (numero_mensualidades == null || isNaN(numero_mensualidades)) {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(monto));
+        } else {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP * numero_mensualidades));
+        }
     
         $("#anticipoModalInternomexFinal").modal();
     });
@@ -131,10 +136,17 @@ $("#tabla_anticipos_internomex").ready(function () {
         var montoP = $(this).attr("data-montoParcialidad");
         $("#montoP").val(montoP);
 
+        var monto = $(this).attr("data-monto");
+        $("#monto").val(monto);
+
         var numero_mensualidades = $(this).attr("data-numero_mensualidades");
         $("#numero_mensualidades").val(numero_mensualidades);
 
-        $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP*numero_mensualidades));
+        if (numero_mensualidades == null || isNaN(numero_mensualidades)) {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(monto));
+        } else {
+            $("#montoTitulo").text("Monto Restante: " + formatMoney(montoP * numero_mensualidades));
+        }
     
         $("#anticipoModalInternomex").modal();
     });
