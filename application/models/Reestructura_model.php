@@ -1849,23 +1849,23 @@ class Reestructura_model extends CI_Model
             ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
         }
         else{
-            return $this->db->query("SELECT CONCAT (CASE
-                WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
-                WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
-                WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
-                WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
-                ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
+        return $this->db->query("SELECT CONCAT (CASE
+        WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
+        WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
+        WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
+        WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
+        ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
                 CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
-                FROM historial_preproceso_lote hp
-                INNER JOIN propuestas_x_lote pr ON pr.idLote = hp.idLote
-                INNER JOIN lotes lo ON lo.idLote = pr.idLote
-                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = hp.id_preproceso AND oxc0.id_catalogo = 106
-                INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = hp.estatus AND oxc1.id_catalogo = 108
-                INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
-                INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
-                WHERE hp.idLote = $idLote
+        FROM historial_preproceso_lote hp
+        INNER JOIN propuestas_x_lote pr ON pr.idLote = hp.idLote
+        INNER JOIN lotes lo ON lo.idLote = pr.idLote
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = hp.id_preproceso AND oxc0.id_catalogo = 106
+        INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = hp.estatus AND oxc1.id_catalogo = 108
+        INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
+        INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
+        WHERE hp.idLote = $idLote
                 ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
-        }
+    }
     }
 
     public function borrarPXL($id_lote){
