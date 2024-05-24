@@ -216,6 +216,17 @@ class Reestructura extends CI_Controller{
         $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
         $fechaNuevoEsquema = new DateTime($fechaCambio);
 
+        var_dump('Valoración:');
+        var_dump($ultimoEstatus2 >= $fechaNuevoEsquema);
+
+        var_dump('fecha nuevo esquema:');
+        var_dump($fechaNuevoEsquema);
+
+        var_dump('fecha ultimo estatus 2:');
+        var_dump($fechaNuevoEsquema);
+
+        exit;
+
         if( $ultimoEstatus2 >= $fechaNuevoEsquema){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
@@ -3382,7 +3393,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado el lote al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado el lote al preproceso ';
         }
         else{
             $this->db->trans_rollback();
@@ -3458,7 +3469,7 @@ class Reestructura extends CI_Controller{
         if($banderaProceso){ // aqui se ve si todos los pasos fueron realizados
             $this->db->trans_commit();
             $response["result"] = true;
-            $response["message"] = 'Se ha regresado la fusión al preproceso ' . $preproceso;
+            $response["message"] = 'Se ha regresado la fusión al preproceso ';
         }
         else{
             $this->db->trans_rollback();
