@@ -728,5 +728,51 @@ class Descuentos_model extends CI_Model {
         }  
     } 
 
+    <?php
+class Descuentos_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    public function insert_prestamos($prestamos) {
+        $this->db->trans_start(); 
+
+        foreach ($prestamos as $prestamo) {
+            if (!empty($prestamo->id_usuario) && !empty($prestamo->monto)) {
+                $data = array(
+                    'id_usuario' => $prestamo->id_usuario,
+                    'monto' => $prestamo->monto,
+                    'num_pagos' => $prestamo->num_pagos,
+                    'pago_individual' => $prestamo->pago_individual,
+                    'comentario' => $prestamo->comentario,
+                    'estatus' => 1,
+                    'pendiente' => $prestamo->monto,
+                    'creado_por' => 1,
+                    'fecha_creacion' => date('Y-m-d H:i:s'),
+                    'modificado_por' => 1,
+                    'fecha_modificacion' => date('Y-m-d H:i:s'),
+                    'n_p' => 1,
+                    'tipo' => $prestamo->tipo,
+                    'id_cliente' => $prestamo->id_cliente,
+                    'evidenciaDocs' => $prestamo->evidenciaDocs,
+                    'tipo_prestamo' => $prestamo->tipo_prestamo
+                );
+
+                $this->db->insert('prestamos_aut', $data);
+            }
+        }
+
+        $this->db->trans_complete(); 
+
+        return $this->db->trans_status();
+    }
+}
+?>
+
+    
+    
+
 
 }
