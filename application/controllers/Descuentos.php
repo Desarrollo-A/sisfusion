@@ -1199,6 +1199,8 @@ class Descuentos extends CI_Controller
 
         public function descuentos_masivos()
         {
+
+            // $array
                 if (!isset($_POST))
                 {    
                 echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
@@ -1226,18 +1228,11 @@ class Descuentos extends CI_Controller
                                 isset($decodedData[$i]->id_usuario) && 
                                 !empty($decodedData[$i]->id_usuario) && 
                                 isset($decodedData[$i]->monto) && 
-                                !empty($decodedData[$i]->monto) && 
-                                isset($decodedData[$i]->numero_pagos) && 
-                                !empty($decodedData[$i]->numero_pagos) &&
-                                isset($decodedData[$i]->montoConDescuentosSede) && 
-                                !empty($decodedData[$i]->montoConDescuentosSede) && 
-                                isset($decodedData[$i]->montoFinal) && 
-                                !empty($decodedData[$i]->montoFinal) && 
-                                isset($decodedData[$i]->comentario))
+                                !empty($decodedData[$i]->monto))
                                 {// inicio de llave if
 
-                                
-                                
+                                                                    
+                                    
                                 }// fin  llave del if
                                 else{
 
