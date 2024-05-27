@@ -90,6 +90,11 @@ pass_to_validar_pago = function(data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -99,10 +104,16 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        return `${data.avance} %`
+        return `${data.avanceObra} %`
     } },
     { data: function(data){
-        return `$ ${data.monto}`
+        return `${data.avance} %`
+    } },
+    { data: function(data) {
+        if(data.monto){
+            return formatter.format(data.monto)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)
