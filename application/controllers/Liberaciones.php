@@ -87,6 +87,7 @@ class Liberaciones extends CI_Controller{
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
+    // Obtener los lotes en el proceso de liberación de su area del usuario para avanzarlo o rechazarlo.
     public function getLotesPendientesLiberacion(){
         $tipoVenta = $this->input->post('tipoVenta');
         $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
@@ -110,6 +111,7 @@ class Liberaciones extends CI_Controller{
         echo json_encode($data, JSON_NUMERIC_CHECK);
     }
 
+    // Consultar los lotes que no estan en su proceso pero estan en un proceso de liberación con otra area.
     public function getLotesEnProcesoLiberacion(){
         $tipoVenta = $this->input->post('tipoVenta');
         $idProcesoTipoLiberacion = $this->input->post('idProcesoTipoLiberacion');
@@ -121,7 +123,7 @@ class Liberaciones extends CI_Controller{
             if ($this->session->userdata('id_rol') == 12) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (4))"; // CAJAS
         }
         if ($idProcesoTipoLiberacion == 134) { // Filtro de acuerdo al concepto de liberación: En este caso Rescisión.
-            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib IS NULL OR pl.proceso_lib NOT IN (1))"; // POSTVENTA
+            if ($this->session->userdata('id_rol') == 55) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib NOT IN (1))"; // POSTVENTA
             if ($this->session->userdata('id_rol') == 17) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (2))"; // CONTRALORÍA
             if ($this->session->userdata('id_rol') == 11) $condicion = "AND (pl.proceso_lib IS NOT NULL AND pl.proceso_lib <> (3))"; // ADMINISTRACIÓN
             // if ($this->session->userdata('id_rol') == 2)  $condicion = "AND (pl.proceso_lib = (4))"; // VENTAS SUBDIRECTOR
@@ -216,8 +218,7 @@ class Liberaciones extends CI_Controller{
         }
     }
 
-    public function historialLiberacionLote()
-    {
+    public function historialLiberacionLote(){
         if (isset($_POST) && !empty($_POST)) {
             $idLote = $_POST['idLote'];
             $tipoVenta = $_POST['tipoVenta'];

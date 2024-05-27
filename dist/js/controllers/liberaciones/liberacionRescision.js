@@ -1,76 +1,139 @@
-$(document).ready(function () {
-    console.log("JS file loaded...");
+const LIBERACION = Object.freeze({
+    PARTICULARES: 133,
+    RESCISION: 134
+})
+
+const TIPO_VENTA = Object.freeze({
+    PARTICULARES: 1,
+    NORMALES: 2
+})
+let liberacionesDataTable;
+
+$(document).ready(function(){
+    //Manejamos la carga de inputs desde la carga del archivo de JS
+    if (id_rol_general == 55){ // Postventa inicia proceso
+        $.post(`${general_base_url}Liberaciones/lista_proyectos`, function(data) {
+            for( let i = 0; i<data.length; i++){
+                const id = data[i]['idResidencial'];
+                const name = data[i]['descripcion'];
+                $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+            }
+            $("#proyecto").selectpicker('refresh');
+        }, 'json');
+    }
+
+    // Pulsamos sobre el tab de proceso
+    if (id_rol_general != 55) {
+       $('#pendientes').click();
+    }
+
+    if (id_rol_general != 55) $('.toolbar').addClass('hide'); // Quito spinner
+    if (id_rol_general != 55) $('.material-datatables').removeClass('hide'); // Quito la tabla
 });
 
-/**
- * newButton function => Create a custom button with parameters
- *
- * @param {string} btnClass
- * @param {string} title
- * @param {string} action
- * @param {object} data
- * @param {string} icon
- * @returns {string} 
- */
-const newButton = (btnClass, title, action = '', data, icon) => {
-    const CUSTOM_BTN = `<button class='${btnClass}'
-        data-toggle='tooltip' 
-        data-placement='top'
-        title='${title.toUpperCase()}'
-        data-accion='${action}'
-        data-data='${JSON.stringify(data)}'>
-            <i class='${icon}'></i>
-        </button>`;
+// Pestaña de liberar lotes desde el primer paso.
+$(document).on("click", "#liberar", function () {
+    if ($('.toolbar').hasClass('hide')) $('.toolbar').removeClass('hide');
+    if (!$('.toolbar').hasClass('hide') && !$("#lote").val()) $('.material-datatables').addClass('hide');
+})
 
-    return CUSTOM_BTN;
-}
+$(document).on("click", "#pendientes", function () {
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    if (!$('.toolbar').hasClass('hide')) $('.toolbar').addClass('hide');
+    if ($('.toolbar').hasClass('hide')) $('.material-datatables').removeClass('hide'); // Quito la tabla
 
-const datatableButtons = (d, type) => {
-    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_AVANCE_P4  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
-    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
-    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
-    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
-    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
-    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/getLotesPendientesLiberacion`,
+        data: {tipoVenta: TIPO_VENTA.NORMALES, idProcesoTipoLiberacion: LIBERACION.RESCISION},
+        cache: false,
+        success: function(rs) {
+            const res = JSON.parse(rs);
+            datatableFn(res, 1);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", error);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        }
+    });
+})
+
+$(document).on("click", "#proceso", function () {
+    $('#spiner-loader').removeClass('hide'); // Aparece spinner
+    if (!$('.toolbar').hasClass('hide')) $('.toolbar').addClass('hide');
+    if ($('.toolbar').hasClass('hide')) $('.material-datatables').removeClass('hide'); // Quito la tabla
     
-    let NO_BTN = '';
+    $.ajax({
+        type: 'POST',
+        url: `${general_base_url}Liberaciones/getLotesEnProcesoLiberacion`,
+        data: {tipoVenta: TIPO_VENTA.NORMALES, idProcesoTipoLiberacion: LIBERACION.RESCISION},
+        cache: false,
+        success: function(rs) {
+            const res = JSON.parse(rs);
+            datatableFn(res, 2);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la petición AJAX:", error);
+            $('#spiner-loader').addClass('hide'); // Desaparece spinner
+        }
+    });
+})
 
-    if (type === 2) {
-        if (d.expediente) return BTN_VER_DOC + BTN_INFO ;
-        if (!d.expediente) return BTN_INFO;
-        return BTN_INFO;
-    }
+$('#proyecto').change(function() {
+    $("#condominio").html("");
+    $.post(`${general_base_url}Liberaciones/lista_condominios/${$('#proyecto').val()}`, function(data) {
+        $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idCondominio'];
+            const name = data[i]['nombre'];
+            $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#condominio").selectpicker('refresh');
+    }, 'json');
+});
 
-    if (type === 1) {
-        if (id_rol_general == 55) { // POSTVENTA
-            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
-            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
-            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
-            return BTN_INFO;
+$('#condominio').change( function() {
+    const index_condominio = $(this).val();
+    $("#lote").html("");
+    $.post(`${general_base_url}Liberaciones/lista_lotes/${index_condominio}/${TIPO_VENTA.NORMALES}`, function(data) {
+        $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idLote'];
+            const name = data[i]['nombreLote'];
+            $("#lote").append($('<option>').val(id).text(name.toUpperCase()));
         }
-        if (id_rol_general == 17) { // CONTRALORIA
-            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
-            return BTN_INFO;
-        }
-        if (id_rol_general == 11 ) { // ADMINISTRACIÓN
-            if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
-            return BTN_INFO;
-        }
-        if (id_rol_general == 2) { // VENTAS
-            if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
-            return BTN_INFO;
-        }
-        if (id_rol_general == 12) { // CAJAS
-            if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
-            return BTN_INFO;
-        }
-    }
+        $("#lote").selectpicker('refresh');
+    }, 'json');
+});
 
-    return NO_BTN;
-}
+$('#lote').change( function() {
+    if ($("#lote").val() != '') {
+        $('#spiner-loader').removeClass('hide'); // Aparece spinner
+        const loteValue = $(this).val();
+        $("#lote").val(loteValue);
+        if ($('.material-datatables').hasClass('hide')) $('.material-datatables').removeClass('hide');
+    
+        const values = { tipoVenta: TIPO_VENTA.NORMALES, idProcesoTipoLiberacion: LIBERACION.RESCISION, lotes: loteValue }
+        
+        $.ajax({
+            type: 'POST',
+            url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+            data: values,
+            cache: false,
+            success: function(rs) {
+                const res = JSON.parse(rs);
+                datatableFn(res, 1);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la petición AJAX:", error);
+                $('#spiner-loader').addClass('hide'); // Aparece spinner
+            }
+        });
+    } 
+});
 
 // Función para colocar el nombre del archivo en el input de texto que comparte con el input de archivo
 $(document).on("change", "#archivo_liberacion", function () {
@@ -97,121 +160,6 @@ $('#liberacionesDataTable thead tr:eq(0) th').each(function (i) {
         }
     });
     $('[data-toggle="tooltip"]').tooltip();
-});
-
-// DATATABLE
-let liberacionesDataTable = $('#liberacionesDataTable').DataTable({
-    dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-    width: '100%',
-    scrollX: true,
-    buttons: [{
-        extend: 'excelHtml5',
-        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-        className: 'btn buttons-excel',
-        titleAttr: 'Liberación de lotes (Particulares)',
-        title:"Liberación de lotes (Particulares)",
-        exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
-            format: {
-                header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
-                }
-            }
-        }
-    },
-    {
-        extend: 'pdfHtml5',
-        text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
-        className: 'btn buttons-pdf',
-        titleAttr: 'Liberación de lotes (Particulares)',
-        title:"Liberación de lotes (Particulares)",
-        orientation: 'landscape',
-        pageSize: 'LEGAL',
-        exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
-            format: {
-                header: function (d, columnIdx) {
-                    return ' ' + titulosTabla[columnIdx] + ' ';
-                }
-            }
-        }
-    }],
-    columnDefs: [
-        {
-            searchable: true,
-            visible: true
-        },
-        { 
-            orderable: true, 
-            targets: '_all' 
-        }
-    ],
-    pageLength: 4,
-    bAutoWidth: false,
-    fixedColumns: true,
-    ordering: true,
-    language: {
-        url: general_base_url+"static/spanishLoader_v2.json",
-        paginate: {
-            previous: "<i class='fa fa-angle-left'>",
-            next: "<i class='fa fa-angle-right'>"
-        }
-    },
-    order: [[15, 'DESC']],
-    destroy: true,
-    columns: [
-        {
-            data: (d) => {
-                if (d.enProcesoLiberacion === 0 || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
-                if (d.estatus_lib === 2) return `<span class="label" style="color: #B03A2E; background: #B03A2E18;}">RECHAZO</span>`;
-                if (d.estatus_lib === 3) return `<span class="label" style="color: #DF7314; background: #DF731418;}">CORRECCIÓN</span>`;
-                return 'SIN ESPECIFICAR';
-            }
-        },
-        { data: "nombreProcesoLiberacion" },
-        { data: "movimiento" },
-        { data: "nombreResidencial" },
-        { data: "nombreCondominio" },
-        { data: "nombreLote" },
-        { data: "idLote" },
-        { data: "cliente" },
-        { data: "referencia" },
-        { data: "nombreAsesor" },
-        { data: "nombreCoordinador" },
-        { data: "nombreGerente" },
-        { data: "nombreSubdirector" },
-        { data: "nombreRegional" },
-        { data: "nombreRegional2" },
-        { data: "fechaApartado" },
-        { data: "sup"},
-        {
-            data: function (d) {
-                return d.costom2f == 'SIN ESPECIFICAR' ? d.costom2f : `${formatMoney(d.costom2f)}`;
-            }
-        },
-        {
-            data: function (d) {
-                return `${formatMoney(d.total)}`
-            }
-        },
-        {
-            data: function (d) {
-                return `<div class="d-flex justify-center">${datatableButtons(d, type)}</div>`;
-            }
-        }
-    ],
-    ajax: {
-        url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
-        dataSrc: "",
-        type: "POST",
-        cache: false,
-        data: {"tipoVenta": 2, idProcesoTipoLiberacion: 134},
-    }, 
-    initComplete: function () {
-        $('[data-toggle="tooltip"]').tooltip({
-            trigger: "hover"
-        });
-    }
 });
 
 // ABRIR MODAL
@@ -491,23 +439,6 @@ $(document).on("click", "#btn-accion", async function (e) {
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
 
-const fillChangelog = (i, d) => {
-    let accion = 'Enviado a '
-    if (d.estatus_lib == '2') {
-        accion = 'Se regresó a:'
-    }
-    $("#changelog").append('<li>\n' +
-  '            <a style="float: right">'+d.fecha_modificacion+'</a><br>\n' +
-  '            <a><b>Tipo de liberación:</b> '+ d.nombreConceptoLiberacion + '</a> \n' +
-  '            <br>\n' + 
-  '            <a><b>Estatus: </b> '+accion+d.nombreProcesoLiberacion.toLowerCase()+' </a>\n' +
-  '            <br>\n' +  
-  '            <a><b>Modificado por: </b> '+(d.nombreMod+' '+d.ap1_mod+ ' '+ d.ap2_mod).toUpperCase()+' </a>\n' +
-  '            <br>\n' +
-  '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
-      '</li>');
-}
-
 $(document).on('click', '.btn-historico', async function(){
     $('.btn-historico').attr('disabled', true);  // Lo vuelvo a activar
     $('#spiner-loader').removeClass('hide'); // Aparece spinner
@@ -522,7 +453,7 @@ $(document).on('click', '.btn-historico', async function(){
         data: {
             "idLote": d.idLote,
             "tipoVenta" : 2,
-            "idProcesoTipoLiberacion": 134
+            "idProcesoTipoLiberacion": LIBERACION.RESCISION
           },
         dataType: 'JSON',
         success: function (res) {
@@ -556,6 +487,222 @@ $(document).on('click', '.btn-archivo', function () {
     $('.btn-historico').attr('disabled', false);  // Lo vuelvo a activar
     $('#spiner-loader').addClass('hide'); // Quito spinner  
 });
+
+// DATATABLE
+const datatableFn = (ndata, type) => {
+    liberacionesDataTable = $('#liberacionesDataTable').DataTable({
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+        width: '100%',
+        scrollX: true,
+        buttons: [{
+            extend: 'excelHtml5',
+            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+            className: 'btn buttons-excel',
+            titleAttr: 'Liberación de lotes (Particulares)',
+            title:"Liberación de lotes (Particulares)",
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
+                }
+            }
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="fa fa-file-pdf" aria-hidden="true"></i>',
+            className: 'btn buttons-pdf',
+            titleAttr: 'Liberación de lotes (Particulares)',
+            title:"Liberación de lotes (Particulares)",
+            orientation: 'landscape',
+            pageSize: 'LEGAL',
+            exportOptions: {
+                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 24],
+                format: {
+                    header: function (d, columnIdx) {
+                        return ' ' + titulosTabla[columnIdx] + ' ';
+                    }
+                }
+            }
+        }],
+        columnDefs: [
+            {
+                searchable: true,
+                visible: true
+            },
+            { 
+                orderable: true, 
+                targets: '_all' 
+            }
+        ],
+        pageLength: 4,
+        bAutoWidth: false,
+        fixedColumns: true,
+        ordering: true,
+        language: {
+            url: general_base_url+"static/spanishLoader_v2.json",
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        order: [[15, 'DESC']],
+        destroy: true,
+        columns: [
+            {
+                data: (d) => {
+                    if (d.enProcesoLiberacion === 0 || d.estatus_lib === 1) return `<span class="label" style="color: #1B4F72; background: #1B4F7218;}">NUEVO</span>`;
+                    if (d.estatus_lib === 2) return `<span class="label" style="color: #B03A2E; background: #B03A2E18;}">RECHAZO</span>`;
+                    if (d.estatus_lib === 3) return `<span class="label" style="color: #DF7314; background: #DF731418;}">CORRECCIÓN</span>`;
+                    return 'SIN ESPECIFICAR';
+                }
+            },
+            { data: "nombreProcesoLiberacion" },
+            { data: "movimiento" },
+            { data: "nombreResidencial" },
+            { data: "nombreCondominio" },
+            { data: "nombreLote" },
+            { data: "idLote" },
+            { data: "cliente" },
+            { data: "referencia" },
+            { data: "nombreAsesor" },
+            { data: "nombreCoordinador" },
+            { data: "nombreGerente" },
+            { data: "nombreSubdirector" },
+            { data: "nombreRegional" },
+            { data: "nombreRegional2" },
+            { data: "fechaApartado" },
+            {
+                data: function (d) {
+                    return `${formatMoney(d.precio)}`
+                }
+            },
+            { data: "sup"},
+            {
+                data: function (d) {
+                    return d.costom2f == 'SIN ESPECIFICAR' ? d.costom2f : `${formatMoney(d.costom2f)}`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `${formatMoney(d.total)}`
+                }
+            },
+            {
+                data: function (d) {
+                    return d.precioLiberacion === null ? 'SIN ASIGNAR' : `${formatMoney(d.precioLiberacion)}`;
+                }
+            },
+            { data: "comentario" },
+            {
+                data: function (d) {
+                    return `<div class="d-flex justify-center">${datatableButtons(d, type)}</div>`;
+                }
+            }
+        ],
+        // ajax: {
+        //     url: `${general_base_url}Liberaciones/getLotesParaLiberacion`,
+        //     dataSrc: "",
+        //     type: "POST",
+        //     cache: false,
+        //     data: {"tipoVenta": 2, idProcesoTipoLiberacion: 134},
+        // }, 
+        data: ndata,
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip({
+                trigger: "hover"
+            });
+        }
+    });
+}
+
+/**
+ * newButton function => Create a custom button with parameters
+ *
+ * @param {string} btnClass
+ * @param {string} title
+ * @param {string} action
+ * @param {object} data
+ * @param {string} icon
+ * @returns {string} 
+ */
+const newButton = (btnClass, title, action = '', data, icon) => {
+    const CUSTOM_BTN = `<button class='${btnClass}'
+        data-toggle='tooltip' 
+        data-placement='top'
+        title='${title.toUpperCase()}'
+        data-accion='${action}'
+        data-data='${JSON.stringify(data)}'>
+            <i class='${icon}'></i>
+        </button>`;
+
+    return CUSTOM_BTN;
+}
+
+const datatableButtons = (d, type) => {
+    const BTN_AVANCE_P1  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CONTRALORÍA', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P2  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A ADMINISTRACIÓN', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P3  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A VENTAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_AVANCE_P4  = newButton('btn-data btn-green btn-accion', 'AVANZAR LIBERACIÓN A CAJAS', 'AVANCE', d, 'fas fa-thumbs-up');
+    const BTN_RECHAZO_P2 = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN A POSTVENTA', 'RECHAZO', d, 'fas fa-thumbs-down');
+    const BTN_LIBERA     = newButton('btn-data btn-green btn-accion', 'APROBAR LIBERACIÓN', 'AVANCE', d, 'fa fa-check');
+    const BTN_NO_LIBERA  = newButton('btn-data btn-warning btn-accion', 'RECHAZAR LIBERACIÓN', 'RECHAZO', d, 'fa fa-times-circle');
+    const BTN_INFO       = newButton('btn-data btn-blueMaderas btn-historico', 'HISTORICO DE LA LIBERACIÓN', 'HISTORICO', d, 'fas fa-info');
+    const BTN_VER_DOC    = newButton('btn-data btn-sky btn-archivo', 'VISUALIZAR ARCHIVO', 'VER-ARCHIVO', d, 'fas fa-eye');
+    
+    let NO_BTN = '';
+
+    if (type === 2) {
+        if (d.expediente) return BTN_VER_DOC + BTN_INFO ;
+        if (!d.expediente) return BTN_INFO;
+        return BTN_INFO;
+    }
+
+    if (type === 1) {
+        if (id_rol_general == 55) { // POSTVENTA
+            if (d.enProcesoLiberacion === 0 && d.expediente) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO ;
+            if (d.enProcesoLiberacion === 0 && !d.expediente) return BTN_AVANCE_P1 + BTN_INFO;
+            if (d.enProcesoLiberacion === 1 ) return BTN_AVANCE_P1 + BTN_VER_DOC + BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 17) { // CONTRALORIA
+            if (d.enProcesoLiberacion === 2) return BTN_AVANCE_P2 + BTN_RECHAZO_P2 + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 11 ) { // ADMINISTRACIÓN
+            if (d.enProcesoLiberacion === 3) return BTN_AVANCE_P3 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 2) { // VENTAS
+            if (d.enProcesoLiberacion === 4) return BTN_AVANCE_P4 + BTN_NO_LIBERA + BTN_VER_DOC +BTN_INFO;
+            return BTN_INFO;
+        }
+        if (id_rol_general == 12) { // CAJAS
+            if (d.enProcesoLiberacion === 5) return BTN_LIBERA + BTN_NO_LIBERA + BTN_VER_DOC + BTN_INFO;      
+            return BTN_INFO;
+        }
+    }
+
+    return NO_BTN;
+}
+
+const fillChangelog = (i, d) => {
+    let accion = 'Enviado a '
+    if (d.estatus_lib == '2') {
+        accion = 'Se regresó a:'
+    }
+    $("#changelog").append('<li>\n' +
+  '            <a style="float: right">'+d.fecha_modificacion+'</a><br>\n' +
+  '            <a><b>Tipo de liberación:</b> '+ d.nombreConceptoLiberacion + '</a> \n' +
+  '            <br>\n' + 
+  '            <a><b>Estatus: </b> '+accion+d.nombreProcesoLiberacion.toLowerCase()+' </a>\n' +
+  '            <br>\n' +  
+  '            <a><b>Modificado por: </b> '+(d.nombreMod+' '+d.ap1_mod+ ' '+ d.ap2_mod).toUpperCase()+' </a>\n' +
+  '            <br>\n' +
+  '            <a><b>Comentario: </b> '+d.comentario+' </a>\n' +
+      '</li>');
+}
 
 const generarTituloDocumento = (abreviaturaNombreResidencial, nombreLote, idLote, idCliente, tipoDocumento) => {
     let rama;

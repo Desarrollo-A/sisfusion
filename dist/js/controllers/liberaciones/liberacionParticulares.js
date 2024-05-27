@@ -1,3 +1,12 @@
+const LIBERACION = Object.freeze({
+    PARTICULARES: 133,
+    RESCISION: 134
+})
+
+const TIPO_VENTA = Object.freeze({
+    PARTICULARES: 1,
+    NORMALES: 2
+})
 let liberacionesDataTable;
 
 $(document).ready(function(){
@@ -36,7 +45,7 @@ $(document).on("click", "#pendientes", function () {
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Liberaciones/getLotesPendientesLiberacion`,
-        data: {tipoVenta: 1, idProcesoTipoLiberacion: 133},
+        data: {tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES},
         cache: false,
         success: function(rs) {
             const res = JSON.parse(rs);
@@ -58,7 +67,7 @@ $(document).on("click", "#proceso", function () {
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Liberaciones/getLotesEnProcesoLiberacion`,
-        data: {tipoVenta: 1, idProcesoTipoLiberacion: 133},
+        data: {tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES},
         cache: false,
         success: function(rs) {
             const res = JSON.parse(rs);
@@ -88,7 +97,7 @@ $('#proyecto').change(function() {
 $('#condominio').change( function() {
     const index_condominio = $(this).val();
     $("#lote").html("");
-    $.post(`${general_base_url}Liberaciones/lista_lotes/${index_condominio}/${1}`, function(data) {
+    $.post(`${general_base_url}Liberaciones/lista_lotes/${index_condominio}/${TIPO_VENTA.PARTICULARES}`, function(data) {
         $("#lote").append($('<option disabled selected>SELECCIONA UN LOTE</option>'));
         for( let i = 0; i<data.length; i++){
             const id = data[i]['idLote'];
@@ -106,7 +115,7 @@ $('#lote').change( function() {
         $("#lote").val(loteValue);
         if ($('.material-datatables').hasClass('hide')) $('.material-datatables').removeClass('hide');
     
-        const values = { tipoVenta: 1, idProcesoTipoLiberacion: 133, lotes: loteValue }
+        const values = { tipoVenta: TIPO_VENTA.PARTICULARES, idProcesoTipoLiberacion: LIBERACION.PARTICULARES, lotes: loteValue }
         
         $.ajax({
             type: 'POST',
@@ -153,7 +162,6 @@ $('#liberacionesDataTable thead tr:eq(0) th').each(function (i) {
 
 // ABRIR MODAL
 $(document).on('click', '.btn-accion', async function(){
-
     // Leemos los datos del registro
     const d = JSON.parse($(this).attr("data-data"));
     const accion = $(this).attr("data-accion");
@@ -467,7 +475,7 @@ $(document).on('click', '.btn-historico', async function(){
         data: {
           "idLote": d.idLote,
           "tipoVenta" : 1,
-          "idProcesoTipoLiberacion": 133
+          "idProcesoTipoLiberacion": LIBERACION.PARTICULARES
         },
         dataType: 'JSON',
         success: function (res) {
