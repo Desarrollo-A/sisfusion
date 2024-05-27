@@ -1721,6 +1721,7 @@ class Reestructura_model extends CI_Model
 		END fechaEstatus2,
 		usG.nombre AS gerente,
 		usA.nombre AS asesor,
+        CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
 		CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
 			FROM clientes cl
 			INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente 
@@ -1771,6 +1772,7 @@ class Reestructura_model extends CI_Model
 		 	WHEN SUM(loOrigen.id_usuario_asignado + 0) < 1 THEN STRING_AGG(usA2.nombre, ', ') 
 		 	ELSE STRING_AGG(usA.nombre, ', ') 
 		 END asesor,
+         CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
 		 CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
 			FROM lotesFusion lf
 			LEFT JOIN lotes loOrigen ON loOrigen.idLote = lf.idLote and lf.origen = 1

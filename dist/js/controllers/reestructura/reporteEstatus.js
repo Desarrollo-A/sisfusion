@@ -71,7 +71,14 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         {
             data: function(d) {
-                return `<label class="label lbl-green">${d.tipo}</label>`;
+                if(d.tipoValor == 1)
+                    return `<label class="label lbl-azure">${d.tipo}</label>`;
+                if(d.tipoValor == 2)
+                    return `<label class="label lbl-warning">${d.tipo}</label>`;
+                if(d.tipoValor == 3)
+                    return `<label class="label lbl-yellow">${d.tipo}</label>`;
+                if(d.tipoValor == 4)
+                    return `<label class="label lbl-azure">Sin especificar</label>`;
             }
         },
         { data: "nombreResidencialOrigen" },
