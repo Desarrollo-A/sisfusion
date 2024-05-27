@@ -757,17 +757,25 @@ class Descuentos extends CI_Controller
 // 
 // anticipo de pagos
 
-        public function anticipo_pago_insert(){
-            $insertArray = array(
-                'id_usuario' => $this->session->userdata('id_usuario'),
-                'monto'    =>   $this->input->post('limpioMonto'),
-                'comentario' => $this->input->post('descripcionMotivo'),
-                'estatus'    => 1,
-                'proceso'    => 2,
-                'impuesto'    => 3,
-                'fecha_registro' => date("Y-m-d H:i:s"),
-                'prioridad'    => 1,
-                'prioridad'    => ''
+        public function anticipo_pago_insert()
+        {
+
+            // if(){
+
+            // }
+
+                // $insertArray
+
+                $insertArray = array(
+                'id_usuario'        => $this->session->userdata('id_usuario'),
+                'monto'             =>   $this->input->post('limpioMonto'),
+                'comentario'        => $this->input->post('descripcionMotivo'),
+                'estatus'           => 1,
+                'proceso'           => 2,
+                'impuesto'          => 3,
+                'fecha_registro'    => date("Y-m-d H:i:s"),
+                'prioridad'         => 1,
+                'prioridad'         => ''
                 );
                 
                 $idAnticipo = $this->Descuentos_model->insertAdelanto($insertArray);

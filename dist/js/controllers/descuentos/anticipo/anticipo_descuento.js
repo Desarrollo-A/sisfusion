@@ -18,9 +18,27 @@ $(document).ready(function () {
         });
         });
         
+
+
+        document.querySelectorAll('.ag-courses-item_link').forEach(item => {
+            item.addEventListener('click', function() {
+              // Remover la clase 'clicked' de cualquier otro elemento
+                document.querySelectorAll('.ag-courses-item_link.clicked').forEach(clickedItem => {
+                clickedItem.classList.remove('clicked');
+                });
+                
+              // Agregar la clase 'clicked' al elemento que fue clickeado
+                this.classList.add('clicked');
+            });
+            });
+
         cargaLinea();
 
 });
+
+
+  
+
 
 function cargaLinea(){
     let linea = document.getElementById('linea_proceso');
@@ -213,12 +231,9 @@ function clickbotonProceso(){
     $("#cartSolicitar_aticipo").addClass("hide");
     $("#preceso_aticipo").removeClass("hide");
 }
+
+
 $("#anticipo_nomina").submit(function (e) { 
-    
-
-    
-  
-
     e.preventDefault();
 }).validate({
     submitHandler: function (form) {
@@ -228,7 +243,7 @@ $("#anticipo_nomina").submit(function (e) {
         const monto = replaceAll(totalDescuento, '$', '');
         
         var data1 = new FormData($(form)[0]);
-
+        
         data1.append("limpioMonto", monto);
         $.ajax({
             url: 'anticipo_pago_insert/',
@@ -646,3 +661,18 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
     }
 
 
+    $('#numeroPagosParcialidad').change(function() {
+
+
+        monto = document.getElementById("numeroPagosParcialidad").value;
+        monto = document.getElementById("numeroPagosParcialidad").value;
+        
+
+        document.getElementById("montoPrestadoParcialidad").value = fechaIncial;
+        
+        alert('cambiando el tema ');
+
+
+
+
+    });

@@ -286,15 +286,15 @@
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
 								<br>
 								<br>
-								<div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">Descargar platilla:
-								</div>
+								<!-- <div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">Descargar platilla:
+								</div> -->
 							</div>
 							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
 								<br>
 								<br>
-								<div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">
+								<!-- <div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">
 									Subir platilla:
-								</div>
+								</div> -->
 							</div>
 						</div>
 						<!-- subir platilla  -->
