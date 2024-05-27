@@ -21,7 +21,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         titleAttr: 'Lotes para reubicar',
         title: "Lotes para reubicar",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -38,7 +38,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -69,6 +69,11 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
         },
+        {
+            data: function(d) {
+                return `<label class="label lbl-green">${d.tipo}</label>`;
+            }
+        },
         { data: "nombreResidencialOrigen" },
         { data: "nombreCondominioOrigen" },
         { data: "nombreLoteOrigen" },
@@ -86,7 +91,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         {
             data: function(d) {
-                return `<label class="label lbl-azure ">${d.validacionAdministracion}</label>`;
+                    return `<label class="label lbl-azure ">${d.validacionAdministracion}</label>`;
             }
         },
         {
