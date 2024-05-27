@@ -2762,7 +2762,7 @@ class Reestructura extends CI_Controller{
 
     public function reporteReubicaciones(){
 		$this->load->view('template/header');
-        $this->load->view("reestructura/reporteReubicaciones_view");
+        $this->load->view("reestructura/reporteEstatus_view");
 	}
 
     public function getReporteReubicaciones() {

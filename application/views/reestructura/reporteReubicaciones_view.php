@@ -30,7 +30,7 @@
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
                                                 <th>SUBDIRECTOR</th>
-                                                <th>ESTATUS PROCESO</th>
+                                                <th>ESTATUS PROCESO</th> <!-- -->
                                                 <th>ESTATUS PROPUESTA</th>
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
