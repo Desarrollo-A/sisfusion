@@ -42,7 +42,7 @@ go_to_documentos = function(data) {
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación por comité técnico"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de proyecto"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -54,7 +54,7 @@ pass_to_proyecto_ejecutivo = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para ser validado por comité técnico.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de proyecto.", "success");
         
                     table.reload()
 
