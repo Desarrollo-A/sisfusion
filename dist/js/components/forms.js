@@ -362,6 +362,16 @@ class NumberField {
         this.id = id
         this.required = required
 
+        let number = ''
+
+        if(value){
+            number = `${value}`
+
+            if(value % 1 == 0){
+                number = `${value}.00`
+            }
+        }
+
         let input = $('<input />')
             .addClass(`form-control input-gral`)
             .attr('id', id)
@@ -370,7 +380,7 @@ class NumberField {
             .attr('placeholder', placeholder)
             .prop('required', required)
             .attr('maxlength', 20)
-            .val(value)
+            .val(number)
             .on('keyup', this.validate)
 
         if(mask){

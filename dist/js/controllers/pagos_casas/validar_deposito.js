@@ -35,7 +35,7 @@ back_to_documentacion = function(data) {
 pass_to_confirmar_pago = function(data) {
     let form = new Form({
         title: 'Validar deposito', 
-        text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?`,
+        text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?<br>Ingresa el monto a pagar al constructor para inicio de obra.`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -59,7 +59,7 @@ pass_to_confirmar_pago = function(data) {
         },
         fields: [
             new HiddenField({ id: 'id', value: data.idProcesoPagos }),
-            new NumberField({  id: 'monto', label: 'Pago a realizar', required: true }),
+            new NumberField({  id: 'monto', label: 'Pago a realizar', required: true, mask: "#,##0.00" }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
