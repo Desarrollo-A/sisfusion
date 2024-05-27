@@ -34,8 +34,18 @@ let buttons = [
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'no subido'
+    } },
     { data: function(data){
         let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         if(!data.archivo){

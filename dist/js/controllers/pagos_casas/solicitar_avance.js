@@ -12,7 +12,7 @@ pass_to_validar_avance = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Se envió el lote al proceso para validar avance.", "success");
+                    alerts.showNotification("top", "right", "Se envió el lote al proceso para confirmar pago.", "success");
         
                     table.reload()
 
@@ -46,7 +46,7 @@ show_form = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a solicitar avance.", "success");
+                    alerts.showNotification("top", "right", "Se ha creado un nuevo avance.", "success");
         
                     table.reload()
 
@@ -60,13 +60,18 @@ show_form = function(data) {
         fields: [
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',      value: data.idAvance }),
-            new NumberField({ id: 'nuevo_avance',   value: data.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
-            new NumberField({ id: 'monto',          value: data.monto,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required:'required' }),
+            new NumberField({ id: 'nuevo_avance',   value: data.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa la cantidad', width:'12', required: true }),
+            new NumberField({ id: 'monto',          value: data.monto,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
         ],
     })
 
     form.show()
 }
+
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
 
 let columns = [
     { data: 'idLote' },
@@ -77,17 +82,20 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        return `${data.avance} %`
+        return `${data.avanceObra} %`
     } },
     { data: function(data){
         if(data.nuevo_avance){
             return `${data.nuevo_avance} %`
         }
         
-        return ''
+        return 'sin ingresar'
     } },
-    { data: function(data){
-        return `$ ${data.monto.toFixed(2)}`
+    { data: function(data) {
+        if(data.monto){
+            return formatter.format(data.monto)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)
@@ -104,7 +112,10 @@ let columns = [
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ingresar nuevo avance', onClick: show_form, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_validar_avance, data})
+        let pass_button = '' 
+        if(data.nuevo_avance && data.monto){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_validar_avance, data})
+        }
 
         // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
         

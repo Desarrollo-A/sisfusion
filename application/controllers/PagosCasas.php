@@ -76,6 +76,11 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/validar_avance");
     }
 
+    public function reporte_pagos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/reporte_pagos");
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -508,10 +513,12 @@ class Pagoscasas extends BaseController {
 
         $proceso = $this->PagosCasasModel->getProceso($id);
 
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 8, $comentario);
+        $nuevo_avance = $proceso->avanceObra + $avance;
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
-            $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $avance);
+            $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $nuevo_avance);
 
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
@@ -548,4 +555,12 @@ class Pagoscasas extends BaseController {
         $this->json([]);
     }
 
+    public function lista_reporte_pagos(){
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
+        $finalizado = "0, 1";
+
+        $lotes = $this->PagosCasasModel->getListaReportePagos($proceso, $finalizado);
+
+        $this->json($lotes);
+    }
 }

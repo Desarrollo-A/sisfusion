@@ -54,9 +54,9 @@ function show_propuestas(proceso) {
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
         new HiddenField({ id: 'idPropuesta', value: proceso.idPropuesta }),
         new title({ text: 'Cotizaciones' }),
-        new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones' }),
+        new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones', required: true }),
         new title({ text: fechas.length == 1 ? 'Fecha de firma' : 'Fechas de firma' }),
-        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', value: proceso.fechaElegida, data: fechas, style: 'height: 45px' }),
+        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', value: proceso.fechaElegida, data: fechas, style: 'height: 45px', required: true }),
     ]
 
     form.show()
@@ -234,13 +234,13 @@ let columns = [
 
         switch(data.fechaElegida){
         case 1:
-            fecha = data.fechaFirma1
+            fecha = data.fechaFirma1.substring(0, 16)
             break
         case 2:
-            fecha = data.fechaFirma2
+            fecha = data.fechaFirma2.substring(0, 16)
             break
         case 3:
-            fecha = data.fechaFirma3
+            fecha = data.fechaFirma3.substring(0, 16)
             break
         }
 
