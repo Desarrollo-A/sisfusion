@@ -3533,17 +3533,11 @@
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
 					$id_lider = $id_lider . ', 6942';
 					$sede = "";
-				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-					$id_lider = $id_lider . ', 10251, 455';
-					$sede = "";
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
 					$id_lider = $id_lider . ', 6661';
 					$sede = "";
 				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
 					$id_lider = $id_lider . ', 80, 664';
-					$sede = "";
-				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-					$id_lider = $id_lider . ', 7435';
 					$sede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
 					$id_lider = $id_lider . ', 495';
@@ -3552,7 +3546,10 @@
 					$id_lider = $id_lider . ', 13016';
 					$sede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-					$id_lider = $id_lider . ', 13059';
+					$id_lider = $id_lider . ', 13059, 7435';
+					$sede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+					$id_lider = $id_lider . ', 10251';
 					$sede = "";
 				}
 

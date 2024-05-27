@@ -30,7 +30,7 @@ function fillTable(transaction, beginDate, endDate, where) {
                 titleAttr: 'LISTADO DE PROSPECTOS CRM',
                 title: "LISTADO DE PROSPECTOS CRM",
                 exportOptions: {
-                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    columns: (id_sede_general == 3 && (id_rol_general == 3 || id_rol_general == 6)) ? [0, 1, 2, 3, 4, 5, 6, 7, 8] : [0, 1, 2, 3, 4, 5, 6],
                     format: {
                         header: function (d, columnIdx) {
                             return ' ' + titulosListadoProspectos[columnIdx] + ' ';
@@ -116,6 +116,18 @@ function fillTable(transaction, beginDate, endDate, where) {
         {
             data: function(d) {
                 return d.fecha_creacion;
+            }
+        },
+        {
+            visible: (id_sede_general == 3 && (id_rol_general == 3 || id_rol_general == 6)) ? true : false,
+            data: function (d) {
+                return d.correo;
+            }
+        },
+        {
+            visible: (id_sede_general == 3 && (id_rol_general == 3 || id_rol_general == 6)) ? true : false,
+            data: function (d) {
+                return d.telefono;
             }
         },
         {
