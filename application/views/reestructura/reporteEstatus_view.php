@@ -45,6 +45,7 @@
                                         <thead>
                                             <tr>
                                                 <th>TIPO DE PROCESO</th>
+                                                <th>MOVIMIENTO</th>
                                                 <th>PROYECTO ORIGEN</th>
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>
@@ -54,7 +55,7 @@
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
                                                 <th>REFERENCIA DESTINO</th>                                                
-                                                <th>ID LOTE DESTINO</th>
+                                                <th>ID LOTE DESTINO</th>                                                
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th>
                                                 <th>FECHA ÚLTIMO MOVIMIENTO</th>
