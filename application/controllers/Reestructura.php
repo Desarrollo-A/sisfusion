@@ -216,17 +216,6 @@ class Reestructura extends CI_Controller{
         $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
         $fechaNuevoEsquema = new DateTime($fechaCambio);
 
-        var_dump('Valoración:');
-        var_dump($ultimoEstatus2 >= $fechaNuevoEsquema);
-
-        var_dump('fecha nuevo esquema:');
-        var_dump($fechaNuevoEsquema);
-
-        var_dump('fecha ultimo estatus 2:');
-        var_dump($fechaNuevoEsquema);
-
-        exit;
-
         if( $ultimoEstatus2 >= $fechaNuevoEsquema){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
@@ -3720,7 +3709,7 @@ class Reestructura extends CI_Controller{
 
         $getTotalNeto2 = $this->Reestructura_model->getTotalNeto2($loteAnterior)->result();
         $totalNetoAnterior = $getTotalNeto2[0]->anterior;
-        var_dump($totalNetoAnterior);
+        // var_dump($totalNetoAnterior);
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
         // aplicarLiberacion funcion
@@ -4093,5 +4082,28 @@ class Reestructura extends CI_Controller{
 
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($response)); 
+    }
+
+    function getPreOrigen(){
+        $idLote = $this->input->post('idLote');
+
+        $getOrigen = $this->Reestructura_model->getPreOrigen($idLote);
+        $getDatos = $getOrigen->result();
+
+        if($getOrigen->num_rows() > 0){
+            $response["result"] = true;
+            $response["message"] = "Se ha obtenido el historial de preproceso";
+            $response["idLote"] = $getDatos[0]->idLote;
+            $response["proceso"] = $getDatos[0]->proceso;
+        }
+        else{
+            $response["result"] = false;
+            $response["message"] = "No hay historial preproceso para este lote";
+            $response["idLote"] = 0;
+            $response["proceso"] = 0;
+        }
+
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($response));         
     }
 }

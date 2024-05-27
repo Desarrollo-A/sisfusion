@@ -2353,5 +2353,13 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    public function getPreOrigen($idLote){
+        $query = $this->db->query("SELECT lo.idLote, cl.proceso FROM clientes cl 
+        INNER JOIN lotes lo ON cl.idLote = lo.idLote
+        WHERE cl.id_cliente = (SELECT id_cliente_reubicacion_2 FROM clientes clSub WHERE idLote = ? AND clSub.status = 1)", $idLote);
+
+        return $query;
+    }
     
 }
