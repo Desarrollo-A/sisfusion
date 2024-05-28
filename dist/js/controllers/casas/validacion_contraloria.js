@@ -14,7 +14,7 @@ pass_to_solicitud_contratos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso para solicitar contratos.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de subir contratos.", "success");
         
                     table.reload();
                     form.hide();

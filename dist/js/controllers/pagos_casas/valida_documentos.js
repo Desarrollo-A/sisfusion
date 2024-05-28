@@ -70,6 +70,11 @@ go_to_documentos = function(data) {
     window.location.href = `lista_valida_documentos/${data.idProcesoPagos}`;
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -80,17 +85,15 @@ let columns = [
     { data: 'gerente' },
     { data: function(data) {
         if(data.costoConstruccion){
-            return `$ ${data.costoConstruccion.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.costoConstruccion)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data) {
         if(data.montoDepositado){
-            return `$ ${data.montoDepositado.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.montoDepositado)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)

@@ -30,7 +30,8 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>AVANCE</th>
+                                            <th>AVANCE OBRA</th>
+                                            <th>AVANCE ACTUAL</th>
                                             <th>MONTO</th>
                                             <th>TIEMPO</th>
                                             <th>ACCIONES</th>

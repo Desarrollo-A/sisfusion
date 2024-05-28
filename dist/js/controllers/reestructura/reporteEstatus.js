@@ -122,7 +122,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         {
             visible: (id_rol_general == 17) ? true : false,
             data: function(d) {
-                return `<label class="label lbl-azure ">${d.validacionAdministracion}</label>`;
+                    return `<label class="label lbl-azure ">${d.validacionAdministracion}</label>`;
             }
         },
         {
