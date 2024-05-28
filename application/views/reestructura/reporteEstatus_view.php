@@ -45,6 +45,7 @@
                                         <thead>
                                             <tr>
                                                 <th>TIPO DE PROCESO</th>
+                                                <th>MOVIMIENTO</th>
                                                 <th>PROYECTO ORIGEN</th>
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>

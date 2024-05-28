@@ -2760,15 +2760,6 @@ class Reestructura extends CI_Controller{
         echo json_encode($this->General_model->updateRecord("lotes", $updateData, "idLote", $this->input->post('idLote')));
     }
 
-    public function reporteReubicaciones(){
-		$this->load->view('template/header');
-        $this->load->view("reestructura/reporteEstatus_view");
-	}
-
-    public function getReporteReubicaciones() {
-        echo json_encode($this->Reestructura_model->getReporteReubicaciones());
-    }
-
     public function copiarCopropietariosAnteriores($idCliente, $idLote): bool
     {
         $copropietarios = $this->Reestructura_model->obtenerCopropietariosPorIdCliente($idCliente);
