@@ -76,6 +76,7 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/validar_avance");
     }
 
+    
     public function reporte_pagos(){
         $this->load->view('template/header');
         $this->load->view("pagos_casas/reporte_pagos");
