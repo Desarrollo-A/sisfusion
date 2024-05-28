@@ -226,6 +226,14 @@
     $data = json_decode(file_get_contents("php://input"));
     $index_condominio = $this->input->post('index_condominio');
     $dato = $this->Internomex_model->getRegistrosLotesEnganche($index_condominio);
+    foreach ($dato as $index => $elemento){
+        if(is_null($elemento['idEnganche'])){
+            $dato[$index]['registroEstatus'] = 0;
+        }else{
+            $dato[$index]['registroEstatus'] = 1;
+        }
+    }
+
     if ($dato != null)
         echo json_encode($dato);
     else

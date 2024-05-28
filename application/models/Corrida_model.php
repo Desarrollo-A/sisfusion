@@ -629,11 +629,13 @@
 
 
     function getPlanesPago($idLote){
-        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
-        $query = $this->db->query("SELECT res.nombreResidencial, co.nombre, lo.nombreLote, lo.idLote, numeroPeriodos,  pp.* FROM planes_pago pp 
+//        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
+        $query = $this->db->query("SELECT res.nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote, lo.idLote, numeroPeriodos,  
+        pp.*, planPagoCatalogo.nombre as planPago FROM planes_pago pp 
         INNER JOIN lotes lo ON pp.idLote = lo.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
+        INNER JOIN opcs_x_cats planPagoCatalogo ON planPagoCatalogo.id_opcion =  pp.tipoPlanPago AND planPagoCatalogo.id_catalogo = 137
         WHERE pp.estatus = 1 AND pp.idLote = ".$idLote);
         return $query->result_array();
     }
@@ -658,6 +660,13 @@
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
         WHERE idLote=$idLote");
+        return $query->row();
+    }
+
+    function getPlanPago($idPlanPago){
+        $query = $this->db->query("SELECT pp.*, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_paterno) as nombreCliente
+        FROM planes_pago pp  INNER JOIN clientes cl ON cl.id_cliente = pp.idCliente 
+        WHERE pp.idPlanPago= $idPlanPago");
         return $query->row();
     }
 }

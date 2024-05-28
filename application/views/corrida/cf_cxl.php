@@ -4987,7 +4987,7 @@
 
                     }
 
-                    if($scope.infoLote.mesesSinInteresP1 == 36) {
+                    /*if($scope.infoLote.mesesSinInteresP1 == 36) {
 
 
 
@@ -5442,7 +5442,7 @@
                         ).withLanguage({"url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"});
 
 
-                    }
+                    }*/
 
                 }
 

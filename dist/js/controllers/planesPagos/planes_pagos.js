@@ -1,4 +1,5 @@
 let idLote = 0;
+let dumpPlanPago = [];
 
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -103,6 +104,15 @@ $('#idLote').change(function () {
                 action:function(){
                     addPlanPago();
                 }
+            },
+            {
+                text: '<i class="fa fa-check" aria-hidden="true"></i>',
+                className: 'btn btn-azure',
+                titleAttr: 'Enviar plan de pago',
+                title: 'Enviar plan de pago',
+                action:function(){
+                    enviarPlanPago();
+                }
             }],
         // columnDefs: [{
         //     targets: [22, 23, 24, 32],
@@ -132,11 +142,20 @@ $('#idLote').change(function () {
             },
             { data: 'nombreLote' },
             { data: 'idLote' },
+            { data: 'nombrePlan' },
             { data: 'numeroPeriodos' },
             /***********/
             {
                 data: function (d) {
-                    return `<center><button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-tipo-venta="${d.tipo_venta}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button></center>`;
+                    let BTN_VER = `<button class="btn-data btn-blueMaderas ver_planPago" value="${d.idLote}" 
+                    data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                    data-toggle="tooltip" data-placement="left" title="VER PLAN"><i class="fas fa-eye"></i></button>`;
+
+                    let BTN_EDIT = `<button class="btn-data btn-blueMaderas editarPago" value="${d.idLote}" 
+                    data-nomLote="${d.nombreLote}" data-idplanPago="${d.idPlanPago}" data-nombrePlan="${d.nombrePlan}" 
+                    data-toggle="tooltip" data-placement="left" title="EDITAR PLAN"><i class="fas fa-pencil-alt"></i></button>`;
+
+                    return `<center>${BTN_VER} ${BTN_EDIT}</center>`;
                 }
             }],
         initComplete: function() {
@@ -188,6 +207,7 @@ function loadInputsCatalogos(dto){
         style: 'currency',
         currency: 'USD',
     });
+    cerrarModalAddPlan();
     dto.dtoCatalogos.map((catalogoOpciones) => {
         if (catalogoOpciones.id_catalogo == 137) // PLAN DE PAGO
             $("#tipoPP").append(`<option value="${catalogoOpciones.id_opcion}" data-FormaPgo="${catalogoOpciones.nombre}">${catalogoOpciones.nombre}</option>`);
@@ -240,10 +260,14 @@ function activarIva(checkboxElem) {
 
 $(document).on("submit", "#formPlanPago", function (e) {
     e.preventDefault();
+
+    generarPlanPagoFunction();
+    let formulario =  new FormData(this);
+    formulario.append("dumpPlanPago", dumpPlanPago);
     $.ajax({
         type: 'POST',
         url: `${general_base_url}Corrida/guardaPlanPago`,
-        data: new FormData(this),
+        data: formulario,
         contentType: false,
         cache: false,
         processData:false,
@@ -258,7 +282,7 @@ $(document).on("submit", "#formPlanPago", function (e) {
                     if (dto.status == 1) {
                         cerrarModalAddPlan();
                         alerts.showNotification("top", "right", dto.mensaje, "success");
-                        tablaPlanPagos.ajax.reload();
+                        $('#tablaPlanPagos').DataTable().ajax.reload();
                     }
                     else
                         alerts.showNotification("top", "right", dto.mensaje, "danger");
@@ -352,21 +376,41 @@ function validateInputs(){
         }
     }
 
+    if(dumpPlanPago.length == 0){
+        alerts.showNotification('top', 'right', 'No se ha generado el plan de pago, inténtalo nuevamente', 'warning');
+        return false;
+    }
+
 }
 
 $(document).on('change','#tipoPP', function(){
     let tipoPlanTxtPP = document.getElementById('tipoPlanTxtPP');
     tipoPlanTxtPP.value = $(this).find("option:selected").attr('data-FormaPgo');
+
+    //1:Enganche 2: Plan de pago
+    let tipoPP = parseInt($(this).val());
+    let tazaInteresPP = $('#tazaInteresPP');
+    let interesesSSI = $('#interesesSSI');
+    if(tipoPP==1){
+        tazaInteresPP.attr('readonly','true');
+        tazaInteresPP.val(0);
+        interesesSSI.attr('disabled', 'disabled');
+    }else{
+        tazaInteresPP.removeAttr('readonly');
+        tazaInteresPP.val(0);
+        interesesSSI.removeAttr('disabled');
+    }
 });
 
 function cerrarModalAddPlan() {
-    $("#tipoPP").html("");
+    $("#tipoPP").empty();
+
     $("#descripcionPlanPago").val();
-    $("#monedaPP").html("");
+    $("#monedaPP").empty();
     $("#montoPP").val();
     $("#tazaInteresPP").val();
     $("#noPeriodosPP").val();
-    $("#periocidadPP").html("");
+    $("#periocidadPP").empty();
     $("#fechaInicioPP").val();
     $("#mensualidadPP").val();
     $("#porcentajeIvaPP").val();
@@ -378,3 +422,185 @@ function cerrarModalAddPlan() {
     $('#addPlanPago').modal('hide');
     cont_eng = 0;
 }
+
+function generarPlanPagoFunction(){
+    //let tipoPP = $('#tipoPP').empty().selectpicker('refresh');
+    let fechaInicio = $('#fechaInicioPP').val();
+    let noPeriodosPP = $('#noPeriodosPP').val();
+    let periocidadPP = $('#periocidadPP').val();
+    let tazaInteresPP = $('#tazaInteresPP').val();
+    let planPago = $('#planPago').val();
+    let montoPP = $('#montoPP').val().replace("$", '');
+    let mensualidadPP = $('#mensualidadPP').val().replace("$", '');
+    montoPP = parseFloat(montoPP.replace(",", ''));
+    let interesesSSI = document.getElementById('interesesSSI').checked;
+    let ivaPP = document.getElementById('ivaPP').checked;
+    let porcentajeIva = document.getElementById('porcentajeIvaPP').value;
+    dumpPlanPago = generarPlanPago(fechaInicio, noPeriodosPP, montoPP, tazaInteresPP, periocidadPP, tipoPP, planPago, mensualidadPP, interesesSSI, ivaPP, porcentajeIva);
+}
+
+$(document).on('click', '.ver_planPago', async function(){
+    let idPlanPago = $(this).attr('data-idplanPago');
+    let nombrePlanPago = $(this).attr('data-nombreplan');
+    console.log('idPlanPago', idPlanPago);
+    console.log('nombrePlanPago', nombrePlanPago);
+
+    $('#spiner-loader').removeClass('hide');
+    dumpPlanPago = await getPlanPagoDump(idPlanPago);
+    fillTable(dumpPlanPago);
+
+    $('#verPlanPago').modal('toggle');
+});
+const getPlanPagoDump = (idPlanPago) =>{
+    return new Promise((resolve) => {
+        $.getJSON(`${general_base_url}Corrida/getPlanPago/${idPlanPago}`,function (sedes) {
+            resolve(sedes);
+            $('#spiner-loader').addClass('hide');
+        });
+    });
+}
+
+function fillTable(data) {
+    $('#nombrePlanPagotxt').val(data.nombrePlanPago);
+    $('#nombrePlanPago').val(data.nombrePlan);
+    $('#nombreCliente').val(data.nombreCliente);
+    $('#montoPlanPago').val(formatMoney(data.monto));
+    $('#tazaInteresPlanPago').val(data.tazaInteres);
+    $('#mensualidadPlanPago').val(formatMoney(data.mensualidad));
+    $('#periodosPlanPago').val(data.numeroPeriodos);
+    data = JSON.parse(data.dumpPlan);
+    let titulosTabla = [];
+    $('#tabla_plan_pago thead tr:eq(0) th').each(function (i) {
+        const title = $(this).text();
+        titulosTabla.push(title);
+        $(this).html('<input type="text" class="textoshead" data-toggle="tooltip" data-placement="top" title="' + title + '" placeholder="' + title + '"/>');
+        $('input', this).on('keyup change', function () {
+            if ($('#tabla_plan_pago').DataTable().column(i).search() !== this.value) {
+                $('#tabla_plan_pago').DataTable().column(i).search(this.value).draw();
+            }
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    tablePagos = $('#tabla_plan_pago').dataTable({
+        data: data,
+        width: '100%',
+        scrollX: true,
+        searching: true,
+        dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
+
+        initComplete: function () {
+            $('[data-toggle="tooltip"]').tooltip("destroy");
+            $('[data-toggle="tooltip"]').tooltip({trigger: "hover"});
+        },
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                title: 'Master cobranza',
+                titleAttr: 'Descargar archivo de Excel',
+                exportOptions: {
+                    columns: [1,2,3,4,5,6,7,8,9,10],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' '+titulos_encabezado[columnIdx] +' ';
+                        }
+                    }
+                }
+            },
+            {
+                text: "<i class='fas fa-pencil-alt' aria-hidden='true'></i>",
+                titleAttr: 'Editar plan de pago',
+                className: "btn  buttons-pdf editarPlanPago",
+            },
+            {
+                text: "<i class='fas fa-check' aria-hidden='true'></i>",
+                titleAttr: 'Enviar planes de pago',
+                className: "btn btn-azure  enviarPlanPago",
+            }
+        ],
+        pagingType: "full_numbers",
+        lengthMenu: [
+            [10, 25, 50, -1],
+            [10, 25, 50, "Todos"]
+        ],
+        language: {
+            url: `${general_base_url}/static/spanishLoader_v2.json`,
+            paginate: {
+                previous: "<i class='fa fa-angle-left'>",
+                next: "<i class='fa fa-angle-right'>"
+            }
+        },
+        destroy: true,
+        processing: false,
+        pageLength: 10,
+        bAutoWidth: false,
+        bLengthChange: false,
+        bInfo: true,
+        paging: true,
+        ordering: true,
+        fixedColumns: true,
+        columns: [
+            {
+                data: function (d) {
+                    return d.pago;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.fecha;
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.capital);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.saldoCapital);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.interes);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.saldoInteres);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.iva);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.saldoIva);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.total);
+                }
+            },
+            {
+                data: function (d) {
+                    return formatMoney(d.saldo);
+                }
+            },
+        ]
+    });
+
+}
+
+function enviarPlanPago(){
+    console.log('se enviara el plan de pago actual');
+}
+
+$(document).on('click', '.editarPago', function(){
+   console.log('acciones para editar el plan de pago');
+});

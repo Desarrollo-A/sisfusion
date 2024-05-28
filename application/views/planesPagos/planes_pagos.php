@@ -20,6 +20,7 @@
 <div class="wrapper">
     <?php $this->load->view('template/sidebar'); ?>
     <?php include 'Modales/addPlanPagoModal.php' ?>
+    <?php include 'Modales/verPlanPagoModal.php' ?>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -75,6 +76,7 @@
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
                                                 <th>ID LOTE</th>
+                                                <th>PLAN DE PAGO</th>
                                                 <th>PLAZO</th>
                                                 <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
                                                 <th>ACCIONES</th><!--68-->
@@ -162,5 +164,6 @@
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/controllers/planesPagos/planes_pagos.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/planesPagos/generaPlanPago.js"></script>
 
 </body>

@@ -201,6 +201,14 @@ function fillTable(index_proyecto, index_condominio) {
             },
             {
                 data: function (d) {
+                    let informacionEnganche = (d.registroEstatus == 0) ? 'SIN INFORMACIÓN' : "CON INFORMACIÓN";
+                    let classLabl = (d.registroEstatus == 0) ? 'lbl-warning' : "lbl-green";
+                    return `<span class='label ${classLabl}'>${informacionEnganche}</span>`;
+
+                }
+            },
+            {
+                data: function (d) {
                     return `<button class="btn-data btn-blueMaderas cop" data-toggle="tooltip" data-placement="top" title= "DETALLE ENGANCHE" data-idLote="${d.idLote}" data-idEnganche="${d.idEnganche}" data-idCliente="${d.idCliente}"><i class="material-icons">attach_money</i></button>`;
                 }
             }

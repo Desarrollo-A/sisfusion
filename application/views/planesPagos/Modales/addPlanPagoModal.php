@@ -47,7 +47,7 @@
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                         <div class="form-group" >
-                                            <label class="control-label">T. interés</label>
+                                            <label class="control-label">T. interés (anual)</label>
                                             <input type="text" class="form-control input-gral" name="tazaInteresPP" id="tazaInteresPP"  value="" style="margin-top: 6px"/>
                                         </div>
                                     </div>
@@ -80,7 +80,7 @@
                                         </div>
                                         <div class="radio">
                                             <label style="font-size: 0.9em;">
-                                                <input type="checkbox" id="interesesSSI" name="ivaPP" class="checkBox" onchange="activarIva(this)" value="1"> Aplicar IVA
+                                                <input type="checkbox" id="ivaPP" name="ivaPP" class="checkBox" onchange="activarIva(this)" value="1"> Aplicar IVA
                                             </label>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                             <label class="control-label">Mensualidad</label>
                                             <input class="form-control input-gral" name="mensualidadPP"
                                                    data-type="currency" pattern="^\$\d{1,3}(,\d{3})*(\.\d+)?$"  step="any" type="text"
-                                                   id="mensualidadPP"  style="color: #ff0000" value="" readonly/>
+                                                   id="mensualidadPP"  style="color: #ff0000" value=""/>
                                         </div>
                                     </div>
                                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left: 0px;padding-right: 0px">
@@ -119,7 +119,8 @@
                     <input type="hidden" name="idLotePP" id="idLotePP">
                     <input type="hidden" name="idClientePP" id="idClientePP">
                     <input type="hidden" name="nombreLotePP" id="nombreLotePP">
-                    <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal"> Cancelar </button>
+                    <!--<button type="button" class="btn btn-simple btn-green" onclick="generarPlanPagoFunction()"> Generar plan </button>-->
+                    <button type="button" class="btn btn-danger btn-simple" onclick="cerrarModalAddPlan()"> Cancelar </button>
                     <button type="submit" id="RequestInformacion" class="btn btn-primary">Aceptar</button>
                 </div>
             </form>

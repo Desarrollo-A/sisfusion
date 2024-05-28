@@ -145,6 +145,7 @@
                                                     <th>UBICACIÓN</th>
                                                     <th>ENGANCHE CONTRALORÍA</th>
                                                     <th>ENGANCHE ADMINISTRACIÓN</th>
+                                                    <th>REGISTRO ENGANCHE</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

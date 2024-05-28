@@ -3723,36 +3723,40 @@ legend {
         $noPeriodosPP = $this->input->post("noPeriodosPP");
         $periocidadPP= $this->input->post("periocidadPP");
         $fechaInicioPP = $this->input->post("fechaInicioPP");
+        $ssi = $this->input->post("interesesSSI");
+        $ssi = isset($ssi) ? $ssi : 0;;
         $ivaPP = $this->input->post("ivaPP");
+        $ivaPP = isset($ivaPP) ? $ivaPP : 0;;
         $mensualidadPP = $this->input->post("mensualidadPP");
         $porcentajeIvaPP = $this->input->post("porcentajeIvaPP");
         $porcentajeIvaPP = isset($porcentajeIvaPP) ? $porcentajeIvaPP : '';
         $cantidadIvaPP = $this->input->post("cantidadIvaPP");
         $cantidadIvaPP = isset($cantidadIvaPP) ? $cantidadIvaPP : '';
         $tipoPlanTxtPP = $this->input->post("tipoPlanTxtPP");//nombre del tipo de plan
+        $dumpPlanPago = $this->input->post("dumpPlanPago");
 
-        $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago-1);
+        $nombrePlan = ($tipoPlanTxtPP=='Enganche')  ? $tipoPlanTxtPP : $tipoPlanTxtPP.' '.($planPago);
         $fecha_actual = date('Y-m-d H:i:s');
 
-        $ret = "App\Service";
-        $string = str_replace('\\','', $ret);
-
         $insert_plan = array(
-            "idLote" => $idLotePP,
-            "idCliente" => $idClientePP,
+            "idLote" =>(int) $idLotePP,
+            "idCliente" => (int) $idClientePP,
             "nombreLote" => $nombreLotePP,
             "nombrePlan" => $nombrePlan, //se compone del plan y el numero del plan
             "descripcion" => $descripcionPlanPago,
-            "monto" => tr_replace(array('$',','),'', $montoPP),
-            "moneda" => $monedaPP,
-            "tazaInteres" => $tazaInteresPP,
-            "mensualidad" => $mensualidadPP,
-            "numeroPeriodos" => $noPeriodosPP,
-            "periodicidad" => $periocidadPP,
+            "tipoPlanPago" => $tipoPP,
+            "monto" => (int) str_replace(array('$',','),'', $montoPP),
+            "moneda" => (int) $monedaPP,
+            "tazaInteres" => (float) $tazaInteresPP,
+            "mensualidad" => (int) str_replace(array('$',','),'', $mensualidadPP),
+            "numeroPeriodos" => (int) $noPeriodosPP,
+            "periodicidad" => (int) $periocidadPP,
             "fechaInicioPlan" => $fechaInicioPP,
-            "montoIvaPorcentaje" => $porcentajeIvaPP,
-            "cantidadIva" => $cantidadIvaPP,
-            "dumpPlan" => null,//array del plan de pago
+            "iva" => $ivaPP,
+            "montoIvaPorcentaje" => (int) $porcentajeIvaPP,
+            "cantidadIva" => (int) $cantidadIvaPP,
+            "ssi" => (int) $ssi,
+            "dumpPlan" => $dumpPlanPago,//array del plan de pago
             "fechaCreacion" => $fecha_actual,
             "creadoPor" => $this->session->userdata("id_usuario"),
             "fechaModificacion" => $fecha_actual,
@@ -3760,9 +3764,8 @@ legend {
             "estatus" => 1
         );
 
-        print_r($insert_plan);
-        exit;
-        $insertPlanDB = $this->General_model->addRecord($insert_plan);
+
+        $insertPlanDB = $this->General_model->addRecord('planes_pago', $insert_plan);
         if ( $insertPlanDB ) {
             $response = array( "status" => 1, "mensaje"=>"Se actualizó el enganche correctamente");
         } else  {
@@ -3770,5 +3773,14 @@ legend {
         }
         echo json_encode($response);
 
+    }
+
+    function getPlanPago($idPlanPago){
+        $data = $this->Corrida_model->getPlanPago($idPlanPago);
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
     }
 }

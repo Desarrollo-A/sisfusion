@@ -396,7 +396,7 @@ class Internomex_model extends CI_Model {
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_materno, ' ', cl.apellido_materno)) nombreCliente, fechaApartado,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_materno, ' ', u0.apellido_materno)) END nombreAsesor,
         tv.tipo_venta tipoVenta, se.nombre ubicacion, FORMAT(lo.totalNeto, 'C') engancheContraloria, FORMAT(lo.totalValidado, 'C') engancheAdministracion, 
-        eng.idEnganche, lo.idCliente
+        eng.idEnganche, lo.idCliente, eng.*
         FROM lotes lo
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio AND co.idCondominio = $id_condominio
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
@@ -405,7 +405,7 @@ class Internomex_model extends CI_Model {
         LEFT JOIN tipo_venta tv ON tv.id_tventa = lo.tipo_venta
         LEFT JOIN sedes se ON se.id_sede = lo.ubicacion
         LEFT JOIN enganche eng ON lo.idLote = eng.idLote 
-        WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result();
+        WHERE lo.status = 1 AND lo.idStatusLote IN (2, 3)")->result_array();
     }
 
     // CONSULTA PARA TRAER LA OPCIONES DEL CATÁLOGO FORMA DE PAGO, INSTRUMENTO MONETARIO Y MONEDA O DIVISA
