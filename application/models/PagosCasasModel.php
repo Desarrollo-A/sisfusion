@@ -519,7 +519,8 @@ class PagosCasasModel extends CI_Model
             CASE
                  WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
                  ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
-            END AS gerente
+            END AS gerente,
+            proceso.nombre AS procesoNombre
         FROM proceso_pagos pp
         LEFT JOIN lotes lo ON lo.idLote = pp.idLote
         LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
@@ -529,9 +530,11 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
         LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
         LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        LEFT JOIN opcs_x_cats proceso ON proceso.id_catalogo = 141 AND proceso.id_opcion = pp.proceso
         WHERE
             pp.proceso IN ($proceso)
-        AND pp.status = 1";
+        AND pp.status = 1
+        AND pc.finalizado IN ($finalizado)";
 
         return $this->db->query($query)->result();
     }
@@ -563,6 +566,33 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             app.idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoFinalizado($idProcesoPagos, $comentario){
+        $query = "UPDATE proceso_pagos
+        SET
+            proceso = 8,
+            comentario = '$comentario',
+            finalizado = 1,
+            fechaProceso = GETDATE(),
+            fechaModificacion = GETDATE(),
+            idModificacion = $this->idUsuario
+        WHERE
+            idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query);
+    }
+
+    public function getProcesosOptions(){
+        $query = "SELECT
+            id_opcion AS value,
+            nombre AS label
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 141
+        AND estatus = 1";
 
         return $this->db->query($query)->result();
     }

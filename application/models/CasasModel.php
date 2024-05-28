@@ -1108,7 +1108,7 @@ class CasasModel extends CI_Model
             cpc.idProcesoCasas,
             cpc.archivo,
             CASE
-                 WHEN cpc.nombre IS NULL THEN 'COTIZACION NO SUBIDA'
+                 WHEN cpc.nombre IS NULL THEN 'COTIZACIÓN NO SUBIDA'
                  ELSE cpc.nombre
             END AS nombre
         FROM cotizacion_proceso_casas cpc
