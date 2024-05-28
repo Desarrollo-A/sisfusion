@@ -535,4 +535,35 @@ class PagosCasasModel extends CI_Model
 
         return $this->db->query($query)->result();
     }
+
+    public function getListaAvances($idProcesoPagos){
+        $query = "SELECT
+            app.*,
+            lo.idLote,
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
+        FROM avances_proceso_pagos app
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        WHERE
+            app.idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query)->result();
+    }
 }

@@ -81,6 +81,17 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/reporte_pagos");
     }
 
+    public function avances($proceso){
+        $lote = $this->PagosCasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/avances", $data);
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -560,6 +571,12 @@ class Pagoscasas extends BaseController {
         $finalizado = "0, 1";
 
         $lotes = $this->PagosCasasModel->getListaReportePagos($proceso, $finalizado);
+
+        $this->json($lotes);
+    }
+
+    public function lista_avances($proceso){
+        $lotes = $this->PagosCasasModel->getListaAvances($proceso);
 
         $this->json($lotes);
     }

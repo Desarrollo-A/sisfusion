@@ -1,7 +1,7 @@
 pass_to_validacion = function(data) {
     let form = new Form({
         title: 'Enviar a validacion', 
-        text: `¿Enviar documentacion del lote <b>${data.nombreLote}</b> a validacion por contraloria?`,
+        text: `¿Enviar documentación del lote <b>${data.nombreLote}</b> a validación por contraloria?`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -12,7 +12,7 @@ pass_to_validacion = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a validacion.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido enviado a validación.", "success");
         
                     table.reload()
 
@@ -48,7 +48,7 @@ function edit_montos(data) {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response)
+                alerts.showNotification("top", "right", "Los datos se guardaron con éxito.", "success");
 
                 table.reload()
 
