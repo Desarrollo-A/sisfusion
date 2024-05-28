@@ -72,7 +72,7 @@ let columns = [
     { data: function(data){
         // let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar deposito', onClick: pass_to_carga_complemento, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_carga_complemento, data})
 
         // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
         

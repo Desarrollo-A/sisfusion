@@ -37,12 +37,22 @@ show_form = function(proceso) {
     let form = new Form({
         title: 'Ingresar avance',
         onSubmit: function(data){
-            //console.log(data)
+            console.log(data.get('nuevo_avance'))
+
+            let is_ok = true
             let avance = proceso.avanceObra + parseFloat(data.get('nuevo_avance'))
 
             if(avance > 100){
                 alerts.showNotification("top", "right", `El nuevo avance no debe ser mayor a ${100-proceso.avanceObra}%.`, "danger");
-            }else{
+                is_ok = false
+            }
+
+            if(parseFloat(data.get('nuevo_avance')) == 0){
+                alerts.showNotification("top", "right", `El nuevo avance no puede ser 0%.`, "danger");
+                is_ok = false
+            }
+
+            if(is_ok){
                 $.ajax({
                     type: 'POST',
                     url: `add_avance`,

@@ -289,7 +289,7 @@ class TextField {
                 $('<span />')
                 .attr('id', `${id}_warning`)
                 .addClass('text-danger h7 ml-1')
-                .text('Debes escoger un elemento')
+                .text('Debes ingresar un texto')
                 .hide()
             )
 
@@ -367,7 +367,7 @@ class NumberField {
         if(value){
             number = `${value}`
 
-            if(value % 1 == 0){
+            if(value % 1 == 0 && mask){
                 number = `${value}.00`
             }
         }
@@ -387,6 +387,8 @@ class NumberField {
             input.mask(mask, {
                 reverse: true
             })
+        }else{
+            input.mask('#')
         }
 
         this.field = $('<div />')
@@ -402,7 +404,7 @@ class NumberField {
                 $('<span />')
                 .attr('id', `${id}_warning`)
                 .addClass('text-danger h7 ml-1')
-                .text('Debes escoger un elemento')
+                .text('Debes ingresar un número')
                 .hide()
             )
 
@@ -912,7 +914,7 @@ class Form {
                 }
             }
 
-            if (field.value()) {
+            if (field.value() != null || field.value() != undefined) {
                 data.append(field.id, field.value())
             }
         }

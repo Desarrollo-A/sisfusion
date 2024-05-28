@@ -34,7 +34,7 @@ back_to_documentacion = function(data) {
 
 pass_to_validar_deposito = function(data) {
     let form = new Form({
-        title: 'Validar documentacion', 
+        title: 'Validar documentación', 
         text: `¿Validar la documentación del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
