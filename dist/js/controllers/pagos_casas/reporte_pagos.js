@@ -10,7 +10,13 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: 'proceso' },
+    { data: function(data){
+        if(data.finalizado){
+            return 'finalizado'
+        }
+
+        return data.procesoNombre
+    } },
     { data: function(data){
         return `${data.avanceObra} %`
     } },
@@ -30,6 +36,10 @@ let columns = [
 
         let text = `Lleva ${days} día(s)`
 
+        if(data.finalizado){
+            text = 'FINALIZADO'
+        }
+
         return text
     } },
     { data: function(data){
@@ -43,4 +53,38 @@ let table = new Table({
     id: '#tableDoct',
     url: 'pagoscasas/lista_reporte_pagos',
     columns,
+})
+
+let filtro_proceso = new SelectFilter({ id: 'opcion', label: 'Proceso',  placeholder: 'Selecciona una opción'})
+
+filtro_proceso.onChange(function(option){
+    // console.log(option)
+
+    table.setParams({opcion: option.value})
+    table.reload()
+})
+
+$.ajax({
+    type: 'GET',
+    url: 'options_procesos',
+    success: function (response) {
+        // console.log(response)
+        let status_option = [
+            {value: -1, label: 'Todos'},
+            ...response,
+            {value: -2, label: 'Finalizado'},
+        ]
+
+        filtro_proceso.setOptions(status_option)
+    },
+    error: function () {
+        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+    }
+})
+
+let filtros = new Filters({
+    id: 'table-filters',
+    filters: [
+        filtro_proceso,
+    ],
 })

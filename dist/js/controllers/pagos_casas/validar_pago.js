@@ -35,7 +35,7 @@ back_to_carga_complementos = function(data) {
 pass_to_solicitar_avance = function(data) {
     let form = new Form({
         title: 'Enviar a solicitar avance', 
-        text: `¿Enviar el lote <b>${data.nombreLote} a solicitar avance</b>?`,
+        text: `¿Enviar el lote <b>${data.nombreLote}</b> a solicitar avance?`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -47,6 +47,41 @@ pass_to_solicitar_avance = function(data) {
                 processData: false,
                 success: function (response) {
                     alerts.showNotification("top", "right", "El lote ha sido enviado a solicitar avance.", "success");
+        
+                    table.reload()
+
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoPagos }),
+            new HiddenField({ id: 'id_avance',  value: data.idAvance }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
+    })
+
+    form.show()
+}
+
+finalizar_proceso = function(data) {
+    let form = new Form({
+        title: 'Finalizar proceso', 
+        text: `¿Finalizar el proceso de pagos del lote <b>${data.nombreLote}</b>?`,
+        onSubmit: function(data){
+            //console.log(data)
+
+            $.ajax({
+                type: 'POST',
+                url: `to_finalizar_proceso`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", "El proceso de pagos del lote ha finalizado.", "success");
         
                     table.reload()
 
@@ -83,7 +118,9 @@ function show_preview(data) {
 
 function download_file(data) {
     alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    window.location.href = `${general_base_url}casas/archivo/${data.complementoXML}`
+    let url = `${general_base_url}casas/archivo/${data.complementoXML}`
+
+    window.open(url, '_blank').focus()
 }
 
 const formatter = new Intl.NumberFormat('es-MX', {
@@ -129,6 +166,10 @@ let columns = [
         let download_button = new RowButton({icon: 'file_download', label: `Descargar complemento de pago XML`, onClick: download_file, data})
 
         let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar pago', onClick: pass_to_solicitar_avance, data})
+
+        if(data.avanceObra >= 100){
+            pass_button = new RowButton({icon: 'check', color: 'green', label: 'Validar y finalizar proceso', onClick: finalizar_proceso, data})
+        }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_carga_complementos, data})
         

@@ -40,7 +40,9 @@ let columns = [
     { data: 'descripcion' },
     { data: 'idMovimiento' },
     { data: 'usuarioMovimiento' },
-    { data: 'fechaMovimiento' },
+    { data: function(data){
+        return data.fechaMovimiento.substring(0, 16)
+    } },
 ]
 
 let table = new Table({
