@@ -1,3 +1,7 @@
+go_to_avances = function(data) {
+    window.location.href = `avances/${data.idProcesoPagos}`;
+}
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -29,13 +33,9 @@ let columns = [
         return text
     } },
     { data: function(data){
-        // let docu_button = new RowButton({icon: 'toc', label: 'Ver historial', onClick: go_to_historial, data})
+        let docu_button = new RowButton({icon: 'toc', label: 'Ver avances', onClick: go_to_avances, data})
 
-        // let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a solicitud de contratos', onClick: pass_to_solicitud_contratos, data})
-
-        // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
-
-        return `<div class="d-flex justify-center"></div>`
+        return `<div class="d-flex justify-center">${docu_button}</div>`
     } },
 ]
 

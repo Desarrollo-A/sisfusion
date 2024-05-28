@@ -33,35 +33,40 @@ pass_to_validar_avance = function(data) {
     form.show()
 }
 
-show_form = function(data) {
+show_form = function(proceso) {
     let form = new Form({
         title: 'Ingresar avance',
         onSubmit: function(data){
             //console.log(data)
+            let avance = proceso.avanceObra + parseFloat(data.get('nuevo_avance'))
 
-            $.ajax({
-                type: 'POST',
-                url: `add_avance`,
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (response) {
-                    alerts.showNotification("top", "right", "Se ha creado un nuevo avance.", "success");
-        
-                    table.reload()
+            if(avance > 100){
+                alerts.showNotification("top", "right", `El nuevo avance no debe ser mayor a ${100-proceso.avanceObra}%.`, "danger");
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: `add_avance`,
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        alerts.showNotification("top", "right", "Se ha creado un nuevo avance.", "success");
+            
+                        table.reload()
 
-                    form.hide();
-                },
-                error: function () {
-                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-                }
-            })
+                        form.hide();
+                    },
+                    error: function () {
+                        alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+                    }
+                })
+            }
         },
         fields: [
-            new HiddenField({ id: 'id_proceso',     value: data.idProcesoPagos }),
-            new HiddenField({ id: 'id_avance',      value: data.idAvance }),
-            new NumberField({ id: 'nuevo_avance',   value: data.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa la cantidad', width:'12', required: true }),
-            new NumberField({ id: 'monto',          value: data.monto,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
+            new HiddenField({ id: 'id_proceso',     value: proceso.idProcesoPagos }),
+            new HiddenField({ id: 'id_avance',      value: proceso.idAvance }),
+            new NumberField({ id: 'nuevo_avance',   value: proceso.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa la cantidad', width:'12', required: true }),
+            new NumberField({ id: 'monto',          value: proceso.monto,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
         ],
     })
 
@@ -69,8 +74,8 @@ show_form = function(data) {
 }
 
 const formatter = new Intl.NumberFormat('es-MX', {
-  style: 'currency',
-  currency: 'MXN',
+    style: 'currency',
+    currency: 'MXN',
 });
 
 let columns = [
