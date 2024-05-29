@@ -78,7 +78,7 @@ pass_to_validacion_contraloria = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloría.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de documentación.", "success");
         
                     table.reload()
 
