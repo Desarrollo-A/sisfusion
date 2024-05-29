@@ -156,7 +156,7 @@ let columns = [
         let pass_button = ''
         
         if(data.fechaFirma1 && data.cotizaciones && data.documentos){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})

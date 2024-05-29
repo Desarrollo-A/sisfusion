@@ -392,7 +392,8 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 6
-        AND pp.status = 1";
+        AND pp.status = 1
+        AND pp.finalizado = 0";
 
         return $this->db->query($query)->result();
     }
