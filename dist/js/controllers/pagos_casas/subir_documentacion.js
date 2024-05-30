@@ -62,7 +62,9 @@ let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
     { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        return data.fechaModificacion.substring(0, 16)
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
