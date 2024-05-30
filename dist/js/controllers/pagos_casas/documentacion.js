@@ -1,7 +1,7 @@
 pass_to_validacion = function(data) {
     let form = new Form({
-        title: 'Enviar a validacion', 
-        text: `¿Enviar documentación del lote <b>${data.nombreLote}</b> a validación por contraloria?`,
+        title: 'Enviar a validación', 
+        text: `¿Enviar documentación del lote <b>${data.nombreLote}</b> a validación por contraloría?`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -62,7 +62,7 @@ function edit_montos(data) {
 
     form.fields = [
         new HiddenField({ id: 'idProcesoPagos', value: data.idProcesoPagos }),
-        new NumberField({ id: 'costoConstruccion', value: data.costoConstruccion, label: 'Costo construccion', placeholder: 'Ingresa la cantidad', required: true, mask: "#,##0.00" }),
+        new NumberField({ id: 'costoConstruccion', value: data.costoConstruccion, label: 'Costo construcción', placeholder: 'Ingresa la cantidad', required: true, mask: "#,##0.00" }),
         new NumberField({ id: 'montoDepositado', value: data.montoDepositado, label: 'Monto depositado', placeholder: 'Ingresa la cantidad', required: true, mask: "#,##0.00" }),
     ]
 
