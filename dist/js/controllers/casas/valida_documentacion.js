@@ -14,7 +14,9 @@ function show_preview(data) {
 
 function download_file(data) {
     alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    window.open(url, '_blank').focus()
 }
 
 backPage = function() {
