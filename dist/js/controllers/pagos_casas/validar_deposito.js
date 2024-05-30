@@ -34,7 +34,7 @@ back_to_documentacion = function(data) {
 
 pass_to_confirmar_pago = function(data) {
     let form = new Form({
-        title: 'Validar deposito', 
+        title: 'Validar depósito', 
         text: `¿Validar el depósito del lote <b>${data.nombreLote}</b>?<br>Ingresa el monto a pagar al constructor para inicio de obra.`,
         onSubmit: function(data){
             //console.log(data)
