@@ -26,7 +26,9 @@
                                             <div class="tab-pane active" id="tabClientesTotal">
                                                 <div class="card">
                                                     <div class="col-md-12">
-                                                        <div class="card card-plain">
+                                                        <!--  -->
+                                                        <!-- <div class="card card-plain"> -->
+                                                            <!--  -->
                                                             <div class="card-content">
                                                                 <div class="material-datatables">
                                                                     <div class="form-group">
@@ -56,7 +58,9 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                            <!--  -->
+                                                        <!-- </div> -->
+                                                        <!--  -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -85,7 +89,7 @@
                             <div class="nav-tabs-custom">
                                 <div class="tab-content p-2">
                                     <div class="tab-pane active" id="tabClientesTotal2">
-                                        <div class="card">
+                                        <!-- <div class="card"> -->
                                             <div class="card card-plain">
                                                 <div class="card-content">
                                                     <h3 class="card-title center-align">Reporte de lote por cliente individual</h3>
@@ -106,7 +110,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <!-- </div> -->
                                     </div>
                                     <?php $this->load->view('reportes/reporteInfoCompleta_view'); ?>
                                 </div>
