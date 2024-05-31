@@ -5,23 +5,25 @@
 
 $("#abrir_modal_plantillas").click(function(e){
     e.preventDefault();
-    
+    document.getElementById('btn_platilla_sub').disabled = true;
     $('#botones_plantilla').removeClass('hide');
     $('#subir_platilla_div').addClass('hide');
+    document.getElementById('respuesta_platilla').innerHTML = '';
 });
 
 
 $("#uploadFile").click(function(e){
     e.preventDefault();
-    alert(44);
+    document.getElementById('btn_platilla_sub').disabled = false;
     $('#botones_plantilla').addClass('hide');
     $('#subir_platilla_div').removeClass('hide');
-
+    document.getElementById('respuesta_platilla').innerHTML = '';
 
 });
 
 
 $("#downloadFile").click(function(e){
+
     e.preventDefault();
     alert(12);
 
@@ -105,24 +107,25 @@ $("#downloadFile").click(function(e){
     //     }
     // });
     $("#form_prestamo_plantilla").on('submit', function (e) {  
+
         e.preventDefault();
-        alert(131331313);
-    fileElm = document.getElementById("subir_platilla");
+        document.getElementById('btn_platilla_sub').disabled = true;
+        $('#spiner-loader').removeClass('hide');
+        fileElm = document.getElementById("subir_platilla");
     file = fileElm.value;
 
-            alert(133133131313313131313131);
             if (file == '')
             {        
                 alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+                $('#spiner-loader').addClass('hide');
+                document.getElementById('btn_platilla_sub').disabled = false;
             }
             else {
                 let extension = file.substring(file.lastIndexOf("."));
                 let statusValidateExtension = validateExtension(extension, ".xlsx");
 
-                console.log(file);
-
                 if (statusValidateExtension == true) { 
-                    alert(33);
+                    
                     processFile(fileElm.files[0]).then(jsonInfo => {
                         
                         console.log(jsonInfo);
@@ -134,11 +137,62 @@ $("#downloadFile").click(function(e){
                             data: {'data': jsonInfo},
                             // data: JSON.stringify({data: jsonInfo}),
                             // data: {'data': generateJWT(jsonInfo)},
-                            success: function (response) {
-
-
+                            success: function (data) {
+                                
+                                dataDatos = ` <div class="article-body"> 
+                                <h3> ID DE USUARIOS Correctos</h3>
+                                <b style="color: #000;">
+                                            Datos correctos:
+                                            `;
+                                            
                                 alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                                if(data.correctas == undefined){
+                                    dataDatos += `NO EXISTEN DATOS </b>`;
 
+                                }else{
+                                    data.correctas.forEach(idx =>{
+                                    
+                                        dataDatos += ` 
+                                            ${idx},
+                                            
+                                        `;
+                                    });
+                                    
+                                    dataDatos += ` 
+                                    </b>
+                                    `;
+                                }
+                                
+
+
+                                dataDatos += `
+                                <h3>ID DE USUARIOS Incorrectos</h3>
+                                    <b>`;
+                                    
+                                if(data.incorrectos == undefined){
+                                    dataDatos += `NO EXISTEN DATOS </b>`;
+                                }else{
+                                    data.incorrectos.forEach(idx =>{
+                                    
+                                        dataDatos += ` 
+                                            ${idx},
+                                            </b>
+                                        `;
+                                    });
+                                    dataDatos += ` 
+                                    </b>
+                                    `;                                    
+                                }
+
+
+
+                                dataDatos += `</div>`;
+                                document.getElementById('respuesta_platilla').innerHTML = dataDatos;
+                                // dataModal += `</div"></div>`; 
+                                // Modalbody.append(dataModal);
+                                
+                                $('#spiner-loader').addClass('hide');
+                                
                                 // $('#uploadModal').modal('toggle');
                             },
                             error: function(XMLHttpRequest, textStatus, errorThrown){
@@ -146,7 +200,7 @@ $("#downloadFile").click(function(e){
                                 if (XMLHttpRequest.status == 301){
                                     alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
                                 }
-                                $('#uploadModal').modal('toggle');
+                                $('#modal_plantilla_descuentos').modal('toggle');
                             }
                         });
                     });

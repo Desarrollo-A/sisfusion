@@ -324,6 +324,9 @@
 									<label class="upload-btn w-auto" for="subir_platilla"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
 								</div>
 						</div>
+						<div class="row "  id="respuesta_platilla" name="respuesta_platilla">
+								
+						</div>
 						<!-- fin de subir factutra -->
 					</div>
                     <div class="modal-footer" style="padding-top:15px;">
