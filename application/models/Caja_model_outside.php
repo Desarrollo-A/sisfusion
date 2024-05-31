@@ -536,14 +536,21 @@
     }
 
 
-    public function getCondominioByIdLote($idLote)
-    {
-        $this->db->select('*');
-        $this->db->join('condominios cond', 'cond.idcondominio = l.idCondominio');
-
-        $this->db->where('idLote', $idLote);
-        $query = $this->db->get("lotes l");
-        return $query->result_array();
+    public function getCondominioByIdLote($idLote) {
+        return $this->db->query(
+            "SELECT 
+                co.idCondominio,
+                lo.idLote,
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData
+            FROM 
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE 
+                lo.idLote = $idLote
+            "
+        )->result_array();
     }
 
     public function getLoteData($idLote)
