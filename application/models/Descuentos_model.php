@@ -43,9 +43,9 @@ class Descuentos_model extends CI_Model {
             $this->db->insert('prestamos_aut', $insertArray);
             $afftectedRows = $this->db->affected_rows();
             if ($afftectedRows == 0) {
-                return 0;
+                return FALSE;
             } else {
-                return 1;
+                return TRUE;
             }
         }
     

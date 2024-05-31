@@ -26,7 +26,7 @@ $(document).ready(function () {
                 document.querySelectorAll('.ag-courses-item_link.clicked').forEach(clickedItem => {
                 clickedItem.classList.remove('clicked');
                 });
-                
+               
               // Agregar la clase 'clicked' al elemento que fue clickeado
                 this.classList.add('clicked');
             });
@@ -37,7 +37,10 @@ $(document).ready(function () {
 });
 
 
-  
+function cambiarColor() {
+    var elemento = document.getElementById('miElemento');
+    elemento.classList.toggle('gold-background');
+}
 
 
 function cargaLinea(){
@@ -243,7 +246,9 @@ $("#anticipo_nomina").submit(function (e) {
         const monto = replaceAll(totalDescuento, '$', '');
         
         var data1 = new FormData($(form)[0]);
-        
+
+
+
         data1.append("limpioMonto", monto);
         $.ajax({
             url: 'anticipo_pago_insert/',
@@ -663,16 +668,53 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
 
     $('#numeroPagosParcialidad').change(function() {
 
-
-        monto = document.getElementById("numeroPagosParcialidad").value;
-        monto = document.getElementById("numeroPagosParcialidad").value;
-        
-
-        document.getElementById("montoPrestadoParcialidad").value = fechaIncial;
-        
+        const totalDescuento = replaceAll($('#montoSolicitado').val(), ',' , '');
+        const monto = replaceAll(totalDescuento, '$', '');
+        pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
+        montoParcialidades = monto/pagos_parcialidades;
+        document.getElementById("montoPrestadoParcialidad").value = montoParcialidades;
         alert('cambiando el tema ');
-
-
-
-
+        
     });
+
+
+
+    
+    $('#procesoTipo').change(function() {
+        
+        console.log(this.value);
+        const totalDescuento = replaceAll($('#montoSolicitado').val(), ',' , '');
+        const monto = replaceAll(totalDescuento, '$', '');
+
+        if(monto != ''){
+            if(this.value == 1)
+                {
+                    // 1 es para apoyo 
+                    $("#n_parcialidades").addClass("hide");
+                    $("#d_tiempo_de_pago").addClass("hide");
+                    $("#monto_pago_parcialidades").addClass("hide");
+                    
+        
+                    var tiempo_de_pago = document.getElementById('tiempo_de_pago');
+                    tiempo_de_pago.disabled = false;
+                    var numeroPagosParcialidad = document.getElementById('numeroPagosParcialidad');
+                    numeroPagosParcialidad.disabled = false;
+                    var montoPrestadoParcialidad = document.getElementById('montoPrestadoParcialidad');
+                    montoPrestadoParcialidad.disabled = false;
+                
+                    
+                }else{
+        
+                    $("#n_parcialidades").removeClass("hide");
+                    $("#d_tiempo_de_pago").removeClass("hide");
+                    $("#monto_pago_parcialidades").removeClass("hide");
+                    
+                }
+        }
+
+
+            // pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
+        // $("#preceso_aticipo").addClass("hide");
+        alert(484445);
+    
+    })

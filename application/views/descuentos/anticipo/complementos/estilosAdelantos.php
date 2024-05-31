@@ -986,6 +986,18 @@ button::-moz-focus-inner {
     font-size: 16px;
   }
 }
+
+
+.ag-courses-item_link.gold-background {
+  background-color: gold; /* Fondo dorado */
+  color: black; /* Texto negro para buen contraste */
+}
+.ag-courses-item_link.gold-background .ag-courses-item_title,
+.ag-courses-item_link.gold-background .ag-courses-item_date-box,
+.ag-courses-item_link.gold-background .ag-courses-item_date {
+  color: black; /* Asegurar que todos los textos sean negros */
+}
+
  /* bptpemes */
  
  

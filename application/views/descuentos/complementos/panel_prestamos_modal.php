@@ -262,6 +262,18 @@
                 </div>
             </div>
         </div>
+		<div class="modal fade modal-alertas" id="modal_ejecutar" name="modal_ejecutar" 
+                    role="dialog">
+            <div class="modal-dialog modal-lg" >
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
 
 		
 		<div class="modal fade modal-alertas" id="modal_plantilla_descuentos" name="modal_plantilla_descuentos" role="dialog">

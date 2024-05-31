@@ -33,6 +33,19 @@
                                 </select>
                             </div>
                             
+                            <div id="d_tiempo_de_pago" name="d_tiempo_de_pago" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                    <div class="form-group overflow-hidden">
+                                        <label class="control-label" for="proyecto">Tiempo de Pagos Parcialidad </label>
+                                        <select class="selectpicker select-gral m-0 input-gral" name="tiempo_de_pago" id="tiempo_de_pago" 
+                                            data-style="btn" data-show-subtext="true"  title="SELECCIONA UN OPCIÓN" 
+                                            data-size="7" data-live-search="true" data-container="body" >
+                                            <option value="1">Mensualidad</option>
+                                            <option value="2">Bimestral</option>
+                                            <option value="3">Trimestral</option>
+                                        </select>
+                                    </div> 
+                            </div>
+                            
                             <div id="n_parcialidades" name="n_parcialidades" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                     <div class="form-group overflow-hidden">
                                         <label class="control-label" for="proyecto">Número de Pagos Parcialidad </label>
@@ -56,6 +69,7 @@
                                 <div class="form-group overflow-hidden">
                                     <label class="control-label" for="proyecto">Monto Pago Parcialidad</label>
                                     <input class="form-control m-0 input-gral" name="montoPrestadoParcialidad" id="montoPrestadoParcialidad" readonly>
+                                    
                                 </div>
                             </div>    
                             <div class="col-xs-6 col-sm-6 col-md-6 form-group m-0">

@@ -66,41 +66,95 @@ $("#downloadFile").click(function(e){
 // form_prestamo_plantilla
 
 // $(document).on('click', '#btn_platilla_sub', function () {
+    // $("#form_prestamo_plantilla").on('submit', function (e) {  
+    //     e.preventDefault();
+    //     let fileElm = document.getElementById("subir_platilla");
+    //     let file = fileElm.value;
+    //     if (file == '') {        
+    //         alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+    //     } else {
+    //         let extension = file.substring(file.lastIndexOf("."));
+    //         let statusValidateExtension = validateExtension(extension, ".xlsx");
+    
+    //         alert(213313131331131331313113);
+            
+
+    //         if (statusValidateExtension) { 
+    //             processFile(fileElm.files[0]).then(jsonInfo => {
+    //                 $.ajax({
+    //                     url: general_base_url + 'Descuentos/descuentos_masivos/',
+    //                     type: 'post',
+    //                     dataType: 'json',
+    //                     contentType: 'application/json',
+    //                     data: JSON.stringify({data: jsonInfo}), // Asegúrate de enviar 'data' como un objeto
+    //                     success: function (response) {
+    //                         alerts.showNotification("top", "right", response.message, response.status == 200 ? "success" : "warning");
+    //                     },
+    //                     error: function(XMLHttpRequest, textStatus, errorThrown){
+    //                         alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
+    //                         if (XMLHttpRequest.status == 301){
+    //                             alerts.showNotification("top", "right", 'intentas subir uno o varios registros.' , "warning");
+    //                         }
+    //                         $('#uploadModal').modal('toggle');
+    //                     }
+    //                 });
+    //             });
+    //         } else {
+    //             alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
+    //         }        
+    //     }
+    // });
     $("#form_prestamo_plantilla").on('submit', function (e) {  
         e.preventDefault();
-        let fileElm = document.getElementById("subir_platilla");
-        let file = fileElm.value;
-        if (file == '') {        
-            alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
-        } else {
-            let extension = file.substring(file.lastIndexOf("."));
-            let statusValidateExtension = validateExtension(extension, ".xlsx");
-    
-            if (statusValidateExtension) { 
-                processFile(fileElm.files[0]).then(jsonInfo => {
-                    $.ajax({
-                        url: general_base_url + 'Descuentos/descuentos_masivos/',
-                        type: 'post',
-                        dataType: 'json',
-                        contentType: 'application/json',
-                        data: JSON.stringify({data: jsonInfo}), // Asegúrate de enviar 'data' como un objeto
-                        success: function (response) {
-                            alerts.showNotification("top", "right", response.message, response.status == 200 ? "success" : "warning");
-                        },
-                        error: function(XMLHttpRequest, textStatus, errorThrown){
-                            alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
-                            if (XMLHttpRequest.status == 301){
-                                alerts.showNotification("top", "right", 'intentas subir uno o varios registros.' , "warning");
+        alert(131331313);
+    fileElm = document.getElementById("subir_platilla");
+    file = fileElm.value;
+
+            alert(133133131313313131313131);
+            if (file == '')
+            {        
+                alerts.showNotification("top", "right", "Asegúrate de seleccionar un archivo para llevar a cabo la carga de la información.", "warning");
+            }
+            else {
+                let extension = file.substring(file.lastIndexOf("."));
+                let statusValidateExtension = validateExtension(extension, ".xlsx");
+
+                console.log(file);
+
+                if (statusValidateExtension == true) { 
+                    alert(33);
+                    processFile(fileElm.files[0]).then(jsonInfo => {
+                        
+                        console.log(jsonInfo);
+                        
+                        $.ajax({
+                            url: general_base_url +'Descuentos/descuentos_masivos/',
+                            type: 'post',
+                            dataType:'json',
+                            data: {'data': jsonInfo},
+                            // data: JSON.stringify({data: jsonInfo}),
+                            // data: {'data': generateJWT(jsonInfo)},
+                            success: function (response) {
+
+
+                                alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+
+                                // $('#uploadModal').modal('toggle');
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown){
+                                alerts.showNotification("top", "right", XMLHttpRequest.status == 500 ? 'Error en los datos ingresados':'Oops, algo salió mal. Inténtalo de nuevo.', "danger");
+                                if (XMLHttpRequest.status == 301){
+                                    alerts.showNotification("top", "right", 'intentas subir uno o varios regitros.' , "warning");
+                                }
+                                $('#uploadModal').modal('toggle');
                             }
-                            $('#uploadModal').modal('toggle');
-                        }
+                        });
                     });
-                });
-            } else {
-                alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
-            }        
-        }
-    });
+                } else{
+                    alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
+                }        
+            }
+        });
 
 
 
