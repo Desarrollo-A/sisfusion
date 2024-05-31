@@ -1407,7 +1407,7 @@ class Reestructura_model extends CI_Model
                     COALESCE(STRING_AGG(loDestino.sup, ', '), 'SIN ESPECIFICAR') AS superficieDestino,
                     CAST((lo.totalNeto2 / lo.sup) as varchar) as preciom2, CAST(((lo.totalNeto2 / lo.sup)*lo.sup) as varchar) as totalNeto,
                     CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
-                    CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE opc2.nombre END AS tipo
                 FROM clientes cl
                     INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente 
                     LEFT JOIN propuestas_x_lote pxl ON pxl.idLote = lo.idLote
@@ -1431,7 +1431,7 @@ class Reestructura_model extends CI_Model
                 WHERE lo.estatus_preproceso != 7 AND (lo.id_usuario_asignado != 0 OR lo.id_usuario_asignado IS NOT NULL) AND lo.liberaBandera = 1 AND lo.idLote NOT IN( SELECT idLote from lotesFusion ) $condicion
                 GROUP BY pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, usG.nombre,
                     usA.nombre, lo.idLote, lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico ,cl.nombre, cl.apellido_paterno, cl.apellido_materno,
-                    lo.sup, usS.nombre, lo.totalNeto2
+                    lo.sup, usS.nombre, lo.totalNeto2, opc2.nombre
             UNION ALL
                 SELECT 'Fusión' tipo_proceso, STRING_AGG(reOrigen.nombreResidencial, ', ') nombreResidencialOrigen, STRING_AGG(coOrigen.nombre, ', ') nombreCondominioOrigen,
                     STRING_AGG(loOrigen.nombreLote, ', ') nombreLoteOrigen, STRING_AGG(loOrigen.referencia, ', ') referenciaOrigen, STRING_AGG(loOrigen.idLote, ', ') idLoteOrigen,
@@ -1447,16 +1447,16 @@ class Reestructura_model extends CI_Model
                         ELSE oxc.nombre END estatusProceso,
                     CASE WHEN max(u.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaUltimoMovimiento, 
                     CASE WHEN max(u2.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u2.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaEstatus2,
-                    STRING_AGG(usG.nombre, ', ') AS gerente,
-                    STRING_AGG(usA.nombre, ', ') AS asesor,
-                    STRING_AGG(usS.nombre, ', ') AS subdirector,
-                    STRING_AGG( (CONCAT(cl1.nombre, ' ', cl1.apellido_paterno, ' ', cl1.apellido_materno )),', ') as nombreCliente,
+                    max(usG.nombre) AS gerente,
+                    MAX(usA.nombre) AS asesor,
+                    MAX(usS.nombre) AS subdirector,
+                    MAX( (CONCAT(cl1.nombre, ' ', cl1.apellido_paterno, ' ', cl1.apellido_materno ))) as nombreCliente,
                     STRING_AGG( loOrigen.sup,', ') as superficieOrigen,
                     COALESCE(STRING_AGG(loDestino.sup, ', '), 'SIN ESPECIFICAR') AS superficieDestino,
                     STRING_AGG((loOrigen.totalNeto2 / loOrigen.sup), ', ') as preciom2,
                     STRING_AGG(((loOrigen.totalNeto2 / loOrigen.sup)*loOrigen.sup), ', ') as totalNeto,
                     CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
-                    CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE opc2.nombre END AS tipo
                 FROM lotesFusion AS lf
                     LEFT JOIN lotes loOrigen ON loOrigen.idLote = lf.idLote and lf.origen = 1
                     LEFT JOIN lotes loDestino ON loDestino.idLote = lf.idLote and lf.destino = 1
@@ -1479,7 +1479,7 @@ class Reestructura_model extends CI_Model
                     LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario -- REGIONAL
                     LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
                 WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND (loPv.id_usuario_asignado != 0 OR loPv.id_usuario_asignado IS NOT NULL) $condicion
-                GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico
+                GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, opc2.nombre
                 ORDER BY nombreLoteOrigen")->result_array();
     }
 

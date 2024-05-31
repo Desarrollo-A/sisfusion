@@ -12,6 +12,13 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    window.open(url, '_blank').focus()
+}
+
 function show_upload(data) {
     //console.log(data)
     let accept = ['image/png', 'image/jpeg', 'application/pdf']
@@ -62,11 +69,21 @@ let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
     { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+
+        return ''
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+
+            if(data.tipo === 6){
+                view_button = new RowButton({icon: 'file_download', label: `Visualizar ${data.documento}`, onClick: download_file, data})
+            }
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})
