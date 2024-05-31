@@ -19,7 +19,7 @@ pass_to_docu_cliente = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

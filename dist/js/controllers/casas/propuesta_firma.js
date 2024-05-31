@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Elección de propuestas"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Elección de propuestas"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -43,7 +43,7 @@ go_to_cotizaciones = function(data) {
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${proceso.nombreLote} a <b>"Documentación cliente".</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a documentación cliente.?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
