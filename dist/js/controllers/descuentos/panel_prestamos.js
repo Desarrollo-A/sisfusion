@@ -19,7 +19,7 @@ function llenado(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name));     
+            $("#tipo").append($('<option>').val(id).text(`${id} - ${name} `));     
         }
         $("#tipo").selectpicker('refresh');
     }, 'json');
@@ -416,6 +416,31 @@ function setDataTableDescuentos(beginDate, endDate){
                             </i>
                         </button>`;
                 }
+                
+                if(d.id_opcion == 94 && d.estatus != 6){
+                    botonesModal += `
+                    <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-estatusP="${d.estatus}"
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
+                        data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
+                        class="btn-data btn-yellow  pausar" title="Pausar">
+                        
+                        <i class="fas fa-pause"></i>
+                        </i>
+                    </button>`;
+                }
+                if(d.estatus == 6 ){
+                    botonesModal += `
+                    <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
+                        data-estatusP="${d.estatus}"
+                        data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
+                        data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
+                        class="btn-data btn-violetDeep  pausar" title="volver a activar">
+                        
+                        <i class="fas fa-rotate-left"></i>
+                        </i>
+                    </button>`;
+                }
 
                 if ((d.estatus == 1 && d.total_pagado == null && d.id_opcion != 28)  ) {
                     if((d.estatus == 2  && d.total_pagado == null )){
@@ -425,7 +450,7 @@ function setDataTableDescuentos(beginDate, endDate){
                         <button href="#" value="${d.id_prestamo}" data-idPrestamo="${d.id_prestamo}" 
                             data-tipo="${d.tipo}" data-idtipo="${d.id_opcion}"  data-name="${d.nombre}" data-comentario="${d.comentario}" 
                             data-individual="${d.pago_individual}" data-npagos="${d.num_pagos}" data-monto="${d.monto}" 
-                            class="btn-data btn-sky edit-prestamo" title="Editar">
+                            class="btn-data btn-sky  edit-prestamo" title="Editar">
                             <i class="fas fa-pen-nib">
                             </i>
                         </button>`;
@@ -511,6 +536,46 @@ $('#tabla_prestamos tbody').on('click', '.toparPrestamo', function () {
     datosDataTable = tablaPrestamos.row($(this).parents('tr')).data();
     $('#modalAlert').modal('show');
 });
+
+
+$('#PausarForma').on('submit', function (e) {
+    $('#spiner-loader').removeClass('hide');
+    document.getElementById('btnTopar').disabled = true;
+    e.preventDefault();
+    // if(datosDataTable.length == 0)
+        var com2 = new FormData(document.getElementById("PausarForma"));    
+        //  <div class="col-md-4"><div class="d-flex justify-center "  style="padding-top: 25px;">
+
+        // let formData = new FormData(document.getElementById("form_delete"));
+            
+                    $.ajax({
+                        url: general_base_url+'Descuentos/pausar_prestamo',
+                        data: com2,
+                        method: 'POST',
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'JSON',
+                        success: function (data) {
+                            $('#spiner-loader').addClass('hide');
+                            $('#ModalPausar').modal('toggle');
+                            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+                            $('#tabla_prestamos').DataTable().ajax.reload(null, false);
+                        }, 
+                        error: function () {
+                            alerts.showNotification("top", "right", "Comunicarse con sistemas","danger");
+                            $('#spiner-loader').addClass('hide');
+                            
+                        }
+                    });
+            
+
+
+
+        document.getElementById('addPausar').disabled = false;
+    });
+
+
 $('#formTopar').on('submit', function (e) {
     $('#spiner-loader').removeClass('hide');
     document.getElementById('btnTopar').disabled = true;
@@ -528,7 +593,31 @@ $('#formTopar').on('submit', function (e) {
     });
     document.getElementById('btnTopar').disabled = false;
 });
+    $('#tabla_prestamos tbody').on('click', '.pausar', function () {
+        const idPrestamo = $(this).val();
+        const estatus = $(this).attr("data-estatusP");
+        // const montoPagos = $(this).attr("data-individual");
+        // const nombreUsuario = $(this).attr("data-name");
+        // const numeroPagos = $(this).attr("data-npagos");
+        // const pagoEdit = $(this).attr("data-monto");
+        // const comentario = $(this).attr("data-comentario");
+        // const tipo = $(this).attr("data-tipo");
+        // const id_tipo = $(this).attr("data-idtipo");
 
+
+        // document.getElementById("prestamoIdPausar").value = '';
+
+        // $("#tipoD").val(id_tipo).selectpicker('refresh');
+        
+        document.getElementById("prestamoIdPausar").value = idPrestamo;
+        document.getElementById("estatusP").value = estatus;
+        // document.getElementById("numeroPagos").value = numeroPagos;
+        // document.getElementById("pagoEdit").value = montoPagos;
+        // document.getElementById("informacionText").value = comentario;
+        // document.getElementById("prestamoId").value = prestamoId;
+
+        $("#ModalPausar").modal();
+    });
 
     $('#tabla_prestamos tbody').on('click', '.edit-prestamo', function () {
         const idPrestamo = $(this).val();
@@ -1348,3 +1437,8 @@ function mostrar(id){
     //$(document).on('input', '.monto', function () {
     //     verificar();
     // });
+
+
+
+
+    
