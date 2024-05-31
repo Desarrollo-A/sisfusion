@@ -127,9 +127,11 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
+                                                <th>REFERENCIA DESTINO</th>
                                                 <th>ID LOTE</th>
                                                 <th>SUPERFICIE</th>
                                                 <th>LOTE(S) ORIGEN</th>
+                                                <th>REFERENCIA ORIGEN</th>
                                                 <th>TOTAL NETO ORIGENES</th>
                                                 <th>SUPERFICIE DE ORIGEN</th>
                                                 <th>PRECIO M2 FINAL</th>
