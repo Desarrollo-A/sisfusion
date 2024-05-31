@@ -3,7 +3,7 @@
 class Caja_outside extends CI_Controller {
     public function __construct() {
         parent::__construct();
-        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model'));
+        $this->load->model(array('Clientes_model', 'caja_model_outside', 'General_model','PaquetesCorrida_model', 'Neodata_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu', 'Jwt_actions', 'Arcus'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -438,23 +438,18 @@ class Caja_outside extends CI_Controller {
 
     }
 
-    public function addClient()
-    {
+    public function addClient() {
         $dataPost = file_get_contents("php://input");
-        //$response['resultado'] = FALSE;
         $datosView = json_decode($dataPost);
-
-        /************testing datas *************/
-        /*$datosView = json_decode($dataFromView);
-
-        print_r($datosView);
-        print_r($datosView->id_prospecto);
-        print_r($datosView->lotes[0]->idLote);
-        exit;*/
-        /************termina testeo *************/
         $id_prospecto = $datosView->id_prospecto;
         $id_lote = $datosView->lotes[0]->idLote;
+
+        $Cliente = explode('-', $datosView->lotes[0]->nombre);
+        $Cliente[2] = 0 . $Cliente[2];
+        $Cliente = implode('-', $Cliente);
+
         $validateLote = $this->caja_model_outside->validate($id_lote);
+        $validateLote = TRUE;
         ($validateLote == 1) ? TRUE : FALSE;
         if ($validateLote == FALSE) {
             $dataError['ERROR'] = array(
@@ -537,6 +532,61 @@ class Caja_outside extends CI_Controller {
         $date->format('Y-m-t');
         //$fechaApartado = $datosView->pagoRetrasado != 0 &&  in_array(date("j"),$dias) ? $date->format('Y-m-t H:i:s') : date('Y-m-d H:i:s') ;
         $fechaApartado = date('Y-m-d H:i:s');
+
+        $dataNeoData = array (
+            "accion" => "ins",
+            "Cliente" => $Cliente,
+            "IdProyecto" => $data['condominio'][0]['idProyectoNeoData'],
+            "IdVivienda" => $data['condominio'][0]['idViviendaNeoData'],
+            "IdCredito" => 2,
+            "IdEstado" => NULL, // NO TENGO EL ESTADO SINO HASTA QUE SE REALIZA EL PRIMER GUARDADO DEL CLIENTE EN EL DS
+            "IdEtapaCliente" => 1, // CvEtapasClientes default 1
+            "IdMedio" => 11, // CvMedios default 11
+            "Nombre" => $data['prospecto'][0]['nombre'],
+            "ApellidoPaterno" => $data['prospecto'][0]['apellido_paterno'],
+            "ApellidoMaterno" => $data['prospecto'][0]['apellido_materno'],
+            "Calle" => '',
+            "Colonia" => '',
+            "CodPost" => NULL,
+            "MpioDeleg" => '',
+            "Localidad" => '',
+            "Telefono" => $data['prospecto'][0]['telefono'],
+            "Email" => $data['prospecto'][0]['correo'],
+            "RFC" => 'XAXX010101000', // SE MANDA RFC GENERICO CUANDO NO SE TIENE RFC DE CLIENTE
+            "FechaNacimiento" => NULL, // AAAA-MM-DD NO TENGO FECHA DE NACIMIENTO HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "FechaIngreso" => date('Y-m-d'), // FECHA DE APARTADO
+            "NumOficial" => '', // # EXTERIOR
+            "NumInterior" => '', // # INTERIOR
+            "Sexo" => NULL, // F / M NO TENGO EL GÉNERO DEL CLEINTE HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "Notas" => '', // VA VACÍO
+            "IdCEtapa" => 7, // default 7
+            "FechaAsignacionVivienda" => date('Y-m-d'), // FECHA DE APARTADO
+            "Cancelado" => 0, // default 0 - 0 PARA EL ALTA (ACTIVO) / 1 PARA LA BAJA (EN EL UPDATE DE ESTATUS)
+            "Escriturado" => 0, // default 0
+            "TelefonoCelular" => $data['prospecto'][0]['telefono_2'], // OTRO TELÉFONO
+            "FechaRegistro" => date('Y-m-d'), // FECHA DE APARTADO
+            "TelefonosConfirmados" => 1, // default 1
+            "FechaUltimoContacto" => date('Y-m-d'), // FECHA DE APARTADO
+            "Referencia" => $datosView->lotes[0]->referencia, // referencia del lote
+            "FechaFichaRapApartado" => date('Y-m-d'), // FECHA DE APARTADO
+            "IdSofolSolicitada" => 4, // CvSofoles default 4
+            "IdCuentaMoratorios" => NULL, // 1198738, // van como vacío
+            "IdCuentaIntereses" => NULL, // 1180884, // van como vacío
+            "NoCuentaContable" => NULL, // van como vacío
+            "EscrituradoReal" => 0, // default 0
+            "IdTipoMoneda" => 1, // default 1
+            "Lada" => NULL, // NO TENGO LADA HASTA QUE SE GUARDA EL DS
+            "Pais" => 1142, // default México (1142)
+            "MonedaSATDefault" => 'MXN', // default MXN
+            "IdCodigoPostalSAT" => 167573, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdPaisSAT" => 1142, // default México (1142)
+            "IdCatRegimen" => 34, // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
+            "CuentaClabeSTP" => NULL
+        );
+
+        $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
+        exit;
+
         $dataInsertCliente = array(
             'id_asesor' => $datosView->id_asesor,
             'id_coordinador' => $voBoCoord,
