@@ -1510,17 +1510,12 @@ class Api extends CI_Controller
 
 
     // inicio del servicio de seguros
-    // inicio del servicio de seguros
     function insertComisionesSeguros() {
         $bandera_array_vacio =  0;
         $dataComisiones = array();
-        $dataComisionesInd = array();
         $porcentaje = 0.10;
-        $arrayRespuesta = array();
-        $banderaAbono = 0;
         $bandera_liquidar = 0;
         $dataUpdateSeguros = array();
-        $dataRespuestas = array();
         $respuestaFinal = array();
         if (!isset(apache_request_headers()["Authorization"])) //solicitud de autorización
             echo json_encode(array("status" => 360, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);
@@ -1552,7 +1547,6 @@ class Api extends CI_Controller
                     // aquis se valida que eeste correcto la passs y el usario Y QUE CUMPLA CON LOS PARAAMETROS DE ENCABEZADO
                     if(!empty($checkSingup) && json_decode($checkSingup)->status == 200) {
                         $dataReturn3 = json_decode(file_get_contents("php://input"));
-                        $dataReturn = json_decode(file_get_contents("php://input"));
                         // SE RECIBE LA INFORMASCIÓN
                         // se valida que datos no sean isset 
                         if($dataReturn3 != NULL) {
@@ -1567,11 +1561,10 @@ class Api extends CI_Controller
                                 $bandera_array_vacio = 0;
                                 // SUSTITUIR LA FORMA DE ESTA RESPUESTA
                                 echo json_encode(array("status" => 375, "message" => "Sin información para procesar, asegúrate de incluir todos los parámetros mínimos requeridos para continuar con esta petición."), JSON_UNESCAPED_UNICODE);
-                                // $respuestaFinal
                             }
-
                             for($contadorPrimer = 0;  $contadorPrimer < count($dataReturn3->seguros); $contadorPrimer ++) {
                                 $status = 200;
+                                $estatusPago = 0;
                                 $message = 'Comisiones agregadas con éxito.';
                                 $idCliente = 0;
                                 $this->db->trans_begin();
@@ -1619,7 +1612,6 @@ class Api extends CI_Controller
                                         } 
                                         else {
                                             $getLoteComision = $this->Seguro_model->validaLoteComision($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
-
                                             // VALIDAR QUE EXISTA EL LOTE
                                             $validarUsuarios = $this->Seguro_model->validarUsuarios($dataReturn3->seguros[$contadorPrimer]->id_gerente,$dataReturn3->seguros[$contadorPrimer]->id_asesor);
                                             if (count($getLoteComision) > 0 && count($getLoteComision) != 1) { // validamod que existan datos, 
@@ -1629,43 +1621,43 @@ class Api extends CI_Controller
                                                 if ($getLoteComision[0]['bandera'] == 7) {
                                                     // se liquido en su momento.    
                                                     $status = 300;
+                                                    $estatusPago = 1;
                                                     $message = 'Seguro liquidado, no es posible procesar la petición.';
                                                     $dataReturn3->seguros[$contadorPrimer];
-                                                } else if(($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  > $getLoteComision[0]['totalLote']){
+                                                }else if(($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  > $getLoteComision[0]['totalLote']){
                                                     $status =375;
-                                                    $message ='Algún parámetro no viene informado. Verifique que todos los parámetros requeridos se incluyan en la petición o sea mayor que 0.';
+                                                    $message ='El lote ya supero el costo total del seguro.';
+                                                    $estatusPago = 1;
                                                 } else if ($getLoteComision[0]['bandera'] == 1) {
                                                     // viene por abono
                                                     if ($getLoteComision[0]['pendiente'] == 0 ) {
                                                         $bandera = 7;
                                                         $dataUpdateSeguros["bandera"] = 7;
-                                                        // $dbTransaction = $this->Seguro_model->updatePago($dataUpdateSeguros,$getLoteComision[0]['id_pagoc']);
                                                         $id_pagoc = $getLoteComision[0]['id_pagoc'];
                                                         $cmd = "UPDATE pago_seguro SET bandera = 7 , fecha_modificacion  = GETDATE() WHERE id_pagoc = $id_pagoc ";
                                                         $respuestaPagoSeguro = $this->Seguro_model->updatePagoSeguro($cmd);
                                                         if ($respuestaPagoSeguro) { // RESPOJNSE OK
                                                             $status = 300;
+                                                            $estatusPago = 1;
                                                             $message = 'Las comisiones fueron liquidadas correctamente.';
                                                         }
                                                     } else { // NO SE LIQUIDA TODAVÍA LE DEBEN
-                                                        // var_dump($dataReturn3->seguros[$contadorPrimer]->mensualidad);
                                                         $comisionTotalSeguro_mensualidad = $dataReturn3->seguros[$contadorPrimer]->mensualidad;
-                                                        // $pagadoTotalSeguro = $dataReturn3->seguros[$contadorPrimer]->montoTotal;
-                                                        $porcentajeMensualidad = ($comisionTotalSeguro_mensualidad * $porcentaje);
-                                                        // $ComisionSumaComparar = $dataReturn3->seguros[$contadorPrimer]->mensualidad + $getLoteComision[$contadorPorComisiones]['bandera'];
-                                                        // $porcentajeComisionSeguroTotal = ($pagadoTotalSeguro * $porcentaje);
-                                                        $pedienteParaPagos = $getLoteComision[0]['pendiente'] - $porcentajeMensualidad;
-                                                        $abonadoMas = ($getLoteComision[0]['abonado'] + $porcentajeMensualidad);
+                                                        $porcentajeMensualidad = $comisionTotalSeguro_mensualidad ;
+                                                        $pedienteParaPagos = $porcentajeMensualidad >=  $getLoteComision[0]['pendiente'] ? 0 : $getLoteComision[0]['pendiente'] - $porcentajeMensualidad;
+                                                        $abonadoMas = $porcentajeMensualidad >=  $getLoteComision[0]['pendiente'] ? $getLoteComision[0]['total_comision']  : ($getLoteComision[0]['abonado'] + $porcentajeMensualidad);
                                                         $dataUpdateSeguros['pendiente'] = $pedienteParaPagos;
                                                         $dataUpdateSeguros['abonado'] = $abonadoMas;
                                                         $id_pagoc = $getLoteComision[0]['id_pagoc'];
-                                                        $sql = (($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  == $getLoteComision[0]['totalLote']) ? ",bandera=7" : '';
+                                                        $sql = (($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  >= $getLoteComision[0]['total_comision']) ? ",bandera=7" : '';
+                                                        $estatusPago = (($getLoteComision[0]['ultimo_pago'] + $dataReturn3->seguros[$contadorPrimer]->mensualidad)  >= $getLoteComision[0]['total_comision']) ? 1 : 0;
                                                         $cmd = "UPDATE pago_seguro SET pendiente = $pedienteParaPagos ,abonado = $abonadoMas,ultimo_pago=ultimo_pago + ".$dataReturn3->seguros[$contadorPrimer]->mensualidad." ,numero_dispersion=".$dataReturn3->seguros[$contadorPrimer]->numero_mensualidad.", fecha_modificacion  = GETDATE() $sql WHERE id_pagoc =  $id_pagoc ";
-                                                        $dbTransaction = $this->Seguro_model->updatePagoSeguro($cmd );     
+                                                        $dbTransaction = $this->Seguro_model->updatePagoSeguro($cmd);     
                                                         for ($contadorPorComisiones = 0; count($getLoteComision) > $contadorPorComisiones; $contadorPorComisiones ++) {
                                                             $totalDeLaComision = ($porcentajeMensualidad * $getLoteComision[$contadorPorComisiones]['porcentaje_decimal']);
                                                             $totalDeLaComision =  $totalDeLaComision / 100;
                                                             $sumaDeAbonado = $getLoteComision[$contadorPorComisiones]['abono_pagado']  + $totalDeLaComision ;
+                                                            $totalDeLaComision = ($getLoteComision[$contadorPorComisiones]['abono_pagado']  + $totalDeLaComision) >  $getLoteComision[$contadorPorComisiones]['comision_total'] ?  ($getLoteComision[$contadorPorComisiones]['comision_total'] - $getLoteComision[$contadorPorComisiones]['abono_pagado']) : $totalDeLaComision;
                                                             if ($sumaDeAbonado > $getLoteComision[$contadorPorComisiones]['comision_total']) {
                                                                 // aqui actualizando los pagos el restante se le abona para liquidar  
                                                                 if ($sumaDeAbonado == $getLoteComision[$contadorPorComisiones]['comision_total']) {
@@ -1692,7 +1684,7 @@ class Api extends CI_Controller
                                                                 'pago_neodata' => $dataReturn3->seguros[$contadorPrimer]->mensualidad,
                                                                 'estatus' => 1,
                                                                 'creado_por' => 1,
-                                                                'comentario' => 'Dispersión pago por sistema pago automático Abono mensualidad'.$dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
+                                                                'comentario' => 'Dispersión pago por sistema pago automático Abono mensualidad '.$dataReturn3->seguros[$contadorPrimer]->numero_mensualidad,
                                                                 'descuento_aplicado' => 0,
                                                                 'modificado_por' => 1,
                                                                 'fecha_modificado' => date("Y-m-d H:i:s"),
@@ -1703,7 +1695,6 @@ class Api extends CI_Controller
                                                                 'aply_pago_intmex' => 0,
                                                                 'fecha_pago_intmex' => 0
                                                             );
-                                                            //$dbTransaction = $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc']);
                                                             $dataHistorialSeguros = array (
                                                                 'id_usuario' =>  1,
                                                                 'fecha_movimiento' => date("Y-m-d H:i:s"),
@@ -1711,7 +1702,7 @@ class Api extends CI_Controller
                                                                 'comentario' => 'Dispersión pago desde sistema'
                                                             );
                                                             
-                                                            $dbTransaction = $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc'],$dataHistorialSeguros);  
+                                                            $totalDeLaComision > 0 ? $this->Seguro_model->insertComisionSeguroAbono($dataIndSeguros,$bandera_liquidar ,$getLoteComision[$contadorPorComisiones]['id_pagoc'],$dataHistorialSeguros) : '';  
                                                             
                                                         }
                                                     }
@@ -1719,14 +1710,12 @@ class Api extends CI_Controller
                                                     $status = 460;
                                                     $message = 'Bandera erronea comunicar a crm administrador.';
                                                 }
-                                                // echo (json_encode(array("status" => 385, "message" => "El Lote ingresado ya se encuentra registrado.")));
                                             }//dos caminos 
                                             else { // CUANDO NO EXISTE LA COMISIÓN
                                                 //  vienee nuevo a insertar  
                                                 $getInfoLote = $this->Seguro_model->getInfoLote($dataReturn3->seguros[$contadorPrimer]->referencia, $dataReturn3->seguros[$contadorPrimer]->empresa, $dataReturn3->seguros[$contadorPrimer]->nombreLote);
                                                 
 
-    
                                                 
                                                 if (empty($getInfoLote) || ($validarUsuarios[0]['tipo'] != 4 || $validarUsuarios[1]['tipo'] != 4)  ) {
                                                     $status = 390;
@@ -1734,33 +1723,32 @@ class Api extends CI_Controller
                                                 }
                                                 else { // los datos de referencia, lote y empresa sí están bien.
                                                     $datosCliente = array(
-                                                        "nombre" => $dataReturn3->seguros[$contadorPrimer]->nombre,
-                                                        "app" => $dataReturn3->seguros[$contadorPrimer]->app,
-                                                        "apm" => $dataReturn3->seguros[$contadorPrimer]->apm,
+                                                        "nombre" => $dataReturn3->seguros[$contadorPrimer]->nom_cliente,
+                                                        "app" => $dataReturn3->seguros[$contadorPrimer]->app_cliente,
+                                                        "apm" => $dataReturn3->seguros[$contadorPrimer]->apm_cliente,
                                                         "idLote" => $getInfoLote->idLote,
                                                         "idCondominio" => $getInfoLote->idCondominio
                                                     );
-                                                    echo $idCliente = $getInfoLote->idCliente == 0 ? $this->Seguro_model->InsertCli($datosCliente) : $getInfoLote->idCliente ;
-                                                    exit;
+                                                    $idCliente = intval($getInfoLote->idCliente) == 0 ? $this->Seguro_model->InsertCli($datosCliente) : $getInfoLote->idCliente ;
                                                     // empiezan las operaciones de comisiones por el usuario 
                                                     $comisionTotalSeguro = $dataReturn3->seguros[$contadorPrimer]->mensualidad;
                                                     $pagadoTotalSeguro = $dataReturn3->seguros[$contadorPrimer]->montoTotal;
                                                     $porcentajeComisionSeguroTotal = ($pagadoTotalSeguro * $porcentaje);
                                                     // aqui se envia el asesor , gerente y el porcentaje que les corresponde.
-                                                    $divisorCompartida = $dataReturn3->seguros[$contadorPrimer]->compartida == 1 ? 2 : 1;
-                                                    $idGerente2 = ($dataReturn3->seguros[$contadorPrimer]->compartida == 1 && isset($dataReturn3->seguros[$contadorPrimer]->id_gerente_2))  ? 0 : $dataReturn3->seguros[$contadorPrimer]->id_gerente_2;
-                                                    $dataReturn3->seguros[$contadorPrimer]->compartida == 0
+                                                     $divisorCompartida = $dataReturn3->seguros[$contadorPrimer]->compartida == 1 ? 2 : 1;
+                                                     $idGerente2 = ($dataReturn3->seguros[$contadorPrimer]->compartida == 0 || !isset($dataReturn3->seguros[$contadorPrimer]->id_gerente_2))  ? 0 : $dataReturn3->seguros[$contadorPrimer]->id_gerente_2;
+                                                     $dataReturn3->seguros[$contadorPrimer]->compartida == 0
                                                     ?
                                                         $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal,$divisorCompartida)
                                                     :
                                                         $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal,$divisorCompartida,$dataReturn3->seguros[$contadorPrimer]->id_asesor_2,$idGerente2);
-
                                                     $pendienteReal = ($dataReturn3->seguros[$contadorPrimer]->mensualidad * 0.10);
                                                     if ($dataReturn3->seguros[$contadorPrimer]->tipo_pago == 2 ) {
                                                         // liquidado en este caso
                                                         $pendiente = 0;
                                                         if($dataReturn3->seguros[$contadorPrimer]->mensualidad ==  $dataReturn3->seguros[$contadorPrimer]->montoTotal){
                                                             $bandera = 7;
+                                                            $estatusPago = 1;
                                                         }else{
                                                             $bandera = 1;
                                                         }
@@ -1771,7 +1759,7 @@ class Api extends CI_Controller
                                                         $bandera = 1;
                                                         $pendiente = 0;
                                                     }
-                                                    $abonado = ($dataReturn3->seguros[$contadorPrimer]->mensualidad * 10)/100;
+                                                    $abonado = $dataReturn3->seguros[$contadorPrimer]->mensualidad > $porcentajeComisionSeguroTotal ? $porcentajeComisionSeguroTotal :  $dataReturn3->seguros[$contadorPrimer]->mensualidad ;
                                                     $dataPagoSeguro = array (
                                                         'id_lote' => $getInfoLote->idLote,
                                                         'total_comision' => $porcentajeComisionSeguroTotal,
@@ -1798,10 +1786,36 @@ class Api extends CI_Controller
                                                     // se mandd los pagos_seguros solo un registro
                                                     if (count($respuestaComisiones) == 0 ) {
                                                         
-                                                    } else {
+                                                    } else {                                                         
+                                                        $nuevaMensualidad = $dataReturn3->seguros[$contadorPrimer]->mensualidad;
                                                         for ($contador = 0; count($respuestaComisiones) > $contador; $contador ++) {
-                                                            $comisionReal = ($respuestaComisiones[$contador]['porcentaje_decimal']  * ($dataReturn3->seguros[$contadorPrimer]->mensualidad * 0.10) ) /100;
-                                                            $PorcentajeDeMensualidad = ( ($dataReturn3->seguros[$contadorPrimer]->mensualidad )* ($respuestaComisiones[$contador]['porcentaje_decimal']/100) )  ;
+                                                            $nuevoAbonoNeodata = 0;
+                                                            
+                                                            $comisionReal = ($respuestaComisiones[$contador]['porcentaje_decimal']  * ($dataReturn3->seguros[$contadorPrimer]->mensualidad ) ) /100;
+                                                           // $PorcentajeDeMensualidad = ( ($dataReturn3->seguros[$contadorPrimer]->mensualidad )* ($respuestaComisiones[$contador]['porcentaje_decimal']/100) );
+                                                           //echo $porcentajeComisionSeguroTotal;
+                                                            if($dataReturn3->seguros[$contadorPrimer]->tipo_pago == 1){
+                                                                if($porcentajeComisionSeguroTotal > $dataReturn3->seguros[$contadorPrimer]->mensualidad){
+                                                                   
+                                                                    // SI ES DE TIPO CREDITO Y LA COMISIÓN TOTAL DEL LOTE ES MAYOR A LA MENSUALIDAD, DIVIDIMOS LA MENSUALIDAD SEGUN LA PRIORIDAD
+                                                                    //LA PRIMERA ITERACIÓN BUSCAMOS ASESORES Y LIQUIDAMOS Y VAMOS RESTANDO LA MENSUALIDAD
+                                                                    if($respuestaComisiones[$contador]['comision_total'] < $nuevaMensualidad){
+                                                                        $comisionReal =  $respuestaComisiones[$contador]['comision_total'];
+                                                                        $nuevaMensualidad = $nuevaMensualidad - $respuestaComisiones[$contador]['comision_total'];
+                                                                    }else{
+                                                                        if($nuevaMensualidad > 0){
+                                                                            $comisionReal = $nuevaMensualidad;
+                                                                        }else{
+                                                                            $comisionReal = 0; 
+                                                                        }
+                                                                    }
+                                                                }else{
+                                                                    $comisionReal =  $respuestaComisiones[$contador]['comision_total'];
+                                                                }
+                                                             }else{
+                                                                 $comisionReal = $comisionReal > $respuestaComisiones[$contador]['comision_total'] ? $respuestaComisiones[$contador]['comision_total'] : $comisionReal;
+                                                             }
+                                                             
                                                             // // LLAVE INICIO DE FORACHE
                                                             $dataComisiones = array (
                                                                 'id_lote' => $getInfoLote->idLote,                          
@@ -1812,7 +1826,7 @@ class Api extends CI_Controller
                                                                 'porcentaje_decimal' => $respuestaComisiones[$contador]['porcentaje_decimal'],                             
                                                                 'rol_generado' => $respuestaComisiones[$contador]['id_rol'],
                                                                 'descuento' => 0,                                              
-                                                                'idCliente' => $getInfoLote->idCliente,                         
+                                                                'idCliente' => $idCliente,                         
                                                                 'modificado_por' => 1,                                              
                                                                 'fecha_modificado' => date("Y-m-d H:i:s"),
                                                                 'fecha_creacion' => date("Y-m-d H:i:s"),
@@ -1821,7 +1835,7 @@ class Api extends CI_Controller
                                                             );        
                                                             $dataIndSeguros = array (
                                                                 'id_usuario' => $respuestaComisiones[$contador]['id_usuario'],   
-                                                                'abono_neodata' => $comisionReal,
+                                                                'abono_neodata' => $comisionReal ,
                                                                 'pago_neodata' => $dataReturn3->seguros[$contadorPrimer]->mensualidad,
                                                                 'estatus' => 1,
                                                                 'creado_por' => 1,
@@ -1837,7 +1851,7 @@ class Api extends CI_Controller
                                                                 'fecha_pago_intmex' => 0
                                                             );
                                                             $dataHistorialSeguros = array (
-                                                                'id_usuario' => $respuestaComisiones[$contador]['id_usuario'],
+                                                                'id_usuario' => 1,
                                                                 'fecha_movimiento' => date("Y-m-d H:i:s"),
                                                                 'estatus' => 1,
                                                                 'comentario' => 'Dispersión pago desde sistema'
@@ -1869,7 +1883,8 @@ class Api extends CI_Controller
                                         'referencia' => $dataReturn3->seguros[$contadorPrimer]->referencia,
                                         'empresa' => $dataReturn3->seguros[$contadorPrimer]->empresa,
                                         'idCliente' => $idCliente,
-                                        'id_pago' => $dataReturn3->seguros[$contadorPrimer]->id_pago
+                                        'id_pago' => $dataReturn3->seguros[$contadorPrimer]->id_pago,
+                                        "estatusPago" => $estatusPago
                                     )
                                 );                         
                                 } 
@@ -1884,7 +1899,11 @@ class Api extends CI_Controller
         }
     }
 
-    
+    function getPlanComision(){
+        $respuestaComisiones = $this->Seguro_model->getPlanComision(15251,15253,1786.874,1);
+        // $respuestaComisiones = $this->Seguro_model->getPlanComision($dataReturn3->seguros[$contadorPrimer]->id_asesor,$dataReturn3->seguros[$contadorPrimer]->id_gerente,$porcentajeComisionSeguroTotal,$divisorCompartida,$dataReturn3->seguros[$contadorPrimer]->id_asesor_2,$idGerente2);
+        echo var_dump($respuestaComisiones);
+    }
     function getAsesoresSeguros() {
         if (!isset(apache_request_headers()["Authorization"]))
             echo json_encode(array("status" => -1, "message" => "La petición no cuenta con el encabezado Authorization."), JSON_UNESCAPED_UNICODE);

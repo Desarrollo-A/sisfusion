@@ -94,6 +94,7 @@ $("#estatusSeguro").change(function() {
                 }},
                 {data: 'idLote'},
                 {data: 'nombreCliente'},
+                {data: 'referencia'},
                 { data: function (d) {
                         return `<span class="label ${d.claseTipo_venta}">${d.tipo_venta}</span>`;
                 }},

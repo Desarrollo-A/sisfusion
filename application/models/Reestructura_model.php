@@ -2101,8 +2101,24 @@ class Reestructura_model extends CI_Model
         $sql = "UPDATE comisiones SET id_lote = ?,modificado_por = ? WHERE id_lote = ? AND idCliente = ? ";
         return $this->db->query($sql, [$idLoteActual,$user,$idLoteOriginal, $idClienteOriginal]);  
     }
-    public function actualizarComisiones($idLote,$idCliente,$idComisionista,$comisionTotal,$creadoPor){
-        $sql = "UPDATE comisones SET comision_total= ?,modificado_por= ? WHERE id_lote = ? AND idCliente = ? AND id_usuario  = ?";
-        return $this->db->query($sql, [$comisionTotal,$creadoPor, $idLote,$idCliente,$idComisionista]); 
+
+    public function actualizarRegistroComision($idLote,$idUser){
+        $sql = "UPDATE lotes SET registro_comision=1,usuario = ? WHERE idLote= ? ;";
+        return $this->db->query($sql, [$idUser,$idLote]);
+    }
+
+    public function actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$idComisionista,$comisionTotal,$creadoPor){
+        $sql = "UPDATE comisones SET comision_total= ?,id_lote = ? , idCliente = ? , modificado_por= ? WHERE id_lote = ? AND idCliente = ? AND id_usuario  = ?";
+        return $this->db->query($sql, [$comisionTotal,$idLoteNuevoDestino,$idClienteNuevoDestino,$creadoPor, $idLoteAnterior,$idClieteAnterior,$idComisionista]); 
+    }
+
+    public function toparComisiones($idLoteNuevoOrigen,$idClienteNuevoOrigen,$rolesATopar){
+        $query = "SELECT * FROM comisiones WHERE id_lote= ?  AND idCliente = ? AND rol_generado IN(?);";
+        $idsComisiones = $this->db->query($query,[$idLoteNuevoOrigen,$idClienteNuevoOrigen,$rolesATopar])->result_array();
+        for ($i=0; $i < count($idsComisiones) ; $i++) { 
+            $comentario = 'SE CANCELA LA REUBICACIÓN EXCEDENTE';
+            $this->Comisiones_model->ToparComision($idsComisiones[$i]['id_comision'],$comentario);
+        }
+
     }
 }

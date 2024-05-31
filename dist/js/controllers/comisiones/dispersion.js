@@ -204,7 +204,7 @@ $(document).ready(function () {
 
                         disparador = 0;
                         d.totalNeto2Cl = ([65,85].indexOf(parseInt(d.plan_comision)) >= 0  && (parseFloat(d.totalNeto2Cl) < parseFloat(d.totalNeto2)) && (parseInt(d.proceso) == 2 || parseInt(d.proceso) == 4) ) ? ( d.totalNeto2Cl > d.totalNeto2 ? d.totalNeto2 : d.totalNeto2Cl ) :([65,85].indexOf(parseInt(d.plan_comision)) < 0 ? d.totalNeto2Cl : d.totalNeto2 );
-                        d.totalNeto2Cl = (parseInt(d.proceso) == 6 || parseInt(d.proceso) == 5) ? ( parseFloat(d.sumaFusion) < parseFloat(d.totalNeto2) || ([50575,50576,50577].indexOf(d.idLote) < 0 )  ? parseFloat(d.sumaFusion / d.cuantosDestinos) :  parseFloat(d.totalNeto2)  ): d.totalNeto2Cl; 
+                        d.totalNeto2Cl = (parseInt(d.proceso) == 6 || parseInt(d.proceso) == 5) ? ( ((parseFloat(d.sumaFusion) < parseFloat(d.totalNeto2) && d.cuantosDestinos == 1) || d.cuantosDestinos > 1 )  ? parseFloat(d.sumaFusion / d.cuantosDestinos) :  parseFloat(d.totalNeto2)  ): d.totalNeto2Cl; 
                         if(d.bandera_dispersion == 1 && d.registro_comision == 9){//NUEVA VENTAS 1°
                             disparador = 1;
                             totalLote = d.totalNeto2Cl;
@@ -539,6 +539,7 @@ console.log('total8p: '+totalNeto2);
                                 let total0 = parseFloat(data[0].Aplicado-abonadoAnterior);
                                 // let total0 = parseFloat(abonadoAnterior);
                                 let total = 0;
+                                let totalPivote=0;
                                 if(total0 > 0){
                                     total = total0;
                                 }else{
@@ -697,7 +698,12 @@ console.log('total8p: '+totalNeto2);
 
                                 $.post(general_base_url + "Comisiones/porcentajes",{idCliente:idCliente,totalNeto2:totalNeto2,plan_comision:plan_comision,reubicadas:reubicadas,ooamDispersion:ooamDispersion}, function (resultArr) {
                                     resultArr = JSON.parse(resultArr);
-                                    console.log(disparador)
+                                    //console.log(disparador)
+                                    var SumaComisionTotal = 0;
+                                    $.each( resultArr, function( i, v){
+                                        SumaComisionTotal = SumaComisionTotal + v.comision_total;
+                                    });
+                                    console.log(SumaComisionTotal);
                                     $.each( resultArr, function( i, v){
                                         let porcentajes = '';
                                         if(plan_comision == 66 || plan_comision == 86){
@@ -734,14 +740,28 @@ console.log('total8p: '+totalNeto2);
 
                                         total = [2,3,4,7].includes(parseInt(procesoReestructura)) ? total  : total;
                                         total = ([2,3,4,7].includes(parseInt(procesoReestructura)) && (data[0].Aplicado-abonadoAnterior) <= 0) ? 0 : total;
-
-                                        if(estatusLote == 15 && [2,3,4,7].includes(parseInt(procesoReestructura)) && ((data[0].Aplicado-abonadoAnterior) > 6000)){
-                                            total = AplicadoGlobal;
-                                        }else  if(estatusLote < 15 && [2,3,4,7].includes(parseInt(procesoReestructura)) && ((data[0].Aplicado-abonadoAnterior) > 5000)){
-                                            total = AplicadoGlobal;
+                                        totalPivote = total;
+                                        console.log('------------')
+                                        console.log(estatusLote)
+                                        console.log(procesoReestructura)
+                                        console.log(plan_comision)
+                                        console.log(data[0].Aplicado-abonadoAnterior)
+                                        if((parseInt(estatusLote) === 15 && [2,3,4,7].includes(parseInt(procesoReestructura)) && ((data[0].Aplicado-abonadoAnterior) > 6000) && [64,65,66,84,85,86].includes(parseInt(plan_comision))) || idLote == 60243){
+                                            total = SumaComisionTotal < total ? AplicadoGlobal : total;
+                                           // total = idLote == 60243 ? AplicadoGlobal : total;
+                                            console.log(9);
+                                        }else  if(estatusLote < 15 && [2,3,4,7].includes(parseInt(procesoReestructura)) && ((data[0].Aplicado-abonadoAnterior) > (SumaComisionTotal / 2) && [64,65,66,84,85,86].includes(parseInt(plan_comision)) )){
+                                            console.log(8);
+                                            total = SumaComisionTotal < total ? AplicadoGlobal : total;
                                         }else {
-                                            total = total;
+                                            console.log(7);
+                                            total = SumaComisionTotal < total ? AplicadoGlobal : total;
+                                            total = totalPivote;
+                                            total = idLote == 52436 ? ((data[0].Aplicado-abonadoAnterior) - 7859.826399999984) : total;
+                                            console.log(total);
+
                                         }
+                                        console.log(bandera_anticipo);
 
                                         switch(bandera_anticipo){
                                             case 0:// monto < 5% se dispersará solo lo proporcional
@@ -779,7 +799,9 @@ console.log('total8p: '+totalNeto2);
                                             break;
 
                                             case 4: // monto OOAM 100%
-                                            operacionValidar = (total*(0.125*v.porcentaje_decimal));
+                                            operacionValidar = idLote == 60243 ? (total*((0.125 * 13.333333333333333333333333333333)*v.porcentaje_decimal)) : (total*(0.125*v.porcentaje_decimal));
+                                            console.log('total'+total);
+                                            console.log('operacionValidar'+operacionValidar);
                                             if(operacionValidar > v.comision_total){
                                                 saldo1C = v.comision_total;
                                             }else{
@@ -884,7 +906,7 @@ console.log('total8p: '+totalNeto2);
                                     $("#modal_NEODATA .modal-body").append(`<div class="row"><div class="col-md-4"><h4><b>Precio lote: ${formatMoney(data1[0].totalNeto2)}</b></h4></div>
                                     <div class="col-md-4"><h4>Aplicado neodata: <b>${formatMoney(data[0].Aplicado)}</b></h4></div><div class="col-md-4">${cadena}</div>
                                     </div><br>`);
-
+                                    var sumaComisionTotalDispersada = 0,sumaAbonadoDispersada = 0;
                                     $.getJSON( general_base_url + "Comisiones/getDatosAbonadoDispersion/"+idLote+"/"+ooamDispersion+"/"+data1[0].estructura).done( function( data ){
                                         $("#modal_NEODATA .modal-body").append(`
                                                         <div class="row">
@@ -901,7 +923,13 @@ console.log('total8p: '+totalNeto2);
                                             if(data[index].id_usuario == 5855){
                                                 contador += 1;
                                             }
+                                            sumaComisionTotalDispersada = sumaComisionTotalDispersada  +  data[index].comision_total;
+                                            sumaAbonadoDispersada = sumaAbonadoDispersada + data[index].abono_pagado;
                                         }
+
+                                        console.log('sumaComisionTotalDispersada: '+sumaComisionTotalDispersada)
+                                        console.log('sumaAbonadoDispersada: '+sumaAbonadoDispersada)
+
 
                                         $.each( data, function( i, v){
                                             saldo =0;
@@ -919,7 +947,7 @@ console.log('total8p: '+totalNeto2);
                                                 console.log('total: '+total);
                                                 //saldo =  ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 2.5 : v.porcentaje_decimal;
-                                                saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 3000 )? ( pendienteGlobal > total ? ((12.5 *(v.porcentaje_decimal / 100)) * total)  :  ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
+                                                saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total > 2262.71 ) ? ( pendienteGlobal > total ? ((12.5 *(v.porcentaje_decimal / 100)) * total)  :  ((12.5 *(v.porcentaje_decimal / 100)) * parseFloat(AplicadoGlobal)) ) : ((12.5 *(v.porcentaje_decimal / 100)) * total);
                                                 saldo = ([2,3,4,7].includes(parseInt(procesoReestructura)) && total <= 0) ? 0 : saldo;
                                                 v.porcentaje_decimal = idLote == 37629 && v.id_usuario == 13556 ? 3.5 : v.porcentaje_decimal;
                                             
@@ -937,7 +965,11 @@ console.log('total8p: '+totalNeto2);
                                                 }
                                                 console.log('saldo segundo '+saldo);
                                                 console.log('saldo tercero '+ ( saldo-v.abono_pagado ));
-                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || idLote == 37629) ? saldo : ( saldo-v.abono_pagado );
+                                                console.log('total::'+total);
+                                                console.log('procesoReestructura::'+procesoReestructura);
+                                                console.log('plan_comision::'+plan_comision);
+                                                console.log('idLote::'+idLote);
+                                                resta_1 = (([2,3,4,7].includes(parseInt(procesoReestructura)) && (total < 5000) ) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933].indexOf(idLote) >= 0)) ? saldo : ( saldo-v.abono_pagado );
                                                 console.log('RESTA'+resta_1);
                                                 if(parseFloat(resta_1) <= 0){
                                                     saldo = 0;
@@ -947,7 +979,7 @@ console.log('total8p: '+totalNeto2);
                                                         saldo = pending;
                                                     }
                                                     else{
-                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura)) && total < (5000)) || idLote == 37629) ? saldo : saldo-v.abono_pagado;
+                                                        saldo = (( [2,3,4,7].includes(parseInt(procesoReestructura))  && total < (5000)) || ([64,65,66,84,85,86].indexOf(plan_comision) >= 0 || [57154,48216,55933].indexOf(idLote)) >= 0) ? saldo : saldo-v.abono_pagado;
                                                     }
                                                 }
                                             }

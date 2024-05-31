@@ -53,7 +53,7 @@ class Seguro_model extends CI_Model {
             /* DIRECTOR */
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, up.valorComision porcentaje_decimal, ((@totalSeguro/100)*(up.valorComision)) comision_total, 
         CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, up.rolComisionista as id_rol,
-        CASE WHEN up.comentario != '' THEN opc.nombre ELSE up.comentario END detail_rol, 1 as rolVal
+        CASE WHEN up.comentario != '' THEN opc.nombre ELSE up.comentario END detail_rol, 5 as rolVal
         FROM plan_comision_seguros pl 
         INNER JOIN usuariosPlanComisionSeguros up ON up.idPlan=pl.id_plan
         INNER JOIN usuarios u1 ON u1.id_usuario=1980 AND up.rolComisionista=18
@@ -62,7 +62,7 @@ class Seguro_model extends CI_Model {
         UNION
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, pl.comAsesor / $divisorCompartida porcentaje_decimal, ((@totalSeguro/100)*(pl.comAsesor / $divisorCompartida)) comision_total,
             CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
-            opc.nombre as detail_rol, 3 rolVal
+            opc.nombre as detail_rol, 1 rolVal
             FROM plan_comision_seguros pl
             INNER JOIN usuarios u1 ON u1.id_usuario = @idAsesor $sqlAsesor
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
@@ -77,13 +77,15 @@ class Seguro_model extends CI_Model {
         )
         UNION
         (SELECT DISTINCT(u1.id_usuario) AS id_usuario, up.valorComision porcentaje_decimal, ((@totalSeguro/100)*(up.valorComision)) comision_total,
-            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, pl.asesor as id_rol, 
-			CASE WHEN up.comentario != '' THEN up.comentario ELSE opc.nombre END detail_rol, 1 as rolVal
+            CONCAT(u1.nombre,' ',u1.apellido_paterno,' ',u1.apellido_materno) AS nombre, up.rolComisionista as id_rol, 
+			CASE WHEN up.comentario != '' THEN up.comentario ELSE opc.nombre END detail_rol, 3 as rolVal
             FROM plan_comision_seguros pl
             INNER JOIN usuariosPlanComisionSeguros up ON up.idPlan=pl.id_plan 
             INNER JOIN usuarios u1 ON u1.id_usuario = up.idUsuario AND u1.id_usuario NOT IN (1980)
             INNER JOIN opcs_x_cats opc ON opc.id_opcion=u1.id_rol AND opc.id_catalogo=1
-        )");
+        )
+        ORDER BY rolVal ASC
+        ");
             return $query->result_array();
         }
 
@@ -664,9 +666,9 @@ class Seguro_model extends CI_Model {
         public function getDataPagosSeguro($estatus = '') {
             $this->db->query("SET LANGUAGE Español;");
             ini_set('memory_limit', -1);  
-            $cadena = $estatus != '' ? "WHERE  cl.estatusSeguro=".$estatus : "";  
+            $cadena = $estatus != '' ? ( $estatus == 1 ? "WHERE  cl.estatusSeguro IN(".$estatus.",0)" : "WHERE  cl.estatusSeguro IN(".$estatus.")" ): "";  
     
-            $query = $this->db->query("SELECT re.descripcion nombreResidencial,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
+            $query = $this->db->query("SELECT re.descripcion nombreResidencial,l.referencia,co.nombre nombreCondominio,l.nombreLote,l.idLote,CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno) nombreCliente,
 			tv.tipo_venta,st.nombreStatus,pg.totalLote Precio_Total,(pg.porcentaje_abono * 100) porcentaje,pg.total_comision Comision_total,pg.abonado Comisiones_Pagadas,pg.pendiente Comisiones_pendientes,pg.fecha_modificacion,
             (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
 			(CASE WHEN l.idStatusContratacion = 15 THEN 'lbl-violetBoots' ELSE 'lbl-gray' END) colorContratacion,

@@ -124,6 +124,7 @@
                                                     <th>LOTE</th>
                                                     <th>ID LOTE</th>
                                                     <th>CLIENTE</th>
+                                                    <th>REFERENCIA</th>
                                                     <th>TIPO DE VENTA</th>
                                                     <th>CONTRATACIÓN</th>
                                                     <th>PLAN DE VENTA</th>

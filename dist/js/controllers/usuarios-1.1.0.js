@@ -964,6 +964,7 @@ $("#editUserForm").on('submit', function(e){
 
 $(document).on('click', '.see-changes-log', function(){
     id_usuario = $(this).attr("data-id-usuario");
+    document.getElementById('changelogUsers').innerHTML = '';
     $.post("getChangeLogUsers/"+id_usuario).done( function( data ){
         $("#changesRegsUsers").modal();
         $.each( JSON.parse(data), function(i, v){

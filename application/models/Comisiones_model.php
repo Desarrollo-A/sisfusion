@@ -5172,7 +5172,7 @@ function getDatosGralInternomex(){
                  ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
-                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29,30,89) AND pci.descuento_aplicado = 1
+                INNER JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i AND pci.descuento_aplicado = 1
                 INNER JOIN comisiones c ON c.id_comision = pci.id_comision
                 INNER JOIN lotes l ON l.idLote = c.id_lote
                 INNER JOIN condominios con ON con.idCondominio=l.idCondominio
@@ -6254,10 +6254,12 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
 
     public function getFechaCorteActual($tipoUsuario,$diaActual){
     $mesActual = date('m');
-    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : "AND Day(fechaInicio) >= 17" ) : "";
+    $formaPago = $this->session->userdata('forma_pago');
+    $filtro = ($tipoUsuario == 2 || $tipoUsuario == 4) ?  ( $diaActual <= 15 ? "AND Day(fechaInicio) <= 17" : (($formaPago == 2 && $tipoUsuario == 2 ) ? " AND Day(fechaInicio) >= 17" :  "AND Day(fechaInicio) >= 17" ) ) : "";
     $filtro2 = $this->session->userdata('id_sede') == 8 ? ",fechaTijuana AS fechaFin" : ",fechaFinGeneral AS fechaFin";
-      return $consultaFechasCorte = $this->db->query("SELECT mes,fechaInicio,tipoCorte $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
-      tipoCorte IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY tipoCorte ASC")->result_array();
+    $tipoUsuario =  $tipoUsuario == 1 ? 0 : ($tipoUsuario == 2 ? 1 : ($tipoUsuario == 4 ? 4 : 3) );
+    return $this->db->query("SELECT mes,fechaInicio,corteOoam $filtro2 FROM fechasCorte WHERE estatus = 1 AND 
+      corteOoam IN($tipoUsuario) AND YEAR(GETDATE()) = YEAR(fechaInicio) AND mes = $mesActual $filtro ORDER BY corteOoam ASC")->result_array();
     }
     public function get_condominios_lista($proyecto = '') {
         $filtro = $proyecto == '' ? '' : "AND idResidencial IN($proyecto)";
