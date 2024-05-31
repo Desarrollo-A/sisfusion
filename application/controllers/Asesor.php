@@ -1102,11 +1102,11 @@ class Asesor extends CI_Controller {
 
         $estados = array_merge(array_filter($catalogs, function($item) {
             //ESTADOS
-            return $item['id_catalogo'] == 143;
+            return $item['id_catalogo'] == 120;
         }));
 
         $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 142;
+            return $item['id_catalogo'] == 118;
         }));
 
         $generos = array_merge(array_filter($catalogs, function ($item) {
@@ -2038,12 +2038,11 @@ class Asesor extends CI_Controller {
             return $item['id_catalogo'] == 120;
         }));
 
-        $tipoMoneda = array_merge(array_filter($catalogs, function($item) {
-            //TIPO MONEDA
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
             return $item['id_catalogo'] == 118;
         }));
 
-        $generos = array_merge(array_filter($catalogs, function($item) {
+        $generos = array_merge(array_filter($catalogs, function ($item) {
             return $item['id_catalogo'] == 121;
         }));
 
@@ -2069,33 +2068,7 @@ class Asesor extends CI_Controller {
             if ($regFiscal2[$c]['id_opcion'] == $regifis_select) {
                 $reg_fis = $regFiscal2[$c]['nombre'];
             }
-        }
-
-        for($n = 0; $n < count($paises); $n++){
-            if($paises[$n]['id_opcion'] == $pais_select) {
-            //    $pais_select_II = $paises[$n['nombre']];
-            }
-        }
-
-        for($n = 0; $n < count($estados); $n++){
-            if($estados[$n]['id_opcion'] == $estado_select) {
-              //  $estado_select_II = $estados[$n['nombre']];
-            }
-        }
-
-        for($n = 0; $n < count($tipoMoneda); $n++) {
-            if($tipoMoneda[$n]['id_opcion'] == $tipoMoneda_select) {
-                //$tipoMoneda_select_II = $tipoMoneda[$n['nombre']];
-            }
-        }
-
-        for($n = 0; $n < count($generos); $n++){
-            if($generos[$n]['id_opcion'] == $generoSelect) {
-
-            }
-        }
-
-        
+        }        
 
         //DOCUMENTACIÓN
         //PERSONA FISICA
@@ -2131,6 +2104,10 @@ class Asesor extends CI_Controller {
         $originario = $this->input->post('originario');
         $regimen_fac = $this->input->post('regimenFiscal');
         $cp_fac = $this->input->post('cp_fac');
+
+        $municipio = $this->input->post('municipio');
+        $calle = $this->input->post('calle');
+        $localidad = $this->input->post('localidad');
         
         
         $estado_civil = $this->input->post('estado_civil');
@@ -2289,6 +2266,9 @@ class Asesor extends CI_Controller {
         $arreglo_cliente['ciudad'] = $ciudad;
         $arreglo_cliente['interior'] = $interior;
         $arreglo_cliente['exterior'] = $exterior;
+        $arreglo_cliente['localidad'] = $localidad;
+        $arreglo_cliente['calle'] = $calle;
+        $arreglo_cliente['municipio'] = $municipio;
 
 
         $arreglo_cliente["regimen_fac"] = $regimen_fac;

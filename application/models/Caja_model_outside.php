@@ -1574,5 +1574,4 @@
     public function getDatosCondominio($idCondominio){
         return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
      }
-
 }
