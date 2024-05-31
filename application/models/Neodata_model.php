@@ -8,6 +8,7 @@ class Neodata_model extends CI_Model {
     }
 
     public function addUpdateClienteNeoData($data) {
+        $messageDetail = $data['accion'] == "upd" ? "actualizado" : "insertado";
         $response = $this->programacion2->query("EXEC [programacion2].[dbo].[CDM300ClientesNeoD]
         @accion = '" . $data['accion'] . "',
         @Cliente = '" . $data['Cliente'] . "',
@@ -57,8 +58,11 @@ class Neodata_model extends CI_Model {
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
         @IdCatRegimen = " . $data['IdCatRegimen'] . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ";")->result_array();
-        echo json_encode($response);
-        exit;
+        
+        if (isset($response[0]['idCliente']))
+            return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");
+        else
+            return array("status" => -1, "message" => $response[0]['ErrorNumber'] . " - " . $response[0]['ErrorMessage']);
     }
 
 }

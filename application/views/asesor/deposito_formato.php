@@ -408,28 +408,33 @@
 
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-                                <div class="form-group">
-                                    <label class="label-on-left m-0">
-                                        CÓDIGO POSTAL
-                                        (<small style="color: red;">*</small>)
-                                    </label>
-                                    <input class="form-control input-gral" onblur="validarCodigoPostal(this)"   name="cp" id="cp" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp; ?>">        
-                                </div>
-                            </div>
-
-                            <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8">
-                                <div class="form-group m-0">
-                                    <label class="label-on-left m-0">
-                                        CIUDAD / MUNICIPIO
-                                        (<small style="color: red;">*</small>)
-                                    </label>
-                                    <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="ciudad" id="ciudad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ciudad?>"/>
-                                </div>
-                            </div>
-                        </div>
+                        <label class="label-on-left m-0">CIUDAD(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="ciudad" id="ciudad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->ciudad?>"/>
                     </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">MUNICIPIO(<small style="color: red;">*</small>)</label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="municipio" id="municipio" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->municipio?>"/>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">
+                            LOCALIDAD
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="localidad" id="localidad" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->localidad?>"/>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                        <label class="label-on-left m-0">
+                            CALLE
+                            (<small style="color: red;">*</small>)
+                        </label>
+                        <input type="text" required="true" class="form-control m-0 input-gral letrasCaracteres"  name="calle" id="calle" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->calle?>"/>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -446,8 +451,7 @@
                                             else {
                                                 echo '<option value="'.$generos[$i]['id_opcion'].'">'.$generos[$i]['nombre'].'</option>';
                                             }
-                                        }
-                                        ?>
+                                        }?>
                                     </select>
                                 </div>
                             </div>
@@ -466,23 +470,27 @@
                                                 else {
                                                     echo '<option value="'.$tipoMoneda[$i]['id_opcion'].'">'.$tipoMoneda[$i]['nombre'].'</option>';
                                                 }
-                                            }
-                                        ?>
+                                            }?>
                                     </select>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <label class="label-on-left m-0">#INTERIOR</label>
-                        <input class="form-control input-gral m-0" required="true" name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
-                    </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <label class="label-on-left m-0">#EXTERIOR</label>
-                        <input class="form-control input-gral m-0" required="true" name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">CÓDIGO POSTAL(<small style="color: red;">*</small>)</label>
+                                <input class="form-control input-gral" onblur="validarCodigoPostal(this)"   name="cp" id="cp" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp; ?>">
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
+                                <input type="text" required="true" class="form-control m-0 input-gral"  name="interior" id="interior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->interior?>"/>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
+                                <label class="label-on-left m-0">#EXTERIOR(<small style="color: red;">*</small>)</label>
+                                <input type="text" required="true" class="form-control m-0 input-gral"  name="exterior" id="exterior" type="text" <?php echo $readOnly; ?> value="<?=$cliente[0]->exterior?>"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
