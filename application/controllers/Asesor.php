@@ -1102,11 +1102,11 @@ class Asesor extends CI_Controller {
 
         $estados = array_merge(array_filter($catalogs, function($item) {
             //ESTADOS
-            return $item['id_catalogo'] == 120;
+            return $item['id_catalogo'] == 143;
         }));
 
         $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 118;
+            return $item['id_catalogo'] == 142;
         }));
 
         $generos = array_merge(array_filter($catalogs, function ($item) {
@@ -2152,7 +2152,7 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
-        /*
+        
         if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
@@ -2163,7 +2163,7 @@ class Asesor extends CI_Controller {
                     exit;
                 }
             }
-        }*/
+        }
 
 
         $proyecto = $this->input->post('proyecto');
