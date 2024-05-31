@@ -89,6 +89,11 @@ back_to_carta_auth = function (data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -97,27 +102,52 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
-    { data: 'adeudoOOAM' },
-    { data: 'adADM' },
-    { data: 'adGPH' },
+    { data: function(data){
+        if(data.adeudoOOAM){
+            return formatter.format(data.adeudoOOAM)
+        }
+        return 'Sin ingresar'
+    } },
+    { data: function(data){
+        if(data.adeudoADM){
+            return formatter.format(data.adeudoADM)
+        }
+        return 'Sin ingresar'
+    } },
+    { data: function(data){
+        if(data.adeudoGPH){
+            return formatter.format(data.adeudoGPH)
+        }
+        return 'Sin ingresar'
+    } },
     {
         data: function (data) {
-            let vigencia = new Date(data.fechaProceso)
-            vigencia.setDate(vigencia.getDate() + 2)
+            let inicio = new Date(data.fechaProceso)
             let today = new Date()
 
-            let difference = vigencia.getTime() - today.getTime()
+            let difference = today.getTime() - inicio.getTime()
 
-            let days = Math.round(difference / (1000 * 3600 * 24))
+            let days = Math.floor(difference / (1000 * 3600 * 24))
 
-            let text = `Quedan ${days} dia(s)`
-            if (days < 0) {
-                text = 'El tiempo establecido ha pasado'
-            }
+            let text = `Lleva ${days} día(s)`
 
             return text
         }
     },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     {
         data: function (data) {
             // console.log(data)
@@ -141,7 +171,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Concentración de adeudos",
         exportOptions: {
-            columns: [0, 1, 2, 3, 5],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');

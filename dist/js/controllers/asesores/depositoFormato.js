@@ -58,24 +58,19 @@ function validarCostos() {
     } else {
         const descuentoCostoListaM2 = (idDesarrollo == 5 || idDesarrollo == 6) ? costoListaM2 * 0.74 : costoListaM2 * 0.80; // Aplicar el descuento del 20%
 
-        if (![2, 3, 4].includes(clienteInfo.proceso)) {
+        if([0, 1].includes(clienteInfo.proceso)){
             if (costoFinalM2 > costoListaM2 || costoFinalM2 < descuentoCostoListaM2 || costoFinalM2 < 0) {
                 setTimeout(()=>{
                     $('#costom2f').val('');
                 }, 1000);
                 return 'danger_1';
-            } else {
+            } 
+            else {
                 return 'success';
             }
-        } else {
-            if (costoListaM2 > 0 && costoFinalM2 <= costoListaM2 && costoFinalM2 >= 0) {
-                return 'success';
-            } else {
-                setTimeout(()=>{
-                    $('#costom2f').val('');
-                }, 1000);
-                return 'danger_1';
-            }
+        }
+        else{
+            return 'success';
         }
     }
 }

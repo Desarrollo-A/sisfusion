@@ -809,7 +809,7 @@
 
     public function getGerente()
     {
-        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161)");
+        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161, 15844)");
         return $query->result_array();
     }
 
@@ -821,7 +821,7 @@
             SELECT id_usuario, CONCAT(id_usuario,' - ', nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_usuario = $id_gerente");*/
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
-			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806)) ORDER BY nombre");
+			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806, 15844)) ORDER BY nombre");
 
         return $query->result_array();
     }

@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Validar deposito</h3>
+                                    <h3 class="card-title center-align">Validar depósito</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -25,9 +25,12 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>NOMBRE LOTE</th>
-                                            <th>COSTO DE CONSTRUCCION</th>
-                                            <th>MONTO DEPOSITADO</th>
-                                            <th>VIGENCIA</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>TIEMPO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

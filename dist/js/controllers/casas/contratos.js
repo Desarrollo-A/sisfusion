@@ -64,7 +64,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -81,7 +81,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf']}),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ],
     })
 
@@ -91,11 +91,21 @@ function show_upload(data) {
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'no subido'
+    } },
     { data: function(data){
         let view_button = ''
-        if(data.archivo != 'Sin archivo'){
+        if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         }
 

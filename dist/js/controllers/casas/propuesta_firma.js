@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Elección de propuestas"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de elección de propuestas.", "success");
         
                     table.reload()
 
@@ -40,10 +40,10 @@ go_to_cotizaciones = function(data) {
     window.location.href = `cotizaciones/${data.idProcesoCasas}`;
 }
 
-back_to_documentos = function(data) {
+back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Concentración de adeudos"</b>?`,
+        text: `¿Desea regresar el proceso del lote ${proceso.nombreLote} a <b>"Documentación cliente".</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -55,7 +55,7 @@ back_to_documentos = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a documentación cliente.`, "success");
         
                     table.reload()
                     form.hide()
@@ -68,7 +68,7 @@ back_to_documentos = function(data) {
             })
         },
         fields: [
-            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new HiddenField({ id: 'id', value: proceso.idProcesoCasas }),
             new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
         ],
     })
@@ -124,29 +124,39 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 3)
+        let inicio = new Date(data.fechaProceso)
         let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+        let difference = today.getTime() - inicio.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+        let days = Math.floor(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
+        let text = `Lleva ${days} día(s)`
 
         return text
     } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     { data: function(data){
         let propuestas_button = new RowButton({icon: 'list', label: 'Propuestas de fechas', onClick: show_propuestas, data})
-        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir cotizaciones', onClick: go_to_cotizaciones, data})
+        let upload_button = new RowButton({icon: 'file_upload', label: 'Subir archivos', onClick: go_to_cotizaciones, data})
 
         let pass_button = ''
         
-        if(data.fechaFirma1 && data.cotizaciones){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
+        if(data.fechaFirma1 && data.cotizaciones && data.documentos){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})
@@ -163,7 +173,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Propuesta de firma",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');

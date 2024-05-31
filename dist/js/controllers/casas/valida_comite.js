@@ -40,7 +40,7 @@ pass_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Titulación"</b>?`,
+        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Propuesta de firma"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -52,7 +52,7 @@ pass_to_propuesta_firma = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Titulación.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de propuesta de firma.", "success");
         
                     table.reload()
 
@@ -86,7 +86,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Validación de proyecto",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -108,20 +108,30 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 5)
+        let inicio = new Date(data.fechaProceso)
         let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+        let difference = today.getTime() - inicio.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+        let days = Math.floor(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
+        let text = `Lleva ${days} día(s)`
 
         return text
+    } },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})

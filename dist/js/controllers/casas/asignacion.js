@@ -45,7 +45,7 @@ $.ajax({
 function choose_asesor(data) {
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
-        new SelectField({ id: 'asesor', label: 'Asesor', placeholder: 'Selecciona una opción', data: items }),
+        new SelectField({ id: 'asesor', label: 'Asesor', value: data.idAsesor, placeholder: 'Selecciona una opción', data: items, required: true }),
     ]
 
     form.show()
@@ -55,7 +55,7 @@ select_asesor = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}`,
+        text: `¿Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -94,7 +94,7 @@ cancel_process = function (data) {
 
     let form = new Form({
         title: 'Cancelar proceso',
-        text: `Desea cancelar el proceso del lote ${data.nombreLote}`,
+        text: `¿Desea cancelar el proceso del lote ${data.nombreLote}?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -136,7 +136,7 @@ let buttons = [
         titleAttr: 'Descargar archivo excel',
         title:"Asignación de cartera",
         exportOptions: {
-            columns: [0, 1, 2],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7],
             format: {
                 header: function (d, columnIdx) {
                     return $(d).attr('placeholder');
@@ -154,6 +154,20 @@ let columns = [
     { data: 'cliente' },
     { data: 'nombreAsesor' },
     { data: 'gerente' },
+    { data: function (data) {
+        switch(data.tipoMovimiento){
+        case 1:
+            clase = 'warning'
+            break
+        case 2:
+            clase = 'orange'
+            break
+        default:
+            clase = 'blueMaderas'
+        }
+
+        return `<span class="label lbl-${clase}">${data.movimiento}</span>`
+    } },
     {
         data: function (data) {
             let asesor_button = new RowButton({ icon: 'assignment_ind', label: 'Asignar asesor', onClick: choose_asesor, data })

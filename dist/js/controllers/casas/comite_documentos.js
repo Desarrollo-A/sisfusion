@@ -33,7 +33,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -50,7 +50,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'] }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
     })
 

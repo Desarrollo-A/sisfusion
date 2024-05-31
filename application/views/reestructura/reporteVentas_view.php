@@ -14,11 +14,14 @@
                     <div class="modal-body">
                         <div role="tabpanel">
                             <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active">
-                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab">Historial de contratación</a>
+                                <li role="presentation" id="tab-proceso">
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab" id="verProceso">Historial de contratación</a>
+                                </li>
+                                <li role="presentation" id="tab-preproceso">
+                                    <a href="#tabHistoriaContratacion" aria-controls="tabHistoriaContratacion" role="tab" data-toggle="tab" id="verPreproceso" class="btn-historial" data-idLote="" data-flagFusion="">Historial preproceso</a>
                                 </li>
                             </ul>
-                            <div class="tab-content">
+                            <div class="tab-content" id="proceso">
                                 <div role="tabpanel" class="tab-pane active" id="tabHistoriaContratacion">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -36,6 +39,25 @@
                                                             </tr>
                                                         </thead>
                                                     </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-content" id="preproceso">
+                                <div class="modal-body">
+                                    <div role="tabpanel">
+                                        <div class="tab-content">
+                                            <div role="tabpanel" class="tab-pane active" id="historialTap">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="card card-plain">
+                                                            <div class="card-content scroll-styles" style="height: 350px; overflow: auto">
+                                                                <ul class="timeline-3" id="historialLine"></ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -68,7 +90,25 @@
                 </div>
             </div>
         </div>
-        
+
+        <div class="modal fade" id="modalCambio" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" id="regresoLo">
+                        <h4 class="modal-title"><label><span class="titulo_modal_2"></span><b><span class="lote_2"></span></b></label></h4>
+                    </div>
+                    <div class="modal-body">
+                        <textarea class="text-modal scroll-styles" id="comentarioRe" rows="3" placeholder="Comentario"></textarea>
+                        <br>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+                        <button type="button" id="saveRegreso" class="btn btn-primary">ACEPTAR</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -118,3 +158,4 @@
 <?php $this->load->view('template/footer'); ?>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reporteVentas.js"></script>
+<script src="<?=base_url()?>dist/js/controllers/reestructura/historialMovimientos.js"></script>

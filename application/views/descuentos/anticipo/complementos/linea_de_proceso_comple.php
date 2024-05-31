@@ -1,13 +1,11 @@
 <div class="card hide preceso_aticipo" id="preceso_aticipo" name="preceso_aticipo">
     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <!-- INICIO -->
-        <div class="container">
-            <div class="row text-center justify-content-center mb-5">
+        <div class="card-content">
                 <div class="encabezadoBox">
-                    <h3 class="card-title font-weight-bold center-align">Proceso actual </h3>
+                    <h3 class="card-title center-align">Proceso actual </h3>
                     <p class=" card-title text-muted pl-1"> Se muestra el proceso actual.</p>
                 </div>
-            </div>
             <br>
             <div class="linea_proceso" id="linea_proceso" name="linea_proceso">
                 <div class="row ">

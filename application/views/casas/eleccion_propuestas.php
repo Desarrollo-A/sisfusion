@@ -32,7 +32,8 @@
                                             <th>GERENTE</th>
                                             <th>NOTARIA</th>
                                             <th>FECHA DE FIRMA</th>
-                                            <th>VIGENCIA</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

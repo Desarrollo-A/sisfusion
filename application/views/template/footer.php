@@ -48,6 +48,7 @@
 <script src="<?=base_url()?>dist/js/fullcalendar/locales-all.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/general/main_services.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js"></script>
@@ -69,6 +70,9 @@
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";
     let lider_general = "<?=$this->session->userdata('id_lider')?> ";
+
+    
+    let forma_de_pago_general = <?=$this->session->userdata('forma_pago');?>;
 
 
     let sede_usuario_general_array = sede_usuario_general_div.split(",");

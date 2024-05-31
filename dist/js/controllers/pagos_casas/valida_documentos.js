@@ -34,7 +34,7 @@ back_to_documentacion = function(data) {
 
 pass_to_validar_deposito = function(data) {
     let form = new Form({
-        title: 'Validar documentacion', 
+        title: 'Validar documentación', 
         text: `¿Validar la documentación del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
@@ -70,36 +70,40 @@ go_to_documentos = function(data) {
     window.location.href = `lista_valida_documentos/${data.idProcesoPagos}`;
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data) {
         if(data.costoConstruccion){
-            return `$ ${data.costoConstruccion.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.costoConstruccion)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data) {
         if(data.montoDepositado){
-            return `$ ${data.montoDepositado.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.montoDepositado)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data){
-        let vigencia = new Date(data.fechaProceso)
-        vigencia.setDate(vigencia.getDate() + 3)
+        let inicio = new Date(data.fechaProceso)
         let today = new Date()
 
-        let difference = vigencia.getTime() - today.getTime()
+        let difference = today.getTime() - inicio.getTime()
 
-        let days = Math.round(difference / (1000 * 3600 * 24))
+        let days = Math.floor(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
-        if(days < 0){
-            text = 'El tiempo establecido ha pasado'
-        }
+        let text = `Lleva ${days} día(s)`
 
         return text
     } },

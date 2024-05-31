@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Envio a firma de R.L.</h3>
+                                    <h3 class="card-title center-align">Envío a firma de R.L.</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -30,7 +30,8 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>VIGENCIA</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

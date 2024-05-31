@@ -34,7 +34,7 @@
 <div id="form-modal" class="modal fade" role="dialog" tabindex='-1'>
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="form-form-modal" method="post">
+            <form id="form-form-modal" method="post" novalidate>
                 <div class="modal-header"> 
                     <h4 class="modal-title" ><b id="title-form-modal" class="text-center"></b></h4>
                 </div>
@@ -48,7 +48,6 @@
                 <div class="modal-footer" >
                     <button id="cancel-button-form-modal" type="button" class="btn btn-danger btn-simple" data-dismiss="modal" >cerrar</button>
                     <button id="ok-button-form-modal" type="submit" class="btn btn-primary" >
-                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         enviar
                     </button>
                 </div>

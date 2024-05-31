@@ -3,6 +3,7 @@ var arrayProyIdProp = [];
 let preproceso = 10; // valor que ayudara a que se regrese al preproceso requerido
 let preproceso2 = [];
 const procesosNombre = []; // nombres de los preprocesos
+let distincion2 = 0;
 let dataRegreso = []; 
 var idProyectoRE = 0; //id de proyecto reestrucura excedente, sólo para ese caso
 var idProyectoConteo=[];
@@ -1449,10 +1450,19 @@ const botonesAccionReubicacion = (d) => {
         ${idEstatusPreproceso === 0 ? '<i class="fas fa-map-marker"></i>': '<i class="fas fa-undo"></i>'}
     </button>`;
 
+    var tooltipEspecial = ESTATUS_PREPROCESO[idEstatusPreproceso + 1];
+
+    if((idEstatusPreproceso + 1) == 2 && FLAGPROCESOCONTRALORIA == 0){
+        tooltipEspecial = "ELABORACIÓN DE CORRIDAS";
+    }
+    else if(idEstatusPreproceso == 2 && FLAGPROCESOCONTRALORIA == 0 ){
+        tooltipEspecial = "ELABORACIÓN DE CONTRATO Y RESCISIÓN";
+    }
+
     const BTN_AVANCE =  `<button class="btn-data btn-green btn-avanzar"
         data-toggle="tooltip" 
         data-placement="left"
-        title="ENVIAR A ${ESTATUS_PREPROCESO[idEstatusPreproceso + 1]}"
+        title="ENVIAR A ${tooltipEspecial}"
         data-idCliente="${d.idCliente}"
         data-tipoTransaccion="${idEstatusPreproceso}"
         data-idEstatusMovimiento="${d.id_estatus_modificacion}"
@@ -1901,8 +1911,9 @@ $(document).on('click', '.regreso-preproceso', function(){
     procesosNombre[0] = 'Pendiente carga de propuestas';
     procesosNombre[1] = 'Revisión de propuestas';
     procesosNombre[2] = 'Elaboración de corridas, contrato y rescisión';
-    procesosNombre[3] = 'Recepción de documentación';
-    procesosNombre[4] = 'Recurso traspasado pendiente de ejecución de apartado nuevo';
+    procesosNombre[3] = 'Elaboración de contrato y rescisión';
+    procesosNombre[4] = 'Recepción de documentación';
+    procesosNombre[5] = 'Recurso traspasado pendiente de ejecución de apartado nuevo';
 
     let arrayManejo = [];
     arrayManejo['id_lote'] = id_lote;
@@ -1939,7 +1950,19 @@ $(document).on('click', '.regreso-preproceso', function(){
         }
         if(i == 2){
             $('#opcionesRegreso').append(`
-                <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-1 lotePropuesto">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
+                    <div class="" id="checkDS">
+                        <div class="container boxChecks p-0">                    
+                            <label class="m-0 checkstyleDS">
+                                <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 2 +`)" id=`+ i + 'j' +` name=`+ i + 'j'+` data-idLote = `+ id_lote +`/>
+                                <span class="w-100 d-flex justify-between">
+                                    <p class="m-0">Preproceso <b>${ 2.1 + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2 lotePropuesto">
                     <div class="" id="checkDS">
                         <div class="container boxChecks p-0">                    
                             <label class="m-0 checkstyleDS">
@@ -1951,18 +1974,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                         </div>
                     </div>
                 </div>
-                <div class="col-6 col-sm-6 col-md-6 col-lg-6 mt-1 lotePropuesto">
-                    <div class="" id="checkDS">
-                        <div class="container boxChecks p-0">                    
-                            <label class="m-0 checkstyleDS">
-                                <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 2 +`)" id=`+ i + 'j' +` name=`+ i + 'j'+` data-idLote = `+ id_lote +`/>
-                                <span class="w-100 d-flex justify-between">
-                                    <p class="m-0">Preproceso <b>${ i + ' (' + 'Jurídico: contrato y rescisión' + ')'}</b></p>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+                
                 </div>
             `);
         }
@@ -1975,7 +1987,7 @@ $(document).on('click', '.regreso-preproceso', function(){
                         <label class="m-0 checkstyleDS">
                             <input type="checkbox" class="select-checkbox" onclick="check(`+ i + ', ' + 0 +`)" id=`+ i +` name=`+ i +` data-idLote = `+ id_lote +`/>
                             <span class="w-100 d-flex justify-between">
-                                <p class="m-0">Preproceso <b>${ i + ' (' + procesosNombre[i] + ')'}</b></p>
+                                <p class="m-0">Preproceso <b>${ i == 3 ? (3 + ' (' + procesosNombre[i + 1] + ')') : (i + ' (' + procesosNombre[i] + ')')}</b></p>
                             </span>
                         </label>
                     </div>
@@ -1991,6 +2003,7 @@ $(document).on('click', '.regreso-preproceso', function(){
 
 function check(i, div){
     const opciones = [];
+    distincion2 = $('#' + i + 'c').is(":checked") ? 1 : 2;
     
     if($('#' + i).is(":checked") || $('#' + i + 'c').is(":checked") || $('#' + i + 'j').is(":checked")) { // añadiendo la division del paso 2 de contraloria y juridico
         // console.log('checado');
@@ -2001,6 +2014,8 @@ function check(i, div){
             {
                 if($('#' + i + 'c').is(":checked")){
                     preproceso2['contraloria'] = div;
+                    $('#' + 2 + 'j').prop('checked', false);
+                    preproceso2['juridico'] = 0;
                 }
                 else{
                     preproceso2['contraloria'] = 0;
@@ -2009,6 +2024,8 @@ function check(i, div){
             else if(div == 2){
                 if($('#' + i + 'j').is(":checked")){
                     preproceso2['juridico'] = div;
+                    $('#' + 2 + 'c').prop('checked', false);
+                    preproceso2['contraloria'] = 0;
                 }
                 else{
                     preproceso2['juridico'] = 0;
@@ -2037,7 +2054,6 @@ function check(i, div){
         }
     }
     else{
-        // console.log('no checado');
         preproceso2 = [];
         preproceso = 10;
     }
@@ -2073,7 +2089,8 @@ $(document).on('click', '#btnRegreso', function(){
                 },
             success: function(response){
                 if(response.result){
-                    alerts.showNotification("top", "right", response.message + ' (' + procesosNombre[preproceso] + ')', "success");
+                    let reponseIndex = preproceso == 2 && distincion2 == 2 ? (preproceso + 1) : preproceso;
+                    alerts.showNotification("top", "right", response.message + reponseIndex + ' (' + procesosNombre[reponseIndex] + ')', "success");
                     $('#regresoPreproceso').modal('hide');
                     $('#reubicacionClientes').DataTable().ajax.reload();
                 }

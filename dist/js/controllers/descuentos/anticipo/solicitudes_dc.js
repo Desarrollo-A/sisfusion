@@ -52,7 +52,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
 
         { data: 'puesto' },
         { data: 'sede' },
-        { data: 'monto' },
+        { data: 'monto_formateado' },
 
         { data: 'comentario' },
         { data: 'proceso' },
@@ -112,22 +112,31 @@ $("#tabla_anticipo_revision_dc").ready(function () {
     });
     $('#tabla_anticipo_revision_dc tbody').on('click', '.delete-anticipo', function () {
         const idAnticipo = $(this).val();
+        const monto1 = $(this).attr("data-monto");
+        const id_usuario = $(this).attr("data-id_usuario");
         const nombreUsuario = $(this).attr("data-name");
         const Modalbody = $('#myModalDelete .modal-body');
         const Modalfooter = $('#myModalDelete .modal-footer');
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
-            <input type="hidden" value="${idAnticipo}" name="idAnticipo" id="idAnticipo"> 
-            <h4>¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
+            <input class="center-align" type="hidden"  value="${idAnticipo}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
+            <h4 class=" center-align">¿Ésta seguro que desea borrar el Anticipo de ${nombreUsuario}?</h4>
             <div class="form-group">
                 <label class="label control-label">Mótivo del rechazo</label>
                 <textarea id="motivoDescuento" name="motivoDescuento" class="text-modal" rows="3" required></textarea>
             </div>
+            <div class="form-group col-md-12 ">
+                    
+                <input  type="hidden" value="${monto1}" name="monto" id="monto">
+            </div>
+            <div class="form-group">
+                <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
+            </div>
             `);
         Modalfooter.append(`
                 <button type="button"  class="btn btn-danger btn-simple " data-dismiss="modal" >Cerrar</button>
-				<button  type="submit" name="disper_btn"  id="dispersar" class="btn btn-primary">Aceptar</button>`);
+				<button  type="submit" name="disper_btn"  id="detener_adelanto" class="btn btn-primary">Aceptar</button>`);
         $("#myModalDelete").modal();
     });
 
@@ -164,7 +173,14 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             </div>
             <div class="form-group col-md-12 ">
                 <label class="label control-label">Confirmar monto</label>
-                <input class="form-control input-gral" type="number" value="${monto1}" name="monto" id="monto">
+                <input class="form-control input-gral" 
+                data-type="currency" maxlength="10" 
+                oncopy="return false" 
+                onpaste="return false"
+                oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+                onkeypress="return onlyNumbers(event)"
+                required
+                type="text" value="${monto1}" name="monto" id="monto">
             </div>
             <div class="form-group">
                 <input type="hidden" value="${id_usuario}" name="id_usuario" id="id_usuario">
@@ -292,7 +308,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
             console.log(data)
             $.each( data, function(i, v){
                 console.log(i);
-                console.log(v.comentario);
+                console.log(v.comentario_general);
                 $("#comentariosAsimilados").append('<li>\n' +
                 '  <div class="container-fluid">\n' +
                 '    <div class="row">\n' +
@@ -300,7 +316,7 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                 '        <a> Proeso : <b> ' +v.nombre+ '</b></a><br>\n' +
                 '      </div>\n' +
                 '      <div class="float-end text-right">\n' +
-                '        <a> Comentario : ' +v.comentario + '</a>\n' +
+                '        <a> Comentario : ' +v.comentario_general + '</a>\n' +
                 '      </div>\n' +
 
                 '    <h6>\n' +
@@ -404,3 +420,46 @@ function changeName(e){
     let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
     relatedTarget[0].value = fileName;
 }
+$("#form_delete").on('submit', function (e) {
+
+    e.preventDefault();
+    let formData = new FormData(document.getElementById("form_delete"));
+
+    // let uploadedDocument = $("#"+boton)[0].files[0];
+    formData.append("proceso", 0);
+    formData.append("estatus", 0);
+
+
+    $.ajax({
+        url: 'anticipo_update_generico',
+        data: formData,
+        method: 'POST',
+        contentType: false,
+        cache: false,
+        processData: false,
+        dataType: 'JSON',
+        success: function (data) {
+            alerts.showNotification("top", "right", "" + data.message + "", "" + data.response_type + "");
+            $('#myModalDelete').modal('hide')
+            document.getElementById("form_delete").reset();
+            $('#tabla_anticipo_revision_dc').DataTable().ajax.reload(null, false);
+            $('#form_delete').trigger('reset');
+        },
+        error: function () {
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            // document.getElementById("form_aceptar").reset();
+            $('#myModalDelete').modal('hide')
+            $('#form_delete').trigger('reset');
+            // $("#usuarioid").selectpicker('refresh');
+
+            
+        }
+    });
+}); 
+
+
+
+
+
+
+

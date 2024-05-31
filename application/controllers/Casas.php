@@ -180,6 +180,11 @@ class Casas extends BaseController {
         $this->load->view("casas/ingresar_adeudos");
     }
 
+    public function reporte_casas(){
+        $this->load->view('template/header');
+        $this->load->view("casas/reporte_casas");
+    }
+
     public function cotizaciones($proceso){
         $lote = $this->CasasModel->getProceso($proceso);
 
@@ -189,6 +194,17 @@ class Casas extends BaseController {
 
         $this->load->view('template/header');
         $this->load->view("casas/cotizaciones", $data);
+    }
+
+    public function historial($proceso){
+        $lote = $this->CasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("casas/historial", $data);
     }
 
     public function archivo($name){
@@ -346,7 +362,12 @@ class Casas extends BaseController {
             }
         }
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -400,7 +421,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -489,8 +510,13 @@ class Casas extends BaseController {
 
         $is_ok = $this->CasasModel->setTipoCredito($id, $tipo, $notaria);
 
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
         if($is_ok){
-            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if($is_ok){
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -522,7 +548,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -561,7 +587,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -592,7 +623,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -646,7 +677,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -677,7 +713,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -721,8 +757,24 @@ class Casas extends BaseController {
             $is_ok = $this->CasasModel->addCotizacion($id);
         }
 
+        $documentos = $this->CasasModel->getDocumentos([17, 28, 29, 30, 31, 32]);
+
+        $is_ok = true;
+        foreach ($documentos as $key => $documento) {
+            $is_ok = $this->CasasModel->inserDocumentsToProceso($id, $documento->tipo, $documento->nombre);
+
+            if(!$is_ok){
+                break;
+            }
+        }
+
         if($is_ok){
-            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+            $movimiento = 0;
+            if($proceso->tipoMovimiento == 1){
+                $movimiento = 2;
+            }
+
+            $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
             if($is_ok){
                 $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -769,7 +821,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -800,7 +857,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -825,7 +882,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -879,7 +941,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -944,7 +1011,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -980,7 +1047,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1011,7 +1083,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1042,7 +1119,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -1067,7 +1144,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1098,7 +1180,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1129,7 +1216,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -1154,7 +1241,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1185,7 +1277,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1216,7 +1313,7 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, 1);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se regreso proceso | Comentario: '.$comentario);
@@ -1241,7 +1338,12 @@ class Casas extends BaseController {
 
         $proceso = $this->CasasModel->getProceso($id);
 
-        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario);
+        $movimiento = 0;
+        if($proceso->tipoMovimiento == 1){
+            $movimiento = 2;
+        }
+
+        $is_ok = $this->CasasModel->setProcesoTo($id, $new_status, $comentario, $movimiento);
 
         if($is_ok){
             $this->CasasModel->addHistorial($id, $proceso->proceso, $new_status, 'Se avanzo proceso | Comentario: '.$comentario);
@@ -1401,5 +1503,43 @@ class Casas extends BaseController {
         }
 
         $this->json([]);
+    }
+
+    public function lista_reporte_casas(){
+        $opcion = $this->input->get('opcion');
+
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
+        $finalizado = "0, 1";
+
+        if($opcion != -1 && $opcion != -2 && isset($opcion)){
+            $proceso = $opcion;
+            $finalizado = "0";
+        }
+
+        if($opcion == -2){
+            $finalizado = "1";
+        }
+
+        $lotes = $this->CasasModel->getListaReporteCasas($proceso, $finalizado);
+
+        $this->json($lotes);
+    }
+
+    public function lista_historial($proceso){
+        $lotes = $this->CasasModel->getListaHistorial($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function options_procesos(){
+        $asesores = $this->CasasModel->getProcesosOptions();
+
+        $this->json($asesores);
+    }
+
+    public function lista_archivos_titulos($proceso){
+        $lotes = $this->CasasModel->getListaArchivosTitulos($proceso);
+
+        $this->json($lotes);
     }
 }
