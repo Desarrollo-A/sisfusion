@@ -57,9 +57,11 @@ $('#tablaReporteVentas').DataTable({
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
+        { data: "referenciaDestino" },
         { data: "idLote" },
         { data: "sup" },
         { data: "nombrePvOrigen" },
+        { data: "referenciaOrigen" },
         { data: "totalNeto2Sep" },
         { data: "supLoteOrigen" },
         {

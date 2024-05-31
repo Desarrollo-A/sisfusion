@@ -53,6 +53,8 @@
                                                 <th>DIRECTOR REGIONAL 2</th>
                                                 <th>LUGAR DE PROSPECCIÓN</th>
                                                 <th>CREACIÓN</th>
+                                                <th>CORREO</th>
+                                                <th>TELÉFONO</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
