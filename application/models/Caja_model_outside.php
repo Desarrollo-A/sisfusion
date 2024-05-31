@@ -1573,6 +1573,41 @@
     }
     public function getDatosCondominio($idCondominio){
         return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
-     }
+    }
+
+    public function getInformaciongGeneralPorCliente($id_cliente) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData,
+                cl.telefono1,
+                cl.ladaTel1,
+                cl.telefono2,
+                cl.correo,
+                cl.fecha_nacimiento,
+                CONVERT(varchar, cl.fechaApartado, 23) fechaApartado,
+                lo.referencia,
+                cl.rfc,
+                cl.estado,
+                cl.pais,
+                cl.genero,
+                cl.municipio,
+                cl.tipoMoneda,
+                cl.exterior,
+                cl.interior,
+                cl.cp,
+                cl.calle,
+                cl.localidad
+
+            FROM
+                clientes cl
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+            WHERE
+                cl.id_cliente = $id_cliente"
+        )->row();
+    }
 
 }
