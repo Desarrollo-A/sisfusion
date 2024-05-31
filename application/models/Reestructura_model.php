@@ -1456,7 +1456,7 @@ class Reestructura_model extends CI_Model
                     STRING_AGG((loOrigen.totalNeto2 / loOrigen.sup), ', ') as preciom2,
                     STRING_AGG(((loOrigen.totalNeto2 / loOrigen.sup)*loOrigen.sup), ', ') as totalNeto,
                     CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
-                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE opc2.nombre END AS tipo
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE MAX(opc2.nombre) END AS tipo
                 FROM lotesFusion AS lf
                     LEFT JOIN lotes loOrigen ON loOrigen.idLote = lf.idLote and lf.origen = 1
                     LEFT JOIN lotes loDestino ON loDestino.idLote = lf.idLote and lf.destino = 1
@@ -1469,17 +1469,17 @@ class Reestructura_model extends CI_Model
                     LEFT JOIN datos_x_cliente dxc ON dxc.idLote = loPv.idLote
                     LEFT JOIN UltimoValor u ON u.idLote = loPv.idLote AND u.uf = 1
                     LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = loPv.idLote AND u2.uf = 1 
-                    INNER JOIN clientes cl1 on cl1.id_cliente = loOrigen.idCliente
+                    LEFT JOIN clientes cl1 on cl1.id_cliente = loOrigen.idCliente
                     LEFT JOIN usuario usA on usA.id_usuario = loOrigen.id_usuario_asignado
                     LEFT JOIN usuario usG on usG.id_usuario = loOrigen.id_gerente_asignado
                     LEFT JOIN usuario usS on usS.id_usuario = loOrigen.id_subdirector_asignado
-                    INNER JOIN usuarios AS us1 ON us1.id_usuario = loOrigen.id_usuario_asignado -- ASESOR
-                    INNER JOIN usuarios AS us2 ON us1.id_lider = us2.id_usuario -- GERENTE
-                    INNER JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario -- SUBDIRECTOR
+                    LEFT JOIN usuarios AS us1 ON us1.id_usuario = loOrigen.id_usuario_asignado -- ASESOR
+                    LEFT JOIN usuarios AS us2 ON us1.id_lider = us2.id_usuario -- GERENTE
+                    LEFT JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario -- SUBDIRECTOR
                     LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario -- REGIONAL
                     LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
-                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND (loPv.id_usuario_asignado != 0 OR loPv.id_usuario_asignado IS NOT NULL) $condicion
-                GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, opc2.nombre
+                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND loPv.id_usuario_asignado != 0
+                GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico
                 ORDER BY nombreLoteOrigen")->result_array();
     }
 
