@@ -17,12 +17,12 @@ class Reestructura_model extends CI_Model
 
         if ($id_rol == 15) { // JURÍDICO
             if (in_array($id_usuario, array(2762, 2747, 13691, 2765, 10463, 2876))) // ES DANI, CARLITOS O CECI
-                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario -- AND dxc2.flagProcesoJuridico = 0";
+                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND lo.id_juridico_preproceso = $id_usuario AND dxc2.flagProcesoJuridico = 0 AND dxc2.flagProcesoContraloria = 1 ";
             else
-                $validacionAdicional = "AND lo.estatus_preproceso IN (2) -- AND dxc2.flagProcesoJuridico = 0";
+                $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoJuridico = 0 AND dxc2.flagProcesoContraloria = 1";
         }
         else if (in_array($id_rol, array(17, 70, 71, 73))) // CONTRALORÍA
-            $validacionAdicional = "AND lo.estatus_preproceso IN (2)"; /* AND dxc2.flagProcesoContraloria = 0 */
+            $validacionAdicional = "AND lo.estatus_preproceso IN (2) AND dxc2.flagProcesoContraloria = 0";
         else if ($id_rol == 6 && $tipo == 2) // ASISTENTE GERENCIA && ES OOAM
             $validacionAdicional = "AND lo.estatus_preproceso NOT IN (7) AND (u6.id_lider = $id_lider OR lo.id_usuario_asignado = $id_lider)";
         else if ($id_rol == 3 && $tipo == 2) // GERENTE && ES OOAM
@@ -104,7 +104,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19) $validacionAdicional")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -771,6 +771,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getInventario() {
+        ini_set('memory_limit', -1);
         return $this->db->query(
             "SELECT 
                 UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, 
@@ -1171,6 +1172,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function getReporteReubicaciones() {
+        ini_set('memory_limit', -1);
         return $this->db->query("WITH UltimoValor
         AS (
             SELECT anterior
@@ -1662,21 +1664,47 @@ class Reestructura_model extends CI_Model
           ) AS uf 
         FROM 
           historial_preproceso_lote hl
+	
       ), 
-      UltimoEstatus2 AS (
+
+      UltimoJuridico AS (
         SELECT 
           idLote, 
-          fecha_modificacion modificado, 
+		  hl.modificado_por,
+		  id_preproceso,
+          hl.fecha_modificacion modificado, 
           ROW_NUMBER() OVER (
             PARTITION BY idLote 
             ORDER BY 
-              fecha_modificacion DESC
+              hl.fecha_modificacion DESC
           ) AS uf 
         FROM 
-          historial_preproceso_lote hl 
-        WHERE 
+          historial_preproceso_lote hl
+		  INNER JOIN usuarios us on us.id_usuario = hl.modificado_por
+        WHERE
           id_preproceso = 2
+		AND us.id_rol = 15
       ),
+
+	   UltimoContraloria AS (
+        SELECT 
+          idLote, 
+		  hl.modificado_por,
+		  id_preproceso,
+          hl.fecha_modificacion modificado, 
+          ROW_NUMBER() OVER (
+            PARTITION BY idLote 
+            ORDER BY 
+              hl.fecha_modificacion DESC
+          ) AS uf 
+        FROM 
+          historial_preproceso_lote hl
+		  INNER JOIN usuarios us on us.id_usuario = hl.modificado_por
+        WHERE
+          id_preproceso = 2
+		AND us.id_rol IN(17, 13, 32, 70, 73)
+      ),
+
 	  usuario AS (
 		SELECT
 			id_usuario,
@@ -1719,9 +1747,12 @@ class Reestructura_model extends CI_Model
 		CASE WHEN u2.modificado IS NULL 
 			THEN 'SIN FECHA' ELSE FORMAT(u2.modificado, 'd/MMMM/yyyy HH:mm ', 'es-MX') 
 		END fechaEstatus2,
+		CASE WHEN c2.modificado IS NULL 
+			THEN 'SIN FECHA' ELSE FORMAT(c2.modificado, 'd/MMMM/yyyy HH:mm ', 'es-MX') 
+		END estatus2Contraloria,
 		usG.nombre AS gerente,
 		usA.nombre AS asesor,
-        CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
+		CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
 		CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
 			FROM clientes cl
 			INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente 
@@ -1734,14 +1765,15 @@ class Reestructura_model extends CI_Model
 			LEFT JOIN residenciales reDestino ON reDestino.idResidencial = coDestino.idResidencial
 			LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
 			LEFT JOIN UltimoValor u ON u.idLote = lo.idLote AND u.uf = 1
-	        LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = lo.idLote AND u2.uf = 1
+	        LEFT JOIN UltimoJuridico u2 ON u2.idLote = lo.idLote AND u2.uf = 1
+			LEFT JOIN UltimoContraloria c2 ON c2.idLote = lo.idLote AND c2.uf = 1
 			LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
 			LEFT JOIN usuario usA on usA.id_usuario = lo.id_usuario_asignado
 			LEFT JOIN usuario usG on usG.id_usuario = lo.id_gerente_asignado
 			WHERE lo.estatus_preproceso != 7 AND lo.id_usuario_asignado != 0
 			AND lo.liberaBandera = 1
 			AND lo.idLote NOT IN( SELECT idLote from lotesFusion )
-			group by pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, usG.nombre, usA.nombre, lo.idLote, lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, opc2.nombre
+			group by pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, c2.modificado, usG.nombre, usA.nombre, lo.idLote, lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, opc2.nombre
  UNION ALL
 	SELECT 
 		'Fusión' tipo_proceso, 
@@ -1762,18 +1794,13 @@ class Reestructura_model extends CI_Model
 			WHEN (loPV.estatus_preproceso = 2 AND dxc.flagProcesoContraloria = 1 AND dxc.flagProcesoJuridico = 0) THEN 'Elaboración de contrato y rescisión'
 			ELSE oxc.nombre 
 		END estatusProceso,
-		 CASE WHEN max(u.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaUltimoMovimiento, 
-		 CASE WHEN max(u2.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u2.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaEstatus2,
-		 CASE
-		   WHEN SUM(loOrigen.id_gerente_asignado + 0) < 1 THEN STRING_AGG(usG2.nombre, ', ') 
-		   ELSE STRING_AGG(usG.nombre, ', ')
-		 END gerente,
-		 CASE
-		 	WHEN SUM(loOrigen.id_usuario_asignado + 0) < 1 THEN STRING_AGG(usA2.nombre, ', ') 
-		 	ELSE STRING_AGG(usA.nombre, ', ') 
-		 END asesor,
-         CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
-		 CASE WHEN STRING_AGG(opc2.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(opc2.nombre, ', ') END AS tipo
+		 CASE WHEN MAX(u.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaUltimoMovimiento, 
+		 CASE WHEN MAX(u2.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u2.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaEstatus2,
+		 CASE WHEN MAX(c2.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(c2.modificado, 'd/MMMM/yyyy HH:mm ', 'es-MX')) END estatus2Contraloria,
+		 MAX(usG.nombre) gerente,
+		 MAX(usA.nombre) asesor,
+		 CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
+		 CASE WHEN MAX(opc2.nombre) IS NULL THEN 'SIN ESPECIFICAR' ELSE MAX(opc2.nombre) END AS tipo
 			FROM lotesFusion lf
 			LEFT JOIN lotes loOrigen ON loOrigen.idLote = lf.idLote and lf.origen = 1
 			LEFT JOIN lotes loDestino ON loDestino.idLote = lf.idLote and lf.destino = 1
@@ -1785,7 +1812,8 @@ class Reestructura_model extends CI_Model
 			LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = loPv.estatus_preproceso AND oxc.id_catalogo = 106
 			LEFT JOIN datos_x_cliente dxc ON dxc.idLote = loPv.idLote
 			LEFT JOIN UltimoValor u ON u.idLote = loPv.idLote AND u.uf = 1
-			LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = loPv.idLote AND u2.uf = 1
+			LEFT JOIN UltimoJuridico u2 ON u2.idLote = loPv.idLote AND u2.uf = 1
+			LEFT JOIN UltimoContraloria c2 ON c2.idLote = loPv.idLote AND c2.uf = 1
 			LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
 			LEFT JOIN clientes cl2 on cl2.id_cliente = loDestino.idCliente
 			LEFT JOIN usuario usA on usA.id_usuario = loOrigen.id_usuario_asignado
@@ -1839,10 +1867,15 @@ class Reestructura_model extends CI_Model
     public function getHistorialPorLote($idLote, $flagFusion){
         if($flagFusion == 1 ){
             return $this->db->query("SELECT CONCAT (CASE
-            WHEN hp.id_preproceso = 2 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
-            WHEN hp.id_preproceso = 3 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
-            WHEN hp.id_preproceso = 4 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
-            WHEN hp.id_preproceso = 5 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
+            WHEN hp.id_preproceso = 2 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' 
+            WHEN hp.id_preproceso = 2 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' and oxc2.id_opcion IN(17, 32, 70, 71, 73) THEN 'Elaboración de corridas'
+			WHEN hp.id_preproceso = 2 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' and oxc2.id_opcion = 15 THEN 'Elaboración de contrato y rescisión'
+            WHEN hp.id_preproceso = 3 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' 
+            WHEN hp.id_preproceso = 3 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
+            WHEN hp.id_preproceso = 4 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada'
+             WHEN hp.id_preproceso = 4 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
+            WHEN hp.id_preproceso = 5 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' 
+            WHEN hp.id_preproceso = 5 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
             ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
             CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
             FROM historial_preproceso_lote hp
@@ -1857,10 +1890,15 @@ class Reestructura_model extends CI_Model
         }
         else{
         return $this->db->query("SELECT CONCAT (CASE
-        WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
-        WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
-        WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
-        WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
+        WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' 
+        WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' and oxc2.id_opcion IN(17, 32, 70, 71, 73) THEN 'Elaboración de corridas'
+		WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' and oxc2.id_opcion = 15 THEN 'Elaboración de contrato y rescisión'
+        WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' 
+        WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
+        WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' 
+        WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
+        WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada'
+         WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
         ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
                 CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
         FROM historial_preproceso_lote hp
@@ -2337,6 +2375,12 @@ class Reestructura_model extends CI_Model
 
         return $query;
     }
+
+    // public function getStatusLote($idLotePv){
+    //     $query = $this->db->query("SELECT * FROM lotes WHERE idLote = ?", $idLotePv);
+
+    //     return $query;
+    // }
 
     public function checkLoteOrigen($loteAnterior){
         $query = $this->db->query('SELECT *FROM lotes WHERE idLote = ');

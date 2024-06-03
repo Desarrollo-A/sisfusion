@@ -20,7 +20,7 @@ $(document).on('click', '.btn-historial', function () {
 function fillChangelog(v) {
     
     const comentario = v.comentario.trim() === "" ? "(Sin comentario)" : v.comentario;
-
+    console.log(v);
     $("#historialLine").append(`<li>
         <div class="container-fluid">
             <div class="row">

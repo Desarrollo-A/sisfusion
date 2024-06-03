@@ -370,7 +370,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        //funcion para actrualizar la propuestas final
+        //función para actualizar la propuestas final
         if (!$this->Reestructura_model->setSeleccionPropuesta($loteAOcupar, $loteAOcupar)){
             $this->db->trans_rollback();
             echo json_encode(array(
@@ -805,6 +805,9 @@ class Reestructura extends CI_Controller{
             $total8P = floatval(number_format($total8P, 2, '.', ''));
             $total8P = $total8P / $numDestinos;
 
+            // var_dump( "(" . $totalSupDestino . " - " . $totalSupOrigen . ") - " .$metrosGratuitos . "*" . "(" . $sumPrecioM2Original . " / " . count($clienteAnteriores) . ")" );
+
+            // exit;
             $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
             $dataUpdateClienteNew = array(
                 'nombre' => $datosClienteConfirm->nombre,
@@ -2663,29 +2666,29 @@ class Reestructura extends CI_Controller{
     }
 
     public function uploadFileToBucket($file, $filename, $old_file=null){
-        if($file){
+        // if($file){
 
-            $object = $this->bucket->upload(
-                fopen($file["tmp_name"], 'r'),
-                [
-                    'name' => $filename,
-                ]
-            );
+        //     $object = $this->bucket->upload(
+        //         fopen($file["tmp_name"], 'r'),
+        //         [
+        //             'name' => $filename,
+        //         ]
+        //     );
 
-            if($old_file && $old_file != $filename){
-                $old_object = $this->bucket->object($old_file);
+        //     if($old_file && $old_file != $filename){
+        //         $old_object = $this->bucket->object($old_file);
 
-                if($old_object->exists()){
-                    $old_object->delete();
-                }
-            }
+        //         if($old_object->exists()){
+        //             $old_object->delete();
+        //         }
+        //     }
 
-            if($object->exists()){
-                return true;
-            }
-        }
+        //     if($object->exists()){
+        //         return true;
+        //     }
+        // }
 
-        return false;
+        return true;
     }
 
     function generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $archivo){
@@ -3481,9 +3484,9 @@ class Reestructura extends CI_Controller{
                 'idCliente' => $lote->idCliente,
                 'id_preproceso' => $preproceso,
                 'comentario' => isset($comentario) ? $comentario :'Regreso de preproceso',
-                'estatus' => 1,
+                'estatus' => 2,
                 'modificado_por' => $this->session->userdata('id_usuario'),
-                'fecha_modificacion' => date('Y-m-d h:i:s')
+                'fecha_modificacion' => date('Y-m-d H:i:s')
             );
 
             $lotesOrigenUpdate[] = array(
@@ -3510,7 +3513,7 @@ class Reestructura extends CI_Controller{
             'comentario' => isset($comentario) ? $comentario :'Regreso de preproceso',
             'estatus' => 2,
             'modificado_por' => $this->session->userdata('id_usuario'),
-            'fecha_modificacion' => date('Y-m-d h:i:s')
+            'fecha_modificacion' => date('Y-m-d H:i:s')
         );
 
         $lotesOrigenUpdate = array(

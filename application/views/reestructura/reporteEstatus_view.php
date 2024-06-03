@@ -59,7 +59,8 @@
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th>
                                                 <th>FECHA ÚLTIMO MOVIMIENTO</th>
-                                                <th>FECHA ESTATUS 2</th>
+                                                <th>ESTATUS 2 JURÍDICO</th>
+                                                <th>ESTATUS 2 CONTRALORÍA</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
                                                 <th>ACCIONES</th>
