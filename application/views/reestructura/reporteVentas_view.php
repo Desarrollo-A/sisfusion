@@ -142,7 +142,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>ESTATUS CONTRATACIÓN</th>
-                                                <th>FECHA ESTATUS 2</th>
+                                                <th>FECHA ESTATUS 2 (PRE PROCESO)</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
