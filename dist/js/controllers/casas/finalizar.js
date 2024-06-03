@@ -2,7 +2,7 @@ finalizar = function(data) {
     
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Finalizar proceso del lote ${data.nombreLote}?`,
+        text: `¿Finalizar proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -39,7 +39,7 @@ back_to_firma_contrato = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
+        text: `¿Regresar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

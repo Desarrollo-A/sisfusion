@@ -55,7 +55,7 @@ select_asesor = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea asignar a ${data.nombreAsesor} al lote ${data.nombreLote}?`,
+        text: `¿Desea asignar a <b>${data.nombreAsesor}</b> al lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 
