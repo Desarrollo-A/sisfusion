@@ -1112,6 +1112,10 @@ class Asesor extends CI_Controller {
         $generos = array_merge(array_filter($catalogs, function ($item) {
             return $item['id_catalogo'] == 145;
         }));
+
+        $codigoPostal = array_merge(array_filter($catalogs, function($item) {
+            return $item['id_catalogo'] == 146;
+        }));
         
         $datos["nacionalidades"] = $nacionalidades;
         $datos["edoCivil"] = $estadosCiviles;
@@ -1123,6 +1127,7 @@ class Asesor extends CI_Controller {
         $datos['estados'] = $estados;
         $datos['tipoMoneda'] = $tipoMoneda;
         $datos['generos'] = $generos;
+        $datos['codigoPostal'] = $codigoPostal;
 
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
@@ -2001,10 +2006,6 @@ class Asesor extends CI_Controller {
         $parentezco_select1 = $this->input->post('parentezco_select1');
         $parentezco_select2 = $this->input->post('parentezco_select2');
 
-        $pais_select = $this->input->post('pais');
-        $estado_select = $this->input->post('estado');
-        $tipoMoneda_select = $this->input->post('tipoMoneda');
-        $generoSelect = $this->input->post('genero');
 
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
 
@@ -2028,22 +2029,26 @@ class Asesor extends CI_Controller {
             return $item['id_catalogo'] == 92;
         }));
 
-        $paises = array_merge(array_filter($catalogs, function($item) {
-            //PAISES
-            return $item['id_catalogo'] == 144;
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 142;
         }));
 
         $estados = array_merge(array_filter($catalogs, function($item) {
             //ESTADOS
             return $item['id_catalogo'] == 143;
         }));
-
-        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 142;
+        
+         $paises = array_merge(array_filter($catalogs, function($item) {
+            //PAISES
+            return $item['id_catalogo'] == 144;
         }));
 
         $generos = array_merge(array_filter($catalogs, function ($item) {
             return $item['id_catalogo'] == 145;
+        }));
+        
+        $codigoPostal = array_merge(array_filter($catalogs, function($item) {
+            return $item['id_catalogo'] == 146;
         }));
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
@@ -2093,14 +2098,7 @@ class Asesor extends CI_Controller {
         $correo = $this->input->post('correo');
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
-        $pais = $this->input->post('pais');
-        $estado = $this->input->post('estado');
-        $genero = $this->input->post('genero');
-        $cp = $this->input->post('cp');
-        $tipoMoneda = $this->input->post('tipoMoneda');
-        $ciudad = $this->input->post('ciudad');
-        $interior = $this->input->post('interior');
-        $exterior = $this->input->post('exterior');
+        
         $originario = $this->input->post('originario');
         $regimen_fac = $this->input->post('regimenFiscal');
         $cp_fac = $this->input->post('cp_fac');
@@ -2108,6 +2106,14 @@ class Asesor extends CI_Controller {
         $municipio = $this->input->post('municipio');
         $calle = $this->input->post('calle');
         $localidad = $this->input->post('localidad');
+        $pais = $this->input->post('pais');
+        $estado = $this->input->post('estado');
+        $genero = $this->input->post('genero');
+        $tipoMoneda = $this->input->post('tipoMoneda');
+        $ciudad = $this->input->post('ciudad');
+        $interior = $this->input->post('interior');
+        $exterior = $this->input->post('exterior');
+        $cp = $this->input->post('codigoPostal');
         
         
         $estado_civil = $this->input->post('estado_civil');
@@ -2130,7 +2136,7 @@ class Asesor extends CI_Controller {
         $proceso= $this->input->post('proceso');
 
         
-        if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
+        /*if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
             $procesoInt = intval($proceso);
@@ -2140,7 +2146,7 @@ class Asesor extends CI_Controller {
                     exit;
                 }
             }
-        }
+        }*/
 
 
         $proyecto = $this->input->post('proyecto');
