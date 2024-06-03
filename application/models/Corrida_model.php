@@ -665,8 +665,17 @@
 
     function getPlanPago($idPlanPago){
         $query = $this->db->query("SELECT pp.*, CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_paterno) as nombreCliente
-        FROM planes_pago pp  INNER JOIN clientes cl ON cl.id_cliente = pp.idCliente 
+        FROM planes_pago pp  LEFT JOIN clientes cl ON cl.id_cliente = pp.idCliente 
         WHERE pp.idPlanPago= $idPlanPago");
         return $query->row();
+    }
+
+    function getInfoByLote($idLote){
+        $query = $this->db->query("SELECT * FROM clientes WHERE status=1 AND idLote =".$idLote);
+        return $query->result_array();
+    }
+
+    function getLoteLista($condominio){
+        return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio =  ".$condominio." ");
     }
 }

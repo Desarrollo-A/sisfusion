@@ -12,7 +12,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
         planPago = parseInt(planPago);
 
         mensualidadPP = mensualidadPP.replace(',', '');
-        console.log(mensualidadPP);
+
 
         //let mensualidadPP = document.getElementById('mensualidadPP');
         fechaInicio = stringToDate(fechaInicio);
@@ -42,7 +42,6 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
         let banderaContIter;
         let cantidadIva;
         porcentajeIva = (porcentajeIva/100) ;
-        console.log('porcentajeIva', porcentajeIva);
 
         for (var i = 0; i < periodos; i++) {
 
@@ -67,6 +66,9 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
 
             }
 
+            if(mes == 1){
+                mes = '01';
+            }
             if(mes == 2){
                 mes = '02';
             }
@@ -101,7 +103,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
                 mes = '12';
             }
 
-            let fechaPlan = day + '-' + mes + '-' + yearc;
+            let fechaPlan = ((day<=10) ? '0'+day : day) + '-' + (mes) + '-' + yearc;
 
             let p2;
             let total;
@@ -111,7 +113,7 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
                 banderaContIter = true;
                 precioTotal = precioTotal - capital;
                 cantidadIva = (ivaPP==1) ? capital * porcentajeIva : 0;
-                total = capital;
+                total = capital+cantidadIva;
             }
             else{
                 // p2 = (interes *  Math.pow(1 + interes, meses) * monto) / ( Math.pow(1 + interes, meses )-1);
@@ -123,19 +125,16 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
                     capital = (precioTotal > (mensualidadPP - interes_plan)) ? (mensualidadPP - interes_plan) : precioTotal;
                     precioTotal = ((precioTotal - capital) <= 0) ? 0: (precioTotal - capital);
                     cantidadIva = (ivaPP==1) ? porcentajeIva * capital : 0;
-                    total = capital + interes_plan;
+                    total = capital + interes_plan + cantidadIva;
                 }
                 else{
                     p2 = (interes *  Math.pow(1 + interes, meses) * monto) / ( Math.pow(1 + interes, meses )-1);
                     capital = (p2 - interes_plan);
                     precioTotal = (precioTotal - capital);
                     cantidadIva = (ivaPP==1) ? porcentajeIva * capital : 0;
-                    total = p2;
-
+                    total = p2 + cantidadIva;
                 }
-                console.log('precioTotal', precioTotal);
                 //mensualidadPP.value = formatMoney(p2.toFixed(2));
-                console.log('interes', interes_plan);
 
             }
 
@@ -157,20 +156,11 @@ function generarPlanPago(fechaInicio, periodos, monto, tIniteres, periocidad, ti
             }
 
         }
-        //console.log('sumatoria total del plan', sumatoriaIntereses);
-        //console.log('planPago', rangoPlan);
         return JSON.stringify(rangoPlan);
 }
 
 function stringToDate(fechaInicio){
     let fechaString = fechaInicio;
-    fechaString = fechaString.split("-").reverse().join("-");
     const fechaObjeto = new Date(fechaString);
-    console.log('fechaObjeto', fechaObjeto);
-
-    const dia = (fechaObjeto.getDate()+1).toString().padStart(2, '0');
-    const mes = (fechaObjeto.getMonth() + 1).toString().padStart(2, '0'); // Los meses en JS son 0-11
-    const anio = fechaObjeto.getFullYear();
-
-    return  mes+'-'+dia+'-'+anio;
+    return fechaObjeto.setDate(fechaObjeto.getDate() + 1);
 }

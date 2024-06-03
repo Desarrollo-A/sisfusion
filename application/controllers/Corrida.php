@@ -1,8 +1,8 @@
 <?php
 //    require_once 'static/autoload.php';//linea debe descomentarse en PROD
-    use PhpOffice\PhpSpreadsheet\Spreadsheet;
-    use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-    require '../../vendor/autoload.php'; //linea debe descomentarse en local
+    //use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    //use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    //require '../../vendor/autoload.php'; //linea debe descomentarse en local
 
 class Corrida extends CI_Controller
 {
@@ -107,8 +107,25 @@ class Corrida extends CI_Controller
 
     public function editar_ds()
     {
-
         $objDatos = json_decode(file_get_contents("php://input"));
+
+
+
+
+
+        $rangos = array(
+            'rango0' => $objDatos->meses_diferir,
+            'rango1' => $objDatos->finalMesesp1,
+            'rango2' => $objDatos->finalMesesp2,
+            'rango3' => $objDatos->finalMesesp3,
+            'rango4' => $objDatos->finalMesesp4,
+        );
+        /****codigo de prueba para creacion de Planes de Pago*******/
+        $corrida_dump = json_encode($objDatos);
+        $this->getCorridaToPlanDePago($corrida_dump, $rangos);
+        /****************/
+
+
 //        echo '$objDatos';
 //        print_r($objDatos);
 //        exit;
@@ -267,7 +284,205 @@ class Corrida extends CI_Controller
             echo json_encode($response);
         }
     }
+    function getCorridaToPlanDePago($dump_data, $rangos){
 
+        $data_general = json_decode($dump_data);
+        $dump_data = $data_general->corrida_dump;
+
+
+
+
+        $plan_pago0 = array();
+        $plan_pago1 = array();
+        $plan_pago2 = array();
+        $plan_pago3 = array();
+        $plan_pago4 = array();
+        if($rangos['rango0']==0){
+            $addArray = (object) array(
+                "fecha" => $data_general->primer_mensualidad,
+                "planPago" => 0,
+                "pago" => 0,
+                "capital" => $data_general->engancheFinalc,
+                "saldoCapital" => 0,
+                "interes" => 0,
+                "saldoInteres" => 0,
+                "iva" => 0,
+                "saldoIva" => 0,
+                "total" => $data_general->precioFinalc,
+                "saldo" => $data_general->saldoc
+            );
+            array_push($dump_data, $addArray);
+        }
+        foreach($dump_data as $index => $elemento){
+
+            switch ($elemento->planPago){
+                case 0:
+                    array_push($plan_pago0,  $elemento);
+                    break;
+                case 1:
+                    array_push($plan_pago1,  $elemento);
+                    break;
+                case 2:
+                    array_push($plan_pago2,  $elemento);
+                    break;
+                case 3:
+                    array_push($plan_pago3,  $elemento);
+                    break;
+                case 4:
+                    array_push($plan_pago4,  $elemento);
+                    break;
+            }
+        }
+
+        if(count($plan_pago0)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago Enganche',
+                "descripcion" => 'Plan de pago Enganche',
+                "tipoPlanPago" => 1,
+                "monto" => $data_general->engancheFinalc,
+                "moneda" => 1,
+                "tazaInteres" => 0,
+                "mensualidad" => $data_general->engancheFinalc,
+                "numeroPeriodos" => ($data_general->meses_diferir == 0) ? 1 : $data_general->meses_diferir,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => $plan_pago0[0]->fecha,
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago0),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+        }
+        if(count($plan_pago1)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 1',
+                "descripcion" => 'Plan de pago 1',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago1[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 0,
+                "mensualidad" => $data_general->msi_1p,
+                "numeroPeriodos" => $data_general->finalMesesp1,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => $plan_pago1[0]->fecha,
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago1),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+        }
+        if(count($plan_pago2)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 2',
+                "descripcion" => 'Plan de pago 2',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago2[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 12,
+                "mensualidad" => $data_general->msi_2p,
+                "numeroPeriodos" => $data_general->finalMesesp2,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => $plan_pago2[0]->fecha,
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago2),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+        }
+        if(count($plan_pago3)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 3',
+                "descripcion" => 'Plan de pago 3',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago3[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 15,
+                "mensualidad" => $data_general->msi_3p,
+                "numeroPeriodos" => $data_general->finalMesesp3,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => $plan_pago3[0]->fecha,
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago3),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+        }
+        if(count($plan_pago4)>0){
+            $insertData = array(
+                "idLote" => $data_general->id_lote,
+                "idCliente" => $data_general->id_cliente,
+                "nombreLote" => $data_general->nombreLote,
+                "nombrePlan" => 'Plan de pago 4',
+                "descripcion" => 'Plan de pago 4',
+                "tipoPlanPago" => 2,
+                "monto" => $plan_pago4[0]->saldo,
+                "moneda" => 1,
+                "tazaInteres" => 18,
+                "mensualidad" => $data_general->msi_4p,
+                "numeroPeriodos" => $data_general->finalMesesp4,
+                "periodicidad" => 2,
+                "fechaInicioPlan" => $plan_pago4[0]->fecha,
+                "iva" => 0,
+                "montoIvaPorcentaje" => 0,
+                "cantidadIva" => 0,
+                "ssi" => 1,
+                "dumpPlan" => json_encode($plan_pago4),
+                "fechaCreacion" => date('Y-m-d H:i:s'),
+                "creadoPor" => 1,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "estatus" => 1
+            );
+            $response = $this->General_model->addRecord("planes_pago", $insertData);
+        }
+//        print_r(json_encode($plan_pago0));
+//        echo '<br>';
+//        echo '<br>';
+//        print_r(json_encode($plan_pago1));
+//        echo '<br>';
+//        echo '<br>';
+//        print_r(json_encode($plan_pago2));
+//        echo '<br>';
+//        echo '<br>';
+//        print_r(json_encode($plan_pago3));
+//        echo '<br>';
+//        echo '<br>';
+//        print_r(json_encode($plan_pago4));
+    }
 
     public function inventario()
     {
@@ -3783,4 +3998,19 @@ legend {
             echo json_encode(array());
         }
     }
+
+    function getInfoByLote($idLote){
+        $data = $this->Corrida_model->getInfoByLote($idLote);
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
+
+    //cmbiar query
+    public function lista_lotes($condominio){
+        echo json_encode($this->Corrida_model->getLoteLista($condominio)->result_array());
+    }
+
 }

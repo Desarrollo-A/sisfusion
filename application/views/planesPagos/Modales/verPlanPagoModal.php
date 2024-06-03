@@ -44,26 +44,29 @@
                                     <input type="text" class="form-control input-gral" name="periodosPlanPago" id="periodosPlanPago"  style="margin-top: 6px" readonly/><!--este input debe de limitarse al numero de planes, apartir de ahí hacer el siguiente-->
                                 </div>
                             </div>
-                            <!--tabla plan pago-->
-                            <div class="material-datatables">
-                                <table class="table-striped table-hover" id="tabla_plan_pago" name="tabla_plan_pago">
-                                    <thead>
-                                    <tr>
-                                        <th>PAGO</th>
-                                        <th>FECHA PAGO</th>
-                                        <th>CAPITAL</th>
-                                        <th>SALDO CAPITAL</th>
-                                        <th>INTERÉS</th>
-                                        <th>SALDO INTERÉS</th>
-                                        <th>IVA</th>
-                                        <th>SALDO IVA</th>
-                                        <th>TOTAL</th>
-                                        <th>SALDO</th>
-                                    </tr>
-                                    </thead>
-                                </table>
+                            <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <!--tabla plan pago-->
+                                <div class="material-datatables">
+                                    <table class="table-striped table-hover" id="tabla_plan_pago" name="tabla_plan_pago">
+                                        <thead>
+                                        <tr>
+                                            <th>PAGO</th>
+                                            <th>FECHA PAGO</th>
+                                            <th>CAPITAL</th>
+                                            <th>SALDO CAPITAL</th>
+                                            <th>INTERÉS</th>
+                                            <th>SALDO INTERÉS</th>
+                                            <th>IVA</th>
+                                            <th>SALDO IVA</th>
+                                            <th>TOTAL</th>
+                                            <th>SALDO</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <!--tabla plan pago -->
                             </div>
-                            <!--tabla plan pago-->
+
                         </div>
                     </div>
 

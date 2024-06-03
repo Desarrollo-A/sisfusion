@@ -66,6 +66,11 @@
                                                     <select name="idLote" id="idLote" class="selectpicker select-gral" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona una opción" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
+                                            <div class="col-md-4 form-group">
+                                                <label class="control-label">Cliente</label>
+                                                <input id="nombreCliente" name="nombreCliente"
+                                                       class="form-control input-gral " readonly/>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="material-datatables">

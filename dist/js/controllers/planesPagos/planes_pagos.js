@@ -33,7 +33,7 @@ $('#idCondominioInventario').change(function () {
     index_idCondominio = $(this).val();
     $("#idLote").html("");
     $(document).ready(function () {
-        $.post(`${general_base_url}Contratacion/lista_lotes/${index_idCondominio}`, function (data) {
+        $.post(`${general_base_url}Corrida/lista_lotes/${index_idCondominio}`, function (data) {
             for (var i = 0; i < data.length; i++) {
                 $("#idLote").append($('<option>').val(data[i]['idLote']).text(data[i]['nombreLote']));
             }
@@ -61,10 +61,16 @@ $('#idLote').change(function () {
     idLote = index_idLote;
     console.log('index_idLote', index_idLote);
     //tablaPlanPagos
+    $('#spiner-loader').removeClass('hide');
+    $.post(general_base_url+"Corrida/getInfoByLote/"+idLote, function (data) {
+        $('#nombreCliente').val(data[0].nombre+' '+data[0].apellido_paterno+' '+data[0].apellido_materno);
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+
+
     tablaPlanPagos = $("#tablaPlanPagos").DataTable({
         dom: "<'row'<'col-12 col-sm-12 col-md-6 col-lg-6'B><'col-12 col-sm-12 col-md-6 col-lg-6 p-0'f>rt>"+"<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: '100%',
-        scrollX: true,
         destroy: true,
         searching: true,
         ajax: {
@@ -103,15 +109,16 @@ $('#idLote').change(function () {
                 title: 'Agregar plan de pago',
                 action:function(){
                     addPlanPago();
-                }
+                },
             },
             {
                 text: '<i class="fa fa-check" aria-hidden="true"></i>',
                 className: 'btn btn-azure',
                 titleAttr: 'Enviar plan de pago',
                 title: 'Enviar plan de pago',
+                attr: {id:'buttonAdd'},
                 action:function(){
-                    enviarPlanPago();
+                    enviarPlanPago(index_idLote);
                 }
             }],
         // columnDefs: [{
@@ -133,7 +140,6 @@ $('#idLote').change(function () {
         bInfo: true,
         paging: true,
         ordering: true,
-        fixedColumns: true,
         columns: [{
             data: 'nombreResidencial'
             },
@@ -405,22 +411,24 @@ $(document).on('change','#tipoPP', function(){
 function cerrarModalAddPlan() {
     $("#tipoPP").empty();
 
-    $("#descripcionPlanPago").val();
+    $("#descripcionPlanPago").val('');
     $("#monedaPP").empty();
-    $("#montoPP").val();
-    $("#tazaInteresPP").val();
-    $("#noPeriodosPP").val();
-    $("#periocidadPP").empty();
-    $("#fechaInicioPP").val();
-    $("#mensualidadPP").val();
-    $("#porcentajeIvaPP").val();
-    $("#cantidadIvaPP").val();
+    $("#montoPP").val('');
+    $("#tazaInteresPP").val('');
+    $("#noPeriodosPP").val('');
+    $("#periocidadPP").empty('');
+    $("#fechaInicioPP").val('');
+    $("#mensualidadPP").val('');
+    $("#porcentajeIvaPP").val('');
+    $("#cantidadIvaPP").val('');
 
     $("#tipoPP").selectpicker('refresh');
     $("#monedaPP").selectpicker('refresh');
     $("#periocidadPP").selectpicker('refresh');
     $('#addPlanPago').modal('hide');
     cont_eng = 0;
+    document.getElementById("interesesSSI").checked = false;
+    document.getElementById("ivaPP").checked = false;
 }
 
 function generarPlanPagoFunction(){
@@ -485,7 +493,6 @@ function fillTable(data) {
     tablePagos = $('#tabla_plan_pago').dataTable({
         data: data,
         width: '100%',
-        scrollX: true,
         searching: true,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
 
@@ -534,13 +541,13 @@ function fillTable(data) {
         },
         destroy: true,
         processing: false,
-        pageLength: 10,
+        pageLength: 25,
         bAutoWidth: false,
         bLengthChange: false,
         bInfo: true,
         paging: true,
         ordering: true,
-        fixedColumns: true,
+        scrollX:true,
         columns: [
             {
                 data: function (d) {
@@ -554,42 +561,42 @@ function fillTable(data) {
             },
             {
                 data: function (d) {
-                    return formatMoney(d.capital);
+                    return formatMoney((d.capital).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.saldoCapital);
+                    return formatMoney((d.saldoCapital).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.interes);
+                    return formatMoney((d.interes).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.saldoInteres);
+                    return formatMoney((d.saldoInteres).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.iva);
+                    return formatMoney((d.iva).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.saldoIva);
+                    return formatMoney((d.saldoIva).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.total);
+                    return formatMoney((d.total).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney(d.saldo);
+                    return formatMoney((d.saldo).toFixed(2));
                 }
             },
         ]
@@ -597,8 +604,13 @@ function fillTable(data) {
 
 }
 
-function enviarPlanPago(){
+function enviarPlanPago(idLote){
     console.log('se enviara el plan de pago actual');
+    console.log('idLote xxD', idLote);
+    $.post(general_base_url+"Corrida/enviarPlanPago", function (data) {
+
+        $("#catalogo_remanente").selectpicker('refresh');
+    }, 'json');
 }
 
 $(document).on('click', '.editarPago', function(){

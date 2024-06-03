@@ -2581,10 +2581,14 @@
 
                         rangEd.push({
                             "fecha" : $scope.dateCf,
-                            "planPago": 1,
+                            "planPago": 0,
                             "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                             "capital" : engd2,
+                            "saldoCapital" : 0,
                             "interes" : 0,
+                            "saldoInteres" : 0,
+                            "iva" : 0,
+                            "saldoIva" : 0,
                             "total" : engd2,
                             "saldo" :  ($scope.mensualidad_con_enganche==undefined || $scope.mensualidad_con_enganche==false ) ? r1 = saldoDif -= engd2 : saldoDif -= engd2,
 
@@ -2816,7 +2820,11 @@
                                 "fecha" :  day + '-' + mes + '-' + yearc,
                                 "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                                 "capital" : engd2,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : engd2 + $scope.infoLote.capital,
                                 "mensualidad" : $scope.infoLote.capital,
                                 "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
@@ -2968,7 +2976,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : $scope.infoLote.capital,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                 "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -3076,7 +3088,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
 
@@ -3206,7 +3222,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
 
@@ -3354,7 +3374,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : $scope.infoLote.capital,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                 "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -3491,7 +3515,11 @@
                                 "fecha" :  day + '-' + mes + '-' + yearc,
                                 "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                                 "capital" : engd2,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : engd2 + $scope.infoLote.capital,
                                 "mensualidad" : $scope.infoLote.capital,
                                 "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
@@ -3637,7 +3665,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : $scope.infoLote.capital,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                 "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -3748,7 +3780,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
 
@@ -3881,7 +3917,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
 
@@ -4049,7 +4089,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : $scope.infoLote.capital,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                 "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -4159,7 +4203,11 @@
                                 "fecha" : $scope.dateCf,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
 
@@ -4291,7 +4339,11 @@
                                 "planPago": 1,
                                 "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
                                 "capital" : engd2,
+                                "saldoCapital": 0,
                                 "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : engd2 + $scope.infoLote.capital,
                                 "mensualidad" : $scope.infoLote.capital,
                                 "saldo" : saldoDif -= (engd2 + $scope.infoLote.capital),
@@ -4453,7 +4505,11 @@
                                         "planPago": 2,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
+                                        "saldoCapital": 0,
                                         "interes" : 0,
+                                        "saldoInteres": 0,
+                                        "iva":0,
+                                        "saldoIva": 0,
                                         "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                         "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -4465,7 +4521,11 @@
                                         "planPago": 2,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
+                                        "saldoCapital": 0,
                                         "interes" : 0,
+                                        "saldoInteres": 0,
+                                        "iva":0,
+                                        "saldoIva": 0,
                                         "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                         "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -4478,7 +4538,11 @@
                                     "planPago": 2,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
+                                    "saldoCapital": 0,
                                     "interes" : 0,
+                                    "saldoInteres": 0,
+                                    "iva":0,
+                                    "saldoIva": 0,
                                     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                     "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -4598,7 +4662,11 @@
                                 "planPago": 3,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
 
@@ -4708,7 +4776,11 @@
                                 "planPago": 4,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                "saldoCapital": 0,
                                 "interes" : (intereses_4 <= 0) ? Math.abs(intereses_4) : intereses_4,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p3,
                                 "saldo" : (saldo_4 <= 0) ? Math.abs(saldo_4) : saldo_4,
 
@@ -4837,7 +4909,11 @@
                                 "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
 
@@ -4942,7 +5018,11 @@
                                 "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                "saldoCapital": 0,
                                 "interes" : (interesFinal <= 0) ? Math.abs(interesFinal) : interesFinal,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p3,
                                 "saldo" : (saldoFinal <= 0) ? Math.abs(saldoFinal) : saldoFinal,
 
@@ -5553,9 +5633,14 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago" : 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.infoLote.precioTotal * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.infoLote.precioTotal = ($scope.infoLote.precioTotal -$scope.capital2)),
 
@@ -5659,9 +5744,14 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago" : 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                "saldoCapital": 0,
                                 "interes" : (interesFinal <= 0) ? Math.abs(interesFinal) : interesFinal,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p3,
                                 "saldo" : (saldoFinal <= 0) ? Math.abs(saldoFinal) : saldoFinal,
 
@@ -5760,9 +5850,14 @@
                             range4.push({
 
                                 "fecha" : $scope.dateCf,
+                                "planPago" : 4,
                                 "pago" : i,
                                 "capital" : ($scope.capital4 = ($scope.p4 - $scope.interes_plan4)),
+                                "saldoCapital": 0,
                                 "interes" : (interes_3 <= 0) ? Math.abs(interes_3) : interes_3,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p4,
                                 "saldo" : (saldoFinal_3 <= 0) ? Math.abs(saldoFinal_3) : saldoFinal_3,
 
@@ -5948,7 +6043,11 @@
                                         "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital + $scope.rangEd[i].capital,
+                                        "saldoCapital" : 0,
                                         "interes" : 0,
+                                        "saldoInteres" : 0,
+                                        "iva" : 0,
+                                        "saldoIva" : 0,
                                         "total" : ($scope.infoLote.capital + $scope.infoLote.interes_p1) + $scope.rangEd[i].capital,
                                         "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - ($scope.infoLote.capital + $scope.rangEd[i].capital),
 
@@ -5960,7 +6059,11 @@
                                         "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
+                                        "saldoCapital" : 0,
                                         "interes" : 0,
+                                        "saldoInteres" : 0,
+                                        "iva" : 0,
+                                        "saldoIva" : 0,
                                         "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                         "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
                                     });
@@ -5974,7 +6077,11 @@
                                     "planPago": 1,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
+                                    "saldoCapital": 0,
                                     "interes" : 0,
+                                    "saldoInteres": 0,
+                                    "iva":0,
+                                    "saldoIva": 0,
                                     "total" : $scope.infoLote.capital + $scope.infoLote.interes_p1,
                                     "saldo" : $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - $scope.infoLote.capital,
 
@@ -6016,7 +6123,6 @@
 
                                 } else if($scope.descMSI == 1){
                                     ini2 = range.length;
-
                                 }
 
                             }
@@ -6112,7 +6218,11 @@
                                 "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
+                                "saldoCapital": 0,
                                 "interes" : ($scope.interes_plan2= ($scope.total2 * $scope.infoLote.interes_p2)),
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p2,
                                 "saldo" : ($scope.total2 = ($scope.total2 -$scope.capital2)),
 
@@ -6220,7 +6330,11 @@
                                 "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
+                                "saldoCapital": 0,
                                 "interes" : (interes_2 <= 0) ? Math.abs(interes_2) : interes_2,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p3,
                                 "saldo" : (saldoFinal_2 <= 0) ? Math.abs(saldoFinal_2) : saldoFinal_2,
 
@@ -6322,7 +6436,11 @@
                                 "planPago": 4,
                                 "pago" : i,
                                 "capital" : ($scope.capital4 = ($scope.p4 - $scope.interes_plan4)),
+                                "saldoCapital": 0,
                                 "interes" : (interes_3 <= 0) ? Math.abs(interes_3) : interes_3,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
                                 "total" : $scope.p4,
                                 "saldo" : (saldoFinal_3 <= 0) ? Math.abs(saldoFinal_3) : saldoFinal_3,
 
@@ -9951,6 +10069,7 @@
                 var gerente; //($scope.gerente == undefined) ? 0 : $scope.gerente.idGerente;//
                 var tipoIM = $scope.inicioMensualidad;
                 var customDate = ($scope.customDate==undefined) ? '' : $scope.customDate;
+                var nombreLote = $scope.nombreLote;
 
                 if($scope.id_clienteP == undefined){
                     gerenteParam = gerente;
@@ -10066,12 +10185,14 @@
                     var msi_1p = ($scope.totalPrimerPlan == undefined) ? 0 : $scope.totalPrimerPlan;
                     var msi_2p = ($scope.totalSegundoPlan == undefined) ? 0 : $scope.totalSegundoPlan;
                     var msi_3p = ($scope.totalTercerPlan == undefined) ? 0 : $scope.totalTercerPlan;
+                    var msi_4p = ($scope.totalCuartoPlan == undefined) ? 0 : $scope.totalCuartoPlan;
                     var primer_mensualidad = $scope.fechaPM;
                     var allDescuentos = $scope.decFin;
 
                     var finalMesesp1 = ($scope.finalMesesp1 == 0 || $scope.finalMesesp1 == undefined) ? 0 : $scope.finalMesesp1;
                     var finalMesesp2 = ($scope.finalMesesp2 == 0 || $scope.finalMesesp2 == undefined) ? 0 : $scope.finalMesesp2;
                     var finalMesesp3 = ($scope.finalMesesp3 == 0 || $scope.finalMesesp3 == undefined) ? 0 : $scope.finalMesesp3;
+                    var finalMesesp4 = ($scope.finalMesesp4 == 0 || $scope.finalMesesp4 == undefined) ? 0 : $scope.finalMesesp4;
 
 
                 }
@@ -10157,6 +10278,7 @@
 
 
                     $http.post('<?=base_url()?>index.php/corrida/editar_ds',{
+                        nombreLote: nombreLote,
                         nombre: nombre,
                         id_lote: id_lote,
                         edad: edad,
@@ -10182,11 +10304,13 @@
                         msi_1p: msi_1p,
                         msi_2p: msi_2p,
                         msi_3p: msi_3p,
+                        msi_4p: msi_4p,
                         primer_mensualidad: primer_mensualidad,
                         allDescuentos: allDescuentos,
                         finalMesesp1: finalMesesp1,
                         finalMesesp2: finalMesesp2,
                         finalMesesp3: finalMesesp3,
+                        finalMesesp4: finalMesesp4,
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
@@ -10453,6 +10577,7 @@
                         finalMesesp1: finalMesesp1,
                         finalMesesp2: finalMesesp2,
                         finalMesesp3: finalMesesp3,
+                        finalMesesp4: finalMesesp4,
                         observaciones: observaciones,
                         allPackages: localStorage.getItem('allPackages'),
                         corrida_dump: $scope.alphaNumeric,
