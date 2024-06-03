@@ -42,7 +42,7 @@ go_to_documentos = function(data) {
 pass_to_proyecto_ejecutivo = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Validación de proyecto"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de proyecto?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Elección de propuestas"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a elección de propuestas?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

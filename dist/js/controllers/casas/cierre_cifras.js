@@ -61,7 +61,7 @@ pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Vo.Bo. de cifras"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
         onSubmit: function (data) {
             //console.log(data)
             form.loading(true)
