@@ -105,7 +105,7 @@ pass_to_adeudos = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Concentrar adeudos"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a concentrar adeudos?`,
         onSubmit: function (data) {
             form.loading(true)
 
