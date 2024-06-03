@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Validación de documentación"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de documentación?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

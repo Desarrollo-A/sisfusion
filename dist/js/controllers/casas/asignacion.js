@@ -94,7 +94,7 @@ cancel_process = function (data) {
 
     let form = new Form({
         title: 'Cancelar proceso',
-        text: `¿Desea cancelar el proceso del lote ${data.nombreLote}?`,
+        text: `¿Desea cancelar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function (data) {
             form.loading(true)
 

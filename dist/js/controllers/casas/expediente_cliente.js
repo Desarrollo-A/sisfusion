@@ -9,7 +9,7 @@ pass_to_envio_a_firma = function(data) {
     ask.show() */
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Marcar como recibido el expediente del cliente <b>${data.nombreLote}</b>?`,
+        text: `¿Marcar como recibido el expediente del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
