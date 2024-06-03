@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de documentación"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> al siguiente proceso: <b>"Validación de documentación"</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -165,7 +165,7 @@ back_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Propuestas para firma"</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a propuestas para firma?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
