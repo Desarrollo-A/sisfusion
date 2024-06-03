@@ -1097,20 +1097,20 @@ class Asesor extends CI_Controller {
 
         $paises = array_merge(array_filter($catalogs, function($item) {
             //PAISES
-            return $item['id_catalogo'] == 119;
+            return $item['id_catalogo'] == 144;
         }));
 
         $estados = array_merge(array_filter($catalogs, function($item) {
             //ESTADOS
-            return $item['id_catalogo'] == 120;
+            return $item['id_catalogo'] == 143;
         }));
 
         $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 118;
+            return $item['id_catalogo'] == 142;
         }));
 
         $generos = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 121;
+            return $item['id_catalogo'] == 145;
         }));
         
         $datos["nacionalidades"] = $nacionalidades;
@@ -2030,20 +2030,20 @@ class Asesor extends CI_Controller {
 
         $paises = array_merge(array_filter($catalogs, function($item) {
             //PAISES
-            return $item['id_catalogo'] == 119;
+            return $item['id_catalogo'] == 144;
         }));
 
         $estados = array_merge(array_filter($catalogs, function($item) {
             //ESTADOS
-            return $item['id_catalogo'] == 120;
+            return $item['id_catalogo'] == 143;
         }));
 
         $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 118;
+            return $item['id_catalogo'] == 142;
         }));
 
         $generos = array_merge(array_filter($catalogs, function ($item) {
-            return $item['id_catalogo'] == 121;
+            return $item['id_catalogo'] == 145;
         }));
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
