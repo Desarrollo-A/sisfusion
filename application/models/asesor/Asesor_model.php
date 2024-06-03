@@ -538,7 +538,10 @@ class Asesor_model extends CI_Model {
                                         cl.ciudad,
                                         cl.pais, 
                                         cl.exterior, 
-                                        cl.interior
+                                        cl.interior, 
+                                        cl.municipio, 
+                                        cl.localidad, 
+                                        cl.calle
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
@@ -1572,7 +1575,7 @@ class Asesor_model extends CI_Model {
     }
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92, 142,143,144) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92, 118, 119,120, 121 ) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
     public function getAsesores($idUsuario)
     {

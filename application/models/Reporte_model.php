@@ -390,7 +390,7 @@ class Reporte_model extends CI_Model {
         }
         else if ($id_rol == 5 && ($id_usuario != 28 || $id_usuario != 30 || $id_usuario != 4888)) { // CONSULTA DE ASISTENTES DE SUBDIRECCIÓN
             if ($render == 1) { // SE TRAE LOS GERENTES
-                $filtro .= " AND (cl.id_subdirector = $id_lider OR vc.id_subdirector)";
+                $filtro .= " AND (cl.id_subdirector = $id_lider OR vc.id_subdirector = $id_lider)";
                 $comodin = "id_gerente";
             } else {
                 $filtro .= " AND (cl.id_regional = $leadersList[4] or vc.id_regional = $leadersList[4])";
@@ -472,7 +472,7 @@ class Reporte_model extends CI_Model {
 
 
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
-        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol);
+        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol, $id_usuario);
 
         $query = $this->db->query("SELECT 
         
@@ -705,7 +705,7 @@ class Reporte_model extends CI_Model {
             $filtroSt .= 'INNER JOIN (SELECT idLote, idCliente, MAX(idStatusContratacion) statusContratacion FROM historial_lotes GROUP BY idLote, idCliente) hlo3 ON hlo3.idLote = lo.idLote AND hlo3.idCliente = cl.id_cliente AND hlo3.statusContratacion = ' . $estatusContratacion;
         
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, $leader);
-        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol);
+        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol, $id_usuario);
         
         $idList = $generalArr == [0,0,0,0] ? '0' : '(' . implode(',', $generalArr) . ')';
         $loteFiltro .= $idList == "0" ? '' : ' and lo.idLote IN ' . $idList;
@@ -966,7 +966,7 @@ class Reporte_model extends CI_Model {
         
         $joinHist = "";
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, null, $leader);
-        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol);
+        list($nombreUsuario, $total, $precioDescuento) = $this->amountShare($id_rol, $id_usuario);
 
         $idList = $idArr == ("0,0,0,0") ? ['0'] : '('.implode(',', $idArr). ')';
         $loteFiltro .= $idList == "0" ? '' : ' and lo.idLote IN ' . $idList;
@@ -1524,7 +1524,7 @@ class Reporte_model extends CI_Model {
         )->result_array();
     }
 
-    public function amountShare($id_rol){
+    public function amountShare($id_rol, $id_usuario = null){
         $nombreUsuario = "";
         $total = "";
         $precioDescuento = "";
