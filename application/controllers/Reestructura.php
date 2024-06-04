@@ -3866,8 +3866,6 @@ class Reestructura extends CI_Controller{
                         $dataNuevosCalculos = $this->recalculoComision($dataClienteDestino->idCliente, $dataClienteDestino->totalNeto2,$dataClienteDestino->plan_comisio,1);
                         //RECORRER DATA, MANDAR COMISIÓN TOTAL PARA EL SET DEL UPDATE Y EL ID USUARIO PARA EL WHERE DEL UPDATE, DE IGUAL FORMA EL LOTE Y ID DE CLEINTE DESTINO ANTERIOR PARA REASIGNAR
 
-
-
                     }else{ // SE MANTIENE TODO IGUAL Y SOLO SE ACTUALIZA EL LOTE Y CLIENTE PARA LAS NUEVAS COMISIONES
                         $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
                     }
@@ -4016,7 +4014,7 @@ class Reestructura extends CI_Controller{
                                 "modificado_por" => $this->session->userdata('id_usuario'),
                                 "liquidada" => 0
                             );
-                            $response = $this->General_model->addRecord('comisiones', $dataComisiones);
+                            $this->General_model->addRecord('comisiones', $dataComisiones);
                         }
                     }
                 }

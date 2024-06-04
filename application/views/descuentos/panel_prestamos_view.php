@@ -150,5 +150,7 @@
 	<script src="<?= base_url() ?>dist/js/controllers/descuentos/complementos/plantilla_prestamos.js"></script>
 	<script type="text/javascript">
 		Shadowbox.init();
+		var fechaServer = '<?php echo date('Y-m-d H:i:s')?>';
 	</script>
+	
 </body>
