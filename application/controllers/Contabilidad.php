@@ -9,7 +9,7 @@ class Contabilidad extends CI_Controller
         $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
-        $this->programacion = $this->load->database('programacion', TRUE);
+        // $this->programacion = $this->load->database('programacion', TRUE);
         $val =  $this->session->userdata('certificado'). $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
@@ -238,6 +238,12 @@ class Contabilidad extends CI_Controller
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    function cargaFolios()
+    {
+        $this->load->view('template/header');
+        $this->load->view("contabilidad/cargaFolios_view");
     }
 
 }
