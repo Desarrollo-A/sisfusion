@@ -469,6 +469,51 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
+    var tablePagos
+
+    const createdCell = function(cell) {
+        let original;
+        cell.setAttribute('contenteditable', true)
+        cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+        cell.setAttribute('spellcheck', false)
+        cell.addEventListener("focus", function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:#000;padding:10px")
+
+            original = e.target.textContent
+        })
+        cell.addEventListener("blur", function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+
+            if (original !== e.target.textContent) {
+                const row = tablePagos.row(e.target.parentElement)
+                //row.invalidate()
+                console.log('Row changed: ', row.data())
+
+                let montoInicial = 518442
+
+                let capital = parseFloat(e.target.textContent)
+
+                let pagos = tablePagos.rows().data().toArray()
+
+                let pago_nuevo = row.data()
+
+                let nuevo_capital = montoInicial
+                for(const pago of pagos){
+                    if(pago.pago == pago_nuevo.pago){
+                        pago.capital = capital
+                    }
+
+                    nuevo_capital -= pago.capital
+
+                    pago.saldo = nuevo_capital
+                }
+
+                tablePagos.clear()
+                tablePagos.rows.add(pagos).draw()
+            }
+        })
+    }
+
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
     $('#nombrePlanPago').val(data.nombrePlan);
     $('#nombreCliente').val(data.nombreCliente);
@@ -490,7 +535,7 @@ function fillTable(data) {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    tablePagos = $('#tabla_plan_pago').dataTable({
+    tablePagos = $('#tabla_plan_pago').DataTable({
         data: data,
         width: '100%',
         searching: true,
@@ -561,7 +606,10 @@ function fillTable(data) {
             },
             {
                 data: function (d) {
-                    return formatMoney((d.capital).toFixed(2));
+                    if(d.capital){
+                        return d.capital.toFixed(2);
+                    }
+                    return ''
                 }
             },
             {
@@ -599,7 +647,11 @@ function fillTable(data) {
                     return formatMoney((d.saldo).toFixed(2));
                 }
             },
-        ]
+        ],
+        columnDefs: [{
+            targets: [2],
+            createdCell: createdCell
+        }]
     });
 
 }
