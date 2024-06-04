@@ -1236,7 +1236,7 @@ class Descuentos extends CI_Controller
             $array_prestamos_aut = array();
                 if (!isset($_POST))
                 {    
-                echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+                // echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
                 }
                 else {
                     
@@ -1244,7 +1244,7 @@ class Descuentos extends CI_Controller
 
                     if ($this->input->post("data" ) == "")
                     {
-                    echo json_encode(array("status" => 400, "message" => "El archivo viene vacio."), JSON_UNESCAPED_UNICODE);
+                    // echo json_encode(array("status" => 400, "message" => "El archivo viene vacio."), JSON_UNESCAPED_UNICODE);
                     }   
                     else {
 
@@ -1314,7 +1314,7 @@ class Descuentos extends CI_Controller
                                 
                                 }// fin  llave del if
                                 else{
-                                    echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
+                                    // echo json_encode(array("status" => 400, "message" => "Algún parámetro no viene informado."));
                                 }
 
                             }
