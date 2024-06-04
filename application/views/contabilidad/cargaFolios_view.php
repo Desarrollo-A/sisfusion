@@ -4,7 +4,7 @@
 <body class="">
     <div class="wrapper">
 
-    <?php $this->load->view('template/sidebar'); ?>
+        <?php $this->load->view('template/sidebar'); ?>
     
         <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
             <div class="modal-dialog" role="document">
@@ -12,9 +12,9 @@
                     <div class="modal-body">
                         <h5 class="text-center">Selección de archivo a cargar</h5>
                         <div class="file-gph">
-                            <input class="d-none" type="file" id="fileElm">
+                            <input class="d-none" type="file" id="archivo">
                             <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
-                            <label class="upload-btn m-0" for="fileElm"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
+                            <label class="upload-btn m-0" for="archivo"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -102,60 +102,45 @@
                                 <i class="fas fa-coins fa-2x"></i>
                             </div>
                             <div class="card-content">
+                                <h3 class="card-title center-align">Carga de folios</h3>
                                 <div class="toolbar">
-
-                                        <h3 class="card-title center-align">Asignación de monto final pagado</h3>
-                             
-
-                                    <div class="row aligned-row">
-                                        <div class="form-group col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                                            <div class="radio_container w-100">
-                                                <?php if ($this->session->userdata('id_rol') == 39) { ?>
-                                                    <input class="d-none generate" type="radio" disabled="true" id="one" checked>
-                                                    <label for="one" class="w-50" disabled="true" id="cargarLabel" style="background: #bfbfbf !important;cursor: not-allowed">Cargar</label>
-                                                    <input class="d-none find-results" type="radio" disabled="true" id="two">
-                                                    <label for="two" class="w-50">Consultar</label>
-                                                <?php } else { ?>
-                                                    <input class="d-none" type="radio" name="radio" id="one" >
-                                                    <label for="one" class="w-50" >Cargar</label>
-                                                    <input class="d-none find-results" type="radio" name="radio" id="two">
-                                                    <label for="two" class="w-50" checked>Consultar</label>
-                                                <?php } ?>
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group label-floating select-is-empty">
+                                                    <label class="control-label">PROYECTO</label>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class=" form-group d-flex col-xs-12 col-sm-6 col-md-6 col-lg-6 align-center justify-evenly  box-table hide">
-                                            <input type="text" class="form-control datepicker text-center pl-1 beginDate box-table hide" id="beginDate" />
-                                            <input type="text" class="form-control datepicker text-center pl-1 endDate box-table hide" id="endDate" />
-                                            <button class="btn btn-success btn-round btn-fab btn-fab-mini searchByDateRange box-table hide" name="searchByDateRange" id="searchByDateRange"><span class="material-icons update-dataTable">search</span></button>
-                                        </div>
-                                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 d-flex align-center justify-evenly  row-load hide ">
-                                            <button class="btn-rounded btn-s-greenLight row-load hide " id="downloadFile" name="downloadFile" title="Download"><i class="fas fa-download"></i></button>
-                                            <button class="btn-rounded btn-s-blueLight row-load hide" name="uploadFile" id="uploadFile" title="Upload" data-toggle="modal" data-target="#uploadModal"><i class="fas fa-upload"></i></button>
-                                        </div>
-                                        
-                                    </div>
-                                    <div class="row pt-2 hide">
-                                        <div class="col-xs-12 col-sm-12 col-md-10 col-lg-10">
-                                            <div class="form-group label-floating select-is-empty m-0 p-0">
-                                                <select id="columns" name="columns" class="selectpicker select-gral m-0" data-style="btn" data-show-subtext="true" data-live-search="true" title="Selecciona las columnas que se requieran" data-size="10" required multiple></select>
+                                            <div class="col-md-4 form-group">
+                                                <div class="form-group label-floating select-is-empty">
+                                                    <label class="control-label">CONDOMINIO</label>
+                                                    <select name="condominio" id="condominio"  class="selectpicker select-gral m-0"
+                                                            data-style="btn" data-show-subtext="true"  title="Selecciona un condominio"
+                                                            data-size="7" data-live-search="true" required>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="box-table hide">
-                                    <table id="tableLotificacion" name="tableLotificacion" class="table-striped table-hover">
+                                    <table id="foliosTable" name="foliosTable" class="table-striped table-hover">
                                         <thead>
                                             <tr>
                                                 <th>ID DEL REGISTRO</th>
-                                                <th>NOMBRE</th>
-                                                <th>ROL</th>
-                                                <th>FORMA DE PAGO</th>
-                                                <th>SEDE</th>
-                                                <th>MONTO SIN DESCUENTO</th>
-                                                <th>MONTO CON DESCUENTO</th>
-                                                <th>MONTO DE INTERNOMEX</th>
-                                                <th>FECHA DE CAPTURA DEL REGISTRO</th>
-                                                <th>COMENTARIO</th>
+                                                <th>ID LOTE</th>
+                                                <th>NOMBRE LOTE</th>
+                                                <th>CALLE</th>
+                                                <th>COLONIA</th>
+                                                <th>EXTERIOR</th>
+                                                <th>CÓDIGO POSTAL</th>
+                                                <th>SUPERFICIE</th>
+                                                <th>RÉGIMEN</th>
+                                                <th>FOLIO REAL</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>
@@ -167,9 +152,24 @@
                 </div>
             </div>
         </div>
+
         <?php $this->load->view('template/footer_legend'); ?>
     </div>
-    </div>
+            <!-- ANIMACIÓN DE CARGA EN TODA LA VISTA -->
+    <div class="spiner-loader hide" id="spiner-loader">
+        <div class="backgroundLS">
+            <div class="contentLS">
+                <div class="center-align">
+                    Este proceso puede demorar algunos segundos
+                </div>
+                <div class="inner">
+                    <div class="load-container load1">
+                        <div class="loader">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
@@ -178,5 +178,5 @@
     <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
     <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
-    <script src="<?= base_url() ?>dist/js/controllers/contabilidad/cargaFolios.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/Contabilidad/cargaFolios.js"></script>
 </body>

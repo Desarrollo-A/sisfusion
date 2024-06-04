@@ -1,18 +1,93 @@
 $(document).ready(function () {
-    $("input:file").on("change", function () {
-        var target = $(this);
-        var relatedTarget = target.siblings(".file-name");
-        var fileName = target[0].files[0].name;
-        relatedTarget.val(fileName);
-    });
+    $('#spiner-loader').removeClass('hide');
+
+    $.post(`${general_base_url}Contabilidad/lista_proyectos`, function(data) {
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idResidencial'];
+            const name = data[i]['descripcion'];
+            $("#proyecto").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#proyecto").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+
     setInitialDates();
-    if( id_rol_global == 39 )
-        $('.generate').trigger('click');
-    else
-        $('.find-results').trigger('click');
+
+    $('.generate').trigger('click');
+
     sp.initFormExtendedDatetimepickers();
-    $('.datepicker').datetimepicker({locale: 'es'});
 });
+
+$('.datepicker').datetimepicker({locale: 'es'});
+
+$('#proyecto').change(function() {
+    $('#spiner-loader').removeClass('hide');
+    const proyectoSeleccionado = $(this).val();
+    $("#condominio").html("");
+    $.post(`${general_base_url}Contabilidad/lista_condominios/${proyectoSeleccionado}`, function(data) {
+        $("#condominio").append($('<option disabled selected>SELECCIONA UN CONDOMINIO</option>'));
+        for( let i = 0; i<data.length; i++){
+            const id = data[i]['idCondominio'];
+            const name = data[i]['nombre'];
+            $("#condominio").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#condominio").selectpicker('refresh');
+        $('#spiner-loader').addClass('hide');
+    }, 'json');
+    
+});
+
+$('#condominio').change( function() {
+    const condominio = $(this).val();
+    $("#lote").html("");
+    dataTable(condominio);
+});
+
+$(document).on("change", "#archivo", function () {
+    const target = $(this);
+    const relatedTarget = target.siblings(".file-name");
+    const fileName = target[0].files[0].name;
+    relatedTarget.val(fileName);
+});
+
+const downloadTemplate = (idCondominio) => {
+    $.ajax({
+        url: `${general_base_url}Contabilidad/lista_lotes`,
+        type: 'post',
+        dataType: 'json',
+        data: {
+            idCondominio: idCondominio,
+        },
+        beforeSend: function() {
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            
+            let template = [];
+            const headers = ['idLote', 'nombreLote', 'calle', 'colonia', 'exterior', 'codigoPostal', 'superficie', 'régimen', 'folio'];
+            template.push(headers);
+            for (let i = 0; i < response.length; i++) {
+                const row = [];
+                row.push(response[i]['idLote']);
+                row.push(response[i]['nombreLote']);
+                template.push(row);
+            }
+
+            const date = new Date();
+            const filename = "PlantillaIngresoFolios_" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
+            const ws_name = "Plantilla";
+            const wb = XLSX.utils.book_new(),
+                ws = XLSX.utils.aoa_to_sheet(template);
+            XLSX.utils.book_append_sheet(wb, ws, ws_name);
+            XLSX.writeFile(wb, filename);
+            $('#spiner-loader').addClass('hide');
+        },
+        error: function() {
+            $('#spiner-loader').addClass('hide');
+            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+        }
+    });
+}
 
 sp = { 
     initFormExtendedDatetimepickers: function () {
@@ -34,16 +109,16 @@ sp = {
     }
 }
 
-function setInitialDates() {
-    var beginDt = moment().startOf('year').format('DD/MM/YYYY');
-    var endDt = moment().format('DD/MM/YYYY');
+const setInitialDates = () => {
+    const beginDt = moment().startOf('year').format('DD/MM/YYYY');
+    const endDt = moment().format('DD/MM/YYYY');
     $('.beginDate').val(beginDt);
     $('.endDate').val(endDt);
 }
 
-function formatDate(date) {
-    var dateParts = date.split("/");
-    var d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+const formatDate = (date) => {
+    const dateParts = date.split("/");
+    const d = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
     if (month.length < 2)
         month = '0' + month;
     if (day.length < 2)
@@ -52,43 +127,35 @@ function formatDate(date) {
 }
 
 let titulos = [];
-$('#tableLotificacion thead tr:eq(0) th').each(function (i) {
+$('#foliosTable thead tr:eq(0) th').each(function (i) {
     title = $(this).text();
     titulos.push(title);
     $(this).html(`<input class="textoshead" data-toggle="tooltip" data-placement="top" title="${title}" placeholder="${title}"/>`);
     $( 'input', this).on('keyup change', function () {
-        if ($('#tableLotificacion').DataTable().column(i).search() !== this.value) {
-            $('#tableLotificacion').DataTable().column(i).search(this.value).draw();
+        if ($('#foliosTable').DataTable().column(i).search() !== this.value) {
+            $('#foliosTable').DataTable().column(i).search(this.value).draw();
         }
     });
     $('[data-toggle="tooltip"]').tooltip({trigger: "hover" });
 });
 
-function fillTableLotificacion(fechaInicio, fechaFin) {
+const dataTable = (idCondominio) => {
     $(".box-table").removeClass('hide');
-    generalDataTable = $('#tableLotificacion').dataTable({
+    generalDataTable = $('#foliosTable').dataTable({
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: "100%",
         scrollX:true,
-        buttons: [{
-            extend: 'excelHtml5',
+        buttons: [
+        {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
-            titleAttr: 'Descargar archivo de Excel',
-            title:'Consulta pago final' ,
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos[columnIdx] + ' ';
-                    }
-                }
-            }
+            titleAttr: 'Plantilla para carga de folios',
+            action: () => downloadTemplate(idCondominio)
         },
         {
             text: '<i class="fas fa-play"></i>',
             className: `btn btn-dt-youtube buttons-youtube`,
-            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de Consulta pago final podrás visualizarlo en el siguiente tutorial',
+            titleAttr: 'Para consultar más detalles sobre el uso y funcionalidad del apartado de carga de folios podrás visualizarlo en el siguiente tutorial',
             action: function (e, dt, button, config) {
                 window.open('https://youtu.be/S7HO2QTLaL0', '_blank');
             }
@@ -108,79 +175,73 @@ function fillTableLotificacion(fechaInicio, fechaFin) {
         },
         destroy: true,
         ordering: false,
-        columns: [{
-            data: function (d) {
-                return d.id_pagoi;
-            }
-        },
-        {
-            data: function (d) {
-                return d.nombre;
-            }
-        },
-        {
-            data: function (d) {
-                return d.rol;
-            }
-        },
-        {
-            data: function (d) {
-                return d.forma_pago;
-            }
-        },
-        {
-            data: function (d) {
-                return d.sede;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_sin_descuento;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_con_descuento;
-            }
-        },
-        {
-            data: function (d) {
-                return d.monto_internomex;
-            }
-        },
-        {
-            data: function (d) {
-                return d.fecha_creacion;
-            }
-        },
-        {
-            data: function (d) {
-                return d.comentario;
-            }
-        },
-        {
-            "visible": false,
-            data: function (d) {
-                if (id_rol_global == 39) {
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky edit-monto-internomex" data_monto_internomex ="'+ d.monto_internomex +'"data-id-pago="' + d.id_pagoi +'" title="Editar" onclick=><i class="fas fa-pencil-alt"></i></button>'+
-                    '<button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+        columns: [
+            {
+                data: function (d) {
+                    return d.idInfoLote;
                 }
-                else{
-                    return '<div class="d-flex justify-center"><button class="btn-data btn-sky see-bitacora" data-estatus="0" data-id-pago="' + d.id_pagoi +'" data-toggle="tooltip" data-placement="right" title="Bitácora"><i class="fas fa-eye"></i></button></div>';
+            },
+            {
+                data: function (d) {
+                    return d.idLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.nombreLote;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.calle;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.colonia;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.numExterior;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.codigoPostal;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.superficie;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.regimen;
+                }
+            },
+            {
+                data: function (d) {
+                    return d.folio;
+                }
+            },
+            {
+                data: function (d) {
+                    return 'ACCIONES';
                 }
             }
-        }],
+        ],
         columnDefs: [{
             visible: false,
             searchable: false
         }],
         ajax: {
-            url: `${general_base_url}Internomex/getPagosFinal`,
+            url: `${general_base_url}Contabilidad/getLotesConFolios`,
             type: "POST",
             cache: false,
             data : {
-                beginDate: fechaInicio,
-                endDate: fechaFin
+                idCondominio: idCondominio
             }
         },
         initComplete: function(){
@@ -207,7 +268,7 @@ $(document).on('click', '.see-bitacora', function(e){
     });
 });
 
-function fillChangelogUsers(v) {
+const fillChangelogUsers = (v) => {
     var nombreMovimiento;
     var dataMovimiento;
     nombreMovimiento = v.col_afect;
@@ -243,7 +304,7 @@ $(document).on('click', '#aceptarMonto', function(e){
                 alerts.showNotification("top", "right", "El registro ha sido actualizado de manera éxitosa.", "success");
                 let fechaInicio = formatDate( $(".beginDate").val());
                 let fechaFin = formatDate( $(".endDate").val());
-                fillTableLotificacion(fechaInicio, fechaFin);
+                dataTable(fechaInicio, fechaFin);
             } else {
                 alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
             }
@@ -258,7 +319,7 @@ $(document).on('click', '.searchByDateRange', function(){
     let fechaInicio = formatDate( $(".beginDate").val());
     let fechaFin = formatDate( $(".endDate").val());
     if(fechaInicio <= fechaFin ){
-        fillTableLotificacion(fechaInicio, fechaFin);
+        datatable(fechaInicio, fechaFin);
     }else{
         alerts.showNotification("top", "right", "Fecha inicial no puede ser mas mayor a la fecha final", "warning");
     }
@@ -270,7 +331,7 @@ $(document).on('click', '.find-results', function () {
     $(".box-table").removeClass("hide");
     let fechaInicio = formatDate( $(".beginDate").val());
     let fechaFin = formatDate( $(".endDate").val());
-    fillTableLotificacion(fechaInicio, fechaFin);
+    datatable(fechaInicio, fechaFin);
     $('#tipo_pago_selector').addClass('hide');
 });
 
@@ -388,11 +449,6 @@ $(document).on('click', '#cargaCoincidencias', function () {
         } else
             alerts.showNotification("top", "right", "El archivo que has intentado cargar con la extensión <b>" + extension + "</b> no es válido. Recuerda seleccionar un archivo <b>.xlsx</b>.", "warning");
     }
-});
-
-$(document).on('click', '#uploadFile', function () {
-    document.getElementById("fileElm").value = "";
-    document.getElementById("file-name").value = "";
 });
 
 function generateJWT(excelData) {

@@ -246,5 +246,33 @@ class Contabilidad extends CI_Controller
         $this->load->view("contabilidad/cargaFolios_view");
     }
 
+    /* QUERIES */
+    public function lista_proyectos() {
+        echo json_encode($this->Contabilidad_model->lista_proyectos()->result_array());
+    }
+
+    public function lista_condominios($proyecto) {
+        echo json_encode($this->Contabilidad_model->lista_condominios($proyecto)->result_array());
+    }
+
+    public function lista_lotes() {
+        $idCondominio = $this->input->post("idCondominio");
+
+        $data = $this->Contabilidad_model->lista_lotes($idCondominio)->result_array();
+        echo json_encode($data);
+   
+    }
+
+    public function getLotesConFolios() {
+        $idCondominio = $this->input->post("idCondominio");
+        
+        $data = $this->Contabilidad_model->getLotesConFolios($idCondominio)->result_array();
+
+        if ($data != null) {
+            echo json_encode($data);
+        } else {
+            echo json_encode(array());
+        }
+    }
 }
 
