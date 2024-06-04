@@ -75,7 +75,7 @@ show_form = function(proceso) {
         fields: [
             new HiddenField({ id: 'id_proceso',     value: proceso.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',      value: proceso.idAvance }),
-            new NumberField({ id: 'nuevo_avance',   value: proceso.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa la cantidad', width:'12', required: true, max: 2 }),
+            new NumberField({ id: 'nuevo_avance',   value: proceso.nuevo_avance,   label: 'Nuevo avance',  placeholder: 'Ingresa porcentaje de avance', width:'12', required: true, max: 100 }),
             new NumberField({ id: 'monto',          value: proceso.monto,          label: 'Monto a pagar', placeholder: 'Ingresa la cantidad', width:'12', required: true, mask: "#,##0.00" }),
         ],
     })
