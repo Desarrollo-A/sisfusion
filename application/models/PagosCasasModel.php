@@ -535,7 +535,8 @@ class PagosCasasModel extends CI_Model
         WHERE
             pp.proceso IN ($proceso)
         AND pp.status = 1
-        AND pc.finalizado IN ($finalizado)";
+        AND pc.finalizado IN ($finalizado)
+        ORDER BY pp.fechaCreacion";
 
         return $this->db->query($query)->result();
     }
@@ -566,7 +567,8 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
         LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
-            app.idProcesoPagos = $idProcesoPagos";
+            app.idProcesoPagos = $idProcesoPagos
+        ORDER BY app.fechaCreacion";
 
         return $this->db->query($query)->result();
     }
