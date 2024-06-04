@@ -25,21 +25,14 @@ $("#uploadFile").click(function(e){
 $("#downloadFile").click(function(e){
 
     e.preventDefault();
-    alert(12);
-
 
     // var len = response.length;
     var createXLSLFormatObj = [];
-    var xlsHeader = ["id_usuario", "monto", 'num_pagos', "pago_individual", "comentarios", "estatus", "pendiente", "creado_por", "fecha_modificacion", "montoFinal", "comentario"];
+    var xlsHeader = ["id_usuario", "monto", 'num_pagos', "pago_individual", "comentarios", "tipo"];
     xlsHeader.push($(this).data('name'));
     createXLSLFormatObj.push(xlsHeader);
     for (var i = 0; i < 1; i++) {
         var innerRowData = [];
-        innerRowData.push(1);
-        innerRowData.push(1);
-        innerRowData.push(1);
-        innerRowData.push(1);
-        innerRowData.push(1);
         innerRowData.push(1);
         innerRowData.push(1);
         innerRowData.push(1);
@@ -60,6 +53,44 @@ $("#downloadFile").click(function(e){
 
 });
 
+
+$("#downloadFileTipo").click(function(e){
+    e.preventDefault();
+        $.ajax({
+            url: 'todos_los_tipos/',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function() {
+                $('#spiner-loader').removeClass('hide');
+            },
+            success: function (response) {
+            // incio de succesos
+            console.log(response);
+            var len = response.length;
+            var createXLSLFormatObj = [];
+            var xlsHeader = ["tipo", "nombre"];
+            xlsHeader.push($(this).data('name'));
+            createXLSLFormatObj.push(xlsHeader);
+            for (var i = 0; i < len; i++) {
+                var innerRowData = [];
+                innerRowData.push(response[i]['id_opcion']);
+                innerRowData.push(response[i]['nombre']);
+                createXLSLFormatObj.push(innerRowData);
+            }
+        
+            let date = new Date();
+            var filename = "tipo_descuentos" + date.getDate() + "-" + date.getMonth() + "-" + date.getFullYear() + " " + date.getHours() + date.getMinutes() + date.getSeconds() + date.getMilliseconds() + ".xlsx";
+            var ws_name = "Plantilla";
+            var wb = XLSX.utils.book_new(),
+                ws = XLSX.utils.aoa_to_sheet(createXLSLFormatObj);
+            XLSX.utils.book_append_sheet(wb, ws, ws_name);
+            XLSX.writeFile(wb, filename);
+            $('#spiner-loader').addClass('hide');
+            }
+            // llave de succesos    
+        })
+        // var len = response.length;
+    });
 
 
 

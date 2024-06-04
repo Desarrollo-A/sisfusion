@@ -3,6 +3,41 @@
 <link rel="stylesheet" type="text/css" href="<?=base_url()?>dist/css/shadowbox.css">
 <body class="">
 <div class="wrapper ">
+    <style>
+            .card_title {
+        position: relative;
+        margin: 0 0 24px;
+        padding-bottom: 10px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: 700;
+        }
+
+        .card_title::after {
+        position: absolute;
+        display: block;
+        width: 50px;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #c89b3f;
+        content: "";
+        }
+
+
+
+        .card_text p {
+        margin: 0 0 24px;
+        font-size: 14px;
+        line-height: 1.5;
+        }
+
+        .card_text p:last-child {
+        margin: 0;
+        }
+
+    </style>
 
     <?php $this->load->view('template/sidebar'); ?>
     <!--MODALS-->

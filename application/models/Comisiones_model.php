@@ -5762,7 +5762,7 @@ function getDatosGralInternomex(){
         LEFT JOIN (SELECT SUM(abono_neodata) abono_nuevo, id_usuario FROM pago_comision_ind WHERE estatus in (1) GROUP BY id_usuario) pci3 ON du.id_usuario = pci3.id_usuario 
         LEFT JOIN sedes se ON se.id_sede = Try_Cast(us.id_sede  As int)
         LEFT JOIN (SELECT COUNT(DISTINCT(CAST(fecha_abono AS DATE))) no_descuentos, id_usuario
-                   FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des 
+        FROM pago_comision_ind WHERE estatus = 17 GROUP BY id_usuario) des 
         ON des.id_usuario = du.id_usuario
         LEFT JOIN (SELECT MIN(hc.fecha_movimiento) fecha_mov, pci.id_usuario
             FROM pago_comision_ind pci 
@@ -5969,27 +5969,36 @@ function getDatosGralInternomex(){
 
     public function getDataDetenidas() {
 
-        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, l.nombreLote, hl.motivo, hl.comentario, oxc.nombre AS motivoOpc,
+        $query = $this->db->query("SELECT DISTINCT(l.idLote), res.nombreResidencial, cond.nombre AS nombreCondominio, 
+        l.nombreLote, hl.motivo, hl.comentario, oxc.nombre AS motivoOpc,
         (CASE WHEN l.tipo_venta = 1 THEN 'Particular' WHEN l.tipo_venta = 2 THEN 'NORMAL' ELSE ' SIN DEFINIR' END) tipo_venta,
         (CASE WHEN l.tipo_venta = 1 THEN 'lbl-warning' WHEN l.tipo_venta = 2 THEN 'lbl-green' ELSE 'lbl-gray' END) claseTipo_venta,
         (CASE WHEN cl.proceso = 0 THEN '' ELSE oxc0.nombre END) procesoCl, 
         (CASE WHEN cl.proceso = 0 THEN '' ELSE 'label lbl-violetBoots' END) colorProcesoCl, cl.proceso, 
-        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, l.idStatusContratacion, l.totalNeto2, 
-        (CASE WHEN year(hl.fecha_movimiento) < 2019 THEN NULL ELSE convert(nvarchar,  hl.fecha_movimiento , 6) END) fecha_sistema, se.nombre AS sede, l.referencia, cl.id_cliente, 
+        CONCAT(cl.nombre,' ',cl.apellido_paterno,' ',cl.apellido_materno) nombreCliente, vc.id_cliente AS compartida, 
+        l.idStatusContratacion, l.totalNeto2, 
+        (CASE WHEN year(hl.fecha_movimiento) < 2019 THEN NULL ELSE convert(nvarchar,  hl.fecha_movimiento , 6) END) fecha_sistema, 
+        se.nombre AS sede, l.referencia, cl.id_cliente, 
         CONCAT(ae.nombre, ' ', ae.apellido_paterno, ' ', ae.apellido_materno) AS asesor, 
         CONCAT(co.nombre, ' ', co.apellido_paterno, ' ', co.apellido_materno) AS coordinador,
         CONCAT(ge.nombre, ' ', ge.apellido_paterno, ' ', ge.apellido_materno) AS gerente, 
         CONCAT(su.nombre, ' ', su.apellido_paterno, ' ', su.apellido_materno) AS subdirector, 
-        (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
+        (CASE WHEN re.id_usuario IN (0) OR re.id_usuario IS NULL THEN 'NA' 
+        ELSE CONCAT(re.nombre, ' ', re.apellido_paterno, ' ', re.apellido_materno) END) regional,
         CONCAT(di.nombre, ' ', di.apellido_paterno, ' ', di.apellido_materno) AS director, 
-        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,
-        (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not IN (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera AS bandera_penalizacion, pe.id_porcentaje_penalizacion, pe.dias_atraso, 
+        (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, 
+        cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,
+        (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not IN (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera AS bandera_penalizacion, 
+        pe.id_porcentaje_penalizacion, pe.dias_atraso, 
         (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu, clr.totalNeto2Cl, 
         (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas, 
         (CASE WHEN clr.banderaComisionCl IN (0,8) AND l.registro_comision IN (9) THEN 1
         WHEN clr.banderaComisionCl = 1 AND l.registro_comision IN (9) THEN 2 
         WHEN clr.banderaComisionCl = 7 AND l.registro_comision IN (9) THEN 3 ELSE 0 END) AS bandera_dispersion, 
-        l.registro_comision, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN CONCAT(l.nombreLote,'</b> <i>(',lf.nombreLotes,')</i><b>') ELSE CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') END) AS nombreLoteReub, 
+        l.registro_comision, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, 
+        (CASE WHEN lf.idLotePvOrigen IS NOT NULL 
+        THEN CONCAT(l.nombreLote,'</b> <i>(',lf.nombreLotes,')</i><b>') 
+        ELSE CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') END) AS nombreLoteReub, 
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
         (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro
         FROM lotes l
@@ -6019,7 +6028,13 @@ function getDatosGralInternomex(){
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
         LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
-        WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) ORDER BY l.idLote");
+        WHERE l.idStatusContratacion BETWEEN 9 AND 15  
+        AND l.status IN (0,1) 
+        AND l.registro_comision IN (10,11,18,5,3,4,5,6) 
+        AND l.tipo_venta 
+        IS NOT NULL 
+        AND l.tipo_venta IN (1,2,7) 
+        ORDER BY l.idLote");
         return $query->result();
     }
 

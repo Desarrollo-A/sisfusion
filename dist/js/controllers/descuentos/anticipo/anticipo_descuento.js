@@ -91,7 +91,7 @@ function cargaLinea(){
                             if(elementoUSUARIO.id_opcion == elementTODOS.id_opcion ){
                                 especial =   (elementoUSUARIO.id_opcion == 5 && elementANTICIPOS.estatus ==1) ? `<botton class="epecial boton_confirmar_contraloria" 
                                 id="boton_confirmar_contraloria" 
-                                onclick="fucntion_paso_5(${elementANTICIPOS.id_anticipo},${elementANTICIPOS.monto},${elementANTICIPOS.id_usuario},${elementANTICIPOS.prioridad},${elementANTICIPOS.forma_pago})"
+                                onclick="fucntion_paso_5(${elementANTICIPOS.id_anticipo},${elementANTICIPOS.monto},${elementANTICIPOS.id_usuario},${elementANTICIPOS.prioridad},${elementANTICIPOS.forma_pago},${elementANTICIPOS.id_parcialidad},${elementANTICIPOS.monto_parcialidad},${elementANTICIPOS.mensualidades} )"
                                 name="boton_confirmar_contraloria"  data-anticipo="${elementANTICIPOS.id_anticipo}"
                                 data-id_usuario="${elementANTICIPOS.id_usuario}" data-name="${elementANTICIPOS.nombre_usuario}" >` : ` `;
 
@@ -282,7 +282,7 @@ $("#anticipo_nomina").submit(function (e) {
 // });
 
 
-function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
+function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_parcialidad,mensualidades_pra){
     
     const Modalbody_subir = $('#myModalAceptar_subir .modal-body');
     const Modalfooter_subir = $('#myModalAceptar_subir .modal-footer');
@@ -354,16 +354,35 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
                 </div> 
             </div>` :``; 
 
+    // const monto_formateado = $(this).attr("data-monto_formateado");
+
+    console.log(id_parcialidad);
+    modalidad =  id_parcialidad == 'null' ? `PRÉSTAMO <br>`  : `APOYO <br>
+                                                MENSUALIDADES   : ${mensualidades_pra} <br>
+                                                MONTO           : ${formatMoney(monto)} <br>` ;
+    
+
     Modalbody_subir.append(`
         <input type="hidden" value="${ID}" name="idAnticipo_Aceptar" id="idAnticipo_Aceptar"> 
         <h4 class=" center-align">¿Ésta seguro que desea aceptar el Descuento de ${ID}?</h4>
         <br>
         <p class=" card-title text-muted pl-1 col-md-6  center-align"> Monto autorizado :    ${formatMoney(monto)}     </p>
         <p class=" card-title text-muted pl-1 col-md-6 center-align"> Prioridad :    ${ prioridad_nombre}     </p>
+        
         <br>
         ${FACTURAS}
         <div class="form-group">
             <input type="hidden" value="0" name="bandera_a" id="bandera_a">
+        </div>
+
+        <div>
+        <h2 class="card_title">Detalles</h2>
+            <p class="center-align"> 
+                Monto solicitado : ${formatMoney(monto)} .<br>
+                Mendiante la modalidad : ${modalidad}
+
+                
+            </p>
         </div>
         <div class="form-group">
             <input type="hidden" value="${monto}" name="monto" id="monto">
@@ -673,7 +692,6 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
         pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
         montoParcialidades = monto/pagos_parcialidades;
         document.getElementById("montoPrestadoParcialidad").value = montoParcialidades;
-        alert('cambiando el tema ');
         
     });
 
@@ -695,12 +713,12 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
                     $("#monto_pago_parcialidades").addClass("hide");
                     
         
-                    var tiempo_de_pago = document.getElementById('tiempo_de_pago');
-                    tiempo_de_pago.disabled = false;
-                    var numeroPagosParcialidad = document.getElementById('numeroPagosParcialidad');
-                    numeroPagosParcialidad.disabled = false;
-                    var montoPrestadoParcialidad = document.getElementById('montoPrestadoParcialidad');
-                    montoPrestadoParcialidad.disabled = false;
+                    // var tiempo_de_pago = document.getElementById('tiempo_de_pago');
+                    // tiempo_de_pago.disabled = false;
+                    // var numeroPagosParcialidad = document.getElementById('numeroPagosParcialidad');
+                    // numeroPagosParcialidad.disabled = false;
+                    // var montoPrestadoParcialidad = document.getElementById('montoPrestadoParcialidad');
+                    // montoPrestadoParcialidad.disabled = false;
                 
                     
                 }else{
@@ -710,6 +728,8 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad){
                     $("#monto_pago_parcialidades").removeClass("hide");
                     
                 }
+        }else{
+            alerts.showNotification("top", "right", "Cantidad del monto no puede ser 0.", "warning");
         }
 
 
