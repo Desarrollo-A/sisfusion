@@ -1265,7 +1265,8 @@ class CasasModel extends CI_Model
             pc.status = 1
         AND cli.status = 1
         AND pc.proceso IN ($proceso)
-        AND pc.finalizado IN ($finalizado)";
+        AND pc.finalizado IN ($finalizado)
+        ORDER BY pc.fechaCreacion";
 
         return $this->db->query($query)->result();
     }
