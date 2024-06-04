@@ -43,7 +43,7 @@ go_to_cotizaciones = function(data) {
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a documentación cliente.?`,
+        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a documentación cliente?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
