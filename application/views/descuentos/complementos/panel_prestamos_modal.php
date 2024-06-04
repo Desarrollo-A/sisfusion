@@ -323,9 +323,9 @@
 						<div class="row hide"  id="subir_platilla_div" name="subir_platilla_div">
 							<form method="post" id="form_prestamo_plantilla">
 								<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-									<label class="label"  style="color: #000;">Platilla de alta de préstamos</label>
+									<label class="label"  style="color: #000;">Plantilla de alta de préstamos</label>
 									<span class="small text-gray textDescripcion" id="textDescripcion" name="textDescripcion">
-										Revisar la platilla para evitar errores en la creación, al finalizar puedes revisarlos en la tabla. 
+										Revisar la Plantilla para evitar errores en la creación, al finalizar puedes revisarlos en la tabla. 
 									</span>
 								</div>
 								<div class="file-gph col-xs-5 col-sm-5 col-md-5 col-lg-5">

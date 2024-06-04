@@ -62,7 +62,7 @@
 													id="abrir_modal_plantillas" name="abrir_modal_plantillas"
 													data-toggle="modal" data-target="#modal_plantilla_descuentos">
 												<i class="fas fa-folder-open"></i>	
-												Platilla Préstamos</button>
+												Plantilla Préstamos</button>
 											</div>
 										</div>
 										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
