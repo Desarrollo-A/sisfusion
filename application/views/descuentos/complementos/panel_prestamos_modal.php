@@ -269,7 +269,10 @@
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
-                    <div class="modal-body"></div>
+                    <div class="modal-body align-center justify-center" >
+                        <h2 class=" align-center justify-center">  próximamente  cambio </h2>
+
+                    </div>
                     <div class="modal-footer"></div>
                 </div>
             </div>
@@ -281,16 +284,23 @@
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h3 class="modal-title">Platillas de para préstamos.</h3>
+						<h3 class="modal-title">Plantillas de para préstamos.</h3>
                     </div>
                     <div class="modal-body">
 						<div class="row botones_plantilla" id="botones_plantilla" name="botones_platilla">
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-center justify-center ">
                         	    <button class="btn-roundedP fa-5x " style=" color: #0067d4;"  id="downloadFile" name="downloadFile" title="Descargar plantilla">
 									<i class="fas fa-download"></i>
 								</button>
                         	</div>
-							<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex align-center justify-center ">
+                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-center justify-center ">
+                        	    <button class="btn-roundedP fa-5x " style=" color: #209E63;"  id="downloadFileTipo" name="downloadFileTipo" title="Descargar motivos de descuentos">
+									<!-- <i class="fas fa-download"></i> -->
+                                    <!-- <i class="fas fa-laptop-arrow-down"></i> -->
+                                    <i class="fas fa-folder-open"></i>
+								</button>
+                        	</div>
+							<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 d-flex align-center justify-center ">
                         		<button class="btn-roundedP fa-5x " style=" color: #0067d4;" name="uploadFile" id="uploadFile" title="Subir plantilla" data-toggle="modal" data-target="#uploadModal">
 									<i class="fas fa-upload"></i>
 								</button>
@@ -323,6 +333,9 @@
 									<input class="file-name overflow-text" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
 									<label class="upload-btn w-auto" for="subir_platilla"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
 								</div>
+						</div>
+						<div class="row "  id="respuesta_platilla" name="respuesta_platilla">
+								
 						</div>
 						<!-- fin de subir factutra -->
 					</div>

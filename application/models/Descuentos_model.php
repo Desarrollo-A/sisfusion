@@ -518,10 +518,15 @@ class Descuentos_model extends CI_Model {
                 
                 $CMD_anticipos="SELECT ant.id_anticipo,ant.id_usuario,ant.monto ,us.forma_pago,
                 ant.comentario,ant.estatus,ant.proceso,ant.impuesto,ant.fecha_registro,
+
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
+
                 ant.prioridad,ant.evidencia, CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) AS nombre_usuario
                 FROM anticipo ant
                 INNER JOIN usuarios us  ON us.id_usuario = ant.id_usuario
-                 WHERE ant.id_usuario = $usuario";
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
+
+                WHERE ant.id_usuario = $usuario";
                 $datos["ANTICIPOS"] = $this->db->query($CMD_anticipos)->result_array();   
 
                 
@@ -542,6 +547,7 @@ class Descuentos_model extends CI_Model {
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
                 ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
                 ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
                 u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
                 FROM usuarios u
@@ -551,7 +557,7 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN usuarios us ON us.id_usuario= u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
-        
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
                 where u.id_rol in(1,2,3,7,9) 
                 AND ant.proceso in (1,2,3,4)
                 AND (u.id_lider = @user  
@@ -605,6 +611,7 @@ class Descuentos_model extends CI_Model {
                 UPPER(u.correo) AS correo, u.estatus, ant.proceso as id_proceso,
                 CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END as prioridad_nombre ,
                 ant.id_anticipo,ant.id_usuario, ant.monto,ant.comentario,
+                pra.mensualidades,pra.monto_parcialidad,pra.id_parcialidad,
                 ant.estatus, ant.proceso, ant.prioridad,oxc.nombre AS puesto,oxc1.nombre as proceso,
                 u.id_lider, 0 nuevo, u.fecha_creacion, UPPER(s.nombre) AS sede 
                 FROM usuarios u
@@ -614,6 +621,8 @@ class Descuentos_model extends CI_Model {
                 INNER JOIN usuarios us ON us.id_usuario= u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = us.id_rol AND oxc.id_catalogo = 1
                 INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = ant.proceso and oxc1.id_catalogo = 128
+                LEFT JOIN parcialidad_relacion_anticipo pra ON pra.id_anticipo = ant.id_anticipo
+
                 where u.id_rol in(1,2,3,7,9) 
                 AND ant.proceso in (3)
                 ";
@@ -726,7 +735,19 @@ class Descuentos_model extends CI_Model {
         catch(Exception $e) {
             return $e->getMessage();
         }  
-    } 
+    }
+    
+    
+
+    function  todos_los_tipos(){
+        
+        $cmd = "SELECT * FROM opcs_x_cats 
+                WHERE id_catalogo=23 
+                AND id_opcion NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) 
+                and estatus = 1";
+
+        return $this->db->query($cmd)->result();
+    }
 
 
 }

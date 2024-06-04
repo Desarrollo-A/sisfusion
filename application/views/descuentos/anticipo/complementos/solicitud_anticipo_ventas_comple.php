@@ -7,7 +7,7 @@
             <div class="encabezadoBox">
                 <h3 class="card-title center-align">Formulario para alta de adelanto</h3>
                 <p class="card-title pl-1">
-                    (Información necesaria para el adelanto de pagos)
+                    (Los datos del adelanto pueden cambiar en el proceso de autorización)
                 </p>
             </div>
             <div class="toolbar">
@@ -33,7 +33,7 @@
                                 </select>
                             </div>
                             
-                            <div id="d_tiempo_de_pago" name="d_tiempo_de_pago" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div id="d_tiempo_de_pago" name="d_tiempo_de_pago" class="d_tiempo_de_pago col-xs-6 col-sm-6 col-md-6 col-lg-6 hide">
                                     <div class="form-group overflow-hidden">
                                         <label class="control-label" for="proyecto">Tiempo de Pagos Parcialidad </label>
                                         <select class="selectpicker select-gral m-0 input-gral" name="tiempo_de_pago" id="tiempo_de_pago" 
@@ -46,7 +46,7 @@
                                     </div> 
                             </div>
                             
-                            <div id="n_parcialidades" name="n_parcialidades" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div id="n_parcialidades" name="n_parcialidades" class="col-xs-6 col-sm-6 col-md-6 col-lg-6 hide">
                                     <div class="form-group overflow-hidden">
                                         <label class="control-label" for="proyecto">Número de Pagos Parcialidad </label>
                                         <select class="selectpicker select-gral m-0 input-gral" name="numeroPagosParcialidad" id="numeroPagosParcialidad" data-style="btn" data-show-subtext="true"  title="SELECCIONA UN NÚMERO" data-size="7" data-live-search="true" data-container="body" >
@@ -65,7 +65,7 @@
                                     </div> 
                             </div>
                             <div id="monto_pago_parcialidades" name ="monto_pago_parcialidades" 
-                                class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                class="col-xs-6 col-sm-6 col-md-6 col-lg-6 hide">
                                 <div class="form-group overflow-hidden">
                                     <label class="control-label" for="proyecto">Monto Pago Parcialidad</label>
                                     <input class="form-control m-0 input-gral" name="montoPrestadoParcialidad" id="montoPrestadoParcialidad" readonly>

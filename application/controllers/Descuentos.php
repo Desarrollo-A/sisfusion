@@ -759,10 +759,9 @@ class Descuentos extends CI_Controller
 
         public function anticipo_pago_insert()
         {
-            // if(){
-            // }
-                echo('confirmación =eheebebb');
-                    
+            
+            $this->db->trans_begin();
+
             
                 // $insertArray
                 $insertArray = array(
@@ -775,25 +774,27 @@ class Descuentos extends CI_Controller
                 'fecha_registro'        => date("Y-m-d H:i:s"),
                 'prioridad'             => 1,
                 'evidencia'             => '',
-                'numero_mensualidad'    =>  $this->input->post('numeroPagosParcialidad')
+                'numero_mensualidades'    =>  $this->input->post('numeroPagosParcialidad')
                 );
                 
                 $idAnticipo = $this->Descuentos_model->insertAdelanto($insertArray);
                 // nace un anticipo
             
                 // REVISAMOS EL TIPO DE ANTICIPO
-                if($this->input->post('procesoTipo') == 1){
-                    // viene por  apoyo no se crea prestamo 
-                    $insertArray = array(
-                        'id_anticipo'           =>  $idAnticipo ,
-                        'catalogo'              =>  $this->input->post('tiempo_de_pago'),
-                        'fecha_creacion'        => date("Y-m-d H:i:s"),
-                        'mensualidad'           =>  $this->input->post('numeroPagosParcialidad'),
+                if($this->input->post('procesoTipo') != 1){
+                    // viene por  apoyo se crea parcialidades  no se crea prestamo 
+                    $insertArray_pran = array(
+                        'id_anticipo'           =>  intval($idAnticipo) ,
+                        'catalogo'              =>  intval($this->input->post('tiempo_de_pago')),
+                        'fecha_creacion'        =>  date("Y-m-d H:i:s"),
+                        'mensualidades'         =>  intval($this->input->post('numeroPagosParcialidad')) ,
                         'monto_parcialidad'     =>  $this->input->post('montoPrestadoParcialidad')
                     );
-                
+                    $tablaGenerica = 'parcialidad_relacion_anticipo' ;
+                    $respuesta_PRA = $this->Descuentos_model->insertAdelantoGenerico($insertArray_pran,$tablaGenerica);
                 }else{
                     // viene por prestamo.
+                    $respuesta_PRA = true;
                 }
 
 
@@ -802,29 +803,37 @@ class Descuentos extends CI_Controller
                 'id_anticipo' => $idAnticipo,
                 'id_usuario'  => $this->session->userdata('id_usuario'),
                 'proceso'     => 1,
-                'comentario'  => $this->input->post('descripcionMotivo')            
+                'comentario'  => $this->input->post('descripcionMotivo'),
+                'fecha_movimiento'        =>  date("Y-m-d H:i:s")            
                 );
+
                 $tablaHistorial = 'historial_anticipo' ;
                 $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+
                 $insertArrayHistorial = array(
                     'id_anticipo' => $idAnticipo,
                     'id_usuario'  => $this->session->userdata('id_usuario'),
                     'proceso'     => 2,
-                    'comentario'  => $this->input->post('descripcionMotivo')            
+                    'comentario'  => $this->input->post('descripcionMotivo')  ,
+                    'fecha_movimiento'        =>  date("Y-m-d H:i:s")              
                     );
                     $tablaHistorial = 'historial_anticipo' ;
-                    $respuestaHistorial = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
-                if($respuestaHistorial){
+                    $respuestaHistorial1 = $this->Descuentos_model->insertAdelantoGenerico($insertArrayHistorial,$tablaHistorial);
+                
+                if($respuestaHistorial1 && $respuestaHistorial && $respuesta_PRA){
                     $respuesta =  array(
                         "response_code" => 200, 
                         "response_type" => 'success',
                         "message" => "Se ha dado de alta el anticipo puedes revisar el avance apartado  PROCESOS");
+                        $this->db->trans_commit();  
                 }else{
                     $respuesta =  array(
                         "response_code" => 400, 
                         "response_type" => 'danger',
                         "message" => "Error NO se ha dado el alta del anticipo");
-                }
+                        $this->db->trans_rollback();  
+                    }
+
                 echo json_encode($respuesta);
 
 
@@ -1368,6 +1377,13 @@ class Descuentos extends CI_Controller
                 }
         }
 
+        public function todos_los_tipos(){
+
+            $todos_los_pasos = $this->Descuentos_model->todos_los_tipos();
+
+            echo json_encode($todos_los_pasos);
+        
+        }
 
 
 }
