@@ -128,7 +128,6 @@ class Corrida extends CI_Controller
 
 //        echo '$objDatos';
 //        print_r($objDatos);
-//        exit;
 
 
         $idLote = (int)$objDatos->id_lote;
@@ -290,8 +289,6 @@ class Corrida extends CI_Controller
         $dump_data = $data_general->corrida_dump;
 
 
-
-
         $plan_pago0 = array();
         $plan_pago1 = array();
         $plan_pago2 = array();
@@ -345,7 +342,7 @@ class Corrida extends CI_Controller
                 "monto" => $data_general->engancheFinalc,
                 "moneda" => 1,
                 "tazaInteres" => 0,
-                "mensualidad" => $data_general->engancheFinalc,
+                "mensualidad" => ($data_general->meses_diferir==0) ? $data_general->engancheFinalc : $plan_pago0[0]->capital,
                 "numeroPeriodos" => ($data_general->meses_diferir == 0) ? 1 : $data_general->meses_diferir,
                 "periodicidad" => 2,
                 "fechaInicioPlan" => $plan_pago0[0]->fecha,
@@ -357,7 +354,9 @@ class Corrida extends CI_Controller
                 "fechaCreacion" => date('Y-m-d H:i:s'),
                 "creadoPor" => 1,
                 "fechaModificacion" => date('Y-m-d H:i:s'),
-                "estatus" => 1
+                "estatus" => 1,
+                "ordenPago" => 0,
+                "saldoInicialPlan" =>  $data_general->precioFinalc
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
@@ -384,7 +383,9 @@ class Corrida extends CI_Controller
                 "fechaCreacion" => date('Y-m-d H:i:s'),
                 "creadoPor" => 1,
                 "fechaModificacion" => date('Y-m-d H:i:s'),
-                "estatus" => 1
+                "estatus" => 1,
+                "ordenPago" => 1,
+                "saldoInicialPlan" => ($rangos['rango0']==0) ? $data_general->saldoc :  $plan_pago0[($rangos['rango0']-1)]->saldo
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
@@ -411,10 +412,13 @@ class Corrida extends CI_Controller
                 "fechaCreacion" => date('Y-m-d H:i:s'),
                 "creadoPor" => 1,
                 "fechaModificacion" => date('Y-m-d H:i:s'),
-                "estatus" => 1
+                "estatus" => 1,
+                "ordenPago" => 2,
+                "saldoInicialPlan" => $plan_pago1[($rangos['rango1']-1)]->saldo
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
+
         if(count($plan_pago3)>0){
             $insertData = array(
                 "idLote" => $data_general->id_lote,
@@ -438,10 +442,13 @@ class Corrida extends CI_Controller
                 "fechaCreacion" => date('Y-m-d H:i:s'),
                 "creadoPor" => 1,
                 "fechaModificacion" => date('Y-m-d H:i:s'),
-                "estatus" => 1
+                "estatus" => 1,
+                "ordenPago" => 3,
+                "saldoInicialPlan" => $plan_pago2[($rangos['rango2']-1)]->saldo
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
+
         if(count($plan_pago4)>0){
             $insertData = array(
                 "idLote" => $data_general->id_lote,
@@ -465,7 +472,9 @@ class Corrida extends CI_Controller
                 "fechaCreacion" => date('Y-m-d H:i:s'),
                 "creadoPor" => 1,
                 "fechaModificacion" => date('Y-m-d H:i:s'),
-                "estatus" => 1
+                "estatus" => 1,
+                "ordenPago" => 4,
+                "saldoInicialPlan" => $plan_pago3[($rangos['rango3']-1)]->saldo
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }

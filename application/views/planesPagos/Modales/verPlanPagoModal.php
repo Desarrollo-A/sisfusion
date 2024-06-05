@@ -14,16 +14,22 @@
                                     <input type="text" class="form-control input-gral" name="planPago" id="nombrePlanPago"  style="margin-top: 6px" readonly/><!--este input debe de limitarse al numero de planes, apartir de ahí hacer el siguiente-->
                                 </div>
                             </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
                                 <div class="form-group" >
                                     <label class="control-label">Cliente</label>
                                     <input type="text" class="form-control input-gral" name="nombreCliente" id="nombreCliente"  style="margin-top: 6px" readonly/><!--este input debe de limitarse al numero de planes, apartir de ahí hacer el siguiente-->
                                 </div>
                             </div>
-                            <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                            <div class="col col-xs-12 col-sm-12 col-md-2 col-lg-2">
                                 <div class="form-group" >
                                     <label class="control-label">Monto</label>
                                     <input type="text" class="form-control input-gral" name="montoPlanPago" id="montoPlanPago"  style="margin-top: 6px" readonly/><!--este input debe de limitarse al numero de planes, apartir de ahí hacer el siguiente-->
+                                </div>
+                            </div>
+                            <div class="col col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                                <div class="form-group" >
+                                    <label class="control-label">Precio Inicial plan</label>
+                                    <input type="text" class="form-control input-gral" name="montoInicialPlan" id="montoInicialPlan"  style="margin-top: 6px" readonly/><!--este input debe de limitarse al numero de planes, apartir de ahí hacer el siguiente-->
                                 </div>
                             </div>
                             <div class="col col-xs-12 col-sm-12 col-md-4 col-lg-4">

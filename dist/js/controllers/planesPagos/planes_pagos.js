@@ -535,6 +535,7 @@ function fillTable(data) {
     $('#tazaInteresPlanPago').val(data.tazaInteres);
     $('#mensualidadPlanPago').val(formatMoney(data.mensualidad));
     $('#periodosPlanPago').val(data.numeroPeriodos);
+    $('#montoInicialPlan').val(formatMoney(data.saldoInicialPlan));
     data = JSON.parse(data.dumpPlan);
     let titulosTabla = [];
     $('#tabla_plan_pago thead tr:eq(0) th').each(function (i) {
@@ -673,9 +674,9 @@ function fillTable(data) {
 function enviarPlanPago(idLote){
     console.log('se enviara el plan de pago actual');
     console.log('idLote xxD', idLote);
-    $.post(general_base_url+"Corrida/enviarPlanPago", function (data) {
 
-        $("#catalogo_remanente").selectpicker('refresh');
+    $.post(general_base_url+"Corrida/enviarPlanPago/"+idLote, function (data) {
+
     }, 'json');
 }
 

@@ -775,7 +775,8 @@
                                                 <label>Meses a diferir:</label>
                                                 <div class="input-group">
                                                     <span class="input-group-addon" id="basic-addon1">#</span>
-                                                    <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control" id="msdif" ><!--ng-change="changeDaysEng()"-->
+                                                    <select ng-model="mesesdiferir" ng-options="item for item in diasDiferidos" class="form-control"
+                                                            id="msdif" ng-change="changeDaysEng()"> <!--ng-change="changeDaysEng()"-->
                                                         <option value = ""> - Selecciona los meses - </option>
                                                     </select>
                                                 </div>
@@ -2479,7 +2480,9 @@
                     var engd = (enganche - $scope.apartado);
                     var engd2 = (engd/$scope.mesesdiferir);
                     var saldoDif = ($scope.precioFinal - $scope.apartado);
-
+                    console.log('$scope.precioFinal ANTES DE', $scope.precioFinal);
+                    console.log('$scope.apartado)', $scope.apartado);
+                    saldoDif =  ($scope.mesesdiferir == 0 || $scope.mesesdiferir==undefined) ?  saldoDif: $scope.precioFinal;
                     var rangEd=[];
                     for (var e = 0; e < $scope.mesesdiferir; e++) {
 
@@ -2590,7 +2593,8 @@
                             "iva" : 0,
                             "saldoIva" : 0,
                             "total" : engd2,
-                            "saldo" :  ($scope.mensualidad_con_enganche==undefined || $scope.mensualidad_con_enganche==false ) ? r1 = saldoDif -= engd2 : saldoDif -= engd2,
+                           "saldo" :  ($scope.mensualidad_con_enganche==undefined || $scope.mensualidad_con_enganche==false ) ? (($scope.mesesdiferir == 0 || $scope.mesesdiferir==undefined)  ? r1 = saldoDif -= engd2 :   saldoDif -= engd2) : saldoDif -= engd2,
+                            // "saldo" :  ($scope.mensualidad_con_enganche==undefined || $scope.mensualidad_con_enganche==false ) ? r1 = saldoDif -= engd2 : saldoDif -= engd2,
 
                         });
                         mes++;
@@ -5531,7 +5535,9 @@
                 if($scope.infoLote.meses >= 252 && $scope.infoLote.meses <= 360) {
                     var range = [];
 
-                    if($scope.day && $scope.apartado && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
+
+
+                    if($scope.day && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true){
                         ini = $scope.infoLote.contadorInicial;
                         console.log('P1');
                     }
@@ -5541,6 +5547,87 @@
                         } else if($scope.descMSI == 1){
                             ini = $scope.infoLote.contadorInicial;
                         }
+
+                    }
+                    
+                    if($scope.day && $scope.mesesdiferir > 0 && $scope.mensualidad_con_enganche == true)
+                    {
+                        ini = $scope.infoLote.contadorInicial;
+                        var engd = (enganche - $scope.apartado);
+                        var engd2 = (engd/$scope.mesesdiferir);
+                        var saldoDif = ($scope.precioFinal - $scope.apartado);
+
+                        var rangEd=[];
+                        for (var e = 0; e < $scope.mesesdiferir; e++) {
+
+                            if(mes == 13){
+                                mes = '01';
+                                yearc++;
+                            }
+                            if(mes == 2){
+                                mes = '02';
+                            }
+                            if(mes == 3){
+                                mes = '03';
+                            }
+                            if(mes == 4){
+                                mes = '04';
+                            }
+                            if(mes == 5){
+                                mes = '05';
+                            }
+                            if(mes == 6){
+                                mes = '06';
+                            }
+                            if(mes == 7){
+                                mes = '07';
+                            }
+                            if(mes == 8){
+                                mes = '08';
+                            }
+                            if(mes == 9){
+                                mes = '09';
+                            }
+                            if(mes == 10){
+                                mes = '10';
+                            }
+                            if(mes == 11){
+                                mes = '11';
+                            }
+                            if(mes == 12){
+                                mes = '12';
+                            }
+
+                            // $scope.dateCf = day + '-' + mes + '-' + yearc;
+                            $scope.dateCf = $scope.fechaApartado;
+                            // if(e == 0){
+                            //     $scope.fechaPM = $scope.dateCf;
+                            // }
+                            // $scope.infoLote.precioTotal = $scope.infoLote.precioTotal - engd2;
+                            rangEd.push({
+                                "fecha" :  day + '-' + mes + '-' + yearc,
+                                "planPago": 1,
+                                "pago" : ($scope.descMSI == 0) ? (e + 1) : (0),
+                                "capital" : engd2,
+                                "saldoCapital": 0,
+                                "interes" : 0,
+                                "saldoInteres": 0,
+                                "iva":0,
+                                "saldoIva": 0,
+                                "total" : engd2 + $scope.infoLote.capital,
+                                "mensualidad" : $scope.infoLote.capital,
+                                "saldo" : 0,
+                            });
+                            mes++;
+                        }
+
+
+                        $scope.rangEd= rangEd;
+
+                        //regresamos el contador de mes para que empiece la corrida normal
+                        $scope.rangEd.map(()=>{
+                            mes = mes - 1;
+                        });
 
                     }
 
@@ -10034,8 +10121,8 @@
                     porcentajeEnganche.prop('disabled', false);
                     cantidadEnganche.val($scope.enganche);
                     cantidadEnganche.prop('disabled', false);
-                    aptdo.prop('disabled', true);
-                    msdif.prop('disabled', true);
+                    aptdo.prop('disabled', false);
+                    msdif.prop('disabled', false);
                     $scope.engancheFinal = ($scope.infoLote.engancheF);
                     $scope.porcentajeEng = 10;
                     calcularCF();
@@ -10058,7 +10145,7 @@
 
 
             $scope.exportc = function() {
-
+                console.log('$scope.mensualidad_con_enganche', $scope.mensualidad_con_enganche);
                 var nombre = ($scope.nombre == undefined) ? 0 : $scope.nombre;
                 var id_lote = ($scope.lote == undefined) ? 0 : $scope.lote.idLote;
                 var edad = ($scope.age == undefined) ? 0 : $scope.age.age;
@@ -10320,6 +10407,7 @@
                         tipoIM: tipoIM,
                         condominio: condominio.idCondominio,
                         customDate: customDate,
+                        mensualidadCEnganche: $scope.mensualidad_con_enganche
                         // fechaApartado: $scope.fechaApartado
                     }).then(
                         function(response){
