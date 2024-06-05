@@ -377,11 +377,11 @@
                                 <?php
 
                                 for($n=0; $n < count($paises) ; $n++){
-                                    if($paises[$n]['id_opcion'] == $cliente[0]->pais){
-                                        echo '<option value="'.$paises[$n]['id_opcion'].'" selected>'.$paises[$n]['nombre'].'</option>';
+                                    if($paises[$n]['nombre'] == $cliente[0]->pais){
+                                        echo '<option value="'.$paises[$n]['nombre'].'" selected>'.$paises[$n]['nombre'].'</option>';
                                     }
                                     else{
-                                        echo '<option value="'.$paises[$n]['id_opcion'].'">'.$paises[$n]['nombre'].'</option>';
+                                        echo '<option value="'.$paises[$n]['nombre'].'">'.$paises[$n]['nombre'].'</option>';
                                     }
                                 }
                                 ?>
@@ -480,7 +480,18 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">CÓDIGO POSTAL(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" onblur="validarCodigoPostal(this)"   name="cp" id="cp" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp; ?>">
+                                   <select name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                            <?php 
+                                                for($i = 0; $i < count($cp); $i++) {
+                                                    if($cp[$i]['codigo_postal'] == $cliente[0]->cp){
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'" selected>'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                    else{
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'">'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                }
+                                            ?>
+                                </select>    
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
