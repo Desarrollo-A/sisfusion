@@ -473,15 +473,8 @@ function fillTable(data) {
 
     const createdCell = function(cell) {
         let original;
-        cell.setAttribute('contenteditable', true)
-        cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
-        cell.setAttribute('spellcheck', false)
-        cell.addEventListener("focus", function(e) {
-            cell.setAttribute("style","border:1px; border-style:solid; border-color:#000;padding:10px")
 
-            original = e.target.textContent
-        })
-        cell.addEventListener("blur", function(e) {
+        const recalcularPlan = function(e) {
             cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
 
             if (original !== e.target.textContent) {
@@ -508,10 +501,31 @@ function fillTable(data) {
                     pago.saldo = nuevo_capital
                 }
 
-                tablePagos.clear()
-                tablePagos.rows.add(pagos).draw()
+                //tablePagos.clear()
+                //tablePagos.rows.add(pagos).draw(false)
+                tablePagos
+                    .rows()
+                    .invalidate()
+                    .draw()
+            }
+        }
+
+        cell.setAttribute('contenteditable', true)
+        cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+        cell.setAttribute('spellcheck', false)
+        cell.addEventListener("focus", function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:#000;padding:10px")
+
+            original = e.target.textContent
+        })
+        cell.addEventListener('keydown', function(e) {
+            if (e.keyCode === 13){
+                e.preventDefault()
+
+                recalcularPlan(e)
             }
         })
+        cell.addEventListener("blur", recalcularPlan )
     }
 
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
