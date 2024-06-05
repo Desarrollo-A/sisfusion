@@ -37,7 +37,7 @@ show_form = function(proceso) {
     let form = new Form({
         title: 'Ingresar avance',
         onSubmit: function(data){
-            console.log(data.get('nuevo_avance'))
+            // console.log(data.get('nuevo_avance'))
 
             let is_ok = true
             let avance = proceso.avanceObra + parseFloat(data.get('nuevo_avance'))

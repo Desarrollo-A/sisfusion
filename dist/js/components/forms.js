@@ -424,7 +424,7 @@ class NumberField {
             if(!val){
                 pass = false
             }else{
-                console.log(this.max)
+                // console.log(this.max)
 
                 if(this.max){
                     if(val > this.max){
