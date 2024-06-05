@@ -21,7 +21,11 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         titleAttr: 'Lotes para reubicar',
         title: "Lotes para reubicar",
         exportOptions: {
+<<<<<<< HEAD
             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+=======
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+>>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -38,7 +42,11 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
+<<<<<<< HEAD
             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+=======
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+>>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -64,7 +72,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
     order: [[4, "desc"]],
     destroy: true,
     columns: [
-        {
+        {   
             data: function (d) {
                 return `<span class='label lbl-violetBoots'>${d.tipo_proceso}</span>`;
             }
@@ -81,22 +89,77 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                     return `<label class="label lbl-azure">Sin especificar</label>`;
             }
         },
-        { data: "nombreResidencialOrigen" },
-        { data: "nombreCondominioOrigen" },
-        { data: "nombreLoteOrigen" },
-        { data: "referenciaOrigen" },
-        { data: "idLoteOrigen" },
+        {   data: function(d) {
+                if (d.nombreResidencialOrigen == null || d.nombreResidencialOrigen == '') return 'SIN ESPECIFICAR'
+                return d.nombreResidencialOrigen;
+            }
+        },
+        {   data: function(d) {
+                if (d.nombreCondominioOrigen == null || d.nombreCondominioOrigen == '') return 'SIN ESPECIFICAR'
+                return d.nombreCondominioOrigen;
+            }
+        },
+        {   data: function(d) {
+                if (d.nombreLoteOrigen == null || d.nombreLoteOrigen == '') return 'SIN ESPECIFICAR'
+                return d.nombreLoteOrigen;
+            }
+        },
+        {   data: function(d) {
+                if (d.nombreCliente == null || d.nombreCliente == '' || '  ') return 'SIN ESPECIFICAR'
+                return d.nombreCliente;
+            }
+        },
+        {   
+            visible: (id_rol_general == 17) ? true : false,
+            data: function(d) {
+                if (d.referenciaOrigen == null || d.referenciaOrigen == '') return 'SIN ESPECIFICAR'
+                return d.referenciaOrigen;
+            }
+        },
+        {   data: function(d) {
+                if (d.idLoteOrigen == null || d.idLoteOrigen == '') return 'SIN ESPECIFICAR'
+                return d.idLoteOrigen;
+            }
+        },
+        {
+            visible: (id_rol_general == 2 || id_rol_general == 6) ? true : false,
+            data: function (d) {
+                if (d.totalNeto == null) {
+                    return 'NA'; // o el valor que quieras devolver si es null
+                }
+                // let dato = d.totalNeto.split(',').map(Number);
+                return (d.totalNeto).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
+            }
+        },
+        { 
+            visible: (id_rol_general == 2 || id_rol_general == 6) ? true : false,
+            data: function (d) {
+                if (d.preciom2 == null) {
+                    return 'NA'; // o el valor que quieras devolver si es null
+                }
+                // let dato = d.totalNeto.split(',').map(Number);
+                return (d.preciom2).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
+            }
+        },
+        { 
+            visible: (id_rol_general == 2 || id_rol_general == 6) ? true : false,
+            data: "superficieOrigen" 
+        },
         { data: "nombreResidencialDestino" },
         { data: "nombreCondominioDestino" },
         { data: "nombreLoteDestino" },
         { data: "referenciaDestino" },
         { data: "idLoteDestino" },
+        {   
+            visible: (id_rol_general == 2 || id_rol_general == 6) ? true : false,
+            data: "superficieDestino" },
         {
             data: function(d) {
                 return `<label class="label lbl-green">${d.estatusProceso}</label>`;
             }
         },
         {
+            visible: (id_rol_general == 17) ? true : false,
             data: function(d) {
                     return `<label class="label lbl-azure ">${d.validacionAdministracion}</label>`;
             }
@@ -111,6 +174,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return `${d.fechaEstatus2}`;
             }
         },
+<<<<<<< HEAD
         {
             data: function(d) {
                 return `${d.estatus2Contraloria}`;
@@ -118,6 +182,26 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         { data: "asesor" },
         { data: "gerente" },
+=======
+        {   
+            data: function(d) {
+                if (d.asesor == null || d.asesor == '') return 'SIN ESPECIFICAR'
+                return d.asesor;
+            }
+        },
+        {   
+            data: function(d) {
+                if (d.gerente == null || d.gerente == '') return 'SIN ESPECIFICAR'
+                return d.gerente;
+            }
+        },
+        {   
+            data: function(d) {
+                if (d.subdirector == null || d.subdirector == '') return 'SIN ESPECIFICAR'
+                return d.subdirector;
+            }
+        },
+>>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
         {
             data: function (d) {
                 return `<div class="d-flex justify-center">

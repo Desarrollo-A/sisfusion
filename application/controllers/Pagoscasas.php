@@ -76,6 +76,23 @@ class Pagoscasas extends BaseController {
         $this->load->view("pagos_casas/validar_avance");
     }
 
+    
+    public function reporte_pagos(){
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/reporte_pagos");
+    }
+
+    public function avances($proceso){
+        $lote = $this->PagosCasasModel->getProceso($proceso);
+
+        $data = [
+            'lote' => $lote,
+        ];
+
+        $this->load->view('template/header');
+        $this->load->view("pagos_casas/avances", $data);
+    }
+
     public function generateFileName($documento, $lote, $proceso, $archivo){
         $file_ext = pathinfo($archivo, PATHINFO_EXTENSION);
 
@@ -508,10 +525,12 @@ class Pagoscasas extends BaseController {
 
         $proceso = $this->PagosCasasModel->getProceso($id);
 
-        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 8, $comentario);
+        $nuevo_avance = $proceso->avanceObra + $avance;
+
+        $is_ok = $this->PagosCasasModel->setProcesoTo($proceso->idProcesoPagos, 4, $comentario);
 
         if($is_ok){
-            $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $avance);
+            $is_ok = $this->PagosCasasModel->setAvanceToProceso($id, $nuevo_avance);
 
             // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
         }else{
@@ -548,4 +567,60 @@ class Pagoscasas extends BaseController {
         $this->json([]);
     }
 
+    public function lista_reporte_pagos(){
+        $opcion = $this->input->get('opcion');
+        
+        $proceso = "0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16";
+        $finalizado = "0, 1";
+
+        if($opcion != -1 && $opcion != -2 && isset($opcion)){
+            $proceso = $opcion;
+            $finalizado = "0";
+        }
+
+        if($opcion == -2){
+            $finalizado = "1";
+        }
+
+        $lotes = $this->PagosCasasModel->getListaReportePagos($proceso, $finalizado);
+
+        $this->json($lotes);
+    }
+
+    public function lista_avances($proceso){
+        $lotes = $this->PagosCasasModel->getListaAvances($proceso);
+
+        $this->json($lotes);
+    }
+
+    public function to_finalizar_proceso(){
+        $id = $this->form('id');
+        $id_avance = $this->form('id_avance');
+        $comentario = $this->form('comentario');
+
+        if(!isset($id)){
+            http_response_code(400);
+            $this->json([]);
+        }
+
+        $proceso = $this->PagosCasasModel->getProceso($id);
+
+        $is_ok = $this->PagosCasasModel->setProcesoFinalizado($proceso->idProcesoPagos, $comentario);
+
+        if($is_ok){
+            $is_ok = $this->PagosCasasModel->setPagadoAvance($id_avance);
+
+            // $this->PagosCasasModel->addHistorial($proceso->idProcesoPagos, 'NULL', 0, 'Se inicio proceso');
+        }else{
+            http_response_code(404);
+        }
+
+        $this->json([]);
+    }
+
+    public function options_procesos(){
+        $asesores = $this->PagosCasasModel->getProcesosOptions();
+
+        $this->json($asesores);
+    }
 }

@@ -127,11 +127,14 @@
                                                 <th>PROYECTO</th>
                                                 <th>CONDOMINIO</th>
                                                 <th>LOTE</th>
+                                                <th>REFERENCIA DESTINO</th>
                                                 <th>ID LOTE</th>
+                                                <th>SUPERFICIE</th>
                                                 <th>LOTE(S) ORIGEN</th>
+                                                <th>REFERENCIA ORIGEN</th>
                                                 <th>TOTAL NETO ORIGENES</th>
                                                 <th>SUPERFICIE DE ORIGEN</th>
-                                                <th>PRECIO M2</th>
+                                                <th>PRECIO M2 FINAL</th>
                                                 <th>CLIENTE</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
@@ -139,7 +142,7 @@
                                                 <th>FECHA DE APARTADO</th>
                                                 <th>ESTATUS LOTE</th>
                                                 <th>ESTATUS CONTRATACIÓN</th>
-                                                <th>FECHA ESTATUS 2</th>
+                                                <th>FECHA ESTATUS 2 (PRE PROCESO)</th>
                                                 <th>FECHA ÚLTIMO STATUS</th>
                                                 <th>ACCIONES</th>
                                             </tr>
@@ -152,10 +155,10 @@
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend'); ?>
+        <?php $this->load->view('template/footer_legend');?>
     </div>
 </body>
-<?php $this->load->view('template/footer'); ?>
+<?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reporteVentas.js"></script>
 <script src="<?=base_url()?>dist/js/controllers/reestructura/historialMovimientos.js"></script>

@@ -2,7 +2,7 @@ pass_to_firma_contrato = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Marcar contrato como enviado a firma por R.L. del lote ${data.nombreLote}?`,
+        text: `¿Marcar contrato como enviado a firma por R.L. del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -40,7 +40,7 @@ back_to_expediente_cliente = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
+        text: `¿Regresar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -130,7 +130,7 @@ let columns = [
         return `<span class="label lbl-${clase}">${data.movimiento}</span>`
     } },
     { data: function(data){
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a firma', onClick: pass_to_firma_contrato, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a firma de contrato', onClick: pass_to_firma_contrato, data})
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_expediente_cliente, data})
 

@@ -16,7 +16,7 @@
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Confirmar pago</h3>
+                                    <h3 class="card-title center-align">Avances del lote: <?php echo $lote->nombreLote ?></h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -30,11 +30,12 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>AVANCE OBRA</th>
-                                            <th>AVANCE ACTUAL</th>
+                                            <th>AVANCE</th>
                                             <th>MONTO</th>
-                                            <th>TIEMPO</th>
-                                            <th>ACCIONES</th>
+                                            <th>PAGADO</th>
+                                            <th>FECHA DE CREACION</th>
+                                            <th>FECHA DE MOVIMIENTO</th>
+                                            <th>COMPLEMENTOS</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -51,5 +52,8 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/confirmar_pago.js"></script>
+    <script type="text/javascript">
+        const idProcesoPagos = <?php echo $lote->idProcesoPagos ?>
+    </script>
+    <script src="<?= base_url() ?>dist/js/controllers/pagos_casas/avances.js"></script>
 </body>

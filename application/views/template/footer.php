@@ -65,6 +65,7 @@
     var url2 = "<?=base_url()?>index.php/";
     var general_base_url = "<?=base_url()?>";
     let id_rol_general = <?= (empty($this->session->userdata('id_rol')) ? 0 : $this->session->userdata('id_rol')) ?>;
+    let id_sede_general = <?= (empty($this->session->userdata('id_sede')) ? 0 : $this->session->userdata('id_sede')) ?>;
     let id_usuario_general =  <?= (empty($this->session->userdata('id_usuario')) ? 0 : $this->session->userdata('id_usuario')) ?>;
     let tipoUsuarioGeneral =  <?=$this->session->userdata('tipo')?>;
     let sede_usuario_general_div = " <?= $this->session->userdata('id_sede') ?> ";

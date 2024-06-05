@@ -61,7 +61,7 @@ pass_to_vobo_cifras = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Visto bueno"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a Vo.Bo. de cifras?`,
         onSubmit: function (data) {
             //console.log(data)
             form.loading(true)
@@ -73,7 +73,7 @@ pass_to_vobo_cifras = function (data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de Vo.Bo. de cifras", "success");
 
                     table.reload()
 
@@ -170,7 +170,7 @@ let columns = [
                     view_button = new RowButton({ icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data })
                 }
 
-                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a titulacion', onClick: pass_to_vobo_cifras, data })
+                pass_button = new RowButton({ icon: 'thumb_up', color: 'green', label: 'Pasar a vo.bo. de cifras', onClick: pass_to_vobo_cifras, data })
             }
 
             return `<div class="d-flex justify-center">${view_button}${upload_button}${pass_button}</div>`

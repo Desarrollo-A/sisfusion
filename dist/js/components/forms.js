@@ -289,7 +289,7 @@ class TextField {
                 $('<span />')
                 .attr('id', `${id}_warning`)
                 .addClass('text-danger h7 ml-1')
-                .text('Debes escoger un elemento')
+                .text('Debes ingresar un texto')
                 .hide()
             )
 
@@ -358,9 +358,19 @@ class TextAreaField {
 }
 
 class NumberField {
-    constructor({ id, label, placeholder, value, width = 12, required = false, mask }) {
+    constructor({ id, label, placeholder, value, width = 12, required = false, mask, max }) {
         this.id = id
         this.required = required
+
+        let number = ''
+
+        if(value){
+            number = `${value}`
+
+            if(value % 1 == 0 && mask){
+                number = `${value}.00`
+            }
+        }
 
         let input = $('<input />')
             .addClass(`form-control input-gral`)
@@ -369,14 +379,16 @@ class NumberField {
             .attr('type', 'text')
             .attr('placeholder', placeholder)
             .prop('required', required)
-            .attr('maxlength', 20)
-            .val(value)
+            .attr('maxlength', max ? max : 20)
+            .val(number)
             .on('keyup', this.validate)
 
         if(mask){
             input.mask(mask, {
                 reverse: true
             })
+        }else{
+            input.mask('#')
         }
 
         this.field = $('<div />')
@@ -392,7 +404,7 @@ class NumberField {
                 $('<span />')
                 .attr('id', `${id}_warning`)
                 .addClass('text-danger h7 ml-1')
-                .text('Debes escoger un elemento')
+                .text('Debes ingresar un número')
                 .hide()
             )
 
@@ -430,9 +442,10 @@ class NumberField {
 }
 
 class OptionField {
-    constructor({ id, label, placeholder, data, value, style, check }) {
+    constructor({ id, label, placeholder, data, value, style, check, required = false }) {
         this.id = id
         this.selected = value
+        this.required = required
 
         let options = []
         for (const option of data) {
@@ -454,14 +467,15 @@ class OptionField {
                             .attr('id', `${id}_${option.value}`)
                             .attr('name', id)
                             .val(option.value)
+                            .on('change', () => this.validate())
                         )
                         .append(
                             $('<span />')
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<b />')
-                                    .addClass('m-0')
-                                    .text(option.title)
+                                .addClass('m-0')
+                                .text(option.title)
                             )
                         )
                         .append(
@@ -469,8 +483,8 @@ class OptionField {
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<p />')
-                                    .addClass('m-0')
-                                    .text(option.subtitle)
+                                .addClass('m-0')
+                                .text(option.subtitle)
                             )
                         )
                         .append(
@@ -478,8 +492,8 @@ class OptionField {
                             .addClass('w-100 d-flex justify-between')
                             .append(
                                 $('<p />')
-                                    .addClass('m-0')
-                                    .text(option.description)
+                                .addClass('m-0')
+                                .text(option.description)
                             )
                         )
                     )
@@ -494,11 +508,38 @@ class OptionField {
                     .text(label)
             )
             .append(options)
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger una opcion')
+                .hide()
+            )
 
         this.value = () => {
             //return $(`#${id}`).val()
             return $(`input[name="${id}"]:checked`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`input[name="${this.id}"]:checked`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -513,9 +554,10 @@ class OptionField {
 }
 
 class OptionFieldAndView {
-    constructor({ id, label, placeholder, data, value, style, onClick, title }) {
+    constructor({ id, label, placeholder, data, value, style, onClick, title, required = false }) {
         this.id = id
         this.selected = value
+        this.required = required
 
         let options = []
         for (const option of data) {
@@ -540,6 +582,7 @@ class OptionFieldAndView {
                                 .attr('name', id)
                                 //.attr('checked', 'checked')
                                 .val(option.value)
+                                .on('change', () => this.validate())
                             )
                             .append(
                                 $('<span />')
@@ -578,11 +621,38 @@ class OptionFieldAndView {
                     .text(label)
             )
             .append(options)
+            .append(
+                $('<span />')
+                .attr('id', `${id}_warning`)
+                .addClass('text-danger h7 ml-1')
+                .text('Debes escoger un elemento')
+                .hide()
+            )
 
         this.value = () => {
             //return $(`#${id}`).val()
             return $(`input[name="${id}"]:checked`).val()
         }
+    }
+
+    validate() {
+        let pass = true
+        
+        if(this.required){
+            let val = $(`input[name="${this.id}"]:checked`).val()
+
+            if(!val){
+                pass = false
+            }
+
+            if(pass){
+                $(`#${this.id}_warning`).hide()
+            }else{
+                $(`#${this.id}_warning`).show()
+            }
+        }
+
+        return pass
     }
 
     get() {
@@ -618,6 +688,7 @@ class DateDelete {
                 .attr('type', 'text')
                 .attr('name', id)
                 .attr('id', id)
+                .prop('readOnly', true)
                 .attr('placeholder', placeholder.toUpperCase())
                 //.on('change', () => this.validate())
                 .datetimepicker({
@@ -656,6 +727,7 @@ class DateDelete {
                         decrementHour: 'Disminuir hora',
                         decrementMinute: 'Disminuir minutos',
                     },
+                    ignoreReadonly: true,
                 })
                 .on('dp.change', () => this.validate())
             )
@@ -842,7 +914,7 @@ class Form {
                 }
             }
 
-            if (field.value()) {
+            if (field.value() != null || field.value() != undefined) {
                 data.append(field.id, field.value())
             }
         }

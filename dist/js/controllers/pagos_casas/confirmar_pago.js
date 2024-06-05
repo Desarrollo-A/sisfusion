@@ -32,6 +32,11 @@ pass_to_carga_complemento = function(data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -41,10 +46,16 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        return `${data.avance} %`
+        return `${data.avanceObra} %`
     } },
     { data: function(data){
-        return `$ ${data.monto}`
+        return `${data.avance} %`
+    } },
+    { data: function(data) {
+        if(data.monto){
+            return formatter.format(data.monto)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)
@@ -61,7 +72,7 @@ let columns = [
     { data: function(data){
         // let docu_button = new RowButton({icon: 'toc', label: 'Subir documentos', onClick: 'go_to_documentos', data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar deposito', onClick: pass_to_carga_complemento, data})
+        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Validar depósito', onClick: pass_to_carga_complemento, data})
 
         // let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentacion, data})
         

@@ -54,9 +54,9 @@ function show_propuestas(proceso) {
         new HiddenField({ id: 'idProcesoCasas', value: proceso.idProcesoCasas }),
         new HiddenField({ id: 'idPropuesta', value: proceso.idPropuesta }),
         new title({ text: 'Cotizaciones' }),
-        new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones' }),
+        new OptionFieldAndView({ id: 'cotizacion', label: '', value: proceso.cotizacionElegida, data: cotizaciones, style: 'height: 45px', onClick: download_file, title: 'Descargar cotizaciones', required: true }),
         new title({ text: fechas.length == 1 ? 'Fecha de firma' : 'Fechas de firma' }),
-        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', value: proceso.fechaElegida, data: fechas, style: 'height: 45px' }),
+        fechas.length == 1 ? new inputText({ id: 'fecha', label: fechas[0].title, value: fechas[0].value}) : new OptionField({ id: 'fecha', label: '', value: proceso.fechaElegida, data: fechas, style: 'height: 45px', required: true }),
     ]
 
     form.show()
@@ -66,7 +66,7 @@ pass_to_validacion_contraloria = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Validación de documentación"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a validación de documentación?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -78,7 +78,7 @@ pass_to_validacion_contraloria = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de contraloría.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de validación de documentación.", "success");
         
                     table.reload()
 
@@ -165,7 +165,7 @@ back_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a <b>"Propuestas para firma"</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a propuestas para firma?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -234,13 +234,13 @@ let columns = [
 
         switch(data.fechaElegida){
         case 1:
-            fecha = data.fechaFirma1
+            fecha = data.fechaFirma1.substring(0, 16)
             break
         case 2:
-            fecha = data.fechaFirma2
+            fecha = data.fechaFirma2.substring(0, 16)
             break
         case 3:
-            fecha = data.fechaFirma3
+            fecha = data.fechaFirma3.substring(0, 16)
             break
         }
 
@@ -282,7 +282,7 @@ let columns = [
 
         // view_button = new RowButton({icon: 'visibility', label: 'Visualizar carta de autorización', onClick: show_preview, data})
         if(data.fechaElegida && data.cotizacionElegida){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación', onClick: pass_to_validacion_contraloria, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a validación de documentación', onClick: pass_to_validacion_contraloria, data})
         }
         
         // }

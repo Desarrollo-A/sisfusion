@@ -959,7 +959,7 @@ class Asesor extends CI_Controller {
             $data[$i]['telefono'] = $query[0]->telefono2;
             $data[$i]['tipo_proceso'] = $query[0]->tipo_proceso;
             $data[$i]['proceso'] = $query[0]->proceso;
-            $data[$i]['tipo_estatus_regreso'] = $query[0]->tipo_estatus_regreso;
+            //$data[$i]['tipo_estatus_regreso'] = $query[0]->tipo_estatus_regreso;
         }
         if ($data != null) {
             echo json_encode($data);
@@ -1095,12 +1095,34 @@ class Asesor extends CI_Controller {
             return $item['id_catalogo'] == 92;
         }));
 
+        $paises = array_merge(array_filter($catalogs, function($item) {
+            //PAISES
+            return $item['id_catalogo'] == 119;
+        }));
+
+        $estados = array_merge(array_filter($catalogs, function($item) {
+            //ESTADOS
+            return $item['id_catalogo'] == 120;
+        }));
+
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 118;
+        }));
+
+        $generos = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 121;
+        }));
+        
         $datos["nacionalidades"] = $nacionalidades;
         $datos["edoCivil"] = $estadosCiviles;
         $datos["regMat"] = $regimenMatrimonial;
         $datos["parentescos"] = $parentesto;
         $datos["regFis"] = $regimenFiscal;
         $datos['onlyView'] = $onlyView;
+        $datos['paises'] = $paises;
+        $datos['estados'] = $estados;
+        $datos['tipoMoneda'] = $tipoMoneda;
+        $datos['generos'] = $generos;
 
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
@@ -1979,6 +2001,11 @@ class Asesor extends CI_Controller {
         $parentezco_select1 = $this->input->post('parentezco_select1');
         $parentezco_select2 = $this->input->post('parentezco_select2');
 
+        $pais_select = $this->input->post('pais');
+        $estado_select = $this->input->post('estado');
+        $tipoMoneda_select = $this->input->post('tipoMoneda');
+        $generoSelect = $this->input->post('genero');
+
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
@@ -1999,6 +2026,24 @@ class Asesor extends CI_Controller {
         $regFiscal2 = array_merge(array_filter($catalogs, function ($item) {
             // REGIMEN FISCAL
             return $item['id_catalogo'] == 92;
+        }));
+
+        $paises = array_merge(array_filter($catalogs, function($item) {
+            //PAISES
+            return $item['id_catalogo'] == 119;
+        }));
+
+        $estados = array_merge(array_filter($catalogs, function($item) {
+            //ESTADOS
+            return $item['id_catalogo'] == 120;
+        }));
+
+        $tipoMoneda = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 118;
+        }));
+
+        $generos = array_merge(array_filter($catalogs, function ($item) {
+            return $item['id_catalogo'] == 121;
         }));
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
@@ -2023,7 +2068,7 @@ class Asesor extends CI_Controller {
             if ($regFiscal2[$c]['id_opcion'] == $regifis_select) {
                 $reg_fis = $regFiscal2[$c]['nombre'];
             }
-        }
+        }        
 
         //DOCUMENTACIÓN
         //PERSONA FISICA
@@ -2048,9 +2093,22 @@ class Asesor extends CI_Controller {
         $correo = $this->input->post('correo');
         $fecha_nacimiento = $this->input->post('fecha_nacimiento');
         $nacionalidad = $this->input->post('nacionalidad');
+        $pais = $this->input->post('pais');
+        $estado = $this->input->post('estado');
+        $genero = $this->input->post('genero');
+        $cp = $this->input->post('cp');
+        $tipoMoneda = $this->input->post('tipoMoneda');
+        $ciudad = $this->input->post('ciudad');
+        $interior = $this->input->post('interior');
+        $exterior = $this->input->post('exterior');
         $originario = $this->input->post('originario');
         $regimen_fac = $this->input->post('regimenFiscal');
         $cp_fac = $this->input->post('cp_fac');
+
+        $municipio = $this->input->post('municipio');
+        $calle = $this->input->post('calle');
+        $localidad = $this->input->post('localidad');
+        
         
         $estado_civil = $this->input->post('estado_civil');
         $nombre_conyuge = $this->input->post('nombre_conyuge');
@@ -2071,6 +2129,7 @@ class Asesor extends CI_Controller {
         $tipo_venta = $this->input->post('tipo_venta');
         $proceso= $this->input->post('proceso');
 
+        
         if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
@@ -2199,6 +2258,19 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["rfc"] = $rfc;
         $arreglo_cliente["fecha_nacimiento"] = $fecha_nacimiento;
         $arreglo_cliente["nacionalidad"] = $nacionalidad;
+        $arreglo_cliente["pais"] = $pais;
+        $arreglo_cliente['estado'] = $estado;
+        $arreglo_cliente['cp'] = $cp;
+        $arreglo_cliente['tipoMoneda'] = $tipoMoneda;
+        $arreglo_cliente['genero'] = $genero;
+        $arreglo_cliente['ciudad'] = $ciudad;
+        $arreglo_cliente['interior'] = $interior;
+        $arreglo_cliente['exterior'] = $exterior;
+        $arreglo_cliente['localidad'] = $localidad;
+        $arreglo_cliente['calle'] = $calle;
+        $arreglo_cliente['municipio'] = $municipio;
+
+
         $arreglo_cliente["regimen_fac"] = $regimen_fac;
         $arreglo_cliente["cp_fac"] = $cp_fac;
         $arreglo_cliente["originario_de"] = $originario;
@@ -4419,6 +4491,15 @@ class Asesor extends CI_Controller {
             $data[$i]['apellido_materno'] = $dato[$i]->apellido_materno;
             $data[$i]['personalidad_juridica'] = ($dato[$i]->personalidad_juridica == "") ? "N/A" : $dato[$i]->personalidad_juridica;
             $data[$i]['nacionalidad'] = ($dato[$i]->nacionalidad == "") ? "N/A" : $dato[$i]->nacionalidad;
+            $data[$i]['pais'] = ($dato[$i]->pais == "") ? "N/A" : $dato[$i]->pais;
+            $data[$i]['estado'] = ($dato[$i]->estado == "") ? "N/A": $data[$i]->estado;
+            $data[$i]['tipoMoneda'] = ($dato[$i]->tipoMoneda == "") ? "N/A" : $dato[$i]->tipoMoneda;
+            $data[$i]['genero'] = ($dato[$i]->genero == "") ? "N/A" : $dato[$i]->genero;
+            $data[$i]['cp'] = ($dato[$i]->cp == "") ? "N/A" : $dato[$i]->cp;
+            $data[$i]['ciudad'] = ($dato[$i]->ciudad == "") ? "N/A" : $dato[$i]->ciudad;
+            $data[$i]['interior'] = ($dato[$i]->interior == "")? "N/A" : $dato[$i]->interior;
+            $data[$i]['exterior'] = ($dato[$i]->exterior == "") ? "N/A" : $dato[$i]->exterior;
+
             $data[$i]['rfc'] = ($dato[$i]->rfc == "") ? "N/A" : $dato[$i]->rfc;
             $data[$i]['curp'] = ($dato[$i]->curp == "") ? "N/A" : $dato[$i]->curp;
             $data[$i]['correo'] = ($dato[$i]->correo == "") ? "N/A" : $dato[$i]->correo;

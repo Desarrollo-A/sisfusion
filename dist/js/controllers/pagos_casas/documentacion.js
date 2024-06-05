@@ -1,7 +1,7 @@
 pass_to_validacion = function(data) {
     let form = new Form({
-        title: 'Enviar a validacion', 
-        text: `¿Enviar documentacion del lote <b>${data.nombreLote}</b> a validacion por contraloria?`,
+        title: 'Enviar a validación', 
+        text: `¿Enviar documentación del lote <b>${data.nombreLote}</b> a validación por contraloría?`,
         onSubmit: function(data){
             //console.log(data)
 
@@ -12,7 +12,7 @@ pass_to_validacion = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha sido enviado a validacion.", "success");
+                    alerts.showNotification("top", "right", "El lote ha sido enviado a validación.", "success");
         
                     table.reload()
 
@@ -48,7 +48,7 @@ function edit_montos(data) {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(response)
+                alerts.showNotification("top", "right", "Los datos se guardaron con éxito.", "success");
 
                 table.reload()
 
@@ -62,8 +62,8 @@ function edit_montos(data) {
 
     form.fields = [
         new HiddenField({ id: 'idProcesoPagos', value: data.idProcesoPagos }),
-        new NumberField({ id: 'costoConstruccion', label: 'Costo construccion', placeholder: 'Ingresa la cantidad' }),
-        new NumberField({ id: 'montoDepositado', label: 'Monto depositado', placeholder: 'Ingresa la cantidad' }),
+        new NumberField({ id: 'costoConstruccion', value: data.costoConstruccion, label: 'Costo construcción', placeholder: 'Ingresa la cantidad', required: true, mask: "#,##0.00" }),
+        new NumberField({ id: 'montoDepositado', value: data.montoDepositado, label: 'Monto depositado', placeholder: 'Ingresa la cantidad', required: true, mask: "#,##0.00" }),
     ]
 
     form.show()
@@ -72,6 +72,11 @@ function edit_montos(data) {
 go_to_documentos = function(data) {
     window.location.href = `subir_documentacion/${data.idProcesoPagos}`;
 }
+
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
 
 let columns = [
     { data: 'idLote' },
@@ -83,17 +88,15 @@ let columns = [
     { data: 'gerente' },
     { data: function(data) {
         if(data.costoConstruccion){
-            return `$ ${data.costoConstruccion.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.costoConstruccion)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data) {
         if(data.montoDepositado){
-            return `$ ${data.montoDepositado.toFixed(2)}`
-        }else{
-            return ''
+            return formatter.format(data.montoDepositado)
         }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)

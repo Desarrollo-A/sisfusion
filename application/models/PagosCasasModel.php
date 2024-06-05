@@ -392,7 +392,8 @@ class PagosCasasModel extends CI_Model
         LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
         WHERE
             pp.proceso = 6
-        AND pp.status = 1";
+        AND pp.status = 1
+        AND pp.finalizado = 0";
 
         return $this->db->query($query)->result();
     }
@@ -459,7 +460,7 @@ class PagosCasasModel extends CI_Model
     public function setAvanceToProceso($idProcesoPagos, $avance){
         $query = "UPDATE proceso_pagos
         SET
-            avance = $avance,
+            avanceObra = $avance,
             idModificacion = $this->idUsuario,
             fechaModificacion = GETDATE()
         WHERE
@@ -498,6 +499,103 @@ class PagosCasasModel extends CI_Model
         WHERE
             pp.proceso = 8
         AND pp.status = 1";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaReportePagos($proceso, $finalizado){
+        $query = "SELECT
+            pp.*,
+            lo.nombreLote,
+            app.idAvance,
+            app.avance AS nuevo_avance,
+            app.monto,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente,
+            proceso.nombre AS procesoNombre
+        FROM proceso_pagos pp
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN avances_proceso_pagos app ON app.idProcesoPagos = pp.idProcesoPagos AND pagado = 0
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        LEFT JOIN opcs_x_cats proceso ON proceso.id_catalogo = 141 AND proceso.id_opcion = pp.proceso
+        WHERE
+            pp.proceso IN ($proceso)
+        AND pp.status = 1
+        AND pc.finalizado IN ($finalizado)
+        ORDER BY pp.fechaCreacion";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function getListaAvances($idProcesoPagos){
+        $query = "SELECT
+            app.*,
+            lo.idLote,
+            lo.nombreLote,
+            con.nombre AS condominio,
+            resi.descripcion AS proyecto,
+            CONCAT(cli.nombre, ' ', cli.apellido_paterno, ' ', cli.apellido_materno) AS cliente,
+            CASE
+                WHEN asesor.nombre IS NOT NULL THEN CONCAT(asesor.nombre, ' ', asesor.apellido_paterno, ' ', asesor.apellido_materno)
+                ELSE 'Sin asignar'
+            END AS nombreAsesor,
+            CASE
+                 WHEN pc.idGerente IS NULL THEN 'SIN ESPECIFICAR'
+                 ELSE CONCAT(gerente.nombre, ' ', gerente.apellido_paterno, ' ', gerente.apellido_materno)
+            END AS gerente
+        FROM avances_proceso_pagos app
+        LEFT JOIN proceso_pagos pp ON pp.idProcesoPagos = app.idProcesoPagos
+        LEFT JOIN proceso_casas pc ON pc.idProcesoCasas = pp.idProcesoCasas
+        LEFT JOIN lotes lo ON lo.idLote = pp.idLote
+        LEFT JOIN condominios con ON con.idCondominio = lo.idCondominio
+        LEFT JOIN residenciales resi ON resi.idResidencial = con.idResidencial
+        LEFT JOIN clientes cli ON cli.idLote = lo.idLote AND cli.status = 1
+        LEFT JOIN usuarios asesor ON asesor.id_usuario = pc.idAsesor
+        LEFT JOIN usuarios gerente ON gerente.id_usuario = pc.idGerente
+        WHERE
+            app.idProcesoPagos = $idProcesoPagos
+        ORDER BY app.fechaCreacion";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function setProcesoFinalizado($idProcesoPagos, $comentario){
+        $query = "UPDATE proceso_pagos
+        SET
+            proceso = 8,
+            comentario = '$comentario',
+            finalizado = 1,
+            fechaProceso = GETDATE(),
+            fechaModificacion = GETDATE(),
+            idModificacion = $this->idUsuario
+        WHERE
+            idProcesoPagos = $idProcesoPagos";
+
+        return $this->db->query($query);
+    }
+
+    public function getProcesosOptions(){
+        $query = "SELECT
+            id_opcion AS value,
+            nombre AS label
+        FROM opcs_x_cats
+        WHERE
+            id_catalogo = 141
+        AND estatus = 1";
 
         return $this->db->query($query)->result();
     }

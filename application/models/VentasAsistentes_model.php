@@ -363,17 +363,11 @@ class VentasAsistentes_model extends CI_Model {
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6942)";
                     $filtroSede = "";
-				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10251, 455)";
-                    $filtroSede = "";
 				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
@@ -382,13 +376,19 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059, 7435)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10251)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";
                     $filtroSede = "";
                 } else if ($id_rol == 5) { // SON ASISTENTES DE SUBDIRECCIÓN / REGIONALES
-                    $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
+                    if ($id_usuario == 6627)
+                        $filtroGerente = "AND ((cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider) OR (cl.id_asesor IN (6253, 6626) AND l.tipo_venta = 3))";
+                    else
+                        $filtroGerente = "AND (cl.id_subdirector = $id_lider OR cl.id_regional = $id_lider OR cl.id_regional_2 = $id_lider)";
                     $filtroSede = "";
                 }
                 $filtroProceso = $id_rol != 4 ? "AND ISNULL(cl.proceso, 0) IN (0, 1)" : "";

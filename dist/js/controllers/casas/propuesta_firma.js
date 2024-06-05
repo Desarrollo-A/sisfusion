@@ -1,7 +1,7 @@
 pass_to_propuestas = function(data) {
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Aceptación de propuestas"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a elección de propuestas?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -13,7 +13,7 @@ pass_to_propuestas = function(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de aceptación de propuestas.", "success");
+                    alerts.showNotification("top", "right", "El lote ha pasado al proceso de elección de propuestas.", "success");
         
                     table.reload()
 
@@ -43,7 +43,7 @@ go_to_cotizaciones = function(data) {
 back_to_documentos = function(proceso) {
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${proceso.nombreLote} a <b>"Documentación cliente".</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${proceso.nombreLote}</b> a documentación cliente?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -55,7 +55,7 @@ back_to_documentos = function(proceso) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a concentración de adeudos.`, "success");
+                    alerts.showNotification("top", "right", `El proceso del lote ${proceso.nombreLote} ha sido regresado a documentación cliente.`, "success");
         
                     table.reload()
                     form.hide()
@@ -156,7 +156,7 @@ let columns = [
         let pass_button = ''
         
         if(data.fechaFirma1 && data.cotizaciones && data.documentos){
-            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a aceptación de propuestas', onClick: pass_to_propuestas, data})
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Pasar a elección de propuestas', onClick: pass_to_propuestas, data})
         }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar proceso', onClick: back_to_documentos, data})

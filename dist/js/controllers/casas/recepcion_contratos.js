@@ -2,7 +2,7 @@ pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Cierre de cifras"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a cierre de cifras?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -40,7 +40,7 @@ back_to_adeudos = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote a <b>"Concentración de adeudos"</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a concentración de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -136,7 +136,10 @@ let columns = [
     { data: function(data){
         let docu_button = new RowButton({icon: 'toc', label: 'Ver documentos', onClick: go_to_documentos, data})
 
-        let pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a cierre de cifras', onClick: pass_to_solicitud_contratos, data})
+        let pass_button = ''
+        if(data.documentos >= 4){
+            pass_button = new RowButton({icon: 'thumb_up', color: 'green', label: 'Enviar a cierre de cifras', onClick: pass_to_solicitud_contratos, data})
+        }
 
         let back_button = new RowButton({icon: 'thumb_down', color: 'warning', label: 'Regresar a concentración de adeudos', onClick: back_to_adeudos, data})
 

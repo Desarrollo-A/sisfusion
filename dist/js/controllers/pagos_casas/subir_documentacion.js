@@ -12,6 +12,13 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    let url = `${general_base_url}casas/archivo/${data.archivo}`
+
+    window.open(url, '_blank').focus()
+}
+
 function show_upload(data) {
     //console.log(data)
     let accept = ['image/png', 'image/jpeg', 'application/pdf']
@@ -36,7 +43,7 @@ function show_upload(data) {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -51,7 +58,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',         value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_documento',       value: data.idDocumento }),
             new HiddenField({ id: 'name_documento',     value: data.documento }),
-            new FileField({   id: 'file_uploaded',      label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept }),
+            new FileField({   id: 'file_uploaded',      label: 'Archivo', placeholder: 'Selecciona un archivo', accept: accept, required: true }),
         ],
     })
 
@@ -62,11 +69,21 @@ let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
     { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+
+        return ''
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
             view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+
+            if(data.tipo === 6){
+                view_button = new RowButton({icon: 'file_download', label: `Visualizar ${data.documento}`, onClick: download_file, data})
+            }
         }
 
         let upload_button = new RowButton({icon: 'file_upload', color: 'green', label: `Subir ${data.documento}`, onClick: show_upload, data})

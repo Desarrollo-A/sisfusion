@@ -14,7 +14,9 @@ function show_preview(data) {
 
 function download_file(data) {
     alerts.showNotification("top", "right", "Descargando archivo...", "info");
-    window.location.href = `${general_base_url}casas/archivo/${data.complementoXML}`
+    let url = `${general_base_url}casas/archivo/${data.complementoXML}`
+
+    window.open(url, '_blank').focus()
 }
 
 show_upload = function(data) {
@@ -47,8 +49,8 @@ show_upload = function(data) {
         fields: [
             new HiddenField({ id: 'id_proceso', value: data.idProcesoPagos }),
             new HiddenField({ id: 'id_avance',  value: data.idAvance }),
-            new FileField({   id: 'file_pdf',   label: 'Archivo PDF', placeholder: 'Selecciona un archivo', accept: pdf }),
-            new FileField({   id: 'file_xml',   label: 'Archivo XML', placeholder: 'Selecciona un archivo', accept: xml }),
+            new FileField({   id: 'file_pdf',   label: 'Archivo PDF', placeholder: 'Selecciona un archivo', accept: pdf, required: true }),
+            new FileField({   id: 'file_xml',   label: 'Archivo XML', placeholder: 'Selecciona un archivo', accept: xml, required: true }),
         ],
     })
 
@@ -90,6 +92,11 @@ pass_to_validar_pago = function(data) {
     form.show()
 }
 
+const formatter = new Intl.NumberFormat('es-MX', {
+  style: 'currency',
+  currency: 'MXN',
+});
+
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
@@ -99,10 +106,16 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
-        return `${data.avance} %`
+        return `${data.avanceObra} %`
     } },
     { data: function(data){
-        return `$ ${data.monto}`
+        return `${data.avance} %`
+    } },
+    { data: function(data) {
+        if(data.monto){
+            return formatter.format(data.monto)
+        }
+        return 'Sin ingresar'
     } },
     { data: function(data){
         let inicio = new Date(data.fechaProceso)

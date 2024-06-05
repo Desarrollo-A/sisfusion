@@ -171,26 +171,23 @@ class Usuarios_modelo extends CI_Model
                     } else if ($this->session->userdata('id_usuario') == 12576) { // DIANA EVELYN PALENCIA AGUILAR
                         $id_lider = $this->session->userdata('id_lider') . ', 6942';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-                        $id_lider = $this->session->userdata('id_lider') . ', 10251, 455';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 12292) { // REYNALDO HERNANDEZ SANCHEZ
                         $id_lider = $this->session->userdata('id_lider') . ', 6661';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
                         $id_lider = $this->session->userdata('id_lider') . ', 80, 664';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
-                    } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
-                        $id_lider = $this->session->userdata('id_lider') . ', 7435';
-                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 15110) { // IVONNE BRAVO VALDERRAMA
                         $id_lider = $this->session->userdata('id_lider') . ', 495';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 15761) { // JACQUELINE GARCIA SOTELLO
-                        $id_lider = $this->session->userdata('id_lider') . ', 13016';
+                        $id_lider = $this->session->userdata('id_lider') . ', 13016, 12027';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     } else if ($this->session->userdata('id_usuario') == 15545) { // PAMELA IVONNE LEE MORENO
-                        $id_lider = $this->session->userdata('id_lider') . ', 13059';
+                        $id_lider = $this->session->userdata('id_lider') . ', 13059, 7435';
+                        $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
+                    } else if ($this->session->userdata('id_usuario') == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                        $id_lider = $this->session->userdata('id_lider') . ', 10251';
                         $where = "(((id_lider IN ($id_lider) OR id_lider_2 IN ($id_lider)) AND id_rol IN (7, 9) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%')) OR usuarios.id_usuario IN ($id_lider) OR usuarios.gerente_id IN ($id_lider))";
                     }
                     else
@@ -394,7 +391,7 @@ class Usuarios_modelo extends CI_Model
                     $sede = " OR id_sede='3'";
                 else if ($headquarter == 12)
                     $sede = " OR id_sede='5'";
-                else if ($headquarter == 15)
+                else if (in_array($headquarter, [15, 18]))
                     $sede = " OR id_sede='$headquarter'";*/
                     return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                             id_rol = 2 AND id_sede='$headquarter' AND estatus = 1 ORDER BY nombre");

@@ -2,7 +2,7 @@ pass_to_recepcion_contrato = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Marcar contrato del lote ${data.nombreLote} como firmado?`,
+        text: `¿Marcar contrato del lote <b>${data.nombreLote}</b> como firmado?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
