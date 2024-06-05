@@ -3551,7 +3551,7 @@
 					$id_lider = $id_lider . ', 13016, 12027';
 					$sede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-					$id_lider = $id_lider . ', 13059, 7435';
+					$id_lider = $id_lider . ', 13059, 11680';
 					$sede = "";
 				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
 					$id_lider = $id_lider . ', 10251';

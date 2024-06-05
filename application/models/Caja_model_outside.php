@@ -1610,4 +1610,18 @@
         )->row();
     }
 
+    public function getInformaciongGeneralPorLote($idLote) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE
+                lo.idLote = $idLote"
+        )->row();
+    }
+
 }

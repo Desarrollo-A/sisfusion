@@ -14,7 +14,7 @@
 <body>
 <div class="wrapper">
     <?php
-        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334)) AND $onlyView==0){
+        if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532)) AND $onlyView==0){
             $readOnly = '';
             $statsInput = '';
             $html_action = '<form id="deposito-seriedad-form">';
@@ -27,7 +27,7 @@
             $html_action_end = '';
         }
 
-        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || $this->session->userdata('id_usuario') == 2752 || $this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2810 || $this->session->userdata('id_usuario') == 5957 || $this->session->userdata('id_usuario') == 6390 || $this->session->userdata('id_usuario') == 4857 || $this->session->userdata('id_usuario') == 2834){
+        if($this->session->userdata('id_rol') == 7 || $this->session->userdata('id_rol') == 9 || $this->session->userdata('id_rol') == 3 || $this->session->userdata('id_rol') == 6 || $this->session->userdata('id_rol') == 2 || in_array($this->session->userdata('id_usuario'), [2752, 2826, 2810, 5957, 6390, 4857, 2834])){
             $readonlyNameToAsesor = 'readonly';
         }
         else{
@@ -52,7 +52,7 @@
     <div class="container" id="mainBoxDS">
         <div class="card">
             <?php echo $html_action;?> 
-            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334)) AND $onlyView==0){?>
+            <?php if(in_array($this->session->userdata('id_rol'), array(7, 9, 3, 6, 2)) || in_array($this->session->userdata('id_usuario'), array(2752, 2826, 2810, 2855, 2815, 5957, 6390, 4857, 2834, 9775, 12377, 2799, 10088, 2827, 6012, 12931, 14342, 13334, 11532)) AND $onlyView==0){?>
                 <section id="sectionBtns">
                     <button type="submit" id="depositoSeriedadGuardar" name="guardarC" class="btn btnAction">GUARDAR CAMBIOS</button>
                 </section>
@@ -377,11 +377,11 @@
                                 <?php
 
                                 for($n=0; $n < count($paises) ; $n++){
-                                    if($paises[$n]['id_opcion'] == $cliente[0]->pais){
-                                        echo '<option value="'.$paises[$n]['id_opcion'].'" selected>'.$paises[$n]['nombre'].'</option>';
+                                    if($paises[$n]['nombre'] == $cliente[0]->pais){
+                                        echo '<option value="'.$paises[$n]['nombre'].'" selected>'.$paises[$n]['nombre'].'</option>';
                                     }
                                     else{
-                                        echo '<option value="'.$paises[$n]['id_opcion'].'">'.$paises[$n]['nombre'].'</option>';
+                                        echo '<option value="'.$paises[$n]['nombre'].'">'.$paises[$n]['nombre'].'</option>';
                                     }
                                 }
                                 ?>
@@ -480,7 +480,18 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">CÓDIGO POSTAL(<small style="color: red;">*</small>)</label>
-                                <input class="form-control input-gral" onblur="validarCodigoPostal(this)"   name="cp" id="cp" <?php echo $readOnly; ?> onKeyPress="if(this.value.length==5) return false;" value="<?php echo $cliente[0]->cp; ?>">
+                                   <select name="cp" required="true" title="SELECCIONA UNA OPCIÓN" id="cp" class="selectpicker select-gral m-0" data-live-search="true" data-container="body" data-cp="<?=$cliente[0]->cp ?>" <?php echo $readOnly; ?> <?php echo $statsInput; ?>>
+                                            <?php 
+                                                for($i = 0; $i < count($cp); $i++) {
+                                                    if($cp[$i]['codigo_postal'] == $cliente[0]->cp){
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'" selected>'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                    else{
+                                                        echo '<option value="'.$cp[$i]['codigo_postal'].'">'.$cp[$i]['codigo_postal'].'</option>';
+                                                    }
+                                                }
+                                            ?>
+                                </select>    
                             </div>
                             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                                 <label class="label-on-left m-0">#INTERIOR(<small style="color: red;">*</small>)</label>
