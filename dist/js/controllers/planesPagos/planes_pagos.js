@@ -480,9 +480,11 @@ function fillTable(data) {
             if (original !== e.target.textContent) {
                 const row = tablePagos.row(e.target.parentElement)
                 //row.invalidate()
-                console.log('Row changed: ', row.data())
+                //console.log('Row changed: ', row.data())
 
-                let montoInicial = 518442
+                //console.log(data)
+
+                let montoInicial = data.saldoInicialPlan
 
                 let capital = parseFloat(e.target.textContent)
 
@@ -536,7 +538,7 @@ function fillTable(data) {
     $('#mensualidadPlanPago').val(formatMoney(data.mensualidad));
     $('#periodosPlanPago').val(data.numeroPeriodos);
     $('#montoInicialPlan').val(formatMoney(data.saldoInicialPlan));
-    data = JSON.parse(data.dumpPlan);
+    data_plan = JSON.parse(data.dumpPlan);
     let titulosTabla = [];
     $('#tabla_plan_pago thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
@@ -551,7 +553,7 @@ function fillTable(data) {
     });
 
     tablePagos = $('#tabla_plan_pago').DataTable({
-        data: data,
+        data: data_plan,
         width: '100%',
         searching: true,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
