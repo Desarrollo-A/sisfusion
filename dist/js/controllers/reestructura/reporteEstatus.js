@@ -166,6 +166,13 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return `${d.fechaEstatus2}`;
             }
         },
+        {
+            data: function(d) {
+                return `${d.estatus2Contraloria}`;
+            }
+        },
+        { data: "asesor" },
+        { data: "gerente" },
         {   
             data: function(d) {
                 if (d.asesor == null || d.asesor == '') return 'SIN ESPECIFICAR'

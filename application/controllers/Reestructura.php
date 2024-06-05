@@ -370,7 +370,7 @@ class Reestructura extends CI_Controller{
             return;
         }
 
-        //funcion para actrualizar la propuestas final
+        //función para actualizar la propuestas final
         if (!$this->Reestructura_model->setSeleccionPropuesta($loteAOcupar, $loteAOcupar)){
             $this->db->trans_rollback();
             echo json_encode(array(
@@ -805,6 +805,9 @@ class Reestructura extends CI_Controller{
             $total8P = floatval(number_format($total8P, 2, '.', ''));
             $total8P = $total8P / $numDestinos;
 
+            // var_dump( "(" . $totalSupDestino . " - " . $totalSupOrigen . ") - " .$metrosGratuitos . "*" . "(" . $sumPrecioM2Original . " / " . count($clienteAnteriores) . ")" );
+
+            // exit;
             $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
             $dataUpdateClienteNew = array(
                 'nombre' => $datosClienteConfirm->nombre,
@@ -2663,29 +2666,29 @@ class Reestructura extends CI_Controller{
     }
 
     public function uploadFileToBucket($file, $filename, $old_file=null){
-        if($file){
+        // if($file){
 
-            $object = $this->bucket->upload(
-                fopen($file["tmp_name"], 'r'),
-                [
-                    'name' => $filename,
-                ]
-            );
+        //     $object = $this->bucket->upload(
+        //         fopen($file["tmp_name"], 'r'),
+        //         [
+        //             'name' => $filename,
+        //         ]
+        //     );
 
-            if($old_file && $old_file != $filename){
-                $old_object = $this->bucket->object($old_file);
+        //     if($old_file && $old_file != $filename){
+        //         $old_object = $this->bucket->object($old_file);
 
-                if($old_object->exists()){
-                    $old_object->delete();
-                }
-            }
+        //         if($old_object->exists()){
+        //             $old_object->delete();
+        //         }
+        //     }
 
-            if($object->exists()){
-                return true;
-            }
-        }
+        //     if($object->exists()){
+        //         return true;
+        //     }
+        // }
 
-        return false;
+        return true;
     }
 
     function generarNombreFile($nombreResidencial, $nombreCondominio, $nombreLote, $idCliente, $archivo){
@@ -3472,9 +3475,9 @@ class Reestructura extends CI_Controller{
                 'idCliente' => $lote->idCliente,
                 'id_preproceso' => $preproceso,
                 'comentario' => isset($comentario) ? $comentario :'Regreso de preproceso',
-                'estatus' => 1,
+                'estatus' => 2,
                 'modificado_por' => $this->session->userdata('id_usuario'),
-                'fecha_modificacion' => date('Y-m-d h:i:s')
+                'fecha_modificacion' => date('Y-m-d H:i:s')
             );
 
             $lotesOrigenUpdate[] = array(
@@ -3501,7 +3504,7 @@ class Reestructura extends CI_Controller{
             'comentario' => isset($comentario) ? $comentario :'Regreso de preproceso',
             'estatus' => 2,
             'modificado_por' => $this->session->userdata('id_usuario'),
-            'fecha_modificacion' => date('Y-m-d h:i:s')
+            'fecha_modificacion' => date('Y-m-d H:i:s')
         );
 
         $lotesOrigenUpdate = array(
@@ -3683,8 +3686,7 @@ class Reestructura extends CI_Controller{
 
         $this->db->trans_begin();
 
-        $getCliente = $this->Reestructura_model->getClienteAnterior($loteNuevo, $clienteNuevo)->result(); // para obtener el cliente anterior y el lote origen
-        
+        $getCliente = $this->Reestructura_model->getClienteAnterior($loteNuevo, $clienteNuevo)->result(); // para obtener el cliente anterior y el lote origen        
         
         $clienteAnterior = $getCliente[0]->clienteAnterior; // se guarda id y cliente anterior
         $loteAnterior = $getCliente[0]->loteAnterior;
@@ -3700,7 +3702,6 @@ class Reestructura extends CI_Controller{
 
         $getTotalNeto2 = $this->Reestructura_model->getTotalNeto2($loteAnterior)->result();
         $totalNetoAnterior = $getTotalNeto2[0]->anterior;
-        // var_dump($totalNetoAnterior);
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
         // aplicarLiberacion funcion
@@ -3755,7 +3756,7 @@ class Reestructura extends CI_Controller{
 
         // último paso, confirmación de que los procesos han sido correctos
         if($flagOk){
-            //$this->db->trans_commit();
+           //  $this->db->trans_commit();
             $response["result"] = true;
             $response["message"] = 'Se ha regresado el proceso del lote';
         }
@@ -3888,7 +3889,7 @@ class Reestructura extends CI_Controller{
             'idStatusLote' => 2,
             'idStatusContratacion' => 15,
             'idMovimiento' => 45,
-            'totalNeto2' => $totalNetoAnterior
+            'totalNeto2' => intval($totalNetoAnterior)
             // 'idStatusLote' => 1
         );
 
