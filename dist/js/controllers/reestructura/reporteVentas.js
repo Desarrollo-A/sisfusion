@@ -1,12 +1,6 @@
 let titulosTabla = [];
 let getInfoData = new Array(7);
 
-$("#preproceso").addClass('hide');
-$("#proceso").removeClass('hide');
-
-$("#tab-proceso").addClass('active');
-$("#tab-preProceso").removeClass('active');
-
 $('#tablaReporteVentas thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
@@ -29,7 +23,7 @@ $('#tablaReporteVentas').DataTable({
         titleAttr: 'Reporte de ventas',
         title: "Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 18],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ,16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -63,11 +57,18 @@ $('#tablaReporteVentas').DataTable({
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
+        { data: "referenciaDestino" },
         { data: "idLote" },
+        { data: "sup" },
         { data: "nombrePvOrigen" },
+        { data: "referenciaOrigen" },
         { data: "totalNeto2Sep" },
         { data: "supLoteOrigen" },
-        { data: "precioM2FinalOrigen" },
+        {
+            data: function (d) {
+                    return `$${formatMoney(d.precioM2FinalOrigen)}`;
+            }
+        },
         { data: "nombreCliente" },
         { data: "nombreAsesor" },
         { data: "nombreGerente" },
@@ -112,49 +113,6 @@ $('#tablaReporteVentas').DataTable({
             trigger: "hover"
         });
     },
-});
-
-$(document).on("click", ".ver_historial", function () {
-    let idLote = $(this).val();
-    let flagFusion = 0;
-    $("#spiner-loader").removeClass('hide');
-
-    $("#preproceso").addClass('hide');
-    $("#proceso").removeClass('hide');
-
-    $("#tab-proceso").addClass('active');
-    $("#tab-preproceso").removeClass('active');
-    
-    $('.btn-historial').attr('data-idLote', idLote); // se asignan los valores por default
-    $('.btn-historial').attr('data-flagFusion', flagFusion);
-
-    $.ajax({ //  se hará una consulta para poder obtener el idLote origen y si es fusion, reubicación o reestructura
-        url: `${general_base_url}Reestructura/getPreOrigen`,
-        type: 'post',
-        dataType: 'JSON',
-        data: {
-            idLote
-        },
-        success: function(response){
-            if(response.result){
-                $('.btn-historial').attr('data-idLote', response.idLote); // se vuelven a reasignar en caso de que se traigan los datos correctamente
-                $('.btn-historial').attr('data-flagFusion', 0);
-            }
-            else{
-                
-            }
-
-            $("#spiner-loader").addClass('hide');
-        },
-        error: function(response){
-            $("#spiner-loader").addClass('hide');
-        }
-    });
-
-    
-    // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
-    consultarHistoriaContratacion(idLote);
-    $("#seeInformationModal").modal();
 });
 
 let titulostablaHistorialContratacion = [];
@@ -357,7 +315,6 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
 });
 
 $(document).on('click', '#verPreproceso', function(e){
-
     $("#proceso").addClass('hide');
     $("#preproceso").removeClass('hide');
 
@@ -367,10 +324,52 @@ $(document).on('click', '#verPreproceso', function(e){
 });
 
 $(document).on('click', '#verProceso', function(e){
-
     $("#preproceso").addClass('hide');
     $("#proceso").removeClass('hide');
     
     $("#tab-proceso").addClass('active');
     $("#tab-preProceso").removeClass('active'); 
+});
+
+$(document).on("click", ".ver_historial", function () {
+    let idLote = $(this).val();
+    let flagFusion = 0;
+    $("#spiner-loader").removeClass('hide');
+
+    $("#preproceso").addClass('hide');
+    $("#proceso").removeClass('hide');
+
+    $("#tab-proceso").addClass('active');
+    $("#tab-preproceso").removeClass('active');
+    
+    $('.btn-historial').attr('data-idLote', idLote); // se asignan los valores por default
+    $('.btn-historial').attr('data-flagFusion', flagFusion);
+
+    $.ajax({ //  se hará una consulta para poder obtener el idLote origen y si es fusion, reubicación o reestructura
+        url: `${general_base_url}Reestructura/getPreOrigen`,
+        type: 'post',
+        dataType: 'JSON',
+        data: {
+            idLote
+        },
+        success: function(response){
+            if(response.result){
+                $('.btn-historial').attr('data-idLote', response.idLote); // se vuelven a reasignar en caso de que se traigan los datos correctamente
+                $('.btn-historial').attr('data-flagFusion', 0);
+            }
+            else{
+                
+            }
+
+            $("#spiner-loader").addClass('hide');
+        },
+        error: function(response){
+            $("#spiner-loader").addClass('hide');
+        }
+    });
+
+    
+    // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
+    consultarHistoriaContratacion(idLote);
+    $("#seeInformationModal").modal();
 });

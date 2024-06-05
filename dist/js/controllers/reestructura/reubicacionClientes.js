@@ -1537,7 +1537,7 @@ const botonesAccionReubicacion = (d) => {
                 data-idLotePreseleccionado="${d.lotePreseleccionado}">
             <i class="fas fa-route"></i>
         </button>`;
-
+// console.log(d);
     const BTN_SUBIR_CONTRATO_FIRMADO =  `
         <button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
             data-toggle="tooltip" 
@@ -2006,7 +2006,6 @@ function check(i, div){
     distincion2 = $('#' + i + 'c').is(":checked") ? 1 : 2;
     
     if($('#' + i).is(":checked") || $('#' + i + 'c').is(":checked") || $('#' + i + 'j').is(":checked")) { // añadiendo la division del paso 2 de contraloria y juridico
-        // console.log('checado');
         if(i == 2){
             preproceso = i;
 
@@ -2063,6 +2062,8 @@ $(document).on('click', '#btnRegreso', function(){
     let funcionRegreso = 'regresoPreproceso';
     let comentario = $("#comentarioRegreso").val();
 
+    $("#spiner-loader").removeClass('hide');
+
    if(preproceso == 10 ){
         alerts.showNotification("top", "right", "Debe seleccionarse un preproceso.", "danger");
    }
@@ -2097,9 +2098,11 @@ $(document).on('click', '#btnRegreso', function(){
                 else{
                     alerts.showNotification("top", "right", response.message, "error");
                 }
+                $("#spiner-loader").addClass('hide');
             },
             error: function(){
                 alerts.showNotification("top", "right", "Ha ocurrido un error al enviar los datos", "danger");
+                $("#spiner-loader").addClass('hide');
             }
         });
    }

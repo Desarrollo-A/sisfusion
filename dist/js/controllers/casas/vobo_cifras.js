@@ -21,7 +21,7 @@ pass_to_expediente_cliente = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Aprobar el cierre de cifras del lote ${data.nombreLote}?`,
+        text: `¿Aprobar el cierre de cifras del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -60,7 +60,7 @@ back_to_cierre_cifras = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote a <b>"Cierre de cifras"</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a cierre de cifras?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

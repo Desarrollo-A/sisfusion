@@ -19,7 +19,7 @@ pass_to_docu_cliente = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso',
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Subir documentación cliente"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a subir documentación cliente?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -56,7 +56,7 @@ back_to_carta_auth = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a carta de autorización?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a carta de autorización?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

@@ -2,7 +2,7 @@ back_to_documentos = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a documentación del cliente?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a documentación del cliente?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -40,7 +40,7 @@ pass_to_propuesta_firma = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Propuesta de firma"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a propuesta de firma?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

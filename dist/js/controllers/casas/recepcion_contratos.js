@@ -2,7 +2,7 @@ pass_to_solicitud_contratos = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Cierre de cifras"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a cierre de cifras?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -40,7 +40,7 @@ back_to_adeudos = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Desea regresar el proceso del lote a <b>"Concentración de adeudos"</b>?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a concentración de adeudos?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);

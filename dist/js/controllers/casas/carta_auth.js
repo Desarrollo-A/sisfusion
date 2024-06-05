@@ -2,7 +2,7 @@ back_process = function (data) {
 
     let form = new Form({
         title: 'Regresar proceso',
-        text: `¿Desea regresar el proceso del lote ${data.nombreLote} a asignación de cartera?`,
+        text: `¿Desea regresar el proceso del lote <b>${data.nombreLote}</b> a asignación de cartera?`,
         onSubmit: function (data) {
             form.loading(true)
 
@@ -105,7 +105,7 @@ pass_to_adeudos = function (data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Desea enviar el lote ${data.nombreLote} al siguiente proceso: <b>"Concentrar adeudos"</b>?`,
+        text: `¿Desea enviar el lote <b>${data.nombreLote}</b> a concentrar adeudos?`,
         onSubmit: function (data) {
             form.loading(true)
 

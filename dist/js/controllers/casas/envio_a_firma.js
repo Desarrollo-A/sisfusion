@@ -2,7 +2,7 @@ pass_to_firma_contrato = function(data) {
 
     let form = new Form({
         title: 'Continuar proceso', 
-        text: `¿Marcar contrato como enviado a firma por R.L. del lote ${data.nombreLote}?`,
+        text: `¿Marcar contrato como enviado a firma por R.L. del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
@@ -40,7 +40,7 @@ back_to_expediente_cliente = function(data) {
 
     let form = new Form({
         title: 'Regresar proceso', 
-        text: `¿Regresar el proceso del lote ${data.nombreLote}?`,
+        text: `¿Regresar el proceso del lote <b>${data.nombreLote}</b>?`,
         onSubmit: function(data){
             //console.log(data)
             form.loading(true);
