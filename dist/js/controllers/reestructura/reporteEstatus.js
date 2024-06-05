@@ -21,11 +21,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         titleAttr: 'Lotes para reubicar',
         title: "Lotes para reubicar",
         exportOptions: {
-<<<<<<< HEAD
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-=======
             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
->>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -42,11 +38,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         orientation: 'landscape',
         pageSize: 'LEGAL',
         exportOptions: {
-<<<<<<< HEAD
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-=======
             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
->>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -174,7 +166,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return `${d.fechaEstatus2}`;
             }
         },
-<<<<<<< HEAD
         {
             data: function(d) {
                 return `${d.estatus2Contraloria}`;
@@ -182,7 +173,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         { data: "asesor" },
         { data: "gerente" },
-=======
         {   
             data: function(d) {
                 if (d.asesor == null || d.asesor == '') return 'SIN ESPECIFICAR'
@@ -201,7 +191,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return d.subdirector;
             }
         },
->>>>>>> 09f3d56e142383650fd63a4be1517dfff6ab5401
         {
             data: function (d) {
                 return `<div class="d-flex justify-center">

@@ -1161,6 +1161,9 @@ class Reestructura_model extends CI_Model
         $id_rol = $this->session->userdata('id_rol');
         $condicion = "";
 
+        $id_usuario_validacion = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND usL.id_usuario = $id_usuario_validacion" : "";
+
         if ( $id_rol == 2 ) { // Subdirector
             if ( $id_usuario == 13546 ) { // ALEJANDRO GONZÁLEZ DÁVALOS
                 $condicion = "AND (us3.id_usuario = 13546 OR us4.id_usuario = 13546)";
@@ -1187,7 +1190,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query(
             "WITH UltimoValor AS (SELECT idLote, fecha_modificacion modificado, estatus, ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY fecha_modificacion DESC) AS uf FROM historial_preproceso_lote AS hl), 
             UltimoEstatus2 AS (SELECT idLote, hl.modificado_por, hl.fecha_modificacion modificado, ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY hl.fecha_modificacion DESC) AS uf FROM historial_preproceso_lote hl INNER JOIN usuarios us on us.id_usuario = hl.modificado_por WHERE id_preproceso = 2 AND us.id_rol = 15),
-            usuario AS (SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno ) nombre FROM usuarios )    
+            usuario AS (SELECT id_usuario, id_lider, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno ) nombre FROM usuarios )    
                SELECT
                    CASE WHEN CAST( pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso, 
                    reOrigen.nombreResidencial AS nombreResidencialOrigen, coOrigen.nombre AS nombreCondominioOrigen, lo.nombreLote AS nombreLoteOrigen,
@@ -1231,7 +1234,8 @@ class Reestructura_model extends CI_Model
                    INNER JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario
                    LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario
                    LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
-               WHERE lo.estatus_preproceso != 7 AND (lo.id_usuario_asignado != 0 OR lo.id_usuario_asignado IS NOT NULL) AND lo.liberaBandera = 1 AND lo.idLote NOT IN( SELECT idLote from lotesFusion ) $condicion
+                   LEFT JOIN usuario usL on usL.id_usuario = usA.id_lider
+               WHERE lo.estatus_preproceso != 7 AND (lo.id_usuario_asignado != 0 OR lo.id_usuario_asignado IS NOT NULL) AND lo.liberaBandera = 1 AND lo.idLote NOT IN( SELECT idLote from lotesFusion ) $condicion $validacionExtra
                GROUP BY pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, usG.nombre,
                    usA.nombre, lo.idLote, lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico ,cl.nombre, cl.apellido_paterno, cl.apellido_materno,
                    lo.sup, usS.nombre, lo.totalNeto2, opc2.nombre
@@ -1281,7 +1285,8 @@ class Reestructura_model extends CI_Model
                     LEFT JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario -- SUBDIRECTOR
                     LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario -- REGIONAL
                     LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
-                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND loPv.id_usuario_asignado != 0 $condicion
+                    LEFT JOIN usuario usL on usL.id_usuario = usA.id_lider
+                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND loPv.id_usuario_asignado != 0 $condicion $validacionExtra
                 GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico
                 ORDER BY nombreLoteOrigen")->result_array();
     }
