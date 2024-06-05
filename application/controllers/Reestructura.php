@@ -3695,8 +3695,7 @@ class Reestructura extends CI_Controller{
 
         $this->db->trans_begin();
 
-        $getCliente = $this->Reestructura_model->getClienteAnterior($loteNuevo, $clienteNuevo)->result(); // para obtener el cliente anterior y el lote origen
-        
+        $getCliente = $this->Reestructura_model->getClienteAnterior($loteNuevo, $clienteNuevo)->result(); // para obtener el cliente anterior y el lote origen        
         
         $clienteAnterior = $getCliente[0]->clienteAnterior; // se guarda id y cliente anterior
         $loteAnterior = $getCliente[0]->loteAnterior;
@@ -3712,7 +3711,6 @@ class Reestructura extends CI_Controller{
 
         $getTotalNeto2 = $this->Reestructura_model->getTotalNeto2($loteAnterior)->result();
         $totalNetoAnterior = $getTotalNeto2[0]->anterior;
-        // var_dump($totalNetoAnterior);
 
         // update historial enganche a status 0 - comentario lote libeardo - pendiente  
         // aplicarLiberacion funcion
@@ -3767,7 +3765,7 @@ class Reestructura extends CI_Controller{
 
         // último paso, confirmación de que los procesos han sido correctos
         if($flagOk){
-            //$this->db->trans_commit();
+           //  $this->db->trans_commit();
             $response["result"] = true;
             $response["message"] = 'Se ha regresado el proceso del lote';
         }
@@ -3900,7 +3898,7 @@ class Reestructura extends CI_Controller{
             'idStatusLote' => 2,
             'idStatusContratacion' => 15,
             'idMovimiento' => 45,
-            'totalNeto2' => $totalNetoAnterior
+            'totalNeto2' => intval($totalNetoAnterior)
             // 'idStatusLote' => 1
         );
 
