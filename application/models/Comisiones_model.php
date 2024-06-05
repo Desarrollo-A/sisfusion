@@ -5985,13 +5985,14 @@ function getDatosGralInternomex(){
         (CASE WHEN cl.plan_comision IN (0) OR cl.plan_comision IS NULL THEN '-' ELSE pl.descripcion END) AS plan_descripcion, cl.plan_comision,cl.id_subdirector, cl.id_sede, cl.id_prospecto, cl.lugar_prospeccion,
         (CASE WHEN pe.id_penalizacion IS NOT NULL AND pe.estatus not IN (3) THEN 1 ELSE 0 END) penalizacion, pe.bandera AS bandera_penalizacion, pe.id_porcentaje_penalizacion, pe.dias_atraso, 
         (CASE WHEN clr.plan_comision IN (0) OR clr.plan_comision IS NULL THEN '-' ELSE plr.descripcion END) AS descripcion_planReu, clr.plan_comision plan_comisionReu, clr.totalNeto2Cl, 
-        (CASE WHEN (liquidada2-liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas, 
+        (CASE WHEN (liquidada2-liq.liquidada) = 0 THEN 1 ELSE 0 END) AS validaLiquidadas, 
         (CASE WHEN clr.banderaComisionCl IN (0,8) AND l.registro_comision IN (9) THEN 1
         WHEN clr.banderaComisionCl = 1 AND l.registro_comision IN (9) THEN 2 
         WHEN clr.banderaComisionCl = 7 AND l.registro_comision IN (9) THEN 3 ELSE 0 END) AS bandera_dispersion, 
         l.registro_comision, ISNULL(cl.id_cliente_reubicacion_2, 0) id_cliente_reubicacion_2, ISNULL(reub.reubicadas, 0) reubicadas, (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN CONCAT(l.nombreLote,'</b> <i>(',lf.nombreLotes,')</i><b>') ELSE CONCAT(l.nombreLote,'</b> <i>(',lor.nombreLote,')</i><b>') END) AS nombreLoteReub, 
         ISNULL(ooamDis.dispersar, 0) banderaOOAM, 
-        (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro
+        (CASE WHEN lf.idLotePvOrigen IS NOT NULL THEN lf.nombreLotes ELSE lor.nombreLote END) AS nombreOtro,
+        (CASE WHEN l.registro_comision IN(3, 4, 5, 6, 8, 9) THEN 1 ELSE 0 END) AS pass
         FROM lotes l
         INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
         INNER JOIN condominios cond ON l.idCondominio = cond.idCondominio
@@ -6018,7 +6019,10 @@ function getDatosGralInternomex(){
         LEFT JOIN (SELECT COUNT(*) liquidada, id_lote FROM comisiones WHERE liquidada = 1 GROUP BY id_lote) liq ON liq.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) liquidada2, id_lote FROM comisiones WHERE ooam = 2 GROUP BY id_lote) liq2 ON liq2.id_lote = l.idLote
         LEFT JOIN (SELECT COUNT(*) reubicadas, idCliente FROM comisionesReubicadas GROUP BY idCliente) reub ON reub.idCliente = clr.id_cliente
-        LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote
+        LEFT JOIN (SELECT COUNT(*) dispersar, id_lote FROM comisiones WHERE ooam = 1 GROUP BY id_lote) ooamDis ON ooamDis.id_lote = l.idLote 
+        -- LEFT JOIN comisiones comi ON comi.id_lote = l.idLote
+        -- LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision FROM pago_comision_ind WHERE (estatus in (11) OR descuento_aplicado = 1)
+        -- GROUP BY id_comision) pci ON comi.id_comision = pci.id_comision
         WHERE l.idStatusContratacion BETWEEN 9 AND 15  AND l.status IN (0,1) AND l.registro_comision IN (10,11,18,5,3,4,5,6) AND l.tipo_venta IS NOT NULL AND l.tipo_venta IN (1,2,7) ORDER BY l.idLote");
         return $query->result();
     }
@@ -6396,6 +6400,24 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
 
     public function validateComisionAsesor($idAsesdor,$lote_1){
         return $this->db->query("SELECT COUNT(*) comisiones FROM comisiones WHERE id_usuario=$idAsesdor AND estatus=1 AND id_lote=$lote_1")->result_array();
+    }
+
+    public function getComisionesDetenidas($idLote){
+        $query = $this->db->query("SELECT * FROM comisiones WHERE id_lote = $idLote");
+        if($query->num_rows()>0){
+            $query = $this->db->query("SELECT l.id_estado, mc.opcion FROM lotes l LEFT JOIN mensualidad_cliente mc ON mc.id_lote = l.idLote WHERE l.status = 1 AND l.idLote = $idLote");
+        }
+        return $query;
+    }
+
+    public function getComisionInd($idLote, $idUsr){
+
+        $query = $this->db->query("SELECT abono_pagado from comisiones comi
+        LEFT JOIN (SELECT SUM(abono_neodata) abono_pagado, id_comision 
+        FROM pago_comision_ind -- WHERE (estatus in (11) OR descuento_aplicado = 1)
+        GROUP BY id_comision) pci ON comi.id_comision = pci.id_comision
+        WHERE comi.id_usuario = $idUsr AND comi.id_lote = $idLote");
+        return $query;
     }
     
 }
