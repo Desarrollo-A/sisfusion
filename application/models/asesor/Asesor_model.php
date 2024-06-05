@@ -1795,4 +1795,15 @@ class Asesor_model extends CI_Model {
         return $query->row();
 
     }
+
+    function getCodigoPostales($valor, $option) {
+        
+        if($option == 'id_cliente') {
+            $query = $this->db->query("SELECT cl.pais, cl.estado, cp.codigo_postal FROM clientes cl LEFT JOIN codigo_postales cp ON cp.id_estado = cl.estado WHERE cl.id_cliente = $valor;");
+        }
+        if($option == 'select') {
+            $query = $this->db->query("SELECT * FROM codigo_postales WHERE id_estado = $valor;");
+        }
+        return $query->result_array();
+    }
 }

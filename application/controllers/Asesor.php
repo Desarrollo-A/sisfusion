@@ -1068,6 +1068,7 @@ class Asesor extends CI_Controller {
         $datos["copropiedad"] = $this->Asesor_model->selectDSCopropiedad($id_cliente);
         $datos["copropiedadTotal"] = $this->Asesor_model->selectDSCopropiedadCount($id_cliente);
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
         $datos['desarrollos'] = $this->Asesor_model->getSedesResidenciales();
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
@@ -1113,9 +1114,6 @@ class Asesor extends CI_Controller {
             return $item['id_catalogo'] == 145;
         }));
 
-        $codigoPostal = array_merge(array_filter($catalogs, function($item) {
-            return $item['id_catalogo'] == 146;
-        }));
         
         $datos["nacionalidades"] = $nacionalidades;
         $datos["edoCivil"] = $estadosCiviles;
@@ -1127,7 +1125,7 @@ class Asesor extends CI_Controller {
         $datos['estados'] = $estados;
         $datos['tipoMoneda'] = $tipoMoneda;
         $datos['generos'] = $generos;
-        $datos['codigoPostal'] = $codigoPostal;
+        $datos['cp'] =$cp;
 
         $datos['corrida_financiera'] = $this->Asesor_model->getInfoCFByCl($id_cliente);
         $datos['descuentos_aplicados'] = (isset($datos['corrida_financiera']->id_corrida))
@@ -2008,6 +2006,7 @@ class Asesor extends CI_Controller {
 
 
         $catalogs = $this->Asesor_model->getCatalogs()->result_array();
+        $cp = $this->Asesor_model->getCodigoPostales($id_cliente, 'id_cliente');
 
         $nacionalidades = array_merge(array_filter($catalogs, function ($item) {
             // NACIONALIDAD
@@ -2046,10 +2045,7 @@ class Asesor extends CI_Controller {
         $generos = array_merge(array_filter($catalogs, function ($item) {
             return $item['id_catalogo'] == 145;
         }));
-        
-        $codigoPostal = array_merge(array_filter($catalogs, function($item) {
-            return $item['id_catalogo'] == 146;
-        }));
+    
 
         for ($n = 0; $n < count($nacionalidades); $n++) {
             if ($nacionalidades[$n]['id_opcion'] == $nac_select) {
@@ -2113,7 +2109,7 @@ class Asesor extends CI_Controller {
         $ciudad = $this->input->post('ciudad');
         $interior = $this->input->post('interior');
         $exterior = $this->input->post('exterior');
-        $cp = $this->input->post('codigoPostal');
+        $cp = $this->input->post('cp');
         
         
         $estado_civil = $this->input->post('estado_civil');
@@ -2266,7 +2262,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente["nacionalidad"] = $nacionalidad;
         $arreglo_cliente["pais"] = $pais;
         $arreglo_cliente['estado'] = $estado;
-        $arreglo_cliente['cp'] = $cp;
+        $arreglo_cliente['cp'] =$cp;
         $arreglo_cliente['tipoMoneda'] = $tipoMoneda;
         $arreglo_cliente['genero'] = $genero;
         $arreglo_cliente['ciudad'] = $ciudad;
@@ -5627,6 +5623,16 @@ class Asesor extends CI_Controller {
             echo json_encode($data);
         else
             echo json_encode(array());
+    }
+
+    public function getCodigoPostales($id_estado,  $option) {
+        $data = $this->Asesor_model->getCodigoPostales($id_estado, $option);
+        if($data != null) {
+            echo json_encode($data);
+        }
+        else {
+            echo json_encode(array());
+        }
     }
 }
 ?>
