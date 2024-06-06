@@ -58,7 +58,7 @@ class Neodata_model extends CI_Model {
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
         @IdCatRegimen = " . $data['IdCatRegimen'] . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ",
-        @Prospecto = " . $data['Prospecto'] . ")->result_array();
+        @Prospecto = " . $data['Prospecto'] . "")->result_array();
         
         if (isset($response[0]['idCliente']))
             return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");

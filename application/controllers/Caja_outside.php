@@ -2031,7 +2031,8 @@ class Caja_outside extends CI_Controller {
                         );
                 
                         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-                        exit;
+                        echo json_encode($responseInsertClienteNeoData);
+                        //exit;
 
 
                         $arreglo["idLote"] = $value->idLote;
@@ -2582,7 +2583,7 @@ class Caja_outside extends CI_Controller {
 
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
         echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
-        exit;
+        //exit;
 
         $data_cliente = $this->caja_model_outside->checkTipoJuridico($id_cliente);
         $pj_info_cliente = $data_cliente->personalidad_juridica;
