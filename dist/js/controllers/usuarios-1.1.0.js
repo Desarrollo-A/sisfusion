@@ -265,7 +265,6 @@ function fillUsersTable() {
         },
         {
             data: function (d) {
-                console.log("fac_humano: ", d.fac_humano);
                 var propiedadExtra = '';
                 let factorEstatus = '';
                 if(d.puesto == 'Asesor' && d.simbolico==1){
@@ -273,7 +272,6 @@ function fillUsersTable() {
                 }
                 if(d.fac_humano == 1) {
                     factorEstatus = '<br><label class="label lbl-violetBoots">FACTOR HUMANO</label>';
-
                 }
                 return d.puesto + propiedadExtra + factorEstatus;
             }
@@ -732,7 +730,6 @@ $(document).on('click', '.edit-user-information', function(e){
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
-        console.log("data: ", data);
         $.each( data, function(i, v){
             const ventas = [7,1,2,3,9];
             const isLargeNumber = (element) => element == v.id_rol;
