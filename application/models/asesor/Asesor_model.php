@@ -530,7 +530,18 @@ class Asesor_model extends CI_Model {
                                         cl.regimen_fac,
                                         cl.cp_fac,
                                         cl.venta_extranjero, 
-                                        cl.proceso
+                                        cl.proceso, 
+                                        cl.genero,
+                                        cl.tipoMoneda,
+                                        cl.cp, 
+                                        cl.estado, 
+                                        cl.ciudad,
+                                        cl.pais, 
+                                        cl.exterior, 
+                                        cl.interior, 
+                                        cl.municipio, 
+                                        cl.localidad, 
+                                        cl.calle
                                 FROM clientes cl
                                 INNER JOIN lotes lot ON cl.idLote = lot.idLote
                                 INNER JOIN condominios con ON con.idCondominio = lot.idCondominio
@@ -1564,7 +1575,7 @@ class Asesor_model extends CI_Model {
     }
     function getCatalogs()
     {
-        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
+        return $this->db->query("SELECT id_catalogo, id_opcion, nombre FROM opcs_x_cats WHERE id_catalogo IN (11, 18, 19, 26, 92, 142, 143, 144, 145, 146 ) AND estatus = 1 ORDER BY id_catalogo, id_opcion");
     }
     public function getAsesores($idUsuario)
     {
@@ -1783,5 +1794,16 @@ class Asesor_model extends CI_Model {
         WHERE lot.idLote = $idLote;");
         return $query->row();
 
+    }
+
+    function getCodigoPostales($valor, $option) {
+        
+        if($option == 'id_cliente') {
+            $query = $this->db->query("SELECT cl.pais, cl.estado, cp.codigo_postal FROM clientes cl LEFT JOIN codigo_postales cp ON cp.id_estado = cl.estado WHERE cl.id_cliente = $valor;");
+        }
+        if($option == 'select') {
+            $query = $this->db->query("SELECT * FROM codigo_postales WHERE id_estado = $valor;");
+        }
+        return $query->result_array();
     }
 }

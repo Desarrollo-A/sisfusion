@@ -12,6 +12,42 @@ function show_preview(data) {
     });
 }
 
+backPage = function() {
+    window.location.href = `${general_base_url}casas/solicitar_contratos`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Contratos del lote",
+        exportOptions: {
+            columns: [0, 1, 2, 3],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
+
 function show_upload(data) {
     //console.log(data)
 
@@ -19,15 +55,16 @@ function show_upload(data) {
         title: `Subir ${data.documento}`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -35,6 +72,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -42,7 +81,7 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true}),
         ],
     })
 
@@ -52,8 +91,18 @@ function show_upload(data) {
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'no subido'
+    } },
     { data: function(data){
         let view_button = ''
         if(data.archivo){
@@ -69,5 +118,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_contratos/${idProcesoCasas}`,
+    buttons:buttons,
     columns,
 })

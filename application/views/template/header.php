@@ -20,7 +20,7 @@
 	<link href="<?=base_url()?>dist/css/font-awesome.css" rel="stylesheet" />
 	<link href="<?=base_url()?>dist/css/google-roboto-300-700.css" rel="stylesheet" />
 	<!--Ciudad Maderas Estilos-->
-	<link href="<?=base_url()?>dist/css/cdm-styles.css" rel="stylesheet">
+	<link href="<?=base_url()?>dist/css/cdm-styles.css?v=2" rel="stylesheet">
 
 	<link href="<?=base_url()?>dist/js/controllers/select2/select2.min.css" rel="stylesheet" />
 	<link href="<?= base_url() ?>static/yadcf/jquery.datatables.yadcf.css" rel="stylesheet" type="text/css"/>

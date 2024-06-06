@@ -6,7 +6,7 @@
     <div class="wrapper ">
         <?php $this->load->view('template/sidebar'); ?>
             <!-- moldaes 2da tabla inicio -->        
-            <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
+        <div class="modal fade " id="banderaLiberar" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog modal-small">
 				<div class="modal-content" > 
 					<div class="modal-body">
@@ -25,6 +25,28 @@
 			</div>
 		</div>
         <!-- fin modales 2da tabla -->
+        <!-- modal de regreso y bloqueo  -->
+        <div class="modal fade " id="banderaRegresar" data-backdrop="static" data-keyboard="false">
+			<div class="modal-dialog modal-small">
+				<div class="modal-content" > 
+					<div class="modal-body">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
+                            <h4  id="tituloBloqueo" name="tituloBloqueo"></h4>
+                        </div>
+                        <br>
+                        <input type="hidden" name="idLoteBloqueo" id="idLoteBloqueo" >
+                        <input type="hidden" name="banderaBloqueo" id="banderaBloqueo" >
+                        <input type="hidden" name="clienteBloqueo" id="clienteBloqueo" >
+                        <input type="hidden" name="preprocesoBloqueo" id="preprocesoBloqueo" >        
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cancelar</button>
+						<button type="button" id="bloquearBandera" name="bloquearBandera" class="btn btn-primary bloquearBandera">Aceptar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+        <!-- fin modal de regreso y bloqueo  -->
         <div class="modal fade" id="liberarReestructura" data-backdrop="static" data-keyboard="false">
 			<div class="modal-dialog">
 				<div class="modal-content" > 

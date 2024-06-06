@@ -856,10 +856,12 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)) as nombreCliente, 
         UPPER(concat(ge.nombre,' ', ge.apellido_paterno, ' ', ge.apellido_materno)) as gerente, lotes.referencia,lotes.observacionContratoUrgente, hl.modificado as modificado_historial,Upper( st.nombre) as estatus_lote, ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta, 
 		st.color, lotes.status8Flag, hl2.modificado fechaEstatus7, hl3.modificado fechaEstatus8,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta,
+		cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
         FROM lotes as lotes
         INNER JOIN clientes as cl ON lotes.idLote=cl.idLote
 		LEFT JOIN sedes AS s ON s.id_sede = cl.id_sede
+		LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
         INNER JOIN condominios as cond ON lotes.idCondominio=cond.idCondominio
         INNER JOIN residenciales as residencial ON cond.idResidencial=residencial.idResidencial AND residencial.sede_residencial = $id_sede $where
         LEFT JOIN usuarios AS us ON cl.id_asesor=us.id_usuario
@@ -880,7 +882,7 @@
 		UPPER(concat(cl.nombre,' ', cl.apellido_paterno, ' ', cl.apellido_materno)),
         concat(ge.nombre,' ', ge.apellido_paterno,' ', ge.apellido_materno), idAsesor, lotes.fechaSolicitudValidacion, lotes.firmaRL, lotes.validacionEnganche, 
 		lotes.referencia, lotes.observacionContratoUrgente, hl.modificado, st.nombre, tv.tipo_venta, st.color, lotes.status8Flag, hl2.modificado, hl3.modificado,
-		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '')");
+		cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), cl.sedeRecepcion, sed.nombre");
 		return $query->result();
 	}
 	
@@ -1583,10 +1585,12 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, 
 				ISNULL(hd.expediente, 0) documentoCargado, 
-				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta 
+				ISNULL(tv.tipo_venta, 'SIN ESPECIFICAR') tipo_venta,
+				cl.sedeRecepcion, ISNULL(sed.nombre, 'SIN ESPECIFICAR') nombreSedeRecepcion
 			FROM lotes lo 
 				INNER JOIN clientes cl ON lo.idLote = cl.idLote AND cl.status = 1 
 				LEFT JOIN sedes se ON se.id_sede = cl.id_sede 
+				LEFT JOIN sedes sed ON sed.id_sede = cl.sedeRecepcion 
 				INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
 				INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
 				LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
@@ -1634,7 +1638,8 @@
 				cl.id_cliente_reubicacion, 
 				ISNULL(CONVERT(varchar, cl.fechaAlta, 20), ''), 
 				hd.expediente, 
-				tv.tipo_venta"
+				tv.tipo_venta,
+				cl.sedeRecepcion, sed.nombre"
 		)->result();
     }
 
@@ -3506,6 +3511,9 @@
 				} else if ($this->session->userdata('id_usuario') == 12318) { // EMMA CECILIA MALDONADO RAMIREZ
 					$id_lider = $id_lider . ', 1916, 11196'; // VE LO DE SU GERENTE ACTUAL + LOS REGISTROS DE LOS DEMÁS GERENTES DE PUEBLA
 					$sede = "";
+				} else if ($id_usuario == 10795) { // ALMA GALICIA ACEVEDO QUEZADA
+					$id_lider = $id_lider . ', 12688, 495';
+					$sede = "";
 				} else if ($id_usuario == 13418) { // MARIA FERNANDA RUIZ PEDROZA
 					$id_lider = $id_lider . ', 5604';
 					$sede = "";
@@ -3524,17 +3532,29 @@
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
 					$id_lider = $id_lider . ', 13295';
 					$sede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-					$id_lider = $id_lider . ', 3111';
-					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
 					$sede = "";
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
 					$id_lider = $id_lider . ', 6942';
 					$sede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+					$id_lider = $id_lider . ', 6661';
+					$sede = "";
+				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+					$id_lider = $id_lider . ', 80, 664';
+					$sede = "";
+				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
+					$id_lider = $id_lider . ', 495';
+					$sede = "";
+				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
+					$id_lider = $id_lider . ', 13016, 12027';
+					$sede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+					$id_lider = $id_lider . ', 13059, 11680';
+					$sede = "";
 				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
-					$id_lider = $id_lider . ', 10251, 455';
+					$id_lider = $id_lider . ', 10251';
 					$sede = "";
 				}
 

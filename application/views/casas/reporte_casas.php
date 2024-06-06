@@ -12,21 +12,29 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-check-square fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Propuestas de firma: <?php echo $lote->nombreLote ?></h3>
+                                    <h3 class="card-title center-align">Reporte proceso de CASAS</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
                                 <table id="tableDoct" class="table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>NOTARIA</th>
-                                            <th>FECHA FIRMA</th>
-                                            <th>COSTO</th>
+                                            <th>ID LOTE</th>
+                                            <th>LOTE</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>PROCESO</th>
+                                            <th>FECHA INICIO</th>
+                                            <th>FECHA MOVIMIENTO</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>
@@ -44,8 +52,5 @@
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
 
-    <script type="text/javascript">
-        const idProcesoCasas = <?php echo $lote->idProcesoCasas ?>
-    </script>
-    <script src="<?= base_url() ?>dist/js/controllers/casas/propuestas.js"></script>
+    <script src="<?= base_url() ?>dist/js/controllers/casas/reporte_casas.js"></script>
 </body>

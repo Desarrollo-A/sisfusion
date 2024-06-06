@@ -12,7 +12,7 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fa fa-list-alt fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
@@ -25,9 +25,14 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
-                                            <th>NOTARIA ELEGIDA</th>
-                                            <th>FECHA DE FIRMA</th>
-                                            <th>COSTO</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
+                                            <th>ACCIONES</th>
                                         </tr>
                                     </thead>
                                 </table>

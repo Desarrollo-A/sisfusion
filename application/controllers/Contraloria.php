@@ -1701,6 +1701,7 @@ class Contraloria extends CI_Controller {
         $totalNeto2 = $this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
+        $sedeRecepcion = $this->input->post('sedeRecepcion');
 
         $mensualidades = $this->input->post('mensualidad9');
 
@@ -2779,7 +2780,10 @@ class Contraloria extends CI_Controller {
     }
 
     public function fillSelectsForV9() {
-        echo json_encode($this->Contraloria_model->getCatalogs()->result_array());
+        $catalogos = $this->Contraloria_model->getCatalogs()->result_array();
+        $sedes = $this->Contraloria_model->get_sede()->result_array();
+        $data = array_merge($catalogos, $sedes);
+        echo json_encode($data);
     }
 
     function todasAutorizacionesMSI(){

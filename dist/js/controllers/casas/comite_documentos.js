@@ -12,6 +12,11 @@ function show_preview(data) {
     });
 }
 
+function download_file(data) {
+    alerts.showNotification("top", "right", "Descargando archivo...", "info");
+    window.location.href = `${general_base_url}casas/archivo/${data.archivo}`
+}
+
 function show_upload(data) {
     //console.log(data)
 
@@ -19,15 +24,16 @@ function show_upload(data) {
         title: `Subir ${data.documento}`,
         onSubmit: function(data){
             //console.log(data)
+            form.loading(true);
 
             $.ajax({
                 type: 'POST',
-                url: `${general_base_url}/casas/upload_documento`,
+                url: `${general_base_url}casas/upload_documento`,
                 data: data,
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    alerts.showNotification("top", "right", "Archivo subido con exito.", "success");
+                    alerts.showNotification("top", "right", "Archivo subido con éxito.", "success");
 
                     table.reload()
 
@@ -35,6 +41,8 @@ function show_upload(data) {
                 },
                 error: function () {
                     alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
                 }
             })
         },
@@ -42,12 +50,48 @@ function show_upload(data) {
             new HiddenField({ id: 'id_proceso',     value: data.idProcesoCasas }),
             new HiddenField({ id: 'id_documento',   value: data.idDocumento }),
             new HiddenField({ id: 'name_documento', value: data.documento }),
-            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo' }),
+            new FileField({   id: 'file_uploaded',   label: 'Archivo', placeholder: 'Selecciona un archivo', accept: ['application/pdf'], required: true }),
         ],
     })
 
     form.show()
 }
+
+backPage = function() {
+    window.location.href = `${general_base_url}casas/valida_comite`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Documentación del lote",
+        exportOptions: {
+            columns: [0, 1, 2, 3],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        },
+        attr: {
+            style: 'position: relative; float: left; margin: 5px',
+        }
+    }
+]
 
 let columns = [
     { data: 'idDocumento' },
@@ -56,8 +100,15 @@ let columns = [
     { data: 'fechaModificacion' },
     { data: function(data){
         let view_button = ''
-        if(data.archivo){
-            view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+        let parts = data.archivo.split('.');
+        let extension = parts.pop();
+
+        if(data.archivo != 'Sin archivo'){
+            if(extension == 'xlsx'){
+                view_button = new RowButton({icon: 'file_download', label: `Descargar ${data.documento}`, onClick: download_file, data})
+            }else{
+                view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
+            }
         }
 
         let upload_button = ''
@@ -72,5 +123,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_documentos_comite/${idProcesoCasas}`,
+    buttons: buttons,
     columns,
 })

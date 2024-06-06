@@ -536,14 +536,21 @@
     }
 
 
-    public function getCondominioByIdLote($idLote)
-    {
-        $this->db->select('*');
-        $this->db->join('condominios cond', 'cond.idcondominio = l.idCondominio');
-
-        $this->db->where('idLote', $idLote);
-        $query = $this->db->get("lotes l");
-        return $query->result_array();
+    public function getCondominioByIdLote($idLote) {
+        return $this->db->query(
+            "SELECT 
+                co.idCondominio,
+                lo.idLote,
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData
+            FROM 
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE 
+                lo.idLote = $idLote
+            "
+        )->result_array();
     }
 
     public function getLoteData($idLote)
@@ -802,7 +809,7 @@
 
     public function getGerente()
     {
-        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161)");
+        $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_rol = 3 AND estatus = 1 OR id_usuario IN (6482, 5, 7092, 14161, 15844)");
         return $query->result_array();
     }
 
@@ -814,7 +821,7 @@
             SELECT id_usuario, CONCAT(id_usuario,' - ', nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios WHERE id_usuario = $id_gerente");*/
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
-			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806)) ORDER BY nombre");
+			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2572,2559,2576, 2595, 2570, 1383, 5,7092, 10806, 15844)) ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -826,7 +833,7 @@
 
         $query = $this->db->query("SELECT id_usuario, CONCAT(id_usuario,' - ',nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre FROM usuarios 
 			WHERE (id_rol IN (7, 9, 3) AND (rfc NOT LIKE '%TSTDD%' AND ISNULL(correo, '' ) NOT LIKE '%test_%') AND estatus = 1) OR 
-            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5))  ORDER BY nombre");
+            (id_usuario IN (2567, 4064, 4068, 2588, 4065, 4069, 2541, 2583, 2562, 2593,2580,2597, 1917, 2591, 9827, 5, 6626, 7092, 5, 691))  ORDER BY nombre");
 
         return $query->result_array();
     }
@@ -1410,7 +1417,7 @@
     public function getLider($id_gerente) {
         return $this->db->query("SELECT us.id_lider as id_subdirector, 
 		(CASE 
-        WHEN us.id_lider = 7092 THEN 3 
+        WHEN us.id_lider IN (7092, 15316) THEN 3 
         WHEN us.id_lider IN (9471, 681, 609, 2411, 9783, 896) THEN 607 
 		WHEN us.id_lider = 692 THEN u0.id_lider
         WHEN us.id_lider IN (703, 19) THEN 4
@@ -1566,6 +1573,57 @@
     }
     public function getDatosCondominio($idCondominio){
         return $this->db->query("SELECT tipo_lote FROM condominios WHERE idCondominio=$idCondominio")->result_array();
-     }
+    }
+
+    public function getInformaciongGeneralPorCliente($id_cliente) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData,
+                cl.telefono1,
+                cl.ladaTel1,
+                cl.telefono2,
+                cl.correo,
+                cl.fecha_nacimiento,
+                CONVERT(varchar, cl.fechaApartado, 23) fechaApartado,
+                lo.referencia,
+                cl.rfc,
+                cl.estado,
+                cl.pais,
+                cl.genero,
+                cl.municipio,
+                cl.tipoMoneda,
+                cl.exterior,
+                cl.interior,
+                cl.cp,
+                cl.calle,
+                cl.localidad, 
+                cl.regimen_fac,
+                cp_fac
+
+            FROM
+                clientes cl
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idCliente = cl.id_cliente
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+            WHERE
+                cl.id_cliente = $id_cliente"
+        )->row();
+    }
+
+    public function getInformaciongGeneralPorLote($idLote) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE
+                lo.idLote = $idLote"
+        )->row();
+    }
 
 }

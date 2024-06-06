@@ -12,11 +12,40 @@ function show_preview(data) {
     });
 }
 
+
+backPage = function() {
+    window.location.href = `${general_base_url}casas/recepcion_contratos`
+}
+
+let buttons = [
+    {
+        text: '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+        action: function() {
+            backPage()
+        },
+        attr: {
+            class: 'btn-back',
+            style: 'position: relative; float: left',
+            title: 'Regresar'
+        }
+    },
+]
+
 let columns = [
     { data: 'idDocumento' },
     { data: 'documento' },
-    { data: 'archivo' },
-    { data: 'fechaModificacion' },
+    { data: function(data){
+        if(data.archivo){
+            return data.archivo
+        }
+        return 'sin archivo'
+    } },
+    { data: function(data){
+        if(data.fechaModificacion){
+            return data.fechaModificacion.substring(0, 16)
+        }
+        return 'no subido'
+    } },
     { data: function(data){
         let view_button = new RowButton({icon: 'visibility', label: `Visualizar ${data.documento}`, onClick: show_preview, data})
         if(!data.archivo){
@@ -30,5 +59,6 @@ let columns = [
 let table = new Table({
     id: '#tableDoct',
     url: `casas/lista_contratos/${idProcesoCasas}`,
+    buttons:buttons,
     columns,
 })

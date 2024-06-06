@@ -93,7 +93,6 @@ function formArchivos(estatusProceso, datos, flagEditar, nombreLote, banderaFusi
     nombreLotes = [];
     rescisionArchivos = [];
     let label = '';
-    console.log(datos)
     let contenedorArchivos = document.getElementById('formularioArchivos');
     let contenidoHTML = '';
     flagProceso = estatusProceso;
@@ -890,7 +889,7 @@ $(document).on("click", "#sendRequestButtoncf", function (e) {
             let flagEditarCF = ($("#contratoFirmado")[0].files[0] == undefined) ? 0 : 1;
             data.append("flagEditarCF", flagEditarCF);
         }
-
+console.log(arrayCF);
         //submit de la data, independientemente sea fusion o normal
         $.ajax({
             type: 'POST',

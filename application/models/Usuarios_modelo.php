@@ -38,7 +38,7 @@ class Usuarios_modelo extends CI_Model
                 usuarios.fecha_creacion, UPPER(s.nombre) sede, usuarios.nueva_estructura, usuarios.simbolico,
                 (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 usuarios.tipo
+                 usuarios.tipo,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
@@ -56,7 +56,7 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo
+                 u.tipo,usuarios.fac_humano
                 FROM usuarios u 
                 INNER JOIN sedes s ON CAST(s.id_sede as VARCHAR(45)) = u.id_sede
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
@@ -73,7 +73,7 @@ class Usuarios_modelo extends CI_Model
                 usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico, 
                 (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                usuarios.tipo
+                usuarios.tipo,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(apellido_paterno, ' ', apellido_materno, ' ', usuarios.nombre) lider FROM usuarios) AS lider_2 ON lider_2.id_lid = usuarios.id_lider 
@@ -121,7 +121,7 @@ class Usuarios_modelo extends CI_Model
                     id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
                     (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                     (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                     usuarios.tipo 
+                     usuarios.tipo,usuarios.fac_humano 
                     FROM usuarios 
                     INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                     LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
@@ -221,7 +221,7 @@ class Usuarios_modelo extends CI_Model
                 id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
                 (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                usuarios.tipo
+                usuarios.tipo,,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  
@@ -245,7 +245,7 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo 
+                 u.tipo,u.fac_humano 
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol
@@ -270,7 +270,7 @@ class Usuarios_modelo extends CI_Model
                 CASE WHEN oxcN.id_opcion = 0 THEN '2D572C' ELSE 'aeaeae' END AS color,oxcn.id_opcion as id_nacionalidad, u.forma_pago as id_forma_pago, u.nueva_estructura, u.simbolico, 
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                u.tipo
+                u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -294,7 +294,7 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us2.nombre, ' ', us2.apellido_paterno, ' ', us2.apellido_materno) jefe_directo2, 0 nuevo, u.fecha_creacion, u.nueva_estructura, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 INNER JOIN sedes s ON s.id_sede = u.id_sede
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
@@ -315,7 +315,7 @@ class Usuarios_modelo extends CI_Model
                 (SELECT (MAX(CONVERT(VARCHAR,fecha_creacion,20))) FROM auditoria aud WHERE u.id_usuario = aud.id_parametro AND aud.tabla='usuarios' AND col_afect='estatus' and anterior='1' and (nuevo='0' OR nuevo='3')) as fecha_baja, u.nueva_estructura, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -341,7 +341,7 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -362,7 +362,7 @@ class Usuarios_modelo extends CI_Model
                 CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno) jefe_directo, u.correo, CASE WHEN DAY(u.fecha_creacion) >= 6 AND MONTH(u.fecha_creacion) = MONTH(GETDATE()) AND YEAR(u.fecha_creacion) = YEAR(GETDATE()) THEN 1 ELSE 0 END as nuevo, u.fecha_creacion, s.nombre sede, u.nueva_estructura, u.simbolico,
                 (CASE WHEN u.tipo = 2 THEN 'MADERAS UPGRADE' WHEN u.tipo = 3 THEN 'CASAS' WHEN u.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN u.tipo = 2 THEN 'lbl-sky' WHEN u.tipo = 3 THEN 'lbl-violetBoots' WHEN u.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                 u.tipo
+                 u.tipo,u.fac_humano
                 FROM usuarios u 
                 LEFT JOIN usuarios us ON us.id_usuario = u.id_lider
                 INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
@@ -426,7 +426,7 @@ class Usuarios_modelo extends CI_Model
                     $sede = " OR id_sede='3'";
                 else if ($headquarter == 12)
                     $sede = " OR id_sede='5'";
-                else if ($headquarter == 15)
+                else if (in_array($headquarter, [15, 18]))
                     $sede = " OR id_sede='$headquarter'";*/
                     return $this->db->query("SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', ISNULL(apellido_materno, '')) nombre, id_sede FROM usuarios WHERE 
                                             id_rol = 2 AND id_sede='$headquarter' AND estatus = 1 ORDER BY nombre");

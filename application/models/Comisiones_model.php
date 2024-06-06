@@ -2059,7 +2059,7 @@ class Comisiones_model extends CI_Model {
             INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
             INNER JOIN cp_usuarios cp1 ON pci1.id_usuario = cp1.id_usuario
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
-            INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) and sed.estatus = 1
+            INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 9471 THEN 1 ELSE u.id_sede END) and sed.estatus = 1
             LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
             WHERE $filtro $where AND com.estatus in (1) AND lo.idStatusContratacion > 8
             GROUP BY pci1.id_comision,com.ooam, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, cp1.codigo_postal, oxcest.id_opcion, re.empresa, co.nombre, lo.referencia, sed.impuesto, u.rfc, oprol2.nombre, cl.estructura)
@@ -2076,7 +2076,7 @@ class Comisiones_model extends CI_Model {
             INNER JOIN cp_usuarios cp1 ON pci1.id_usuario = cp1.id_usuario
             INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
             INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-            WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) and sed.estatus = 1
+            WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 9471 THEN 1 ELSE u.id_sede END) and sed.estatus = 1
             LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = com.idCliente
             LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
             WHERE $filtro $where AND ((lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8  AND com.estatus IN (8)))   
@@ -2183,7 +2183,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
         INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-        WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) and sed.estatus = 1
+        WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 9471 THEN 1 ELSE u.id_sede END) and sed.estatus = 1
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
         WHERE $filtro $where AND com.estatus in (1) AND lo.idStatusContratacion > 8
         GROUP BY pci1.id_comision,com.ooam, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, u.forma_pago, pci1.id_pago_i, 
@@ -2204,7 +2204,7 @@ class Comisiones_model extends CI_Model {
         INNER JOIN pago_comision pac ON pac.id_lote = com.id_lote
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pci1.estatus AND oxcest.id_catalogo = 23 
         INNER JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario 
-        WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) and sed.estatus = 1
+        WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 9471 THEN 1 ELSE u.id_sede END) and sed.estatus = 1
         LEFT JOIN clientes cl ON cl.idLote = lo.idLote AND cl.id_cliente = com.idCliente
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
         WHERE $filtro $where AND ( (lo.idStatusContratacion < 9 AND com.estatus IN (1,8)) OR (lo.idStatusContratacion > 8  AND com.estatus IN (8)))   
@@ -2669,7 +2669,8 @@ class Comisiones_model extends CI_Model {
         WHEN 5 THEN 3
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
-            WHEN 9629 THEN 2
+        WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1
         WHERE pci1.estatus IN (12) and com.rol_generado in (38)
         GROUP BY pci1.id_comision,com.ooam, lo.nombreLote, re.nombreResidencial, lo.totalNeto2, com.comision_total, com.porcentaje_decimal, pci1.abono_neodata, pci1.pago_neodata, pci1.estatus, pci1.fecha_pago_intmex, pci1.id_usuario, cl.personalidad_juridica, u.forma_pago, pci1.id_pago_i, pac.porcentaje_abono, u.nombre, u.apellido_paterno,u.apellido_materno, oprol.nombre, oxcest.nombre, oxcest.id_opcion, re.empresa, cl.lugar_prospeccion, co.nombre, lo.referencia, sed.impuesto ORDER BY lo.nombreLote");
@@ -3090,6 +3091,7 @@ class Comisiones_model extends CI_Model {
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1
         LEFT JOIN opcs_x_cats opcx2 on opcx2.id_opcion = u.id_rol AND opcx2.id_catalogo = 83
         WHERE b.estado IN ($estado) $filtro");
@@ -3115,6 +3117,7 @@ class Comisiones_model extends CI_Model {
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1
         WHERE x.id_catalogo = 46 and opcx.id_catalogo = 1 AND b.id_usuario = $usuario");
     }
@@ -3178,6 +3181,7 @@ class Comisiones_model extends CI_Model {
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1 
         LEFT JOIN opcs_x_cats opcx2 on opcx2.id_opcion = u.id_rol AND opcx2.id_catalogo = 83 $cadena");
     }
@@ -3830,6 +3834,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1
         INNER JOIN pagos_bonos_ind b on b.id_bono = p.id_bono
         inner join opcs_x_cats opcs on opcs.id_opcion = u.id_rol 
@@ -3988,6 +3993,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and se.estatus = 1
         LEFT JOIN clientes cl ON cl.id_cliente = com.idCliente
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
@@ -4017,6 +4023,7 @@ LEFT JOIN  usuarios di ON di.id_usuario = su.id_lider
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and se.estatus = 1
         LEFT JOIN opcs_x_cats oprol2 ON oprol2.id_opcion = com.rol_generado AND oprol2.id_catalogo = 83
         WHERE pci1.estatus = 17 $filtro AND lo.idStatusContratacion > 8 
@@ -4887,6 +4894,7 @@ function getDatosGralInternomex(){
         WHEN 607 THEN 1 
         WHEN 7092 THEN 4
         WHEN 9629 THEN 2
+        WHEN 9471 THEN 1
         ELSE u.id_sede END) and sed.estatus = 1
         WHERE p.estatus in(1,2) and opcx.id_catalogo=1 and p.id_usuario=$user and d.estado in($estatus) and p.comentario like '%$comentario%' $complemento
         GROUP BY sed.id_sede,sed.impuesto,u.forma_pago,p.id_bono,p.id_usuario,p.num_pagos,d.n_p,CAST(p.comentario AS NVARCHAR(4000)),d.abono,u.forma_pago,p.pago,sed.impuesto
@@ -5168,7 +5176,8 @@ function getDatosGralInternomex(){
                  WHEN 5 THEN 3
                  WHEN 607 THEN 1 
                  WHEN 7092 THEN 4
-                     WHEN 9629 THEN 2
+                 WHEN 9629 THEN 2
+                 WHEN 9471 THEN 1
                  ELSE u.id_sede END) and sed.estatus = 1
                 INNER JOIN opcs_x_cats pcs ON pcs.id_opcion=pa.tipo AND pcs.id_catalogo=23
                 INNER JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
@@ -5199,7 +5208,7 @@ function getDatosGralInternomex(){
         INNER JOIN residenciales res ON cond.idResidencial = res.idResidencial
         INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = u.id_rol AND oxc.id_catalogo = 1
         INNER JOIN opcs_x_cats oxcest ON oxcest.id_opcion = pa.tipo AND oxcest.id_catalogo = 23
-		LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 ELSE u.id_sede END) AND sed.estatus = 1
+		LEFT JOIN sedes sed ON sed.id_sede = (CASE u.id_usuario WHEN 2 THEN 2 WHEN 3 THEN 2 WHEN 1980 THEN 2 WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 WHEN 7092 THEN 4 WHEN 9629 THEN 2 WHEN 9471 THEN 1 ELSE u.id_sede END) AND sed.estatus = 1
         WHERE MONTH(rpp.fecha_creacion) = $mes AND YEAR(rpp.fecha_creacion) = $anio
         GROUP BY rpp.id_pago_i, pa.id_prestamo, u.nombre, u.apellido_paterno, u.apellido_materno, lo.nombreLote, oxc.nombre, pa.id_usuario, pa.monto, pa.pago_individual, pa.comentario, rpp.id_relacion_pp,oxcest.nombre, oxcest.id_opcion, oxcest.color, pci.abonado, rpp.fecha_creacion, res.nombreResidencial, cond.nombre, lo.nombreLote, sed.nombre, pa.num_pagos
         ORDER BY  pa.id_prestamo ASC, pa.id_usuario ASC");
@@ -5302,30 +5311,24 @@ function getDatosGralInternomex(){
 
     public function findUsuariosByPuestoAsistente($puesto, $id_lider, $id_usuario) {
         $addLider = '';
-        if ($id_usuario == 12449) {// MARCELA CUELLAR MORON
+        if ($id_usuario == 12449) // MARCELA CUELLAR MORON
             $id_lider .= ", 654";
-        }
-        else if ($id_usuario == 10270){ // ANDRES BARRERA VENEGAS
+        else if ($id_usuario == 10270) { // ANDRES BARRERA VENEGAS
             $id_lider .= ", 113";
             $puestoWhereClause = '';
         }
+        else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
+            $id_lider .= ", 495";
         if ($puesto === '3') // CONSULTA GERENTES
-        { 
             $puestoWhereClause = "id_usuario IN ($id_lider)";
-        }
         else if ($puesto === '9') // CONSULTA COORDINADORES
-        {
             $puestoWhereClause = "id_lider IN ($id_lider) AND id_rol = 9";
-        } 
-        else if( $puesto == 7 && $id_usuario == 13511 )
-        {
+        else if($puesto == 7 && $id_usuario == 13511){
             $addLider = "id_lider , ";
             $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE  id_rol IN (7,9)) OR ( id_rol IN (7,9) ) OR id_usuario IN (13634)";
         }   
         else if ($puesto === '7') // CONSULTA ASESORES Y COORDINADORES
-        {   
             $puestoWhereClause = "id_lider IN (SELECT id_usuario FROM usuarios WHERE id_lider IN ($id_lider) AND id_rol IN (7,9)) OR (id_lider IN ($id_lider) AND id_rol IN (7,9)  )  ";
-        }
         return $this->db->query("SELECT $addLider id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno) nombre_completo FROM usuarios WHERE $puestoWhereClause ORDER BY nombre_completo")->result_array();
     }
 
@@ -5770,6 +5773,7 @@ function getDatosGralInternomex(){
                          WHEN 1981 THEN 2 WHEN 1982 THEN 2 WHEN 1988 THEN 2 
                          WHEN 4 THEN 5 WHEN 5 THEN 3 WHEN 607 THEN 1 
                          WHEN 7092 THEN 4 WHEN 9629 THEN 2
+                         WHEN 9471 THEN 1
                          ELSE u.id_sede END) and se.estatus = 1";
 
           $query = $this->db->query($cmd);
@@ -6296,6 +6300,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
                 WHEN 607 THEN 1 
                 WHEN 7092 THEN 4
                 WHEN 9629 THEN 2
+                WHEN 9471 THEN 1
                 ELSE u.id_sede END) AND sed.estatus = 1
         INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) nuevas FROM pago_comision_ind WHERE estatus=1 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciN ON pciN.id_usuario=u.id_usuario
         INNER JOIN ( SELECT id_usuario,SUM(abono_neodata) resguardo FROM pago_comision_ind WHERE estatus=3 AND id_comision IN(SELECT id_comision FROM comisiones) GROUP BY id_usuario) pciR ON pciR.id_usuario=u.id_usuario
@@ -6334,7 +6339,7 @@ function insert_penalizacion_individual($id_comision, $id_usuario, $rol, $abono_
         LEFT JOIN motivosRelacionPrestamos mrp ON mrp.id_opcion =  opc.id_opcion 
         LEFT JOIN opcs_x_cats emp ON emp.nombre=re.empresa AND emp.id_catalogo=61 
         LEFT JOIN sedes se ON se.id_sede = 
-		(CASE WHEN u.id_usuario IN(2,3,1980,1981,1982,1988,4,5,9629,13546,13547,13548,1981,1982,26,27) THEN 2 WHEN u.id_usuario = 4 THEN 5 WHEN u.id_usuario = 5 THEN 3 WHEN u.id_usuario = 607 THEN 1 WHEN u.id_usuario = 7092 THEN 4 ELSE u.id_sede END) AND se.estatus = 1
+		(CASE WHEN u.id_usuario IN(2, 3, 1980, 1981, 1982, 1988, 4, 5, 9629, 13546, 13547, 13548, 1981, 1982, 26, 27) THEN 2 WHEN u.id_usuario = 4 THEN 5 WHEN u.id_usuario = 5 THEN 3 WHEN u.id_usuario IN (607, 9471) THEN 1 WHEN u.id_usuario = 7092 THEN 4 ELSE u.id_sede END) AND se.estatus = 1
         $queryFecha $queryEmpresa $querySede $queryPuesto $queryUsuario
         ORDER BY pa.id_prestamo DESC")->result_array();
     }

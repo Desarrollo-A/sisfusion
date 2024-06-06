@@ -1,5 +1,6 @@
 let titulosTabla = [];
 let getInfoData = new Array(7);
+
 $('#tablaReporteVentas thead tr:eq(0) th').each(function (i) {
     const title = $(this).text();
     titulosTabla.push(title);
@@ -22,7 +23,7 @@ $('#tablaReporteVentas').DataTable({
         titleAttr: 'Reporte de ventas',
         title: "Reporte de ventas",
         exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ,16, 17],
             format: {
                 header: function (d, columnIdx) {
                     return ' ' + titulosTabla[columnIdx] + ' ';
@@ -56,11 +57,18 @@ $('#tablaReporteVentas').DataTable({
         { data: "nombreResidencial" },
         { data: "nombreCondominio" },
         { data: "nombreLote" },
+        { data: "referenciaDestino" },
         { data: "idLote" },
+        { data: "sup" },
         { data: "nombrePvOrigen" },
+        { data: "referenciaOrigen" },
         { data: "totalNeto2Sep" },
         { data: "supLoteOrigen" },
-        { data: "precioM2FinalOrigen" },
+        {
+            data: function (d) {
+                    return `$${formatMoney(d.precioM2FinalOrigen)}`;
+            }
+        },
         { data: "nombreCliente" },
         { data: "nombreAsesor" },
         { data: "nombreGerente" },
@@ -86,12 +94,13 @@ $('#tablaReporteVentas').DataTable({
                 return `${d.ultiModificacion}`;
             }
         },
+        // { data: "nombreSedeRecepcion" },
         {
             data: function (d) {
-                if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + `</div>`;
+                if(d.tipoV == 1) return `<div class="d-flex justify-center">` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + construiBotonRegreso(d, d.fechaVenc, 'getInfoRe') + construirBotonCambio(d, 'getInfoRe2') +`</div>`;
                 if(d.tipoV == 2) return `<center>` + `<button class="btn-data btn-blueMaderas ver_historial" value="${d.idLote}" data-nomLote="${d.nombreLote}" data-toggle="tooltip" data-placement="left" title="VER MÁS INFORMACIÓN"><i class="fas fa-history"></i></button>` + `</center>`;
             }
-        }
+        },
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteVentas`,
@@ -104,13 +113,6 @@ $('#tablaReporteVentas').DataTable({
             trigger: "hover"
         });
     },
-});
-
-$(document).on("click", ".ver_historial", function () {
-    let idLote = $(this).val();
-    // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
-    consultarHistoriaContratacion(idLote);
-    $("#seeInformationModal").modal();
 });
 
 let titulostablaHistorialContratacion = [];
@@ -199,6 +201,26 @@ $(document).on("click", ".getInfoRe", function (e) {
     $('#modalRegreso').modal('show');
 });
 
+$(document).on("click", ".getInfoRe2", function (e) {
+    e.preventDefault();
+    getInfoData[0] = $(this).attr("data-idCliente");
+    getInfoData[1] = $(this).attr("data-nombreResidencial");
+    getInfoData[2] = $(this).attr("data-nombreCondominio");
+    // getInfoData[3] = $(this).attr("data-idCondominio");
+    getInfoData[4] = $(this).attr("data-nombreLote");
+    getInfoData[5] = $(this).attr("data-idLote");
+    // getInfoData[6] = $(this).attr("data-fechavenc");
+    // getInfoData[7] = $(this).attr("data-idMov");
+    getInfoData[8] = $(this).attr("data-EstatusRegreso");
+
+    titulo_modal = 'Cambio de plan de comisión del lote - ';
+    
+    $(".lote_2").html(getInfoData[4]);
+    $(".titulo_modal_2").html(titulo_modal);
+    tipo_comprobante = $(this).attr('data-ticomp');
+    $('#modalCambio').modal('show');
+});
+
 function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
     return `<button href='#' ${atributoButton} 
                 data-tiComp='${data.tipo_comprobanteD}' 
@@ -215,6 +237,23 @@ function construiBotonRegreso(data, fechaVenc, classButton, atributoButton = '',
                 class="btn-data btn-warning ${classButton}" 
                 data-toggle="tooltip" data-placement="top" 
                 title="${titulo}"> <i class="fas fa-rotate-left"></i></button>`;
+}
+
+function construirBotonCambio(data, classButton, atributoButton = '', titulo = 'ENVIAR ESTATUS') {
+    return `<button href='#' ${atributoButton} 
+                data-tiComp='${data.tipo_comprobanteD}' 
+                data-nomLote='${data.nombreLote}' 
+                data-idCliente='${data.id_cliente}'
+                data-nombreResidencial='${data.nombreResidencial}' 
+                data-nombreCondominio='${data.nombreCondominio}' 
+                data-nombreLote='${data.nombreLote}' 
+                data-idCondominio='${data.idCondominio}' 
+                data-idLote='${data.idLote}' 
+                data-idMov='${data.idMovimiento}'
+                data-EstatusRegreso='${data.tipo_estatus_regreso}' 
+                class="btn-data btn-warning ${classButton}" 
+                data-toggle="tooltip" data-placement="top" 
+                title="${titulo}"> <i class="fa fa-money-bill-wave"></i></button>`;
 }
 
 $(document).on('click', '#saveRegreso', function(e) { // accion para el botón de regreso del procesos y preproceso
@@ -273,4 +312,64 @@ $(document).on('click', '#saveRegreso', function(e) { // accion para el botón d
             }
         });
     }
+});
+
+$(document).on('click', '#verPreproceso', function(e){
+    $("#proceso").addClass('hide');
+    $("#preproceso").removeClass('hide');
+
+    $("#tab-proceso").removeClass('active');
+    $("#tab-preProceso").addClass('active');
+    
+});
+
+$(document).on('click', '#verProceso', function(e){
+    $("#preproceso").addClass('hide');
+    $("#proceso").removeClass('hide');
+    
+    $("#tab-proceso").addClass('active');
+    $("#tab-preProceso").removeClass('active'); 
+});
+
+$(document).on("click", ".ver_historial", function () {
+    let idLote = $(this).val();
+    let flagFusion = 0;
+    $("#spiner-loader").removeClass('hide');
+
+    $("#preproceso").addClass('hide');
+    $("#proceso").removeClass('hide');
+
+    $("#tab-proceso").addClass('active');
+    $("#tab-preproceso").removeClass('active');
+    
+    $('.btn-historial').attr('data-idLote', idLote); // se asignan los valores por default
+    $('.btn-historial').attr('data-flagFusion', flagFusion);
+
+    $.ajax({ //  se hará una consulta para poder obtener el idLote origen y si es fusion, reubicación o reestructura
+        url: `${general_base_url}Reestructura/getPreOrigen`,
+        type: 'post',
+        dataType: 'JSON',
+        data: {
+            idLote
+        },
+        success: function(response){
+            if(response.result){
+                $('.btn-historial').attr('data-idLote', response.idLote); // se vuelven a reasignar en caso de que se traigan los datos correctamente
+                $('.btn-historial').attr('data-flagFusion', 0);
+            }
+            else{
+                
+            }
+
+            $("#spiner-loader").addClass('hide');
+        },
+        error: function(response){
+            $("#spiner-loader").addClass('hide');
+        }
+    });
+
+    
+    // LLENA LA TABLA CON EL HISTORIAL DEL PROCESO DE CONTRATACIÓN DEL LOTE X
+    consultarHistoriaContratacion(idLote);
+    $("#seeInformationModal").modal();
 });

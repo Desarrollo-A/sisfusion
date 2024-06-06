@@ -2832,6 +2832,7 @@ class RegistroLote extends CI_Controller
 			$datos[$i]['nombreResidencial'] = $data[$i]->nombreResidencial;
 			$datos[$i]['fechaVenc'] = $data[$i]->fechaVenc;
 			$datos[$i]['nombreCliente'] = $data[$i]->nombreCliente;
+			$datos[$i]['nombreSedeRecepcion'] = $data[$i]->nombreSedeRecepcion;
 			$datos[$i]['comentario'] = $data[$i]->comentario;
 			$datos[$i]['fechaSolicitudValidacion'] = $data[$i]->fechaSolicitudValidacion;
 			$datos[$i]['gerente'] = ($data[$i]->gerente == " ") ? "NO APLICA" : $data[$i]->gerente;
@@ -2863,6 +2864,7 @@ class RegistroLote extends CI_Controller
 			$datos[$i]['status8Flag'] = $data[$i]->status8Flag;
 			$datos[$i]['id_cliente_reubicacion'] = $data[$i]->id_cliente_reubicacion;
 			$datos[$i]['fechaAlta'] = $data[$i]->fechaAlta;
+			$datos[$i]['sedeRecepcion'] = $data[$i]->sedeRecepcion;
 		}
 		if ($datos != null) {
 			$result['data'] = $datos;

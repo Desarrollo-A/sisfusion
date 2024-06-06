@@ -12,11 +12,11 @@
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
-                                <i class="fas fa-user-friends fa-2x"></i>
+                                <i class="fas fa-check-square fa-2x"></i>
                             </div>
                             <div class="card-content">
                                 <div class="toolbar">
-                                    <h3 class="card-title center-align">Validacion de documentación</h3>
+                                    <h3 class="card-title center-align">Validación de documentación</h3>
                                     <div id="table-filters" class="row mb-1"></div>
                                 </div>
                                 
@@ -25,7 +25,13 @@
                                         <tr>
                                             <th>ID LOTE</th>
                                             <th>LOTE</th>
-                                            <th>VIGENCIA</th>
+                                            <th>CONDOMINIO</th>
+                                            <th>PROYECTO</th>
+                                            <th>NOMBRE CLIENTE</th>
+                                            <th>ASESOR</th>
+                                            <th>GERENTE</th>
+                                            <th>TIEMPO</th>
+                                            <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
                                         </tr>
                                     </thead>

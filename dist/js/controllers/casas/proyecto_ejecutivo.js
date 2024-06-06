@@ -1,29 +1,38 @@
-function sendToAdeudos(data) {
-    console.log(data)
-
-    $.ajax({
-        type: 'POST',
-        url: `back_to_adeudos?id=${data.idProcesoCasas}`,
-        success: function (response) {
-            alerts.showNotification("top", "right", `El proceso del lote ${data.nombreLote} ha sido regresado a concentracion de adeudos.`, "success");
-
-            table.reload()
-        },
-        error: function () {
-            alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
-        }
-    })
-}
-
 back_to_adeudos = function(data) {
-    let ask = new AskDialog({
+
+    let form = new Form({
         title: 'Regresar proceso', 
         text: `¿Desea regresar el proceso del lote ${data.nombreLote} a concentracion de adeudos?`,
-        onOk: () => sendToAdeudos(data),
-        //onCancel: sayNo,
+        onSubmit: function(data){
+            //console.log(data)
+            form.loading(true);
+
+            $.ajax({
+                type: 'POST',
+                url: `back_to_adeudos`,
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alerts.showNotification("top", "right", `El proceso del lote ha sido regresado a concentracion de adeudos.`, "success");
+        
+                    table.reload()
+                    form.hide();
+                },
+                error: function () {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+
+                    form.loading(false)
+                }
+            })
+        },
+        fields: [
+            new HiddenField({ id: 'id', value: data.idProcesoCasas }),
+            new TextAreaField({  id: 'comentario', label: 'Comentario', width: '12' }),
+        ],
     })
 
-    ask.show()
+    form.show()
 }
 
 go_to_documentos = function(data) {
@@ -61,6 +70,11 @@ pass_to_proyecto_ejecutivo = function(data) {
 let columns = [
     { data: 'idLote' },
     { data: 'nombreLote' },
+    { data: 'condominio' },
+    { data: 'proyecto' },
+    { data: 'cliente' },
+    { data: 'nombreAsesor' },
+    { data: 'gerente' },
     { data: function(data){
         let vigencia = new Date(data.fechaProceso)
         vigencia.setDate(vigencia.getDate() + 5)
@@ -70,7 +84,7 @@ let columns = [
 
         let days = Math.round(difference / (1000 * 3600 * 24))
 
-        let text = `Quedan ${days} dia(s)`
+        let text = `Quedan ${days} día(s)`
         if(days < 0){
             text = 'El tiempo establecido ha pasado'
         }
@@ -91,8 +105,27 @@ let columns = [
     } },
 ]
 
+let buttons = [
+    {
+        extend: 'excelHtml5',
+        text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+        className: 'btn buttons-excel',
+        titleAttr: 'Descargar archivo excel',
+        title:"Proyecto ejecutivo",
+        exportOptions: {
+            columns: [0, 1, 2],
+            format: {
+                header: function (d, columnIdx) {
+                    return $(d).attr('placeholder');
+                }
+            }
+        }
+    }
+]
+
 let table = new Table({
     id: '#tableDoct',
     url: 'casas/lista_proyecto_ejecutivo_documentos',
+    buttons:buttons,
     columns,
 })

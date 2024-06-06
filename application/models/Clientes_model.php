@@ -496,6 +496,8 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 21, 1545) AND pr.id_sede IN (15)";
             else if ($id_usuario == 12318) // EMMA CECILIA MALDONADO RAMIREZ
                 $where = "pr.id_gerente IN ($id_lider, 1916, 11196) AND pr.id_sede IN (10, 8)";
+            else if ($id_usuario == 10795) // ALMA GALICIA ACEVEDO QUEZADA
+                $where = "pr.id_gerente IN ($id_lider, 12688, 495) AND pr.id_sede IN (12)";
             else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
                 $where = "pr.id_gerente IN ($id_lider, 5604) AND pr.id_sede IN (12)";
             else if ($id_usuario == 12855) // ARIADNA ZORAIDA ALDANA ZAPATA
@@ -508,14 +510,22 @@ function getStatusMktdPreventa(){
                 $where = "pr.id_gerente IN ($id_lider, 694, 4509) AND pr.id_sede IN (14)";
             else if ($id_usuario == 14952) // GUILLERMO HELI IZQUIERDO VIEYRA
                 $where = "pr.id_gerente IN ($id_lider, 13295) AND pr.id_sede IN (14)";
-            else if ($id_usuario == 12292) // REYNALDO HERNÁNDEZ SANCHEZ
-                $where = "pr.id_gerente IN ($id_lider, 3111) AND pr.id_sede IN (4)";
             else if ($id_usuario == 13348) // VIRIDIANA ZAMORA ORTIZ
                 $where = "pr.id_gerente IN ($id_lider, 10063) AND pr.id_sede IN (4)";
             else if ($id_usuario == 12576) // DIANA EVELYN PALENCIA AGUILAR
                 $where = "pr.id_gerente IN ($id_lider, 6942)";
+            else if ($id_usuario == 12292) // REYNALDO HERNANDEZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 6661)";
+            else if ($id_usuario == 15466) // LAURA CAROLINA GUTIERREZ SANCHEZ
+                $where = "pr.id_gerente IN ($id_lider, 80, 664)";
+            else if ($id_usuario == 15110) // IVONNE BRAVO VALDERRAMA
+                $where = "pr.id_gerente IN ($id_lider, 495)";
+            else if ($id_usuario == 15761) // JACQUELINE GARCIA SOTELLO
+                $where = "pr.id_gerente IN ($id_lider, 13016)";
+            else if ($id_usuario == 15545) // PAMELA IVONNE LEE MORENO
+                $where = "pr.id_gerente IN ($id_lider, 13059, 11680)";
             else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
-                $where = "pr.id_gerente IN ($id_lider, 10251, 455)";
+                $where = "pr.id_gerente IN ($id_lider, 10251)";
             else
                 $where = "pr.id_gerente = $id_lider";
         }
@@ -543,7 +553,8 @@ function getStatusMktdPreventa(){
         UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) regional,
         UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) regional_2,
         CONVERT(varchar, pr.fecha_creacion, 20) fecha_creacion, pr.fecha_vencimiento, pr.estatus, pr.estatus_particular, pr.lugar_prospeccion , UPPER(oxc.nombre) AS nombre_lp, pr.id_asesor, pr.telefono, pr.telefono_2,
-        pr.source, pr.editProspecto, CASE WHEN CAST(pr.id_dragon AS VARCHAR(25)) = 0 THEN 'NO DISPONIBLE' ELSE CAST(pr.id_dragon AS VARCHAR(25)) END id_dragon, pr.id_arcus
+        pr.source, pr.editProspecto, CASE WHEN CAST(pr.id_dragon AS VARCHAR(25)) = 0 THEN 'NO DISPONIBLE' ELSE CAST(pr.id_dragon AS VARCHAR(25)) END id_dragon, pr.id_arcus,
+        pr.correo, pr.telefono
         FROM prospectos pr
         INNER JOIN usuarios u0 ON u0.id_usuario = pr.id_asesor
         LEFT JOIN usuarios u1 ON u1.id_usuario = pr.id_coordinador
@@ -4394,6 +4405,8 @@ function getStatusMktdPreventa(){
             $idLider .= ", 4223";
         else if ($id_usuario == 13418) // MARIA FERNANDA RUIZ PEDROZA
             $idLider .= ", 5604";
+        else if ($id_usuario == 15109) // MARIBEL GUADALUPE RIOS DIAZ
+            $idLider .= ", 10251";
         $condicion = ($idRol == 6) ? "AND cl.id_gerente IN ($idLider)" : "AND cl.cancelacion_proceso = 1";
 
         $query = $this->db->query("SELECT lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
