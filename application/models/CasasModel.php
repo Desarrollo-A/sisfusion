@@ -1,7 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class CasasModel extends CI_Model
-{
+class CasasModel extends CI_Model{
     private $idUsuario;
 
     function __construct(){
