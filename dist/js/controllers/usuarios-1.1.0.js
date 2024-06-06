@@ -538,10 +538,12 @@ function getLeadersList(){
             $('#tipoMiembro_column').removeClass('col-sm-6');
             $('#tipoMiembro_column').addClass('col-sm-3');
             $('#simbolico_column').removeClass('hide');
+            $('#fac_humano_column').removeClass('hide');
         }else{
             $('#tipoMiembro_column').removeClass('col-sm-3');
             $('#tipoMiembro_column').addClass('col-sm-6');
             $('#simbolico_column').addClass('hide');
+            $('#fac_humano_column').removeClass('hide');
         }
     }
 
@@ -736,6 +738,7 @@ $(document).on('click', '.edit-user-information', function(e){
     $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
+    $('.fac_humano_column').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
             const ventas = [7,1,2,3,9];
