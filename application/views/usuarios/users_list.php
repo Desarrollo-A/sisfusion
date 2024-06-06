@@ -228,7 +228,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3" id="tipoMiembro_column">
                                             <div class="form-group overflow-hidden">
                                                 <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
                                                 <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
