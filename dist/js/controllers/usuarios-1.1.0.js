@@ -759,6 +759,8 @@ $(document).on('click', '.edit-user-information', function(e){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
                     $('#tipoMiembro_column').addClass('col-sm-3');
+                    $('.simbolico_column').empty();
+                    $('.fac_humano_column').empty();
                     var row_add = $('.simbolico_column');
                     row_add.append(`
                     <div class="col-sm-3 mt-3">
