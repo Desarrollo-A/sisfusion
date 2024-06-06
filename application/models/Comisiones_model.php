@@ -5144,7 +5144,7 @@ function getDatosGralInternomex(){
             JOIN usuarios u ON u.id_usuario = pa.id_usuario
             JOIN relacion_pagos_prestamo rpp ON rpp.id_prestamo = pa.id_prestamo
             JOIN pago_comision_ind pci ON pci.id_pago_i = rpp.id_pago_i 
-            AND pci.estatus IN(18,19,20,21,22,23,24,25,26,28,29,30,89) AND pci.descuento_aplicado = 1
+            AND pci.estatus  NOT IN (0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,27,28,41,42,51,52,88) AND pci.descuento_aplicado = 1
             WHERE pa.id_prestamo = $idPrestamo
             GROUP BY u.nombre, u.apellido_paterno, u.apellido_materno, pa.monto, pa.pago_individual, pa.num_pagos, pa.n_p");
         return $result->row();

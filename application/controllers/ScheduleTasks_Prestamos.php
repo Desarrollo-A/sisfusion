@@ -41,7 +41,9 @@ class ScheduleTasks_Prestamos extends CI_Controller
     }
 
     function descuentos_aut($param = 0){ // SI NO SE RECIBE EL PARAMETRO ES LA 1° EJECUCIÓN(CRONJOB). SI SE RECIBE ES POR QUE ES POR PARDE DE SISTEMAS Ó CONTRALORÍA
-        $sqlQuery = $param != 0 ? " AND pendiente > 0 AND mensualidadOk = 0 " : "";
+        $mes = date("m");
+        $fecha = "2024-".$mes."-05 00:00:00.000";
+        $sqlQuery = $param != 0 ? "  AND ((p.pendiente > 0 AND p.mensualidadOk = 0 ) OR p.fecha_creacion >= '".$fecha."' ) " : "";
 
         ini_set('max_execution_time', 99999999999);
         set_time_limit(99999999999);

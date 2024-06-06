@@ -679,6 +679,17 @@ class Reestructura extends CI_Controller{
             $lineaVenta->id_regional_2 = 0;
             $idLider = $checkApartado02[0]['id_gerente_asignado'];
             $esquemaAnterior = true;
+
+            if($idLider == 0 || $idLider == NULL || is_null($idLider)){
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'color' => 'danger'
+                ));
+                exit; 
+            }
+
         }
 
         $metrosGratuitos = 0;
@@ -792,7 +803,16 @@ class Reestructura extends CI_Controller{
             else{
                 $planComision == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
             }
-
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
+            }
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
                     $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
@@ -979,6 +999,17 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $planComision == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
+            }
+            
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
             }
 
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
