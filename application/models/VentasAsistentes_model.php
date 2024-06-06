@@ -96,6 +96,7 @@ class VentasAsistentes_model extends CI_Model {
     }
    
 	public function registroStatusContratacion8 () {
+
         list($filtroProceso, $where, $validacionMktd) = $this->setFilters($this->session->userdata('id_rol'), $this->session->userdata('id_usuario'), $this->session->userdata('id_sede'), $this->session->userdata('id_lider'), $this->session->userdata('tipo'));
 		return $this->db-> query("SELECT l.idLote, cl.id_cliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
         l.nombreLote, l.idStatusContratacion, l.idMovimiento, CONVERT(VARCHAR, l.modificado, 120) AS modificado, cl.rfc, sd.nombre as nombreSede,
@@ -318,7 +319,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroSede = "AND l.ubicacion IN ('2', '4', '13', '14', '15')";
 
                 $filtroGerente = "";
-                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
+                if (in_array($id_usuario, array(7097, 7096, 10924, 7324, 5620, 13094, 15842))) // GRISELL MALAGON, EDGAR AGUILAR Y DALIA PONCE
                     $filtroSede = "AND l.ubicacion IN ('4', '9', '13', '14')"; // Ciudad de México, San Miguel de Allende, Estado de México Occidente y Estado de México Norte
                 else if (in_array($id_usuario, array(29, 7934))) // FERNANDA MONJARAZ Y SANDRA CAROLINA GUERRERO GARCIA
                     $filtroSede = "AND l.ubicacion IN ('5', '12', '16')"; // León y Guadalajara
@@ -351,19 +352,37 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 12027, 13059, 2599, 609, 11680, 7435)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14946) { // MELANI BECERRIL FLORES
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 694, 4509)";
                     $filtroSede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13295)";
-                    $filtroSede = "";
-				} else if ($id_usuario == 12292) { // REYNALDO HERNÁNDEZ SANCHEZ
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 3111)";
                     $filtroSede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10063)";
                     $filtroSede = "";
 				} else if ($id_usuario == 12576) { // DIANA EVELYN PALENCIA AGUILAR
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6942)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10251, 455)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 12292) { // REYNALDO HERNANDEZ SANCHEZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 6661)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15466) { // LAURA CAROLINA GUTIERREZ SANCHEZ
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 80, 664)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 7435)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15110) { // IVONNE BRAVO VALDERRAMA
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 495)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15761) { // JACQUELINE GARCIA SOTELLO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
+                    $filtroSede = "";
+				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059)";
                     $filtroSede = "";
 				} else if ($id_rol == 6 && $id_sede != 5) { // ES CUALQUIER ASISTENTE, YA SÓLO VERÁ LO DE SU GERENCIA MENOS LEÓN
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider)";

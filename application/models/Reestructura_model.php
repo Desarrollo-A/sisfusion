@@ -47,7 +47,8 @@ class Reestructura_model extends CI_Model
         CASE WHEN u4.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u4.nombre, ' ', u4.apellido_paterno, ' ', u4.apellido_materno)) END nombreRegional,
         CASE WHEN u5.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u5.nombre, ' ', u5.apellido_paterno, ' ', u5.apellido_materno)) END nombreRegional2, lo.sup, 
         (ISNULL(lo.totalNeto2, 0.00) / lo.sup) costom2f, ISNULL(lo.totalNeto2, 0.00) total,
-        oxc1.nombre estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
+        CASE WHEN (lo.estatus_preproceso = 2 AND dxc2.flagProcesoContraloria = 0) THEN 'Elaboración de corrida' WHEN (lo.estatus_preproceso = 2 AND dxc2.flagProcesoContraloria = 1 AND dxc2.flagProcesoJuridico = 0) 
+        THEN 'Elaboración de contrato y rescisión' ELSE oxc1.nombre END estatusPreproceso, lo.estatus_preproceso id_estatus_preproceso, pxl3.totalCorridasNumero, pxl3.totalContratoNumero, pxl3.totalPropuestas,
         pxl1.totalCorridas, pxl2.totalContratos, dxc.totalRescision, dxc2.idLote AS idLoteXcliente,
         CASE WHEN u6.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u6.nombre, ' ', u6.apellido_paterno, ' ', u6.apellido_materno)) END nombreAsesorAsignado,
         HD.expediente as contratoFirmado, HD.idDocumento as idContratoFirmado, co.idCondominio, hdcount.totalContratoFirmado, hdcountlf.totalContratoFirmadoFusion,
@@ -103,7 +104,7 @@ class Reestructura_model extends CI_Model
         LEFT JOIN (SELECT idLote, idCliente, MAX(fecha_modificacion) fechaUltimoEstatus FROM historial_preproceso_lote GROUP BY idLote, idCliente) hpl3 ON hpl3.idLote = lo.idLote AND hpl3.idCliente = cl.id_cliente
         LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatusPreseleccion = 1) pxl4 ON pxl4.idLote = lo.idLote
         LEFT JOIN lotes lo2 ON lo2.idLote = pxl4.id_lotep
-        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.idStatusLote NOT IN (18,19)")->result_array();
+        WHERE lo.liberaBandera = 1 AND lo.status = 1 $validacionAdicional AND lo.solicitudCancelacion NOT IN (2) AND lo.idStatusLote NOT IN (18,19)")->result_array();
     }
 
     public function getDatosClienteTemporal($idLote) {
@@ -202,12 +203,12 @@ class Reestructura_model extends CI_Model
     }
 
     public function getLotesDisponibles($condominio, $superficie, $flagFusion, $idProyecto){
-        $validacionSL = '';
+        /*$validacionSL = '';
         if($idProyecto == 21 || $idProyecto == 14 || $idProyecto == 22 || $idProyecto == 25){
             $validacionSL = '21'; //validación statusLote
-        }else{
-            $validacionSL = '1, 15';
-        }
+        }else{*/
+            $validacionSL = '1, 15, 21';
+        /*}*/
         $query = $this->db->query("SELECT CASE 
 		WHEN (lo.sup = $superficie) THEN op1.nombre
 		WHEN (lo.sup - $superficie) <= lo.sup * 0.05 THEN op2.nombre
@@ -431,7 +432,8 @@ class Reestructura_model extends CI_Model
                     precio = ".$row[0]['precio'].", total = ((".$row[0]['sup'].") * ".$row[0]['precio']."),
                     enganche = (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1), 
                     saldo = (((".$row[0]['sup'].") * ".$row[0]['precio'].") - (((".$row[0]['sup'].") * ".$row[0]['precio'].") * 0.1)),
-                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0
+                    asig_jur = 0, tipo_estatus_regreso = $tipo_estatus_regreso, solicitudCancelacion = 0, 
+                    id_usuario_asignado = 0, id_gerente_asignado = 0, id_subdirector_asignado = 0, estatus_preproceso = 0
                     WHERE idLote IN (".$datos['idLote'].") and status = 1");
                     
                     if(!in_array($datos["tipo"],array(7, 8, 9))) {
@@ -564,7 +566,9 @@ class Reestructura_model extends CI_Model
                 re.nombreResidencial, 
                 co.nombre nombreCondominio, 
                 lo.nombreLote, 
-                lo.idLote, 
+                lo.idLote,
+                lo.estatus_preproceso,
+                lo.idCliente,
                 lo.sup superficie, 
                 FORMAT(lo.precio, 'C') precio, 
                 CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
@@ -578,7 +582,7 @@ class Reestructura_model extends CI_Model
                 LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status IN (1) AND cl.proceso IN (0, 1) 
             WHERE 
                 lo.status = 1 
-                AND idStatusLote IN (2, 3)
+                AND idStatusLote IN (2, 3, 17)
                 AND lo.solicitudCancelacion != 2"
         )->result();
     }
@@ -603,10 +607,14 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_usuario = $this->session->userdata('id_usuario');
         $filtroSede = '';
-        $id_sede = $id_usuario == 2148 ? '3' : ($id_usuario == 13549 ? '2, 5, 1' : $this->session->userdata('id_sede'));
+        if (in_array($id_usuario, [2148, 13995]))
+            $id_sede  = '3';
+        else if ($id_usuario == 13549)
+            $id_sede = '2, 5, 1';
+        else 
+            $id_sede = $this->session->userdata('id_sede');
         if( ($this->session->userdata('id_rol') != 2 && $this->session->userdata('id_rol') != 5) ||  $this->session->userdata('id_usuario') == 13549 || $this->session->userdata('id_usuario') == 13589 )
             $filtroSede = "AND sede_residencial IN ($id_sede)";
-
         return $this->db->query("SELECT lf.idLotePvOrigen, lf.idFusion, cl.proceso, lr.idProyecto, lo.idLote, lo.nombreLote, lo.idCliente, UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) AS cliente, 
         CONVERT(VARCHAR, cl.fechaApartado, 20) as fechaApartado, co.nombre AS nombreCondominio, re.nombreResidencial,
         CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
@@ -748,6 +756,12 @@ class Reestructura_model extends CI_Model
         return $this->db->query("UPDATE propuestas_x_lote SET estatus = 1, modificado_por = $id_usuario where idLote = $idLote and id_lotep = $idLoteSelected");
     }
 
+    public function setNoSeleccionPropuesta($idLote, $idLoteSelected){
+        $id_usuario = $this->session->userdata('id_usuario');
+
+        return $this->db->query("UPDATE propuestas_x_lote SET estatus = 2, modificado_por = $id_usuario where idLote = $idLote and id_lotep != $idLoteSelected");
+    }
+
     public function getNotSelectedLotes($idLote){
         $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso 
 		FROM propuestas_x_lote pxl
@@ -831,148 +845,312 @@ class Reestructura_model extends CI_Model
     }
 
     public function getReporteVentas() {
+        ini_set('memory_limit', -1);
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
         $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
 
         return $this->db->query(
             "WITH UltimoValor AS (
-                SELECT
-                    anterior,
-                    aud.fecha_creacion, 
-                    id_parametro,
-                    ROW_NUMBER() OVER (PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
-                    FROM auditoria aud
-                    WHERE col_afect = 'totalNeto2'
-            )
-                        SELECT
-                            oxc0.nombre tipoProceso,
-                            UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
-                            co.nombre nombreCondominio,
-                            lo.nombreLote,
-                            lo.sup,
-                            lo.idLote,
-                            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-                            CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
-                            CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
-                            CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-                            cl.fechaApartado,
-                            sl.nombre estatusLote,
-                            sc.nombreStatus estatusContratacion,
-                            mo.descripcion detalleUltimoEstatus,
-                            CASE 
-                                WHEN oxc0.id_opcion IN(2, 3, 4) THEN CAST(ISNULL(lo2.nombreLote, lo.nombreLote) AS VARCHAR(20))
-                            END AS nombrePvOrigen,
-                            CASE 
-                                WHEN oxc0.id_opcion IN(2, 3, 4) THEN CAST(ISNULL(lo2.idLote, lo.idLote) AS VARCHAR(20))
-                            END AS idLotesOrigen,
-                            CAST(lo2.sup AS VARCHAR) supLoteOrigen,
-                            lo2.sup supSumLoteOrigen,
-                            CASE
-                                WHEN lo2.totalNeto2 < 1 THEN CONVERT(VARCHAR, u.anterior, 128) 
-                                WHEN lo2.totalNeto2 IS NULL THEN  CONVERT(VARCHAR, u.anterior, 128) 
-                                ELSE CONVERT(VARCHAR, lo2.totalNeto2, 128)
-                            END totalNeto2Sep,
-                            CASE
-                                WHEN lo2.totalNeto2 < 1 THEN  CONVERT(VARCHAR, u.anterior,128) 
-                                WHEN lo2.totalNeto2 IS NULL THEN  CONVERT(VARCHAR, u.anterior,128) 
-                                ELSE CONVERT(VARCHAR, lo2.totalNeto2, 128) 
-                            END totalNeto2Origen,
-                            CASE
-                                WHEN lo2.totalNeto2 < 1 THEN ( (u.anterior / lo2.sup) / 1 ) 
-                                WHEN lo2.totalNeto2 IS NULL THEN ( (u.anterior / lo2.sup) / 1 ) 
-                                ELSE ( (lo2.totalNeto2 / lo2.sup) / 1 )
-                            END precioM2FinalOrigen,
-                            1 countLotesOrigen,
-                            CASE
-                                WHEN (SELECT TOP 1 hpl2.fecha_modificacion fechaEstatus2 FROM historial_preproceso_lote hpl2 WHERE hpl2.id_preproceso = 1 AND idLote = lo2.idLote ORDER BY hpl2.fecha_modificacion DESC) IS NULL THEN NULL
-                                ELSE CAST((SELECT TOP 1 hpl2.fecha_modificacion fechaEstatus2 FROM historial_preproceso_lote hpl2 WHERE hpl2.id_preproceso = 1 AND idLote = lo2.idLote ORDER BY hpl2.fecha_modificacion DESC) AS DATETIME)
-                            END fechaEstatus2,
-                            ( SELECT TOP 1 modificado FROM historial_lotes WHERE idLote = lo.idLote ORDER BY idHistorialLote DESC ) as ultiModificacion 
-                        FROM( 
-                            SELECT lot. idLote, lot.nombreLote, lot.sup, aud.anterior, lot.idCliente, lot.idCondominio, lot.idStatusLote, lot.idStatusContratacion, lot.idMovimiento, lot.status FROM lotes lot 
-                            LEFT JOIN ( SELECT TOP 1 anterior, aud.fecha_creacion, id_parametro FROM auditoria aud INNER JOIN lotes lot ON lot.idLote = aud.id_parametro WHERE col_afect = 'totalNeto2' AND id_parametro = lot.idLote order by aud.fecha_creacion desc ) aud ON aud.id_parametro = lot.idLote 
-                        ) lo
-                            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
-                            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                            INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-                            INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
-                            INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-                            INNER JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-                            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-                            INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
-                            INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
-                            INNER JOIN propuestas_x_lote pl ON pl.id_lotep = lo.idLote
-                            INNER JOIN lotes lo2 ON lo2.idLote = pl.idLote
-                            JOIN UltimoValor u ON lo2.idLote = u.id_parametro AND u.rn = 1
-                        WHERE lo.status = 1
-                        AND oxc0.id_opcion IN(2, 3, 4)
-                        UNION ALL
-                        SELECT
-                        DISTINCT
-                            oxc0.nombre tipoProceso,
-                            UPPER(CAST(re.descripcion AS varchar(150))) nombreResidencial,
-                            co.nombre nombreCondominio,
-                            lo.nombreLote,
-                            lo.sup,
-                            lo.idLote,
-                            UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente,
-                            CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
-                            CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
-                            CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-                            cl.fechaApartado,
-                            sl.nombre estatusLote,
-                            sc.nombreStatus estatusContratacion,
-                            mo.descripcion detalleUltimoEstatus,
-                            CASE
-                                WHEN oxc0.id_opcion IN(5, 6) THEN CAST(ISNULL(ltf.lotesOrigen, lo.nombreLote ) AS VARCHAR(150))
-                            END AS nombrePvOrigen,
-                            CASE
-                                WHEN oxc0.id_opcion IN(5, 6) THEN CAST(ISNULL(ltf.idLote, lo.idLote ) AS VARCHAR(150))
-                            END AS idLotesOrigen,
-                            ltf.supLoteOrigen supLoteOrigen,
-                            ltf.supSumLoteOrigen,
-                            ltf.totalNeto2Sep totalNeto2Sep,
-                            ltf.totalNeto2 totalNeto2Origen,
-                            ltf.precioM2FinalOrigen,
-                            ltf.countLotesOrigen,
-                            (SELECT TOP 1 hpl2.fecha_modificacion fechaEstatus2 FROM historial_preproceso_lote hpl2 WHERE hpl2.id_preproceso = 1 AND hpl2.idLote = hpl.idLote ORDER BY hpl2.fecha_modificacion DESC) fechaEstatus2,
-                            ( SELECT TOP 1 modificado FROM historial_lotes WHERE idLote = lo.idLote ORDER BY idHistorialLote DESC ) as ultiModificacion                         
-                        FROM 
-                        lotes lo
-                            INNER JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.proceso >= 2 AND cl.status = 1 $validacionExtra
-                            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-                            INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-                            INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
-                            INNER JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor
-                            INNER JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente
-                            INNER JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector
-                            INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote
-                            INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion
-                            INNER JOIN (SELECT *FROM lotesFusion WHERE destino = 1) ltff on ltff.idLote = lo.idLote
-                            INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
-                            LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote
-                            LEFT JOIN (
-                                SELECT 
-                                    ltf.idLotePvOrigen,
-                                    STRING_AGG(ltf.nombreLotes, ', ') lotesOrigen, 
-                                    STRING_AGG(lo2.sup, ', ') supLoteOrigen,
-                                    SUM(lo2.sup) supSumLoteOrigen,
-                                    STRING_AGG(CONVERT(numeric, ltf.totalNeto2), ', ') totalNeto2Sep,
-                                    sum(ltf.totalNeto2) totalNeto2,
-                                    (sum(ltf.totalNeto2) / sum(lo2.sup)) totalNeto2Div, 
-                                    STRING_AGG(lo2.idLote, ', ') idLote,
-                                    COUNT(lo2.idLote) countLotesOrigen,
-                                    CASE 
-                                        WHEN ((sum(ltf.totalNeto2 /lo2.sup)) / COUNT(lo2.idLote)) IS NULL THEN 0 ELSE ((sum(ltf.totalNeto2 /lo2.sup)) / COUNT(lo2.idLote))
-                                    END precioM2FinalOrigen
-                                    FROM lotesFusion ltf
-                                    INNER JOIN lotes lo2 ON lo2.idLote = ltf.idLote WHERE origen = 1 GROUP BY ltf.idLotePvOrigen) ltf ON ltf.idLotePvOrigen = lf.idLotePvOrigen
-                            LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = ltf.idLotePvOrigen
-                        WHERE lo.status = 1
-                        AND oxc0.id_opcion IN(5, 6)
-                        order by lo.idLote"
+                SELECT 
+                  anterior, 
+                  aud.fecha_creacion, 
+                  id_parametro, 
+                  ROW_NUMBER() OVER (
+                    PARTITION BY id_parametro 
+                    ORDER BY 
+                      fecha_creacion DESC
+                  ) AS rn 
+                FROM 
+                  auditoria aud 
+                WHERE 
+                  col_afect = 'totalNeto2'
+              ) 
+              
+              SELECT 
+                tipoV = 1, 
+                cl.id_cliente, 
+                lo.tipo_estatus_regreso, 
+                oxc0.nombre tipoProceso, 
+                UPPER(
+                  CAST(
+                    re.descripcion AS varchar(150)
+                  )
+                ) nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.sup, 
+                lo.idLote, 
+                UPPER(
+                  CONCAT(
+                    cl.nombre, ' ', cl.apellido_paterno, 
+                    ' ', cl.apellido_materno
+                  )
+                ) nombreCliente, 
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u0.nombre, ' ', u0.apellido_paterno, 
+                    ' ', u0.apellido_materno
+                  )
+                ) END nombreAsesor, 
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u2.nombre, ' ', u2.apellido_paterno, 
+                    ' ', u2.apellido_materno
+                  )
+                ) END nombreGerente, 
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u3.nombre, ' ', u3.apellido_paterno, 
+                    ' ', u3.apellido_materno
+                  )
+                ) END nombreSubdirector, 
+                cl.fechaApartado, 
+                sl.nombre estatusLote, 
+                sc.nombreStatus estatusContratacion, 
+                mo.descripcion detalleUltimoEstatus, 
+                CASE WHEN oxc0.id_opcion IN(2, 3, 4) THEN CAST(
+                  ISNULL(lo2.nombreLote, lo.nombreLote) AS VARCHAR(20)
+                ) END AS nombrePvOrigen, 
+                CASE WHEN oxc0.id_opcion IN(2, 3, 4) THEN CAST(
+                  ISNULL(lo2.idLote, lo.idLote) AS VARCHAR(20)
+                ) END AS idLotesOrigen, 
+                CAST(lo2.sup AS VARCHAR) supLoteOrigen, 
+                lo2.sup supSumLoteOrigen, 
+                CASE WHEN lo2.totalNeto2 < 1 THEN CONVERT(VARCHAR, u.anterior, 128) WHEN lo2.totalNeto2 IS NULL THEN CONVERT(VARCHAR, u.anterior, 128) ELSE CONVERT(VARCHAR, lo2.totalNeto2, 128) END totalNeto2Sep, 
+                CASE WHEN lo2.totalNeto2 < 1 THEN CONVERT(VARCHAR, u.anterior, 128) WHEN lo2.totalNeto2 IS NULL THEN CONVERT(VARCHAR, u.anterior, 128) ELSE CONVERT(VARCHAR, lo2.totalNeto2, 128) END totalNeto2Origen, 
+                CASE WHEN lo2.totalNeto2 < 1 THEN (
+                  (u.anterior / lo2.sup) / 1
+                ) WHEN lo2.totalNeto2 IS NULL THEN (
+                  (u.anterior / lo2.sup) / 1
+                ) ELSE (
+                  (lo2.totalNeto2 / lo2.sup) / 1
+                ) END precioM2FinalOrigen, 
+                1 countLotesOrigen, 
+                CASE WHEN (
+                  SELECT 
+                    TOP 1 hpl2.fecha_modificacion fechaEstatus2 
+                  FROM 
+                    historial_preproceso_lote hpl2 
+                  WHERE 
+                    hpl2.id_preproceso = 1 
+                    AND idLote = lo2.idLote 
+                  ORDER BY 
+                    hpl2.fecha_modificacion DESC
+                ) IS NULL THEN NULL ELSE CAST(
+                  (
+                    SELECT 
+                      TOP 1 hpl2.fecha_modificacion fechaEstatus2 
+                    FROM 
+                      historial_preproceso_lote hpl2 
+                    WHERE 
+                      hpl2.id_preproceso = 1 
+                      AND idLote = lo2.idLote 
+                    ORDER BY 
+                      hpl2.fecha_modificacion DESC
+                  ) AS DATETIME
+                ) END fechaEstatus2, 
+                (
+                  SELECT 
+                    TOP 1 modificado 
+                  FROM 
+                    historial_lotes 
+                  WHERE 
+                    idLote = lo.idLote 
+                  ORDER BY 
+                    idHistorialLote DESC
+                ) as ultiModificacion 
+              FROM 
+                (
+                  SELECT 
+                    lot.idLote, 
+                    lot.nombreLote, 
+                    lot.sup, 
+                    aud.anterior, 
+                    lot.idCliente, 
+                    lot.idCondominio, 
+                    lot.idStatusLote, 
+                    lot.idStatusContratacion, 
+                    lot.idMovimiento, 
+                    lot.status, 
+                    lot.tipo_estatus_regreso 
+                  FROM 
+                    lotes lot 
+                    LEFT JOIN (
+                      SELECT 
+                        TOP 1 anterior, 
+                        aud.fecha_creacion, 
+                        id_parametro 
+                      FROM 
+                        auditoria aud 
+                        INNER JOIN lotes lot ON lot.idLote = aud.id_parametro 
+                      WHERE 
+                        col_afect = 'totalNeto2' 
+                        AND id_parametro = lot.idLote 
+                      order by 
+                        aud.fecha_creacion desc
+                    ) aud ON aud.id_parametro = lot.idLote
+                ) lo 
+                INNER JOIN clientes cl ON cl.idLote = lo.idLote $validacionExtra
+                AND cl.idLote = lo.idLote 
+                AND cl.status = 1 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso 
+                AND oxc0.id_catalogo = 97 
+                LEFT JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
+                LEFT JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente 
+                LEFT JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector 
+                INNER JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+                INNER JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion 
+                INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento
+                LEFT JOIN propuestas_x_lote pl ON pl.id_lotep = lo.idLote AND pl.estatus = 1
+                left JOIN lotes lo2 ON lo2.idLote = pl.idLote
+                LEFT JOIN UltimoValor u ON lo2.idLote = u.id_parametro 
+                AND u.rn = 1 
+              WHERE 
+                lo.status = 1 
+                AND oxc0.id_opcion IN(2, 3, 4, 7) 
+              UNION ALL 
+              SELECT 
+                DISTINCT tipoV = 2, 
+                cl.id_cliente, 
+                lo.tipo_estatus_regreso, 
+                oxc0.nombre tipoProceso, 
+                UPPER(
+                  CAST(
+                    re.descripcion AS varchar(150)
+                  )
+                ) nombreResidencial, 
+                co.nombre nombreCondominio, 
+                lo.nombreLote, 
+                lo.sup, 
+                lo.idLote, 
+                UPPER(
+                  CONCAT(
+                    cl.nombre, ' ', cl.apellido_paterno, 
+                    ' ', cl.apellido_materno
+                  )
+                ) nombreCliente, 
+                CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u0.nombre, ' ', u0.apellido_paterno, 
+                    ' ', u0.apellido_materno
+                  )
+                ) END nombreAsesor, 
+                CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u2.nombre, ' ', u2.apellido_paterno, 
+                    ' ', u2.apellido_materno
+                  )
+                ) END nombreGerente, 
+                CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(
+                  CONCAT(
+                    u3.nombre, ' ', u3.apellido_paterno, 
+                    ' ', u3.apellido_materno
+                  )
+                ) END nombreSubdirector, 
+                cl.fechaApartado, 
+                sl.nombre estatusLote, 
+                sc.nombreStatus estatusContratacion, 
+                mo.descripcion detalleUltimoEstatus, 
+                CASE WHEN oxc0.id_opcion IN(5, 6) THEN CAST(
+                  ISNULL(ltf.lotesOrigen, lo.nombreLote) AS VARCHAR(150)
+                ) END AS nombrePvOrigen, 
+                CASE WHEN oxc0.id_opcion IN(5, 6) THEN CAST(
+                  ISNULL(ltf.idLote, lo.idLote) AS VARCHAR(150)
+                ) END AS idLotesOrigen, 
+                ltf.supLoteOrigen supLoteOrigen, 
+                ltf.supSumLoteOrigen, 
+                ltf.totalNeto2Sep totalNeto2Sep, 
+                ltf.totalNeto2 totalNeto2Origen, 
+                ltf.precioM2FinalOrigen, 
+                ltf.countLotesOrigen, 
+                (
+                  SELECT 
+                    TOP 1 hpl2.fecha_modificacion fechaEstatus2 
+                  FROM 
+                    historial_preproceso_lote hpl2 
+                  WHERE 
+                    hpl2.id_preproceso = 1 
+                    AND hpl2.idLote = hpl.idLote 
+                  ORDER BY 
+                    hpl2.fecha_modificacion DESC
+                ) fechaEstatus2, 
+                (
+                  SELECT 
+                    TOP 1 modificado 
+                  FROM 
+                    historial_lotes 
+                  WHERE 
+                    idLote = lo.idLote 
+                  ORDER BY 
+                    idHistorialLote DESC
+                ) as ultiModificacion 
+              FROM 
+                lotes lo 
+                INNER JOIN clientes cl ON cl.idLote = lo.idLote $validacionExtra
+                AND cl.idLote = lo.idLote 
+                AND cl.status = 1 
+                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial 
+                INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso 
+                AND oxc0.id_catalogo = 97 
+                left JOIN usuarios u0 ON u0.id_usuario = cl.id_asesor 
+                left JOIN usuarios u2 ON u2.id_usuario = cl.id_gerente 
+                left JOIN usuarios u3 ON u3.id_usuario = cl.id_subdirector 
+                left JOIN statuslote sl ON sl.idStatusLote = lo.idStatusLote 
+                left JOIN statuscontratacion sc ON sc.idStatusContratacion = lo.idStatusContratacion 
+                left JOIN (
+                  SELECT 
+                    * 
+                  FROM 
+                    lotesFusion 
+                  WHERE 
+                    destino = 1
+                ) ltff on ltff.idLote = lo.idLote 
+                INNER JOIN movimientos mo ON mo.idMovimiento = lo.idMovimiento 
+                LEFT JOIN lotesFusion lf ON lf.idLote = lo.idLote 
+                LEFT JOIN (
+                  SELECT 
+                    ltf.idLotePvOrigen, 
+                    STRING_AGG(lo2.nombreLote, ', ') lotesOrigen, 
+                    STRING_AGG(lo2.sup, ', ') supLoteOrigen, 
+                    SUM(lo2.sup) supSumLoteOrigen, 
+                    STRING_AGG(
+                      CONVERT(numeric, ltf.totalNeto2), 
+                      ', '
+                    ) totalNeto2Sep, 
+                    sum(ltf.totalNeto2) totalNeto2, 
+                    (
+                      sum(ltf.totalNeto2) / sum(lo2.sup)
+                    ) totalNeto2Div, 
+                    STRING_AGG(lo2.idLote, ', ') idLote, 
+                    COUNT(lo2.idLote) countLotesOrigen, 
+                    CASE WHEN (
+                      (
+                        sum(ltf.totalNeto2 / lo2.sup)
+                      ) / COUNT(lo2.idLote)
+                    ) IS NULL THEN 0 ELSE (
+                      (
+                        sum(ltf.totalNeto2 / lo2.sup)
+                      ) / COUNT(lo2.idLote)
+                    ) END precioM2FinalOrigen 
+                  FROM 
+                    lotesFusion ltf 
+                    INNER JOIN lotes lo2 ON lo2.idLote = ltf.idLote 
+                  WHERE 
+                    origen = 1 
+                  GROUP BY 
+                    ltf.idLotePvOrigen
+                ) ltf ON ltf.idLotePvOrigen = lf.idLotePvOrigen 
+                LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = ltf.idLotePvOrigen
+              WHERE 
+                lo.status = 1 
+                AND cl.proceso IN(5, 6)
+              order by 
+               lo.nombreLote
+              "
             )->result_array();
     }
 
@@ -992,33 +1170,6 @@ class Reestructura_model extends CI_Model
         ORDER BY UPPER(CONCAT(nombre , ' ', apellido_paterno, ' ', apellido_materno, ' '))")->result_array();
     }
 
-    public function getReporteReubicaciones() {
-        return $this->db->query("SELECT UPPER(CAST(re.descripcion AS varchar(75))) nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote,
-        CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
-        CASE WHEN u0.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)) END nombreAsesor,
-        CASE WHEN u2.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u2.nombre, ' ', u2.apellido_paterno, ' ', u2.apellido_materno)) END nombreGerente,
-        CASE WHEN u3.id_usuario IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(u3.nombre, ' ', u3.apellido_paterno, ' ', u3.apellido_materno)) END nombreSubdirector,
-        oxc.nombre estatusPreproceso, CASE WHEN pxl.idLote IS NULL THEN 'NO SE HA SELECCIONADO NINGUNA PROPUESTA' ELSE 'PROPUESTA FINAL SELECCIONADA' END procesoVenta,
-		UPPER(ISNULL(CAST(re2.descripcion AS varchar(75)), 'SIN ESPECIFICAR')) nombreResidencial2, ISNULL(co2.nombre, 'SIN ESPECIFICAR') nombreCondominio2, 
-        ISNULL(lo2.nombreLote, 'SIN ESPECIFICAR') nombreLote2, 
-        CASE WHEN oxc1.nombre IS NOT NULL THEN oxc1.nombre ELSE CASE WHEN pxl.idLote = pxl.id_lotep THEN 'REESTRUCTURA' ELSE 'REUBICACIÓN' END END tipo_proceso
-        FROM lotes lo
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1
-        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
-        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN usuarios u0 ON u0.id_usuario = lo.id_usuario_asignado
-        LEFT JOIN usuarios u2 ON u2.id_usuario = u0.id_lider
-        LEFT JOIN usuarios u3 ON u3.id_usuario = u2.id_lider
-        INNER JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
-        LEFT JOIN (SELECT idLote, id_lotep FROM propuestas_x_lote WHERE estatus = 1 GROUP BY idLote, id_lotep) pxl ON pxl.idLote = lo.idLote
-		LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
-		LEFT JOIN condominios co2 ON co2.idCondominio = lo2.idCondominio
-        LEFT JOIN residenciales re2 ON re2.idResidencial = co2.idResidencial
-        LEFT JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = cl.proceso AND oxc1.id_catalogo = 97
-        WHERE lo.estatus_preproceso != 0
-        ORDER BY lo.estatus_preproceso")->result_array();
-    }
-
     public function obtenerCopropietariosReubicacion($idLote)
     {
         $query = $this->db->query("SELECT * FROM datos_x_copropietario WHERE idLote = $idLote");
@@ -1031,9 +1182,7 @@ class Reestructura_model extends CI_Model
     }
 
     public function revisarCFDocumentos($idLote, $idCliente){
-        $ids = implode(",", $idLote);
-        $idsC = implode(",", $idCliente);
-        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote in (".$ids.") AND idCliente in (".$idsC.")");
+        $query = $this->db->query("SELECT * FROM historial_documento WHERE tipo_doc=30  AND idLote=".$idLote." AND idCliente=".$idCliente);
 
         return $query->result_array();
     }
@@ -1129,9 +1278,13 @@ class Reestructura_model extends CI_Model
             $tipoOrigenDestino = '';
         }
 
-        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales
+        $query = $this->db->query("SELECT lf.*, l.sup, lf.idCliente, l.nombreLote nombreLoteDO, l.idCondominio, co.originales,
+        hd.expediente, hd.idDocumento, c.nombre AS nombreCondominio, r.nombreResidencial
         FROM lotesFusion lf
         INNER JOIN lotes l ON l.idLote = lf.idLote
+        LEFT JOIN historial_documento hd ON hd.idLote=l.idLote AND hd.tipo_doc=30
+        LEFT JOIN condominios c ON c.idCondominio=l.idCondominio
+        LEFT JOIN residenciales r ON r.idResidencial = c.idResidencial
         LEFT JOIN (SELECT lf2.idLotePvOrigen , COUNT(idLotePvOrigen) as originales FROM lotesFusion lf2  WHERE origen=1 GROUP BY lf2.idLotePvOrigen ) co ON co.idLotePvOrigen = lf.idLotePvOrigen
         WHERE lf.idLotePvOrigen=".$idLote." $tipoOrigenDestino");
         return $query->result_array();
@@ -1150,17 +1303,19 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, dxc.id_dxc, cl.proceso, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, dxc.cantidadTraspaso, dxc.comentario comentarioTraspaso,
         re2.nombreResidencial nombreResidencialDestino, co2.nombre nombreCondominioDestino, lo2.nombreLote nombreLoteDestino, lo2.referencia referenciaDestino, lo2.idLote idLoteDestino,
-        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 1 tipo, pxl.corrida
+        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 1 tipo, pxl.corrida,
+        CONVERT(VARCHAR, hl.modificado, 111) fechaEstatus9
         FROM propuestas_x_lote pxl
         INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
         INNER JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote AND dxc.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
+        INNER JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep AND lo2.idStatusContratacion IN (9, 10, 13, 14, 15)
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lo2.idLote AND cl.status = 1 AND ISNULL(cl.proceso, 0) > 1 
         INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo2.idLote AND hl.idCliente = cl.id_cliente
         WHERE pxl.estatus = 1
         ORDER BY lo.nombreLote")->result_array();
     }
@@ -1178,7 +1333,7 @@ class Reestructura_model extends CI_Model
         return $this->db->query("SELECT tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
         UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) nombreCliente, cl.proceso, ISNULL(oxc0.nombre, 'Normal') tipo_proceso, lf2.cantidadTraspaso, lf2.comentario comentarioTraspaso,
         re2.nombreResidencial nombreResidencialDestino, co2.nombre nombreCondominioDestino, lo2.nombreLote nombreLoteDestino, lo2.referencia referenciaDestino, lo2.idLote idLoteDestino,
-        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 2 tipo, lf2.corrida
+        co2.idCondominio idCondominioDestino, cl.id_cliente idClienteDestino, 2 tipo, lf2.corrida, CONVERT(VARCHAR, hl.modificado, 111) fechaEstatus9
         FROM (
         SELECT lf1.idLotePvOrigen, STRING_AGG (re.nombreResidencial, ', ') nombreResidencialOrigen, STRING_AGG(co.nombre, ', ') nombreCondominioOrigen, STRING_AGG(lo.nombreLote, ', ') nombreLoteOrigen, 
         STRING_AGG(lo.referencia, ', ') referenciaOrigen, STRING_AGG(lo.idLote, ', ') idLoteOrigen
@@ -1189,63 +1344,172 @@ class Reestructura_model extends CI_Model
         WHERE lf1.estatusTraspaso = 0 AND lf1.origen = 1 AND lf1.destino = 0
         GROUP BY lf1.idLotePvOrigen) tb
         INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen AND lf2.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1
+        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1 AND lo2.idStatusContratacion IN (9, 10, 13, 14, 15)
         INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
         INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
         INNER JOIN clientes cl ON cl.id_cliente = lo2.idCliente AND cl.idLote = lf2.idLote AND cl.status = 1 AND cl.proceso IN (5, 6)
-        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97")->result_array();
+        INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+        INNER JOIN (SELECT idLote, idCliente, MAX(modificado) modificado FROM historial_lotes WHERE idStatusContratacion = 9 AND idMovimiento = 39 AND status = 1 GROUP BY idLote, idCliente) hl ON hl.idLote = lo2.idLote AND hl.idCliente = cl.id_cliente")->result_array();
     }
 
     public function getReporteEstatus() {
+        ini_set('memory_limit', -1);
+        $id_usuario = $this->session->userdata('id_usuario');
+        $id_rol = $this->session->userdata('id_rol');
+        $condicion = "";
 
-        return $this->db->query("SELECT CASE WHEN CAST(pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso,
-        re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, lo.referencia referenciaOrigen, lo.idLote idLoteOrigen,
-        STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, STRING_AGG(lo2.referencia, ', ') referenciaDestino, 
-        STRING_AGG(lo2.idLote, ', ') idLoteDestino, CASE WHEN (lo2.validacionEnganche = 'NULL' OR lo2.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        hpl.fecha_modificacion fechaUltimoMovimiento, hpl.comentario
-        FROM propuestas_x_lote pxl
-        INNER JOIN lotes lo ON lo.idLote = pxl.idLote AND lo.liberaBandera = 1 AND lo.solicitudCancelacion != 2
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        LEFT JOIN lotes lo2 ON lo2.idLote = pxl.id_lotep
-        LEFT JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        LEFT JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo.estatus_preproceso AND oxc0.id_catalogo = 106
-		LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = lo.idLote AND hpl.idHistoPreproceso = (
-        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        GROUP BY re.nombreResidencial, co.nombre, lo.nombreLote, lo.referencia, lo.idLote, pxl.idLote, lo2.validacionEnganche, oxc0.nombre, hpl.fecha_modificacion,hpl.comentario
-        UNION ALL
-        SELECT 'Reubicación' tipo_proceso, tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen,
-        STRING_AGG(re2.nombreResidencial, ', ') nombreResidencialDestino, STRING_AGG(co2.nombre, ', ') nombreCondominioDestino, STRING_AGG(lo2.nombreLote, ', ') nombreLoteDestino, 
-        STRING_AGG(lo2.referencia, ', ') referenciaDestino, STRING_AGG(lo2.idLote, ', ') idLoteDestino, tb.validacionAdministracion, 2 tipo, STRING_AGG(oxc0.nombre, ', ') estatusProceso,
-        hpl.fecha_modificacion fechaUltimoMovimiento, hpl.comentario
-        FROM (
-        SELECT lf1.idLotePvOrigen, re.nombreResidencial nombreResidencialOrigen, co.nombre nombreCondominioOrigen, lo.nombreLote nombreLoteOrigen, 
-        lo.referencia referenciaOrigen, lo.idLote idLoteOrigen, CASE WHEN (lo.validacionEnganche = 'NULL' OR lo.validacionEnganche IS NULL) THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion
-        FROM lotesFusion lf1
-        INNER JOIN lotes lo ON lo.idLote = lf1.idLote AND lo.liberaBandera = 1 AND lo.status = 1 AND lo.solicitudCancelacion != 2
-        INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
-        INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
-        WHERE lf1.origen = 1 AND lf1.destino = 0) tb
-        INNER JOIN lotesFusion lf2 ON lf2.idLotePvOrigen = tb.idLotePvOrigen AND lf2.estatusTraspaso = 0
-        INNER JOIN lotes lo2 ON lo2.idLote = lf2.idLote AND lf2.origen = 0 AND lf2.destino = 1
-        INNER JOIN condominios co2 ON lo2.idCondominio = co2.idCondominio
-        INNER JOIN residenciales re2 ON co2.idResidencial = re2.idResidencial
-		INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = lo2.estatus_preproceso AND oxc0.id_catalogo = 106
-        LEFT JOIN historial_preproceso_lote hpl ON hpl.idLote = tb.idLotePvOrigen AND hpl.idHistoPreproceso = (
-        SELECT MAX(hpl2.idHistoPreproceso) FROM historial_preproceso_lote hpl2 WHERE hpl2.idLote = hpl.idLote)
-        GROUP BY tb.nombreResidencialOrigen, tb.nombreCondominioOrigen, tb.nombreLoteOrigen, tb.referenciaOrigen, tb.idLoteOrigen, tb.validacionAdministracion, hpl.fecha_modificacion, hpl.comentario
-        ORDER BY nombreLoteDestino")->result_array();
+        if ( $id_rol == 2 ) { // Subdirector
+            if ( $id_usuario == 13546 ) { // ALEJANDRO GONZÁLEZ DÁVALOS
+                $condicion = "AND (us3.id_usuario = 13546 OR us4.id_usuario = 13546)";
+            }
+            if ( $id_usuario == 13549 ) { // FERNANDO ALVAREZ FLORES
+                $condicion = "AND (us2.id_usuario = 13549 OR us3.id_usuario = 13549)";
+            }
+            if ( $id_usuario == 13589 ) { // ANA KAREN ESPINOSA PAREDÓN
+                $condicion = "AND (us2.id_usuario = 13589 OR us3.id_usuario = 13589)";
+            }
+        }
+        if ( $id_rol == 5 ) { // Subdirector
+            if ( $id_usuario == 13547 || $id_usuario == 13548 ) { // MAURA EGLEE RIERA JAMBOOS, GABRIELA GUADALUPE VARGAS
+                $condicion = "AND (us3.id_usuario = 13546 OR us4.id_usuario = 13546)";
+            }
+            if ( $id_usuario == 13550 ) { // SANDRA KARINA CABRERA RASGADO
+                $condicion = "AND (us2.id_usuario = 13549 OR us3.id_usuario = 13549)";
+            }
+            if ( $id_usuario == 13590 ) { // ROSARIO DEL PILAR BALAM CÓRDOVA
+                $condicion = "AND (us2.id_usuario = 13589 OR us3.id_usuario = 13589)";
+            }
+        }
+        ini_set('memory_limit', -1);
+        return $this->db->query(
+            "WITH UltimoValor AS (SELECT idLote, fecha_modificacion modificado, estatus, ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY fecha_modificacion DESC) AS uf FROM historial_preproceso_lote AS hl), 
+            UltimoEstatus2 AS (SELECT idLote, hl.modificado_por, hl.fecha_modificacion modificado, ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY hl.fecha_modificacion DESC) AS uf FROM historial_preproceso_lote hl INNER JOIN usuarios us on us.id_usuario = hl.modificado_por WHERE id_preproceso = 2 AND us.id_rol = 15),
+            usuario AS (SELECT id_usuario, CONCAT(nombre, ' ', apellido_paterno, ' ', apellido_materno ) nombre FROM usuarios )    
+                SELECT
+                    CASE WHEN CAST( pxl.idLote AS varchar(150)) = STRING_AGG(pxl.id_lotep, ', ') THEN 'Reestructura' ELSE 'Reubicación' END tipo_proceso, 
+                    reOrigen.nombreResidencial AS nombreResidencialOrigen, coOrigen.nombre AS nombreCondominioOrigen, lo.nombreLote AS nombreLoteOrigen,
+                    CAST(lo.referencia AS varchar) AS referenciaOrigen, CAST(lo.idLote AS varchar) idLoteOrigen,
+                    CASE WHEN STRING_AGG(reDestino.nombreResidencial, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(reDestino.nombreResidencial, ', ') END AS nombreResidencialDestino,
+                    CASE WHEN STRING_AGG(coDestino.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(coDestino.nombre, ', ') END AS nombreCondominioDestino,
+                    CASE WHEN STRING_AGG(loDestino.nombreLote, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(loDestino.nombreLote, ', ') END AS nombreLoteDestino,
+                    CASE WHEN STRING_AGG(loDestino.referencia, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(loDestino.referencia, ', ') END AS referenciaDestino,
+                    CASE WHEN STRING_AGG(pxl.id_lotep, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(pxl.id_lotep, ', ') END AS idLoteDestino,
+                    CASE WHEN 1 = 1 THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 1 tipo,
+                    CASE WHEN (lo.estatus_preproceso = 2 AND dxc.flagProcesoContraloria = 0) THEN 'Elaboración de corrida'
+                         WHEN (lo.estatus_preproceso = 2 AND dxc.flagProcesoContraloria = 1 AND dxc.flagProcesoJuridico = 0) THEN 'Elaboración de contrato y rescisión'
+                         ELSE oxc.nombre 
+                    END estatusProceso,
+                    CASE WHEN u.modificado IS NULL THEN 'SIN FECHA' ELSE FORMAT(u.modificado, 'd/MMMM/yyyy HH:mm ', 'es-MX') END fechaUltimoMovimiento, 
+                    CASE WHEN u2.modificado IS NULL THEN 'SIN FECHA' ELSE FORMAT(u2.modificado, 'd/MMMM/yyyy HH:mm ', 'es-MX') END fechaEstatus2,
+                    usG.nombre AS gerente, usA.nombre AS asesor, usS.nombre AS subdirector,
+                    CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno ) as nombreCliente,
+                    CAST(lo.sup AS varchar) superficieOrigen,
+                    COALESCE(STRING_AGG(loDestino.sup, ', '), 'SIN ESPECIFICAR') AS superficieDestino,
+                    CAST((lo.totalNeto2 / lo.sup) as varchar) as preciom2, CAST(((lo.totalNeto2 / lo.sup)*lo.sup) as varchar) as totalNeto,
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE opc2.nombre END AS tipo
+                FROM clientes cl
+                    INNER JOIN lotes lo ON lo.idCliente = cl.id_cliente 
+                    LEFT JOIN propuestas_x_lote pxl ON pxl.idLote = lo.idLote
+                    LEFT JOIN lotes loDestino ON loDestino.idLote = pxl.id_lotep
+                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote
+                    INNER JOIN condominios coOrigen ON coOrigen.idCondominio = lo.idCondominio
+                    INNER JOIN residenciales reOrigen ON reOrigen.idResidencial = coOrigen.idResidencial
+                    LEFT JOIN condominios coDestino ON coDestino.idCondominio = loDestino.idCondominio
+                    LEFT JOIN residenciales reDestino ON reDestino.idResidencial = coDestino.idResidencial
+                    LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = lo.estatus_preproceso AND oxc.id_catalogo = 106
+                    LEFT JOIN UltimoValor u ON u.idLote = lo.idLote AND u.uf = 1
+                    LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = lo.idLote AND u2.uf = 1
+                    LEFT JOIN usuario usA on usA.id_usuario = lo.id_usuario_asignado
+                    LEFT JOIN usuario usG on usG.id_usuario = lo.id_gerente_asignado
+                    LEFT JOIN usuario usS ON usS.id_usuario = lo.id_subdirector_asignado
+                    INNER JOIN usuarios AS us1 ON us1.id_usuario = lo.id_usuario_asignado
+                    INNER JOIN usuarios AS us2 ON us1.id_lider = us2.id_usuario
+                    INNER JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario
+                    LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario
+                    LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
+                WHERE lo.estatus_preproceso != 7 AND (lo.id_usuario_asignado != 0 OR lo.id_usuario_asignado IS NOT NULL) AND lo.liberaBandera = 1 AND lo.idLote NOT IN( SELECT idLote from lotesFusion ) $condicion
+                GROUP BY pxl.idLote, reOrigen.nombreResidencial, coOrigen.nombre, lo.nombreLote, lo.referencia, oxc.nombre, u.modificado, u2.modificado, usG.nombre,
+                    usA.nombre, lo.idLote, lo.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico ,cl.nombre, cl.apellido_paterno, cl.apellido_materno,
+                    lo.sup, usS.nombre, lo.totalNeto2, opc2.nombre
+            UNION ALL
+                SELECT 'Fusión' tipo_proceso, STRING_AGG(reOrigen.nombreResidencial, ', ') nombreResidencialOrigen, STRING_AGG(coOrigen.nombre, ', ') nombreCondominioOrigen,
+                    STRING_AGG(loOrigen.nombreLote, ', ') nombreLoteOrigen, STRING_AGG(loOrigen.referencia, ', ') referenciaOrigen, STRING_AGG(loOrigen.idLote, ', ') idLoteOrigen,
+                    CASE WHEN STRING_AGG(reDestino.nombreResidencial, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(reDestino.nombreResidencial, ', ') END AS nombreResidencialDestino,
+                    CASE WHEN STRING_AGG(coDestino.nombre, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(coDestino.nombre, ', ') END AS nombreCondominioDestino,
+                    CASE WHEN STRING_AGG(loDestino.nombreLote, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(loDestino.nombreLote, ', ') END AS nombreLoteDestino,
+                    CASE WHEN STRING_AGG(loDestino.referencia, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(loDestino.referencia, ', ') END AS referenciaDestino,
+                    CASE WHEN STRING_AGG(loDestino.idLote, ', ') IS NULL THEN 'SIN ESPECIFICAR' ELSE STRING_AGG(loDestino.idLote, ', ') END AS idLoteDestino,
+                    CASE WHEN 1=1 THEN 'PENDIENTE' ELSE 'CONFIRMADO' END validacionAdministracion, 2 tipo,
+                    CASE 
+                        WHEN (loPv.estatus_preproceso = 2 AND dxc.flagProcesoContraloria = 0) THEN 'Elaboración de corrida'
+                        WHEN (loPV.estatus_preproceso = 2 AND dxc.flagProcesoContraloria = 1 AND dxc.flagProcesoJuridico = 0) THEN 'Elaboración de contrato y rescisión'
+                        ELSE oxc.nombre END estatusProceso,
+                    CASE WHEN max(u.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaUltimoMovimiento, 
+                    CASE WHEN max(u2.modificado) IS NULL THEN 'SIN FECHA' ELSE MAX(FORMAT(u2.modificado, ' d/MMMM/yyyy HH:mm ', 'es-MX')) END fechaEstatus2,
+                    max(usG.nombre) AS gerente,
+                    MAX(usA.nombre) AS asesor,
+                    MAX(usS.nombre) AS subdirector,
+                    MAX( (CONCAT(cl1.nombre, ' ', cl1.apellido_paterno, ' ', cl1.apellido_materno ))) as nombreCliente,
+                    STRING_AGG( loOrigen.sup,', ') as superficieOrigen,
+                    COALESCE(STRING_AGG(loDestino.sup, ', '), 'SIN ESPECIFICAR') AS superficieDestino,
+                    STRING_AGG((loOrigen.totalNeto2 / loOrigen.sup), ', ') as preciom2,
+                    STRING_AGG(((loOrigen.totalNeto2 / loOrigen.sup)*loOrigen.sup), ', ') as totalNeto,
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 4 ELSE MAX(opc2.id_opcion) END AS tipoValor,
+                    CASE WHEN MAX(opc2.id_opcion) IS NULL THEN 'SIN ESPECIFICAR' ELSE opc2.nombre END AS tipo
+                FROM lotesFusion AS lf
+                    LEFT JOIN lotes loOrigen ON loOrigen.idLote = lf.idLote and lf.origen = 1
+                    LEFT JOIN lotes loDestino ON loDestino.idLote = lf.idLote and lf.destino = 1
+                    LEFT JOIN lotes loPv ON loPv.idLote = lf.idLotePvOrigen
+                    LEFT JOIN condominios coOrigen ON coOrigen.idCondominio = loOrigen.idCondominio
+                    LEFT JOIN residenciales reOrigen ON reOrigen.idResidencial = coOrigen.idResidencial
+                    LEFT JOIN condominios coDestino ON coDestino.idCondominio = loDestino.idCondominio
+                    LEFT JOIN residenciales reDestino ON reDestino.idResidencial = coDestino.idResidencial
+                    LEFT JOIN opcs_x_cats oxc ON oxc.id_opcion = loPv.estatus_preproceso AND oxc.id_catalogo = 106
+                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = loPv.idLote
+                    LEFT JOIN UltimoValor u ON u.idLote = loPv.idLote AND u.uf = 1
+                    LEFT JOIN UltimoEstatus2 u2 ON u2.idLote = loPv.idLote AND u2.uf = 1 
+                    INNER JOIN clientes cl1 on cl1.id_cliente = loOrigen.idCliente
+                    LEFT JOIN usuario usA on usA.id_usuario = loOrigen.id_usuario_asignado
+                    LEFT JOIN usuario usG on usG.id_usuario = loOrigen.id_gerente_asignado
+                    LEFT JOIN usuario usS on usS.id_usuario = loOrigen.id_subdirector_asignado
+                    INNER JOIN usuarios AS us1 ON us1.id_usuario = loOrigen.id_usuario_asignado -- ASESOR
+                    INNER JOIN usuarios AS us2 ON us1.id_lider = us2.id_usuario -- GERENTE
+                    INNER JOIN usuarios AS us3 ON us2.id_lider = us3.id_usuario -- SUBDIRECTOR
+                    LEFT JOIN usuarios AS us4 ON us3.id_lider = us4.id_usuario -- REGIONAL
+                    LEFT JOIN opcs_x_cats opc2 ON opc2.id_opcion = u.estatus AND opc2.id_catalogo = 108
+                WHERE loPv.liberaBandera = 1 AND loPv.estatus_preproceso != 7 AND (loPv.id_usuario_asignado != 0 OR loPv.id_usuario_asignado IS NOT NULL) $condicion
+                GROUP BY lf.idLotePvOrigen, oxc.nombre, loPv.estatus_preproceso, dxc.flagProcesoContraloria, dxc.flagProcesoJuridico, opc2.nombre
+                ORDER BY nombreLoteOrigen")->result_array();
     }
 
-    public function getHistorialPorLote($idLote){
+    public function getHistorialPorLote($idLote, $flagFusion){
+        if($flagFusion == 1 ){
+            return $this->db->query("SELECT CONCAT (CASE
+            WHEN hp.id_preproceso = 2 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
+            WHEN hp.id_preproceso = 3 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
+            WHEN hp.id_preproceso = 4 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
+            WHEN hp.id_preproceso = 5 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
+            ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
+            CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
+            FROM historial_preproceso_lote hp
+            INNER JOIN lotesFusion lf ON lf.idLote = hp.idLote
+            INNER JOIN lotes lo ON lo.idLote = lf.idLote
+            INNER JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = hp.id_preproceso AND oxc0.id_catalogo = 106
+            INNER JOIN opcs_x_cats oxc1 ON oxc1.id_opcion = hp.estatus AND oxc1.id_catalogo = 108
+            INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
+            INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
+            WHERE hp.idLote = $idLote
+            ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
+        }
+        else{
         return $this->db->query("SELECT CONCAT (CASE
         WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' WHEN hp.id_preproceso = 2 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas, contrato y rescisión'
         WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de contrato y resicisión' WHEN hp.id_preproceso = 3 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Recepción de documentación'
         WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Documentación entregada' WHEN hp.id_preproceso = 4 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Obtención de firma del cliente'
         WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion < '2023-12-04 00:00:00.000' THEN 'Recepción de documentos confirmada' WHEN hp.id_preproceso = 5 AND pr.fecha_modificacion > '2023-12-04 00:00:00.000' THEN 'Contrato firmado confirmado, pendiente traspaso de recurso'
         ELSE oxc0.nombre END, ' (', oxc1.nombre, ')') movimiento, 
-        CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
+                CONCAT(UPPER(CONCAT(u0.nombre, ' ', u0.apellido_paterno, ' ', u0.apellido_materno)), ' (', oxc2.nombre, ')') nombreUsuario, hp.fecha_modificacion fechaEstatus, hp.comentario
         FROM historial_preproceso_lote hp
         INNER JOIN propuestas_x_lote pr ON pr.idLote = hp.idLote
         INNER JOIN lotes lo ON lo.idLote = pr.idLote
@@ -1254,8 +1518,10 @@ class Reestructura_model extends CI_Model
         INNER JOIN usuarios u0 ON u0.id_usuario = hp.modificado_por
         INNER JOIN opcs_x_cats oxc2 ON oxc2.id_opcion = u0.id_rol AND oxc2.id_catalogo = 1
         WHERE hp.idLote = $idLote
-        ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
+                ORDER BY lo.idLote, hp.fecha_modificacion, hp.comentario")->result_array();
     }
+    }
+
     public function borrarPXL($id_lote){
         $this->db->query('DELETE FROM propuestas_x_lote WHERE id_lotep = '.$id_lote.' AND idLote='.$id_lote);
         return $this->db->affected_rows();
@@ -1511,6 +1777,12 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
+    public function deshacerFusion($id_lote){
+        $query = $this->db->query('DELETE FROM lotesFusion WHERE idLotePvOrigen = ?', $id_lote);
+        
+        return $query;
+    }
+
     public function updateLotesDestino($idLotes, $idStatusLote, $idUsuario){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? where idLote IN(' . $idLotes . ')', array($idStatusLote, $idUsuario));
         return $query;
@@ -1521,11 +1793,11 @@ class Reestructura_model extends CI_Model
         return $query;
     }
 
-    // public function checkLotesFusion($idLotes){
-    //     $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
+    public function checkLotesFusion($idLotes){
+        $query = $this->db->query('SELECT *from lotes WHERE idLote IN (' . $idLotes . ')');
 
-    //     return $query;
-    // }
+        return $query;
+    }
 
     public function updateLotesFusion($idLote, $idStatusLote, $idUsuario){
         $query = $this->db->query('UPDATE lotes SET idStatusLote = ?, usuario = ? WHERE idLote = ?', array($idStatusLote, $idUsuario, $idLote));
@@ -1575,4 +1847,173 @@ class Reestructura_model extends CI_Model
 
       return $query->result_array();
     }
+
+    public function checkFechaApartado02($idLote){
+        $query = $this->db->query("SELECT 
+        pxl.id_lotep idLoteDestino,
+        re.nombreResidencial,
+        co.nombre,
+        lo.nombreLote,
+        lo.idLote,
+        CONVERT (NVARCHAR (10), hpl.fechaUltimoEstatus2, 120) fechaUltimoEstatus2,
+        lo.id_usuario_asignado,
+        lo.id_gerente_asignado,
+        lo.id_subdirector_asignado
+        FROM propuestas_x_lote pxl 
+        INNER JOIN lotes lo ON lo.idLote = pxl.idLote
+        INNER JOIN condominios co ON co.idCondominio = lo.idCondominio    
+        INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
+        INNER JOIN (SELECT idLote, MAX(fecha_modificacion) fechaUltimoEstatus2 FROM historial_preproceso_lote WHERE id_preproceso = 2 GROUP BY idLote) hpl ON hpl.idLote = pxl.idLote
+        WHERE pxl.idLote IN ($idLote)");
+        return $query->result_array();
+    }
+    public function getLotesOrigen($idLotePv){
+        $query = $this->db->query("SELECT lf.idLote, lo.idCliente FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote  where lf.idLotePvOrigen = ? AND lf.origen = 1", array($idLotePv));
+
+        return $query;
+    }
+
+    
+    public function getLotesDestino($idLotePv){
+        $query = $this->db->query("SELECT lf.*, lo.tipo_estatus_regreso FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote where idLotePvOrigen = ? AND destino = 1", $idLotePv);
+
+        return $query;
+    }
+    
+
+    public function getFlagCJ($idLotePv){
+        $query = $this->db->query("SELECT flagProcesoContraloria, flagProcesoJuridico FROM datos_x_cliente where idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function deleteFusionDestinos($lotesDelete, $idLotePv){
+        $query = $this->db->query("DELETE FROM lotesFusion WHERE idLote IN( ? ) AND idLotePvOrigen = ?", array($lotesDelete, $idLotePv));
+
+        return $query;
+    }
+
+    public function deleteDatos($idLotePv){
+        $query = $this->db->query("DELETE FROM datos_x_cliente WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getLotesOrigenRe($idLotePv){
+        $query = $this->db->query("SELECT TOP 1 lo.idLote, lo.idCliente FROM propuestas_x_lote pxl INNER JOIN lotes lo ON lo.idLote = pxl.idLote WHERE lo.idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getLotesDestinoRe($idLotePv){
+        $query = $this->db->query("SELECT pxl.*, lo.tipo_estatus_regreso FROM propuestas_x_lote pxl INNER JOIN lotes lo ON lo.idLote = pxl.idLote where lo.idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function deletePropuestasDestinos($lotesDelete, $idLotePv){
+        $query = $this->db->query("DELETE FROM propuestas_x_lote WHERE id_lotep IN ?  AND idLote = ?", array($lotesDelete, $idLotePv));
+
+        return $query;
+    }
+
+    public function deleteCopropietario($idLotePv){
+        $query = $this->db->query("DELETE FROM datos_x_copropietario WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function updateRescision($idLotePv, $idCliente){
+        $query = $this->db->query("UPDATE datos_x_cliente SET rescision = NULL WHERE idLote = ?", $idLotePv);
+
+        return $query;
+    }
+
+    public function getClienteAnterior($idLote, $idCliente){
+        $query = $this->db->query("SELECT cl1.id_cliente AS clienteNuevo, cl1.idLote AS loteNuevo, cl2.id_cliente AS clienteAnterior, cl2.idLote AS loteAnterior,
+                                    lo.idStatusContratacion statusAnterior, lo2.idStatusContratacion statusNuevo, lo.idStatusLote statusAnterior2, lo.estatus_preproceso preprocesoAnterior, lo.nombreLote AS nombreLoteAnterior, lo2.nombreLote AS nombreLoteNuevo,
+                                    lo.precio AS precioAnterior, cl1.proceso AS procesoDestino, cl1.plan_comision comisionNuevo, cl1.id_cliente_reubicacion_2
+                                    FROM clientes cl1
+                                    INNER JOIN clientes cl2 ON cl2.id_cliente = cl1.id_cliente_reubicacion_2
+                                    INNER JOIN lotes lo ON lo.idLote = cl2.idLote
+                                    INNER JOIN lotes lo2 ON lo2.idLote = cl1.idLote
+                                    LEFT JOIN datos_x_cliente dxc ON dxc.idLote = cl1.idLote
+                                    LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = cl2.idLote                                
+                                    WHERE cl1.idLote = ? AND cl1.id_cliente = ? ", array($idLote, $idCliente));
+        return $query;
+    }
+
+    public function updateDocumentoAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE historial_documento SET status = 1 WHERE idLote = ? AND idCliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateDocumentoNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE historial_documento SET status = 0 WHERE idLote = ? AND idCliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function updateHistorialAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE historial_lotes SET status = 1 WHERE idLote = ? AND idCliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateHistorialNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE historial_lotes SET status = 0 WHERE idLote = ? AND idCliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function updateClienteAnterior($idLoteAnterior, $idClienteAnterior){
+        $query = $this->db->query("UPDATE clientes SET status = 1, proceso = 0 WHERE idLote = ? AND id_cliente = ?", array($idLoteAnterior, $idClienteAnterior));
+
+        return $query;
+    }
+
+    public function updateClienteNuevo($idLoteNuevo, $idClienteNuevo){
+        $query = $this->db->query("UPDATE clientes SET status = 0 WHERE idLote = ? AND id_cliente = ?", array($idLoteNuevo, $idClienteNuevo));
+
+        return $query;
+    }
+
+    public function getStatusLote($idLotePv){
+        $query = $this->db->query("SELECT TOP 1 anterior FROM auditoria WHERE id_parametro = ? AND col_afect = 'idStatusLote' ORDER BY fecha_creacion DESC", $idLotePv);
+
+        return $query;
+    }
+
+    public function checkLoteOrigen($loteAnterior){
+        $query = $this->db->query('SELECT *FROM lotes WHERE idLote = ');
+
+        return $query;
+    }
+
+    public function getTotalNeto2($loteAnterior)
+    {
+        $query = $this->db->query("WITH UltimoValor AS (
+            SELECT
+                anterior,
+                aud.fecha_creacion, 
+                id_parametro,
+                ROW_NUMBER() OVER (PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
+                FROM auditoria aud
+                WHERE col_afect = 'totalNeto2'
+        )
+        SELECT u.anterior FROM lotes lo INNER JOIN UltimoValor u ON u.id_parametro = lo.idLote and u.rn = 1
+        where idLote = ?", $loteAnterior);
+
+        return $query;
+    }
+
+    public function getPreOrigen($idLote){
+        $query = $this->db->query("SELECT lo.idLote, cl.proceso FROM clientes cl 
+        INNER JOIN lotes lo ON cl.idLote = lo.idLote
+        WHERE cl.id_cliente = (SELECT id_cliente_reubicacion_2 FROM clientes clSub WHERE idLote = ? AND clSub.status = 1)", $idLote);
+
+        return $query;
+    }
+    
 }

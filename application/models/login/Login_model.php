@@ -29,7 +29,7 @@ class login_model extends CI_Model {
 		LEFT JOIN usuarios ge ON ge.id_usuario = us.id_lider
 		LEFT JOIN usuarios sb ON sb.id_usuario = ge.id_lider
 		LEFT JOIN homePorRol  hr ON hr.id_rol = u.id_rol
-        WHERE u.usuario = '$username' AND u.contrasena = '$new_pass' AND u.estatus IN (1,3)")->result();
+        WHERE u.usuario = ? AND u.contrasena = ? AND u.estatus IN (1,3)", array($username, $new_pass))->result();
 	}
 
 	public function checkGerente($idGerente)

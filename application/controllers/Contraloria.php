@@ -1089,10 +1089,10 @@ class Contraloria extends CI_Controller {
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
                 
-                if ($id_asig == 5468)
+                if ($id_asig == 15418)
                     $assigned_user = 2764;
                 else if ($id_asig == 2764)
-                    $assigned_user = 5468;
+                    $assigned_user = 15418;
 
                 $arreglo["asig_jur"] = $assigned_user;
             } else if ($assigned_location == 5) { // EXPEDIENTES LEÓN
@@ -1108,7 +1108,7 @@ class Contraloria extends CI_Controller {
                     $assigned_user = 6856;
 
                 $arreglo["asig_jur"] = $assigned_user;
-            }  else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
+            } else if ($assigned_location == 3) { // EXPEDIENTES MÉRIDA
                 $id_sede_jur = 3;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
 
@@ -1132,8 +1132,7 @@ class Contraloria extends CI_Controller {
                 else if ($id_asig == 15025)
                     $assigned_user = 10427;
                 $arreglo["asig_jur"] = $assigned_user;
-            }
-            else if ($assigned_location == 8) { // TIJUANA
+            } else if (in_array($assigned_location, [8, 19])) { // TIJUANA / MIAMI
                 $id_sede_jur = 8;
                 $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
                 $id_asig = $data_asig->contador;
@@ -1141,6 +1140,18 @@ class Contraloria extends CI_Controller {
                     $assigned_user = 11125;
                 else if ($id_asig == 11125)
                     $assigned_user = 15046;
+                $arreglo["asig_jur"] = $assigned_user;
+            } else if ($assigned_location == 11) { // EXPEDIENTES MONTERREY
+                $id_sede_jur = 11;
+                $data_asig = $this->Contraloria_model->get_id_asig($assigned_location);
+
+                $id_asig = $data_asig->contador;
+                
+                if ($id_asig == 15433)
+                    $assigned_user = 11468;
+                else if ($id_asig == 11468)
+                    $assigned_user = 15433;
+
                 $arreglo["asig_jur"] = $assigned_user;
             }
         }
@@ -1167,7 +1178,7 @@ class Contraloria extends CI_Controller {
         return;
     }
 
-    if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8]))
+    if (in_array($assigned_location, [1, 2, 4, 5, 3, 13, 15, 16, 6, 8, 19, 11]))
         $this->Contraloria_model->update_asig_jur($arreglo["asig_jur"], $id_sede_jur);
 
     if ($cliente->proceso <= 1) {
@@ -1690,6 +1701,7 @@ class Contraloria extends CI_Controller {
         $totalNeto2 = $this->input->post('totalNeto2');
         $rl = $this->input->post('rl');
         $residencia = $this->input->post('residencia');
+        $sedeRecepcion = $this->input->post('sedeRecepcion');
 
         $mensualidades = $this->input->post('mensualidad9');
 
@@ -2768,7 +2780,10 @@ class Contraloria extends CI_Controller {
     }
 
     public function fillSelectsForV9() {
-        echo json_encode($this->Contraloria_model->getCatalogs()->result_array());
+        $catalogos = $this->Contraloria_model->getCatalogs()->result_array();
+        $sedes = $this->Contraloria_model->get_sede()->result_array();
+        $data = array_merge($catalogos, $sedes);
+        echo json_encode($data);
     }
 
     function todasAutorizacionesMSI(){

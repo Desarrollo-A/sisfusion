@@ -93,7 +93,7 @@ class Contratacion_model extends CI_Model {
       ds.aportMensualOfer, ds.fecha1erAport, ds.fechaLiquidaDepo, ds.fecha2daAport, 
 	  ISNULL(ref.nombreReferencias, 'SIN ESPECIFICAR') as referenciasPersonales, 
       ds.observacion, cl.personalidad_juridica, ds.idOficial_pf, ds.idDomicilio_pf, ds.actaMatrimonio_pf, ds.actaConstitutiva_pm, ds.poder_pm, ds.idOficialApoderado_pm, ds.idDomicilio_pm,
-      cl.edadFirma
+      cl.edadFirma, sds.nombre as sedeResidencial
       FROM lotes lot
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio $filtroCondominio
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial $filtroProyecto
@@ -128,6 +128,7 @@ class Contratacion_model extends CI_Model {
 	  LEFT JOIN opcs_x_cats catRegMat ON catRegMat.id_opcion = cl.regimen_matrimonial AND catRegMat.id_catalogo = 19
 	  LEFT JOIN opcs_x_cats catEdoCivil ON catEdoCivil.id_opcion = cl.estado_civil AND catEdoCivil.id_catalogo = 18
 	  LEFT JOIN opcs_x_cats catNaci ON catNaci.id_opcion = cl.nacionalidad AND catNaci.id_catalogo = 11
+	  INNER JOIN sedes sds ON sds.id_sede = res.sede_residencial
       --nuevo 
       WHERE lot.status = 1 $filtroEstatus $whereProceso
       ORDER BY lot.nombreLote");
@@ -209,7 +210,7 @@ class Contratacion_model extends CI_Model {
    }
 
     function getClauses($lote){
-         return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1");                        
+        return $this->db->query("SELECT * FROM clausulas WHERE id_lote = $lote AND estatus = 1 ORDER BY id_clausula DESC");
     }
 
     function getInventoryBylote($idLote){
@@ -282,7 +283,8 @@ class Contratacion_model extends CI_Model {
       cl.id_cliente_reubicacion, ISNULL(CONVERT(varchar, cl.fechaAlta, 20), '') fechaAlta, sc.nombreStatus as estatusContratacion,
       CONCAT(cl.nombre, ' ', cl.apellido_paterno,' ', cl.apellido_materno ) as nombreCliente,
       ISNULL(ca.comAdmon, 'SIN ESPECIFICAR') comentario_administracion, ISNULL(vc.total, 0) venta_compartida, sed.nombre as ubicacion,
-      ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario
+      ISNULL(oxc0.nombre, 'Normal') tipo_proceso, ISNULL(co.nombreCopropietario, 'SIN ESPECIFICAR') nombreCopropietario,
+      sds.nombre as sedeResidencial
       FROM lotes lot 
       INNER JOIN condominios con ON con.idCondominio = lot.idCondominio 
       INNER JOIN residenciales res ON res.idResidencial = con.idResidencial AND res.sede_residencial = $sede_residencial
@@ -309,6 +311,7 @@ class Contratacion_model extends CI_Model {
       LEFT JOIN (SELECT nombreLote, STRING_AGG(CAST(comAdmon AS varchar(250)), ' | ') comAdmon FROM comentarios_administracion GROUP BY nombreLote) ca ON ca.nombreLote = lot.nombreLote
       LEFT JOIN (SELECT id_cliente, COUNT(*) total FROM ventas_compartidas WHERE estatus = 1 GROUP BY id_cliente) vc ON vc.id_cliente = cl.id_cliente
       LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = cl.proceso AND oxc0.id_catalogo = 97
+      INNER JOIN sedes sds ON sds.id_sede = res.sede_residencial
       WHERE lot.status = 1 $whereProceso ORDER BY con.nombre, lot.idLote");
    }
 

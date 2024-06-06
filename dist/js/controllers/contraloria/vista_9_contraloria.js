@@ -109,7 +109,7 @@ $("#tabla_ingresar_9").ready(function () {
                     /*if (d.tipo_proceso != 'Normal' && d.validacionContratoFirmado == 0)
                         cntActions = `<span class="label lbl-blueMaderas">Pendiente carga de contrato firmado</span>`;
                     else if ((d.tipo_proceso != 'Normal' && d.validacionContratoFirmado == 1) || d.tipo_proceso == 'Normal')*/
-                        cntActions = `<button href="#" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idProspecto="${d.id_prospecto}" class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
+                        cntActions = `<button href="#" data-id_salesforce="${d.id_salesforce}" data-idLote="${d.idLote}" data-residencia="${d.residencia}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" data-idArcus="${d.id_arcus}" data-lugarProspeccion="${d.lugar_prospeccion}" data-idProspecto="${d.id_prospecto}" class="btn-data btn-green editReg" data-toggle="tooltip" data-placement="top" title="REGISTRAR ESTATUS"><i class="fas fa-thumbs-up"></i></button>`;
                     if (d.tipo_proceso == 'Normal')
                         cntActions += `<button href="#" data-idLote="${d.idLote}" data-nomLote="${d.nombreLote}" data-idCond="${d.idCondominio}" data-idCliente="${d.id_cliente}" data-fecVen="${d.fechaVenc}" data-ubic="${d.ubicacion}" data-code="${d.cbbtton}" class="btn-data btn-warning cancelReg" data-toggle="tooltip" data-placement="top" title="RECHAZO/REGRESO DE ESTATUS"><i class="fas fa-thumbs-down"></i></button>`;
                 }
@@ -193,6 +193,7 @@ $("#tabla_ingresar_9").ready(function () {
         getInfo1[8] = $(this).attr("data-idArcus"); // ID DE ARCUS
         getInfo1[9] = $(this).attr("data-lugarProspeccion"); // LUGAR DE PROSPECCIÓN
         getInfo1[10] = $(this).attr("data-idProspecto"); // ID PROSPECTO
+        getInfo1[11] = $(this).attr("data-id_salesforce"); // ID DE SALESFORCE
         nombreLote = $(this).data("nomlote");
         let residencia = $(this).attr("data-residencia") != 1 ? 0 : 1;
         $(".lote").html(nombreLote);
@@ -228,13 +229,14 @@ $(document).on('click', '#save1', function (e) {
     var rl = $("#rl").val();
     var mensualidad9 = $("#mensualidad9").val();
     var mensaValida = ($("#mensualidad9").val().length != 0) ? 1 : 0;
-    mensaValida = parseInt(mensaValida); 
-    console.log(mensaValida);
+    mensaValida = parseInt(mensaValida);
     var residencia = $("#residencia").val();
+    var sedeRecepcion = $("#sedeRecepcion").val();
     var validaComent = ($("#comentario").val().length == 0) ? 0 : 1;
     var validatn = ($("#totalNeto2").val().length == 0) ? 0 : 1;
     var validaRL = ($("#rl").val().length == 0) ? 0 : 1;
     var validaResidencia = ($("#residencia").val().length == 0) ? 0 : 1;
+    var validaSedeRecepcion = ($("#sedeRecepcion").val().length == 0) ? 0 : 1;
     var dataExp1 = new FormData();
     dataExp1.append("idCliente", getInfo1[0]);
     dataExp1.append("idCondominio", getInfo1[3]);
@@ -246,13 +248,15 @@ $(document).on('click', '#save1', function (e) {
     dataExp1.append("rl", rl);
     dataExp1.append("mensualidad9", mensualidad9);
     dataExp1.append("residencia", residencia);
+    dataExp1.append("sedeRecepcion", sedeRecepcion);
     // INFORMACIÓN PARA ENVIAR A ARCUS
     dataExp1.append("uid", getInfo1[8]); // id_arcus
+    dataExp1.append("id_salesforce", getInfo1[11]); // salesforce
     dataExp1.append("lugar_prospeccion", getInfo1[9]); // lugar_prospeccion
     dataExp1.append("id_prospecto", getInfo1[10]); // id_prospecto
-    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || mensaValida == 0)
+    if (validaComent == 0 || validatn == 0 || validaRL == 0 || validaResidencia == 0 || validaSedeRecepcion == 0 || mensaValida == 0)
         alerts.showNotification("top", "right", "Todos los campos son obligatorios.", "danger");
-    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && mensaValida == 1) {
+    if (validaComent == 1 && validatn == 1 && validaRL == 1 && validaResidencia == 1 && validaSedeRecepcion == 1 && mensaValida == 1) {
         $('#save1').prop('disabled', true);
         $.ajax({
             url: `${general_base_url}Contraloria/editar_registro_lote_contraloria_proceceso9`,
@@ -377,13 +381,25 @@ function SoloNumeros(evt) {
 function fillSelectsForV9() {
     $.getJSON("fillSelectsForV9").done(function (data) {
         for (let i = 0; i < data.length; i++) {
-            if (data[i]['id_catalogo'] == 77) // REPRESENTABTE LEGAL SELECT
+            if (data[i]['id_catalogo'] == 77) // REPRESENTANTE LEGAL SELECT
                 $("#rl").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
             if (data[i]['id_catalogo'] == 78) // RESIDENCIA SELECT
                 $("#residencia").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+            if (data[i]['id_sede'])
+                $("#sedeRecepcion").append($('<option>').val(data[i]['id_sede']).text(data[i]['nombre']));
         }
         $('#rl').selectpicker('refresh');
         $('#residencia').selectpicker('refresh');
+        $('#sedeRecepcion').selectpicker('refresh');
+    });
+}
+
+function fillMensualidades() {
+    $.getJSON("fillMensualidades").done(function (data) {
+        for (let i = 0; i < data.length; i++) {
+            $("#mensualidad9").append($('<option>').val(data[i]['id_opcion']).text(data[i]['nombre']));
+        }
+        $('#mensualidad9').selectpicker('refresh');
     });
 }
 

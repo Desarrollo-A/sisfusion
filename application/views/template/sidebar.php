@@ -97,7 +97,7 @@
                             </li>
                     <?php
                         }else{
-                            if($this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2855 || $this->session->userdata('id_rol') == 17)
+                            if($this->session->userdata('id_usuario') == 2826 || $this->session->userdata('id_usuario') == 2855 || in_array($this->session->userdata('id_rol'), [17, 70]))
                             {
                     ?>
                                 <li class="nav-item <?php if (isset($datos4)) {   if($padreVal == $datos->orden) {  echo 'active';}} ?>">

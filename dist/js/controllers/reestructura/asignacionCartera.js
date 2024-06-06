@@ -1,5 +1,7 @@
 var arrayValores = [];
 const ROLES_SIN_ACCIONES = [4, 6];
+if (id_usuario_general == 13575) // ZULEYMMA IBARRA TENORIO	permiso como gerente
+    id_rol_general = 3;
 
 $(document).ready(function () {
     if (!ROLES_SIN_ACCIONES.includes(id_rol_general)) {
@@ -91,7 +93,7 @@ tablaAsignacion = $('#tablaAsignacionCartera').DataTable({
             width: "30%",
             data: function (d) {
                 let lblInput = '';
-                console.log('d.idFusion: ', d.idFusion, ' d.idLotePvOrigen: ', d.idLotePvOrigen, ' d.id_estatus_preproceso: ', d.id_estatus_preproceso);
+                //console.log('d.idFusion: ', d.idFusion, ' d.idLotePvOrigen: ', d.idLotePvOrigen, ' d.id_estatus_preproceso: ', d.id_estatus_preproceso);
                 
                 if(d.idFusion == null && d.idLotePvOrigen == null && d.id_estatus_preproceso == 0){
                     lblInput = `<center><input type="checkbox" onChange="verificarCheck(this)" required data-idAsesorAsignado="${d.idAsesorAsignado}"
