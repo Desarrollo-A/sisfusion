@@ -538,12 +538,10 @@ function getLeadersList(){
             $('#tipoMiembro_column').removeClass('col-sm-6');
             $('#tipoMiembro_column').addClass('col-sm-3');
             $('#simbolico_column').removeClass('hide');
-            $('#fac_humano_column').removeClass('hide');
         }else{
             $('#tipoMiembro_column').removeClass('col-sm-3');
             $('#tipoMiembro_column').addClass('col-sm-6');
             $('#simbolico_column').addClass('hide');
-            $('#fac_humano_column').removeClass('hide');
         }
     }
 
@@ -763,14 +761,23 @@ $(document).on('click', '.edit-user-information', function(e){
                         </div>
                     </div>
                 `);
-            }
+                let row_fac_humano = $('.fac_humano_column');
+                    row_fac_humano.append(`
+                        <div class="col-sm-6 mt-3">
+                        <div class="form-group label-floating select-is-empty div_membertype">
+                            <label class="control-label"><small class="isRequired">*</small>¿Asesor factor humano?</label>
+                            <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''}>SÍ</option>
+                                <option value="0" ${ (v.fac_humano == 0 || v.fac_humano == '0' || v.fac_humano == null ) ? 'selected' : ''}>NO</option>
+                            </select>
+                        </div>
+                        </div></div>`);       
+            }$('#fac_humano').selectpicker('refresh');
 
             if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
                     $('#tipoMiembro_column').removeClass('col-sm-6');
                     $('#tipoMiembro_column').addClass('col-sm-3');
-                    $('.simbolico_column').empty();
-                    $('.fac_humano_column').empty();
                     var row_add = $('.simbolico_column');
                     row_add.append(`
                     <div class="col-sm-3 mt-3">
@@ -783,23 +790,12 @@ $(document).on('click', '.edit-user-information', function(e){
                         </div>
                     </div></div>`);
 
-                    let row_fac_humano = $('.fac_humano_column');
-                    row_fac_humano.append(`
-                        <div class="col-sm-6 mt-3">
-                        <div class="form-group label-floating select-is-empty div_membertype">
-                            <label class="control-label"><small class="isRequired">*</small>¿Asesor factor humano?</label>
-                            <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
-                                <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''}>SÍ</option>
-                                <option value="0" ${ (v.fac_humano == 0 || v.fac_humano == '0' || v.fac_humano == null ) ? 'selected' : ''}>NO</option>
-                            </select>
-                        </div>
-                        </div></div>`);
+                  
                 }else{
                     $('#tipoMiembro_column').removeClass('col-sm-3');
                     $('#tipoMiembro_column').addClass('col-sm-6');
                 }
                 $('#simbolicoType').selectpicker('refresh');
-                $('#fac_humano').selectpicker('refresh');
             }
             $('#nueva_estructura').selectpicker('refresh');
             getLeadersListForEdit(v.id_sede, v.id_rol, leader);
