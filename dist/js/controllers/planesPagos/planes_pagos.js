@@ -708,6 +708,8 @@ function fillTable(data) {
             dataType: 'json',
         })
         .done(function() {
+            alerts.showNotification("top", "right", "Plan guardado con éxito.", "success");
+
             $('#verPlanPago').modal('hide');
         })
     });

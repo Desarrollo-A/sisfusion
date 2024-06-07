@@ -4106,6 +4106,8 @@ legend {
                 $planes[$key]->dumpPlan = json_encode($plan_data);
 
                 $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $plan->saldoInicialPlan, $planes[$key]->dumpPlan);
+
+                $pagos = json_decode($planes[$key]->dumpPlan);
             }
 
             foreach ($pagos as $key => $pago) {
