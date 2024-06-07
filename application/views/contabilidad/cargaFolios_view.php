@@ -6,93 +6,53 @@
 
         <?php $this->load->view('template/sidebar'); ?>
     
+        <!-- Modal para subir archivos -->
         <div class="modal" tabindex="-1" role="dialog" id="uploadModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
                         <h5 class="text-center">Selección de archivo a cargar</h5>
                         <div class="file-gph">
-                            <input class="d-none" type="file" id="archivo">
-                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionada nada aún" readonly="">
+                            <input class="d-none" type="file" id="archivo" accept=".xlsx, .xls">
+                            <input class="file-name" id="file-name" type="text" placeholder="No has seleccionado nada aún" readonly="">
                             <label class="upload-btn m-0" for="archivo"><span>Seleccionar</span><i class="fas fa-folder-open"></i></label>
                         </div>
+                        <span class='pl-1'><b>NOTA:</b> Los lotes ya registrados se omitirán.</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                        <button class="btn btn-primary" id="cargaCoincidencias" data-toggle="modal">Cargar</button>
+                        <button class="btn btn-primary" id="btnCargaFolios" data-toggle="modal">Cargar</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="modal fade" id="editMontoInternomex" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg">
+        <!-- Modal de cambios -->
+        <div class="modal fade" id="seeInformationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-md modal-dialog-scrollable" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons">clear</i></button>
-                        <h4 class="modal-title">Monto internomex</h4>
+                        <h4 class="modal-title">Bitácora de cambios</h4>
                     </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
+                    <div class="modal-body">                      
+                        <div class="container-fluid" id="changelogTab">
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <div class="form-group label-floating div_name">
-                                        <input id="monto" name="monto"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                    </div>
-                                    <div class="form-group label-floating div_name" hidden>
-                                        <input id="id_pago" name="id_pago"  onchange="validateInputs(this);" type="text" class="form-control input-gral" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12 d-flex justify-end">
-                                    <button type="button" class="btn btn-danger btn-simple mt-1" data-dismiss="modal">Cancelar</button>
-                                    <button id="aceptarMonto" name="aceptarMonto" class="btn btn-primary mt-1">Aceptar</button>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 scroll-styles" style="height: 350px; overflow: auto">
+                                    <ul class="timeline-3" id="changelog">
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="changesBitacora" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="material-icons" onclick="cleanComments()">clear</i></button>
-                        <h4 class="modal-title">Consulta información</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist" style="background: #003d82;">
-                                <li role="presentation" class="active">
-                                    <a href="#changelogUsersTab" aria-controls="changelogUsersTab" role="tab" data-toggle="tab">Bitácora de cambios</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane active"
-                                    id="changelogUsersTab">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="card card-plain">
-                                                <div class="card-content">
-                                                    <ul class="timeline timeline-simple" id="changelogUsers"></ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <input type="hidden" name="prospecto_lbl" id="prospecto_lbl">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                        <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Card del datatable -->
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -107,17 +67,17 @@
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">PROYECTO</label>
-                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral m-0"
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Proyecto</label>
+                                                    <select name="proyecto" id="proyecto" class="selectpicker select-gral mt-0"
                                                             data-style="btn" data-show-subtext="true"  title="Selecciona un proyecto"
                                                             data-size="7" data-live-search="true" required>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <div class="form-group label-floating select-is-empty">
-                                                    <label class="control-label">CONDOMINIO</label>
+                                                <div class="form-group select-is-empty">
+                                                    <label class="control-label">Condominio</label>
                                                     <select name="condominio" id="condominio"  class="selectpicker select-gral m-0"
                                                             data-style="btn" data-show-subtext="true"  title="Selecciona un condominio"
                                                             data-size="7" data-live-search="true" required>
@@ -139,6 +99,7 @@
                                                 <th>EXTERIOR</th>
                                                 <th>CÓDIGO POSTAL</th>
                                                 <th>SUPERFICIE</th>
+                                                <th>SUPERFICIE CRM</th>
                                                 <th>RÉGIMEN</th>
                                                 <th>FOLIO REAL</th>
                                                 <th>ACCIONES</th>
@@ -153,9 +114,10 @@
             </div>
         </div>
 
-        <?php $this->load->view('template/footer_legend'); ?>
+    <?php $this->load->view('template/footer_legend'); ?>
     </div>
-            <!-- ANIMACIÓN DE CARGA EN TODA LA VISTA -->
+
+    <!-- ANIMACIÓN DE CARGA EN TODA LA VISTA -->
     <div class="spiner-loader hide" id="spiner-loader">
         <div class="backgroundLS">
             <div class="contentLS">
@@ -172,11 +134,19 @@
         </div>
     </div>
     <?php $this->load->view('template/footer'); ?>
+
+    <!-- OBTENER LA FECHA Y HORA DEL SERVIDOR -->
+    <script>
+        function fechaServidor() {
+            return '<?php echo date('Y-m-d H:i:s')?>';
+        }
+    </script>
     <script type="text/javascript" src="<?= base_url() ?>dist/js/xlsx/xlsx.full.min.js"></script>
     <script src="<?= base_url() ?>dist/js/es.js"></script>
     <script src="<?= base_url() ?>dist/js/bootstrap-datetimepicker.js"></script>
     <script src="<?= base_url() ?>dist/js/jwt/hmac-sha256.js"></script>
     <script src="<?= base_url() ?>dist/js/jwt/enc-base64-min.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/general/main_services.js"></script>
+    <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
     <script src="<?= base_url() ?>dist/js/controllers/Contabilidad/cargaFolios.js"></script>
 </body>

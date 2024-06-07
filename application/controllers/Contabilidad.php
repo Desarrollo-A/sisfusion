@@ -5,7 +5,7 @@ class Contabilidad extends CI_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model(array('Contabilidad_model'));
+        $this->load->model(array('Contabilidad_model', 'General_model'));
         $this->load->library(array('session', 'form_validation', 'get_menu','permisos_sidebar'));
         $this->load->helper(array('url', 'form'));
         $this->load->database('default');
@@ -260,19 +260,55 @@ class Contabilidad extends CI_Controller
 
         $data = $this->Contabilidad_model->lista_lotes($idCondominio)->result_array();
         echo json_encode($data);
-   
     }
 
     public function getLotesConFolios() {
+        $filtrado = $this->input->post("filtrado");
         $idCondominio = $this->input->post("idCondominio");
         
-        $data = $this->Contabilidad_model->getLotesConFolios($idCondominio)->result_array();
+        $condicion = $filtrado == 1 ? "AND lo.idCondominio = ?" : '';
 
-        if ($data != null) {
-            echo json_encode($data);
-        } else {
-            echo json_encode(array());
+        $data['data'] = $this->Contabilidad_model->getLotesConFolios($condicion, $idCondominio)->result_array();
+        echo json_encode($data);
+    }
+
+    public function insertBatchLotesConFolios() {
+        $this->db->trans_begin();
+        $dataToBeInserted = $this->input->post("lotesConFolio");
+
+        if (empty($dataToBeInserted)) {
+            echo json_encode(['success' => false, 'message' => 'No data to insert']);
+            return;
         }
+
+        $insertResponse = $this->General_model->insertBatch("informacion_lotes", $dataToBeInserted);
+        if ($insertResponse) {
+            $this->db->trans_commit();
+            echo json_encode(['result' => true, 'message' => 'Data inserted successfully']);
+        } else {
+            $this->db->trans_rollback();
+            echo json_encode(['result' => false, 'message' => 'Failed to insert data']);
+        }
+    }
+    
+    public function updateLoteConFolio() {
+        $idInfoLote = $this->input->post("idInfoLote");
+        $dataToBeInserted = $this->input->post("data");
+        
+        $update = $this->General_model->updateRecord('informacion_lotes', $dataToBeInserted, 'idInfoLote', $idInfoLote);
+
+        if ($update) {
+            echo json_encode(['result' => true, 'message' => 'Data inserted successfully']);
+        } else {
+            echo json_encode(['result' => false, 'message' => 'Failed to insert data']);
+        }
+    }
+
+    public function historicoLoteConFolio() {
+        $idInfoLote = $this->input->post("idInfoLote");
+        
+        $data = $this->Contabilidad_model->historicoLoteConFolio($idInfoLote)->result_array();
+        echo json_encode($data);
     }
 }
 

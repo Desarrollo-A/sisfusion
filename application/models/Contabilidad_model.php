@@ -165,10 +165,18 @@ class Contabilidad_model extends CI_Model
         return $this->db->query("SELECT idLote, nombreLote FROM lotes WHERE status = 1 AND idCondominio = ?;", $idCondominio);
     }
 
-    public function getLotesConFolios($idCondominio){
+    public function getLotesConFolios($condicion, $idCondominio){
         return $this->db->query(
-        "SELECT * FROM informacion_lotes AS il 
+        "SELECT il.*, lo.status, lo.sup FROM informacion_lotes AS il 
         LEFT JOIN lotes as lo ON lo.idLote = il.idLote 
-        WHERE il.estatus = 1 AND lo.idCondominio = ?;", $idCondominio);
+        WHERE il.estatus = 1 AND lo.status = 1 $condicion", $idCondominio);
+    }
+
+    public function historicoLoteConFolio($idInfoLote){
+        return $this->db->query(
+        "SELECT au.*, UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) nombreUsuario 
+        FROM auditoria AS au 
+        LEFT JOIN usuarios as us ON au.creado_por = us.id_usuario
+        WHERE tabla = 'informacion_lotes' AND id_parametro = ?;", $idInfoLote);
     }
 }
