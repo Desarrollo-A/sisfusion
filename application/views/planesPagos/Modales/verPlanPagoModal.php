@@ -57,6 +57,7 @@
                                         <thead>
                                         <tr>
                                             <th>PAGO</th>
+                                            <th>CONCEPTO PAGO</th>
                                             <th>FECHA PAGO</th>
                                             <th>CAPITAL</th>
                                             <th>SALDO CAPITAL</th>

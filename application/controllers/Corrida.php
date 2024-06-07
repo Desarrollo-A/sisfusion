@@ -21,7 +21,7 @@ class Corrida extends CI_Controller
         $val = $this->session->userdata('certificado') . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
         $_SESSION['rutaController'] = str_replace('' . base_url() . '', '', $val);
         $rutaUrl = explode($_SESSION['rutaActual'], $_SERVER["REQUEST_URI"]);
-        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
+//        $this->permisos_sidebar->validarPermiso($this->session->userdata('datos'), $rutaUrl[1], $this->session->userdata('opcionesMenu'));
     }
 
     public function index()
@@ -170,10 +170,12 @@ class Corrida extends CI_Controller
         $arreglo["msi_1p"] = ($objDatos->msi_1p == '' || $objDatos->msi_1p == NULL) ? 0 : $objDatos->msi_1p;
         $arreglo["msi_2p"] = ($objDatos->msi_2p == '' || $objDatos->msi_2p == NULL) ? 0 : $objDatos->msi_2p;
         $arreglo["msi_3p"] = ($objDatos->msi_3p == '' || $objDatos->msi_3p == NULL) ? 0 : $objDatos->msi_3p;
+        $arreglo["msi_4p"] = ($objDatos->msi_4p == '' || $objDatos->msi_4p == NULL) ? 0 : $objDatos->msi_4p;
         $arreglo["primer_mensualidad"] = $objDatos->primer_mensualidad;
         $arreglo["finalMesesp1"] = $objDatos->finalMesesp1;
         $arreglo["finalMesesp2"] = $objDatos->finalMesesp2;
         $arreglo["finalMesesp3"] = $objDatos->finalMesesp3;
+        $arreglo["finalMesesp4"] = $objDatos->finalMesesp4;
         $arreglo["observaciones"] = $objDatos->observaciones;
         $arreglo['status'] = 0;
         $arreglo["corrida_dump"] = json_encode($objDatos->corrida_dump);
@@ -285,8 +287,11 @@ class Corrida extends CI_Controller
     }
     function getCorridaToPlanDePago($dump_data, $rangos){
 
+
+
         $data_general = json_decode($dump_data);
-        $dump_data = $data_general->corrida_dump;
+        $dump_data = json_decode($data_general->corrida_dump);
+
 
 
         $plan_pago0 = array();
@@ -478,19 +483,6 @@ class Corrida extends CI_Controller
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
-//        print_r(json_encode($plan_pago0));
-//        echo '<br>';
-//        echo '<br>';
-//        print_r(json_encode($plan_pago1));
-//        echo '<br>';
-//        echo '<br>';
-//        print_r(json_encode($plan_pago2));
-//        echo '<br>';
-//        echo '<br>';
-//        print_r(json_encode($plan_pago3));
-//        echo '<br>';
-//        echo '<br>';
-//        print_r(json_encode($plan_pago4));
     }
 
     public function inventario()
@@ -2033,7 +2025,7 @@ legend {
 
     }
 
-    /*
+  /*
     That it is an implementation of the function money_format for the
     platforms that do not it bear.
 
@@ -3413,6 +3405,21 @@ legend {
             if ($resultado['status'] == 1) {
                 $data = $this->Corrida_model->actionMCorrida($id_corrida, $action);
                 //update rama de documentación
+                /*aqui se debe hacer la inserción del plan de pago*/
+                    $dataCorrida = $this->Corrida_model->getCorridaFinanciera($id_corrida);//traer la data de la corrida
+
+                    //asignar valor de los rangos
+                    $rangos = array(
+                        'rango0' => $dataCorrida[0]['meses_diferir'],
+                        'rango1' => $dataCorrida[0]['finalMesesp1'],
+                        'rango2' => $dataCorrida[0]['finalMesesp2'],
+                        'rango3' => $dataCorrida[0]['finalMesesp3'],
+                        'rango4' => $dataCorrida[0]['finalMesesp4']
+                    );
+                    //codigo creacion de Planes de Pago
+                    $corrida_dump = json_encode( $dataCorrida[0]); //se mandan los datos en formato json
+                    $this->getCorridaToPlanDePago($corrida_dump, $rangos);//manda la data como la ocupa la función
+                /*FIN aqui se debe hacer la inserción del plan de pago*/
                 $response['message'] = ($data == 1) ? 'OK' : 'ERROR';
             } else {
                 $response['message'] = 'ERROR';
@@ -4022,6 +4029,46 @@ legend {
         echo json_encode($this->Corrida_model->getLoteLista($condominio)->result_array());
     }
 
+    function testFuncion($id_corrida){
+        $dataCorrida = $this->Corrida_model->getCorridaFinanciera($id_corrida);//traer la data de la corrida
+
+        //asignar valor de los rangos
+        $rangos = array(
+            'rango0' => $dataCorrida[0]['meses_diferir'],
+            'rango1' => $dataCorrida[0]['finalMesesp1'],
+            'rango2' => $dataCorrida[0]['finalMesesp2'],
+            'rango3' => $dataCorrida[0]['finalMesesp3'],
+            'rango4' => $dataCorrida[0]['finalMesesp4']
+        );
+        //codigo creacion de Planes de Pago
+        $corrida_dump = json_encode( $dataCorrida[0]); //se mandan los datos en formato json
+
+        $this->getCorridaToPlanDePago($corrida_dump, $rangos);//manda la data como la ocupa la función
+    }
+
+    function generaPlanPagoEnvio(){
+        $idLote = $this->input->post('idLote');
+        $datos = $this->Corrida_model->getPlanesPago($idLote);
+        $arrayFinal = array(
+            "lote" => $datos[0]['nombreLote'],
+            "empresa" => $datos[0]['empresa']
+        );
+
+        $arrayDump = array();
+        foreach($datos as $index => $elemento){//recorre los planes de pago generales
+            $arrayFinal['interes'.$index] = $datos[$index]['tazaInteres'];
+
+            foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt){//recorre la corrida financiera dentro del PP
+                array_push($arrayDump, $corridaElmnt);
+            }
+        }
+        $arrayFinal['planesPago'] = $arrayDump;
+        $response = array(
+            "respuesta" => (($arrayDump)>0) ? 1 : 0,
+            "planServicio" => $arrayFinal
+        );
+        print_r(json_encode($response));
+        exit;
     private function calculatePlan($pagos, $saldoInicialPlan){
         $montoInicial = $saldoInicialPlan;
 

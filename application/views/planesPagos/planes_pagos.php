@@ -21,6 +21,7 @@
     <?php $this->load->view('template/sidebar'); ?>
     <?php include 'Modales/addPlanPagoModal.php' ?>
     <?php include 'Modales/verPlanPagoModal.php' ?>
+    <?php include 'Modales/confirmarEnvioPlanModal.php' ?>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">
@@ -83,7 +84,7 @@
                                                 <th>ID LOTE</th>
                                                 <th>PLAN DE PAGO</th>
                                                 <th>PLAZO</th>
-                                                <!--SOLO PARA POPEA Y EL OTRO SUJETO END-->
+                                                <th>ESTATUS</th>
                                                 <th>ACCIONES</th><!--68-->
                                             </tr>
                                             </thead>

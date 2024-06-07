@@ -352,8 +352,8 @@
             case '32': // CONTRALORIA
                 $query = $this->db->query("SELECT l.idLote, nombreLote, idStatusLote, cl.id_asesor FROM  lotes l
                         INNER JOIN corridas_financieras cf ON l.idLote = cf.id_lote
-                        INNER JOIN clientes cl ON cl.id_cliente = l.idCliente
-                        INNER JOIN usuarios u ON u.id_usuario = cl.id_asesor
+                        LEFT JOIN clientes cl ON cl.id_cliente = l.idCliente
+                        LEFT JOIN usuarios u ON u.id_usuario = cl.id_asesor
                         WHERE l.idCondominio = ".$condominio."
                         GROUP BY l.idLote, nombreLote, idStatusLote, cl.id_asesor;");
                 break;
@@ -390,7 +390,7 @@
         }
 
         if($id_rol == 13 || $id_rol==17 || $id_rol==32){
-            $valInner = 'INNER JOIN clientes cl ON l.idCliente = cl.id_cliente';
+            $valInner = 'LEFT JOIN clientes cl ON l.idCliente = cl.id_cliente';
         }
         $query = $this->db->query("SELECT *,c.nombre as nombreCondominio,
         cf.nombre as nombreCliente,
@@ -401,7 +401,7 @@
         INNER JOIN condominios c ON c.idCondominio = l.idCondominio
         INNER JOIN residenciales r ON r.idResidencial = c.idResidencial
         $valInner
-        INNER JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." ".$condicion);
+        LEFT JOIN usuarios u ON u.id_usuario = cf.id_asesor WHERE id_lote=".$idLote." ".$condicion);
         return $query->result_array();
     }
     function updateCF($id_corrida, $arreglo){
@@ -631,7 +631,7 @@
     function getPlanesPago($idLote){
 //        $query = $this->db->query("SELECT * FROM planes_pago WHERE estatus = 1 AND idLote = ".$idLote);
         $query = $this->db->query("SELECT res.nombreResidencial, co.nombre as nombreCondominio, lo.nombreLote, lo.idLote, numeroPeriodos,  
-        pp.*, planPagoCatalogo.nombre as planPago FROM planes_pago pp 
+        pp.*, planPagoCatalogo.nombre as planPago, res.empresa FROM planes_pago pp 
         INNER JOIN lotes lo ON pp.idLote = lo.idLote
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
         INNER JOIN residenciales res ON res.idResidencial = co.idResidencial
@@ -679,6 +679,12 @@
         return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio =  ".$condominio." ");
     }
 
+    function getCorridaFinanciera($id_corrida){
+        $query = $this->db->query("SELECT *,  cf.pago_enganche as engancheFinalc, cf.precio_final as precioFinalc  
+                                    FROM corridas_financieras cf 
+                                    INNER JOIN lotes lo ON cf.id_lote = lo.idLote
+                                    WHERE cf.id_corrida= ".$id_corrida);
+        return $query->result_array();
     public function getPlanesPagoRaw($idLote){
         $query = "SELECT *
         FROM planes_pago
