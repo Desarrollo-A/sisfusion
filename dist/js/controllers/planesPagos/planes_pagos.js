@@ -671,6 +671,21 @@ function fillTable(data) {
         }]
     });
 
+    $('.guardarPlan').unbind("click").on('click', function(){
+        console.log('guardar plan');
+
+        let pagos = tablePagos.rows().data().toArray()
+
+        $.ajax({
+            type: "POST",
+            url: `${general_base_url}Corrida/guardarPlanPago/${idLote}?plan=${data.idPlanPago}`,
+            data: JSON.stringify(pagos),
+            dataType: 'json',
+        })
+        .done(function() {
+            $('#verPlanPago').modal('hide');
+        })
+    });
 }
 
 function enviarPlanPago(idLote){

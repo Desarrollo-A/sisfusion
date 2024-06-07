@@ -678,4 +678,25 @@
     function getLoteLista($condominio){
         return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio =  ".$condominio." ");
     }
+
+    public function getPlanesPagoRaw($idLote){
+        $query = "SELECT *
+        FROM planes_pago
+        WHERE idLote = $idLote
+        AND estatus = 1
+        ORDER BY ordenPago";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function savePlanPagoRaw($idPlanPago, $saldoInicialPlan, $dumpPlan){
+        $query = "UPDATE planes_pago
+        SET
+            saldoInicialPlan = $saldoInicialPlan,
+            dumpPlan = '$dumpPlan'
+        WHERE
+            idPlanPago = $idPlanPago";
+
+        return $this->db->query($query);
+    }
 }

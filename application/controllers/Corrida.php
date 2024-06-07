@@ -4022,4 +4022,49 @@ legend {
         echo json_encode($this->Corrida_model->getLoteLista($condominio)->result_array());
     }
 
+    private function calculatePlan($pagos, $saldoInicialPlan){
+        $montoInicial = $saldoInicialPlan;
+
+        $nuevo_capital = $montoInicial;
+        foreach ($pagos as $key => $pago) {
+            $nuevo_capital -= $pago->capital;
+
+            $pago->saldo = $nuevo_capital;
+        }
+
+        return $pagos;
+    }
+
+    public function guardarPlanPago($lote){
+        $plan_id = $this->input->get('plan');
+
+        $plan_data = json_decode(file_get_contents("php://input"));
+
+        $planes = $this->Corrida_model->getPlanesPagoRaw($lote);
+
+        $recalcular = false;
+        $last_saldo;
+        foreach ($planes as $key => $plan) {
+            $pagos = json_decode($planes[$key]->dumpPlan);
+
+            if($recalcular){
+                $new_pagos = json_encode($this->calculatePlan($pagos, $last_saldo));
+
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $last_saldo, $new_pagos);
+            }
+
+            if($plan->idPlanPago == $plan_id){
+                $planes[$key]->dumpPlan = json_encode($plan_data);
+
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $plan->saldoInicialPlan, $planes[$key]->dumpPlan);
+            }
+
+            foreach ($pagos as $key => $pago) {
+                $last_saldo = $pago->saldo;
+            }
+        }
+
+        print_r(json_encode([]));
+    }
+
 }
