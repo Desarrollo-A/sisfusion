@@ -1,5 +1,6 @@
 let idLote = 0;
 let dumpPlanPago = [];
+let nombreLote;
 
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -35,7 +36,7 @@ $('#idCondominioInventario').change(function () {
     $(document).ready(function () {
         $.post(`${general_base_url}Corrida/lista_lotes/${index_idCondominio}`, function (data) {
             for (var i = 0; i < data.length; i++) {
-                $("#idLote").append($('<option>').val(data[i]['idLote']).text(data[i]['nombreLote']));
+                $("#idLote").append($('<option data-nombreLote="'+data[i]['nombreLote']+'">').val(data[i]['idLote']).text(data[i]['nombreLote']));
             }
             $("#idLote").selectpicker('refresh');
             $('#spiner-loader').addClass('hide');
@@ -60,6 +61,8 @@ $('#idLote').change(function () {
     index_idLote = $(this).val();
     idLote = index_idLote;
     console.log('index_idLote', index_idLote);
+    var nombreLoteSeleccionado = $('option:selected', this).attr('data-nombreLote');
+
     //tablaPlanPagos
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url+"Corrida/getInfoByLote/"+idLote, function (data) {
@@ -83,7 +86,7 @@ $('#idLote').change(function () {
             text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
             className: 'btn buttons-excel',
             titleAttr: 'Descargar archivo de Excel',
-            title: 'Inventario lotes',
+            title: 'Planes de pago '+ nombreLoteSeleccionado,
             },
             {
                 extend: 'pdfHtml5',
@@ -150,6 +153,21 @@ $('#idLote').change(function () {
             { data: 'idLote' },
             { data: 'nombrePlan' },
             { data: 'numeroPeriodos' },
+            {
+                data: function (d) {
+                    let etiqueta;
+                    switch (d.estatusPlan) {
+                        case 1: //Se subió
+                            etiqueta = `<label class="label lbl-gray">En proceso</label>`;
+                            break;
+                        case 2: //Se envio correctamente a NeoData
+                            etiqueta = `<label class="label lbl-green">Se envió correctamente a NeoData</label>`;
+                            break;
+                    }
+
+                    return etiqueta;
+                }
+            },
             /***********/
             {
                 data: function (d) {
@@ -506,13 +524,13 @@ function fillTable(data) {
                 extend: 'excelHtml5',
                 text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
                 className: 'btn buttons-excel',
-                title: 'Master cobranza',
+                title: 'Plan de pago',
                 titleAttr: 'Descargar archivo de Excel',
                 exportOptions: {
                     columns: [1,2,3,4,5,6,7,8,9,10],
                     format: {
                         header: function (d, columnIdx) {
-                            return ' '+titulos_encabezado[columnIdx] +' ';
+                            return ' '+titulosTabla[columnIdx] +' ';
                         }
                     }
                 }
@@ -553,6 +571,13 @@ function fillTable(data) {
             {
                 data: function (d) {
                     return d.pago;
+                }
+            },
+            {
+                data: function (d) {//col concepto
+                    let nombrePlan = $('#nombrePlanPago').val();
+                    let nombreCompuesto = nombrePlan + ' - ' + d.pago;
+                    return nombreCompuesto;
                 }
             },
             {
@@ -605,15 +630,61 @@ function fillTable(data) {
 
 }
 
+$(document).on('click', '.editarPago', function(){
+    console.log('acciones para editar el plan de pago');
+});
+
 function enviarPlanPago(idLote){
     console.log('se enviara el plan de pago actual');
     console.log('idLote xxD', idLote);
 
-    $.post(general_base_url+"Corrida/enviarPlanPago/"+idLote, function (data) {
+    $('#idLoteSbt').val(idLote);
+    $('#aceptarPlanPago').modal();
 
-    }, 'json');
+
 }
+$(document).on('click', '#aceptarEnvioPP', function(){
 
-$(document).on('click', '.editarPago', function(){
-   console.log('acciones para editar el plan de pago');
+   let idLote = $('#idLoteSbt').val();
+   console.log('se debe hacer la acción', idLote);
+    $.ajax({
+        data: {idLote:idLote},
+        url: 'generaPlanPagoEnvio/',
+        type: 'POST',
+        beforeSend: function(){
+            $('#spiner-loader').removeClass('hide');
+        },
+        success: function (response) {
+            response = JSON.parse(response);
+            console.log('response',response);
+            if (response.respuesta == 1) {
+
+
+                //enviar el plan generado pero ahora al servicio de NeoData
+                //Descomentar cuando se haga la prueba con el servicio de Rodri
+                // $.ajax({
+                //     data: {planPago:response.planServicio},
+                //     url: 'generaPlanPagoEnvio/',
+                //     type: 'POST',
+                //     success: function (response) {
+                //         $('#aceptarPlanPago').modal('toggle');
+                //         $('#spiner-loader').addClass('hide');
+                        //     alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
+                        //     $('#tablaPlanPagos').DataTable().ajax.reload();
+                //     }
+                // });
+
+                //código de prueba para no ejecutar el servicio y llamar a NeoData
+                $('#aceptarPlanPago').modal('toggle');
+                $('#spiner-loader').addClass('hide');
+                $('#tablaPlanPagos').DataTable().ajax.reload();
+                alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
+
+            } else {
+                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
+            }
+
+        }
+    });
 });
+
