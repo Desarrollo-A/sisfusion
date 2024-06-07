@@ -4069,6 +4069,8 @@ legend {
         );
         print_r(json_encode($response));
         exit;
+    }
+    
     private function calculatePlan($pagos, $saldoInicialPlan){
         $montoInicial = $saldoInicialPlan;
 

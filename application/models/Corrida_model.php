@@ -685,6 +685,8 @@
                                     INNER JOIN lotes lo ON cf.id_lote = lo.idLote
                                     WHERE cf.id_corrida= ".$id_corrida);
         return $query->result_array();
+    }
+    
     public function getPlanesPagoRaw($idLote){
         $query = "SELECT *
         FROM planes_pago
