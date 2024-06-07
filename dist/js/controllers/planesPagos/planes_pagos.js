@@ -487,6 +487,67 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
+    var tablePagos
+
+    const createdCell = function(cell) {
+        let original;
+
+        const recalcularPlan = function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+
+            if (original !== e.target.textContent) {
+                const row = tablePagos.row(e.target.parentElement)
+                //row.invalidate()
+                //console.log('Row changed: ', row.data())
+
+                //console.log(data)
+
+                let montoInicial = data.saldoInicialPlan
+
+                let capital = parseFloat(e.target.textContent)
+
+                let pagos = tablePagos.rows().data().toArray()
+
+                let pago_nuevo = row.data()
+
+                let nuevo_capital = montoInicial
+                for(const pago of pagos){
+                    if(pago.pago == pago_nuevo.pago){
+                        pago.capital = capital
+                    }
+
+                    nuevo_capital -= pago.capital
+
+                    pago.saldo = nuevo_capital
+                }
+
+                //tablePagos.clear()
+                //tablePagos.rows.add(pagos).draw(false)
+                tablePagos
+                    .rows()
+                    .invalidate()
+                    .draw()
+            }
+        }
+
+        cell.setAttribute('contenteditable', true)
+        cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+        cell.setAttribute('spellcheck', false)
+        cell.addEventListener("focus", function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:#000;padding:10px")
+
+            original = e.target.textContent
+        })
+        cell.addEventListener('keydown', function(e) {
+            if (e.keyCode === 13){
+                e.preventDefault()
+
+                recalcularPlan(e)
+            }
+        })
+        cell.addEventListener("blur", recalcularPlan )
+    }
+
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
     $('#nombrePlanPago').val(data.nombrePlan);
     $('#nombreCliente').val(data.nombreCliente);
@@ -495,7 +556,7 @@ function fillTable(data) {
     $('#mensualidadPlanPago').val(formatMoney(data.mensualidad));
     $('#periodosPlanPago').val(data.numeroPeriodos);
     $('#montoInicialPlan').val(formatMoney(data.saldoInicialPlan));
-    data = JSON.parse(data.dumpPlan);
+    data_plan = JSON.parse(data.dumpPlan);
     let titulosTabla = [];
     $('#tabla_plan_pago thead tr:eq(0) th').each(function (i) {
         const title = $(this).text();
@@ -509,8 +570,8 @@ function fillTable(data) {
         $('[data-toggle="tooltip"]').tooltip();
     });
 
-    tablePagos = $('#tabla_plan_pago').dataTable({
-        data: data,
+    tablePagos = $('#tabla_plan_pago').DataTable({
+        data: data_plan,
         width: '100%',
         searching: true,
         dom: 'Brt'+ "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
@@ -587,7 +648,10 @@ function fillTable(data) {
             },
             {
                 data: function (d) {
-                    return formatMoney((d.capital).toFixed(2));
+                    if(d.capital){
+                        return d.capital.toFixed(2);
+                    }
+                    return ''
                 }
             },
             {
@@ -625,9 +689,28 @@ function fillTable(data) {
                     return formatMoney((d.saldo).toFixed(2));
                 }
             },
-        ]
+        ],
+        columnDefs: [{
+            targets: [2],
+            createdCell: createdCell
+        }]
     });
 
+    $('.guardarPlan').unbind("click").on('click', function(){
+        console.log('guardar plan');
+
+        let pagos = tablePagos.rows().data().toArray()
+
+        $.ajax({
+            type: "POST",
+            url: `${general_base_url}Corrida/guardarPlanPago/${idLote}?plan=${data.idPlanPago}`,
+            data: JSON.stringify(pagos),
+            dataType: 'json',
+        })
+        .done(function() {
+            $('#verPlanPago').modal('hide');
+        })
+    });
 }
 
 $(document).on('click', '.editarPago', function(){

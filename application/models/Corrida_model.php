@@ -685,5 +685,24 @@
                                     INNER JOIN lotes lo ON cf.id_lote = lo.idLote
                                     WHERE cf.id_corrida= ".$id_corrida);
         return $query->result_array();
+    public function getPlanesPagoRaw($idLote){
+        $query = "SELECT *
+        FROM planes_pago
+        WHERE idLote = $idLote
+        AND estatus = 1
+        ORDER BY ordenPago";
+
+        return $this->db->query($query)->result();
+    }
+
+    public function savePlanPagoRaw($idPlanPago, $saldoInicialPlan, $dumpPlan){
+        $query = "UPDATE planes_pago
+        SET
+            saldoInicialPlan = $saldoInicialPlan,
+            dumpPlan = '$dumpPlan'
+        WHERE
+            idPlanPago = $idPlanPago";
+
+        return $this->db->query($query);
     }
 }
