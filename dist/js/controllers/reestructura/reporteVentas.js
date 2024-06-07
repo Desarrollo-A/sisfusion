@@ -38,7 +38,7 @@ $('#tablaReporteVentas').DataTable({
     pageLength: 10,
     bAutoWidth: false,
     fixedColumns: true,
-    ordering: false,
+    ordering: true,
     language: {
         url: `${general_base_url}static/spanishLoader_v2.json`,
         paginate: {
@@ -70,9 +70,9 @@ $('#tablaReporteVentas').DataTable({
             }
         },
         { data: "nombreCliente" },
-        { data: "nombreAsesor" },
-        { data: "nombreGerente" },
-        { data: "nombreSubdirector" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreAsesor" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreGerente" },
+        { visible: (id_rol_general == 15) ? false : true, data: "nombreSubdirector" },
         { data: "fechaApartado" },
         {
             data: function (d) {

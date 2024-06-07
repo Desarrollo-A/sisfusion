@@ -1162,6 +1162,7 @@ class Reestructura_model extends CI_Model
         $id_usuario = $this->session->userdata('id_usuario');
         $id_rol = $this->session->userdata('id_rol');
         $condicion = "";
+        $condicionFusion = "";
 
         $id_usuario_validacion = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
         $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND usL.id_usuario = $id_usuario_validacion" : "";
