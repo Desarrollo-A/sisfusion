@@ -1772,10 +1772,8 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
-    public function checkFechaApartado02($idLote)
-    {
+    public function checkFechaApartado02($idLote){
         $query = $this->db->query("SELECT 
-        pxl.id_lotep idLoteDestino,
         re.nombreResidencial,
         co.nombre,
         lo.nombreLote,
@@ -1784,14 +1782,14 @@ class Reestructura_model extends CI_Model
         lo.id_usuario_asignado,
         lo.id_gerente_asignado,
         lo.id_subdirector_asignado
-        FROM propuestas_x_lote pxl 
-        INNER JOIN lotes lo ON lo.idLote = pxl.idLote
+        FROM lotes lo 
         INNER JOIN condominios co ON co.idCondominio = lo.idCondominio    
         INNER JOIN residenciales re ON re.idResidencial = co.idResidencial
-        INNER JOIN (SELECT idLote, MAX(fecha_modificacion) fechaUltimoEstatus2 FROM historial_preproceso_lote WHERE id_preproceso = 2 GROUP BY idLote) hpl ON hpl.idLote = pxl.idLote
-        WHERE pxl.idLote IN ($idLote)");
+        INNER JOIN (SELECT idLote, MAX(fecha_modificacion) fechaUltimoEstatus2 FROM historial_preproceso_lote WHERE id_preproceso = 1 GROUP BY idLote) hpl ON hpl.idLote = lo.idLote
+        WHERE lo.idLote IN ($idLote)");
         return $query->result_array();
     }
+    
     public function getLotesOrigen($idLotePv)
     {
         $query = $this->db->query("SELECT lf.idLote, lo.idCliente FROM lotesFusion lf INNER JOIN lotes lo ON lo.idLote = lf.idLote  where lf.idLotePvOrigen = ? AND lf.origen = 1", array($idLotePv));
