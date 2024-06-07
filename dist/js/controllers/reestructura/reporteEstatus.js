@@ -171,8 +171,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 return `${d.estatus2Contraloria}`;
             }
         },
-        { data: "asesor" },
-        { data: "gerente" },
         {   
             data: function(d) {
                 if (d.asesor == null || d.asesor == '') return 'SIN ESPECIFICAR'
@@ -205,7 +203,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                     </button>
                 </div>`;
             }
-        },
+        }
     ],
     ajax: {
         url: `${general_base_url}Reestructura/getReporteEstatus`,

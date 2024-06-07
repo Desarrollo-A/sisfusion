@@ -361,6 +361,7 @@ class NumberField {
     constructor({ id, label, placeholder, value, width = 12, required = false, mask, max }) {
         this.id = id
         this.required = required
+        this.max = max
 
         let number = ''
 
@@ -379,9 +380,9 @@ class NumberField {
             .attr('type', 'text')
             .attr('placeholder', placeholder)
             .prop('required', required)
-            .attr('maxlength', max ? max : 20)
+            .attr('maxlength', 20)
             .val(number)
-            .on('keyup', this.validate)
+            .on('keyup', () => this.validate())
 
         if(mask){
             input.mask(mask, {
@@ -422,6 +423,14 @@ class NumberField {
 
             if(!val){
                 pass = false
+            }else{
+                // console.log(this.max)
+
+                if(this.max){
+                    if(val > this.max){
+                        $(`#${this.id}`).val(this.max)
+                    }
+                }
             }
 
             if(pass){
