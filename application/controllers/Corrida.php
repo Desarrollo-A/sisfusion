@@ -4046,7 +4046,8 @@ legend {
         $this->getCorridaToPlanDePago($corrida_dump, $rangos);//manda la data como la ocupa la función
     }
 
-    function generaPlanPagoEnvio(){
+    function generaPlanPagoEnvio()
+    {
         $idLote = $this->input->post('idLote');
         $datos = $this->Corrida_model->getPlanesPago($idLote);
         $arrayFinal = array(
@@ -4055,20 +4056,21 @@ legend {
         );
 
         $arrayDump = array();
-        foreach($datos as $index => $elemento){//recorre los planes de pago generales
-            $arrayFinal['interes'.$index] = $datos[$index]['tazaInteres'];
+        foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
+            $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
 
-            foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt){//recorre la corrida financiera dentro del PP
+            foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt) {//recorre la corrida financiera dentro del PP
                 array_push($arrayDump, $corridaElmnt);
             }
         }
         $arrayFinal['planesPago'] = $arrayDump;
         $response = array(
-            "respuesta" => (($arrayDump)>0) ? 1 : 0,
+            "respuesta" => (($arrayDump) > 0) ? 1 : 0,
             "planServicio" => $arrayFinal
         );
         print_r(json_encode($response));
         exit;
+    }
     private function calculatePlan($pagos, $saldoInicialPlan){
         $montoInicial = $saldoInicialPlan;
 

@@ -679,12 +679,14 @@
         return $this->db->query("SELECT * FROM lotes WHERE status = 1 AND idCondominio =  ".$condominio." ");
     }
 
-    function getCorridaFinanciera($id_corrida){
+    function getCorridaFinanciera($id_corrida)
+    {
         $query = $this->db->query("SELECT *,  cf.pago_enganche as engancheFinalc, cf.precio_final as precioFinalc  
                                     FROM corridas_financieras cf 
                                     INNER JOIN lotes lo ON cf.id_lote = lo.idLote
-                                    WHERE cf.id_corrida= ".$id_corrida);
+                                    WHERE cf.id_corrida= " . $id_corrida);
         return $query->result_array();
+    }
     public function getPlanesPagoRaw($idLote){
         $query = "SELECT *
         FROM planes_pago

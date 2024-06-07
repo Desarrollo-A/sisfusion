@@ -691,7 +691,7 @@ function fillTable(data) {
             },
         ],
         columnDefs: [{
-            targets: [2],
+            targets: [3],
             createdCell: createdCell
         }]
     });
