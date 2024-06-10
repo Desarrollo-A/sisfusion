@@ -333,7 +333,7 @@ $(document).on('click', '.btn-editar-folio', function(e){
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
                             <label class="control-label">Superficie (<small style="color: red;">*</small>)<small class="pl-1" id="result"></small></label>
-                            <input class="form-control input-gral" name="inputSuperficie" id="inputSuperficie" type="number" value="${d.superficie}" min="0" oninput="validity.valid||(value='');" required/>
+                            <input class="form-control input-gral" name="inputSuperficie" id="inputSuperficie" type="number" value="${d.superficie}" min="0" step="0.01" maxlength="10" oninput="validity.valid||(value='');" required/>
                         </div>
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 m-0">
                             <label class="control-label">Régimen (<small style="color: red;">*</small>)</label>
