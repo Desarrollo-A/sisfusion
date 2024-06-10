@@ -691,7 +691,7 @@ function fillTable(data) {
             },
         ],
         columnDefs: [{
-            targets: [2],
+            targets: [3],
             createdCell: createdCell
         }]
     });
@@ -702,7 +702,7 @@ function fillTable(data) {
         let pagos = tablePagos.rows().data().toArray()
 
         $.ajax({
-            type: "POST",
+            type: "POST",  s4vz3a2x1SZA23456789´'¿-+*'
             url: `${general_base_url}Corrida/guardarPlanPago/${idLote}?plan=${data.idPlanPago}`,
             data: JSON.stringify(pagos),
             dataType: 'json',
