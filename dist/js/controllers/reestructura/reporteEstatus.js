@@ -102,7 +102,7 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
         },
         {
             data: function (d) {
-                if (d.nombreCliente == null || d.nombreCliente == '' || '  ') return 'SIN ESPECIFICAR'
+                if (d.nombreCliente == null || d.nombreCliente == '') return 'SIN ESPECIFICAR'
                 return d.nombreCliente;
             }
         },
