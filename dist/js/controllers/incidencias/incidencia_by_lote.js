@@ -694,6 +694,44 @@ function saveTipo(id){
     }
 }
 
+function updateVentaC(id, idLote, idCliente){
+    
+    var formData = new FormData;
+    formData.append("id", id);
+    formData.append("idLote", idLote);
+    formData.append("idCliente", idCliente)
+    $.ajax({
+        url: general_base_url+'Incidencias/updateVentaCompartida',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        method: 'POST',
+        type: 'POST', // For jQuery < 1.9
+        success:function(data){
+            if(data == 1){
+                $('#modalBajaVcUpdate .modal-body').html('');
+                $("#modalBajaVcUpdate").modal('toggle');
+                $('#modalBajaVc .modal-body').html('');
+                $("#modalBajaVc").modal('toggle');
+                $("#modal_NEODATA").modal('toggle');
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "La venta compartirda ha sido dada de baja", "success");
+            }
+            else{
+                $('#modalBajaVcUpdate .modal-body').html('');
+                $("#modalBajaVcUpdate").modal('toggle');
+                $("#modal_NEODATA").modal('toggle');
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#spiner-loader').addClass('hidden');
+                alerts.showNotification("top", "right", "Algo salio mal", "danger");
+            }
+        }
+    });
+}
+
 /*
 function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
@@ -897,6 +935,7 @@ $('#tabla_inventario_contraloria thead tr:eq(0) th').each( function (i) {
  
 $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
+    
    if(idLote != ''){
 
     $('#tabla_inventario_contraloria').show();
@@ -1090,14 +1129,14 @@ $(".find_doc").click( function() {
 
                     }
                     else if(data.registro_comision == 1 ) {
-                        BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
+                        BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-lote="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
                         BtnStats += '<button class="btn-data btn-green mensualidadTipo" title="Cambiar Mensualidad" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-mensualidad="'+data.opcion+'"><i class="fas fa-cog"></i></button>';
 
                     }
                     else {
-                        BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-code="'+data.cbbtton+'" ' +
+                        BtnStats = '<button href="#" value="'+data.idLote+'" data-estatus="'+data.idStatusContratacion+'" data-tipo="I" data-precioAnt="'+data.totalNeto2+'"  data-value="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-lote="'+data.idLote+'" data-code="'+data.cbbtton+'" ' +
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button><button class="btn-data btn-orangeYellow update_bandera" title="Cambiar estatus" value="' + data.idLote +'" data-nombre="'+data.nombreLote+'"><i class="fas fa-sync-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
                     
@@ -1340,7 +1379,11 @@ $(".find_doc").click( function() {
         id_estatus = $(this).attr("data-estatus");
         precioAnt = $(this).attr("data-precioAnt");
         tipo = $(this).attr('data-tipo');
+        planComision = $(this).attr('data-planComision');
 
+        cliente = $(this).attr("data-cliente");
+        lote = $(this).attr("data-lote");
+ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
@@ -1479,7 +1522,7 @@ $(".find_doc").click( function() {
                                         // boton guardar
                                         let boton = `
                                         <button type="button" id="btn_${i}" 
-                                        ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'style="display:none" ' : 'style="display:show" '} 
+                                        ${(parseInt(banderaPermisos) != 1) ? 'style="display:none" ' : 'style="display:show" '} 
                                         onclick="SaveAjuste(${i})" ${v.descuento == 1 || v.descuento > 1  ? 'style="display:none" ' : 'style="display:show" ' }  
                                          data-toggle="tooltip" disabled
                                         data-placement="top" title="GUARDAR PORCENTAJE" class="btn btn-dark btn-round btn-fab btn-fab-mini"><span class="material-icons">check</span>
@@ -1514,56 +1557,27 @@ $(".find_doc").click( function() {
 
 
                                         $("#modal_NEODATA .modal-body").append(`<div class="row">
-                                            
-                                            <input id="id_disparador" type="hidden" name="id_disparador" value="1">
-                                            <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
-                                            <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
-                                            <input type="hidden" name="pending" id="pending" value="${pending}">
-                                            <input type="hidden" name="idLote" id="idLote" value="${idLote}">
-                                            <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
-                                            <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
-                                            
-                                            <div class="col-md-2">
-                                                <input class="form-control input-gral"  readonly="true" value="${v.colaborador}" 
-                                                style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
-                                                <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
-                                                <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
-                                                font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <input class="form-control input-gral" ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
-                                                <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${parseFloat(v.porcentaje_decimal).toFixed(3)}">
-                                                <b id="msj_${i}" style="color:red;"></b>
-                                            </div>
-
-                                            <div class="col-md-2"> 
-                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}">
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <input class="form-control input-gral" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}">
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <input class="form-control input-gral" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}">
-                                            </div>
-
-                                            <div class="col-md-2 botones">
-                                                ${(id_user != 1 && id_user != 2767 && id_user != 2826 && id_user != 11947 && id_user != 5957 && id_user != 2749) ? '' : boton}  
-                                                ${boton_topar}
-                                                ${boton_pago}
-                                                ${boton_regresar}
-                                            </div> 
+                                        <div class="col-md-2"><input id="id_disparador" type="hidden" name="id_disparador" value="1">
+                                        <input type="hidden" name="pago_neo" id="pago_neo" value="${total.toFixed(3)}">
+                                        <input type="hidden" name="id_rol" id="id_rol_${i}" value="${v.rol_generado}">
+                                        <input type="hidden" name="pending" id="pending" value="${pending}">
+                                        <input type="hidden" name="idLote" id="idLote" value="${idLote}">
+                                        <input id="id_comision_${i}" type="hidden" name="id_comision_${i}" value="${v.id_comision}">
+                                        <input id="id_usuario_${i}" type="hidden" name="id_usuario_${i}" value="${v.id_usuario}">
+                                        <input class="form-control input-gral ng-invalid-required" required readonly="true" value="${v.colaborador}" 
+                                            style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} "><b>
+                                            <p style="font-size:12px; ${v.descuento == 1 ? 'color:red;' : ''} ">${ v.descuento == "1" ? v.rol+' Incorrecto' : v.rol}</b>
+                                            <b style="color:${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? 'red' : 'green'}; 
+                                            font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
                                         </div>
                                         <div class="col-md-1">
-                                        <input class="form-control ng-invalid ng-invalid-required" ${(parseInt(banderaPermisos) != 1) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
+                                        <input class="form-control input-gral ng-invalid-required" ${(parseInt(banderaPermisos) != 1) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
                                         <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
                                         <b id="msj_${i}" style="color:red;"></b>
                                         </div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
                                         <div class="col-md-3 botones">
                                         ${(parseInt(banderaPermisos) != 1) ? '' : boton}  
                                         ${boton_topar}
@@ -1578,7 +1592,19 @@ $(".find_doc").click( function() {
                                     });
                                 });
 
-                                $("#modal_NEODATA .modal-footer").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"></div><div class="col-md-3"></div></div>');
+                                $.getJSON(general_base_url + "Incidencias/getUserVC/" + cliente)
+                                .done(function (vc) {
+                                    if (vc.length > 0) {
+                                        $("#modal_NEODATA .modal-footer").append(`
+                                            <div class="d-flex justify-content-center align-items-center w-100">
+                                                <button type="button" value="${lote}" data-lote="${lote}" data-cliente="${cliente}" class="btn-gral-data bajaVentaC" style='background-color:red; margin: auto;'>
+                                                    BAJA DE VENTAS COMPARTIDAS<i class="fas fa-trash pl-1"></i>
+                                                </button>
+                                            </div>
+                                        `);   
+                                    }  
+                                });                                                          
+                                
                                 if(total < 1 ){
                                     $('#dispersar').prop('disabled', true);
                                 }
@@ -1586,7 +1612,8 @@ $(".find_doc").click( function() {
                                     $('#dispersar').prop('disabled', false);
                                 }
                             });
-                        }        
+                        }
+
                     break;
                     case 2:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
@@ -2466,3 +2493,114 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         }
     });
 
+    $(document).on('click', ".bajaVentaC", function(e){
+    
+        idLote = $(this).attr('data-lote');
+        idCliente = $(this).attr('data-cliente');
+
+        console.log(idLote)
+
+        $("#modalBajaVc .modal-body").html('');
+        $("#modalBajaVc .modal-footer").html('');
+
+        $.getJSON(general_base_url + "Incidencias/getUserVP/" + idLote)
+    .done(function(dtP) {
+        $("#modalBajaVc .modal-body").append(`
+            <h5>Usuarios en venta principal</h5>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].asesor}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Asesor</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].coordinador == '' || dtP[0].coordinador.trim() == '' ? 'NO REGISTRADO' : dtP[0].coordinador}" style="font-size:12px; color:${dtP[0].coordinador == '' || dtP[0].coordinador.trim() == '' ? 'red' : 'black'};">
+                    <b><p style="font-size:12px; text-align: center;">Coordinador</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].gerente}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Gerente</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].subdirector}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Subdirector</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].regional == '' || dtP[0].regional.trim() == '' ? 'NO APLICA' : dtP[0].regional}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Regional</p></b>
+                </div>
+            </div>
+        `);
+
+        $("#modalBajaVc .modal-body").append(`
+                        <h5>Usuarios en venta compartida</h5>`);
+        $.getJSON(general_base_url + "Incidencias/getUserVC/" + idCliente)
+            .done(function (data) {
+                if (data.length > 0) {
+                    data.forEach((item) => {
+                        console.log(item.asesor)
+                        $("#modalBajaVc .modal-body").append(`
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.asesor}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Asesor</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.coordinador == '' || item.coordinador.trim() == '' ? 'NO REGISTRADO' : item.coordinador}" style="font-size:12px; color:${item.coordinador == '' || item.coordinador.trim() == '' ? 'red' : 'black'};">
+                                <b><p style="font-size:12px; text-align: center;">Coordinador</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.gerente}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Gerente</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.subdirector}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Subdirector</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.regional == '' || item.regional.trim() == '' ? 'NO APLICA' : item.regional}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Regional</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <button class="btn-data btn-warning bajaVCupdate" title="Eliminar venta compartida" value="${item.id_vcompartida}" data-id_vcompartida="${item.id_vcompartida}" data-lote="${idLote}" data-id_cliente="${item.id_cliente}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `);
+                    })
+                } else {
+                    $("#modalBajaVc .modal-body").append(`<h5>No hay ventas compartidas</h5>`);
+                }
+            });
+    });
+
+        $("#modalBajaVc .modal-footer").append(`
+          
+            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+            
+        `);
+        $("#modalBajaVc").modal();
+    
+    });
+
+    $(document).on('click', ".bajaVCupdate", function(e){
+
+        idLote = $(this).attr('data-lote');
+        idVentaC = $(this).attr('data-id_vcompartida');
+        idCliente = $(this).attr('data-id_cliente');
+
+        $("#modalBajaVcUpdate .modal-body").html('');
+        $("#modalBajaVcUpdate .modal-footer").html('');
+
+        $("#modalBajaVcUpdate .modal-body").append(`
+            <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
+            <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
+        `);
+
+        $("#modalBajaVcUpdate .modal-footer").append(`
+            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+            <button type="button" onclick="updateVentaC(${idVentaC}, ${idLote}, ${idCliente} )" class="btn btn-gral-data" >
+                GUARDAR
+            </button> 
+        `);
+        $("#modalBajaVcUpdate").modal();
+
+    });
