@@ -488,46 +488,77 @@ class Reporte_model extends CI_Model {
 
         list($filtro, $comodin, $comodin2) = $this->setFilters($id_rol, $render, $filtro, $leadersList, $comodin2, $id_usuario, $id_lider, $typeTransaction);
         list($nombreUsuario, $total, $precioDescuento, $totalChart,$totalCte) = $this->amountShare($id_rol, $id_usuario);
-        //$this->db->trans_start();
-        //$this->db->query(" 
         
-
         $query = $this->db->query("
-        SELECT $comodin, 
-        COUNT(*) AS occurrence,
-        id_cliente, 
-        nombreUsuario,
-        COALESCE(id_sede,0)id_sede,
-        id_rol
-        INTO #comodinCount
-        FROM (
-            SELECT ISNULL(u.id_usuario,0) $comodin, vc.id_cliente,
-            CASE WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' THEN 'ACUMULADO SIN ESPECIFICAR' ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) END AS nombreUsuario,
-            COALESCE(sede.id_sede, 0) id_sede,
-            ISNULL(u.id_rol, 0)id_rol
+       IF OBJECT_ID('tempdb..#comodinCount') IS NOT NULL DROP TABLE #comodinCount;
+            CREATE TABLE #comodinCount (
+                id_asesor INT,
+                occurrence INT,
+                id_cliente INT,
+                nombreUsuario NVARCHAR(255),
+                id_sede INT,
+                id_rol INT
+            );
+
+            INSERT INTO #comodinCount (id_asesor, occurrence, id_cliente, nombreUsuario, id_sede, id_rol)
+            SELECT $comodin, 
+                   COUNT(*) AS occurrence, 
+                   id_cliente, 
+                   nombreUsuario, 
+                   COALESCE(id_sede, 0) AS id_sede, 
+                   id_rol
+            FROM (
+                SELECT ISNULL(u.id_usuario, 0) AS $comodin, 
+                       vc.id_cliente, 
+                       CASE 
+                           WHEN CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) = '  ' 
+                           THEN 'ACUMULADO SIN ESPECIFICAR' 
+                           ELSE CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno) 
+                       END AS nombreUsuario,
+                       COALESCE(sede.id_sede, 0) AS id_sede, 
+                       ISNULL(u.id_rol, 0) AS id_rol
+                FROM clientes cl
+                INNER JOIN lotes lo ON lo.idLote = cl.idLote
+                INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+                LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
+                LEFT JOIN (SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol FROM usuarios) u 
+                       ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin) AND cl.id_cliente = vc.id_cliente
+                WHERE vc.estatus = 1 
+                $filtro $filtroExt
+                GROUP BY cl.$comodin, cl.id_cliente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), vc.id_cliente, u.id_usuario, vc.$comodin, sede.id_sede, u.id_rol
+            ) AS combined
+            GROUP BY $comodin, id_cliente, nombreUsuario, id_sede, id_rol;
+             IF OBJECT_ID('tempdb..#BaseTotal') IS NOT NULL DROP TABLE #BaseTotal;
+            CREATE TABLE #BaseTotal (
+                id_cliente INT,
+                base_total DECIMAL(16, 2)
+            );
+
+            INSERT INTO #BaseTotal (id_cliente, base_total)
+            SELECT cl.id_cliente,
+                   SUM(CASE 
+                           WHEN lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00 
+                           THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) 
+                           ELSE lo.totalNeto2 
+                       END) AS base_total
             FROM clientes cl
-            INNER JOIN lotes lo ON lo.idLote = cl.idLote
-            INNER JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-            LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
-            LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin) AND cl.id_cliente = vc.id_cliente
-            WHERE vc.estatus = 1 
+            INNER JOIN lotes lo ON lo.idLote = cl.idLote 
+            INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
+            LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
+            WHERE cl.id_cliente IS NOT NULL 
             $filtro $filtroExt
-            GROUP BY cl.$comodin, cl.id_cliente, CONCAT(u.nombre, ' ', u.apellido_paterno, ' ', u.apellido_materno), vc.id_cliente, u.id_usuario, vc.$comodin, sede.id_sede, u.id_rol
-        )AS combined
-        GROUP BY $comodin, id_cliente, nombreUsuario, id_sede, id_rol;
-        SELECT 
-        cl.id_cliente,
-        SUM(CASE WHEN(lo.totalNeto2 IS NULL OR lo.totalNeto2 = 0.00) THEN ISNULL(TRY_CAST(ds.costom2f AS DECIMAL(16,2)) * lo.sup, lo.precio * lo.sup) ELSE lo.totalNeto2 END) AS base_total
-        INTO #BaseTotal
-        FROM clientes cl
-        INNER JOIN lotes lo ON lo.idLote = cl.idLote 
-        INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-        LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-        WHERE cl.id_cliente IS NOT NULL $filtro $filtroExt
-        GROUP BY cl.id_cliente;
-        SELECT SUM(occurrence) AS total_occurrence, id_cliente INTO #total_occurrences FROM #comodinCount
-        GROUP BY id_cliente;
-            
+            GROUP BY cl.id_cliente;
+            IF OBJECT_ID('tempdb..#total_occurrences') IS NOT NULL DROP TABLE #total_occurrences;
+            CREATE TABLE #total_occurrences (
+                total_occurrence INT,
+                id_cliente INT
+            );
+
+            INSERT INTO #total_occurrences (total_occurrence, id_cliente)
+            SELECT SUM(occurrence) AS total_occurrence, 
+                   id_cliente 
+            FROM #comodinCount
+            GROUP BY id_cliente;
         SELECT
             FORMAT(ISNULL(contratadas.sumaConT, 0), 'C') sumaConT, ISNULL(contratadas.totalConT, 0) totalConT, --VENDIDO CONTRATADO
             FORMAT(ISNULL(apartadas.sumaAT, 0), 'C') sumaAT, ISNULL(apartadas.totalAT, 0) totalAT, --VENDIDO APARTADO
@@ -570,7 +601,7 @@ class Reporte_model extends CI_Model {
 					--$comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin 
                     LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
 					INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede
+                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede AND rc.$comodin = u.id_usuario
                     LEFT JOIN #BaseTotal bt ON bt.id_cliente = cl.id_cliente
                     LEFT JOIN #total_occurrences tot ON tot.id_cliente = cl.id_cliente
                     $filtroSt
@@ -605,12 +636,13 @@ class Reporte_model extends CI_Model {
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede
+                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
+                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede AND rc.$comodin = u.id_usuario
                     LEFT JOIN #BaseTotal bt ON bt.id_cliente = cl.id_cliente
                     LEFT JOIN #total_occurrences tot ON tot.id_cliente = cl.id_cliente
                     
                     
-                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
+                    
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente      
                     $filtroSt
                     WHERE cl.cancelacion_proceso = 2 AND isNULL(noRecibo, '') != 'CANCELADO'  AND isNULL(isNULL(cl.tipo_venta_cl, lo.tipo_venta), 0) IN (0, 1, 2) AND cl.status = 1 AND cl.id_asesor NOT IN (2541, 2562, 2583, 2551, 2572, 2593, 2591, 2570, 2549, 12845) AND cl.id_gerente NOT IN (6739)
@@ -641,9 +673,9 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote AND lo.idStatusLote IN (2, 3) AND (lo.totalNeto2 IS NOT NULL AND lo.totalNeto2 != 0.00)
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
-                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede
+                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
+                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede AND rc.$comodin = u.id_usuario
                     LEFT JOIN #BaseTotal bt ON bt.id_cliente = cl.id_cliente
                     LEFT JOIN #total_occurrences tot ON tot.id_cliente = cl.id_cliente
                     
@@ -681,10 +713,10 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
-                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede
+                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
+                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede AND rc.$comodin = u.id_usuario
                     LEFT JOIN #BaseTotal bt ON bt.id_cliente = cl.id_cliente
                     LEFT JOIN #total_occurrences tot ON tot.id_cliente = cl.id_cliente
                    
@@ -723,9 +755,9 @@ class Reporte_model extends CI_Model {
                     INNER JOIN lotes lo ON lo.idLote = cl.idLote
                     INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
                     LEFT JOIN sedes sede ON sede.id_sede = cl.id_sede
-                    $comodin2 JOIN usuarios u ON u.id_usuario = cl.$comodin
                     LEFT JOIN ventas_compartidas vc ON vc.id_cliente = cl.id_cliente AND vc.estatus = 1
-                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede
+                    LEFT JOIN(SELECT id_usuario, nombre, apellido_paterno, apellido_materno, id_rol from usuarios) u ON (u.id_usuario = cl.$comodin OR u.id_usuario = vc.$comodin)
+                    LEFT JOIN #comodinCount rc ON rc.id_cliente = cl.id_cliente AND rc.id_sede = cl.id_sede AND rc.$comodin = u.id_usuario
                     LEFT JOIN #BaseTotal bt ON bt.id_cliente = cl.id_cliente
                     LEFT JOIN #total_occurrences tot ON tot.id_cliente = cl.id_cliente
                     
@@ -751,11 +783,12 @@ class Reporte_model extends CI_Model {
             apartadas.nombreUsuario, contratadas.nombreUsuario, general.userID, canapartadas.nombreUsuario, cancontratadas.nombreUsuario, apartadas.sedeNombre, contratadas.sedeNombre, 
             apartadas.id_array, contratadas.id_array, canapartadas.id_array, cancontratadas.id_array
             ORDER BY apartadas.nombreUsuario
-            DROP TABLE #comodinCount;
-            DROP TABLE #BaseTotal;
-            DROP TABLE #total_occurrences;
-        ");
+            ");
+        
         return $query;
+
+            
+
     }
 
     public function validateRegional($id){
