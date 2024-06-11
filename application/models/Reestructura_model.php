@@ -830,6 +830,7 @@ class Reestructura_model extends CI_Model
             WHERE
                 lo.idStatusLote IN (15, 16, 21, 20) 
                 AND lo.status = 1
+                AND ISNULL(lo.tipo_venta, 0) != 1
             UNION ALL 
             SELECT 
                 UPPER(CAST(re.descripcion AS varchar(100))) nombreResidencial, 
@@ -872,7 +873,7 @@ class Reestructura_model extends CI_Model
         ini_set('memory_limit', -1);
         $id_rol = $this->session->userdata('id_rol');
         $id_usuario = $id_rol == 6 ? $this->session->userdata('id_lider') : $this->session->userdata('id_usuario');
-        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND cl.id_gerente = $id_usuario" : ($this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
+        $validacionExtra = in_array($id_rol, array(3, 6)) ? "AND (cl.id_gerente = $id_usuario OR cl.id_asesor = $id_usuario)" : ( $this->session->userdata('id_rol') == 7 ? "AND cl.id_asesor = $id_usuario" : "");
 
         return $this->db->query(
             "WITH UltimoValor AS (SELECT anterior, aud.fecha_creacion, id_parametro, ROW_NUMBER() OVER (PARTITION BY id_parametro ORDER BY fecha_creacion DESC) AS rn
