@@ -179,18 +179,21 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
             }
         },
         {
+            visible: (id_rol_general == 15) ? false : true,
             data: function (d) {
                 if (d.asesor == null || d.asesor == '') return 'SIN ESPECIFICAR'
                 return d.asesor;
             }
         },
         {
+            visible: (id_rol_general == 15) ? false : true,
             data: function (d) {
                 if (d.gerente == null || d.gerente == '') return 'SIN ESPECIFICAR'
                 return d.gerente;
             }
         },
         {
+            visible: (id_rol_general == 15) ? false : true,
             data: function (d) {
                 if (d.subdirector == null || d.subdirector == '') return 'SIN ESPECIFICAR'
                 return d.subdirector;
