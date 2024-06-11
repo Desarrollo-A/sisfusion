@@ -693,102 +693,6 @@ function saveTipo(id){
         });
     }
 }
-/*function Editar(i,precio,id_usuario){
-    $('#modal_avisos .modal-body').html('');
-    let precioLote = parseFloat(precio);
-    let nuevoPorce1 = replaceAll($('#porcentaje_'+i).val(), ',',''); 
-    let nuevoPorce = replaceAll(nuevoPorce1, '%',''); 
-    let  abonado =  replaceAll($('#abonado_'+i).val(), ',','');
-    let id_comision = $('#id_comision_'+i).val();
-    let id_rol = $('#id_rol_'+i).val();
-    let pendiente = replaceAll($('#pendiente_'+i).val(), ',',''); 
-
-    if(id_rol == 1 || id_rol == 2 || id_rol == 3 || id_rol == 9 || id_rol == 38 || id_rol == 45){
-        if(parseFloat(nuevoPorce) > 1 || parseFloat(nuevoPorce) < 0){
-            $('#porcentaje_'+i).val(1);
-            nuevoPorce=1;
-            document.getElementById('msj_'+i).innerHTML = 'Debe ingresar un número entre 0 y 1';
-        }
-        else{
-            document.getElementById('msj_'+i).innerHTML = '';
-        }
-    }
-    else{
-        if(parseFloat(nuevoPorce) > 4 || parseFloat(nuevoPorce) < 0){
-            $('#porcentaje_'+i).val(3);
-            nuevoPorce=3;
-            document.getElementById('msj_'+i).innerHTML = '';
-            document.getElementById('msj_'+i).innerHTML = 'Debe ingresar un número entre 0 y 3';
-        }
-        else{
-            document.getElementById('msj_'+i).innerHTML = '';
-        }
-    }
-
-    let comisionTotal = precioLote * (nuevoPorce / 100);
-    $('#btn_'+i).addClass('btn-success');
-
-    if(parseFloat(abonado) > parseFloat(comisionTotal)){
-        $('#comision_total_'+i).val(formatMoney(comisionTotal));
-        $.ajax({
-            url: general_base_url+'Incidencias/getPagosByComision/'+id_comision,
-            type: 'post',
-            dataType: 'json',
-            success:function(response){
-                var len = response.length;
-                if(len == 0){
-                    let nuevoPendient=parseFloat(comisionTotal - abonado);
-                    $('#pendiente_'+i).val(formatMoney(nuevoPendient));
-
-                    $('#modal_avisos .modal-body').append('<p>La nueva comisión total <b style="color:green;">$'+formatMoney(comisionTotal)+'</b> es menor a lo abondado, No se encontraron pagos disponibles para eliminar. <b style="color:red;">Aplicar los respectivos descuentos</b></p>');
-                }
-                else{
-                    let suma = 0;
-                    console.log(response);
-                    $('#modal_avisos .modal-body').append(`<table class="table table-hover">
-                    <thead>
-                    <tr>
-                    <th>ID pago</th>
-                    <th>Monto</th>
-                    <th>Usuario</th>
-                    <th>Estatus</th>
-                    </tr>
-                    </thead><tbody>`);
-                    for( var j = 0; j<len; j++){
-                        suma = suma + response[j]['abono_neodata'];
-                        $('#modal_avisos .modal-body .table').append(`<tr>
-                        <td>${response[j]['id_pago_i']}</td>
-                        <td>$${formatMoney(response[j]['abono_neodata'])}</td>
-                        <td>${response[j]['usuario']}</td>
-                        <td>${response[j]['nombre']}</td>
-                        </tr>`);
-                    }
-                    $('#modal_avisos .modal-body').append(`</tbody></table>`);
-                    let nuevoAbono=parseFloat(abonado-suma);
-                    let NuevoPendiente=parseFloat(comisionTotal - nuevoAbono);
-                    $('#abonado_'+i).val(formatMoney(nuevoAbono));
-                    $('#pendiente_'+i).val(formatMoney(NuevoPendiente));
-
-                    if(nuevoAbono > comisionTotal){
-                        $('#modal_avisos .modal-body').append('<p>La nueva comisión total <b style="color:green;">$'+formatMoney(comisionTotal)+'</b> es menor a lo abondado <b>$'+formatMoney(nuevoAbono)+'</b> (ya con los pagos eliminados),Se eliminar los pagos mostrados una vez guardado el cambio. <b style="color:red;">Aplicar los respectivos descuentos</b></p>');
-                    }
-                    else{
-                        $('#modal_avisos .modal-body').append('<p>La nueva comisión total es de <b style="color:green;">$'+formatMoney(comisionTotal)+'</b>, se eliminaran los pagos mostrados una vez guardado el ajuste. El nuevo saldo abonado sera de <b>$'+formatMoney(nuevoAbono)+'</b>. <b>No se requiere aplicar descuentos</b> </p>');
-                    }
-                }
-            }
-        });
-        $('#modal_avisos').modal('show');
-    }
-    else{
-        let NuevoPendiente=parseFloat(comisionTotal - abonado);
-        $('#pendiente_'+i).val(formatMoney(NuevoPendiente));
-        // document.getElementById('btn_'+i).disabled=false;
-        $("#btn_"+i).show('slow'); 
-        $('#comision_total_'+i).val(formatMoney(comisionTotal));
-    }
-}*/
-
 function SaveAjuste(i){
     $('#spiner-loader').removeClass('hidden');
     $('#btn_'+i).removeClass('btn-success');
@@ -875,7 +779,11 @@ function onKeyUp(event) {
  
 $(".find_doc").click( function() {
     var idLote = $('#inp_lote').val();
-   if(idLote != '' ){
+    
+   if(idLote != ''){
+
+    $('#tabla_inventario_contraloria').show();
+
     tabla_inventario = $("#tabla_inventario_contraloria").DataTable({
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
         width: 'auto',
@@ -1239,6 +1147,9 @@ $(".find_doc").click( function() {
         tipo = $(this).attr('data-tipo');
         planComision = $(this).attr('data-planComision');
 
+        cliente = $(this).attr("data-cliente");
+        lote = $(this).attr("data-lote");
+ 
         $("#modal_NEODATA .modal-header").html("");
         $("#modal_NEODATA .modal-body").html("");
         $("#modal_NEODATA .modal-footer").html("");
@@ -1426,13 +1337,13 @@ $(".find_doc").click( function() {
                                             font-size:10px;">${v.observaciones == 'COMISIÓN CEDIDA' ? '(COMISIÓN CEDIDA)' : ''} ${v.descuento > 1 && v.observaciones != 'COMISIÓN CEDIDA'  ? '(CEDIÓ COMISIÓN)' : ''}<b></p>
                                         </div>
                                         <div class="col-md-1">
-                                        <input class="form-control ng-invalid ng-invalid-required" ${(parseInt(banderaPermisos) != 1) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
+                                        <input class="form-control input-gral ng-invalid-required" ${(parseInt(banderaPermisos) != 1) ? 'readonly="true"' : ''} style="${v.descuento == 1 ? 'color:red;' : ''}" ${v.descuento == 1 || v.descuento > 1 ? 'disabled' : ''} id="porcentaje_${i}" ${(v.rol_generado == 1 || v.rol_generado == 2 || v.rol_generado == 3 || v.rol_generado == 9 || v.rol_generado == 45 || v.rol_generado == 38) ? 'max="1"' : 'max="4"'}   onblur="Editar(${i},${precioAnt},${v.id_usuario})" value="${parseFloat(v.porcentaje_decimal)}">
                                         <input type="hidden" id="porcentaje_ant_${i}" name="porcentaje_ant_${i}" value="${v.porcentaje_decimal}"><br>
                                         <b id="msj_${i}" style="color:red;"></b>
                                         </div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
-                                        <div class="col-md-2"><input class="form-control ng-invalid ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="comision_total_${i}" value="${formatMoney(v.comision_total)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" style="${v.descuento == 1 ? 'color:red;' : ''}" readonly="true" id="abonado_${i}" value="${formatMoney(v.abono_pagado)}"></div>
+                                        <div class="col-md-2"><input class="form-control input-gral ng-invalid-required" required readonly="true"  id="pendiente_${i}" value="${formatMoney(v.comision_total-v.abono_pagado)}"></div>
                                         <div class="col-md-3 botones">
                                         ${(parseInt(banderaPermisos) != 1) ? '' : boton}  
                                         ${boton_topar}
@@ -1447,7 +1358,19 @@ $(".find_doc").click( function() {
                                     });
                                 });
 
-                                $("#modal_NEODATA .modal-footer").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"></div><div class="col-md-3"></div></div>');
+                                $.getJSON(general_base_url + "Incidencias/getUserVC/" + cliente)
+                                .done(function (vc) {
+                                    if (vc.length > 0) {
+                                        $("#modal_NEODATA .modal-footer").append(`
+                                            <div class="d-flex justify-content-center align-items-center w-100">
+                                                <button type="button" value="${lote}" data-lote="${lote}" data-cliente="${cliente}" class="btn-gral-data bajaVentaC" style='background-color:red; margin: auto;'>
+                                                    BAJA DE VENTAS COMPARTIDAS<i class="fas fa-trash pl-1"></i>
+                                                </button>
+                                            </div>
+                                        `);   
+                                    }  
+                                });                                                          
+                                
                                 if(total < 1 ){
                                     $('#dispersar').prop('disabled', true);
                                 }
@@ -1455,7 +1378,8 @@ $(".find_doc").click( function() {
                                     $('#dispersar').prop('disabled', false);
                                 }
                             });
-                        }        
+                        }
+
                     break;
                     case 2:
                         $("#modal_NEODATA .modal-body").append('<div class="row"><div class="col-md-12"><h4><b>No se encontró esta referencia de '+row.data().nombreLote+'.</b></h4><br><h5>Revisar con Administración.</h5></div> <div class="col-md-12"><center><img src="'+general_base_url+'static/images/robot.gif" width="320" height="300"></center></div> </div>');
@@ -2335,3 +2259,114 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         }
     });
 
+    $(document).on('click', ".bajaVentaC", function(e){
+    
+        idLote = $(this).attr('data-lote');
+        idCliente = $(this).attr('data-cliente');
+
+        console.log(idLote)
+
+        $("#modalBajaVc .modal-body").html('');
+        $("#modalBajaVc .modal-footer").html('');
+
+        $.getJSON(general_base_url + "Incidencias/getUserVP/" + idLote)
+    .done(function(dtP) {
+        $("#modalBajaVc .modal-body").append(`
+            <h5>Usuarios en venta principal</h5>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].asesor}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Asesor</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].coordinador == '' || dtP[0].coordinador.trim() == '' ? 'NO REGISTRADO' : dtP[0].coordinador}" style="font-size:12px; color:${dtP[0].coordinador == '' || dtP[0].coordinador.trim() == '' ? 'red' : 'black'};">
+                    <b><p style="font-size:12px; text-align: center;">Coordinador</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].gerente}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Gerente</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].subdirector}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Subdirector</p></b>
+                </div>
+                <div class="flex-grow-1 p-2">
+                    <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${dtP[0].regional == '' || dtP[0].regional.trim() == '' ? 'NO APLICA' : dtP[0].regional}" style="font-size:12px;">
+                    <b><p style="font-size:12px; text-align: center;">Regional</p></b>
+                </div>
+            </div>
+        `);
+
+        $("#modalBajaVc .modal-body").append(`
+                        <h5>Usuarios en venta compartida</h5>`);
+        $.getJSON(general_base_url + "Incidencias/getUserVC/" + idCliente)
+            .done(function (data) {
+                if (data.length > 0) {
+                    data.forEach((item) => {
+                        console.log(item.asesor)
+                        $("#modalBajaVc .modal-body").append(`
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.asesor}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Asesor</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.coordinador == '' || item.coordinador.trim() == '' ? 'NO REGISTRADO' : item.coordinador}" style="font-size:12px; color:${item.coordinador == '' || item.coordinador.trim() == '' ? 'red' : 'black'};">
+                                <b><p style="font-size:12px; text-align: center;">Coordinador</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.gerente}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Gerente</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.subdirector}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Subdirector</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <input class="form-control input-gral ng-invalid ng-invalid-required" required readonly="true" value="${item.regional == '' || item.regional.trim() == '' ? 'NO APLICA' : item.regional}" style="font-size:12px;">
+                                <b><p style="font-size:12px; text-align: center;">Regional</p></b>
+                            </div>
+                            <div class="flex-grow-1 p-2">
+                                <button class="btn-data btn-warning bajaVCupdate" title="Eliminar venta compartida" value="${item.id_vcompartida}" data-id_vcompartida="${item.id_vcompartida}" data-lote="${idLote}" data-id_cliente="${item.id_cliente}"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `);
+                    })
+                } else {
+                    $("#modalBajaVc .modal-body").append(`<h5>No hay ventas compartidas</h5>`);
+                }
+            });
+    });
+
+        $("#modalBajaVc .modal-footer").append(`
+          
+            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+            
+        `);
+        $("#modalBajaVc").modal();
+    
+    });
+
+    $(document).on('click', ".bajaVCupdate", function(e){
+
+        idLote = $(this).attr('data-lote');
+        idVentaC = $(this).attr('data-id_vcompartida');
+        idCliente = $(this).attr('data-id_cliente');
+
+        $("#modalBajaVcUpdate .modal-body").html('');
+        $("#modalBajaVcUpdate .modal-footer").html('');
+
+        $("#modalBajaVcUpdate .modal-body").append(`
+            <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
+            <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
+        `);
+
+        $("#modalBajaVcUpdate .modal-footer").append(`
+            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+            <button type="button" onclick="updateVentaC(${idVentaC}, ${idLote}, ${idCliente} )" class="btn btn-gral-data" >
+                GUARDAR
+            </button> 
+        `);
+        $("#modalBajaVcUpdate").modal();
+
+    });
