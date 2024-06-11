@@ -1,16 +1,15 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <style>
-    hr {
-        display: block;
-        height: 1px;
-        border: 0;
-        border-top: 1px solid #ccc;
-        margin: 1em 0;
-        padding: 0;
-    }
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
 </style>
-
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -19,62 +18,65 @@
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header ">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
-                        <h4 class="card-title"><b>Cambio de sedes</b></h4>
-
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button> 
+                    <h4 class="card-title"><b>Cambio de sedes</b></h4>
+                   
                     </div>
                     <form method="post" id="form_sede">
 
                         <div class="modal-body">
-
-                            <div class="tituloLote" id="tituloLote"></div>
-                            <div class="sedeOld" id="sedeOld"></div>
-
-                            <div class="form-group">
+                            
+                            <div class="tituloLote" id="tituloLote" ></div>
+                            <div class="sedeOld" id="sedeOld" ></div>
+                            
+                            <div class="form-group" >
                                 <label class="control-label">Selecciona una opción </label>
-                                <select id="sedesCambio" name="sedesCambio" class="selectpicker select-gral sedesNuevo" title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
-                                    <?php foreach ($sedes as $sede) { ?>>
+                                <select id="sedesCambio" name="sedesCambio" 
+                                class="selectpicker select-gral sedesNuevo" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                required data-live-search="true">
+                                <?php foreach($sedes as $sede){ ?>>
                                     <option value="<?= $sede->id_sede ?>"> <?= $sede->nombre  ?> </option>
                                 <?php  }  ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer">  
                             <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal">
                                 CANCELAR
                             </button>
                             <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="margin: 15px;">
                                 ACEPTAR
                             </button>
-                        </div>
-
+            			</div>
+                    
                     </form>
-
+                
                 </div>
             </div>
         </div>
-
+       
         <div class="modal fade modal-alertas" id="modal_pagadas" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header ">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-icons">clear</i>
-                        </button>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="material-icons">clear</i>
+                    </button>   
                     </div>
                     <form method="post" id="form_pagadas">
                         <div class="modal-body"></div>
-                        <div class="modal-footer">
-                        </div>
+                        <div class="modal-footer">  
+            				</div>
                     </form>
-
+                
                 </div>
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_NEODATA" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modal-alertas"  id="modal_NEODATA" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -88,7 +90,7 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_inventario" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modal-alertas"  id="modal_inventario" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -103,58 +105,25 @@
             </div>
         </div>
 
-        <div class="modal fade modal-alertas" id="modal_mensualidades" style="overflow:auto !important;" role="dialog">
-            <div class="modal-dialog modal-lg">
-
-                <div class="modal-content">
-                    <form method="post" id="modal_mensualidades_form">
-                        <div class="modal-header bg-red">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="seleccionar">
-                            <h4 class="col-xs-12 text-center"><b>En esta opción podrás editar el tipo mensualidad:</b></h4>
-                            <div class="text-center">
-                                <p><b>Mensualidad anterior:</b> <span id="mensualidad_anterior"></span></p>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <div class="form-group m-0 overflow-hidden">
-                                    <input type="hidden" id="idLote" name="idLote" value="">
-                                    <input type="hidden" id="idCliente" name="idCliente" value="">
-                                    <label class="control-label" for="proyecto">Mensualidad</label>
-                                    <select name="mensualidad9" id="mensualidad9" class="selectpicker select-gral m-0 rl" data-default-value="opciones" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA MENSUALIDAD" data-size="7" data-container="body" required></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-body">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR">CANCELAR</button>
-                            <button type="submit" id="mensualidadTipoBoton" class="btn btn-primary">ENVIAR</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modal-alertas" id="addEmpresa" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modal-alertas"  id="addEmpresa" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-ico  ns">clear</i>
-                        </button>
+                            <i class="material-icons">clear</i>
+                        </button>   
                     </div>
                     <form method="post" id="form_empresa">
                         <div class="modal-body">
-                            <input type="hidden" name="idLoteE" readonly="true" id="idLoteE">
-                            <input type="hidden" name="idClienteE" readonly="true" id="idClienteE">
-                            <input type="hidden" name="PrecioLoteE" readonly="true" id="PrecioLoteE">
+                            <input type="hidden" name="idLoteE" readonly="true" id="idLoteE" >
+                            <input type="hidden" name="idClienteE" readonly="true" id="idClienteE" >
+                            <input type="hidden" name="PrecioLoteE" readonly="true" id="PrecioLoteE" >
                             <h4>¿Esta seguro que desea agregar empresa?</h4>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
-                            <!-- <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
+                            <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
+                        <!-- <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
                             <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button> -->
                         </div>
                     </form>
@@ -181,16 +150,17 @@
                                 <li role="presentation">
                                     <a href="#coSellingAdvisers" aria-controls="coSellingAdvisers" role="tab" data-toggle="tab" onclick="javascript:$('#seeCoSellingAdvisers').DataTable().ajax.reload();">Asesores venta compartida</a>
                                 </li>
-                                <?php
+                                <?php 
                                 $id_rol = $this->session->userdata('id_rol');
-                                if ($id_rol == 11) {
+                                if($id_rol == 11){
                                     echo '<li role="presentation"><a href="#tab_asignacion" aria-controls="tab_asignacion" role="tab" data-toggle="tab"
                                         onclick="fill_data_asignacion();">Asignación</a>
                                     </li>';
                                 }
                                 ?>
                                 <li role="presentation" class="hide" id="li_individual_sales">
-                                    <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" data-toggle="tab">Clausulas</a>
+                                    <a href="#salesOfIndividuals" aria-controls="salesOfIndividuals" role="tab" 
+                                    data-toggle="tab">Clausulas</a>
                                 </li>
                             </ul>
                             <!-- Tab panes -->
@@ -203,48 +173,24 @@
                                                     <table id="verDet" class="table table-bordered table-hover" width="100%" style="text-align:center;">
                                                         <thead>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Lote</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Status</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Detalles</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Comentario</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Lote</center></th>
+                                                                <th><center>Status</center></th>
+                                                                <th><center>Detalles</center></th>
+                                                                <th><center>Comentario</center></th>
+                                                                <th><center>Fecha</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Lote</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Status</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Detalles</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Comentario</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Lote</center></th>
+                                                                <th><center>Status</center></th>
+                                                                <th><center>Detalles</center></th>
+                                                                <th><center>Comentario</center></th>
+                                                                <th><center>Fecha</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -261,42 +207,22 @@
                                                     <table id="verDetBloqueo" class="table table-bordered table-hover" width="100%" style="text-align:center;">
                                                         <thead>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Lote</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Precio</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha Liberación</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Comentario Liberación</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Lote</center></th>
+                                                                <th><center>Precio</center></th>
+                                                                <th><center>Fecha Liberación</center></th>
+                                                                <th><center>Comentario Liberación</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Lote</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Precio</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha Liberación</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Comentario Liberación</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Lote</center></th>
+                                                                <th><center>Precio</center></th>
+                                                                <th><center>Fecha Liberación</center></th>
+                                                                <th><center>Comentario Liberación</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -313,42 +239,22 @@
                                                     <table id="seeCoSellingAdvisers" class="table table-bordered table-hover" width="100%" style="text-align:center;">
                                                         <thead>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Asesor</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Coordinador</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Gerente</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha alta</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Asesor</center></th>
+                                                                <th><center>Coordinador</center></th>
+                                                                <th><center>Gerente</center></th>
+                                                                <th><center>Fecha alta</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
-                                                                <th>
-                                                                    <center>Asesor</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Coordinador</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Gerente</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Fecha alta</center>
-                                                                </th>
-                                                                <th>
-                                                                    <center>Usuario</center>
-                                                                </th>
+                                                                <th><center>Asesor</center></th>
+                                                                <th><center>Coordinador</center></th>
+                                                                <th><center>Gerente</center></th>
+                                                                <th><center>Fecha alta</center></th>
+                                                                <th><center>Usuario</center></th>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -364,7 +270,9 @@
                                                 <div class="card-content">
                                                     <div class="form-group">
                                                         <label for="des">Desarrollo</label>
-                                                        <select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker" data-style="btn btn-second" data-show-subtext="true" data-live-search="true" title="" data-size="7" required>
+                                                        <select name="sel_desarrollo" id="sel_desarrollo" class="selectpicker" 
+                                                        data-style="btn btn-second" data-show-subtext="true" 
+                                                        data-live-search="true"  title="" data-size="7" required>
                                                             <option disabled selected>Selecciona un desarrollo</option>
                                                         </select>
                                                     </div>
@@ -504,56 +412,46 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="control-label">Asesor dado de baja</label>
-                                <select name="asesorold" id="asesorold" class="selectpicker select-gral" title="SELECCIONA UNA OPCIÓN" data-style="btn " data-show-subtext="true" data-live-search="true" title="Selecciona un usuario" data-size="7" required>
+                                <select name="asesorold" id="asesorold" class="selectpicker select-gral" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                data-style="btn " data-show-subtext="true" data-live-search="true" 
+                                title="Selecciona un usuario" data-size="7" required>
                                 </select>
                             </div>
-                            <div id="info"></div>
+                            <div id="info" ></div>
                             <div class="form-group" id="users"></div>
                             <div class="form-group">
                                 <label class="control-label">Puesto del usuario a ceder la comisiones</label>
-                                <select class="selectpicker select-gral roles2" name="roles2" id="roles2" required title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
+                                <select class="selectpicker select-gral roles2" 
+                                    name="roles2" id="roles2" required
+                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
                                     <option value="7">Asesor</option>
                                     <option value="9">Coordinador</option>
                                     <option value="3">Gerente</option>
-                                </select>
+                                </select> 
                             </div>
                             <div class="form-group" id="users">
                                 <label class="control-label">Usuario a ceder comisiones</label>
-                                <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>
+                                <select id="usuarioid2" name="usuarioid2" class="selectpicker directorSelect select-gral"
+                                title="SELECCIONA UNA OPCIÓN" 
+                                 required data-live-search="true"></select>
                             </div>
                             <div class="form-group">
                                 <label class="control-label">Descripción</label>
-                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
+                                <textarea id="comentario" name="comentario" class="form-control input-gral" rows="3" 
+                                placeholder="Descripción" required="required"></textarea>
                             </div>
                             <div class="form-group">
-
+                             
                             </div>
                         </div>
+                        
+                        <div class="modal-footer">     
 
-                        <div class="modal-footer">
-
-                            <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal">CANCELAR</button>
-                            <button type="submit" id="btn_ceder" class="btn btn-gral-data ">GUARDAR</button>
+                                    <button class="btn btn-danger btn-simple" type="button" data-dismiss="modal" >CANCELAR</button>
+                                    <button type="submit" id="btn_ceder" class="btn btn-gral-data ">GUARDAR</button>
                         </div>
 
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!--MODAL QUITAR VENTA COMPARITIDA -->
-        <div class="modal fade modal-alertas" id="modalCompartidos" role="dialog">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content">
-                    <div class="modal-header pb-4">
-                        <h3 class="card-title text-center"><b>Quitar venta compartida</b></h3>
-                    </div>
-                    <form id="compartidasForm">
-                        <div class="card-content text-center" id="nombrePorcentaje">
-                        </div>
-
-                        <div class="card-content text-center" id="footer">
-                        </div>
                     </form>
                 </div>
             </div>
@@ -618,36 +516,33 @@
                         <div class="modal-body">
                             <div class="vc"></div>
                             <div class="form-group" id="users"></div>
-
                             <div class="form-group">
-                                <h4 class="card-title"><b>Opciones de cambio de usuario</b></h4>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label class="control-label">Puesto del usuario a modificar</label>
-                                        <select class="selectpicker select-gral rolesvc" name="rolesvc" id="rolesvc" required title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
-                                            <option value="7">Asesor</option>
-                                            <option value="9">Coordinador</option>
-                                            <option value="3">Gerente</option>
-                                            <option value="2">Sub director</option>
-                                            <option value="59">Regional</option>
-                                        </select>
-                                        <p id="UserSelectvc"></p>
-                                    </div>
+                                <label class="control-label">Puesto del usuario a modificar</label>
 
-                                    <div class="col-md-6">
-                                        <label class="control-label">Seleccionar usuario</label>
-                                        <select id="usuarioid4" name="usuarioid4" class="selectpicker select-gral directorSelect" title="SELECCIONA UNA OPCIÓN" required data-live-search="true"></select>
-                                    </div>
-                                </div>
+                                    <select class="selectpicker select-gral rolesvc" 
+                                    name="rolesvc" id="rolesvc" required
+                                 title="SELECCIONA UNA OPCIÓN" required data-live-search="true">
 
-                                <div class="form-group">
-                                    <label class="control-label">Descripción</label>
-                                    <textarea id="comentario4" name="comentario4" class="form-control input-gral" rows="3" placeholder="Descripción" required="required"></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <!-- Puedes agregar más elementos aquí si es necesario -->
-                                </div>
+                                    <option value="7">Asesor</option>
+                                    <option value="9">Coordinador</option>
+                                    <option value="3">Gerente</option>
+                                </select>
+                                <p id="UserSelectvc"></p>
+                            </div>
+                            <div class="form-group" id="users">
+                                <label class="control-label">Seleccionar usuario</label>
+                                <select id="usuarioid4" name="usuarioid4" 
+                                class="selectpicker select-gral directorSelect" 
+                                title="SELECCIONA UNA OPCIÓN"
+                                required data-live-search="true"></select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label">Descripción</label>
+                                <textarea id="comentario4" name="comentario4" class="form-control input-gral"
+                                 rows="3" placeholder="Descripción" required="required"></textarea>
+                            </div>
+                            <div class="form-group">
+                              
                             </div>
                         </div>
                         <div class="modal-footer">     
@@ -655,31 +550,6 @@
                                 <button type="submit" id="btn_vc" class="btn btn-gral-data" >GUARDAR</button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <h3 class="card-title text-center mx-auto"><b>Baja de venta compartida</b></h3>
-                    </div>
-                    <div class="modal-body text-center">
-                    </div>
-                    <div class="modal-footer">
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
-            <div class="modal-dialog modal-md">
-                <div class="modal-content">
-                    <div class="modal-body">
-                    </div>
-                    <div class="modal-footer">
-                    </div>
                 </div>
             </div>
         </div>
@@ -703,15 +573,10 @@
                                 <select id="usuarioid6" name="usuarioid6" class="selectpicker select-gral  coor "
                                 data-live-search="true" required    title="SELECCIONA UNA OPCIÓN"></select>
                             </div>
-
-
-                            <div class="col-md-6">
-                                <div class="modal-body">
-                                    <div class="form-group" id="users7">
-                                        <label class="control-label">Gerente</label>
-                                        <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral ger" required data-live-search="true" title="SELECCIONA UNA OPCIÓN"></select>
-                                    </div>
-                                </div>
+                            <div class="form-group" id="users7">
+                                <label class="control-label">Gerente</label>
+                                <select id="usuarioid7" name="usuarioid7" class="selectpicker select-gral  ger " 
+                                required data-live-search="true"    title="SELECCIONA UNA OPCIÓN" ></select>
                             </div>
                             <div class="form-group" id="users7">
                                 <label class="control-label">Subdirector</label>
@@ -726,6 +591,12 @@
                         </div>
                     </form>
                 </div>
+            </div>
+        </div>
+
+        <div class="content boxContent">
+            <div class="container-fluid">
+                <div class="row">
                     <div class="col col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="card">
                             <div class="card-header card-header-icon" data-background-color="goldMaderas">
@@ -735,6 +606,7 @@
                                 <h3 class="card-title center-align">Panel de incidencias</h3>
                                 <div class="toolbar">
                                     <div class="container-fluid">
+                                        <div class="row">
                                             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -747,7 +619,9 @@
                                             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                                                 <div class="form-group  label-floating is-empty">
                                                     <label class="control-label label-gral">Lote</label>
-                                                    <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote" onkeydown="return event.keyCode !== 69" class="form-control input-gral" type="number" min="1" maxlength="6">
+                                                    <input id="inp_lote" onkeyup="onKeyUp(event)" name="inp_lote" 
+                                                    onkeydown="return event.keyCode !== 69"
+                                                    class="form-control input-gral" type="number" min="1"  maxlength="6">
                                                 </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -763,7 +637,7 @@
                                         <div class="table-responsive">
                                             <table class="table-striped table-hover" id="tabla_inventario_contraloria" name="tabla_inventario_contraloria">
                                                 <thead>
-                                                    <tr>
+                                                    <tr>   
                                                         <th>PROYECTO</th>
                                                         <th>CONDOMINIO</th>
                                                         <th>LOTE</th>
@@ -774,7 +648,7 @@
                                                         <th>CONTRATACIÓN</th>
                                                         
                                                         <th>PLAN VENTA</th>
-                                                        <th>FEC. SISTEMA</th>
+                                                        <th>FEC. SISTEMA</th> 
                                                         <th>FEC. NEODATA</th>
 
                                                         <th>ENT. VENTA</th>
@@ -786,16 +660,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+							</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <?php $this->load->view('template/footer_legend'); ?>
+        <?php $this->load->view('template/footer_legend');?>
     </div>
     </div>
     </div>
-    <?php $this->load->view('template/footer'); ?>
+    <?php $this->load->view('template/footer');?>
     <script src="<?= base_url() ?>dist/js/controllers/incidencias/incidencia_by_lote.js"></script>
 </body>
