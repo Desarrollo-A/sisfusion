@@ -66,7 +66,7 @@ class Reestructura_model extends CI_Model
         CASE WHEN ISNULL(dxc2.banderaProcesoUrgente, 0) = 0 THEN 'NO APLICA' ELSE 'URGENTE' END banderaProcesoUrgenteTexto,
         ISNULL(dxc2.banderaProcesoUrgente, 0) banderaProcesoUrgente, HD.bucket
         FROM lotes lo
-        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6)
+        LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.idLote = lo.idLote AND cl.status = 1 AND cl.proceso NOT IN (2, 3, 4, 5, 6, 7)
         LEFT JOIN datos_x_cliente dxc2 ON dxc2.idLote = lo.idLote
         INNER JOIN condominios co ON lo.idCondominio = co.idCondominio
         INNER JOIN residenciales re ON co.idResidencial = re.idResidencial
@@ -1957,6 +1957,40 @@ class Reestructura_model extends CI_Model
         $query = $this->db->query("SELECT lo.idLote, cl.proceso FROM clientes cl 
         INNER JOIN lotes lo ON cl.idLote = lo.idLote
         WHERE cl.id_cliente = (SELECT id_cliente_reubicacion_2 FROM clientes clSub WHERE idLote = ? AND clSub.status = 1)", $idLote);
+
+        return $query;
+    }
+
+    public function getDocumentosRe($idLote){
+        $query = $this->db->query("SELECT nombreLote, documento, nombreDocumento 
+            FROM (SELECT lo.nombreLote, pxl.contrato, pxl.corrida, rescision = null
+                    FROM propuestas_x_lote pxl
+                    inner JOIN lotes lo ON lo.idLote = pxl.id_lotep
+					inner JOIN lotes lo2 ON lo2.idLote = pxl.idLote
+					LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lo2.idLote
+                    WHERE pxl.idLote = ?
+					UNION ALL
+					SELECT lo.nombreLote, contrato = null, corrida = null, dxc.rescision
+                    FROM propuestas_x_lote pxl
+                    inner JOIN lotes lo ON lo.idLote = pxl.idLote
+					LEFT JOIN datos_x_cliente dxc ON dxc.idLote = lo.idLote
+                    WHERE pxl.idLote = ?) pv1
+            unpivot (documento for nombreDocumento in (contrato, corrida, rescision)) unpiv 
+            ORDER BY nombreLote", 
+        array($idLote, $idLote));
+
+        return $query;
+    }
+
+    public function getDocumentosFusion($idLote){
+        $query = $this->db->query("SELECT nombreLote, documento, nombreDocumento 
+            FROM (SELECT nombreLote, lf.*
+                    FROM lotesFusion lf
+                    INNER JOIN lotes lo ON lo.idLote = lf.idLote
+                    WHERE idLotePvOrigen in ?) pv1
+            unpivot (documento for nombreDocumento in (contrato, corrida, rescision)) unpiv 
+            ORDER BY nombreLote", 
+        array($idLote));
 
         return $query;
     }
