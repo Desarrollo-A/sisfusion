@@ -49,18 +49,18 @@
                                                 <th>PROYECTO ORIGEN</th>
                                                 <th>CONDOMINIO ORIGEN</th>
                                                 <th>LOTE ORIGEN</th>
-                                                <th>CLIENTE</th>                <!-- -->
+                                                <th>CLIENTE</th>
                                                 <th>REFERENCIA ORIGEN</th>                                           
                                                 <th>ID LOTE ORIGEN</th>
-                                                <th>TOTAL NETO</th>             <!-- -->
-                                                <th>PRECIO M2</th>              <!-- -->
-                                                <th>SUPERFICIE LOTE ORIGEN</th> <!-- -->
+                                                <th>TOTAL NETO</th>
+                                                <th>PRECIO M2</th>
+                                                <th>SUPERFICIE LOTE ORIGEN</th>
                                                 <th>PROYECTO DESTINO</th>
                                                 <th>CONDOMINIO DESTINO</th>
                                                 <th>LOTE DESTINO</th>
-                                                <th>REFERENCIA DESTINO</th>                                                
+                                                <th>REFERENCIA DESTINO</th>
                                                 <th>ID LOTE DESTINO</th>
-                                                <th>SUPERFICIE LOTE DESTINO</th> <!-- -->
+                                                <th>SUPERFICIE LOTE DESTINO</th>
                                                 <th>ESTATUS PROCESO</th>
                                                 <th>ESTATUS ADMINISTRACIÓN</th> 
                                                 <th>FECHA ÚLTIMO MOVIMIENTO</th>
@@ -68,7 +68,7 @@
                                                 <th>ESTATUS 2 CONTRALORÍA</th>
                                                 <th>ASESOR</th>
                                                 <th>GERENTE</th>
-                                                <th>SUBDIRECTOR</th>                <!-- -->
+                                                <th>SUBDIRECTOR</th>
                                                 <th>ACCIONES</th>
                                             </tr>
                                         </thead>

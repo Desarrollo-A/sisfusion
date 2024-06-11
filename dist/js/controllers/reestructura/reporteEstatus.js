@@ -53,7 +53,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
     pageLength: 10,
     bAutoWidth: false,
     fixedColumns: true,
-    ordering: false,
     language: {
         url: general_base_url + "static/spanishLoader_v2.json",
         paginate: {
@@ -119,7 +118,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 if (d.totalNeto == null) {
                     return 'NA'; // o el valor que quieras devolver si es null
                 }
-                // let dato = d.totalNeto.split(',').map(Number);
                 return (d.totalNeto).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
             }
         },
@@ -129,7 +127,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 if (d.preciom2 == null) {
                     return 'NA'; // o el valor que quieras devolver si es null
                 }
-                // let dato = d.totalNeto.split(',').map(Number);
                 return (d.preciom2).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
             }
         },

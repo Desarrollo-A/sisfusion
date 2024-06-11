@@ -213,10 +213,7 @@ class Reestructura extends CI_Controller{
         $fechaCambio = "2024-03-09";
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
-        $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
-        $fechaNuevoEsquema = new DateTime($fechaCambio);
-
-        if( $ultimoEstatus2 >= $fechaNuevoEsquema){
+        if( $fechaUltimoEstatus2 >= $fechaCambio){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -714,10 +711,7 @@ class Reestructura extends CI_Controller{
         $fechaCambio = "2024-03-09";
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
-        $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
-        $fechaNuevoEsquema = new DateTime($fechaCambio);
-
-        if($ultimoEstatus2 >= $fechaNuevoEsquema){
+        if( $fechaUltimoEstatus2 >= $fechaCambio){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -727,6 +721,17 @@ class Reestructura extends CI_Controller{
             $lineaVenta->id_regional_2 = 0;
             $idLider = $checkApartado02[0]['id_gerente_asignado'];
             $esquemaAnterior = true;
+
+            if($idLider == 0 || $idLider == NULL || is_null($idLider)){
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'color' => 'danger'
+                ));
+                exit; 
+            }
+
         }
 
         $metrosGratuitos = 0;
@@ -842,7 +847,16 @@ class Reestructura extends CI_Controller{
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
             }
-
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
+            }
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
                     $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
@@ -1005,6 +1019,16 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
+            }
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
             }
 
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
