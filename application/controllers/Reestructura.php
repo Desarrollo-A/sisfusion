@@ -4096,6 +4096,31 @@ class Reestructura extends CI_Controller{
         }
 
         $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));         
+        $this->output->set_output(json_encode($response));
+    }
+
+    function getDocumentos(){
+        $idLote = $this->input->post('idLote');
+        $flagFusion = intval($this->input->post('flagFusion'));
+
+        $idLote = array_map('intval', explode(',', $idLote));
+
+        if($flagFusion == 1){
+            $get = $this->Reestructura_model->getDocumentosFusion($idLote);
+        }
+        else{
+            $get = $this->Reestructura_model->getDocumentosRe($idLote);
+        }
+        
+        if($get->num_rows() > 0){
+            $response["result"] = true;
+            $response["data"] = $get->result();
+        }
+        else{
+            $response["result"] = false;
+            $response["data"] = [];
+        }
+
+        echo json_encode($response["data"], JSON_NUMERIC_CHECK);
     }
 }
