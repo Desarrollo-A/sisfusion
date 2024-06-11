@@ -134,7 +134,6 @@ $("#tabla_anticipos").ready(function () {
                     }
 
                     var botonParcialidad= d.mensualidadesBoton;
-                    console.log(botonParcialidad);
 
                     if (botonParcialidad === null) {
                         botonesModal += `
@@ -146,11 +145,10 @@ $("#tabla_anticipos").ready(function () {
                     } else {
                         botonesModal += `
                             <center>
-                                <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="CONTINUAR PARCIALIDAD">
+                                <button class="btn-data btn-blueMaderas continuarParcialidad" data-monto="${d.monto}" data-valorTexto="${d.valorTexto}" data-doc="${d.evidencia}" data-proceso="${d.proceso}" data-anticipo="${d.id_anticipo}" data-usuario="${d.id_usuario}" data-toggle="tooltip" data-placement="left" title="CONTINUAR PARCIALIDAD">
                                 <i class="fas fa-address-card"></i>
                                 </button>
                             </center>`;
-                        // alert("nuevo boton");
                     }
             
                     botonesModal += `
@@ -203,7 +201,6 @@ $("#tabla_anticipos").ready(function () {
     });
 
     $(document).on('click', '.continuarParcialidad', function (e) {
-
         var id_usuario = $(this).attr("data-usuario");
         $("#id_usuario").val(id_usuario);
     
@@ -215,11 +212,21 @@ $("#tabla_anticipos").ready(function () {
     
         var proceso = $(this).attr("data-proceso");
     
+        var parcial = $(this).attr("data-valorTexto");
+    
+        var modalTitle = 'Estatus - Mensualidades Parcialidades';
+        if (parcial === "null") { 
+            modalTitle = 'Estatus - Mensualidades Unico Pago';
+        }
+        $("#modalTitle").text(modalTitle);
+    
         mostrarOcultarCampos(proceso);
-
+    
         $("#parcialidadModal").modal();
-        
     });
+    
+    
+    
 
     function calcularPago() {
         var montoPrestado = parseFloat($("#montoPrestado").val());
@@ -325,16 +332,22 @@ $("#tabla_anticipos").ready(function () {
             return;
         }
 
-        if(procesoTipo==1){
+        if (procesoTipo == 1) {
             if (!procesoTipo) { 
                 alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
                 return;
             }
-
+        
             if (!numeroPagos) { 
                 alerts.showNotification("top", "right", "Por favor, selecciona un Número de pagos.", "warning");
                 return;
             }   
+        } else {
+            if (!procesoTipo) { 
+                alerts.showNotification("top", "right", "Por favor, selecciona un tipo.", "warning");
+                return;
+            }
+             
         }
     
         var anticipoData = new FormData();

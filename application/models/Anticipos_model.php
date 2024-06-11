@@ -25,7 +25,7 @@ class Anticipos_model extends CI_Model {
         oxc.nombre AS esquema, se.nombre AS sede, us.forma_pago, fa.nombre_archivo AS factura_nombre,
         ant.evidencia, ant.impuesto, ant.id_anticipo, ant.monto, ant.id_usuario, ant.estatus, 
         UPPER(CONCAT(us.nombre, ' ', us.apellido_paterno, ' ', us.apellido_materno)) AS nombreUsuario, 
-        ant.proceso, ant.comentario, CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END AS prioridad_nombre, $filtroMonto as montoParcial, pra.mensualidades, ant.numero_mensualidades as mensualidadesBoton
+        ant.proceso, ant.comentario, CASE WHEN ant.prioridad  = 0 THEN 'Normal' ELSE 'URGENTE' END AS prioridad_nombre, $filtroMonto as montoParcial, pra.mensualidades, ant.numero_mensualidades as mensualidadesBoton, pra.monto_parcialidad as valorTexto
         FROM anticipo ant
         INNER JOIN usuarios us ON us.id_usuario = ant.id_usuario 
         LEFT JOIN sedes se ON se.id_sede = us.id_sede 
@@ -129,13 +129,17 @@ class Anticipos_model extends CI_Model {
 
     public function updateMontoTotal($id_anticipo,$mensualidadParcialidad,$procesoAntInternomex){
 
+        var_dump($mensualidadParcialidad);
+
+
         $estatus = ($procesoAntInternomex == 0) ? 0 : 2;
         $proceso = ($procesoAntInternomex == 0) ? 0 : 6;
 
         if($mensualidadParcialidad == 0){
+            
             $mensualidadParcialidad=0;
         }
-        
+
         $query = $this->db->query("UPDATE anticipo SET numero_mensualidades=$mensualidadParcialidad, proceso=$proceso, estatus=$estatus WHERE id_anticipo = $id_anticipo");
         
         if ($query) {
@@ -160,7 +164,7 @@ class Anticipos_model extends CI_Model {
     }
 
     public function regresoInternomex($id_anticipo, $id_usuario, $procesoParcialidad) {
-        
+
         $estatus = ($procesoParcialidad == 0) ? 0 : 2;
         $proceso = ($procesoParcialidad == 0) ? 0 : 7;
     

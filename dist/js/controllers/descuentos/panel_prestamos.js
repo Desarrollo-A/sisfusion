@@ -19,7 +19,7 @@ function llenado(){
         for (var i = 0; i < len; i++) {
             var id = data[i]['id_opcion'];
             var name = data[i]['nombre'];
-            $("#tipo").append($('<option>').val(id).text(name));     
+            $("#tipo").append($('<option>').val(id).text(`${id} - ${name} `));     
         }
         $("#tipo").selectpicker('refresh');
     }, 'json');

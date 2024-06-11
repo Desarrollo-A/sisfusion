@@ -48,7 +48,7 @@
                                     </div>
 									
 									<div class="row">
-										<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                             <div class="form-group d-flex justify-center align-center">
 												<button Type="button" class="btn-gral-data" data-toggle="modal" data-target="#miModal">
 												<i class="fas fa-coins"></i>	
@@ -62,13 +62,23 @@
 													id="abrir_modal_plantillas" name="abrir_modal_plantillas"
 													data-toggle="modal" data-target="#modal_plantilla_descuentos">
 												<i class="fas fa-folder-open"></i>	
-												Platilla Préstamos</button>
+												Plantilla Préstamos</button>
+											</div>
+										</div>
+										<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                                            <div class="form-group d-flex justify-center align-center">
+												<button Type="button"  class="btn-gral-data" 
+													id="abrir_ejecutar" name="modal_ejecutar"
+													data-toggle="modal" data-target="#modal_ejecutar">
+												
+												<i class="fas fa-terminal"></i>	
+												Ejecutar función</button>
 											</div>
 										</div>
 										
 
 
-										<div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                             <div class="form-group d-flex justify-center align-center">
 												<buttons Type="button"  class="data" data-toggle="modal" data-target="#ModalAddMotivo"><i class="fas fa-plus"></i> Nuevo motivo de préstamo</buttons>
 											</div>
