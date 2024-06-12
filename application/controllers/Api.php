@@ -450,6 +450,13 @@ class Api extends CI_Controller
                             $data2[$i]['pagos']['monto_comision'] = $dbTransaction[$i]['monto_comision'];
                             $data2[$i]['pagos']['fecha_pago_comision'] = $dbTransaction[$i]['fecha_pago_comision'];
                             $data2[$i]['pagos']['forma_pago'] = implode(', ', array_unique(explode(',', $dbTransaction[$i]['forma_pago_comisionista'])));
+                            $data2[$i]['folio']['il_calle'] = $dbTransaction[$i]['il_calle'];
+                            $data2[$i]['folio']['il_colonia'] = $dbTransaction[$i]['il_colonia'];
+                            $data2[$i]['folio']['il_numExterior'] = $dbTransaction[$i]['il_numExterior'];
+                            $data2[$i]['folio']['il_codigoPostal'] = $dbTransaction[$i]['il_codigoPostal'];
+                            $data2[$i]['folio']['il_superficie'] = $dbTransaction[$i]['il_superficie'];
+                            $data2[$i]['folio']['il_regimen'] = $dbTransaction[$i]['il_regimen'];
+                            $data2[$i]['folio']['il_folio'] = $dbTransaction[$i]['il_folio'];
                         }
                         if ($dbTransaction) // SUCCESS TRANSACTION
                             echo json_encode(array("status" => 1, "message" => "Consulta realizada con éxito.", "data" => $data2), JSON_UNESCAPED_UNICODE);
