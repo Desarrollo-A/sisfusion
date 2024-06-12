@@ -3346,9 +3346,13 @@ class Reestructura extends CI_Controller{
         }
 
         if($preproceso <= 1 ){
-            $update = $this->updateLotesJuridicoRe($idLotePv);
-            $updateRe = $this->updateDocRe($getLotesDestino->result());
+            $update = $this->updateLotesJuridicoRe($idLotePv);            
             $updateResicion = $this->updateResicionRe($idLotePv, $idCliente);
+            $updateRe = true;
+
+            if($getLotesDestino->num_rows() > 0){ // para verificar en caso de que se hayan quitado las propuestas de forma manual
+                $updateRe = $this->updateDocRe($getLotesDestino->result());
+            }
 
             if(!$update || !$updateRe || !$updateResicion){
                 $banderaProceso = false;
@@ -3357,7 +3361,7 @@ class Reestructura extends CI_Controller{
 
         if($preproceso <= 0 ){
             $tempFlag = true; 
-            if($getLotesDestino->num_rows() > 0){
+            if($getLotesDestino->num_rows() > 0){ // para verificar en caso de que se hayan quitado las propuestas de forma manual
                 
                 $updateDestino = $this->updateLotesDestinoRe($getLotesDestino->result(), $idLotePv, $statusReestructura);
                 if(!$updateDestino){
@@ -3545,6 +3549,7 @@ class Reestructura extends CI_Controller{
     public function updateDocFusion($getLotesOrigen, $getLotesDestino){
         $lotesOrigenUpdate = [];
         $lotesDestinoUpdate = [];
+        $updateDestino = true; // se asigna como true, en caso de que el query no regrese nada se dara false
 
         $flag = true;
 
@@ -3567,7 +3572,9 @@ class Reestructura extends CI_Controller{
         }
 
         $updateOrigen = $this->General_model->updateBatch('lotesFusion', $lotesOrigenUpdate, 'idLote');
-        $updateDestino = $this->General_model->updateBatch('lotesFusion', $lotesDestinoUpdate, 'idLote');
+        if(!empty($getLotesDestino)){
+            $updateDestino = $this->General_model->updateBatch('lotesFusion', $lotesDestinoUpdate, 'idLote');
+        }
 
         if(!$updateOrigen || !$updateDestino){
             $flag = false; 
