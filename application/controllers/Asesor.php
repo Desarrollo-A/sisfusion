@@ -4,7 +4,7 @@ class Asesor extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('asesor/Asesor_model');
-        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model'));
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model', 'Neodata_model',));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -2107,10 +2107,10 @@ class Asesor extends CI_Controller {
         $genero = $this->input->post('genero');
         $tipoMoneda = $this->input->post('tipoMoneda');
         $ciudad = $this->input->post('ciudad');
+        $colonia = $this->input->post('colonia');
         $interior = $this->input->post('interior');
         $exterior = $this->input->post('exterior');
         $cp = $this->input->post('cp');
-        
         
         $estado_civil = $this->input->post('estado_civil');
         $nombre_conyuge = $this->input->post('nombre_conyuge');
@@ -2132,7 +2132,7 @@ class Asesor extends CI_Controller {
         $proceso= $this->input->post('proceso');
 
         
-        /*if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
+        if(!in_array($this->session->userdata('id_rol'), array(17, 32, 70))){ //la validación no debe ser valida para contraloria
             $dcv = $this->Asesor_model->informacionVerificarCliente($id_cliente);
             $validacionM2 = $this->validarCostos($costoM2, $costom2f, $tipo_venta, $proceso, $dcv->idResidencial);
             $procesoInt = intval($proceso);
@@ -2142,7 +2142,7 @@ class Asesor extends CI_Controller {
                     exit;
                 }
             }
-        }*/
+        }
 
 
         $proyecto = $this->input->post('proyecto');
@@ -2204,6 +2204,63 @@ class Asesor extends CI_Controller {
                 }
             }
         }
+        $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
+
+            $dataNeoData = array (
+            "accion" => "upd",
+            "Cliente" => $nombreLote,
+            "IdProyecto" => $infoCliente->idProyectoNeoData,
+            "IdVivienda" => $infoCliente->idViviendaNeoData,
+            "IdCredito" => 2,
+            "IdEstado" => $this->input->post('estado'), // NO TENGO EL ESTADO SINO HASTA QUE SE REALIZA EL PRIMER GUARDADO DEL CLIENTE EN EL DS
+            "IdEtapaCliente" => 1, // CvEtapasClientes default 1
+            "IdMedio" => 11, // CvMedios default 11
+            "Nombre" => $this->input->post('nombre'),
+            "ApellidoPaterno" => $this->input->post('apellido_paterno'),
+            "ApellidoMaterno" => $this->input->post('apellido_materno'),
+            "Calle" => $this->input->post('calle'),
+            "Colonia" => $this->input->post('colonia'),
+            "CodPost" => $this->input->post('cp'),
+            "MpioDeleg" => $this->input->post('municipio'),
+            "Localidad" => $this->input->post('localidad'),
+            "Telefono" => $this->input->post('telefono1'),
+            "Email" => $this->input->post('correo'),
+            "RFC" => ($this->input->post('rfc') == null ? 'XAXX010101000' : $this->input->post('rfc')), // SE MANDA RFC GENERICO CUANDO NO SE TIENE RFC DE CLIENTE
+            "FechaNacimiento" => $this->input->post('fecha_nacimiento'), // AAAA-MM-DD NO TENGO FECHA DE NACIMIENTO HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "FechaIngreso" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "NumOficial" => $this->input->post('exterior'), // # EXTERIOR
+            "NumInterior" => $this->input->post('interior'), // # INTERIOR
+            "Sexo" => ($this->input->post('genero') == 1 ? 'M' : $this->input->post('genero') == 2 ? 'F' : NULL), // F / M NO TENGO EL GÉNERO DEL CLEINTE HASTA QUE NO SE REALIZA EL PRIMER GUARDADO DEL DS
+            "Notas" => '', // VA VACÍO
+            "IdCEtapa" => 7, // default 7
+            "FechaAsignacionVivienda" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "Cancelado" => 0, // default 0 - 0 PARA EL ALTA (ACTIVO) / 1 PARA LA BAJA (EN EL UPDATE DE ESTATUS)
+            "Escriturado" => 0, // default 0
+            "TelefonoCelular" => $this->input->post('telefono2'), // OTRO TELÉFONO
+            "FechaRegistro" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "TelefonosConfirmados" => 1, // default 1
+            "FechaUltimoContacto" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "Referencia" => $this->input->post('referencia'), // referencia del lote
+            "FechaFichaRapApartado" => $infoCliente->fechaApartado, // FECHA DE APARTADO
+            "IdSofolSolicitada" => 4, // CvSofoles default 4
+            "IdCuentaMoratorios" => NULL, // 1198738, // van como vacío
+            "IdCuentaIntereses" => NULL, // 1180884, // van como vacío
+            "NoCuentaContable" => NULL, // van como vacío
+            "EscrituradoReal" => 0, // default 0
+            "IdTipoMoneda" => $this->input->post('tipoMoneda'), // default 1
+            "Lada" => $this->input->post('ladaTel1'), // NO TENGO LADA HASTA QUE SE GUARDA EL DS
+            "Pais" => 1142, // default México (1142)
+            "MonedaSATDefault" => 'MXN', // default MXN
+            "IdCodigoPostalSAT" => 167573, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdPaisSAT" => $this->input->post('pais'), // default México (1142)
+            "IdCatRegimen" => $this->input->post('regimenFiscal'), // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
+            "CuentaClabeSTP" => NULL,
+            "RFC"=>$this->input->post('regimenFiscal'),
+            "IdCodigoPostalSAT"=>$this->input->post('cp_fac'),
+        );
+        
+        $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
+        echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
@@ -2270,6 +2327,7 @@ class Asesor extends CI_Controller {
         $arreglo_cliente['exterior'] = $exterior;
         $arreglo_cliente['localidad'] = $localidad;
         $arreglo_cliente['calle'] = $calle;
+        $arreglo_cliente['colonia'] = $colonia;
         $arreglo_cliente['municipio'] = $municipio;
 
 
