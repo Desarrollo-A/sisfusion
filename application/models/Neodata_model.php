@@ -50,7 +50,7 @@ class Neodata_model extends CI_Model {
         @IdCuentaIntereses = " . ($data['IdCuentaIntereses'] == '' ? 'NULL' : $data['IdCuentaIntereses']) . ",
         @NoCuentaContable = " . ($data['NoCuentaContable'] == '' ? 'NULL' : $data['NoCuentaContable']) . ",
         @EscrituradoReal = " . $data['EscrituradoReal'] . ",
-        @IdTipoMoneda = " . $data['IdTipoMoneda'] . ",
+        @IdTipoMoneda = " . ($data['IdTipoMoneda'] == '' ? 1 : $data['IdTipoMoneda']) . ",
         @Lada = " . ($data['Lada'] == '' ? 'NULL' : $data['Lada']) . ",
         @Pais = " . $data['Pais'] . ",
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
