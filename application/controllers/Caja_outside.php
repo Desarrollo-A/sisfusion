@@ -2031,7 +2031,8 @@ class Caja_outside extends CI_Controller {
                         );
                 
                         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-                        exit;
+                        echo json_encode($responseInsertClienteNeoData);
+                        //exit;
 
 
                         $arreglo["idLote"] = $value->idLote;
@@ -2574,15 +2575,16 @@ class Caja_outside extends CI_Controller {
             "Lada" => $infoCliente->ladaTel1, // NO TENGO LADA HASTA QUE SE GUARDA EL DS
             "Pais" => 1142, // default México (1142)
             "MonedaSATDefault" => 'MXN', // default MXN
-            "IdCodigoPostalSAT" => 167573, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdCodigoPostalSAT" => $infoCliente->cp_fac, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
             "IdPaisSAT" => 1142, // default México (1142)
             "IdCatRegimen" => 34, // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
-            "CuentaClabeSTP" => NULL
+            "CuentaClabeSTP" => NULL,
+            "Prospecto" => 0
         );
 
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
         echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
-        exit;
+        //exit;
 
         $data_cliente = $this->caja_model_outside->checkTipoJuridico($id_cliente);
         $pj_info_cliente = $data_cliente->personalidad_juridica;

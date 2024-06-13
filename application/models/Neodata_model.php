@@ -50,7 +50,7 @@ class Neodata_model extends CI_Model {
         @IdCuentaIntereses = " . ($data['IdCuentaIntereses'] == '' ? 'NULL' : $data['IdCuentaIntereses']) . ",
         @NoCuentaContable = " . ($data['NoCuentaContable'] == '' ? 'NULL' : $data['NoCuentaContable']) . ",
         @EscrituradoReal = " . $data['EscrituradoReal'] . ",
-        @IdTipoMoneda = " . $data['IdTipoMoneda'] . ",
+        @IdTipoMoneda = " . ($data['IdTipoMoneda'] == '' ? 1 : $data['IdTipoMoneda']) . ",
         @Lada = " . ($data['Lada'] == '' ? 'NULL' : $data['Lada']) . ",
         @Pais = " . $data['Pais'] . ",
         @MonedaSATDefault = '" . $data['MonedaSATDefault'] . "',
@@ -58,7 +58,7 @@ class Neodata_model extends CI_Model {
         @IdPaisSAT = " . $data['IdPaisSAT'] . ",
         @IdCatRegimen = " . $data['IdCatRegimen'] . ",
         @CuentaClabeSTP = " . ($data['CuentaClabeSTP'] == '' ? 'NULL' : $data['CuentaClabeSTP']) . ",
-        @Prospecto = " . $data['Prospecto'] . ")->result_array();
+        @Prospecto = " . $data['Prospecto'] . "")->result_array();
         
         if (isset($response[0]['idCliente']))
             return array("status" => 1, "message" => "Registro $messageDetail con éxito - " . $response[0]['idCliente'] . ".");
