@@ -2259,9 +2259,6 @@ class Asesor extends CI_Controller {
         );
         
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-        if($responseInsertClienteNeoData['status'] == 1) {
-            echo json_encode(['code'] => 200);
-        }
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
@@ -3247,8 +3244,9 @@ class Asesor extends CI_Controller {
                             return;
                         }
                     }
-
-                    echo json_encode(['code' => 200]);
+                    if ($responseInsertClienteNeoData['status'] == 1) {
+                        echo json_encode(['code' => 200]);
+                    } 
                 } else {
                     echo json_encode(['code' => 200]);
                 }
