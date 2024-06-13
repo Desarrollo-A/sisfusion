@@ -11,6 +11,23 @@ $.post(general_base_url+"Incidencias/getAsesoresBaja", function(data) {
     $("#asesorold").selectpicker('refresh');
 }, 'json'); 
 
+/**-------------------acceso de consulta en cambio de plan de comision------------------------------- */
+
+$.ajax({
+    url: general_base_url+'Incidencias/getPlanComision/',
+    type: 'post',
+    dataType: 'json',
+    success:function(response){
+        var len = response.length;
+        for( var i = 0; i<len; i++){
+            var id = response[i]['id_plan'];
+            var name = response[i]['descripcion'];
+            $("#plan_comision").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+        $("#plan_comision").selectpicker('refresh');
+    }
+});
+
 $("#modal_avisos").draggable({
     handle: ".modal-header"
 }); 
@@ -1075,6 +1092,9 @@ $(".find_doc").click( function() {
                 }
                 BtnStats += [64,65,66,84,85,86].indexOf(data.plan_comision) >= 0 ? '' : `<button href="#" data-planComision="${data.plan_comision}" value="${data.idLote}" data-estatus="${data.idStatusContratacion}" data-tipo="I" data-precioAnt="${data.totalNeto2}"  data-value="${data.registro_comision}" data-code="${data.cbbtton}" class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button>`;
                 BtnStats += `<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" data-planComision="${data.plan_comision}" value="${data.idLote}" data-precioAnt="${data.totalNeto2}"><i class="fas fa-pencil-alt"></i></button>`;
+                
+                BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
+                
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }]
@@ -1145,6 +1165,62 @@ $(".find_doc").click( function() {
             </div>`);
         $("#modal_pagadas").modal();
     });
+
+    /**-------------------Cambio de plan de comision------------------------------- */
+
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_plan_comision", function(e){
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var tr = $(this).closest('tr');
+        var row = tabla_inventario.row( tr );
+        idCliente = $(this).attr("data-idCliente");
+        estatus = $(this).attr("data-estatus");
+
+        if(parseInt(estatus) === 1){
+            alerts.showNotification("top", "right", "Este lote ya fue dispersado, revisalo con TI", "danger");
+        }else{
+            $('#cliente').val(idCliente);
+            $("#titulos").html("");
+            $("#titulos").html(` <h4 class="modal-title">Cambiar plan de comisión del lote <b>${row.data().nombreLote}</b></h4><br><em>Plan de comisión actual: <b>${row.data().plan_descripcion}</b> </em>`);
+    
+            $("#modal_comision").modal();
+        }
+   
+    });
+
+    $("#form_comision").on('submit', function(e){
+        $('#boton').prop('disabled', true);
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        $.ajax({
+            type: 'POST',
+            url: general_base_url+'Incidencias/updatePlanComision',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function(data) {
+            
+                if (data == 1) {
+                    $('#modal_comision').modal("hide");
+                    $("#cliente").val("");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#boton').removeAttr('disabled');
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+
+
+
 
     /**-------------------INVENTARIO------------------------------- */
     $("#tabla_inventario_contraloria tbody").on("click", ".inventario", function(e){
