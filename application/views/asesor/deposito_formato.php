@@ -378,10 +378,10 @@
 
                                 for($n=0; $n < count($paises) ; $n++){
                                     if($paises[$n]['nombre'] == $cliente[0]->pais){
-                                        echo '<option value="'.$paises[$n]['nombre'].'" selected>'.$paises[$n]['nombre'].'</option>';
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'" selected>'.$paises[$n]['nombre'].'</option>';
                                     }
                                     else{
-                                        echo '<option value="'.$paises[$n]['nombre'].'">'.$paises[$n]['nombre'].'</option>';
+                                        echo '<option value="'.$paises[$n]['id_opcion'].'">'.$paises[$n]['nombre'].'</option>';
                                     }
                                 }
                                 ?>
