@@ -1598,7 +1598,9 @@
                 cl.interior,
                 cl.cp,
                 cl.calle,
-                cl.localidad
+                cl.localidad, 
+                cl.regimen_fac,
+                cl.cp_fac
 
             FROM
                 clientes cl

@@ -428,7 +428,8 @@ class Usuarios extends CI_Controller
                 "sedech" => $sedeCH,
                 "sucursalch" => $sucursal,
                 "simbolico" => $simbolicoPropiedad,
-                "tipo" => $tipoUsuario
+                "tipo" => $tipoUsuario,
+                "fac_humano"=>isset($_POST['fac_humano']) ? $_POST['fac_humano'] : null
             );
         }
         $insertData = array();
