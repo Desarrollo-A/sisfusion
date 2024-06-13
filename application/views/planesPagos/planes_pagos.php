@@ -22,6 +22,7 @@
     <?php include 'Modales/addPlanPagoModal.php' ?>
     <?php include 'Modales/verPlanPagoModal.php' ?>
     <?php include 'Modales/confirmarEnvioPlanModal.php' ?>
+    <?php include 'Modales/avisoModal.php' ?>
     <div class="content boxContent">
         <div class="container-fluid">
             <div class="row">

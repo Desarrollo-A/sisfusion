@@ -1,6 +1,7 @@
 let idLote = 0;
 let dumpPlanPago = [];
 let nombreLote;
+let planesDePagoIds;
 
 $(document).ready(function () {
     $.post(`${general_base_url}Contratacion/lista_proyecto`, function (data) {
@@ -56,18 +57,28 @@ $('#tablaPlanPagos thead tr:eq(0) th').each(function (i) {
     });
 });
 $('#idLote').change(function () {
+    $('#nombreCliente').val('');
     $('#spiner-loader').removeClass('hide');
     $('#tablaPlanPagos').removeClass('hide');
     index_idLote = $(this).val();
     idLote = index_idLote;
     console.log('index_idLote', index_idLote);
     var nombreLoteSeleccionado = $('option:selected', this).attr('data-nombreLote');
-
+    var disabledButton;
     //tablaPlanPagos
     $('#spiner-loader').removeClass('hide');
     $.post(general_base_url+"Corrida/getInfoByLote/"+idLote, function (data) {
-        $('#nombreCliente').val(data[0].nombre+' '+data[0].apellido_paterno+' '+data[0].apellido_materno);
+        console.log(data['cliente']);
+        console.log(data['planPago']);
+        $('#nombreCliente').val(data['cliente'][0].nombre+' '+data['cliente'][0].apellido_paterno+' '+data['cliente'][0].apellido_materno);
         $('#spiner-loader').addClass('hide');
+        console.log(data['planPago'].length);
+
+        if(data['planPago'].length <= 0 ){
+            tablaPlanPagos.buttons( '.myButtonClass' ).disable();
+        }else{
+            disabledButton = false;
+        }
     }, 'json');
 
 
@@ -202,9 +213,16 @@ function addPlanPago(){
             if (dto != []) {
                 try {
                     if (dto.status == 1) {
-                        loadInputsCatalogos(dto);
-
-                        $('#addPlanPago').modal('show');
+                        if(dto.enviadoNeodata == 0){
+                            loadInputsCatalogos(dto);
+                            $('#addPlanPago').modal('show');
+                        }else{
+                            let tituloAviso = '<h5>Estos planes de pago <b>ya fueron enviados a NeoData</b> anteriormente</h5>';
+                            let subtitAviso = '<p>Por lo cual, no es posible agregar más planes de pago</p>';
+                            let contenedorGeneral = tituloAviso + subtitAviso;
+                            document.getElementById("contenidoAviso").innerHTML =  contenedorGeneral;
+                            $('#avisoModalPlanPago').modal('show');
+                        }
                     }
                     else
                         alerts.showNotification("top", "right", "Oops, algo salió mal al consultar los datos.", "danger");
@@ -731,7 +749,6 @@ function enviarPlanPago(idLote){
 $(document).on('click', '#aceptarEnvioPP', function(){
 
    let idLote = $('#idLoteSbt').val();
-   console.log('se debe hacer la acción', idLote);
     $.ajax({
         data: {idLote:idLote},
         url: 'generaPlanPagoEnvio/',
@@ -741,32 +758,62 @@ $(document).on('click', '#aceptarEnvioPP', function(){
         },
         success: function (response) {
             response = JSON.parse(response);
-            console.log('response',response);
             if (response.respuesta == 1) {
-
-
                 //enviar el plan generado pero ahora al servicio de NeoData
                 //Descomentar cuando se haga la prueba con el servicio de Rodri
-                // $.ajax({
-                //     data: {planPago:response.planServicio},
-                //     url: 'generaPlanPagoEnvio/',
-                //     type: 'POST',
-                //     success: function (response) {
-                //         $('#aceptarPlanPago').modal('toggle');
-                //         $('#spiner-loader').addClass('hide');
-                        //     alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
-                        //     $('#tablaPlanPagos').DataTable().ajax.reload();
-                //     }
-                // });
+                console.log('response', response);
+                planesDePagoIds = response.planesPagoIds;
+                $.ajax({
+                     data:JSON.stringify(response.planServicio),
+                     url: 'http://192.168.16.20/neodata_reps/back/index.php/ServiciosNeo/regPlanPagoCompleto',
+                     type: 'POST',
+                     success: function (response) {
+                         console.log('RESPUES NEODATA:'+response);
+                         response = JSON.parse(response);
+                         let statusAviso;
+                         if(response.status === true){
+                             statusAviso = 'success';
+                             //actualizar los registros de los  planes de pago com enviados
+                             $.ajax({
+                                 data:{ids:planesDePagoIds},
+                                 url: 'actualizaPlanPagoStatus',
+                                 type: 'POST',
+                                 success: function (response) {
+                                     response = JSON.parse(response);
+                                     let statusAviso;
+                                     if(response.status === true){
+                                         statusAviso = 'success';
+                                         //actualizar los registros de los  planes de pago com enviados
+                                     }else{
+                                         statusAviso = 'danger';
+                                     }
+                                     alerts.showNotification('top', 'right', response.msj, statusAviso);
+                                     $('#aceptarPlanPago').modal('toggle');
+                                     $('#spiner-loader').addClass('hide');
+                                     $('#tablaPlanPagos').DataTable().ajax.reload();
+                                 }
+                             });
+                         }else{
+                             statusAviso = 'danger';
+                             alerts.showNotification('top', 'right', response.msj, statusAviso);
+                             $('#aceptarPlanPago').modal('toggle');
+                             $('#spiner-loader').addClass('hide');
+                             $('#tablaPlanPagos').DataTable().ajax.reload();
+                         }
+                     }
 
-                //código de prueba para no ejecutar el servicio y llamar a NeoData
+                 });
+
+
+            } else if(response.respuesta == -1){
+                alerts.showNotification('top', 'right', 'No hay registro de plan de pagos para enviar o ya se enviaron a Neodata anteriormente.', 'danger');
+                $('#aceptarPlanPago').modal('toggle');
+                $('#spiner-loader').addClass('hide');
+            } else{
+                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
                 $('#aceptarPlanPago').modal('toggle');
                 $('#spiner-loader').addClass('hide');
                 $('#tablaPlanPagos').DataTable().ajax.reload();
-                alerts.showNotification('top', 'right', 'Se envió correctamente el plan de pago', 'success');
-
-            } else {
-                alerts.showNotification('top', 'right', 'OCURRIO UN ERROR INESPERADO, INTENTELO NUEVAMENTE', 'danger');
             }
 
         }

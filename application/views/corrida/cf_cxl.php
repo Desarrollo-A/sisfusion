@@ -4506,7 +4506,7 @@
                                     console.log('$scope.mensualidad_con_enganche', $scope.mensualidad_con_enganche);
                                     range.push({
                                         "fecha" : $scope.dateCf,
-                                        "planPago": 2,
+                                        "planPago":1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "saldoCapital": 0,
@@ -4522,7 +4522,7 @@
                                 else{
                                     range.push({
                                         "fecha" : $scope.dateCf,
-                                        "planPago": 2,
+                                        "planPago": 1,
                                         "pago" : i + 1,
                                         "capital" : $scope.infoLote.capital,
                                         "saldoCapital": 0,
@@ -4539,7 +4539,7 @@
                             else{
                                 range.push({
                                     "fecha" : $scope.dateCf,
-                                    "planPago": 2,
+                                    "planPago": 1,
                                     "pago" : i + 1,
                                     "capital" : $scope.infoLote.capital,
                                     "saldoCapital": 0,
@@ -4663,7 +4663,7 @@
                             range2.push({
 
                                 "fecha" : $scope.dateCf,
-                                "planPago": 3,
+                                "planPago": 2,
                                 "pago" : i + 1,
                                 "capital" : ($scope.capital2 = ($scope.p2 - $scope.interes_plan2)),
                                 "saldoCapital": 0,
@@ -4777,7 +4777,7 @@
                             range3.push({
 
                                 "fecha" : $scope.dateCf,
-                                "planPago": 4,
+                                "planPago": 3,
                                 "pago" : i,
                                 "capital" : ($scope.capital2 = ($scope.p3 - $scope.interes_plan3)),
                                 "saldoCapital": 0,

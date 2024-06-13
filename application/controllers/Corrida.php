@@ -288,9 +288,12 @@ class Corrida extends CI_Controller
     function getCorridaToPlanDePago($dump_data, $rangos){
 
 
-
         $data_general = json_decode($dump_data);
-        $dump_data = json_decode($data_general->corrida_dump);
+//        print_r($data_general->corrida_dump);
+//        echo '<br><br>';
+//        exit;
+//        $dump_data = json_decode($data_general->corrida_dump);
+        $dump_data = $data_general->corrida_dump;
 
 
 
@@ -419,7 +422,7 @@ class Corrida extends CI_Controller
                 "fechaModificacion" => date('Y-m-d H:i:s'),
                 "estatus" => 1,
                 "ordenPago" => 2,
-                "saldoInicialPlan" => $plan_pago1[($rangos['rango1']-1)]->saldo
+                "saldoInicialPlan" =>(count($plan_pago1)>0) ? $plan_pago1[($rangos['rango1']-1)]->saldo : (($rangos['rango0']==0) ? $data_general->saldoc :  $plan_pago0[($rangos['rango0']-1)]->saldo)
             );
             $response = $this->General_model->addRecord("planes_pago", $insertData);
         }
@@ -3933,8 +3936,17 @@ legend {
         $dtoCatalogos = $this->Corrida_model->catalogosPlanPago();
         $dtoTotalPlanesPago = $this->Corrida_model->totalPlanesPago($idLote);
         $dtoInfoLote = $this->Corrida_model->infoLotePlanPago($idLote);
+
+        $flagEstatusPlan2 = 0;
+        foreach ($dtoTotalPlanesPago as $index => $elemento){
+            if($elemento['estatusPlan'] == 2){
+                $flagEstatusPlan2 = $flagEstatusPlan2 + 1;
+            }
+        }
+        $dtoTotalEnviadas = (count($dtoTotalPlanesPago)>0) ? (($flagEstatusPlan2 == count($dtoTotalPlanesPago)) ? 1 : 0) : 0; //si el valor está en 1 quiere decir que ya se mandó a NeoData, si no, aun no se ha mandado
+
         if(count($dtoCatalogos) > 0)
-            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote);
+            $response = array( "status" => 1, "mensaje"=>"Exito al traer los catalogos", "dtoCatalogos"=> $dtoCatalogos, "planesTotal" => count($dtoTotalPlanesPago), "infoLote" => $dtoInfoLote, "enviadoNeodata" => $dtoTotalEnviadas);
         else
             $response = array( "status" => 0, "mensaje"=>"Error al traer los catalogos", "dtoCatalogos"=> []);
         echo json_encode($response);
@@ -4016,7 +4028,8 @@ legend {
     }
 
     function getInfoByLote($idLote){
-        $data = $this->Corrida_model->getInfoByLote($idLote);
+        $data['cliente'] = $this->Corrida_model->getInfoByLote($idLote);
+        $data['planPago'] = $this->Corrida_model->totalPlanesPago($idLote);
         if ($data != null) {
             echo json_encode($data);
         } else {
@@ -4049,25 +4062,42 @@ legend {
     function generaPlanPagoEnvio()
     {
         $idLote = $this->input->post('idLote');
-        $datos = $this->Corrida_model->getPlanesPago($idLote);
-        $arrayFinal = array(
-            "lote" => $datos[0]['nombreLote'],
-            "empresa" => $datos[0]['empresa']
-        );
+        $datos = $this->Corrida_model->getPlanesPagoGenerar($idLote);
+        if(count($datos)>0){
+            $arrayFinal = array(
+                "lote" => $datos[0]['nombreLote'],
+                "empresa" => $datos[0]['empresa']
+            );
 
-        $arrayDump = array();
-        foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
-            $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
+            $arrayDump = array();
+            $arrayIdPagos = array();
+            foreach ($datos as $index => $elemento) {//recorre los planes de pago generales
+                $arrayFinal['interes' . $index] = $datos[$index]['tazaInteres'];
+                array_push($arrayIdPagos, $elemento['idPlanPago']);
 
-            foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt) {//recorre la corrida financiera dentro del PP
-                array_push($arrayDump, $corridaElmnt);
+                foreach (json_decode($elemento['dumpPlan']) as $indice => $corridaElmnt) {//recorre la corrida financiera dentro del PP
+                    array_push($arrayDump, $corridaElmnt);
+                }
             }
+            $arrayFinal['planesPago'] = $arrayDump;
+            $response = array(
+                "planesPagoIds" => $arrayIdPagos,
+                "respuesta" => (($arrayDump) > 0) ? 1 : 0,
+                "planServicio" => $arrayFinal
+            );
         }
-        $arrayFinal['planesPago'] = $arrayDump;
-        $response = array(
-            "respuesta" => (($arrayDump) > 0) ? 1 : 0,
-            "planServicio" => $arrayFinal
-        );
+        else{
+            $arrayFinal = array(
+                "lote" => NULL,
+                "empresa" => NULL
+            );
+            $response = array(
+                "planesPagoIds" => array(),
+                "respuesta" => -1,
+                "planServicio" => array()
+            );
+        }
+
         print_r(json_encode($response));
         exit;
     }
@@ -4116,6 +4146,49 @@ legend {
         }
 
         print_r(json_encode([]));
+    }
+
+    function actualizaPlanPagoStatus(){
+        $ids = $this->input->post();
+        $ids = str_replace(array('[', ']'), '', $ids);
+        $key = 'idPlanPago';
+        $tabla = 'planes_pago';
+        $flagUpdate = 0;
+        foreach ($ids['ids'] as $index =>  $elemento){
+            $array_update=array(
+                "estatusPlan" => 2,
+                "fechaModificacion" => date('Y-m-d H:i:s'),
+                "modificadoPor" => 1
+            );
+            if($this->General_model->updateRecord($tabla, $array_update, $key, $elemento)){
+                $flagUpdate += 1;
+            }
+        }
+
+        if($flagUpdate>0){
+            if($flagUpdate == count($ids['ids'])){
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Se actualizaron correctamente los planes de pago."
+                );
+            }else{
+                $respuesta = array(
+                    "status" => true,
+                    "msj" => "Sólo se actualizaron algunos registros."
+                );
+            }
+        }else{
+            $respuesta = array(
+                "status" => false,
+                "msj" => "Hubo un error al ejecutar la actualización, inténtalo nuevamente."
+            );
+        }
+
+        if ($respuesta != null) {
+            echo json_encode($respuesta);
+        } else {
+            echo json_encode(array());
+        }
     }
 
 }
