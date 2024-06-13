@@ -2255,10 +2255,13 @@ class Asesor extends CI_Controller {
             "IdPaisSAT" => $this->input->post('pais'), // default México (1142)
             "IdCatRegimen" => $this->input->post('regimenFiscal'), // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
             "CuentaClabeSTP" => NULL,
+            "Prospecto" => 0
         );
         
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-        echo json_encode($responseInsertClienteNeoData, JSON_UNESCAPED_UNICODE);
+        if($responseInsertClienteNeoData['status'] == 1) {
+            echo json_encode(['code'] => 200);
+        }
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
