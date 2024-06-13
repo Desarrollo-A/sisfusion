@@ -4,7 +4,7 @@ class Asesor extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('asesor/Asesor_model');
-        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model', 'Neodata_model',));
+        $this->load->model(array('model_queryinventario', 'registrolote_modelo', 'caja_model_outside', 'Contraloria_model', 'General_model', 'Clientes_model', 'Reestructura_model', 'Neodata_model'));
         $this->load->model([
             'opcs_catalogo/valores/AutorizacionClienteOpcs',
             'opcs_catalogo/valores/TipoAutorizacionClienteOpcs'
@@ -2259,9 +2259,6 @@ class Asesor extends CI_Controller {
         );
         
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
-        if($responseInsertClienteNeoData['status'] == 1) {
-            echo json_encode(['code'] => 200);
-        }
 
         /*****MARTHA DEBALE OPTION*******/
         $des_casa = $this->input->post('des_hide');
@@ -3247,10 +3244,11 @@ class Asesor extends CI_Controller {
                             return;
                         }
                     }
-
                     echo json_encode(['code' => 200]);
-                } else {
-                    echo json_encode(['code' => 200]);
+                } else {   
+                   if ($responseInsertClienteNeoData['status'] == 1) {
+                        echo json_encode(['code' => 200]);
+                   } 
                 }
             } else {
                 if (count($idCopArray) > 0) {
