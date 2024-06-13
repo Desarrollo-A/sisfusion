@@ -29,7 +29,7 @@ class Neodata_model extends CI_Model {
         @Telefono = '" . $data['Telefono'] . "',
         @Email = '" . $data['Email'] . "',
         @RFC = '" . $data['RFC'] . "',
-        @FechaNacimiento = "' . ($data['FechaNacimiento'] == '' ? 'NULL' : $data['FechaNacimiento']) . '",
+        @FechaNacimiento = '" . ($data['FechaNacimiento'] == '' ? 'NULL' : $data['FechaNacimiento']) . "',
         @FechaIngreso = '" . $data['FechaIngreso'] . "',
         @NumOficial = " . ($data['NumOficial'] == '' ? 'NULL' : $data['NumOficial']) . ",
         @NumInterior = " . ($data['NumInterior'] == '' ? 'NULL' : $data['NumInterior']) . ",
