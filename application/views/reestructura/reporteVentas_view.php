@@ -1,6 +1,5 @@
-<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
+<link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
-
 <body>
     <div class="wrapper">
         <?php $this->load->view('template/sidebar'); ?>
@@ -108,7 +107,6 @@
                 </div>
             </div>
         </div>
-
         <div class="content boxContent">
             <div class="container-fluid">
                 <div class="row">
@@ -161,4 +159,4 @@
 <?php $this->load->view('template/footer');?>
 <script src="<?= base_url() ?>dist/js/core/modal-general.js"></script>
 <script src="<?= base_url() ?>dist/js/controllers/reestructura/reporteVentas.js"></script>
-<script src="<?=base_url()?>dist/js/controllers/reestructura/historialMovimientos.js"></script>
+<script src="<?= base_url() ?>dist/js/controllers/reestructura/historialMovimientos.js"></script>

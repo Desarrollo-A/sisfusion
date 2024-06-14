@@ -11,7 +11,7 @@
 					<div class="modal-body">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 p-1 text-center">
-                                <h4>¿Estás seguro de solicitar la cancelación del contrato de lote?</h4>
+                                <h4>¿Estás seguro de realizar la cancelación del contrato de lote?</h4>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <input type="hidden" name="idLote" id="idLote">

@@ -213,10 +213,7 @@ class Reestructura extends CI_Controller{
         $fechaCambio = "2024-03-09";
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
-        $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
-        $fechaNuevoEsquema = new DateTime($fechaCambio);
-
-        if( $ultimoEstatus2 >= $fechaNuevoEsquema){
+        if( $fechaUltimoEstatus2 >= $fechaCambio){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -714,10 +711,7 @@ class Reestructura extends CI_Controller{
         $fechaCambio = "2024-03-09";
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
-        $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
-        $fechaNuevoEsquema = new DateTime($fechaCambio);
-
-        if($ultimoEstatus2 >= $fechaNuevoEsquema){
+        if( $fechaUltimoEstatus2 >= $fechaCambio){
             $lineaVenta = $this->General_model->getLider($idLider)->row();
         }
         else{
@@ -727,6 +721,17 @@ class Reestructura extends CI_Controller{
             $lineaVenta->id_regional_2 = 0;
             $idLider = $checkApartado02[0]['id_gerente_asignado'];
             $esquemaAnterior = true;
+
+            if($idLider == 0 || $idLider == NULL || is_null($idLider)){
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'color' => 'danger'
+                ));
+                exit; 
+            }
+
         }
 
         $metrosGratuitos = 0;
@@ -842,7 +847,16 @@ class Reestructura extends CI_Controller{
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
             }
-
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
+            }
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
                     $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
@@ -1005,6 +1019,16 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
+            }
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
             }
 
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
@@ -1792,7 +1816,26 @@ class Reestructura extends CI_Controller{
     }
 
 	public function getregistrosLotes() {
-        $dato = $this->Reestructura_model->getLotes($this->input->post('index_proyecto'));
+        $id_proyecto = $this->input->post('index_proyecto');
+
+        if ($this->session->userdata('id_usuario') == 13546) {
+            $union = "UNION ALL
+                SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
+                    CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
+                    lo.observacionLiberacion AS observacion, CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
+                    lo.liberaBandera, lo.idStatusLote, '1' as consulta
+                FROM lotes lo 
+                    INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
+                    INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN ($id_proyecto)
+                    LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
+                WHERE 
+                    lo.status = 1
+                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3) )";
+        }else {
+            $union = "";
+        }
+        
+        $dato = $this->Reestructura_model->getLotes($union);
         if ($dato != null)
             echo json_encode($dato);
         else
@@ -3357,9 +3400,13 @@ class Reestructura extends CI_Controller{
         }
 
         if($preproceso <= 1 ){
-            $update = $this->updateLotesJuridicoRe($idLotePv);
-            $updateRe = $this->updateDocRe($getLotesDestino->result());
+            $update = $this->updateLotesJuridicoRe($idLotePv);            
             $updateResicion = $this->updateResicionRe($idLotePv, $idCliente);
+            $updateRe = true;
+
+            if($getLotesDestino->num_rows() > 0){ // para verificar en caso de que se hayan quitado las propuestas de forma manual
+                $updateRe = $this->updateDocRe($getLotesDestino->result());
+            }
 
             if(!$update || !$updateRe || !$updateResicion){
                 $banderaProceso = false;
@@ -3368,7 +3415,7 @@ class Reestructura extends CI_Controller{
 
         if($preproceso <= 0 ){
             $tempFlag = true; 
-            if($getLotesDestino->num_rows() > 0){
+            if($getLotesDestino->num_rows() > 0){ // para verificar en caso de que se hayan quitado las propuestas de forma manual
                 
                 $updateDestino = $this->updateLotesDestinoRe($getLotesDestino->result(), $idLotePv, $statusReestructura);
                 if(!$updateDestino){
@@ -3556,6 +3603,7 @@ class Reestructura extends CI_Controller{
     public function updateDocFusion($getLotesOrigen, $getLotesDestino){
         $lotesOrigenUpdate = [];
         $lotesDestinoUpdate = [];
+        $updateDestino = true; // se asigna como true, en caso de que el query no regrese nada se dara false
 
         $flag = true;
 
@@ -3578,7 +3626,9 @@ class Reestructura extends CI_Controller{
         }
 
         $updateOrigen = $this->General_model->updateBatch('lotesFusion', $lotesOrigenUpdate, 'idLote');
-        $updateDestino = $this->General_model->updateBatch('lotesFusion', $lotesDestinoUpdate, 'idLote');
+        if(!empty($getLotesDestino)){
+            $updateDestino = $this->General_model->updateBatch('lotesFusion', $lotesDestinoUpdate, 'idLote');
+        }
 
         if(!$updateOrigen || !$updateDestino){
             $flag = false; 
@@ -4107,6 +4157,31 @@ class Reestructura extends CI_Controller{
         }
 
         $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));         
+        $this->output->set_output(json_encode($response));
+    }
+
+    function getDocumentos(){
+        $idLote = $this->input->post('idLote');
+        $flagFusion = intval($this->input->post('flagFusion'));
+
+        $idLote = array_map('intval', explode(',', $idLote));
+
+        if($flagFusion == 1){
+            $get = $this->Reestructura_model->getDocumentosFusion($idLote);
+        }
+        else{
+            $get = $this->Reestructura_model->getDocumentosRe($idLote);
+        }
+        
+        if($get->num_rows() > 0){
+            $response["result"] = true;
+            $response["data"] = $get->result();
+        }
+        else{
+            $response["result"] = false;
+            $response["data"] = [];
+        }
+
+        echo json_encode($response["data"], JSON_NUMERIC_CHECK);
     }
 }

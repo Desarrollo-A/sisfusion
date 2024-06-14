@@ -24,21 +24,22 @@ function cancelacionTable() {
     tabla_cancelacion = $("#tabla_cancelacion").DataTable({
         width: '100%',
         dom: 'Brt' + "<'container-fluid pt-1 pb-1'<'row'<'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'i><'col-xs-12 col-sm-12 col-md-12 col-lg-12 d-flex justify-center'p>>>",
-        buttons: [{
-            extend: 'excelHtml5',
-            text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-            className: 'btn buttons-excel',
-            titleAttr: 'CANCELACIÓN POR REESTRUCTURACIÓN',
-            title: 'CANCELACIÓN POR REESTRUCTURACIÓN',
-            exportOptions: {
-                columns: [0, 1, 2, 3, 4, 5, 6, 7],
-                format: {
-                    header: function (d, columnIdx) {
-                        return ' ' + titulos_intxt[columnIdx] + ' ';
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
+                className: 'btn buttons-excel',
+                titleAttr: 'Reestructuración',
+                title: 'Reestructuración',
+                exportOptions: {
+                    columns: [0, 1, 2, 3, 4, 5, 6],
+                    format: {
+                        header: function (d, columnIdx) {
+                            return ' ' + titulos_intxt[columnIdx] + ' ';
+                        }
                     }
-                }
-            },
-        }],
+                },
+            }],
         pagingType: "full_numbers",
         language: {
             url: `${general_base_url}static/spanishLoader_v2.json`,
@@ -61,28 +62,16 @@ function cancelacionTable() {
             { data: 'nombreResidencial' },
             { data: 'nombreCondominio' },
             { data: 'nombreLote' },
-            { data: 'nombreCliente' },
             { data: 'idLote' },
-            { data: 'comentarioReubicacion' },
-            { data: 'comentarioLiberacion' },
+            { data: 'superficie' },
+            { data: 'precio' },
+            { data: 'nombreCliente' },
             {
+                visible: id_usuario_general == 13546 ? true: false,
                 data: function (d) {
-                    return `<span class='label lbl-violetBoots'>${d.tipoCancelacion}</span>`;
-                }
-            },
-            {
-                visible: (id_rol_general == 33) ? true : false,
-                data: function (d) {
-                    return `<span class='label ${d.solicitudCancelacion == 2 ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
-                }
-            },
-            {
-                visible: (id_rol_general == 33) ? true : false,
-                data: function (d) {
-                    return (d.solicitudCancelacion == 2 ) ? `<div class="d-flex justify-center"><button class="btn-data btn-warning cancel" data-toggle="tooltip" data-placement="top" title= "CANCELAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-user-times"></i></button><div class="d-flex justify-center"><button class="btn-data btn-sky returnBtn" data-toggle="tooltip" data-placement="top" title= "REGRESAR CONTRATO" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-undo"></i></button>` : ``;                   
+                    return ``;
                 }
             }
-
         ],
         columnDefs: [{
             defaultContent: "",
@@ -91,11 +80,11 @@ function cancelacionTable() {
             orderable: false
         }],
         ajax: {
-            url: `${general_base_url}Reestructura/getReporteCancelaciones`,
+            url: `${general_base_url}Reestructura/getregistrosLotes`,
             dataSrc: "",
             type: "POST",
             cache: false,
-            data: {}
+            data: { index_proyecto: 0 }
         },
         initComplete: function () {
             $("#spiner-loader").addClass('hide');
