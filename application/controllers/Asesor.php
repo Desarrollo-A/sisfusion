@@ -2253,7 +2253,7 @@ class Asesor extends CI_Controller {
             "Lada" => $this->input->post('ladaTel1'), // NO TENGO LADA HASTA QUE SE GUARDA EL DS
             "Pais" =>  $this->input->post('pais'), // default México (1142)
             "MonedaSATDefault" => 'MXN', // default MXN
-            "IdCodigoPostalSAT" => $this->input->post('cp'), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdCodigoPostalSAT" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
             "IdPaisSAT" => $this->input->post('pais'), // default México (1142)
             "IdCatRegimen" => $this->input->post('regimenFiscal'), // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
             "CuentaClabeSTP" => NULL,

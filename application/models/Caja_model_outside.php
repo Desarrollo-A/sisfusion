@@ -1601,7 +1601,8 @@
                 cl.localidad, 
                 cl.regimen_fac,
                 cl.cp_fac, 
-                cl.colonia
+                cl.colonia,
+                cl.pais
 
             FROM
                 clientes cl
