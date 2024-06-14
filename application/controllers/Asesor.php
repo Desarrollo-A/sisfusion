@@ -2205,10 +2205,12 @@ class Asesor extends CI_Controller {
             }
         }
         $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
-
+        $Cliente = explode('-', $infoCliente->nombreLote);
+        $Cliente[2] = 0 . $Cliente[2];
+        $Cliente = implode('-', $Cliente);
             $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => $nombreLote,
+            "Cliente" => $Cliente,
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,
