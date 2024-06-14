@@ -137,7 +137,11 @@ function fillTable(index_proyecto) {
             { data: 'nombreCliente' },
             {
                 data: function (d) {
-                    return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
+                    if (d.consulta == 1) {
+                        return `<div class="d-flex justify-center"><button class="btn-data btn-yellow cancel" data-toggle="tooltip" data-placement="top" title= "SOLICITUD DE CANCELACIÓN" data-idLote="${d.idLote}" data-nombreLote="${d.nombreLote}"><i class="fas fa-comment-dots"></i></button>`;
+                    
+                    }
+                    return ``;
                 }
             }
         ],
