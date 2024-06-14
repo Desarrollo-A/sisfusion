@@ -3530,7 +3530,7 @@
 					$id_lider = $id_lider . ', 694, 4509';
 					$sede = "";
 				} else if ($id_usuario == 14952) { // GUILLERMO HELI IZQUIERDO VIEYRA
-					$id_lider = $id_lider . ', 13295';
+					$id_lider = $id_lider . ', 13295, 7970';
 					$sede = "";
 				} else if ($id_usuario == 13348) { // VIRIDIANA ZAMORA ORTIZ
 					$id_lider = $id_lider . ', 10063';
