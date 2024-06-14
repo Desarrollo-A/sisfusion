@@ -1600,7 +1600,8 @@
                 cl.calle,
                 cl.localidad, 
                 cl.regimen_fac,
-                cl.cp_fac
+                cl.cp_fac, 
+                cl.colonia
 
             FROM
                 clientes cl
