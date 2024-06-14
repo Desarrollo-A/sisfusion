@@ -2575,7 +2575,7 @@ class Caja_outside extends CI_Controller {
             "Pais" => $infoCliente->pais, // default México (1142)
             "MonedaSATDefault" => 'MXN', // default MXN
             "IdCodigoPostalSAT" => ($infoCliente->cp == '0' ? NULL : $infoCliente->cp), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
-            "IdPaisSAT" => 1142, // default México (1142)
+            "IdPaisSAT" => ($infoCliente->pais == '0' ? NULL : $infoCliente->pais), // default México (1142)
             "IdCatRegimen" => 34, // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
             "CuentaClabeSTP" => NULL,
             "Prospecto" => 0
