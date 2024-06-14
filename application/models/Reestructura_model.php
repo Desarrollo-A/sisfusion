@@ -566,32 +566,19 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    public function getLotes($id_proyecto)
+    // ARTURO
+    public function getLotes($union)
     {
         return $this->db->query(
-            "SELECT 
-                re.idResidencial, 
-                re.nombreResidencial, 
-                co.nombre nombreCondominio, 
-                lo.nombreLote, 
-                lo.idLote,
-                lo.estatus_preproceso,
-                lo.idCliente,
-                lo.sup superficie, 
-                FORMAT(lo.precio, 'C') precio, 
-                CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
-                lo.observacionLiberacion AS observacion,
-                CASE WHEN lo.liberaBandera = 1 THEN 'LIBERADO' ELSE 'SIN LIBERAR' END estatusLiberacion,
-                lo.liberaBandera
-            FROM 
-                lotes lo 
-                INNER JOIN condominios co ON co.idCondominio = lo.idCondominio 
-                INNER JOIN residenciales re ON re.idResidencial = co.idResidencial AND re.idResidencial IN ($id_proyecto)
-                LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente AND cl.status IN (1) AND cl.proceso IN (0, 1) 
-            WHERE 
-                lo.status = 1 
-                AND idStatusLote IN (2, 3, 17)
-                AND lo.solicitudCancelacion != 2"
+            "SELECT  re.idResidencial, re.nombreResidencial, co.nombre as nombreCondominio, hl.nombreLote, hl.idLote, lo.estatus_preproceso, hl.id_cliente as idCliente, lo.sup as superficie,
+                FORMAT(lo.precio, 'C') precio, CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
+                hl.observacionLiberacion as observacion, 'CONTRATO CANCELADO' AS estatusLiberacion, lo.liberaBandera, lo.idStatusLote, '2' as consulta
+            FROM historial_liberacion as hl
+                INNER JOIN lotes as lo ON lo.idLote = hl.idLote
+                INNER JOIN condominios as co ON co.idCondominio = lo.idCondominio
+                INNER JOIN residenciales as re ON re.idResidencial = co.idResidencial
+                INNER JOIN clientes as cl ON cl.id_cliente = hl.id_cliente
+            WHERE hl.observacionLiberacion = 'CANCELACIÓN DE CONTRATO' ".$union
         )->result();
     }
 
@@ -1502,6 +1489,7 @@ class Reestructura_model extends CI_Model
         return $query->result_array();
     }
 
+    // ARTURO
     public function getReporteCancelaciones()
     {
         $validacionCancelacionEnProceso = $this->session->userdata('id_rol') == 33 ? "OR (lo.solicitudCancelacion = 2)" : "";
@@ -1612,18 +1600,20 @@ class Reestructura_model extends CI_Model
         $tipoCancelacionNombre = $tipoCancelacion == 0 ? '' : $dataPost['tipoCancelacionNombre'];
 
         $this->db->trans_begin();
-        $this->db->query("UPDATE lotes SET solicitudCancelacion = '2', comentarioReubicacion = '" . $obsSolicitudCancel . "', usuario = " . $usuario . " where idLote = " . $idLote . " ");
-        $data = $this->db->query("UPDATE clientes SET tipoCancelacion = $tipoCancelacion where idLote = " . $idLote . " and status = 1");
+
+        $data = $this->db->query("UPDATE clientes SET  modificado_por = $usuario, tipoCancelacion = $tipoCancelacion where idLote = " . $idLote . " and status = 1");
 
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
-            ->to('postventa@ciudadmaderas.com')
-            ->subject('Notificación de solicitud de cancelación reestructura')
-            ->view($this->load->view('mail/reestructura/mailSolicitudCancelacion', [
+            //->to('postventa@ciudadmaderas.com')
+            ->to('programador.analista36@ciudadmaderas.com')
+            ->subject('Notificación de liberación')
+            ->view($this->load->view('mail/reestructura/mailLiberacion', [
                 'lote' => $nombreLote,
+                'fechaApartado' => date('Y-m-d H:i:s'),
                 'Observaciones' => $obsSolicitudCancel,
-                'tipoCancelacion' => $tipoCancelacionNombre
+                'tipoCancelacion' => $tipoCancelacionNombre,
             ], true));
         $this->email->send();
 
@@ -1635,6 +1625,7 @@ class Reestructura_model extends CI_Model
             return true;
         }
     }
+    
 
     public function returnToRestructure($data)
     {
