@@ -376,7 +376,7 @@ class VentasAsistentes_model extends CI_Model {
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13016)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15545) { // PAMELA IVONNE LEE MORENO
-                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059, 7435)";
+                    $filtroGerente = "AND cl.id_gerente IN ($id_lider, 13059, 11680)";
                     $filtroSede = "";
 				} else if ($id_usuario == 15109) { // MARIBEL GUADALUPE RIOS DIAZ
                     $filtroGerente = "AND cl.id_gerente IN ($id_lider, 10251)";

@@ -457,3 +457,24 @@ function validateInputArray(input, campo) {
     }
     return result;
 }
+
+$('#estado').change(function(){
+    let value = $("#estado").val();
+    let option = 'select';
+    $.getJSON(`${general_base_url}Asesor/getCodigoPostales/${value}/${option}`)
+        .done(function(data) {
+            let options = data.length ? 
+                data.map(item => `<option value="${item.codigo_postal}" data-value="${item.codigo_postal}">${item.codigo_postal}</option>`)
+                : '<option selected="selected" disabled>No se han encontrado registros que mostrar</option>';
+            $("#cp").html(options);
+            $("#cp").selectpicker('refresh');
+            let selectedCP = $("#cp").data("cp");
+            if (selectedCP) {
+                $("#cp").val(selectedCP);
+                $("#cp").selectpicker('refresh');
+            }
+        })
+        .fail(function() {
+            console.error("Error fetching data");
+    });
+});

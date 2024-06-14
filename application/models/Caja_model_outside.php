@@ -1598,7 +1598,9 @@
                 cl.interior,
                 cl.cp,
                 cl.calle,
-                cl.localidad
+                cl.localidad, 
+                cl.regimen_fac,
+                cl.cp_fac
 
             FROM
                 clientes cl
@@ -1607,6 +1609,21 @@
             INNER JOIN deposito_seriedad ds ON ds.id_cliente = cl.id_cliente
             WHERE
                 cl.id_cliente = $id_cliente"
+        )->row();
+    }
+
+    public function getInformaciongGeneralPorLote($idLote) {
+        return $this->db->query(
+            "SELECT
+                lo.nombreLote,
+                lo.idViviendaNeoData,
+                co.idProyectoNeoData,
+                lo.referencia
+            FROM
+                lotes lo
+            INNER JOIN condominios co ON co.idCondominio = lo.idCondominio
+            WHERE
+                lo.idLote = $idLote"
         )->row();
     }
 
