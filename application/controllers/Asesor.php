@@ -2222,7 +2222,7 @@ class Asesor extends CI_Controller {
             "ApellidoMaterno" => $this->input->post('apellido_materno'),
             "Calle" => $this->input->post('calle'),
             "Colonia" => $this->input->post('colonia'),
-            "CodPost" => $this->input->post('cp'),
+            "CodPost" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')),
             "MpioDeleg" => $this->input->post('municipio'),
             "Localidad" => $this->input->post('localidad'),
             "Telefono" => $this->input->post('telefono1'),
