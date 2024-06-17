@@ -10,62 +10,166 @@ var tabla_resguardo2 ;
 var totaPen = 0;
 let titulos = [];
 
-$(document).ready(function() {
+// ------------Funcion de botones anteriores de comisiones de resguardo------------------
+
+// $(document).ready(function() {
+//     $("#tabla_resguardo").prop("hidden", true);
+//     $.post(general_base_url + "Comisiones/getResguardo", function (data) {
+//         var len = data.length;
+//         for (var i = 0; i < len; i++) {
+//             var id = data[i]['id_usuario'];
+//             var name = data[i]['nombre'];
+//             if(id_usuario_general == 1875 ){
+//                 if(id == 2){
+//                     $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
+//                 }
+//             }
+//             else{
+//                 $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
+//             }
+//         }
+//         $("#directivo_resguardo").selectpicker('refresh');
+//     }, 'json');
+// });
+
+
+// $('#directivo_resguardo').change(function(ruta){
+//     residencial = $('#directivo_resguardo').val();
+//     $("#catalogo_resguardo").empty().selectpicker('refresh');
+//     $.ajax({
+//         url: general_base_url + 'Contratacion/lista_proyecto/'+residencial,
+//         type: 'post',
+//         dataType: 'json',
+//         success:function(response){
+//             var len = response.length;
+//             for( var i = 0; i<len; i++){
+//                 var id = response[i]['idResidencial'];
+//                 var name = response[i]['descripcion'];
+//                 $("#catalogo_resguardo").append($('<option>').val(id).text(name));
+//             }
+//             $("#catalogo_resguardo").selectpicker('refresh');
+//         }
+//     });
+// });
+
+//--------------Funcionalidad de botones de comisiones de resguardo actual------------------
+
+
+$(document).ready(function () { 
     $("#tabla_resguardo").prop("hidden", true);
-    $.post(general_base_url + "Comisiones/getDirectivos", function (data) {
-        var len = data.length;
-        for (var i = 0; i < len; i++) {
-            var id = data[i]['id_usuario'];
-            var name = data[i]['nombre'];
-            if(id_usuario_general == 1875 ){
-                if(id == 2){
-                    $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
-                }
-            }
-            else{
-                $("#directivo_resguardo").append($('<option>').val(id).text(name.toUpperCase()));
-            }
+    $.post(general_base_url + "Comisiones/getResguardo", function (data) {
+
+    let catalogo = data.catalogo,
+    proyecto = data.proyecto, 
+    directivos = data.directivos;
+
+        for (var i = 0; i < catalogo.length; i++) {
+            var id = catalogo[i]['id_opcion'];
+            var anio = catalogo[i]['nombre'];
+            $(`#anio`).append($('<option>').val(anio).text(anio));
         }
-        $("#directivo_resguardo").selectpicker('refresh');
+        $("#anio").selectpicker('refresh')
+        
+        for (var i1 = 0; i1 < proyecto.length; i1++) {
+            var id = proyecto[i1]['idResidencial'];
+            $(`#catalogo_resguardo`).append($('<option>').val(id).text(proyecto[i1]['descripcion']));
+        }
+        $("#catalogo_resguardo").selectpicker('refresh')
+        
+        for (var i2 = 0; i2 < directivos.length; i2++) {
+            var id = directivos[i2]['id_usuario'];
+            var name = directivos[i2]['nombre'];
+            $(`#directivo_resguardo`).append($('<option>').val(id).text(name));
+        }$("#directivo_resguardo").selectpicker('refresh')
+        
     }, 'json');
-});
-
-
-$('#directivo_resguardo').change(function(ruta){
-    residencial = $('#directivo_resguardo').val();
-    $("#catalogo_resguardo").empty().selectpicker('refresh');
-    $.ajax({
-        url: general_base_url + 'Contratacion/lista_proyecto/'+residencial,
-        type: 'post',
-        dataType: 'json',
-        success:function(response){
-            var len = response.length;
-            for( var i = 0; i<len; i++){
-                var id = response[i]['idResidencial'];
-                var name = response[i]['descripcion'];
-                $("#catalogo_resguardo").append($('<option>').val(id).text(name));
-            }
-            $("#catalogo_resguardo").selectpicker('refresh');
+    let meses = [
+        {
+            id: '1',
+            mes:'ENERO'
+        },
+        {
+            id:'2',
+            mes:'FEBRERO'
+        },
+        {
+            id:'3',
+            mes:'MARZO'
+        },
+        {
+            id:'4',
+            mes:'ABRIL'
+        },
+        {
+            id:'5',
+            mes:'MAYO'
+        },
+        {
+            id:'6',
+            mes:'JUNIO'
+        },
+        {
+            id:'7',
+            mes:'JULIO'
+        },
+        {
+            id:'8',
+            mes:'AGOSTO'
+        },
+        {
+            id:'9',
+            mes:'SEPTIEMBRE'
+        },
+        {
+            id:'10',
+            mes:'OCTUBRE'
+        },
+        {
+            id:'11',
+            mes:'NOVIEMBRE'
+        },
+        {
+            id:'12',
+            mes:'DICIEMBRE'
         }
-    });
+    ];
+    let datos = '';
+
+        for (let index = 0; index < meses.length; index++) {
+        datos = datos + `<option value="${meses[index]['id']}">${meses[index]['mes']}</option>`;
+        $('#mes').html(datos);
+        $('#mes').selectpicker('refresh');
+    }
+
 });
 
-$('#directivo_resguardo').change(function(ruta){
-    proyecto = $('#directivo_resguardo').val();
-    condominio = $('#catalogo_resguardo').val();
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0; 
+$('#directivo_resguardo, #anio, #mes').change(function(ruta){
+    directivo = $('#directivo_resguardo').val();
+    proyecto = $('#catalogo_resguardo').val();
+    anio = $('#anio').val();
+    mes = $('#mes').val();
+
+    if(directivo == '' || directivo == null || directivo == undefined || anio == '' || anio == null || anio == undefined
+       || mes == '' || mes == null || mes== undefined
+     ){
+        return false;
+    }else{
+    getAssimilatedCommissions(directivo, proyecto, anio, mes);
     }
-    getAssimilatedCommissions(proyecto, condominio);
 });
 
 $('#catalogo_resguardo').change(function(ruta){
-    proyecto = $('#directivo_resguardo').val();
-    condominio = $('#catalogo_resguardo').val();
-    if(condominio == '' || condominio == null || condominio == undefined){
-        condominio = 0;
-    }
-    getAssimilatedCommissions(proyecto, condominio);
+    directivo = $('#directivo_resguardo').val();
+    proyecto = $('#catalogo_resguardo').val();
+    anio = $('#anio').val();
+    mes = $('#mes').val();
+    if(directivo == '' || directivo == null || directivo == undefined || anio == '' || anio == null || anio == undefined
+        || mes == '' || mes == null || mes== undefined
+      ){
+         return false;
+     }else{
+     getAssimilatedCommissions(directivo, proyecto, anio, mes);
+     }
 });
 
 $('#tabla_resguardo thead tr:eq(0) th').each( function (i) {
@@ -82,7 +186,7 @@ $('#tabla_resguardo thead tr:eq(0) th').each( function (i) {
     });
 });
 
-function getAssimilatedCommissions(proyecto, condominio){
+function getAssimilatedCommissions(directivo, proyecto, anio, mes){
     $('#tabla_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
@@ -269,10 +373,14 @@ function getAssimilatedCommissions(proyecto, condominio){
             className: 'dt-body-center',
         }],
         ajax: {
-            url: general_base_url + "Comisiones/getDatosResguardoContraloria/" + proyecto + "/" + condominio,
+            url: general_base_url + "Comisiones/getDatosResguardoContraloria/",
             type: "POST",
             cache: false,
-            data: function( d ){
+            data: {
+                directivo:directivo,
+                proyecto:proyecto,
+                mes:mes,
+                anio:anio
             }
         },
     });
