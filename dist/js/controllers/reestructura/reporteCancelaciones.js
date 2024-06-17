@@ -66,8 +66,20 @@ function cancelacionTable() {
             { data: 'superficie' },
             { data: 'precio' },
             { data: 'nombreCliente' },
+            { data: 'comentarioReubicacion' },
+            { data: 'comentarioLiberacion' },
             {
-                visible: id_usuario_general == 13546 ? true: false,
+                data: function (d) {
+                    return `<span class='label lbl-violetBoots'>${d.tipoCancelacion}</span>`;
+                }
+            },
+            {
+                data: function (d) {
+                    return `<span class='label ${d.estatusCancelacion == 'CANCELADA' ? 'lbl-orange' : 'lbl-green'}'>${d.estatusCancelacion}</span>`;
+                }
+            },
+            {
+                visible: false,
                 data: function (d) {
                     return ``;
                 }
