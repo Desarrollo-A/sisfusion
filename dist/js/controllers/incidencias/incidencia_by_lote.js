@@ -1609,7 +1609,19 @@ $(".find_doc").click( function() {
                                     });
                                 });
 
-                                $("#modal_NEODATA .modal-footer").append('<div class="row"><div class="col-md-3"></div><div class="col-md-3"></div><div class="col-md-3"></div></div>');
+                                $.getJSON(general_base_url + "Incidencias/getUserVC/" + cliente)
+                                .done(function (vc) {
+                                    if (vc.length > 0) {
+                                        $("#modal_NEODATA .modal-footer").append(`
+                                            <div class="d-flex justify-content-center align-items-center w-100">
+                                                <button type="button" value="${lote}" data-lote="${lote}" data-cliente="${cliente}" class="btn-gral-data bajaVentaC" style='background-color:red; margin: auto;'>
+                                                    BAJA DE VENTAS COMPARTIDAS<i class="fas fa-trash pl-1"></i> 
+                                                </button>
+                                            </div>
+                                        `);   
+                                    }  
+                                });                                                          
+                                
                                 if(total < 1 ){
                                     $('#dispersar').prop('disabled', true);
                                 }
@@ -2595,7 +2607,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         $("#modalBajaVcUpdate .modal-footer").html('');
 
         $("#modalBajaVcUpdate .modal-body").append(` 
-            <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
+            <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida? 
             <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
         `);
 
