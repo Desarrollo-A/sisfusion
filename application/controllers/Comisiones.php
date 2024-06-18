@@ -13,6 +13,7 @@ class Comisiones extends CI_Controller
   {
     parent::__construct();
     $this->load->model('Comisiones_model');
+    $this->load->model('Contratacion_model');
     $this->load->model('asesor/Asesor_model');
     $this->load->model('Usuarios_modelo');
     $this->load->model('PagoInvoice_model');
@@ -225,10 +226,10 @@ class Comisiones extends CI_Controller
       $this->load->view("ventas/validate_region");
   }
 
-  // public function resguardos(){
-  //   $this->load->view('template/header');
-  //   $this->load->view("ventas/revision_resguardo");
-  // }
+   public function resguardos(){
+     $this->load->view('template/header');
+     $this->load->view("ventas/revision_resguardo");
+  }
 
 
   // public function retiros(){
@@ -2884,8 +2885,13 @@ public function LiquidarLote(){
 
 
  
-    public function getDatosResguardoContraloria($user,$residencial){
-      $dat =  $this->Comisiones_model->getDatosResguardoContraloria($user,$residencial)->result_array();
+    public function getDatosResguardoContraloria(){
+      $directivo = $this->input->post('directivo');
+      $proyecto = $this -> input->post('proyecto');
+      $anio = $this ->input->post('anio');
+      $mes = $this -> input->post('mes');
+
+      $dat =  $this->Comisiones_model->getDatosResguardoContraloria($directivo,$proyecto,$anio,$mes)->result_array();
       for( $i = 0; $i < count($dat); $i++ ){
         $dat[$i]['pa'] = 0;
       }
@@ -5635,6 +5641,17 @@ public function lista_usuarios($rol,$forma_pago){
     );
     echo json_encode($data);
   }
+
+  //---------------Consulta de datos para años, directivos y proyectos--------------
+  public function getResguardo(){
+    $data = array(
+      "catalogo" => $this->General_model->getCatalogOptions(115)->result_array(),
+      "proyecto" => $this->Contratacion_model->get_proyecto_lista()->result_array(),
+      "directivos" => $this->Comisiones_model->getDirectivos()->result_array()
+    );
+    echo json_encode($data);
+  }
+
 
 
   public function getReporteDesc(){

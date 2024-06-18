@@ -34,13 +34,25 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
                                                 <div class="form-group overflow-hidden">
                                                     <label className="m-0" for="directivo_resguardo">Directivo</label>
                                                     <select name="directivo_resguardo" id="directivo_resguardo" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group overflow-hidden">
+                                                    <label className="m-0" for="anio">Año</label>
+                                                    <select name="anio" id="anio" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
+                                                <div class="form-group overflow-hidden">
+                                                    <label className="m-0" for="mes">Mes</label>
+                                                    <select name="mes" id="mes" class="selectpicker select-gral" data-style="btn " data-show-subtext="true" data-live-search="true"  title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
+                                                </div>
+                                            </div>
+                                            <div class="col-6 col-sm-6 col-md-3 col-lg-3">
                                                 <div class="form-group select-gral overflow-hidden">
                                                     <label className="m-0" for="catalogo_resguardo">Proyecto</label>
                                                     <select class="selectpicker" id="catalogo_resguardo" name="catalogo_resguardo[]" data-style="btn " data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>

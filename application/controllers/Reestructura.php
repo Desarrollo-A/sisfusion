@@ -812,13 +812,24 @@ class Reestructura extends CI_Controller{
                 $proceso = $totalSupDestino - $totalSupOrigen <= $metrosGratuitos ? 5 : 6;
             }
 
+            foreach ($clienteAnteriores as $dataCliente){
+                $dataUpdateCliente= array();
+                if ($proceso == 6){
+                    $precioM2Original = floatval($dataCliente['totalNeto2']) / floatval($dataCliente['sup']);
+                    $sumPrecioM2Original = $sumPrecioM2Original + floatval($precioM2Original); 
+                }
+
+                $dataUpdateCliente = array(
+                    'id_cliente' => $dataCliente['id_cliente'],
+                    'proceso' => $proceso,
+                );
+                array_push($arrayUpdateCliente, $dataUpdateCliente);
+            }
+
             $total8P = floatval(($totalSupDestino - $totalSupOrigen ) - $metrosGratuitos) * ($sumPrecioM2Original / count($clienteAnteriores));
             $total8P = floatval(number_format($total8P, 2, '.', ''));
             $total8P = $total8P / $numDestinos;
 
-            // var_dump( "(" . $totalSupDestino . " - " . $totalSupOrigen . ") - " .$metrosGratuitos . "*" . "(" . $sumPrecioM2Original . " / " . count($clienteAnteriores) . ")" );
-
-            // exit;
             $datosClienteConfirm = $this->Reestructura_model->copiarDatosXCliente($idLoteOriginal);
             $dataUpdateClienteNew = array(
                 'nombre' => $datosClienteConfirm->nombre,

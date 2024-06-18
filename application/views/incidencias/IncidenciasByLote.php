@@ -76,6 +76,39 @@ hr {
             </div>
         </div>
 
+        <!-- Modal cambio de plan de comision -->
+
+        <div class="modal fade modal-alertas" id="modal_comision" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <i class="material-icons">clear</i>
+                        </button>   
+                    </div>
+                    <form method="post" id="form_comision">
+                        <div class="form-group" id="select_planes"></div>
+                    
+                        <div class="modal-body">
+                            <div id="titulos"> 
+                            </div>
+
+                            <select class="selectpicker select-gral m-0" data-style="btn"title="SELECCIONA UNA OPCIÓN" required data-live-search="true"name="plan_comision" id="plan_comision"> 
+                                <label  class="label">Seleccionar plan de comisión</label>
+                            </select>
+            
+                            <input type="hidden" name="cliente" id="cliente">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple " data-dismiss="modal"> CANCELAR</button>
+                            
+                            <button type="submit" class="btn btn-gral-data" value="ACEPTAR" style="15px" id="boton"> ACEPTAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas"  id="modal_NEODATA" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -547,6 +580,31 @@ hr {
                                 <button type="submit" id="btn_vc" class="btn btn-gral-data" >GUARDAR</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h3 class="card-title text-center mx-auto"><b>Baja de venta compartida</b></h3>
+                    </div>
+                    <div class="modal-body text-center">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
                 </div>
             </div>
         </div>

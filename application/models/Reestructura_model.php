@@ -1336,8 +1336,9 @@ class Reestructura_model extends CI_Model
         nombreLoteDestino")->result_array();
     }
 
-    public function getHistorialPorLote($idLote, $flagFusion){
-        if($flagFusion == 1 ){
+    public function getHistorialPorLote($idLote, $flagFusion)
+    {
+        if ($flagFusion == 1) {
             return $this->db->query("SELECT CONCAT (CASE
             WHEN hp.id_preproceso = 2 AND lf.fechaModificacion < '2023-12-04 00:00:00.000' THEN 'Elaboración de corridas' 
             WHEN hp.id_preproceso = 2 AND lf.fechaModificacion > '2023-12-04 00:00:00.000' and oxc2.id_opcion IN(17, 32, 70, 71, 73) THEN 'Elaboración de corridas'

@@ -35,7 +35,7 @@ class Incidencias extends CI_Controller
         $this->load->view("incidencias/IncidenciasByLote", $datos);
     }
 
-    public function getInCommissions($lote)
+    public function getInCommissions($lote) //agrega status
     {
       $datos = array();
       $datos = $this->Incidencias_model->getInCommissions($lote);
@@ -497,4 +497,26 @@ class Incidencias extends CI_Controller
       echo json_encode($respuesta);
     }
 
+
+  //----------------------Cambio de plan de comision----------------------//
+
+  public function getPlanComision(){
+    $plan = array();
+    $plan =$this->Incidencias_model->getPlanComision();
+
+    if ($plan != null) {
+      echo json_encode($plan);
+    } else {
+      echo json_encode(array());
+    }
+  }
+
+  public function updatePlanComision(){
+    $idUsuarioM =  $this->session->userdata('id_usuario');
+    $idCliente = $this->input->post('cliente');
+    $planComision = $this->input->post('plan_comision');
+
+    $result = $this->Incidencias_model->updatePlanComision($planComision, $idCliente ,$idUsuarioM);
+    echo json_encode($result); 
+  }
 }
