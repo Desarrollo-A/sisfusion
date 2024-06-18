@@ -217,22 +217,27 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="form-group overflow-hidden">
-                                            <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
-                                            <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
+                                        <div class="col-sm-6">
+                                            <div class="form-group overflow-hidden">
+                                                <label class="control-label">Sede (<small class="isRequired">*</small>)</label>
+                                                <select class="selectpicker select-gral m-0" id="headquarter" name="headquarter" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="cleadFieldsHeadquarterChange()"></select>
+                                            </div>
+                                        </div>
+                                        <div class="col-estructura">
                                         </div>
                                     </div>
-                                    <div class="col-estructura">
-                                    </div>
-                                    <div class="col-sm-6" id="tipoMiembro_column">
-                                        <div class="form-group overflow-hidden">
-                                            <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
-                                            <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
+
+                                    <div class="row">
+                                        <div class="col-sm-3" id="tipoMiembro_column">
+                                            <div class="form-group overflow-hidden">
+                                                <label class="control-label">Tipo de miembro (<small class="isRequired">*</small>)</label>
+                                                <select class="selectpicker select-gral m-0" id="member_type" name="member_type" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required onchange="getLeadersList()"></select>
+                                            </div>
                                         </div>
+                                        <div class="simbolico_column"></div>
+                                        <div class="fac_humano_column"></div>
                                     </div>
-                                    <div class="simbolico_column">
-                                    </div>
+                                    <div class="row align-items-center">
                                         <div class="col-sm-6">
                                             <div class="form-group overflow-hidden">
                                                 <input type="hidden" name="rol_actual" id="rol_actual">
@@ -240,6 +245,7 @@
                                                 <select class="selectpicker select-gral m-0" id="leader" name="leader" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required></select>
                                             </div>
                                         </div>
+                                        <div class="col-sm-6"></div>
                                     </div>
                                 </div>
                                 <!---LÍNEA DE VENTA--->

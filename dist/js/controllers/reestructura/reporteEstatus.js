@@ -125,7 +125,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 if (d.totalNeto == null) {
                     return 'NA'; // o el valor que quieras devolver si es null
                 }
-                // let dato = d.totalNeto.split(',').map(Number);
                 return (d.totalNeto).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
             }
         },
@@ -135,7 +134,6 @@ tablaTraspasoAportaciones = $('#tablaTraspasoAportaciones').DataTable({
                 if (d.preciom2 == null) {
                     return 'NA'; // o el valor que quieras devolver si es null
                 }
-                // let dato = d.totalNeto.split(',').map(Number);
                 return (d.preciom2).toString().split(',').map(valor => formatMoney(valor.trim())).join(', ');
             }
         },

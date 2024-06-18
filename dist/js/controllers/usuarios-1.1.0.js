@@ -266,10 +266,14 @@ function fillUsersTable() {
         {
             data: function (d) {
                 var propiedadExtra = '';
+                let factorEstatus = '';
                 if(d.puesto == 'Asesor' && d.simbolico==1){
                     propiedadExtra = '<br><label class="label lbl-sky">SIMBÓLICO</label>';
                 }
-                return d.puesto + propiedadExtra;
+                if(d.fac_humano == 1) {
+                    factorEstatus = '<br><label class="label lbl-violetBoots">FACTOR HUMANO</label>';
+                }
+                return d.puesto + propiedadExtra + factorEstatus;
             }
         },
         {
@@ -732,6 +736,7 @@ $(document).on('click', '.edit-user-information', function(e){
     $('#btn_acept').prop('disabled', false);
     $('.simbolico_column').html('');
     $('.col-estructura').html('');
+    $('.fac_humano_column').html('');
     $.getJSON("getUserInformation/"+id_usuario).done( function( data ){
         $.each( data, function(i, v){
             const ventas = [7,1,2,3,9];
@@ -756,7 +761,18 @@ $(document).on('click', '.edit-user-information', function(e){
                         </div>
                     </div>
                 `);
-            }
+                let row_fac_humano = $('.fac_humano_column');
+                    row_fac_humano.append(`
+                        <div class="col-sm-6 mt-3">
+                        <div class="form-group label-floating select-is-empty div_membertype">
+                            <label class="control-label"><small class="isRequired">*</small>¿Asesor factor humano?</label>
+                            <select class="selectpicker select-gral m-0" id="fac_humano" name="fac_humano" data-style="btn" data-show-subtext="true" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-size="7" data-container="body" required>
+                                <option value="1" ${ (v.fac_humano == 1 || v.fac_humano == '1' ) ? 'selected' : ''}>SÍ</option>
+                                <option value="0" ${ (v.fac_humano == 0 || v.fac_humano == '0' || v.fac_humano == null ) ? 'selected' : ''}>NO</option>
+                            </select>
+                        </div>
+                        </div></div>`);       
+            }$('#fac_humano').selectpicker('refresh');
 
             if(id_rol_general == 4 || id_rol_general == 5 || id_rol_general==6){
                 if (v.id_rol == '7' ){
@@ -772,7 +788,9 @@ $(document).on('click', '.edit-user-information', function(e){
                                 <option value="0" ${ (v.simbolico == 0 || v.simbolico == '0' || v.simbolico == null ) ? 'selected' : ''}>NO</option>
                             </select>
                         </div>
-                    </div>`);
+                    </div></div>`);
+
+                  
                 }else{
                     $('#tipoMiembro_column').removeClass('col-sm-3');
                     $('#tipoMiembro_column').addClass('col-sm-6');

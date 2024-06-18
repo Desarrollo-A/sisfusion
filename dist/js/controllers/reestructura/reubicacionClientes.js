@@ -1537,7 +1537,7 @@ const botonesAccionReubicacion = (d) => {
                 data-idLotePreseleccionado="${d.lotePreseleccionado}">
             <i class="fas fa-route"></i>
         </button>`;
-// console.log(d);
+
     const BTN_SUBIR_CONTRATO_FIRMADO =  `
         <button class="btn-data btn-green-excel btn-abrir-contratoFirmado"
             data-toggle="tooltip" 
@@ -1974,7 +1974,6 @@ $(document).on('click', '.regreso-preproceso', function(){
                         </div>
                     </div>
                 </div>
-                
                 </div>
             `);
         }
@@ -2061,9 +2060,7 @@ function check(i, div){
 $(document).on('click', '#btnRegreso', function(){
     let funcionRegreso = 'regresoPreproceso';
     let comentario = $("#comentarioRegreso").val();
-
     $("#spiner-loader").removeClass('hide');
-
    if(preproceso == 10 ){
         alerts.showNotification("top", "right", "Debe seleccionarse un preproceso.", "danger");
    }
