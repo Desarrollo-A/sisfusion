@@ -1510,7 +1510,6 @@ if( isset( $_FILES ) && !empty($_FILES) ){
         $usuarioid = $this->session->userdata('id_usuario');
       }
       $validar_sede =  $this->session->userdata('id_sede');
-      $mesActual = $this->db->query("SELECT MONTH(GETDATE()) AS mesActual")->row()->mesActual;
   
 
       $diaActual = date('d'); 
@@ -5654,6 +5653,15 @@ public function lista_usuarios($rol,$forma_pago){
     $puesto = $this->input->post('puesto');
     $usuario = $this->input->post('usuario');
     echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
+  }
+
+  public function AddEmpresa(){
+    $idLote = $this->input->post("idLoteE");
+    $Precio = $this->input->post("PrecioLoteE");
+    $idCliente = $this->input->post("idClienteE");
+
+    $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+    echo json_encode($respuesta);
   }
 
 }

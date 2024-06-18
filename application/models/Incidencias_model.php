@@ -990,4 +990,24 @@ class Incidencias_model extends CI_Model {
             }
 
         }
+
+        public function AddEmpresa($idLote,$comision,$idCliente){
+
+            $comisionesEmpresa = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND id_usuario=4824 AND estatus=1")->result_array();
+            $comisiones = $this->db-> query("SELECT * FROM comisiones WHERE id_lote=$idLote AND estatus=1")->result_array();
+
+            $respuesta=false;
+            if(count($comisionesEmpresa) == 0 && count($comisiones) > 0){
+                $respuesta=    $this->db->query("INSERT INTO comisiones
+                ([id_lote], [id_usuario], [comision_total], [estatus], [observaciones], [ooam], [loteReubicado], [creado_por], [fecha_creacion], [porcentaje_decimal], [fecha_autorizacion], [rol_generado],[idCliente]) VALUES (".$idLote.",4824,".$comision.", 1, 'SE AGREGÓ EMPRESA', NULL, NULL, ".$this->session->userdata('id_usuario').", GETDATE(),1, GETDATE(), 45,$idCliente)");
+                
+                if($respuesta){
+                    return 1;
+            }else{
+                    return 0;
+            }
+             }else{
+                return 2;
+             }    
+        }
     }

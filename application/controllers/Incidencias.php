@@ -475,5 +475,13 @@ class Incidencias extends CI_Controller
 
     }
   
+    public function AddEmpresa(){
+      $idLote = $this->input->post("idLoteE");
+      $Precio = $this->input->post("PrecioLoteE");
+      $idCliente = $this->input->post("idClienteE");
+  
+      $respuesta = $this->Incidencias_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+      echo json_encode($respuesta);
+    }
 
 }

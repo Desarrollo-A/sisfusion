@@ -221,7 +221,7 @@ class Usuarios_modelo extends CI_Model
                 id_lider, id_lider_2, 0 nuevo, usuarios.fecha_creacion, s.nombre sede, usuarios.nueva_estructura, usuarios.simbolico,
                 (CASE WHEN usuarios.tipo = 2 THEN 'MADERAS UPGRADE' WHEN usuarios.tipo = 3 THEN 'CASAS' WHEN usuarios.tipo = 4 THEN 'SEGIUROS MADERAS' ELSE 'NORMAL' END) tipoUsuario,
                 (CASE WHEN usuarios.tipo = 2 THEN 'lbl-sky' WHEN usuarios.tipo = 3 THEN 'lbl-violetBoots' WHEN usuarios.tipo = 4 THEN 'lbl-goldMaderas' ELSE 'lbl-oceanGreen' END) colorTipo,
-                usuarios.tipo,,usuarios.fac_humano
+                usuarios.tipo,usuarios.fac_humano
                 FROM usuarios 
                 INNER JOIN (SELECT * FROM opcs_x_cats WHERE id_catalogo = 1) opcs_x_cats ON usuarios.id_rol = opcs_x_cats.id_opcion 
                 LEFT JOIN (SELECT id_usuario AS id_lid, id_lider AS id_lider_2, CONCAT(usuarios.nombre, ' ', apellido_paterno, ' ', apellido_materno) lider  

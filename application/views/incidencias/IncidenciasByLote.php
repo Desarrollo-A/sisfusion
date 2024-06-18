@@ -141,10 +141,7 @@ hr {
         <div class="modal fade modal-alertas"  id="addEmpresa" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
-                    <div class="modal-header bg-red">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                            <i class="material-ico  ns">clear</i>
-                        </button>   
+                    <div class="modal-header bg-red">  
                     </div>
                     <form method="post" id="form_empresa">
                         <div class="modal-body">
@@ -154,7 +151,7 @@ hr {
                             <h4>¿Esta seguro que desea agregar empresa?</h4>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" disabled id="btn-save" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
+                            <button type="submit" id="btn_add" class="btn btn-gral-data" value="GUARDAR">GUARDAR</button>
                             <button type="button" class="btn btn-danger btn-simple"  data-dismiss="modal" value="CANCELAR"> CANCELAR</button>
                         <!-- <button type="submit" id="btn_add" class="btn btn-primary">GUARDAR</button>
                             <button class="btn btn-danger" type="button" data-dismiss="modal" >CANCELAR</button> -->
