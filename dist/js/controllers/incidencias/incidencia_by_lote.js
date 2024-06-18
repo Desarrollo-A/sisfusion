@@ -1089,6 +1089,8 @@ $(".find_doc").click( function() {
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';  
                     
                     }
+
+                    BtnStats += '<button class="btn-data btn-blueMaderas addEmpresa"  title="Agregar empresa" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-building"></i></button>';
                 }
                 BtnStats += [64,65,66,84,85,86].indexOf(data.plan_comision) >= 0 ? '' : `<button href="#" data-planComision="${data.plan_comision}" value="${data.idLote}" data-estatus="${data.idStatusContratacion}" data-tipo="I" data-precioAnt="${data.totalNeto2}"  data-value="${data.registro_comision}" data-code="${data.cbbtton}" class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button>`;
                 BtnStats += `<button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" data-planComision="${data.plan_comision}" value="${data.idLote}" data-precioAnt="${data.totalNeto2}"><i class="fas fa-pencil-alt"></i></button>`;
@@ -1282,23 +1284,67 @@ $(".find_doc").click( function() {
 
 
 /**--------------------------AGREGAR EMPRESA---------------------------- */
-// $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
-//         e.preventDefault();
-//         e.stopImmediatePropagation();
+ $("#tabla_inventario_contraloria tbody").on("click", ".addEmpresa", function(e){
+         e.preventDefault();
+         e.stopImmediatePropagation();
+         var tr = $(this).closest('tr');
+         var row = tabla_inventario.row( tr );
+         idLote = $(this).val();
+         $('#idLoteE').val(idLote);
+         id_cliente = $(this).attr("data-cliente");
+         precioAnt = $(this).attr("data-precioAnt");
+         $('#idClienteE').val(id_cliente);
+         $('#PrecioLoteE').val(precioAnt);
+         $("#addEmpresa").modal();
+                
+     }); 
+     $("#form_empresa").on('submit', function(e){ 
+        e.preventDefault();
+        document.getElementById('btn_add').disabled=true;
 
-//         var tr = $(this).closest('tr');
-//         var row = tabla_inventario.row( tr );
-//         idLote = $(this).val();
+        let formData = new FormData(document.getElementById("form_empresa"));
+        $.ajax({
+            url: 'Incidencias/AddEmpresa',
+            data: formData,
+            method: 'POST',
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(data) {
+                console.log(data);
+                if (data == 1) {
+                    $('#form_empresa')[0].reset();
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
 
-//         $('#idLoteE').val(idLote);
-//         id_cliente = $(this).attr("data-cliente");
-//         precioAnt = $(this).attr("data-precioAnt");
-//         $('#idClienteE').val(id_cliente);
-//         $('#PrecioLoteE').val(precioAnt);
+                    $('#addEmpresa').modal('toggle');
+                    alerts.showNotification("top", "right", "El registro se guardo correctamente.", "success");
+                    document.getElementById('btn_add').disabled=false;
 
-//         $("#addEmpresa").modal();
-                   
-//     }); 
+                }if (data == 2) {
+                    $('#form_empresa')[0].reset();
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+
+                    $('#addEmpresa').modal('toggle');
+                    alerts.showNotification("top", "right", "EMPRESA YA SE ENCUENTRA REGISTRADA.", "warning");
+                    document.getElementById('btn_add').disabled=false;
+
+                } else if (data == 0){
+                    alerts.showNotification("top", "right", "Ocurrio un error.", "warning");
+                    $('#addEmpresa').modal('toggle');
+                    document.getElementById('btn_add').disabled=false;
+                    $('#form_empresa')[0].reset();
+
+                }
+            },
+            error: function(){
+                $('#form_empresa')[0].reset();
+                $('#addEmpresa').modal('toggle');
+                document.getElementById('btn_add').disabled=false;
+                $('#addEmpresa').modal('hide');
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
     /**--------------------------------------------------------------------- */
 
 

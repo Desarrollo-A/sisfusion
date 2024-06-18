@@ -8,6 +8,27 @@
         <?php $this->load->view('template/sidebar'); ?>
         <?php $this->load->view('descuentos/complementos/estilosPrestamos_comple'); ?>
 
+        <div class="modal fade" id="EmpresaModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <form method="post" id="modal_parcialidad_form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <!-- <h3 id="modalTitle" class="modal-title text-center" id="myModalLabel">Estatus - Mensualidades Parcialidades</h3> -->
+                        </div>
+                        <div class="modal-body">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">CERRAR</button>
+                            <button type="submit" id="enviarAnticipoParcialidad" class="btn btn-primary">ENVIAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade" id="parcialidadModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
@@ -199,15 +220,24 @@
                                                 <thead>
                                                     <tr>
                                                         <th>ID ANTICIPO</th>
-                                                        <th>ID USUARIO</th>
-                                                        <th>NOMBRE</th>
+                                                        <th>ID SOLICITANTE</th>
+
+                                                        <th>NOMBRE SOLICITANTE</th>
                                                         <th>PROCESO</th>
+                                                        
+                                                        <th>PROCESO NOMBRE</th>
                                                         <th>COMENTARIO</th>
-                                                        <th>PRIORIDAD</th>
-                                                        <th>IMPUESTO</th>
+                                                        
+                                                        <th>RÉGIMEN</th>
+                                                        <th>SOLICITADO</th>
+
+                                                        <th>TOTAL IMPUESTO</th>
+                                                        <th>DESCUENTO</th>
+
+                                                        <th>PRIORIDAD</th>                                                        
                                                         <th>SEDE</th>
+
                                                         <th>ESQUEMA</th>
-                                                        <th>MONTO</th>
                                                         <th>ACCIONES</th>
                                                     </tr>
                                                 </thead>

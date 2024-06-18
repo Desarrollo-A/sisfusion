@@ -1185,7 +1185,7 @@ public function updateSt10_2($contrato,$arreglo,$arreglo2,$data3,$id,$folioUp){
         $validation90 = $this->db->query("SELECT c.fechaApartado,DATEDIFF(DAY, c.fechaApartado, GETDATE()) AS dias, c.tipo_nc  
 		FROM clientes c 
 		INNER JOIN lotes l on l.idCliente=c.id_cliente 
-		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote")->result_array();
+		WHERE c.id_cliente=$idCliente AND l.idLote=$idLote AND c.proceso IN(0,1)")->result_array();
         if(count($validation90) > 0){
             if($validation90[0]['dias'] > 89 && ($validation90[0]['tipo_nc'] == 0 || $validation90[0]['tipo_nc'] == NULL)){
 				$dias = $validation90[0]['dias'];

@@ -125,8 +125,7 @@ $("#tabla_anticipo_revision").ready(function () {
             cache: false,
             data: function (d) {
             }
-        },
-        order: [[1, 'asc']]
+        }
     });
 
     $('#tabla_anticipo_revision').on('draw.dt', function () {

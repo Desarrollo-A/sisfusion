@@ -169,6 +169,19 @@ class Incidencias extends CI_Controller
       $datos = $this->Incidencias_model->getUserVC($id_cliente)->result_array();
       echo json_encode($datos);
     }
+
+    public function getUserVP($idLote){
+      $datos = $this->Incidencias_model->getUserVP($idLote)->result_array();
+      echo json_encode($datos);
+    }
+
+    public function updateVentaCompartida(){
+      $id = $this->input->post('id');
+      $idLote = $this->input->post('idLote');
+      $idCliente = $this->input->post('idCliente');
+      $datos = $this->Incidencias_model->updateVentaCompartida($id, $idLote, $idCliente);
+      echo json_encode($datos);
+    }
     
     public function getUserInventario($id_cliente){
       $datos = $this->Incidencias_model->getUserInventario($id_cliente)->result_array();
@@ -473,6 +486,15 @@ class Incidencias extends CI_Controller
       
       echo json_encode ($result);
 
+    }
+  
+    public function AddEmpresa(){
+      $idLote = $this->input->post("idLoteE");
+      $Precio = $this->input->post("PrecioLoteE");
+      $idCliente = $this->input->post("idClienteE");
+  
+      $respuesta = $this->Incidencias_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
+      echo json_encode($respuesta);
     }
 
 

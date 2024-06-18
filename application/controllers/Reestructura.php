@@ -710,8 +710,8 @@ class Reestructura extends CI_Controller{
         $idLider = $this->session->userdata('id_lider');
 
         $checkApartado02 = $this->Reestructura_model->checkFechaApartado02($idLoteOriginal);
-        
         $fechaCambio = "2024-03-09";
+
         $fechaUltimoEstatus2 = $checkApartado02[0]['fechaUltimoEstatus2'];
 
         $ultimoEstatus2 = new DateTime($fechaUltimoEstatus2); 
@@ -727,6 +727,17 @@ class Reestructura extends CI_Controller{
             $lineaVenta->id_regional_2 = 0;
             $idLider = $checkApartado02[0]['id_gerente_asignado'];
             $esquemaAnterior = true;
+
+            if($idLider == 0 || $idLider == NULL || is_null($idLider)){
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se encontro el Gerente correspondiente, reportarlo con SISTEMAS',
+                    'color' => 'danger'
+                ));
+                exit; 
+            }
+
         }
 
         $metrosGratuitos = 0;
@@ -842,7 +853,16 @@ class Reestructura extends CI_Controller{
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
             }
-
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
+            }
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
                     $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
@@ -1005,6 +1025,17 @@ class Reestructura extends CI_Controller{
             }
             else{
                 $planComision = $proceso == 3 ? 84 : (($proceso == 2 || $proceso == 5) ? 85 : 86);
+            }
+            
+            if(($proceso == 4 || $proceso == 6) && ($total8P == 0  || is_null($total8P))){
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'No se pudo calcular el total excedente, favor de reportarlo con Sistemas',
+                    'color' => 'danger'
+                ));
+                return;
             }
 
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
@@ -3710,6 +3741,7 @@ class Reestructura extends CI_Controller{
         $tipoProceso = $getCliente[0]->procesoDestino;
         $comisionNuevo = $getCliente[0]->comisionNuevo;
         $clienteReubicacion = $getCliente[0]->id_cliente_reubicacion_2;
+        $idStatusContratacion = $getCliente[0]->idStatusContratacion;
 
         $getTotalNeto2 = $this->Reestructura_model->getTotalNeto2($loteAnterior)->result();
         $totalNetoAnterior = $getTotalNeto2[0]->anterior;
@@ -3724,8 +3756,11 @@ class Reestructura extends CI_Controller{
         // paso 0 se verifica si el lote de origen esta libre antes de regresar
         if($statusNuevo > 6 && !in_array($statusLoteAnterior2, array(1, 2, 15, 21)) && $loteNuevo != $loteAnterior) {$flagOk = false; $msg = 'error 0'; }
 
+        $estatusComisiones = in_array($idStatusContratacion,array(9,10,13,14,15)) ? $this->verificarComisiones($loteNuevo,$clienteNuevo,$clienteReubicacion) : 1;
+        if($estatusComisiones == 0){ $flagOk = false; $msg = 'Error  al pausar pagos de comisiones'; }
+
         // paso 1 - insert en tabla de regreso
-        $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion);
+        $insertRegresoLote = $this->insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones);
         if(!$insertRegresoLote){ $flagOk = false; $msg = 'guardar, el lote de origen ya ha sido ocupado';}
 
         
@@ -3763,6 +3798,7 @@ class Reestructura extends CI_Controller{
         //paso 9 - regresar origen
         $updateOrigen = $this->updateOrigenProceso($loteAnterior, $clienteAnterior, $comentario, $totalNetoAnterior);
         if(!$updateOrigen) { $flagOk = false; $msg = 'regresar los origenes';}
+        
 
 
         // último paso, confirmación de que los procesos han sido correctos
@@ -3899,8 +3935,7 @@ class Reestructura extends CI_Controller{
             'idCliente' => $clienteAnterior,
             'idStatusLote' => 2,
             'idStatusContratacion' => 15,
-            'idMovimiento' => 45,
-            'totalNeto2' => intval($totalNetoAnterior)
+            'idMovimiento' => 45
             // 'idStatusLote' => 1
         );
 
@@ -3954,7 +3989,7 @@ class Reestructura extends CI_Controller{
 
         $update = $this->General_model->addRecord('historial_liberacion', $insertData);
 
-        $this->email
+       /* $this->email
             ->initialize()
             ->from('Ciudad Maderas')
             ->to('programador.analista34@ciudadmaderas.com')
@@ -3966,7 +4001,7 @@ class Reestructura extends CI_Controller{
                 'tipoCancelacion' => 1 // $tipoCancelacionNombre
             ], true));
 
-        $this->email->send();
+        $this->email->send();*/
 
         return $update;
     }
@@ -3981,7 +4016,7 @@ class Reestructura extends CI_Controller{
         return $update;
     }
 
-    public function insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion){
+    public function insertRegresoLote($clienteAnterior, $clienteNuevo, $loteAnterior, $loteNuevo, $tipoProceso, $comisionNuevo, $clienteReubicacion,$estatusComisiones){
         $insertData = array(
             'idClienteOrigen' => $clienteAnterior,
             'idClienteDestino' => $clienteNuevo,
@@ -3991,122 +4026,223 @@ class Reestructura extends CI_Controller{
             'planComision' => $comisionNuevo,
             'clienteReubicacion2' => $clienteReubicacion,
             'fechaCreacion' => date('Y-m-d H:i:s'),
-            'creadoPor' => $this->session->userdata('id_usuario')
+            'creadoPor' => $this->session->userdata('id_usuario'),
+            'estatusComisiones' => $estatusComisiones
         );
         
         $insert = $this->General_model->addRecord('historial_regreso_reestructura', $insertData);
 
         return $insert;
     }
+    public function verificarComisiones($idLoteActual,$idClienteActual,$idClienteReubicacion){
+        $data = $this->Reestructura_model->buscarPagos($idLoteActual,$idClienteActual,$idClienteReubicacion);    
+        if(count($data) == 0){ //NO SE ENCONTRARON PAGOS
+            return 1;
+        }else{
+                if($data[0]['pagadasGeneral'] == 0){
+                    if($data[0]['nuevasDestino'] == 0 && $data[0]['nuevasOrigen'] > 0){ //SOLO SE HAN PAGADO LAS COMISIONES DE ORIGEN, SOLO SE ACTUALIZA ID LOTE
 
-    public function bloqueoRegreso(){
-        $bandera = $this->input->post("bandera");
-        $idLote = $this->input->post("idLoteBandera");
-        $idCliente = $this->input->post("idCliente");
-        $flagFusion = 0;
-        $flagRe = 0;
-        $flagPass = true;
-        $flagFusion = 0;
-        $flagRe = 0;
-        $idLotePvOrigen = $this->input->post("idLoteBandera");;
-
-        $dataUpdate = array(
-            "liberaBandera" => 0
-        );
-
-        $checkFusion = $this->Reestructura_model->checkFusion($idLote); // revisar si es fusión
-        $checkRe = $this->Reestructura_model->checkReubicacion($idLote); // revisar si es reubicación 
-        $checkRee = $this->Reestructura_model->checkReestructura($idLote); // o reestructura
-
+                    }else if($data[0]['nuevasDestino'] > 0 && $data[0]['nuevasOrigen'] == 0){ // SE PAUSAN LOS NUEVOS PAGOS DE DESTINO
+                        $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLoteActual,$idClienteActual);
+                        if(!$result){
+                            return 0;
+                       }
+                    }else{ // SE PAUSAN LOS PAGOS NUEVOS DE DESTINO Y LOS DE ORIGEN SE LES CAMBIARA EL ID LOTE
+                        $result = $this->Reestructura_model->pausarPagos($this->session->userdata('id_usuario'),$idLoteActual,$idClienteActual);
+                        if(!$result){
+                            return 0;
+                       }
+                    }   
+                    return 2;
+                }else{
+                    if(($data[0]['pagadasOrigen'] > 0 && ($data[0]['nuevasOrigen'] > 0 || $data[0]['nuevasOrigen'] == 0)) && ($data[0]['nuevasDestino'] == 0 && $data[0]['pagadasDestino'] == 0)){
+                        //SOLO HAY PAGADAS DEL ORIGEN SE CAMBIAR EL ID DEL LOTE
+                        return 2;
+                    }else if(($data[0]['pagadasOrigen'] == 0 && $data[0]['nuevasOrigen'] == 0) && ($data[0]['pagadasDestino'] > 0 && ($data[0]['nuevasDestino'] > 0 || $data[0]['nuevasDestino'] == 0))){
+                        //SOLO HAY PAGADAS DE DESTINO(UPGRADE) SE REALIZA EL RECALCULO
+                        return 3;
+                    }else if( $data[0]['pagadasOrigen'] > 0 && $data[0]['pagadasDestino'] > 0){ // YA SE PAGARON COMISIONES DE ORIGEN Y DESTINO, LA DE ORIGEN SE ACTUALIZA EL LOTE Y LAS DE DESTINO SE RECALCULAN
+                        return 3;
+                    }
+                }
+        }   
+    }
+    
+    public function traspasoComisiones($idClienteReubicacion,$idLoteActual){
         $this->db->trans_begin();
+        $dataClienteAnterior = json_decode($this->Reestructura_model->getDataClienteAnterior($idClienteReubicacion));
+        $dataClienteDestino = json_decode($this->Reestructura_model->getDataClienteActual($idLoteActual));
+        $user = $this->session->userdata('id_usuario');
+        //PROCESOS PARA BANDERA EN 2
+        /*CONSULTAR SI ES EL MISMO PLAN, SI ES EL MISMO PLAN SE VERIFICA 
+        EL PRECIO ORIGEN Y DESTINO, SE TOMA EL MENOR, SI SE TOMA EL DE ORIGEN SOLO ACTUALIZAR LOTE Y CLIENTE DE COMSIONES.
+        SI ES EL DIFERENTE EL PRECIO LLAMAR FUNCIÓN DE PORCENTAJES Y RECALCULAR LOS TOTALES COMISIÓN DE CADA COMISIONISTA*/
+        if($dataClienteAnterior->estatusComisiones == 3){ // SE RECALCULAN LAS COMISIONES
+            if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){ //ES EL MISMO PLAN SOLO SE RECALCULAN LAS COMISIONES CON EL MENOR PRECIO DEL LOTE
+                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
+                if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){
+                    if($dataClienteDestino->totalNeto2 < $dataClienteAnterior->precioOrigen){ // SE HACE EL RECALCULO, YA QUE EL PRECIO CAMBIO
+                        $dataNuevosCalculos = $this->recalculoComision($dataClienteDestino->idCliente, $dataClienteDestino->totalNeto2,$dataClienteDestino->plan_comisio,1);
+                        //RECORRER DATA, MANDAR COMISIÓN TOTAL PARA EL SET DEL UPDATE Y EL ID USUARIO PARA EL WHERE DEL UPDATE, DE IGUAL FORMA EL LOTE Y ID DE CLEINTE DESTINO ANTERIOR PARA REASIGNAR
 
-        if($checkRe->num_rows() > 0 || $checkRee->num_rows() > 0){
-            $flagRe = 1;
+                    }else{ // SE MANTIENE TODO IGUAL Y SOLO SE ACTUALIZA EL LOTE Y CLIENTE PARA LAS NUEVAS COMISIONES
+                        $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
+                    }
+                }else{ //REUBICACIÓN EXCEDENTE
+                    $precioLote = $dataClienteDestino->totalNeto2 < $dataClienteAnterior->precioOrigen ? $dataClienteDestino->totalNeto2 :  $dataClienteAnterior->precioOrigen;
+                    $dataNuevosCalculos = $this->recalculoComision($dataClienteDestino->idCliente, $dataClienteDestino->total8P,$dataClienteDestino->plan_comisio,1,$precioLote);
+                }
+            }else{
+                //SI EL PLAN COMISIÓN CAMBIA, SE HACE EL RECALCULO DE LAS COMISIONES Y SE REALIZA EL TRASPASO DE LAS ANTERIORES SI ES QUE HAY
+                $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idClienteOrigen,$idLoteActual,$user); //TRASPASO COMISIONES ANTERIORES
+                if(in_array($dataClienteDestino->plan_comision, array(64,64,84,85))){//REUBICACIÓN Y REESTRUCTURA, NO SE TOPAN LOS COMISIONISTAS, SOLO SE RECALCULAN LOS MONTOS CON EL NUEVO PRECIO SI ES QUE ESTE ES MENOR
+                    if($dataClienteDestino->totalNeto2 < $dataClienteAnterior->precioOrigen){ // SE HACE EL RECALCULO, YA QUE EL PRECIO CAMBIO
+                        $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user); // TRASPASO COMSIONES ACTUALES
+                    }else{ // SE MANTIENE TODO IGUAL Y SOLO SE ACTUALIZA EL LOTE Y CLIENTE PARA LAS NUEVAS COMISIONES
+
+                    }
+                 }else{//REUBICACIÓN EXCEDENTE
+     
+                 }
+            }
+
+        }else{ // SOLO SE ACTUALIZAN LAS COMOSIONES DE ORIGEN(ID_LOTE)
+           $result = $this->Reestructura_model->trasposoComisionesReu($dataClienteAnterior->idLote,$dataClienteAnterior->idCliente,$idLoteActual,$user);
         }
-        else if($checkFusion->num_rows() > 0){
-            $flagFusion = 1;
+        /*if($dataClienteAnterior->planComision == $dataClienteDestino->plan_comision){//COMPARAMOS EL PLAN COMISIÓN, SI ES EL MISMO:
+            // SE PROCEDE A COMPARAR EL PRECIO DEL LOTE ORIGEN CON EL DESTINO
+            //REESTRUCTURA TRATAR IGUAL, EXCDENTE MANDAR NUEVO TOTAL8P  
+            
+            if($dataClienteDestino->precioOrigen < $dataClienteDestino->precioDestino){// SI PRECIO ORIGEN ES MENOR, 
 
-            $fusionResult = $checkFusion->result();
-            $idLotePvOrigen = $fusionResult[0]->idLotePvOrigen;
-        }
+            }else{
 
-        $updateBandera = $this->General_model->updateRecord('lotes', $dataUpdate, 'idLote', $idLote);
-        if(!$updateBandera) $flagPass = false;
+            }
+        }*/
+        /* SI ES DIFERENTE PLAN COMISIÓN, SE LLAMA FUNCIÓN DE PORCENTAJES CON EL PRECIO MENOR DE LOS DOS LOTES(ORIGEN Y DESTINO)
+        REESTRUCTURA A REUBICACIÓN 
+        REESTRUCTURA A REUBICACIÓN EXCEDENTE
+        REUBICACIÓN A REESTRUCTURA
+        REUBICACIÓN A REUBICACIÓN EXCEDENTE
+        ---
+        REUBICACIÓN EXCEDENTE A REUBICACIÓN
+        REUBICACIÓN EXCEDENTE A REUBICACIÓN
+        (PARA ESTOS ULTIMOS CASOS TOMAR COMISIONISTAS QUE NO CORRESPONDEN AL NUEVO PLAN)
+        */
 
-        if($flagPass){
-            $this->db->trans_commit();
-            $response["result"] = true;
-            $response["flagRe"] = $flagRe;
-            $response["flagFusion"] = $flagFusion;
-            $response["idLotePvOrigen"] = $idLotePvOrigen;
-            $response["message"] = "Se ha bloqueado el lote correctamente";
-        }
-        else{
+        /* POSIBLE SOLUCIÓN: HACER EL LLAMADO A LA FUNCIÓN  PORCENTAJES, SI ES EXCEDENTE MANDAR EL TOTAL8P Y CALCULAR EL PRECIO MENOR CON EL 1%
+           INSERTAR SOLO A COMISIONES,  */
+        if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
-            $response["result"] = false;
-            $response["message"] = "Ha ocurrido un error al bloquear el lote";
+            return false;
+        } else {
+            $this->db->trans_commit();
+            return true;
         }
-
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));        
     }
 
-    public function deshacerFusion(){
-        $idLotePv = $this->input->post('idLotePvOrigen');
-
-        $checkFusion = $this->Reestructura_model->checkFusion($idLotePv); // revisar si es fusión
-        $data = $checkFusion->result();
-
-        // una vez que se comprueba que haya resultados de la consulta, se guardan los lotes en un arreglo
-        foreach ($data as $d) {
-            if($d->origen == 1){
-                $lotesOrigenUpdate[] = array(
-                    'idLote' => $d->idLote,
-                    'id_usuario_asignado' => 0,
-                    'id_juridico_preproceso' => 0
-                );
-            }
-            else if($d->origen == 0){
-                $lotesDestino[] = $d->idLote;
-            }
+    public function recalculoComision($idCliente, $totalNeto2, $planComision,$ooamDispersion,$precioParaExcedente = 0){
+        $dataComisiones = $this->Comisiones_model->porcentajes($idCliente, $totalNeto2, $planComision,$ooamDispersion)->result_array();
+        $datosPlan8PAnterior =          
+        [
+            array(
+                "idRol"=>7,
+                "porcentaje"=>0.50
+            ),
+            array(
+                "idRol"=>3,
+                "porcentaje"=>0.2
+            ),
+            array(
+                "idRol" => 2,
+                "porcentaje"=>0.2
+            ),
+            array(
+                "idRol"=>1,
+                "porcentaje"=>0.1
+            )
+        ];
+        $datosPlan8PNuevo =  [
+            array(
+                "idRol"=>7,
+                "porcentaje"=>0.50
+            ),
+            array(
+                "idRol"=>3,
+                "porcentaje"=>0.2
+            ),
+            array(
+                "idRol"=>2,
+                "porcentaje"=>0.2
+            ),
+            array(
+                "idRol"=>59,
+                "porcentaje"=>0.2
+            ),
+            array(
+                "idRol"=>1,
+                "porcentaje"=>0.1
+            )
+        ];
+        $datosPlan8P =  $planComision == 66 ? $datosPlan8PAnterior : $datosPlan8PNuevo;
+        for ($i=0; $i < count($dataComisiones) ; $i++) { 
+            if($planComision == 66 || $planComision == 86){
+                $dataComisiones[$i]['id_rol'] = $planComision == 86 && $dataComisiones[$i]['id_usuario'] == 13546 ? 59 : $dataComisiones[$i]['id_rol'];
+                $busqueda =[];
+                for ($j=0; $j < count($datosPlan8P) ; $j++) { 
+                    if($datosPlan8P[$j]['idRol'] == $dataComisiones[$i]['id_rol']){
+                        $busqueda = $datosPlan8P[$j];
+                        $dataComisiones[$i]['porcentaje_decimal'] = count($busqueda) > 0 ? $dataComisiones[$i]['porcentaje_decimal'] + $busqueda['porcentaje'] : $dataComisiones[$i]['porcentaje_decimal'];
+                        $dataComisiones[$i]['comision_total'] = count($busqueda) > 0 ? ($dataComisiones[$i]['comision_total'] + (($busqueda['porcentaje']/100)) * $precioParaExcedente) : $dataComisiones[$i]['comision_total'];
+                    }
+                }
+            }   
         }
-        
-        $update = $this->General_model->updateBatch('lotes', $lotesOrigenUpdate, 'idLote');
-        $deleteFusion = $this->Reestructura_model->deshacerFusion($idLotePv);
-
-        if($deleteFusion && $update){
-            $response["result"] = true;
-            $response["message"] = "Se ha bloqueado el lote y eliminado la fusión";
-        }
-        else{
-            $response["result"] = false;
-            $response["message"] = "Ha ocurrido un error al deshacer la fusión";
-        }
-
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response)); 
+        var_dump($dataComisiones);
+        return $dataComisiones;
     }
 
-    function getPreOrigen(){
-        $idLote = $this->input->post('idLote');
-
-        $getOrigen = $this->Reestructura_model->getPreOrigen($idLote);
-        $getDatos = $getOrigen->result();
-
-        if($getOrigen->num_rows() > 0){
-            $response["result"] = true;
-            $response["message"] = "Se ha obtenido el historial de preproceso";
-            $response["idLote"] = $getDatos[0]->idLote;
-            $response["proceso"] = $getDatos[0]->proceso;
+    public function traspasarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$planComisionNuevo,$planComisionAnterior,$dataNuevosCalculos,$banderaCambioPlan){
+        $creadoPor = $this->session->userdata('id_usuario');
+        if($banderaCambioPlan == 1){ //HUBO CAMBIO DE PLAN, SE TOPAN O SE INSERTAN LAS COMISONES
+            if(in_array($planComisionAnterior,array(66,86))){ // ERA UNA REUBICACIÓN EXCEDENTE, SE TOPARAN LOS QUE NO PERTENECEN AL PLAN NUEVO
+                // ROLES QUE SE TOPARAN: 89,90,91,87,88
+                $rolesATopar = '89,90,91,87,88';
+                $this->Reestructura_model->toparComisiones($idLoteNuevoDestino,$idClienteNuevoDestino,$rolesATopar);
+            }else{ // 
+                if(in_array($planComisionNuevo,array(66,86))){// VIENE DE UNA REUBICACIÓN Ó UNA REESTRUCTURA Y PASA A UNA REUBICACIÓN EXCEDENTE, SE INSERTARAN LOS COMISIONISTAS FALTANTES
+                    for ($i=0; $i <$dataNuevosCalculos ; $i++) { 
+                        if(in_array($dataNuevosCalculos[$i]['id_rol'],array(1,2,59,3,7))){ //UPDATE, 
+                            $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
+                        }else{//INSERT PARA LOS ROLES DEL EXCEDENTE
+                            $dataComisiones = array(
+                                "id_lote" => $idLoteNuevoDestino,
+                                "id_usuario" => $dataNuevosCalculos[$i]['id_usuario'],
+                                "comision_total" =>  $dataNuevosCalculos[$i]['comision_total'],
+                                "estatus" => 1,
+                                "observaciones" => "CAMBIO DE PROCESO" ,
+                                "ooam" => 1,
+                                "loteReubicado" => '', 
+                                "creado_por" => $this->session->userdata('id_usuario') ,
+                                "fecha_creacion" => date('Y-m-d H:i:s') ,
+                                "porcentaje_decimanl" => $dataNuevosCalculos[$i]['comision_total'] ,
+                                "fecha_autorizacion" => date('Y-m-d H:i:s'),
+                                "rol_generado" => $dataNuevosCalculos[$i]['id_rol'] ,
+                                "descuento" => 0 ,
+                                "idCliente" => $idClienteNuevoDestino ,
+                                "modificado_por" => $this->session->userdata('id_usuario'),
+                                "liquidada" => 0
+                            );
+                            $this->General_model->addRecord('comisiones', $dataComisiones);
+                        }
+                    }
+                }
+            }
+        }else{// SI NO, SOLO SE HACE EL UPDATE DE LA COMISIÓN TOTAL DE LAS COMISIONES
+            for ($i=0; $i < count($dataNuevosCalculos) ; $i++) { 
+                $this->Reestructura_model->actualizarComisiones($idLoteAnterior,$idClieteAnterior,$idLoteNuevoDestino,$idClienteNuevoDestino,$dataNuevosCalculos[$i]["id_usuario"],$dataNuevosCalculos[$i]["comision_total"],$creadoPor);
+            }
         }
-        else{
-            $response["result"] = false;
-            $response["message"] = "No hay historial preproceso para este lote";
-            $response["idLote"] = 0;
-            $response["proceso"] = 0;
-        }
-
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($response));         
+        $this->Reestructura_model->actualizarRegistroComision($idLote,$creadoPor);
     }
 }

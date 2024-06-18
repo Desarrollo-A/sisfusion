@@ -2577,7 +2577,10 @@ class Caja_outside extends CI_Controller {
             "IdCodigoPostalSAT" => 167573, // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
             "IdPaisSAT" => 1142, // default México (1142)
             "IdCatRegimen" => 34, // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
-            "CuentaClabeSTP" => NULL
+            "CuentaClabeSTP" => NULL,
+            "RFC"=>$infoCliente->regimenFiscal,
+            "IdCodigoPostalSAT"=>$infoCliente->cp_fac,
+
         );
 
         $responseInsertClienteNeoData = $this->Neodata_model->addUpdateClienteNeoData($dataNeoData);
