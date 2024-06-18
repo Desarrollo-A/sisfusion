@@ -2590,7 +2590,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         $("#modalBajaVcUpdate .modal-body").html('');
         $("#modalBajaVcUpdate .modal-footer").html('');
 
-        $("#modalBajaVcUpdate .modal-body").append(`
+        $("#modalBajaVcUpdate .modal-body").append(` 
             <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
             <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
         `);
