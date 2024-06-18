@@ -669,7 +669,7 @@
                     <div class="modal-footer">
                     </div>
                 </div>
-            </div>
+            </div> 
         </div>
 
         <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
