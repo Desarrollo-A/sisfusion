@@ -584,6 +584,31 @@ hr {
             </div>
         </div>
 
+        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-red">
+                        <h3 class="card-title text-center mx-auto"><b>Baja de venta compartida</b></h3>
+                    </div>
+                    <div class="modal-body text-center">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="modal fade modal-alertas" id="miModalVcNew" style="overflow:auto !important;" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
