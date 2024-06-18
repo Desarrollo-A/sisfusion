@@ -5,10 +5,10 @@
         <div class="card-body">
             <div class=" no-gutters align-items-center">
                 <div class="col mr-12">
-                    <div class="text-xs font-weight-bold  lbl-sky text-uppercase center-align">
+                    <div class="text-xs font-weight-bold  lbl-goldMaderas text-uppercase center-align">
                     Préstamos activos:</div>
                     <div class="center-align" style="padding-top:20px; margin-bottom:2px; " >
-                    <i class="fas fa-coins fa-2x " style=" color: #0067d4;" ></i>
+                    <i class="fas fa-coins fa-2x " style=" color: #103f75;" ></i>
                     </div>
                     <div name="totalp" id="totalp" 
                         class="h5 totalp mb-0 font-weight-bold text-gray-800 center-align">$0
@@ -24,10 +24,10 @@
     <div class="card border-left-success shadow  py-2">
         <div class="card-body" >
                 <div class="col mr-12">
-                    <div class="text-xs font-weight-bold lbl-sky text-uppercase center-align">
+                    <div class="text-xs font-weight-bold lbl-goldMaderas text-uppercase center-align">
                     Abonado :</div>
                     <div class="center-align" style="padding-top:20px; margin-bottom:2px">
-                    <i class="fas fa-cash-register fa-2x " style=" color: #0067d4;"></i>
+                    <i class="fas fa-cash-register fa-2x " style=" color: #103f75;"></i>
                     </div>
                     <div class="col-auto align-items-center d-flex justify-center">
                     </div>
@@ -45,10 +45,10 @@
         <div class="card-body">
                 <div class="col mr-12">
                     
-                        <div class="text-xs font-weight-bold lbl-sky text-uppercase center-align">
+                        <div class="text-xs font-weight-bold lbl-goldMaderas text-uppercase center-align">
                         Pendiente :</div>
                         <div class="center-align" style="padding-top:20px; margin-bottom:2px">
-                            <i class="fas fa-comments-dollar fa-2x" style=" color: #0067d4;"></i>
+                            <i class="fas fa-comments-dollar fa-2x" style=" color: #103f75;"></i>
                         </div>
                         <div  name="totalPendiente" id="totalPendiente" 
                         class="h5 totalPendiente mb-0 font-weight-bold text-gray-800 center-align">$0

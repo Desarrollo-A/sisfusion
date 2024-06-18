@@ -4887,14 +4887,7 @@ for ($d=0; $d <count($dos) ; $d++) {
         echo json_encode(array());
       }
     }
-
- 
     
-
-
-
-
- 
     public function cambiarEstatusComisiones()
     {
         $idPagos = explode(',', $this->input->post('idPagos'));
@@ -5655,13 +5648,21 @@ public function lista_usuarios($rol,$forma_pago){
     echo json_encode(array("data" => $this->Comisiones_model->getReporteDesc($sede , $empresa, $puesto, $usuario, $beginDate, $endDate)));
   }
 
-  public function AddEmpresa(){
-    $idLote = $this->input->post("idLoteE");
-    $Precio = $this->input->post("PrecioLoteE");
-    $idCliente = $this->input->post("idClienteE");
-
-    $respuesta = $this->Comisiones_model->AddEmpresa($idLote,($Precio*(1/100)),$idCliente);
-    echo json_encode($respuesta);
+  public function getComisionesDetenidas($idLote){
+      $respuesta = $this->Comisiones_model->getComisionesDetenidas($idLote)->result();
+      if(count($respuesta) > 0)
+      {
+        echo json_encode(1);
+      }else{
+        echo json_encode(0);
+      }
   }
+
+  public function getComisionInd(){
+    $idLote = $this->input->post('idLote');
+    $idUsr = $this->input->post('idUsr');
+    
+    echo json_encode($this->Comisiones_model->getComisionInd($idLote, $idUsr)->result_array(),JSON_NUMERIC_CHECK);
+}
 
 }

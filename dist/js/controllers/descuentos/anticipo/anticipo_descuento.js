@@ -289,6 +289,10 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
     Modalbody_subir.html('');
     prioridad_nombre = prioridad == 1 ? 'URGENTE' : 'NORMAL'; 
     Modalfooter_subir.html('');
+
+    montoMandar =  id_parcialidad == 'null' ? monto  : mensualidades_pra ;
+
+    
     bloquear = forma_de_pago_general == 2 ? 'disabled' : ''; 
     FACTURAS = forma_de_pago_general == 2 ?  `
             <div class="form-group">      
@@ -303,7 +307,7 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
             </div>
             <br>
             <br>
-            <center><button class="btn btn-warning" type="button" onclick="xml2(${monto})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center>
+            <center><button class="btn btn-warning" type="button" onclick="xml2(${montoMandar})" id="cargar_xml2"><i class="fa fa-upload"></i> VERIFICAR Y CARGAR</button></center>
             <p id="cantidadSeleccionada"></p>
             <br>
             <br>
@@ -735,6 +739,5 @@ function  fucntion_paso_5(ID,monto,id_usuario,prioridad,id_parcialidad,monto_par
 
             // pagos_parcialidades = document.getElementById("numeroPagosParcialidad").value;
         // $("#preceso_aticipo").addClass("hide");
-        alert(484445);
     
     })
