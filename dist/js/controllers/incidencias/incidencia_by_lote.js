@@ -722,7 +722,7 @@ function updateVentaC(id, idLote, idCliente){
             }
             else{
                 $('#modalBajaVcUpdate .modal-body').html('');
-                $("#modalBajaVcUpdate").modal('toggle');
+                $("#modalBajaVcUpdate").modal('toggle'); 
                 $("#modal_NEODATA").modal('toggle');
                 $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                 $('#spiner-loader').addClass('hidden');
