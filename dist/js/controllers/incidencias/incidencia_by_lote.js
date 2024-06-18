@@ -710,6 +710,46 @@ function saveTipo(id){
         });
     }
 }
+
+function updateVentaC(id, idLote, idCliente){
+    
+    var formData = new FormData;
+    formData.append("id", id);
+    formData.append("idLote", idLote);
+    formData.append("idCliente", idCliente)
+    $.ajax({
+        url: general_base_url+'Incidencias/updateVentaCompartida',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: 'json',
+        method: 'POST',
+        type: 'POST', // For jQuery < 1.9
+        success:function(data){
+            if(data == 1){
+                $('#modalBajaVcUpdate .modal-body').html('');
+                $("#modalBajaVcUpdate").modal('toggle');
+                $('#modalBajaVc .modal-body').html('');
+                $("#modalBajaVc").modal('toggle');
+                $("#modal_NEODATA").modal('toggle');
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#spiner-loader').addClass('hidden');
+                    alerts.showNotification("top", "right", "La venta compartirda ha sido dada de baja", "success");
+            }
+            else{
+                $('#modalBajaVcUpdate .modal-body').html('');
+                $("#modalBajaVcUpdate").modal('toggle'); 
+                $("#modal_NEODATA").modal('toggle');
+                $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                $('#spiner-loader').addClass('hidden');
+                alerts.showNotification("top", "right", "Algo salio mal", "danger");
+            }
+        }
+    });
+}
+
+
 /*function Editar(i,precio,id_usuario){
     $('#modal_avisos .modal-body').html('');
     let precioLote = parseFloat(precio);
