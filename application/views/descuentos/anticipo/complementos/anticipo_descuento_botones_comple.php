@@ -45,7 +45,7 @@
         <div class="ag-courses-item_bg"></div>
 
         <div class="ag-courses-item_title">
-        Solicitud Anticipo de nómina
+        Solicitud Anticipo-Apoyo
         </div>
 
         <div class="ag-courses-item_date-box">

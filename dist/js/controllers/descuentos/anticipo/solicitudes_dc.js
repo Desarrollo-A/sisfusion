@@ -165,9 +165,67 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                                                     MENSUALIDADES   : ${mensualidades_pra} <br>
                                                     MONTO           : ${monto_parcialidad} <br>` ;
 
+        
 
         const monto_formateado = $(this).attr("data-monto_formateado");
         
+        const formulario = id_parcialidad != 'null' ? `       
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">número de mensualidades</label>
+            <input class="form-control input-gral" 
+                data-type="number" maxlength="2" 
+                required
+                type="text" value="${mensualidades_pra}" name="num_mensualidades" id="num_mensualidades">
+        </div>
+        
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">Confirmar monto</label>
+            <input class="form-control input-gral" 
+            data-type="currency" maxlength="10" 
+            oncopy="return false" 
+            onpaste="return false"
+            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+            onkeypress="return onlyNumbers(event)"
+            required
+            type="text" value="${monto1}" name="monto" id="monto">
+        </div>
+        
+
+
+        <div class="form-group col-md-6 ">
+            <label class="label control-label">Monto por mes</label>
+            <input class="form-control input-gral" 
+                data-type="currency" maxlength="10" 
+                required
+                type="text" value="${monto_parcialidad}" name="mensualidad" id="mensualidad">
+        </div>
+
+        <div class="form-group col-md-6 ">
+                <a  
+                    name="nuevosNumeros"  
+                    id="nuevosNumeros" 
+                    onclick="validar_nuevosNumeros()"
+                    class="btn btn-violetDeep">
+                    Validar nuevos valores
+                </a>
+        </div>` 
+        : 
+        `<div class="form-group col-md-12 ">
+            <label class="label control-label">Confirmar monto</label>
+            <input class="form-control input-gral" 
+            data-type="currency" maxlength="10" 
+            oncopy="return false" 
+            onpaste="return false"
+            oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
+            onkeypress="return onlyNumbers(event)"
+            required
+            type="text" value="${monto1}" name="monto" id="monto">
+        </div>
+        ` ;
+
+
+
+
         Modalbody.html('');
         Modalfooter.html('');
         Modalbody.append(`
@@ -198,45 +256,8 @@ $("#tabla_anticipo_revision_dc").ready(function () {
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-md-6 ">
-                    <label class="label control-label">número de mensualidades</label>
-                    <input class="form-control input-gral" 
-                        data-type="number" maxlength="2" 
-                        required
-                        type="text" value="${mensualidades_pra}" name="num_mensualidades" id="num_mensualidades">
-                </div>
-                
-                <div class="form-group col-md-6 ">
-                    <label class="label control-label">Confirmar monto</label>
-                    <input class="form-control input-gral" 
-                    data-type="currency" maxlength="10" 
-                    oncopy="return false" 
-                    onpaste="return false"
-                    oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" 
-                    onkeypress="return onlyNumbers(event)"
-                    required
-                    type="text" value="${monto1}" name="monto" id="monto">
-                </div>
-                
 
-
-                <div class="form-group col-md-6 ">
-                    <label class="label control-label">Monto por mes</label>
-                    <input class="form-control input-gral" 
-                        data-type="currency" maxlength="10" 
-                        required
-                        type="text" value="${monto_parcialidad}" name="mensualidad" id="mensualidad">
-                </div>
-
-                <div class="form-group col-md-6 ">
-                        <button  
-                            name="nuevosNumeros"  
-                            id="nuevosNumeros" 
-                            onclick="nuevosNumeros()"
-                            class="btn btn-violetDeep">
-                            Aceptar
-                        </button>
-                </div>
+                ${formulario}
                 
                 
             
@@ -480,20 +501,39 @@ $("#form_subir").on('submit', function (e) {
 
 // document.getElementById('num_mensualidades').addEventListener('input', validateInput);
 
-function nuevosNumeros() {
-    const input = document.getElementById('num_mensualidades');
-    const value = input.value;
-    const number = parseInt(value, 10);
-    const validationMessage = document.getElementById('validationMessage');
+function validar_nuevosNumeros() {
+    alert('datos') 
 
-    if (isNaN(number) || number < 1 || number > 99) {
-        validationMessage.textContent = 'Por favor, ingrese un número válido entre 1 y 99.';
-        input.focus();
-    } else {
-        validationMessage.textContent = 'El número de mensualidades es válido.';
+    const numero_mensualidades = document.getElementById('num_mensualidades').value;
+    const monto = document.getElementById('monto').value;
+    // const numero_mensualidades = document.getElementById('num_mensualidades');
+    // monto = parseFloat(monto);
+    // numero_mensualidades = parseFloat(numero_mensualidades);
+
+    const number = parseInt(numero_mensualidades, 10);
+    const validationMessage = document.getElementById('validationMessage');
+    var nuevo_dato = 0;
+
+
+    // if (isNaN(number) || number < 1 || number > 99) {
+    //     // validationMessage.textContent = 'Por favor, ingrese un número válido entre 1 y 99.';
+    //     // input.focus();
+    // } else {
+        
+        
+        console.log('nuevo dato',nuevo_dato);
+        console.log('numero_mensualidades', numero_mensualidades);
+        console.log('monto',monto);
+
+        nuevo_dato = (monto/numero_mensualidades);
+
+        document.getElementById('mensualidad').value = parseFloat(nuevo_dato);
+
+
+        // validationMessage.textContent = 'El número de mensualidades es válido.';
         // Aquí puedes añadir la lógica adicional, como enviar los datos a un servidor
-        console.log('Número de mensualidades:', number);
-    }
+        // console.log('Número de mensualidades:', number);
+    // }
 }
 // document.addEventListener('DOMContentLoaded', function() {
 //     const input = document.getElementById('num_mensualidades');

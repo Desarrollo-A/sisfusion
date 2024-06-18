@@ -108,13 +108,36 @@ $("#tabla_anticipos").ready(function () {
         columns: [
             { data: 'id_anticipo' },
             { data: 'id_usuario' },
+            
             { data: 'nombreUsuario' },
+            { data: 'prioridad_nombre' },
+
             { data: 'proceso' },
             { data: 'comentario' },
+            
+            { data: 'formaNombre' },
+            {    data: function( d ){
+                return '<p class="m-0">'+formatMoney(d.monto)+'</p>';
+            } },
+
+
+            {   
+                data: function( d ){
+                var total_impuesto_monto = d.forma_pago == 2 ?  0 : (d.monto*0.03);    
+                return '<p class="m-0">'+formatMoney(total_impuesto_monto)+'</p>';
+            } 
+            },
+            {  data: function( d ){
+                var total_impuesto = d.forma_pago == 2 ?  0 : 3;
+                return '<p class="m-0">'+total_impuesto+'%</p>';
+                } 
+            },
+            
+
+
             { data: 'prioridad_nombre' },
-            { data: 'impuesto' },
             { data: 'sede' },
-            { data: 'esquema' },
+            
             {
                 data: function( d ){
                     return '<p class="m-0">'+formatMoney(d.montoParcial)+'</p>';
@@ -132,6 +155,16 @@ $("#tabla_anticipos").ready(function () {
                                 <i class="fas fa-folder-open"></i>
                             </button>`;
                     }
+
+
+                    if (d.evidencia != null) {
+                        botonesModal += `
+                            <button href="#" id="addEmpresa" name="addEmpresa" data-doc="${d.evidencia}"  
+                            class="btn-data btn-yellow" title="Agregar Empresa">
+                            <i class="fas fa-tools"></i>
+                            </button>`;
+                    }
+
 
                     var botonParcialidad= d.mensualidadesBoton;
 
@@ -226,6 +259,16 @@ $("#tabla_anticipos").ready(function () {
     });
     
     
+    $(document).on('click', '.addEmpresa', function (e) {
+
+        // mostrarOcultarCampos(proceso);
+    
+        $("#EmpresaModal").modal();
+    });
+    
+    
+
+
     
 
     function calcularPago() {
