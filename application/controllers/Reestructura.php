@@ -1031,6 +1031,17 @@ class Reestructura extends CI_Controller{
                 return;
             }
 
+            if ( ($proceso == 4 || $proceso == 6) && ($planComision == 84 || $planComision == 85 || $planComision == 86) && ($lineaVenta->id_regional == 0) ) {
+                $this->db->trans_rollback();
+                echo json_encode(array(
+                    'titulo' => 'ERROR',
+                    'resultado' => FALSE,
+                    'message' => 'Error con la linea de venta, favor de reportarlo con sistemas.',
+                    'color' => 'danger'
+                ));
+                return;
+            }
+
             $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
             $idClienteInsert = $clienteNuevo[0]['lastId'];
             if (!$idClienteInsert) {
