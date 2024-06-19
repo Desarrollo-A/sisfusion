@@ -42,7 +42,7 @@
                                 <i class="fas fa-box fa-2x"></i>
                             </div>
                             <div class="card-content">
-                                <h3 class="card-title center-align">Solicitud de cancelación de contrato</h3>
+                                <h3 class="card-title center-align">Cancelación de contrato</h3>
                                 <div class="toolbar">
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
@@ -66,6 +66,10 @@
                                                     <th>SUPERFICIE</th>
                                                     <th>PRECIO</th>
                                                     <th>NOMBRE</th>
+                                                    <th>COMENTARIO REUBICACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>TIPO DE CANCELACIÓN</th>
+                                                    <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>
