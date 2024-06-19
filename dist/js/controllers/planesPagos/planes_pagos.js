@@ -487,46 +487,93 @@ const getPlanPagoDump = (idPlanPago) =>{
 }
 
 function fillTable(data) {
+    console.log(data)
+    
     var tablePagos
 
     const createdCell = function(cell) {
         let original;
 
-        const recalcularPlan = function(e) {
-            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+        const recalcularPlan = function(row, capital) {
+            // const row = tablePagos.row(e.target.parentElement)
+            //row.invalidate()
+            //console.log('Row changed: ', row.data())
 
-            if (original !== e.target.textContent) {
-                const row = tablePagos.row(e.target.parentElement)
-                //row.invalidate()
-                //console.log('Row changed: ', row.data())
+            // let montoInicial = parseFloat(data.monto)
 
-                //console.log(data)
+            // let capital = parseFloat(e.target.textContent)
 
-                let montoInicial = data.saldoInicialPlan
+            let pagos = tablePagos.rows().data().toArray()
 
-                let capital = parseFloat(e.target.textContent)
+            let pago_nuevo = row.data()
 
-                let pagos = tablePagos.rows().data().toArray()
+            let nuevo_capital = parseFloat(data.monto)//montoInicial
 
-                let pago_nuevo = row.data()
+            let num_pagos = pagos.length
+            for (var p = 0; p < pagos.length; p++) {
+                let pago = pagos[p]
+                //console.log(pago.capital, capital)
 
-                let nuevo_capital = montoInicial
-                for(const pago of pagos){
-                    if(pago.pago == pago_nuevo.pago){
-                        pago.capital = capital
-                    }
-
-                    nuevo_capital -= pago.capital
-
-                    pago.saldo = nuevo_capital
+                if(pago.pago == pago_nuevo.pago){
+                    pago.capital = capital
                 }
 
-                //tablePagos.clear()
-                //tablePagos.rows.add(pagos).draw(false)
+                if(pago.capital > nuevo_capital){
+                    pago.capital = nuevo_capital
+                }
+
+                nuevo_capital -= pago.capital
+
+                pago.total = pago.capital
+                pago.saldo = nuevo_capital
+
+                if(pago.capital === 0){
+                    pagos.splice(p, 1)
+                }
+
+                if(pagos.length === p + 1){
+                    if(nuevo_capital > 0){
+                        let date_parts = pago.fecha.split('-')
+                        let date = new Date(date_parts[2], date_parts[1] - 1, date_parts[0])
+                        
+                        let new_fecha = new Date(date.setMonth(date.getMonth()+1))
+                        let date_str = [
+                            ('0' + new_fecha.getDate()).slice(-2),
+                            ('0' + (new_fecha.getMonth() + 1)).slice(-2),
+                            new_fecha.getFullYear(),
+                        ].join('-')
+
+                        pagos.push({
+                            capital: nuevo_capital,
+                            fecha: date_str,
+                            interes: pago.interes,
+                            iva: pago.iva,
+                            pago: pagos.length + 1,
+                            planPago: pago.planPago,
+                            saldo: 0,
+                            saldoCapital: pago.saldoCapital,
+                            saldoInteres: pago.saldoInteres,
+                            saldoIva: pago.saldoIva,
+                            total: nuevo_capital,
+                        })
+                    }
+                }else{
+                    if(nuevo_capital <= 0){
+                        pagos.splice(p + 1, 1)
+                    }
+                }
+            }
+
+            // console.log(pagos)
+
+            if(num_pagos === pagos.length){
                 tablePagos
-                    .rows()
-                    .invalidate()
-                    .draw()
+                .rows()
+                .invalidate()
+                .draw()
+            }else{
+                tablePagos.clear()
+                tablePagos.rows.add(pagos).draw(false)
             }
         }
 
@@ -539,13 +586,28 @@ function fillTable(data) {
             original = e.target.textContent
         })
         cell.addEventListener('keydown', function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+
             if (e.keyCode === 13){
                 e.preventDefault()
 
-                recalcularPlan(e)
+                const row = tablePagos.row(e.target.parentElement)
+                const capital = parseFloat(e.target.textContent)
+
+                recalcularPlan(row, capital)
             }
         })
-        cell.addEventListener("blur", recalcularPlan )
+        cell.addEventListener("blur", function(e) {
+            cell.setAttribute("style","border:1px; border-style:solid; border-color:transparent;padding:10px")
+
+            if (original !== e.target.textContent) {
+
+                const row = tablePagos.row(e.target.parentElement)
+                const capital = parseFloat(e.target.textContent)
+
+                recalcularPlan(row, capital)
+            }
+        })
     }
 
     $('#nombrePlanPagotxt').val(data.nombrePlanPago);
@@ -649,44 +711,44 @@ function fillTable(data) {
             {
                 data: function (d) {
                     if(d.capital){
-                        return d.capital.toFixed(2);
+                        return parseFloat(d.capital).toFixed(2);
                     }
                     return ''
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.saldoCapital).toFixed(2));
+                    return formatMoney(parseFloat(d.saldoCapital).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.interes).toFixed(2));
+                    return formatMoney(parseFloat(d.interes).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.saldoInteres).toFixed(2));
+                    return formatMoney(parseFloat(d.saldoInteres).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.iva).toFixed(2));
+                    return formatMoney(parseFloat(d.iva).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.saldoIva).toFixed(2));
+                    return formatMoney(parseFloat(d.saldoIva).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.total).toFixed(2));
+                    return formatMoney(parseFloat(d.total).toFixed(2));
                 }
             },
             {
                 data: function (d) {
-                    return formatMoney((d.saldo).toFixed(2));
+                    return formatMoney(parseFloat(d.saldo).toFixed(2));
                 }
             },
         ],

@@ -4009,7 +4009,7 @@ legend {
     function getPlanPago($idPlanPago){
         $data = $this->Corrida_model->getPlanPago($idPlanPago);
         if ($data != null) {
-            echo json_encode($data);
+            echo json_encode($data, JSON_NUMERIC_CHECK);
         } else {
             echo json_encode(array());
         }
@@ -4071,14 +4071,17 @@ legend {
         exit;
     }
     
-    private function calculatePlan($pagos, $saldoInicialPlan){
+    private function calculatePlan($pagos, $saldoInicialPlan, $last_fecha){
         $montoInicial = $saldoInicialPlan;
 
         $nuevo_capital = $montoInicial;
+        $nueva_fecha = date('d-m-Y', strtotime($last_fecha));
         foreach ($pagos as $key => $pago) {
             $nuevo_capital -= $pago->capital;
+            $nueva_fecha = date("d-m-Y", strtotime("+1 month", strtotime($nueva_fecha)));
 
             $pago->saldo = $nuevo_capital;
+            $pago->fecha = $nueva_fecha;
         }
 
         return $pagos;
@@ -4092,26 +4095,42 @@ legend {
         $planes = $this->Corrida_model->getPlanesPagoRaw($lote);
 
         $recalcular = false;
-        $last_saldo;
+        
+        $last_fecha;
         foreach ($planes as $key => $plan) {
             $pagos = json_decode($planes[$key]->dumpPlan);
 
             if($recalcular){
-                $new_pagos = json_encode($this->calculatePlan($pagos, $last_saldo));
+                if($plan->tazaInteres != 0){
+                    if(isset($last_saldo)){
+                        $monto = $last_saldo;
+                    }else{
+                        $monto = $plan->monto;
+                    }
+                }else{
+                    $monto = $plan->monto;
+                }
+                $new_pagos = $this->calculatePlan($pagos, $monto, $last_fecha);
+                $numeroPeriodos = count($new_pagos);
+                $new_pagos = json_encode($new_pagos);
 
-                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $last_saldo, $new_pagos);
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $numeroPeriodos, $new_pagos);
             }
 
             if($plan->idPlanPago == $plan_id){
                 $planes[$key]->dumpPlan = json_encode($plan_data);
+                $numeroPeriodos = count($plan_data);
 
-                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $plan->saldoInicialPlan, $planes[$key]->dumpPlan);
+                $recalcular = $this->Corrida_model->savePlanPagoRaw($plan->idPlanPago, $numeroPeriodos, $planes[$key]->dumpPlan);
 
                 $pagos = json_decode($planes[$key]->dumpPlan);
             }
 
-            foreach ($pagos as $key => $pago) {
-                $last_saldo = $pago->saldo;
+            $last_pago = end($pagos);
+
+            $last_fecha = $last_pago->fecha;
+            if($plan->tazaInteres != 0){
+                $last_saldo = $last_pago->saldo;
             }
         }
 

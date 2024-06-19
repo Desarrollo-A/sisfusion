@@ -697,10 +697,10 @@
         return $this->db->query($query)->result();
     }
 
-    public function savePlanPagoRaw($idPlanPago, $saldoInicialPlan, $dumpPlan){
+    public function savePlanPagoRaw($idPlanPago, $numeroPeriodos, $dumpPlan){
         $query = "UPDATE planes_pago
         SET
-            saldoInicialPlan = $saldoInicialPlan,
+            numeroPeriodos = $numeroPeriodos,
             dumpPlan = '$dumpPlan'
         WHERE
             idPlanPago = $idPlanPago";
