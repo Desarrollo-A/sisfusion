@@ -566,7 +566,6 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    // ARTURO
     public function getLotes($union)
     {
         return $this->db->query(
