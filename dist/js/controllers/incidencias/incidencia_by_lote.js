@@ -715,7 +715,7 @@ function updateVentaC(id, idLote, idCliente){
                 $("#modalBajaVcUpdate").modal('toggle');
                 $('#modalBajaVc .modal-body').html('');
                 $("#modalBajaVc").modal('toggle');
-                $("#modal_NEODATA").modal('toggle');
+                $("#modal_NEODATA").modal('hide');
                 $('#tabla_inventario_contraloria').DataTable().ajax.reload();
                 $('#spiner-loader').addClass('hidden');
                     alerts.showNotification("top", "right", "La venta compartirda ha sido dada de baja", "success");
@@ -1135,7 +1135,6 @@ $(".find_doc").click( function() {
                         'class="btn-data btn-gray verify_neodata" title="Ajustes"><i class="fas fa-wrench"></i></button><button class="btn-data btn-sky cambiar_precio" title="Cambiar precio" value="' + data.idLote +'"  data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-pencil-alt"></i></button>';
                         BtnStats += '<button class="btn-data btn-green inventario"  title="Cambiar usuarios" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-precioAnt="'+data.totalNeto2+'"><i class="fas fa-user-plus"></i></button>';
                         BtnStats += '<button class="btn-data btn-green mensualidadTipo" title="Cambiar Mensualidad" value="' + data.idLote +'" data-registro="'+data.registro_comision+'" data-cliente="'+data.id_cliente+'" data-mensualidad="'+data.opcion+'"><i class="fas fa-cog"></i></button>';
-
                     }
 
                     else {
@@ -1145,6 +1144,9 @@ $(".find_doc").click( function() {
                     
                     }
                 }
+                BtnStats += (data.idStatusContratacion >= 9 && [64,65,66,84,85,86].indexOf(data.plan_comision) < 0) ? `<button data-estatus="${data.estatus}" data-idCliente="${data.id_cliente}" class=" btn-data btn-yellow cambiar_plan_comision"  title="Cambiar plan de comisión"><i class="fas fa-chart-bar"></i></button>` : '';
+                BtnStats +=  data.registro_comision ===0 || data.registro_comision ===8 && data.compartida!=null ? `<button  value="${data.idLote}" data-lote="${data.idLote}" data-cliente="${data.id_cliente}" class=" btn-data btn-warning bajaVentaC"><i class="fas fa-trash"></i></button>`:'';
+
                 return '<div class="d-flex justify-center">'+BtnStats+'</div>';
             }
         }]
@@ -1214,6 +1216,58 @@ $(".find_doc").click( function() {
             </div>`);
         $("#modal_pagadas").modal();
     });
+
+    $("#tabla_inventario_contraloria tbody").on("click", ".cambiar_plan_comision", function(e){
+
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var tr = $(this).closest('tr');
+        var row = tabla_inventario.row( tr );
+        idCliente = $(this).attr("data-idCliente");
+        estatus = $(this).attr("data-estatus");
+
+        if(parseInt(estatus) === 1){
+            alerts.showNotification("top", "right", "Este lote ya fue dispersado, revisalo con TI", "danger");
+        }else{
+            $('#cliente').val(idCliente);
+            $("#titulos").html("");
+            $("#titulos").html(` <h4 class="modal-title">Cambiar plan de comisión del lote <b>${row.data().nombreLote}</b></h4><br><em>Plan de comisión actual: <b>${row.data().plan_descripcion}</b> </em>`);
+    
+            $("#modal_comision").modal();
+        }
+   
+    });
+
+    $("#form_comision").on('submit', function(e){
+        $('#boton').prop('disabled', true);
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        $.ajax({
+            type: 'POST',
+            url: general_base_url+'Incidencias/updatePlanComision',
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData: false,
+            dataType: 'JSON',
+            success: function(data) {
+            
+                if (data == 1) {
+                    $('#modal_comision').modal("hide");
+                    $("#cliente").val("");
+                    alerts.showNotification("top", "right", "El registro se ha actualizado exitosamente.", "success");
+                    $('#tabla_inventario_contraloria').DataTable().ajax.reload();
+                    $('#boton').removeAttr('disabled');
+                } else {
+                    alerts.showNotification("top", "right", "Oops, algo salió mal. Error al intentar actualizar.", "warning");
+                }
+            },
+            error: function(){
+                alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+            }
+        });
+    });
+
 
     /**-------------------INVENTARIO------------------------------- */
     $("#tabla_inventario_contraloria tbody").on("click", ".inventario", function(e){
@@ -2497,6 +2551,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
     });
 
     $(document).on('click', ".bajaVentaC", function(e){
+        $('#boton').prop('disabled', true);
     
         idLote = $(this).attr('data-lote');
         idCliente = $(this).attr('data-cliente');
@@ -2569,6 +2624,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
                         </div>
                     `);
                     })
+                    $('#boton').prop('disabled', true);
                 } else {
                     $("#modalBajaVc .modal-body").append(`<h5>No hay ventas compartidas</h5>`);
                 }
@@ -2585,7 +2641,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
     });
 
     $(document).on('click', ".bajaVCupdate", function(e){
-
+        $('#boton').prop('disabled', true);
         idLote = $(this).attr('data-lote');
         idVentaC = $(this).attr('data-id_vcompartida');
         idCliente = $(this).attr('data-id_cliente');
@@ -2596,6 +2652,7 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
         $("#modalBajaVcUpdate .modal-body").append(`
             <h5 style= "text-align: center;">¿Estás seguro de dar de baja esta venta compartida?
             <b>Antes</b> de hacerlo, asegúrate de haber ajustado los <b>porcentajes</b>.</h5>
+            
         `);
 
         $("#modalBajaVcUpdate .modal-footer").append(`
@@ -2605,5 +2662,6 @@ if( $('#usuarioid6').val() != 0 && $('#usuarioid7').val() != 0 && $('#usuarioid8
             </button> 
         `);
         $("#modalBajaVcUpdate").modal();
+        $('#boton').prop('disabled', true);
 
     });

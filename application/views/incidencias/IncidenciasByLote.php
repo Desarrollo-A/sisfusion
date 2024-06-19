@@ -584,7 +584,7 @@ hr {
             </div>
         </div>
 
-        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modalBajaVc" id="modalBajaVc" style="overflow:auto !important;" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header bg-red">
@@ -598,7 +598,7 @@ hr {
             </div> 
         </div>
 
-        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog">
+        <div class="modal fade modalBajaVcUpdate" id="modalBajaVcUpdate" style="overflow:auto !important;" role="dialog" data-backdrop="static">
             <div class="modal-dialog modal-md">
                 <div class="modal-content">
                     <div class="modal-body">
