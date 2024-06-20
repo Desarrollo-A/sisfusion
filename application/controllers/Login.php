@@ -65,6 +65,7 @@ class Login extends CI_Controller
 				$id_usuario = $this->input->post('id_usuario');
 				$imagen_perfil = $this->input->post('imagen_perfil');
 				$check_user = $this->login_model->login_user($usuario,$contrasena);
+
 				if(empty($check_user))
 				{
 					$this->session->set_userdata('errorLogin', 33);
@@ -168,6 +169,10 @@ class Login extends CI_Controller
 						elseif ($dataRol[0]->nombre=="Asesor OOAM")
 						{
 							$perfil = ($dataRol[0]->nombre=="Asesor OOAM") ? "asesorOOAM" : $dataRol[0]->nombre;
+						}
+						elseif ($dataRol[0]->nombre=="OOAM casas")
+						{
+							$perfil = ($dataRol[0]->nombre=="OOAM casas") ? "administracion" : $dataRol[0]->nombre;
 						}
 
 					}
