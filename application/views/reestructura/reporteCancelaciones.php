@@ -73,6 +73,10 @@
                                                     <th>SUPERFICIE</th>
                                                     <th>PRECIO</th>
                                                     <th>NOMBRE</th>
+                                                    <th>COMENTARIO REUBICACIÓN</th>
+                                                    <th>COMENTARIO</th>
+                                                    <th>TIPO DE CANCELACIÓN</th>
+                                                    <th>ESTATUS</th>
                                                     <th>ACCIONES</th>
                                                 </tr>
                                             </thead>

@@ -566,18 +566,20 @@ class Reestructura_model extends CI_Model
         return $query->row();
     }
 
-    // ARTURO
     public function getLotes($union)
     {
         return $this->db->query(
             "SELECT  re.idResidencial, re.nombreResidencial, co.nombre as nombreCondominio, hl.nombreLote, hl.idLote, lo.estatus_preproceso, hl.id_cliente as idCliente, lo.sup as superficie,
                 FORMAT(lo.precio, 'C') precio, CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente,
-                hl.observacionLiberacion as observacion, 'CONTRATO CANCELADO' AS estatusLiberacion, lo.liberaBandera, lo.idStatusLote, '2' as consulta
+                hl.observacionLiberacion as observacion, 'CONTRATO CANCELADO' AS estatusLiberacion, lo.liberaBandera, lo.idStatusLote, '2' as consulta,
+                ISNULL(oxc0.nombre, 'SIN ESPECIFICAR') tipoCancelacion, lo.solicitudCancelacion, 'CANCELADA' AS estatusCancelacion,
+                lo.solicitudCancelacion, lo.comentarioReubicacion, CASE WHEN hl.idLiberacion IS NULL THEN lo.comentarioLiberacion ELSE hl.comentarioLiberacion END comentarioLiberacion
             FROM historial_liberacion as hl
                 INNER JOIN lotes as lo ON lo.idLote = hl.idLote
                 INNER JOIN condominios as co ON co.idCondominio = lo.idCondominio
                 INNER JOIN residenciales as re ON re.idResidencial = co.idResidencial
                 INNER JOIN clientes as cl ON cl.id_cliente = hl.id_cliente
+                LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
             WHERE hl.observacionLiberacion = 'CANCELACIÓN DE CONTRATO' ".$union
         )->result();
     }

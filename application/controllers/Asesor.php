@@ -2205,10 +2205,12 @@ class Asesor extends CI_Controller {
             }
         }
         $infoCliente = $this->caja_model_outside->getInformaciongGeneralPorCliente($id_cliente);
-
+        $Cliente = explode('-', $infoCliente->nombreLote);
+        $Cliente[2] = 0 . $Cliente[2];
+        $Cliente = implode('-', $Cliente);
             $dataNeoData = array (
             "accion" => "upd",
-            "Cliente" => $nombreLote,
+            "Cliente" => $Cliente,
             "IdProyecto" => $infoCliente->idProyectoNeoData,
             "IdVivienda" => $infoCliente->idViviendaNeoData,
             "IdCredito" => 2,
@@ -2220,7 +2222,7 @@ class Asesor extends CI_Controller {
             "ApellidoMaterno" => $this->input->post('apellido_materno'),
             "Calle" => $this->input->post('calle'),
             "Colonia" => $this->input->post('colonia'),
-            "CodPost" => $this->input->post('cp'),
+            "CodPost" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')),
             "MpioDeleg" => $this->input->post('municipio'),
             "Localidad" => $this->input->post('localidad'),
             "Telefono" => $this->input->post('telefono1'),
@@ -2251,7 +2253,7 @@ class Asesor extends CI_Controller {
             "Lada" => $this->input->post('ladaTel1'), // NO TENGO LADA HASTA QUE SE GUARDA EL DS
             "Pais" =>  $this->input->post('pais'), // default México (1142)
             "MonedaSATDefault" => 'MXN', // default MXN
-            "IdCodigoPostalSAT" => $this->input->post('cp'), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
+            "IdCodigoPostalSAT" => ($this->input->post('cp') == '0' ? NULL : $this->input->post('cp')), // se toma la versión 4.0 de la tabla SELECT * FROM AcCatCodigosPostalesSAT WHERE CodigoPostalSAT" => 76000;
             "IdPaisSAT" => $this->input->post('pais'), // default México (1142)
             "IdCatRegimen" => $this->input->post('regimenFiscal'), // default 34 (cuando no hay rfc) AcCatRegimenesFiscalesSAT sino tomo el que hayan ingresado en régimen en el DS
             "CuentaClabeSTP" => NULL,
