@@ -193,6 +193,7 @@ class CasasModel extends CI_Model
         WHERE
             pc.proceso = 0
             AND pc.status = 1
+            AND pc.idGerente = $this->idUsuario
             AND cli.status = 1";
 
         return $this->db->query($query)->result();
@@ -228,9 +229,7 @@ class CasasModel extends CI_Model
             id_usuario AS value
         FROM usuarios
         WHERE
-            estatus = 1
-        AND id_rol = 3
-        AND tipo = 2";
+            id_usuario IN (671, 75, 207, 1853)";
 
         // Cambiar por tipo 3
 
@@ -244,7 +243,8 @@ class CasasModel extends CI_Model
         FROM usuarios
         WHERE
             estatus = 1
-        AND id_rol = 7";
+        AND id_rol = 7
+        AND id_lider = $this->idUsuario";
 
         return $this->db->query($query)->result();
     }
@@ -807,6 +807,23 @@ class CasasModel extends CI_Model
     }
 
     public function getListaContratos($idProcesoCasas){
+        $tipos = "19, 20, 21, 22, 23, 24";
+
+        // Usuarios de OOAM
+        if(in_array($this->idUsuario, [15891, 15892, 15893])){
+            $tipos = "23";
+        }
+        
+        // Usuarios de PV
+        if(in_array($this->idUsuario, [2896, 12072, 12112, 15900])){
+            $tipos = "24";
+        }
+
+        // Usuarios de Titulacion
+        if(in_array($this->idUsuario, [10846, 10849, 10862, 10865])){
+            $tipos = "19, 20, 21, 22";
+        }
+
         $query = "SELECT
             idProcesoCasas,
             idDocumento,
@@ -817,7 +834,7 @@ class CasasModel extends CI_Model
         FROM documentos_proceso_casas
         WHERE
             idProcesoCasas = $idProcesoCasas
-        AND tipo IN (19,20,21,22,23,24)";
+        AND tipo IN ($tipos)";
 
         return $this->db->query($query)->result();
     }
@@ -850,7 +867,9 @@ class CasasModel extends CI_Model
         LEFT JOIN (SELECT COUNT(*) AS documentos, idProcesoCasas FROM documentos_proceso_casas WHERE tipo IN (19,20,21,22) AND archivo IS NOT NULL GROUP BY idProcesoCasas) doc ON doc.idProcesoCasas = pc.idProcesoCasas
         WHERE
             pc.proceso IN (8,9)
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente = $this->idUsuario";
 
         return $this->db->query($query)->result();
     }
@@ -1044,7 +1063,9 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
             pc.proceso = 15
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente IN ($this->idUsuario, 11650)";
 
         return $this->db->query($query)->result();
     }
@@ -1093,10 +1114,10 @@ class CasasModel extends CI_Model
         return $this->db->query($query);
     }
 
-    public function setAdeudo($idProcesoCasas, $adeudoOoam, $adeudoAdm, $adeudoGph){
+    public function setAdeudo($idProcesoCasas, $adeudo, $cantidad){
         $query = "UPDATE proceso_casas
-                  SET adeudoOOAM = $adeudoOoam, adeudoADM = $adeudoAdm, adeudoGPH = $adeudoGph
-                  WHERE idProcesoCasas = $idProcesoCasas";
+        SET $adeudo = $cantidad
+        WHERE idProcesoCasas = $idProcesoCasas";
 
         return $this->db->query($query);
     }
@@ -1309,5 +1330,28 @@ class CasasModel extends CI_Model
         AND tipo IN (17, 28, 29, 30, 31, 32)";
 
         return $this->db->query($query)->result();
+    }
+
+    public function setVoboToProceso($idProcesoCasas, $column){
+        $query = "UPDATE proceso_casas
+        SET
+            $column = 1
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
+    }
+
+    public function resetVoBos($idProcesoCasas){
+        $query = "UPDATE proceso_casas
+        SET
+            voboADM = NULL,
+            voboOOAM = NULL,
+            voboGPH = NULL,
+            voboPV = NULL,
+        WHERE
+            idProcesoCasas = $idProcesoCasas";
+
+        return $this->db->query($query);
     }
 }
