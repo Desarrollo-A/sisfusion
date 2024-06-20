@@ -234,7 +234,20 @@ class Reestructura extends CI_Controller{
         $planComision = $esquemaAnterior ? 64 : 84;
 
         $proceso = 3;
-        $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+
+        $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso);
+        if ( $qry['result'] = false ) {
+            $this->db->trans_rollback();
+            echo json_encode(array(
+                'titulo' => 'ERROR',
+                'resultado' => FALSE,
+                'message' => 'Error con la linea de venta, favor de reportarlo con sistemas.',
+                'color' => 'danger'
+            ));
+            return;
+        }
+        $clienteNuevo = $qry['data'];
+        
         $idClienteInsert = $clienteNuevo[0]['lastId'];
 
         if (!$idClienteInsert) {
@@ -859,7 +872,20 @@ class Reestructura extends CI_Controller{
             }
             foreach ($dataFusion as $dataLote){
                 if($dataLote['destino'] == 1){
-                    $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
+                    $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $dataLote['idLote'], $dataLote['idCondominio'], $total8P);
+                    
+                    if ( $qry['result'] = false ) {
+                        $this->db->trans_rollback();
+                        echo json_encode(array(
+                            'titulo' => 'ERROR',
+                            'resultado' => FALSE,
+                            'message' => 'Error con la linea de venta, favor de reportarlo con sistemas.',
+                            'color' => 'danger'
+                        ));
+                        return;
+                    }
+                    $clienteNuevo = $qry['data'];
+                    
                     $idClienteInsert = $clienteNuevo[0]['lastId'];
 
                     if (!$idClienteInsert) {
@@ -1031,7 +1057,9 @@ class Reestructura extends CI_Controller{
                 return;
             }
 
-            if ( ($proceso == 4 || $proceso == 6) && ($planComision == 84 || $planComision == 85 || $planComision == 86) && ($lineaVenta->id_regional == 0) ) {
+            $qry = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
+            
+            if ( $qry['result'] = false ) {
                 $this->db->trans_rollback();
                 echo json_encode(array(
                     'titulo' => 'ERROR',
@@ -1041,8 +1069,8 @@ class Reestructura extends CI_Controller{
                 ));
                 return;
             }
+            $clienteNuevo = $qry['data'];
 
-            $clienteNuevo = $this->copiarClienteANuevo($planComision, $clienteAnterior, $idAsesor, $idLider, $lineaVenta, $proceso, $loteSelected->idLote, $idCondominio, $total8P);
             $idClienteInsert = $clienteNuevo[0]['lastId'];
             if (!$idClienteInsert) {
                 $this->db->trans_rollback();
@@ -1253,6 +1281,10 @@ class Reestructura extends CI_Controller{
         $dataCliente = [];
         $camposOmitir = ['id_cliente','nombreLote', 'sup', 'tipo_venta', 'ubicacion', 'totalNeto2'];
 
+        if ( ($planComision == 84 || $planComision == 85 || $planComision == 86) && ($lineaVenta->id_regional == 0) ) {
+            return ['result' => false, 'data' => false];
+        }
+
         foreach ($clienteAnterior as $clave => $valor) {
             if(in_array($clave, $camposOmitir)) {
                 continue;
@@ -1315,7 +1347,8 @@ class Reestructura extends CI_Controller{
             $dataCliente = array_merge([$clave => $valor], $dataCliente);
         }
 
-        return $this->caja_model_outside->insertClient($dataCliente);
+        $qry = $this->caja_model_outside->insertClient($dataCliente);
+        return ['result' => true, 'data' => $qry];
     }
 
     function updateLote($idClienteInsert, $nombreAsesor, $loteAOcupar, $tipo_venta, $ubicacion){
