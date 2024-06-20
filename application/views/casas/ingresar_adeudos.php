@@ -30,9 +30,18 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>ADEUDO OOAM</th>
-                                            <th>ADEUDO ADM</th>
-                                            <th>ADEUDO GPH</th>
+                                            <th>ADEUDO <?php
+
+                                            switch ($idRol) {
+                                                case 99:
+                                                    echo 'OOAM';
+                                                    break;
+                                                case 101:
+                                                    echo 'GPH';
+                                                    break;
+                                            }
+
+                                            ?></th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
@@ -51,6 +60,10 @@
     </div>
     <?php $this->load->view('template/footer');?>
     <?php $this->load->view('template/modals');?>
+
+    <script type="text/javascript">
+        const idRol = <?php echo $idRol ?>
+    </script>
 
     <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js?=v1"></script>
 </body>
