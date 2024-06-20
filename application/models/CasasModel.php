@@ -453,7 +453,9 @@ class CasasModel extends CI_Model
         LEFT JOIN opcs_x_cats oxc ON oxc.id_catalogo = 136 AND oxc.id_opcion = pc.tipoMovimiento
         WHERE
             pc.proceso = 3
-        AND pc.status = 1 AND cli.status = 1";
+        AND pc.status = 1
+        AND cli.status = 1
+        AND pc.idGerente IN ($this->idUsuario, 11650)";
 
         return $this->db->query($query)->result();
     }
@@ -869,7 +871,7 @@ class CasasModel extends CI_Model
             pc.proceso IN (8,9)
         AND pc.status = 1
         AND cli.status = 1
-        AND pc.idGerente = $this->idUsuario";
+        AND pc.idGerente IN ($this->idUsuario, 11650)";
 
         return $this->db->query($query)->result();
     }

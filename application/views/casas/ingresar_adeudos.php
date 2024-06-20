@@ -1,3 +1,22 @@
+<?php
+
+switch ($idRol) {
+    case 99:
+        $adeudo = 'OOAM';
+        break;
+    case 101:
+        $adeudo = 'GPH';
+        break;
+    case 33:
+        $adeudo = 'ADM';
+        break;
+}
+
+if(in_array($idUsuario, [4512])){
+    $adeudo = 'GPH';
+}
+
+?>
 
 <link href="<?= base_url() ?>dist/css/datatableNFilters.css" rel="stylesheet" />
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
@@ -30,18 +49,7 @@
                                             <th>NOMBRE CLIENTE</th>
                                             <th>ASESOR</th>
                                             <th>GERENTE</th>
-                                            <th>ADEUDO <?php
-
-                                            switch ($idRol) {
-                                                case 99:
-                                                    echo 'OOAM';
-                                                    break;
-                                                case 101:
-                                                    echo 'GPH';
-                                                    break;
-                                            }
-
-                                            ?></th>
+                                            <th>ADEUDO <?php echo $adeudo ?></th>
                                             <th>TIEMPO</th>
                                             <th>MOVIMIENTO</th>
                                             <th>ACCIONES</th>
@@ -62,7 +70,8 @@
     <?php $this->load->view('template/modals');?>
 
     <script type="text/javascript">
-        const idRol = <?php echo $idRol ?>
+        const idRol = <?php echo $idRol ?>;
+        const idUsuario = <?php echo $idUsuario ?>;
     </script>
 
     <script src="<?= base_url() ?>dist/js/controllers/casas/ingresar_adeudos.js?=v1"></script>

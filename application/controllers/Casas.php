@@ -187,6 +187,7 @@ class Casas extends BaseController {
     public function ingresar_adeudos(){
         $data = [
             'idRol' => $this->idRol,
+            'idUsuario' => $this->idUsuario,
         ];
 
         $this->load->view('template/header');
