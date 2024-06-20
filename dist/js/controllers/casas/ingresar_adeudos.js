@@ -53,6 +53,12 @@ function set_adeudo(data) {
             break
     }
 
+    if([4512].includes(idUsuario)){
+        adeudo = 'adeudoGPH'
+        value = data.adeudoGPH
+        label = 'Adeudo GPH'
+    }
+
     form.fields = [
         new HiddenField({ id: 'id', value: data.idProcesoCasas }),
         new HiddenField({ id: 'adeudo', value: adeudo }),
@@ -78,14 +84,17 @@ let columns = [
     { data: 'nombreAsesor' },
     { data: 'gerente' },
     { data: function(data){
+        if([4512].includes(idUsuario)){
+            return formatter.format(data.adeudoGPH)
+        }
         if(idRol === 99 && data.adeudoOOAM){
             return formatter.format(data.adeudoOOAM)
         }
         if(idRol === 101 && data.adeudoGPH){
             return formatter.format(data.adeudoGPH)
         }
-        if(idRol === 97 && data.adeudoOOAM){
-            return formatter.format(data.adeudoOOAM)
+        if(idRol === 33 && data.adeudoADM){
+            return formatter.format(data.adeudoADM)
         }
         return 'Sin ingresar'
     } },
