@@ -46,6 +46,11 @@ function set_adeudo(data) {
             value = data.adeudoGPH
             label = 'Adeudo GPH'
             break
+        case 33:
+            adeudo = 'adeudoADM'
+            value = data.adeudoADM
+            label = 'Adeudo ADM'
+            break
     }
 
     form.fields = [
