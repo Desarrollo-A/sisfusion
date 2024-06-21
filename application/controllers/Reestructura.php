@@ -1862,9 +1862,8 @@ class Reestructura extends CI_Controller{
 	public function getregistrosLotes() {
         $id_proyecto = $this->input->post('index_proyecto');
 
-        if ($this->session->userdata('id_usuario') == 13546) {
+        if ($this->session->userdata('id_usuario') == 13546 || $this->session->userdata('id_usuario') == 13547 ) {
             $union = "
-                AND re.idResidencial IN ($id_proyecto)
             UNION ALL
                 SELECT re.idResidencial, re.nombreResidencial, co.nombre nombreCondominio, lo.nombreLote, lo.idLote, lo.estatus_preproceso, lo.idCliente, lo.sup superficie, FORMAT(lo.precio, 'C') precio, 
                     CASE WHEN cl.id_cliente IS NULL THEN 'SIN ESPECIFICAR' ELSE UPPER(CONCAT(cl.nombre, ' ', cl.apellido_paterno, ' ', cl.apellido_materno)) END nombreCliente, 
@@ -1878,8 +1877,8 @@ class Reestructura extends CI_Controller{
                     LEFT JOIN clientes cl ON cl.id_cliente = lo.idCliente
                     LEFT JOIN opcs_x_cats oxc0 ON oxc0.id_opcion = tipoCancelacion AND oxc0.id_catalogo = 117
                 WHERE 
-                    lo.status = 1  AND re.idResidencial IN ($id_proyecto)
-                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3) )";
+                    lo.status = 1
+                AND (lo.estatus_preproceso != 7 AND lo.liberaBandera = 1 AND lo.idStatusLote IN (2, 3, 17) )";
         }else {
             $union = "";
         }
