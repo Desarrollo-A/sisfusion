@@ -140,6 +140,7 @@ class Documentacion extends CI_Controller {
             'fechaHora' => date('Y-m-d H:i:s')
         ];
 
+        /*
         $this->email
             ->initialize()
             ->from('Ciudad Maderas')
@@ -153,7 +154,7 @@ class Documentacion extends CI_Controller {
                 'coord.administrativo4@ciudadmaderas.com',
                 'coord.administrativo5@ciudadmaderas.com',
                 'coord.administrativo7@ciudadmaderas.com',
-                'asistente.admon@ciudadmaderas.com')*/
+                'asistente.admon@ciudadmaderas.com')
             ->subject('MODIFICACIÓN DE CORRIDA FINANCIERA')
             ->view($this->load->view('template/mail/componentes/tabla', [
                 'encabezados' => [
@@ -167,6 +168,7 @@ class Documentacion extends CI_Controller {
             ], true));
 
             $this->email->send();
+        */
 
         echo json_encode($response);
     }

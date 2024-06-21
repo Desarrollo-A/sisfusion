@@ -46,7 +46,7 @@ $(document).ready(function () {
     }, 'json');
 
     $("#anexa_complemento").append($('<option>').val(1).text('SI'));
-    $("#anexa_complemento").append($('<option>').val(2).text('NO'));
+    $("#anexa_complemento").append($('<option>').val(0).text('NO'));
     $("#anexa_complemento").selectpicker('refresh');
 });
 
@@ -484,24 +484,38 @@ function preguntaenvARevCE() {
 
   else if (comentario.length > 0 && validatventa != 0 && validaUbicacion != 0) {
     var botonEnviar = document.getElementById('enviarenvARevCE');
-    botonEnviar.disabled = true;
+    // botonEnviar.disabled = true;
 
     $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
         function (data) {
-            if (data.length > 1 && anexa_complemento == 0) {
+            console.log("valid", data.length >= 1, anexa_complemento == 0, anexa_complemento)
+            if (data.length >= 1 && anexa_complemento == 0) {
                 // BORRAR REGISTRO
+                alert('Borrando...');
+                
+                $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
+                    function (rs1) {
+                        console.log('Eliminar archivo', rs1);
+                        if (rs1.code == 500 ){
+                            alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+                            return;
+                        }
+                    }
+                ,'json');
+
                 alert(1);
-            }else if (data.length == 0 && anexa_complemento == 1){
-               // CREAR REGISTRO
+            }
+            if (data.length == 0 && anexa_complemento == 1){
+                // CREAR REGISTRO
                 $.post(general_base_url + 'Contraloria/insertComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
                     function (data2) {
-                        alert(JSON.stringify(data2));
+                        if (!data2 ){
+                            alerts.showNotification("top", "right", 'Surgió un error al requerir el complemento de pago', "warning");
+                            return;
+                        }
                     },'json'
                 );
                 alert(2);
-            }else {
-                // PUS NADA
-                alert(3);
             }
             console.log(data);
         }

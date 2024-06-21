@@ -3635,7 +3635,7 @@ class Contraloria extends CI_Controller {
             "idUser" => $this->session->userdata('id_usuario')
         );
         $response = $this->General_model->addRecord("historial_documento", $updateDocumentData);
-        return $response;
+        echo json_encode($response);
     }
 
     public function deleteComplementoPago() {
