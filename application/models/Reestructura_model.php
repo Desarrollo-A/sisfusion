@@ -1243,7 +1243,7 @@ class Reestructura_model extends CI_Model
 			ROW_NUMBER() OVER (PARTITION BY idLote ORDER BY modificado DESC) AS uf
 			FROM 
 			historial_lotes hl
-)
+        )");
 
         if ($id_rol == 2) { // Subdirector
             if ($id_usuario == 13546) { // ALEJANDRO GONZÁLEZ DÁVALOS
