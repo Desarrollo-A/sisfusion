@@ -75,9 +75,6 @@ class Descuentos extends CI_Controller
     }
     
 
-    // 
-    // 
-    // aqui vamos 
     
     public function anticipo()
     {

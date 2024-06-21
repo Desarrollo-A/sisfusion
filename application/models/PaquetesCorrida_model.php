@@ -368,4 +368,12 @@ public function getPaquetesByLotes($desarrollos,$query_superdicie,$query_tipo_lo
     public function getCatalogo($id_catalogo){ 
         return $this->db->query("SELECT * FROM opcs_x_cats WHERE id_catalogo=$id_catalogo")->result_array();
     }
+
+    /** CARGA DE PLANTILLA PLANES DE VENTAS */
+    public function guardarPaquete($descripcion_paquete,$Fechainicio,$Fechafin,$datos_sede,$desarrollos,$TipoLote,$inicio,$fin){
+        $this->db->query("INSERT INTO paquetes(descripcion,id_descuento,fecha_inicio,fecha_fin,estatus,sede,desarrollos,tipo_lote,super1,super2) VALUES('$descripcion_paquete',0,'$Fechainicio','$Fechafin',1,'" . $datos_sede . "','$desarrollos',$TipoLote,$inicio,$fin) ");
+        return  $this->db->insert_id();
+    }
+
+    /** */
 }

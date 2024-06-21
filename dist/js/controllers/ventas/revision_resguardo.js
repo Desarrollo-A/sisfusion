@@ -86,7 +86,7 @@ function getAssimilatedCommissions(proyecto, condominio){
     $('#tabla_resguardo').on('xhr.dt', function(e, settings, json, xhr) {
         var total = 0;
         $.each(json.data, function(i, v) {
-            total += parseFloat(v.pago_neodata);
+            total += parseFloat(v.pago_cliente);
         });
         var to = formatMoney(total);
         document.getElementById("totpagarremanente").textContent = to;

@@ -241,9 +241,10 @@ $(document).on('click', '#btnLimpiar', function (e) {
 }
 
 function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechazar,idAutorizacion,estatus_autorizacion){
+    //<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>
         let botones = '';
             if(permisoVista == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnVer" class="btn-data btn-sky" data-toggle="tooltip" data-placement="top" title="Ver planes de venta"><i class="fas fa-eye"></i></button>`;   }
-            if(permisoEditar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" id="btnEditar" class="btn-data btn-yellow" data-toggle="tooltip" data-placement="top" title="Editar planes"><i class="fas fa-edit"></i></button>`; }
+            if(permisoEditar == 1){ botones += ``; }
             if(permisoAvanzar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="1" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-green" data-toggle="tooltip" data-placement="top" title="Avanzar autorización"><i class="fas fa-thumbs-up"></i></button>`;  }
             if(permisoRechazar == 1){ botones += `<button data-idAutorizacion="${idAutorizacion}" data-tipo="2" data-estatus="${estatus_autorizacion}" id="btnAvanzar" class="btn-data btn-warning" data-toggle="tooltip" data-placement="top" title="Rechazar autorización"><i class="fas fa-thumbs-down"></i></button>`;  }
         return  botones;
@@ -1088,14 +1089,159 @@ function botonesPermiso(permisoVista,permisoEditar,permisoAvanzar,permisoRechaza
         }
         
     }
+
     
+    $("input:file").on("change", function () {
+        alert()
+        var target = $(this);
+        var relatedTarget = target.siblings(".file-name");
+        if (target.val() == "") {
+          var fileName = "No ha seleccionado nada aún";
+        } else {
+          var fileName = target[0].files[0].name;
+        }
+        relatedTarget.val(fileName);
+      });
     function selectSuperficie(tipoSup){
         $('#super').val(tipoSup);
         document.getElementById("printSuperficie").innerHTML ='';
-        validateAllInForm();
+        var select = document.getElementById("sede");
+        document.getElementById("showPackage").innerHTML ='';
+        // Obtener el texto seleccionado
+        var sedeText = select.options[select.selectedIndex].text;
+        //validateAllInForm();
+        $('#showPackage').append(`
+            <div class="emptyCards h-100 d-flex justify-center align-center pt-4">
+                <div class="h-100 text-center pt-4">
+                    <img src= '`+general_base_url+`dist/img/emptyFile.png' alt="Icono gráfica" class="h-50 w-auto">
+                    <h3 class="titleEmpty">CARGAR PLANTILLA PLANES DE VENTAS</h3>
+                    <div class="subtitleEmpty">Por favor cargue la plantilla de la sede <b>${sedeText}</b></div>
+                    
+                    <div class="file-gph" id="selectFileSection">
+                        <input class="d-none" type="file" onchange="changeName(this)" name="uploadedDocument" id="uploadedDocument">
+                        <input class="file-name" id="file-name" type="text" placeholder="No ha seleccionado nada aún" readonly="">
+                        <label class="upload-btn m-0" for="uploadedDocument">
+                            <span>Seleccionar</span>
+                            <i class="fas fa-folder-open"></i>
+                        </label>
+                </div>
+
+                </div>
+            </div>`);
         $('[data-toggle="tooltip"]').tooltip();
     }
-    
+
+    function changeName(e){
+        const fileName = e.files[0].name;
+        let relatedTarget = $( e ).closest( '.file-gph' ).find( '.file-name' );
+        relatedTarget[0].value = fileName;
+        $("#btn_save").removeClass('d-none');
+    }
+
+    /**VALIDACIÓN DE ARCHIVO PARA ENVIO*/
+      
+    $("#form-paquetes").on('submit', function (e) {
+        e.preventDefault();
+        let fechaInicio = $("#fechainicio").val();
+        let fechaFin = $("#fechafin").val();
+        let sede = $("#sede").val();
+        let proyectos = $("#residencial").val();
+        let tipoLote = $("#tipoLote").val();
+        let superficie = $("#superficie").val();
+
+
+        let sendRequestPermission = 0;
+          let uploadedDocument = $("#uploadedDocument")[0].files[0];
+          console.log(uploadedDocument)
+          let allowedExtensions = /(\.xlsx)$/i;
+          let validateUploadedDocument = (uploadedDocument == undefined) || !allowedExtensions.exec(uploadedDocument.name) ? 0 : 1;
+      
+          // SE VALIDA QUE HAYA SELECCIONADO UN ARCHIVO ANTES DE LLEVAR A CABO EL REQUEST
+          if (validateUploadedDocument == 0) alerts.showNotification("top", "right", "Asegúrate de haber seleccionado un archivo antes de guardar.", "warning");
+          else sendRequestPermission = 1; // PUEDE MANDAR EL REQUEST PORQUE SÍ HAY ARCHIVO SELECCIONADO
+       
+      
+        if (sendRequestPermission == 1) {
+          let data = new FormData(document.getElementById("form-paquetes"));
+          data.append("uploadedDocument", $("#uploadedDocument")[0].files[0]);
+          console.log(data);
+          $('#spiner-loader').removeClass('hide');
+          
+            if($("#uploadedDocument")[0].files[0].size > 50000000){
+              alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+              return false;
+            }
+          
+          $.ajax({
+            url: "cargarPlantillaPlanes",
+            data: data,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function (response) {
+              $("#sendRequestButton").prop("disabled", false);
+              if (response == 1) {
+                alerts.showNotification("top", "right", action == 1 ? "El documento se ha cargado con éxito." : action == 2 ? "El documento se ha eliminado con éxito." : action == 4 ? "Los motivos de rechazo se han asociado de manera exitosa para el documento." : "El documento ha sido validado correctamente.", "success");
+                if(details == 1){
+                  var tr = $(`#trees${idSolicitud}`).closest('tr');
+                  var row = escrituracionTable.row(tr);
+                  createDocRow(row, tr, $(`#trees${idSolicitud}`));
+                  if((id_estatus == 19 || id_estatus == 22) && (action == 1 || action == 2)){
+                    var index = documentosObligatorios.findIndex(e => e.cargado == 0);
+                    // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                    //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                    if((index < 0 && action == 1) || (action == 2 && index >= 0 )){
+                      escrituracionTable.ajax.reload(null,false);
+                      createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                    }
+                  }
+                  if((id_estatus == 20 || id_estatus == 25 || id_estatus == 12) && (action == 3 || action == 4)){
+                    var index2 = documentosObligatorios.findIndex(e => e.validado == 2);
+                    var indexNull = documentosObligatorios.findIndex(e => e.validado == null);
+                    // SI LA ACCIÓN ES CARGA Y NO TODOS LOS ARCHIVOS ESTAN CARGADOS RECARGAR
+                    //SI LA ACCIÓN ES DELETE Y FALTA UN ARCHIVO AL MENOS RECARGAR
+                    if(((index2 < 0 && indexNull < 0) && action == 3) || (action == 4 && index2 >= 0 )){
+                      escrituracionTable.ajax.reload(null,false);
+                      createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                    }
+                  }
+                  if((id_estatus == 26 || id_estatus == 30 || id_estatus == 31) ){
+                    escrituracionTable.ajax.reload(null,false);
+                    createDocRow(integracionExpediente.row,integracionExpediente.tr,integracionExpediente.this);
+                  }
+                }else if(details == 2){
+                  let idNxS = $("#idNxS").val();
+                  buildUploadCards(idNxS);
+                }else if(details == 3){
+                  var tr = $(`#docs${idSolicitud}`).closest('tr');
+                  var row = escrituracionTable.row(tr);
+                  createDocRowOtros(row, tr, $(`#docs${idSolicitud}`),contador);
+                }else if(details == 4){
+                  var tr = $(`#pago${idSolicitud}`).closest('tr');
+                  var row = escrituracionTable.row(tr);
+                  createDocRowPago(row, tr, $(`#pago${idSolicitud}`));
+                }
+                else{
+                  escrituracionTable.ajax.reload(null,false);
+                  escrituracionTableTest.ajax.reload(null,false);
+                }
+                $("#uploadModal").modal("hide");
+                $('#spiner-loader').addClass('hide');
+              } else if (response == 0) alerts.showNotification("top", "right", "Oops, algo salió mal.", "warning");
+              else if (response == 2) alerts.showNotification("top", "right", "No fue posible almacenar el archivo en el servidor, ya que supera los 50MB", "warning");
+              else if (response == 3) alerts.showNotification("top", "right", "El archivo que se intenta subir no cuenta con la extención .xlsx", "warning");
+              $('#spiner-loader').addClass('hide');
+            }, error: function () {
+              $("#sendRequestButton").prop("disabled", false);
+              alerts.showNotification("top", "right", "Oops, algo salió mal.", "danger");
+              $('#spiner-loader').addClass('hide');
+            }
+          });
+        }
+      });
+    /** FIN VALIDACIÓN  */
+
     function RemovePackage(){
         let divNum = $('#iddiv').val();
         $('#ModalRemove').modal('toggle');
