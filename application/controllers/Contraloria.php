@@ -3619,7 +3619,7 @@ class Contraloria extends CI_Controller {
         echo json_encode($this->Contraloria_model->getComplementoPago($idLote)->result_array());
     }
 
-    public function insertComplementoPago() {
+    public function insertRamaComplementoPago() {
         $idCliente = $_POST['idCliente'];
         $idCondominio = $_POST['idCondominio'];
         $idLote = $_POST['idLote'];
@@ -3638,11 +3638,9 @@ class Contraloria extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function deleteComplementoPago() {
+    public function deleteRamaComplementoPago() {
         $idDocumento = $_POST['idDocumento'];
 
         echo json_encode($this->Contraloria_model->deleteComplementoPago($idDocumento)->result_array());
     }
-
-
 }

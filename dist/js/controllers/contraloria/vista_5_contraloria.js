@@ -491,13 +491,23 @@ function preguntaenvARevCE() {
             console.log("valid", data.length >= 1, anexa_complemento == 0, anexa_complemento)
             if (data.length >= 1 && anexa_complemento == 0) {
                 // BORRAR REGISTRO
-                alert('Borrando...');
                 
                 $.post(`${general_base_url}Documentacion/eliminarArchivo`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
                     function (rs1) {
                         console.log('Eliminar archivo', rs1);
+                        if (rs1.code == 200) {
+                            $.post(`${general_base_url}Contraloria/deleteRamaComplementoPago`, { idDocumento: data[0].idDocumento, tipoDocumento: 55 },
+                                function (rs2) {
+                                    if (!rs2){
+                                        alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago.', "warning");
+                                        return;
+                                    }
+                                }
+                            ,'json');
+                        }
+
                         if (rs1.code == 500 ){
-                            alerts.showNotification("top", "right", 'Surgió un error al eliminar archivo', "warning");
+                            alerts.showNotification("top", "right", 'Surgió un error al manipular el complemento de pago', "warning");
                             return;
                         }
                     }
@@ -507,7 +517,7 @@ function preguntaenvARevCE() {
             }
             if (data.length == 0 && anexa_complemento == 1){
                 // CREAR REGISTRO
-                $.post(general_base_url + 'Contraloria/insertComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
+                $.post(general_base_url + 'Contraloria/insertRamaComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
                     function (data2) {
                         if (!data2 ){
                             alerts.showNotification("top", "right", 'Surgió un error al requerir el complemento de pago', "warning");
