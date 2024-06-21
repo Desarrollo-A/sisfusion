@@ -502,8 +502,6 @@ $("#form_subir").on('submit', function (e) {
 // document.getElementById('num_mensualidades').addEventListener('input', validateInput);
 
 function validar_nuevosNumeros() {
-    alert('datos') 
-
     const numero_mensualidades = document.getElementById('num_mensualidades').value;
     const monto = document.getElementById('monto').value;
     // const numero_mensualidades = document.getElementById('num_mensualidades');
