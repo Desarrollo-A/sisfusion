@@ -725,6 +725,7 @@ button::-moz-focus-inner {
   border-right: 1px solid lightgrey;
   padding-left: 5px;
   padding-right: 5px;
+  color: red; /* Cambia el color al pasar el puntero */
 }
 
 .example-elements a {
@@ -872,7 +873,7 @@ button::-moz-focus-inner {
 .ag-courses-item_link:hover,
 .ag-courses-item_link:hover .ag-courses-item_date {
   text-decoration: none;
-  color: #E9E5E5  ;
+  color: #616060  ;
 }
 .ag-courses-item_link:hover .ag-courses-item_bg {
   -webkit-transform: scale(10);
@@ -887,21 +888,21 @@ button::-moz-focus-inner {
 
   font-weight: bold;
   font-size: 30px;
-  color: #E9E5E5  ;
+  color: #616060  ;
 
   z-index: 2;
   position: relative;
 }
 .ag-courses-item_date-box {
   font-size: 18px;
-  color: #E9E5E5  ;
+  color: #616060  ;
 
   z-index: 2;
   position: relative;
 }
 .ag-courses-item_date {
   font-weight: bold;
-  color: #E9E5E5  ;
+  color: #616060  ;
 
   -webkit-transition: color .5s ease;
   -o-transition: color .5s ease;
@@ -910,7 +911,7 @@ button::-moz-focus-inner {
 
 .ag-courses-item_link.clicked {
 
-  background-color: #96843D; /* Cambia este color según tu preferencia */
+  background-color: #B19E55; /* Cambia este color según tu preferencia */
 }
 
 .ag-courses-item_bg.clicked::before {
@@ -918,24 +919,95 @@ button::-moz-focus-inner {
   
 }
 
-.ag-courses-item_bg {
-  height: 128px;
-  width: 128px;
-  background-color: #96843D;
 
-  /* z-index: 1; */
-  position: absolute;
-  top: -75px;
-  right: -75px;
+        
+.ag-courses-item_bg {
+  height: 200px;
+  width: 200px;
+  background-color: #B19E55; 
+
+  
+   position: absolute;
+  top: 75px;
+  right: 75px;
 
   border-radius: 100%;
 
   -webkit-transition: all .5s ease;
   -o-transition: all .5s ease;
   transition: all .5s ease;
-}
+  
+  /* .ag-courses-item_title {
+  min-height: 87px;
+    margin: 0 0 25px;
+
+    overflow: hidden;
+
+    font-weight: bold;
+    font-size: 30px;
+    color: #505050  ;
+
+    z-index: 2;
+    position: relative;
+    } */
+}.
+
+
+.ag-courses-item_bg:hover ~ .ag-courses-item_title {
+            color: #FFFEFE; /* Cambia el color según tu preferencia */
+        }
+
+        /* Cambiar el color de la clase .ag-courses-item_title cuando se hace clic en .ag-courses-item_link */
+        .ag-courses-item_link.clicked .ag-courses-item_title {
+            color: white; /* Cambia el color según tu preferencia */
+        }
+
+        /* Cambiar el fondo de .ag-courses-item_link cuando se hace clic */
+        .ag-courses-item_link.clicked {
+            background-color: #B19E55; /* Cambia este color según tu preferencia */
+        }
+
+
+.ag-courses-item {
+            position: relative;
+            margin: 50px;
+            padding: 20px;
+            background-color: #616060;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .ag-courses-item_bg {
+            height: 200px;
+            width: 200px;
+            background-color: #B19E55;
+            position: absolute;
+            top: 75px;
+            right: 75px;
+            border-radius: 100%;
+            transition: all .5s ease;
+        }
+
+        .ag-courses-item_title {
+            min-height: 87px;
+            margin: 0 0 25px;
+            overflow: hidden;
+            font-weight: bold;
+            font-size: 30px;
+            color: #545454;
+            z-index: 2;
+            position: relative;
+            transition: color .5s ease;
+        }
+
+        /* Cambiar el color de la clase .ag-courses-item_title cuando se pasa el puntero sobre .ag-courses-item_bg */
+        
+            .ag-courses-item_bg:hover ~ .ag-courses-item_title {
+                color: #FFFEFE; /* Cambia el color según tu preferencia */
+            }
+
 .ag-courses_item:nth-child(2n) .ag-courses-item_bg {
-  background-color: #96843D;
+  background-color: #B19E55;
 }
 .ag-courses_item:nth-child(3n) .ag-courses-item_bg {
   background-color: #e44002;

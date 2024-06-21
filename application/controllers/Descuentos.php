@@ -951,7 +951,40 @@ class Descuentos extends CI_Controller
                         'proceso'       => $this->input->post('proceso'),
                         'prioridad'     => $this->input->post('seleccion')
                         );
-                }else{
+                }else if($this->input->post('proceso') ==4){
+
+                    if( $this->input->post('num_mensualidades') != null )
+                    {
+                        
+                        $array_parcialidad_relacion_anticipo = array (
+                            'mensualidades'         => intval($this->input->post('num_mensualidades')),
+                            'monto_parcialidad'     => intval($this->input->post('mensualidad'))
+                        );
+                        
+                        $tabla = 'parcialidad_relacion_anticipo';
+                        $clave =  $id_anticipo;
+                        $llave = 'id_anticipo';
+                        $respuestaHistorial = $this->Descuentos_model->update_generico_aticipo($clave,$llave,$tabla,$array_parcialidad_relacion_anticipo);
+                
+                        $insertArray = array(
+                            'monto'     =>  $monto,
+                            'prioridad'     => $this->input->post('seleccion'),
+                            'estatus'       => $this->input->post('estatus'),
+                            'proceso'       => $this->input->post('proceso')
+                        );
+
+                        
+
+
+                        // vine por prestamo 
+                    }else{
+                        // viene por apoyo     
+                        
+                        exit;
+                    }
+                }
+                else
+                {
                     $insertArray = array(
                         'monto'         => $monto,
                         'evidencia'     => $expediente,
@@ -961,13 +994,10 @@ class Descuentos extends CI_Controller
                 }
             }else{
                 // cancelado
-                
                 $insertArray = array(
                     'estatus'       => 0,
                     // 'evidencia'     => $expediente,
                     'proceso'       => 0);
-
-                    
             }
             
                 
