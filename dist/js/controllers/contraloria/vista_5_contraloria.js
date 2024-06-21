@@ -35,6 +35,19 @@ $(document).ready(function () {
       }
         $("#ubicacion").selectpicker('refresh');
     }, 'json');
+
+    $.post(general_base_url + 'General/getCatalogOptions', { id_catalogo: 147 }, function (data) {
+        for (let i = 0; i < data.length; i++) {
+              const id = data[i]['id_opcion'];
+              const name = data[i]['nombre'];
+              $("#tipo_enganche").append($('<option>').val(id).text(name.toUpperCase()));
+        }
+          $("#tipo_enganche").selectpicker('refresh');
+    }, 'json');
+
+    $("#anexa_complemento").append($('<option>').val(1).text('SI'));
+    $("#anexa_complemento").append($('<option>').val(2).text('NO'));
+    $("#anexa_complemento").selectpicker('refresh');
 });
 
 $("#tabla_ingresar_5").ready(function () {
@@ -406,7 +419,7 @@ $(document).on('click', '.stat5Rev', function () {
 
   $('#nombreLoteenvARevCE').val($(this).attr('data-nomLote'));
   $('#idLoteenvARevCE').val($(this).attr('data-idLote'));
-  $('#idCondominioenvARevCE').val($(this).attr('data-idCond'));
+  $('#idCondominioenvARevCE').val($(this).attr('data-idCond')); //recibodeapartadoyenganche
   $('#idClienteenvARevCE').val($(this).attr('data-idCliente'));
   $('#fechaVencenvARevCE').val($(this).attr('data-fecVen'));
   $('#nomLoteFakeenvARevCE').val($(this).attr('data-nomLote'));
@@ -450,6 +463,10 @@ function preguntaenvARevCE() {
   var ubicacion = $("#ubicacion").val();
   var comentario = $("#comentarioenvARevCE").val();
   var tipo_venta = $('#tipo_ventaenvARevCE').val();
+
+  const tipo_enganche = $('#tipo_enganche').val();
+  const anexa_complemento = $('#anexa_complemento').val();
+
   var parametros = {
     "idLote": idLote,
     "idCondominio": idCondominio,
@@ -462,12 +479,36 @@ function preguntaenvARevCE() {
   };
   var validatventa = ($("#tipo_ventaenvARevCE").val().trim() == '') ? 0 : 1;
   var validaUbicacion = ($("#ubicacion").val().trim() == '') ? 0 : 1;
-  if (comentario.length <= 0 || validatventa == 0 || validaUbicacion == 0)
+  if (comentario.length <= 0 || validatventa == 0 || validaUbicacion == 0 || !tipo_enganche || !anexa_complemento)
     alerts.showNotification('top', 'right', 'Todos los campos son requeridos', 'danger')
 
   else if (comentario.length > 0 && validatventa != 0 && validaUbicacion != 0) {
     var botonEnviar = document.getElementById('enviarenvARevCE');
     botonEnviar.disabled = true;
+
+    $.post(general_base_url + 'Contraloria/getComplementoPago ', { idLote: idLote },
+        function (data) {
+            if (data.length > 1 && anexa_complemento == 0) {
+                // BORRAR REGISTRO
+                alert(1);
+            }else if (data.length == 0 && anexa_complemento == 1){
+               // CREAR REGISTRO
+                $.post(general_base_url + 'Contraloria/insertComplementoPago ', { idLote: idLote, idCondominio: idCondominio, idCliente: idCliente},
+                    function (data2) {
+                        alert(JSON.stringify(data2));
+                    },'json'
+                );
+                alert(2);
+            }else {
+                // PUS NADA
+                alert(3);
+            }
+            console.log(data);
+        }
+    ,'json');
+
+    return 1;
+    
     $.ajax({
       data: parametros,
       url: 'editar_registro_lote_contraloria_proceceso5/',
@@ -681,13 +722,14 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#motivoRechazo2').val('');
     })
-    
 
     jQuery('#envARevCE').on('hidden.bs.modal', function (e) {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentarioenvARevCE').val('');
         jQuery(this).find('#tipo_ventaenvARevCE').val(null).trigger('change');
         jQuery(this).find('#ubicacion').val(null).trigger('change');
+        jQuery(this).find('#tipo_enganche').val(null).trigger('change');
+        jQuery(this).find('#anexa_complemento').val(null).trigger('change');
     })
 
     jQuery('#envARev2').on('hidden.bs.modal', function (e) {
@@ -699,4 +741,4 @@ jQuery(document).ready(function () {
         jQuery(this).removeData('bs.modal');
         jQuery(this).find('#comentario2').val('');
     })
-  });
+});

@@ -37,6 +37,16 @@
 							<select required="required" name="ubicacion" id="ubicacion" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="7">
 							</select>
 						</div>
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden" >
+							<label class="control-label">Tipo de enganche</label>
+							<select required="required" name="tipo_enganche" id="tipo_enganche" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="4">
+							</select>			
+						</div>
+						<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 overflow-hidden">
+							<label class="control-label">Anexa complemento</label>
+							<select required="required" name="anexa_complemento" id="anexa_complemento" class="selectpicker select-gral" data-style="btn" data-live-search="true" title="SELECCIONA UNA OPCIÓN" data-container="body" data-size="2">
+							</select>
+						</div>
 						<input type="hidden" name="idLote" id="idLoteenvARevCE" >
 						<input type="hidden" name="idCliente" id="idClienteenvARevCE" >
 						<input type="hidden" name="idCondominio" id="idCondominioenvARevCE" >
