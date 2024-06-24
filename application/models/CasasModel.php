@@ -426,6 +426,12 @@ class CasasModel extends CI_Model
     }
 
     public function getListaProcesoDocumentos(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
         pc.*,
         lo.nombreLote,
@@ -455,7 +461,7 @@ class CasasModel extends CI_Model
             pc.proceso = 3
         AND pc.status = 1
         AND cli.status = 1
-        AND pc.idGerente IN ($this->idUsuario, 11650)";
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
@@ -842,6 +848,12 @@ class CasasModel extends CI_Model
     }
 
     public function getListaRecepcionContratos(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
             pc.*,
             lo.nombreLote,
@@ -871,7 +883,7 @@ class CasasModel extends CI_Model
             pc.proceso IN (8,9)
         AND pc.status = 1
         AND cli.status = 1
-        AND pc.idGerente IN ($this->idUsuario, 11650)";
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
@@ -1040,6 +1052,12 @@ class CasasModel extends CI_Model
     }
 
     public function getListaRecepcionContrato(){
+        $gerentes = implode(',', [$this->idUsuario]);
+
+        if($this->idUsuario == 11650){
+            $gerentes = implode(',', [671, 75, 207, 1853]);
+        }
+
         $query = "SELECT
             pc.*,
             lo.nombreLote,
@@ -1067,7 +1085,7 @@ class CasasModel extends CI_Model
             pc.proceso = 15
         AND pc.status = 1
         AND cli.status = 1
-        AND pc.idGerente IN ($this->idUsuario, 11650)";
+        AND pc.idGerente IN ($gerentes)";
 
         return $this->db->query($query)->result();
     }
